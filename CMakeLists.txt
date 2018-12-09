@@ -18,6 +18,8 @@ add_definitions(-D_USE_MATH_DEFINES)
 find_package(Qt5Widgets REQUIRED)
 find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
+include_directories("vendor/glm")
+include_directories("vendor/json/include")
 
 set(LIBRARIES Qt5::Widgets)
 
