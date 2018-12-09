@@ -1,7 +1,7 @@
 #include <QApplication>
 #include <QSurfaceFormat>
 #include <QOpenGLContext>
-#include <QWidget>
+#include "MainWindow.hpp"
 
 int main(int argc, char *argv[]) {
     QApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
 
     QSurfaceFormat::setDefaultFormat(glFormat);
 
-    QWidget window;
+    Lattice::MainWindow window;
     window.show();
     return a.exec();
 }
