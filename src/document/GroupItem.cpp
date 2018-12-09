@@ -10,9 +10,4 @@ SP<Item> GroupItem::clone() const {
     return cloned;
 }
 
-bool GroupItem::canInsertItem(const SP<const Item> &item) const {
-    Q_UNUSED(item)
-    return true;
-}
-
 } // namespace Shapecraft

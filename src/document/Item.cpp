@@ -139,7 +139,7 @@ std::vector<int> Item::indexPath() const {
 
 bool Item::canInsertItem(const SP<const Item> &item) const {
     Q_UNUSED(item)
-    return false;
+    return true;
 }
 
 void Item::toJSON(nlohmann::json &json) const {
