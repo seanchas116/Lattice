@@ -1,6 +1,5 @@
 #pragma once
 #include <QOpenGLWidget>
-#include <QOpenGLExtraFunctions>
 #include <memory>
 
 namespace Lattice {
