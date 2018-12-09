@@ -4,25 +4,25 @@
 
 namespace Lattice {
 
-class PolygonShape;
+class MeshShape;
 
-class PolygonShapeItem final : public Item {
+class MeshItem final : public Item {
     Q_OBJECT
 public:
-    PolygonShapeItem();
+    MeshItem();
 
-    const SP<PolygonShape>& shape() const { return _shape; }
-    void setShape(const SP<PolygonShape> &shape);
+    const SP<MeshShape>& shape() const { return _shape; }
+    void setShape(const SP<MeshShape> &shape);
 
     SP<Item> clone() const override;
     void toJSON(nlohmann::json& json) const override;
     void fromJSON(const nlohmann::json& json) override;
 
 signals:
-    void shapeChanged(const SP<PolygonShape> &shape);
+    void shapeChanged(const SP<MeshShape> &shape);
 
 private:
-    SP<PolygonShape> _shape;
+    SP<MeshShape> _shape;
 };
 
 } // namespace Shapecraft

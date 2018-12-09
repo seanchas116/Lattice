@@ -1,5 +1,5 @@
-#include "PolygonShapeItem.hpp"
-#include "PolygonShape.hpp"
+#include "MeshItem.hpp"
+#include "MeshShape.hpp"
 #include "../support/Debug.hpp"
 #include <QPainterPath>
 #include <nlohmann/json.hpp>
@@ -8,8 +8,8 @@ using namespace glm;
 
 namespace Lattice {
 
-PolygonShapeItem::PolygonShapeItem() : _shape(std::make_shared<PolygonShape>()) {
-    connect(this, &PolygonShapeItem::shapeChanged, this, &Item::changed);
+MeshItem::MeshItem() : _shape(std::make_shared<MeshShape>()) {
+    connect(this, &MeshItem::shapeChanged, this, &Item::changed);
 
     auto v1 = _shape->addVertex(vec3(0, 0, 0));
     auto v2 = _shape->addVertex(vec3(0, 0, 1));
@@ -28,25 +28,25 @@ PolygonShapeItem::PolygonShapeItem() : _shape(std::make_shared<PolygonShape>()) 
     qDebug() << f->normal();
 }
 
-SP<Item> PolygonShapeItem::clone() const {
-    auto cloned = std::make_shared<PolygonShapeItem>();
+SP<Item> MeshItem::clone() const {
+    auto cloned = std::make_shared<MeshItem>();
     cloned->_shape = _shape->clone();
     return cloned;
 }
 
-void PolygonShapeItem::toJSON(nlohmann::json &json) const {
+void MeshItem::toJSON(nlohmann::json &json) const {
     Item::toJSON(json);
     // TODO
     // _shape->toJSON(json["shape"]);
 }
 
-void PolygonShapeItem::fromJSON(const nlohmann::json &json) {
+void MeshItem::fromJSON(const nlohmann::json &json) {
     Item::fromJSON(json);
     // TODO
     //_shape->fromJSON(json["shape"]);
 }
 
-void PolygonShapeItem::setShape(const SP<PolygonShape> &shape) {
+void MeshItem::setShape(const SP<MeshShape> &shape) {
     emit shapeChanged(shape);
     _shape = shape;
 }

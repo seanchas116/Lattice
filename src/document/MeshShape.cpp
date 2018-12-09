@@ -1,4 +1,4 @@
-#include "PolygonShape.hpp"
+#include "MeshShape.hpp"
 #include "../support/Mod.hpp"
 #include <unordered_map>
 
@@ -138,28 +138,28 @@ vec3 Face::normal() const {
     return normalSum / float(count);
 }
 
-PolygonShape::~PolygonShape() {
+MeshShape::~MeshShape() {
 }
 
-SP<Vertex> PolygonShape::addVertex(vec3 pos) {
+SP<Vertex> MeshShape::addVertex(vec3 pos) {
     auto vertex = std::make_shared<Vertex>(pos);
     _vertices.insert(vertex);
     return vertex;
 }
 
-SP<Edge> PolygonShape::addEdge(const SP<Vertex>& inVertex, const SP<Vertex>& outVertex) {
+SP<Edge> MeshShape::addEdge(const SP<Vertex>& inVertex, const SP<Vertex>& outVertex) {
     auto edge = std::make_shared<Edge>(inVertex, outVertex);
     _edges.insert(edge);
     return edge;
 }
 
-SP<Face> PolygonShape::addFace(const std::vector<SP<Edge> > &edges) {
+SP<Face> MeshShape::addFace(const std::vector<SP<Edge> > &edges) {
     auto face = std::make_shared<Face>(edges);
     _faces.insert(face);
     return face;
 }
 
-void PolygonShape::removeVertex(const SP<Vertex>& vertex) {
+void MeshShape::removeVertex(const SP<Vertex>& vertex) {
     auto edges = vertex->edges();
     for (auto&& edge : edges) {
         removeEdge(edge);
@@ -167,7 +167,7 @@ void PolygonShape::removeVertex(const SP<Vertex>& vertex) {
     _vertices.erase(vertex);
 }
 
-void PolygonShape::removeEdge(const SP<Edge> &edge) {
+void MeshShape::removeEdge(const SP<Edge> &edge) {
     auto faces = edge->faces();
     for (auto&& face : faces) {
         removeFace(face);
@@ -175,12 +175,12 @@ void PolygonShape::removeEdge(const SP<Edge> &edge) {
     _edges.erase(edge);
 }
 
-void PolygonShape::removeFace(const SP<Face> &face) {
+void MeshShape::removeFace(const SP<Face> &face) {
     _faces.erase(face);
 }
 
-std::shared_ptr<PolygonShape> PolygonShape::clone() const {
-    auto cloned = std::make_shared<PolygonShape>();
+std::shared_ptr<MeshShape> MeshShape::clone() const {
+    auto cloned = std::make_shared<MeshShape>();
     std::unordered_map<SP<Vertex>, SP<Vertex>> oldNewVertices;
     for (auto&& oldVertex : _vertices) {
         auto newVertex = cloned->addVertex(oldVertex->position());

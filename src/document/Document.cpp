@@ -1,5 +1,5 @@
 #include "Document.hpp"
-#include "PolygonShapeItem.hpp"
+#include "MeshItem.hpp"
 #include "History.hpp"
 
 namespace Lattice {
@@ -38,7 +38,7 @@ Document::Document() {
 
 void Document::addInitialItems() {
     // Add example item
-    auto shapeItem = std::make_shared<PolygonShapeItem>();
+    auto shapeItem = std::make_shared<MeshItem>();
     shapeItem->setName(tr("Item"));
 
     _rootItem->appendChildItem(shapeItem);
