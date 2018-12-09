@@ -3,10 +3,10 @@
 
 namespace Lattice {
 
-class GroupItem final : public Item {
+class EmptyItem final : public Item {
     Q_OBJECT
 public:
-    GroupItem();
+    EmptyItem();
     SP<Item> clone() const override;
 };
 
