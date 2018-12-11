@@ -38,11 +38,11 @@ Document::Document() {
 
 void Document::addInitialItems() {
     // Add example item
-    auto shapeItem = std::make_shared<MeshItem>();
-    shapeItem->setName(tr("Item"));
+    auto meshItem = std::make_shared<MeshItem>();
+    meshItem->setName(tr("Mesh"));
 
-    _rootItem->appendChildItem(shapeItem);
-    _selectedItems = {shapeItem};
+    _rootItem->appendChildItem(meshItem);
+    _selectedItems = {meshItem};
 }
 
 void Document::setSelectedItems(const std::vector<SP<Item>> &items) {
