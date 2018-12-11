@@ -83,4 +83,4 @@ void Document::watchChildrenInsertRemove(const SP<Item> &item) {
     });
 }
 
-} // namespace Shapecraft
+} // namespace Lattice

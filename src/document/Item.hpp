@@ -71,4 +71,4 @@ private:
     std::vector<SP<Item>> _childItems;
 };
 
-} // namespace Shapecraft
+} // namespace Lattice

@@ -51,4 +51,4 @@ void MeshItem::setShape(const SP<MeshShape> &shape) {
     _shape = shape;
 }
 
-} // namespace Shapecraft
+} // namespace Lattice

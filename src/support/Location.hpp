@@ -16,4 +16,4 @@ struct Location final {
 void to_json(nlohmann::json& json, const Location& location);
 void from_json(const nlohmann::json& json, Location& location);
 
-} // namespace Shapecraft
+} // namespace Lattice

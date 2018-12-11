@@ -24,4 +24,4 @@ QDebug operator<<(QDebug debug, const std::array<T, N>& array) {
     return debug;
 }
 
-} // namespace Shapecraft
+} // namespace Lattice

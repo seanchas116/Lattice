@@ -60,4 +60,4 @@ void History::addChange(const SP<Change> &change) {
     _undoStack->push(command);
 }
 
-} // namespace Shapecraft
+} // namespace Lattice

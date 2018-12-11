@@ -92,4 +92,4 @@ private:
     std::unordered_set<SP<Face>> _faces;
 };
 
-} // namespace Shapecraft
+} // namespace Lattice

@@ -249,4 +249,4 @@ void Item::setLocationInternal(const Location &location) {
     }
 }
 
-} // namespace Shapecraft
+} // namespace Lattice

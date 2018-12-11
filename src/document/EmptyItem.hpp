@@ -10,4 +10,4 @@ public:
     SP<Item> clone() const override;
 };
 
-} // namespace Shapecraft
+} // namespace Lattice

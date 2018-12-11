@@ -192,4 +192,4 @@ std::shared_ptr<MeshShape> MeshShape::clone() const {
     return cloned;
 }
 
-} // namespace Shapecraft
+} // namespace Lattice

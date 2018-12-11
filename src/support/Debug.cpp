@@ -20,4 +20,4 @@ QDebug operator<<(QDebug debug, const glm::vec4 &v) {
     return debug;
 }
 
-} // namespace Shapecraft
+} // namespace Lattice

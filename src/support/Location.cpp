@@ -24,4 +24,4 @@ void from_json(const nlohmann::json &json, Location &location) {
     location.rotation = json["rotation"];
 }
 
-} // namespace Shapecraft
+} // namespace Lattice

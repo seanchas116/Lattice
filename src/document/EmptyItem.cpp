@@ -10,4 +10,4 @@ SP<Item> EmptyItem::clone() const {
     return cloned;
 }
 
-} // namespace Shapecraft
+} // namespace Lattice

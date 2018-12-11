@@ -35,4 +35,4 @@ private:
     QString _currentTitle;
 };
 
-} // namespace Shapecraft
+} // namespace Lattice

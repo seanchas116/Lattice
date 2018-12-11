@@ -39,4 +39,4 @@ private:
     SP<History> _history;
 };
 
-} // namespace Shapecraft
+} // namespace Lattice

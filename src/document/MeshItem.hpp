@@ -25,4 +25,4 @@ private:
     SP<MeshShape> _shape;
 };
 
-} // namespace Shapecraft
+} // namespace Lattice
