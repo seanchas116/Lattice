@@ -60,23 +60,4 @@ void History::addChange(const SP<Change> &change) {
     _undoStack->push(command);
 }
 
-/*
-void History::stage(const SP<Change> &change) {
-    change->redo();
-
-    if (!_stagedChanges.empty()) {
-        auto& last = _stagedChanges[_stagedChanges.size() - 1];
-        if (last->mergeWith(change)) {
-            return;
-        }
-    }
-    _stagedChanges.push_back(change);
-}
-
-void History::commit(const QString &message) {
-    auto command = new ChangesUndoCommand(message, _stagedChanges);
-    _undoStack->push(command);
-}
-*/
-
 } // namespace Shapecraft
