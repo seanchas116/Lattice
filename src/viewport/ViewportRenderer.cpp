@@ -11,7 +11,7 @@ void ViewportRenderer::resize(glm::ivec2 size) {
 }
 
 void ViewportRenderer::render() {
-    glClearColor(1, 0, 0, 1);
+    glClearColor(0.8f, 0.8f, 0.8f, 1);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
