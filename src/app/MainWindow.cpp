@@ -33,9 +33,13 @@ void MainWindow::setupActions() {
         openAction->setShortcut(QKeySequence::Open);
         fileMenu->addAction(openAction);
 
+        fileMenu->addSeparator();
+
         auto closeAction = new QAction(tr("Close"), this);
         closeAction->setShortcut(QKeySequence::Close);
         fileMenu->addAction(closeAction);
+
+        fileMenu->addSeparator();
 
         auto saveAction = new QAction(tr("Save"), this);
         saveAction->setShortcut(QKeySequence::Save);
