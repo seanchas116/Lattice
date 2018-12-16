@@ -25,12 +25,10 @@ include_directories("vendor/json/include")
 
 set(LIBRARIES Qt5::Widgets)
 
-file(GLOB_RECURSE SOURCES "src/*.cpp")
-file(GLOB_RECURSE HEADERS "src/*.hpp")
+file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.hpp")
 
 file(GLOB_RECURSE SHADERS "src/*.vert" "src/*.geom" "src/*.frag")
-
 cmrc_add_resource_library(Lattice_resources ${SHADERS})
 
-add_executable(Lattice ${SOURCES} ${HEADERS})
+add_executable(Lattice ${SOURCES})
 target_link_libraries(Lattice ${LIBRARIES} Lattice_resources)
