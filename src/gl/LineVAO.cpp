@@ -37,7 +37,7 @@ void LineVAO::setLineStrips(const std::vector<LineStrip>& strips) {
     std::vector<LineAdjacency> adjacencies;
     for (auto& strip : strips) {
         for (size_t i = 0; i < strip.size() - 1; ++i) {
-            size_t prev = std::max(i - i, size_t(0));
+            size_t prev = std::max(i - 1, size_t(0));
             size_t begin = i;
             size_t end = i + 1;
             size_t next = std::min(i + 2, strip.size() - 1);
