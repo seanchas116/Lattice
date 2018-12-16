@@ -28,7 +28,6 @@ Shader::Shader(const QByteArray &vertexShader, const QByteArray& geometryShader,
         glDeleteProgram(_program);
 
         qWarning() << log.data();
-        throw std::runtime_error(log.data());
     }
     _program = program;
 }
