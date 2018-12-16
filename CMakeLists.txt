@@ -29,7 +29,7 @@ set(LIBRARIES Qt5::Widgets)
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.hpp")
 
 file(GLOB_RECURSE SHADERS "src/*.vert" "src/*.geom" "src/*.frag")
-cmrc_add_resource_library(Lattice_resources ${SHADERS})
+cmrc_add_resource_library(LatticeResources ${SHADERS})
 
 add_executable(Lattice ${SOURCES})
-target_link_libraries(Lattice ${LIBRARIES} Lattice_resources)
+target_link_libraries(Lattice ${LIBRARIES} LatticeResources)
