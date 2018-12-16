@@ -1,11 +1,13 @@
 #include "MainWindow.hpp"
 #include "AppState.hpp"
+#include "ItemListPane.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
 #include "../viewport/ViewportWidget.hpp"
 #include <QAction>
 #include <QMenuBar>
 #include <QUndoStack>
+#include <QDockWidget>
 
 namespace Lattice {
 
@@ -14,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     auto viewportWidget = new ViewportWidget();
     setCentralWidget(viewportWidget);
     setupActions();
+    setupPanes();
 }
 
 void MainWindow::setupActions() {
@@ -97,6 +100,15 @@ void MainWindow::setupActions() {
     }
 
     setMenuBar(menuBar);
+}
+
+void MainWindow::setupPanes() {
+    {
+        auto dockWidget = new QDockWidget();
+        dockWidget->setWindowTitle(tr("Items"));
+        dockWidget->setWidget(new ItemListPane(_appState));
+        addDockWidget(Qt::LeftDockWidgetArea, dockWidget);
+    }
 }
 
 } // namespace Lattice

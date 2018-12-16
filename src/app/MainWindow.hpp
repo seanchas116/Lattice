@@ -13,6 +13,7 @@ public:
 
 private:
     void setupActions();
+    void setupPanes();
 
     SP<AppState> _appState;
 };
