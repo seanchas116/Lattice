@@ -1,10 +1,12 @@
 #include "ViewportRenderer.hpp"
-#include <cmrc/cmrc.hpp>
+#include "../gl/Shader.hpp"
+#include "../resource/Resource.hpp"
 
 namespace Lattice {
 
 ViewportRenderer::ViewportRenderer() {
     initializeOpenGLFunctions();
+    _lineShader = std::make_shared<Shader>(readResource("src/viewport/ThickLine.vert"), readResource("src/viewport/ThickLine.geom"), readResource("src/viewport/ThickLine.frag"));
 }
 
 void ViewportRenderer::resize(glm::ivec2 size) {
