@@ -27,5 +27,5 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 file(GLOB_RECURSE HEADERS "src/*.hpp")
 qt5_add_resources(RESOURCES "src/resources.qrc")
 
-add_executable(Shapecraft ${SOURCES} ${HEADERS} ${RESOURCES})
-target_link_libraries(Shapecraft ${LIBRARIES})
+add_executable(Lattice ${SOURCES} ${HEADERS} ${RESOURCES})
+target_link_libraries(Lattice ${LIBRARIES})
