@@ -10,15 +10,15 @@ namespace Lattice {
 
 class VertexBuffer;
 
-class Mesh final : protected QOpenGLExtraFunctions {
-    Q_DISABLE_COPY(Mesh)
+class VAO final : protected QOpenGLExtraFunctions {
+    Q_DISABLE_COPY(VAO)
 public:
     using Triangle = std::array<uint32_t, 3>;
 
-    Mesh();
-    Mesh(const SP<VertexBuffer>& vertexBuffer);
-    Mesh(const SP<VertexBuffer>& vertexBuffer, const std::vector<Triangle>& triangles);
-    ~Mesh();
+    VAO();
+    VAO(const SP<VertexBuffer>& vertexBuffer);
+    VAO(const SP<VertexBuffer>& vertexBuffer, const std::vector<Triangle>& triangles);
+    ~VAO();
 
     const SP<VertexBuffer>& vertexBuffer() const { return _vertexBuffer; }
 

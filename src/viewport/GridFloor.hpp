@@ -4,7 +4,7 @@
 
 namespace Lattice {
 
-class LineMesh;
+class LineVAO;
 
 class GridFloor final {
 public:
@@ -13,7 +13,7 @@ public:
     void draw();
 
 private:
-    SP<LineMesh> _mesh;
+    SP<LineVAO> _vao;
 };
 
 } // namespace Lattice

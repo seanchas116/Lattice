@@ -1,13 +1,13 @@
-#include "LineMesh.hpp"
+#include "LineVAO.hpp"
 #include "VertexBuffer.hpp"
 #include <array>
 
 namespace Lattice {
 
-LineMesh::LineMesh() : LineMesh(std::make_shared<VertexBuffer>()) {
+LineVAO::LineVAO() : LineVAO(std::make_shared<VertexBuffer>()) {
 }
 
-LineMesh::LineMesh(const SP<VertexBuffer> &vertexBuffer) : _vertexBuffer(vertexBuffer) {
+LineVAO::LineVAO(const SP<VertexBuffer> &vertexBuffer) : _vertexBuffer(vertexBuffer) {
     initializeOpenGLFunctions();
 
     glGenBuffers(1, &_indexBuffer);
@@ -22,18 +22,18 @@ LineMesh::LineMesh(const SP<VertexBuffer> &vertexBuffer) : _vertexBuffer(vertexB
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-LineMesh::~LineMesh() {
+LineVAO::~LineVAO() {
     glDeleteVertexArrays(1, &_vertexArray);
     glDeleteBuffers(1, &_indexBuffer);
 }
 
-void LineMesh::draw() {
+void LineVAO::draw() {
     glBindVertexArray(_vertexArray);
     glDrawElements(GL_LINES_ADJACENCY, _lineCount * 4, GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);
 }
 
-void LineMesh::setLineStrips(const std::vector<LineStrip>& strips) {
+void LineVAO::setLineStrips(const std::vector<LineStrip>& strips) {
     std::vector<LineAdjacency> adjacencies;
     for (auto& strip : strips) {
         for (size_t i = 0; i < strip.size() - 1; ++i) {
@@ -47,7 +47,7 @@ void LineMesh::setLineStrips(const std::vector<LineStrip>& strips) {
     setLineAdjacencies(adjacencies);
 }
 
-void LineMesh::setLineAdjacencies(const std::vector<LineMesh::LineAdjacency> &lines) {
+void LineVAO::setLineAdjacencies(const std::vector<LineVAO::LineAdjacency> &lines) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, GLsizeiptr(lines.size() * sizeof(LineAdjacency)), lines.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

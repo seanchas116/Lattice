@@ -1,12 +1,12 @@
 #include "GridFloor.hpp"
-#include "../gl/LineMesh.hpp"
+#include "../gl/LineVAO.hpp"
 #include "../gl/VertexBuffer.hpp"
 
 namespace Lattice {
 
 GridFloor::GridFloor() {
     auto buffer = std::make_shared<VertexBuffer>();
-    _mesh = std::make_shared<LineMesh>(buffer);
+    _vao = std::make_shared<LineVAO>(buffer);
 
     // build grid
     constexpr int count = 10;
@@ -35,11 +35,11 @@ GridFloor::GridFloor() {
     }
 
     buffer->setVertices(vertices);
-    _mesh->setLineStrips(lineStrips);
+    _vao->setLineStrips(lineStrips);
 }
 
 void GridFloor::draw() {
-    _mesh->draw();
+    _vao->draw();
 }
 
 } // namespace Lattice

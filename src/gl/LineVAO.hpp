@@ -9,15 +9,15 @@ namespace Lattice {
 
 class VertexBuffer;
 
-class LineMesh final : protected QOpenGLExtraFunctions {
-    Q_DISABLE_COPY(LineMesh)
+class LineVAO final : protected QOpenGLExtraFunctions {
+    Q_DISABLE_COPY(LineVAO)
 public:
     using LineStrip = std::vector<uint32_t>;
     using LineAdjacency= std::array<uint32_t, 4>;
 
-    LineMesh();
-    LineMesh(const SP<VertexBuffer>& vertexBuffer);
-    ~LineMesh();
+    LineVAO();
+    LineVAO(const SP<VertexBuffer>& vertexBuffer);
+    ~LineVAO();
 
     const SP<VertexBuffer>& vertexBuffer() const { return _vertexBuffer; }
 

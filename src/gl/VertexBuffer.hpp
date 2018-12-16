@@ -25,7 +25,7 @@ public:
     void unbind();
 
 private:
-    friend class Mesh;
+    friend class VAO;
     std::vector<Vertex> _vertices;
     GLuint _buffer;
 };
