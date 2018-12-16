@@ -1,4 +1,5 @@
 #include "ViewportRenderer.hpp"
+#include <cmrc/cmrc.hpp>
 
 namespace Lattice {
 
