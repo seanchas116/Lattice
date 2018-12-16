@@ -9,8 +9,7 @@ namespace Lattice {
 class Shader final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(Shader)
 public:
-    Shader(const QByteArray& vertexShader, const QByteArray& geometryShader, const QByteArray& fragmentShader);
-    Shader(const QUrl& vertexShaderUrl, const QUrl& geometryShaderUrl, const QUrl& fragmentShaderUrl);
+    Shader(const std::string &vertexShader, const std::string &geometryShader, const std::string &fragmentShader);
     ~Shader();
 
     void bind();
@@ -25,7 +24,7 @@ public:
     void setUniform(const char* name, glm::mat4 value);
 
 private:
-    GLuint loadShader(GLenum type, const QByteArray& src);
+    GLuint loadShader(GLenum type, const std::string &src);
     GLuint _program;
 };
 

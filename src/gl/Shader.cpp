@@ -4,12 +4,12 @@
 
 namespace Lattice {
 
-Shader::Shader(const QByteArray &vertexShader, const QByteArray& geometryShader, const QByteArray &fragmentShader) {
+Shader::Shader(const std::string &vertexShader, const std::string &geometryShader, const std::string &fragmentShader) {
     initializeOpenGLFunctions();
 
     GLuint program = glCreateProgram();
     glAttachShader(program, loadShader(GL_VERTEX_SHADER, vertexShader));
-    if (!geometryShader.isEmpty()) {
+    if (!geometryShader.empty()) {
         glAttachShader(program, loadShader(GL_GEOMETRY_SHADER, geometryShader));
     }
     glAttachShader(program, loadShader(GL_FRAGMENT_SHADER, fragmentShader));
@@ -30,31 +30,6 @@ Shader::Shader(const QByteArray &vertexShader, const QByteArray& geometryShader,
         qWarning() << log.data();
     }
     _program = program;
-}
-
-namespace {
-
-QByteArray loadTextFile(const QUrl& url) {
-    if (url.isEmpty()) {
-        return QByteArray();
-    }
-    if (url.scheme() != "qrc") {
-        qWarning() << "Provide qrc:// url";
-        return QByteArray();
-    }
-    QFile file(":" + url.path());
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "Cannot load shader file";
-        return QByteArray();
-    }
-    return file.readAll();
-};
-
-}
-
-Shader::Shader(const QUrl &vertexShaderUrl, const QUrl &geometryShaderUrl, const QUrl &fragmentShaderUrl) :
-    Shader(loadTextFile(vertexShaderUrl), loadTextFile(geometryShaderUrl), loadTextFile(fragmentShaderUrl))
-{
 }
 
 Shader::~Shader() {
@@ -104,7 +79,7 @@ void Shader::setUniform(const char *name, glm::mat4 value) {
     glUniformMatrix4fv(glGetUniformLocation(_program, name), 1, GL_FALSE, &value[0][0]);
 }
 
-GLuint Shader::loadShader(GLenum type, const QByteArray &src) {
+GLuint Shader::loadShader(GLenum type, const std::string &src) {
     GLuint shader = glCreateShader(type);
     const char* srcData = src.data();
 
