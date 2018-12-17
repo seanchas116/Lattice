@@ -3,12 +3,12 @@
 uniform float width;
 uniform vec2 viewportSize;
 
-layout(lines_adjacency) in;
+layout(lines) in;
 layout(triangle_strip, max_vertices = 4) out;
 
 void main(void) {
-    vec4 p0_clipSpace = gl_in[1].gl_Position;
-    vec4 p1_clipSpace = gl_in[2].gl_Position;
+    vec4 p0_clipSpace = gl_in[0].gl_Position;
+    vec4 p1_clipSpace = gl_in[1].gl_Position;
 
     vec2 p0 = (p0_clipSpace.xy / p0_clipSpace.w + 1.0) * (0.5 * viewportSize);
     vec2 p1 = (p1_clipSpace.xy / p1_clipSpace.w + 1.0) * (0.5 * viewportSize);

@@ -13,7 +13,7 @@ class LineVAO final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(LineVAO)
 public:
     using LineStrip = std::vector<uint32_t>;
-    using LineAdjacency= std::array<uint32_t, 4>;
+    using Line = std::array<uint32_t, 2>;
 
     LineVAO();
     LineVAO(const SP<VertexBuffer>& vertexBuffer);
@@ -22,8 +22,8 @@ public:
     const SP<VertexBuffer>& vertexBuffer() const { return _vertexBuffer; }
 
     void draw();
+    void setLines(const std::vector<Line>& lines);
     void setLineStrips(const std::vector<LineStrip> &strips);
-    void setLineAdjacencies(const std::vector<LineAdjacency>& lines);
 
 private:
     SP<VertexBuffer> _vertexBuffer;
