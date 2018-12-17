@@ -24,6 +24,7 @@ private:
     Camera _camera;
     glm::mat4 _projection;
     SP<Shader> _lineShader;
+    SP<Shader> _solidShader;
     SP<GridFloor> _gridFloor;
 };
 

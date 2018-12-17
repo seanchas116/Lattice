@@ -1,0 +1,16 @@
+#version 330
+
+in vec3 normal_cameraSpace;
+
+out vec4 fragColor;
+
+const vec3 lightDirection = vec3(0, 0, 1);
+uniform vec3 diffuse;
+
+void main(void) {
+    vec3 normalDirection = normalize(normal_cameraSpace);
+
+    float diffuseStrength = clamp(dot(normalDirection, lightDirection), 0.0, 1.0);
+
+    fragColor = vec4(diffuse * diffuseStrength, 1);
+}
