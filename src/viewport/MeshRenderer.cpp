@@ -18,6 +18,7 @@ void MeshRenderer::update(const SP<MeshShape> &shape) {
         // Edge VAO
         std::unordered_map<SP<Vertex>, int> indices;
         std::vector<VertexBuffer::Vertex> vertices;
+        std::vector<LineVAO::Line> lines;
         for (auto& vertex : shape->vertices()) {
             indices[vertex] = vertices.size();
             VertexBuffer::Vertex vertexData = {
@@ -27,7 +28,33 @@ void MeshRenderer::update(const SP<MeshShape> &shape) {
             };
             vertices.push_back(vertexData);
         }
-        // WIP
+        for (auto& edge : shape->edges()) {
+            uint32_t i0 = indices[edge->inVertex()];
+            uint32_t i1 = indices[edge->outVertex()];
+            lines.push_back({i0, i1});
+        }
+        _edgeVAO->vertexBuffer()->setVertices(vertices);
+        _edgeVAO->setLines(lines);
+    }
+
+    {
+        // Face VAO
+        std::vector<VertexBuffer::Vertex> vertices;
+        std::vector<VAO::Triangle> triangles;
+
+        for (auto& face : shape->faces()) {
+            uint32_t offset = vertices.size();
+            auto normal = face->normal();
+            for (auto& vertex : face->vertices()) {
+                vertices.push_back({vertex->position(), {}, normal});
+            }
+            for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
+                triangles.push_back({offset, offset + i - 1, offset + i});
+            }
+        }
+
+        _faceVAO->vertexBuffer()->setVertices(vertices);
+        _faceVAO->setTriangles(triangles);
     }
 }
 
