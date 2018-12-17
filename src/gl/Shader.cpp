@@ -1,6 +1,5 @@
 #include "Shader.hpp"
 #include <QtDebug>
-#include <QFile>
 
 namespace Lattice {
 
@@ -22,7 +21,7 @@ Shader::Shader(const std::string &vertexShader, const std::string &geometryShade
         GLint logLen;
         glGetProgramiv(program, GL_INFO_LOG_LENGTH, &logLen);
 
-        QByteArray log(logLen, 0);
+        std::string log(logLen, 0);
         glGetProgramInfoLog(program, logLen, nullptr, log.data());
 
         glDeleteProgram(_program);
@@ -93,7 +92,7 @@ GLuint Shader::loadShader(GLenum type, const std::string &src) {
         GLint logLen;
         glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logLen);
 
-        QByteArray log(logLen, 0);
+        std::string log(logLen, 0);
         glGetShaderInfoLog(shader, logLen, nullptr, log.data());
 
         glDeleteShader(shader);

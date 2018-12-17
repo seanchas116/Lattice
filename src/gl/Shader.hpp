@@ -1,6 +1,5 @@
 #pragma once
 #include <QOpenGLExtraFunctions>
-#include <QUrl>
 #include <glm/glm.hpp>
 #include "../support/Pointer.hpp"
 
