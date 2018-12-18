@@ -1,11 +1,13 @@
 #include "ViewportWidget.hpp"
 #include "ViewportRenderer.hpp"
+#include "CameraController.hpp"
 #include <QOpenGLDebugLogger>
 
 namespace Lattice {
 
 ViewportWidget::ViewportWidget(QWidget *parent) : QOpenGLWidget(parent)
 {
+    _cameraController = std::make_shared<CameraController>();
 }
 
 void ViewportWidget::initializeGL() {
@@ -27,6 +29,18 @@ void ViewportWidget::resizeGL(int w, int h) {
 
 void ViewportWidget::paintGL() {
     _renderer->render();
+}
+
+void ViewportWidget::mousePressEvent(QMouseEvent *event) {
+    _cameraController->mousePress(event);
+}
+
+void ViewportWidget::mouseMoveEvent(QMouseEvent *event) {
+    _cameraController->mouseMove(event);
+}
+
+void ViewportWidget::mouseReleaseEvent(QMouseEvent *event) {
+    _cameraController->mouseRelease(event);
 }
 
 } // namespace Lattice
