@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <QPoint>
 #include "../support/Camera.hpp"
 
 class QMouseEvent;
@@ -19,7 +20,15 @@ signals:
     void cameraChanged(const Camera& camera);
 
 private:
+    enum Mode {
+        None,
+        Move,
+        Rotate,
+    };
+
     Camera _camera;
+    Mode _mode;
+    QPoint _lastMousePos;
 };
 
 } // namespace Lattice
