@@ -22,7 +22,6 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
 
     _lineShader = std::make_shared<ThickLineShader>();
     _lineShader->setWidth(1.f);
-    _lineShader->setColor(vec3(0, 0, 0));
 
     _solidShader = std::make_shared<SolidShader>();
     _solidShader->setDiffuse(vec3(1, 0, 0));
@@ -52,7 +51,13 @@ void ViewportRenderer::render() {
     _lineShader->setMVPMatrix(_projection * _camera.matrix());
     _lineShader->setViewportSize(vec2(_size));
 
+    _lineShader->setColor(vec3(0.5));
     _gridFloor->draw();
+
+    for (auto& [item, renderer] : _meshRenderers) {
+        _lineShader->setColor(vec3(0));
+        renderer->drawEdges();
+    }
 }
 
 } // namespace Lattice
