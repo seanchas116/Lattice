@@ -7,6 +7,8 @@ namespace Lattice {
 
 ViewportWidget::ViewportWidget(QWidget *parent) : QOpenGLWidget(parent)
 {
+    setFocusPolicy(Qt::ClickFocus);
+    connect(&_keyObserver, &KeyObserver::keysChanged, &_cameraController, &CameraController::setKeys);
 }
 
 void ViewportWidget::initializeGL() {

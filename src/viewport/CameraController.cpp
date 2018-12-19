@@ -1,5 +1,6 @@
 #include "CameraController.hpp"
 #include <QMouseEvent>
+#include <QtDebug>
 
 namespace Lattice {
 
@@ -7,9 +8,12 @@ CameraController::CameraController() {
 }
 
 bool CameraController::mousePress(QMouseEvent *event) {
-    if (event->button() == Qt::MiddleButton) {
+    bool rotateKey = _keys.find(Qt::Key_Space) != _keys.end() && event->modifiers() & Qt::ShiftModifier;
+    bool moveKey = _keys.find(Qt::Key_Space) != _keys.end() && !(event->modifiers() & Qt::ShiftModifier);
+
+    if (moveKey || event->button() == Qt::MiddleButton) {
         _mode = Mode::Move;
-    } else if (event->button() == Qt::RightButton) {
+    } else if (rotateKey || event->button() == Qt::RightButton) {
         _mode = Mode::Rotate;
     } else {
         _mode = Mode::None;
@@ -47,6 +51,10 @@ bool CameraController::mouseMove(QMouseEvent *event) {
 bool CameraController::mouseRelease(QMouseEvent *) {
     _mode = Mode::None;
     return false;
+}
+
+void CameraController::setKeys(const std::unordered_set<int> &keys) {
+    _keys = keys;
 }
 
 } // namespace Lattice

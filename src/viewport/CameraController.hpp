@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QPoint>
+#include <unordered_set>
 #include "../support/Camera.hpp"
 
 class QMouseEvent;
@@ -16,6 +17,8 @@ public:
     bool mouseMove(QMouseEvent* event);
     bool mouseRelease(QMouseEvent* event);
 
+    void setKeys(const std::unordered_set<int>& keys);
+
 signals:
     void cameraChanged(const Camera& camera);
 
@@ -29,6 +32,7 @@ private:
     Camera _camera;
     Mode _mode;
     QPoint _lastMousePos;
+    std::unordered_set<int> _keys;
 };
 
 } // namespace Lattice
