@@ -5,8 +5,9 @@
 
 namespace Lattice {
 
-ViewportWidget::ViewportWidget(QWidget *parent) : QOpenGLWidget(parent)
+ViewportWidget::ViewportWidget(const SP<AppState> &appState, QWidget *parent) : QOpenGLWidget(parent)
 {
+    _appState = appState;
     setFocusPolicy(Qt::ClickFocus);
     connect(&_keyObserver, &KeyObserver::selectedKeysChanged, &_cameraController, &CameraController::setPressedKeys);
 }
@@ -21,7 +22,7 @@ void ViewportWidget::initializeGL() {
         qDebug() << "OpenGL debug enabled";
     }
 
-    _renderer = std::make_shared<ViewportRenderer>();
+    _renderer = std::make_shared<ViewportRenderer>(_appState);
     connect(&_cameraController, &CameraController::cameraChanged, this, [this] (const Camera& camera) {
         _renderer->setCamera(camera);
         update();

@@ -8,12 +8,12 @@
 namespace Lattice {
 
 class ViewportRenderer;
-class CameraController;
+class AppState;
 
 class ViewportWidget : public QOpenGLWidget {
     Q_OBJECT
 public:
-    explicit ViewportWidget(QWidget *parent = nullptr);
+    explicit ViewportWidget(const SP<AppState>& appState, QWidget *parent = nullptr);
 
 protected:
     void initializeGL() override;
@@ -33,6 +33,7 @@ private:
     SP<ViewportRenderer> _renderer;
     CameraController _cameraController;
     KeyObserver _keyObserver;
+    SP<AppState> _appState;
 };
 
 } // namespace Lattice

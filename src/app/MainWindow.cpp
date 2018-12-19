@@ -13,7 +13,7 @@ namespace Lattice {
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     _appState = std::make_shared<AppState>();
-    auto viewportWidget = new ViewportWidget();
+    auto viewportWidget = new ViewportWidget(_appState);
     setCentralWidget(viewportWidget);
     setupActions();
     setupPanes();

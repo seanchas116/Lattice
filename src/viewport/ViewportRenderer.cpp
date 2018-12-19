@@ -8,7 +8,9 @@ using namespace glm;
 
 namespace Lattice {
 
-ViewportRenderer::ViewportRenderer() {
+ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
+    _appState = appState;
+
     initializeOpenGLFunctions();
     _lineShader = std::make_shared<Shader>(readResource("src/viewport/ThickLine.vert"), readResource("src/viewport/ThickLine.geom"), readResource("src/viewport/ThickLine.frag"));
     _solidShader = std::make_shared<Shader>(readResource("src/viewport/Solid.vert"), std::string(), readResource("src/viewport/Solid.frag"));
