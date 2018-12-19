@@ -59,4 +59,12 @@ void MeshRenderer::update(const SP<MeshShape> &shape) {
     }
 }
 
+void MeshRenderer::drawFaces() {
+    _faceVAO->draw();
+}
+
+void MeshRenderer::drawEdges() {
+    _edgeVAO->draw();
+}
+
 }

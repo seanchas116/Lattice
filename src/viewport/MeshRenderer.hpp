@@ -13,6 +13,9 @@ public:
     MeshRenderer();
     void update(const SP<MeshShape>& shape);
 
+    void drawFaces();
+    void drawEdges();
+
 private:
     SP<VAO> _faceVAO;
     SP<LineVAO> _edgeVAO;
