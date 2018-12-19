@@ -23,13 +23,13 @@ class ViewportRenderer final : public QObject, protected QOpenGLExtraFunctions {
 public:
     ViewportRenderer(const SP<AppState>& appState);
 
-    void resize(glm::ivec2 size);
+    void resize(glm::ivec2 physicalSize, glm::ivec2 logicalSize);
     void render();
 
     void setCamera(const Camera& camera) { _camera = camera; }
 
 private:
-    glm::ivec2 _size;
+    glm::ivec2 _logicalSize;
     Camera _camera;
     glm::mat4 _projection;
     SP<CircleShader> _circleShader;

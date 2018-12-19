@@ -30,7 +30,14 @@ void ViewportWidget::initializeGL() {
 }
 
 void ViewportWidget::resizeGL(int w, int h) {
-    _renderer->resize({w, h});
+    glm::vec2 physicalSize(w, h);
+
+#ifdef Q_OS_WIN
+    glm::vec2 logicalSize = physicalSize / (logicalDpiX() / 96.f);
+#else
+    glm::vec2 logicalSize = physicalSize;
+#endif
+    _renderer->resize(physicalSize, logicalSize);
 }
 
 void ViewportWidget::paintGL() {

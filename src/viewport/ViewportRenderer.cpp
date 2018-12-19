@@ -35,10 +35,10 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
     _gridFloor = std::make_shared<GridFloor>();
 }
 
-void ViewportRenderer::resize(glm::ivec2 size) {
-    glViewport(0, 0, size.x, size.y);
-    _size = size;
-    _projection = glm::perspective(glm::radians(60.f), float(size.x) / float(size.y), 0.1f, 100.f);
+void ViewportRenderer::resize(ivec2 physicalSize, ivec2 logicalSize) {
+    glViewport(0, 0, physicalSize.x, physicalSize.y);
+    _logicalSize = logicalSize;
+    _projection = glm::perspective(glm::radians(60.f), float(physicalSize.x) / float(physicalSize.y), 0.1f, 100.f);
 }
 
 void ViewportRenderer::render() {
@@ -57,7 +57,7 @@ void ViewportRenderer::render() {
 
     _lineShader->bind();
     _lineShader->setMVPMatrix(MVP);
-    _lineShader->setViewportSize(vec2(_size));
+    _lineShader->setViewportSize(vec2(_logicalSize));
 
     _lineShader->setColor(vec3(0.5));
     _gridFloor->draw();
@@ -77,7 +77,7 @@ void ViewportRenderer::render() {
 
     _circleShader->bind();
     _circleShader->setMVPMatrix(MVP);
-    _circleShader->setViewportSize(vec2(_size));
+    _circleShader->setViewportSize(vec2(_logicalSize));
     _circleShader->setColor(vec3(1));
     for (auto& [item, renderer] : _meshRenderers) {
         renderer->drawVertices();
