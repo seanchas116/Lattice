@@ -1,6 +1,8 @@
 #pragma once
 #include <QOpenGLWidget>
 #include <memory>
+#include "CameraController.hpp"
+#include "KeyObserver.hpp"
 #include "../support/Pointer.hpp"
 
 namespace Lattice {
@@ -22,9 +24,13 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
 
+    void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
+
 private:
     SP<ViewportRenderer> _renderer;
-    SP<CameraController> _cameraController;
+    CameraController _cameraController;
+    KeyObserver _keyObserver;
 };
 
 } // namespace Lattice

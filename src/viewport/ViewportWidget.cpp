@@ -7,7 +7,6 @@ namespace Lattice {
 
 ViewportWidget::ViewportWidget(QWidget *parent) : QOpenGLWidget(parent)
 {
-    _cameraController = std::make_shared<CameraController>();
 }
 
 void ViewportWidget::initializeGL() {
@@ -21,7 +20,7 @@ void ViewportWidget::initializeGL() {
     }
 
     _renderer = std::make_shared<ViewportRenderer>();
-    connect(_cameraController.get(), &CameraController::cameraChanged, this, [this] (const Camera& camera) {
+    connect(&_cameraController, &CameraController::cameraChanged, this, [this] (const Camera& camera) {
         _renderer->setCamera(camera);
         update();
     });
@@ -36,15 +35,23 @@ void ViewportWidget::paintGL() {
 }
 
 void ViewportWidget::mousePressEvent(QMouseEvent *event) {
-    _cameraController->mousePress(event);
+    _cameraController.mousePress(event);
 }
 
 void ViewportWidget::mouseMoveEvent(QMouseEvent *event) {
-    _cameraController->mouseMove(event);
+    _cameraController.mouseMove(event);
 }
 
 void ViewportWidget::mouseReleaseEvent(QMouseEvent *event) {
-    _cameraController->mouseRelease(event);
+    _cameraController.mouseRelease(event);
+}
+
+void ViewportWidget::keyPressEvent(QKeyEvent *event) {
+    _keyObserver.keyPress(event);
+}
+
+void ViewportWidget::keyReleaseEvent(QKeyEvent *event) {
+    _keyObserver.keyRelease(event);
 }
 
 } // namespace Lattice
