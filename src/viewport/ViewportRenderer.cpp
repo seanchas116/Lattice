@@ -1,6 +1,7 @@
 #include "ViewportRenderer.hpp"
 #include "GridFloor.hpp"
 #include "MeshRenderer.hpp"
+#include "CircleShader.hpp"
 #include "ThickLineShader.hpp"
 #include "SolidShader.hpp"
 #include "../resource/Resource.hpp"
@@ -19,6 +20,11 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
     _appState = appState;
 
     initializeOpenGLFunctions();
+
+    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+
+    _circleShader = std::make_shared<CircleShader>();
+    _circleShader->setWidth(10.f);
 
     _lineShader = std::make_shared<ThickLineShader>();
     _lineShader->setWidth(1.f);
@@ -56,16 +62,24 @@ void ViewportRenderer::render() {
     _lineShader->setColor(vec3(0.5));
     _gridFloor->draw();
 
-    for (auto& [item, renderer] : _meshRenderers) {
-        _lineShader->setColor(vec3(0));
-        renderer->drawEdges();
-    }
-
     _solidShader->bind();
     _solidShader->setMVPMatrix(_camera.matrix(), MVP);
 
     for (auto& [item, renderer] : _meshRenderers) {
         renderer->drawFaces();
+    }
+
+    _lineShader->bind();
+    _lineShader->setColor(vec3(0));
+    for (auto& [item, renderer] : _meshRenderers) {
+        renderer->drawEdges();
+    }
+
+    _circleShader->bind();
+    _circleShader->setMVPMatrix(MVP);
+    _circleShader->setColor(vec3(1));
+    for (auto& [item, renderer] : _meshRenderers) {
+        renderer->drawVertices();
     }
 }
 
