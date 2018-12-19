@@ -47,8 +47,10 @@ void ViewportRenderer::render() {
         _meshRenderers[meshItem] = renderer;
     });
 
+    auto MVP = _projection * _camera.matrix();
+
     _lineShader->bind();
-    _lineShader->setMVPMatrix(_projection * _camera.matrix());
+    _lineShader->setMVPMatrix(MVP);
     _lineShader->setViewportSize(vec2(_size));
 
     _lineShader->setColor(vec3(0.5));
@@ -57,6 +59,13 @@ void ViewportRenderer::render() {
     for (auto& [item, renderer] : _meshRenderers) {
         _lineShader->setColor(vec3(0));
         renderer->drawEdges();
+    }
+
+    _solidShader->bind();
+    _solidShader->setMVPMatrix(_camera.matrix(), MVP);
+
+    for (auto& [item, renderer] : _meshRenderers) {
+        renderer->drawFaces();
     }
 }
 

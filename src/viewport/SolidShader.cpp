@@ -13,7 +13,8 @@ void SolidShader::setDiffuse(glm::vec3 diffuse) {
     setUniform("diffuse", diffuse);
 }
 
-void SolidShader::setMVPMatrix(glm::mat4 MVP) {
+void SolidShader::setMVPMatrix(glm::mat4 MV, glm::mat4 MVP) {
+    setUniform("MV", MV);
     setUniform("MVP", MVP);
 }
 

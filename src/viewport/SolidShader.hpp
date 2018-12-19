@@ -8,7 +8,7 @@ public:
     SolidShader();
 
     void setDiffuse(glm::vec3 diffuse);
-    void setMVPMatrix(glm::mat4 MVP);
+    void setMVPMatrix(glm::mat4 MV, glm::mat4 MVP);
 };
 
 } // namespace Lattice
