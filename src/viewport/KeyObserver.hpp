@@ -14,11 +14,13 @@ public:
     void keyPress(QKeyEvent* event);
     void keyRelease(QKeyEvent* event);
 
+    const auto& pressedKeys() const { return _pressedKeys; }
+
 signals:
-    void keysChanged(const std::unordered_set<int>& keys);
+    void selectedKeysChanged(const std::unordered_set<int>& keys);
 
 private:
-    std::unordered_set<int> _keys;
+    std::unordered_set<int> _pressedKeys;
 };
 
 } // namespace Lattice

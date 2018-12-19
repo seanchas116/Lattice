@@ -8,8 +8,8 @@ CameraController::CameraController() {
 }
 
 bool CameraController::mousePress(QMouseEvent *event) {
-    bool rotateKey = _keys.find(Qt::Key_Space) != _keys.end() && event->modifiers() & Qt::ShiftModifier;
-    bool moveKey = _keys.find(Qt::Key_Space) != _keys.end() && !(event->modifiers() & Qt::ShiftModifier);
+    bool rotateKey = _pressedKeys.find(Qt::Key_Space) != _pressedKeys.end() && event->modifiers() & Qt::ShiftModifier;
+    bool moveKey = _pressedKeys.find(Qt::Key_Space) != _pressedKeys.end() && !(event->modifiers() & Qt::ShiftModifier);
 
     if (moveKey || event->button() == Qt::MiddleButton) {
         _mode = Mode::Move;
@@ -53,8 +53,13 @@ bool CameraController::mouseRelease(QMouseEvent *) {
     return false;
 }
 
-void CameraController::setKeys(const std::unordered_set<int> &keys) {
-    _keys = keys;
+bool CameraController::wheel(QWheelEvent *event) {
+    _camera.setPos(_camera.pos() + _camera.direction() * (0.01f * event->delta()));
+    emit cameraChanged(_camera);
+}
+
+void CameraController::setPressedKeys(const std::unordered_set<int> &keys) {
+    _pressedKeys = keys;
 }
 
 } // namespace Lattice

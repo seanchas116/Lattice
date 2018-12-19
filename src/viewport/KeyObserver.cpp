@@ -7,13 +7,13 @@ KeyObserver::KeyObserver() {
 }
 
 void KeyObserver::keyPress(QKeyEvent *event) {
-    _keys.insert(event->key());
-    emit keysChanged(_keys);
+    _pressedKeys.insert(event->key());
+    emit selectedKeysChanged(_pressedKeys);
 }
 
 void KeyObserver::keyRelease(QKeyEvent *event) {
-    _keys.erase(event->key());
-    emit keysChanged(_keys);
+    _pressedKeys.erase(event->key());
+    emit selectedKeysChanged(_pressedKeys);
 }
 
 } // namespace Lattice
