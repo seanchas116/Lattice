@@ -10,12 +10,12 @@ namespace Lattice {
 
 class VertexBuffer;
 
-class PointsVAO final : protected QOpenGLExtraFunctions {
-    Q_DISABLE_COPY(PointsVAO)
+class PointVAO final : protected QOpenGLExtraFunctions {
+    Q_DISABLE_COPY(PointVAO)
 public:
-    PointsVAO();
-    PointsVAO(const SP<VertexBuffer>& vertexBuffer);
-    ~PointsVAO();
+    PointVAO();
+    PointVAO(const SP<VertexBuffer>& vertexBuffer);
+    ~PointVAO();
 
     const SP<VertexBuffer>& vertexBuffer() const { return _vertexBuffer; }
 

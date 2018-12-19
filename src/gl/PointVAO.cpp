@@ -1,12 +1,12 @@
-#include "PointsVAO.hpp"
+#include "PointVAO.hpp"
 #include "VertexBuffer.hpp"
 
 namespace Lattice {
 
-PointsVAO::PointsVAO() : PointsVAO(std::make_shared<VertexBuffer>()) {
+PointVAO::PointVAO() : PointVAO(std::make_shared<VertexBuffer>()) {
 }
 
-PointsVAO::PointsVAO(const SP<VertexBuffer> &vertexBuffer) : _vertexBuffer(vertexBuffer) {
+PointVAO::PointVAO(const SP<VertexBuffer> &vertexBuffer) : _vertexBuffer(vertexBuffer) {
     initializeOpenGLFunctions();
 
     glGenVertexArrays(1, &_vertexArray);
@@ -17,11 +17,11 @@ PointsVAO::PointsVAO(const SP<VertexBuffer> &vertexBuffer) : _vertexBuffer(verte
     vertexBuffer->unbind();
 }
 
-PointsVAO::~PointsVAO() {
+PointVAO::~PointVAO() {
     glDeleteVertexArrays(1, &_vertexArray);
 }
 
-void PointsVAO::draw() {
+void PointVAO::draw() {
     glBindVertexArray(_vertexArray);
     glDrawArrays(GL_POINTS, 0, _vertexBuffer->size());
     glBindVertexArray(0);
