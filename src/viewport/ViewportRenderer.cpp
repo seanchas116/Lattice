@@ -1,6 +1,7 @@
 #include "ViewportRenderer.hpp"
 #include "GridFloor.hpp"
 #include "MeshRenderer.hpp"
+#include "ThickLineShader.hpp"
 #include "../gl/Shader.hpp"
 #include "../resource/Resource.hpp"
 #include "../app/AppState.hpp"
@@ -18,8 +19,13 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
     _appState = appState;
 
     initializeOpenGLFunctions();
-    _lineShader = std::make_shared<Shader>(readResource("src/viewport/ThickLine.vert"), readResource("src/viewport/ThickLine.geom"), readResource("src/viewport/ThickLine.frag"));
+
+    _lineShader = std::make_shared<ThickLineShader>();
+    _lineShader->setWidth(1.f);
+    _lineShader->setColor(vec3(0, 0, 0));
+
     _solidShader = std::make_shared<Shader>(readResource("src/viewport/Solid.vert"), std::string(), readResource("src/viewport/Solid.frag"));
+
     _gridFloor = std::make_shared<GridFloor>();
 }
 
@@ -42,11 +48,9 @@ void ViewportRenderer::render() {
     });
 
     _lineShader->bind();
-    _lineShader->setUniform("zOffset", 0.f);
-    _lineShader->setUniform("MVP", _projection * _camera.matrix());
-    _lineShader->setUniform("width", 1.f);
-    _lineShader->setUniform("color", vec3(0, 0, 0));
-    _lineShader->setUniform("viewportSize", vec2(_size));
+    _lineShader->setMVPMatrix(_projection * _camera.matrix());
+    _lineShader->setViewportSize(vec2(_size));
+
     _gridFloor->draw();
 }
 
