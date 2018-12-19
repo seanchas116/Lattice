@@ -10,5 +10,5 @@ out vec3 position;
 void main(void) {
     vec4 pos = MVP * vec4(position_modelSpace, 1);
     gl_Position = pos;
-    gl_PointSize = width;
+    //gl_PointSize = width;
 }

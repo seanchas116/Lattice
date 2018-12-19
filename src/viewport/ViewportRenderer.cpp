@@ -77,6 +77,7 @@ void ViewportRenderer::render() {
 
     _circleShader->bind();
     _circleShader->setMVPMatrix(MVP);
+    _circleShader->setViewportSize(vec2(_size));
     _circleShader->setColor(vec3(1));
     for (auto& [item, renderer] : _meshRenderers) {
         renderer->drawVertices();
