@@ -24,7 +24,7 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
     _circleShader = std::make_shared<CircleShader>();
-    _circleShader->setWidth(10.f);
+    _circleShader->setWidth(4.f);
 
     _lineShader = std::make_shared<ThickLineShader>();
     _lineShader->setWidth(1.f);
