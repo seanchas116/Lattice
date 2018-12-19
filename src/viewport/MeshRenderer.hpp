@@ -6,6 +6,7 @@ namespace Lattice {
 
 class VAO;
 class LineVAO;
+class PointVAO;
 class MeshShape;
 
 class MeshRenderer {
@@ -15,10 +16,12 @@ public:
 
     void drawFaces();
     void drawEdges();
+    void drawVertices();
 
 private:
     SP<VAO> _faceVAO;
     SP<LineVAO> _edgeVAO;
+    SP<PointVAO> _vertexVAO;
 };
 
 }

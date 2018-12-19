@@ -2,6 +2,7 @@
 #include "../document/MeshShape.hpp"
 #include "../gl/VAO.hpp"
 #include "../gl/LineVAO.hpp"
+#include "../gl/PointVAO.hpp"
 #include "../gl/VertexBuffer.hpp"
 #include <unordered_map>
 
@@ -11,7 +12,10 @@ namespace Lattice {
 
 MeshRenderer::MeshRenderer() {
     _faceVAO = std::make_shared<VAO>();
-    _edgeVAO = std::make_shared<LineVAO>();
+
+    auto vbo = std::make_shared<VertexBuffer>();
+    _edgeVAO = std::make_shared<LineVAO>(vbo);
+    _vertexVAO = std::make_shared<PointVAO>(vbo);
 }
 
 void MeshRenderer::update(const SP<MeshShape> &shape) {
@@ -65,6 +69,10 @@ void MeshRenderer::drawFaces() {
 
 void MeshRenderer::drawEdges() {
     _edgeVAO->draw();
+}
+
+void MeshRenderer::drawVertices() {
+    _vertexVAO->draw();
 }
 
 }
