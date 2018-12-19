@@ -32,6 +32,8 @@ public:
     void notifyChanged() { emit changed(); }
     void notifyChangeFinished() { emit changeFinished(); }
 
+    void forEachDescendant(const std::function<void(const SP<Item> &)> &callback);
+
     virtual bool canInsertItem(const SP<const Item>& item) const;
     virtual SP<Item> clone() const = 0;
     virtual void toJSON(nlohmann::json& json) const;

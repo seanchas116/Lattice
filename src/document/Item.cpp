@@ -242,6 +242,13 @@ void Item::setLocation(const Location &location) {
     addChange(std::make_shared<LocationChange>(shared_from_this(), location));
 }
 
+void Item::forEachDescendant(const std::function<void(const SP<Item>&)> &callback) {
+    callback(shared_from_this());
+    for (auto& child : _childItems) {
+        child->forEachDescendant(callback);
+    }
+}
+
 void Item::setLocationInternal(const Location &location) {
     if (_location != location) {
         _location = location;
