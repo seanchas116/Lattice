@@ -21,6 +21,8 @@ public:
     const std::vector<Vertex>& vertices() const { return _vertices; }
     void setVertices(const std::vector<Vertex>& vertices);
 
+    size_t size() const { return _vertices.size(); }
+
     void bind();
     void unbind();
 
