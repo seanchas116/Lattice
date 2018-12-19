@@ -2,7 +2,7 @@
 #include "GridFloor.hpp"
 #include "MeshRenderer.hpp"
 #include "ThickLineShader.hpp"
-#include "../gl/Shader.hpp"
+#include "SolidShader.hpp"
 #include "../resource/Resource.hpp"
 #include "../app/AppState.hpp"
 #include "../document/Document.hpp"
@@ -24,7 +24,8 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
     _lineShader->setWidth(1.f);
     _lineShader->setColor(vec3(0, 0, 0));
 
-    _solidShader = std::make_shared<Shader>(readResource("src/viewport/Solid.vert"), std::string(), readResource("src/viewport/Solid.frag"));
+    _solidShader = std::make_shared<SolidShader>();
+    _solidShader->setDiffuse(vec3(1, 0, 0));
 
     _gridFloor = std::make_shared<GridFloor>();
 }
