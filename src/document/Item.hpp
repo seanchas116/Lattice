@@ -2,8 +2,9 @@
 #include "../support/Pointer.hpp"
 #include "../support/Location.hpp"
 #include <QObject>
-#include <vector>
 #include <nlohmann/json_fwd.hpp>
+#include <vector>
+#include <functional>
 
 namespace Lattice {
 
