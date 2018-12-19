@@ -21,6 +21,11 @@ void ViewportWidget::initializeGL() {
     }
 
     _renderer = std::make_shared<ViewportRenderer>();
+    connect(_cameraController.get(), &CameraController::cameraChanged, this, [this] (const Camera& camera) {
+        qDebug() << "cameraChanged";
+        _renderer->setCamera(camera);
+        update();
+    });
 }
 
 void ViewportWidget::resizeGL(int w, int h) {

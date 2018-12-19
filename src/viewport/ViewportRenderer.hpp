@@ -19,6 +19,8 @@ public:
     void resize(glm::ivec2 size);
     void render();
 
+    void setCamera(const Camera& camera) { _camera = camera; }
+
 private:
     glm::ivec2 _size;
     Camera _camera;
