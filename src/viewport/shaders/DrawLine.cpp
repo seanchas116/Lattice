@@ -12,6 +12,7 @@ DrawLine::DrawLine() :
 
 void DrawLine::draw(const SP<LineVAO> &vao, const glm::mat4 &matrix, const Projection &projection, float width, glm::vec3 color)
 {
+    _shader.bind();
     _shader.setUniform("MV", matrix);
     _shader.setUniform("P", projection.matrix());
     _shader.setUniform("viewportSize", projection.viewSize());

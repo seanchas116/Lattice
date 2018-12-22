@@ -2,7 +2,7 @@
 
 #include "./shaders/DrawCircle.hpp"
 #include "./shaders/DrawLine.hpp"
-#include "./shaders/SolidShader.hpp"
+#include "./shaders/DrawSolid.hpp"
 
 namespace Lattice {
 
@@ -11,7 +11,7 @@ public:
     Shaders() {}
     DrawCircle drawCircle;
     DrawLine drawLine;
-    SolidShader solidShader;
+    DrawSolid drawSolid;
 };
 
 } // namespace Lattice

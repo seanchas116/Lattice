@@ -64,8 +64,8 @@ void MeshRenderer::update(const SP<MeshShape> &shape) {
     }
 }
 
-void MeshRenderer::drawFaces() {
-    _faceVAO->draw();
+void MeshRenderer::drawFaces(const SP<Shaders> &shaders, const mat4 &viewMatrix, const Projection &projection) {
+    shaders->drawSolid.draw(_faceVAO, viewMatrix, projection, vec3(1, 0, 0), vec3(0));
 }
 
 void MeshRenderer::drawEdges(const SP<Shaders> &shaders, const mat4 &viewMatrix, const Projection &projection) {

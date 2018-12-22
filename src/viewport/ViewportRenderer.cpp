@@ -41,17 +41,10 @@ void ViewportRenderer::render() {
         _meshRenderers[meshItem] = renderer;
     });
 
-    auto MVP = _projection.matrix() * _camera.matrix();
-
     _gridFloor->draw(_shaders, _camera, _projection);
 
-    _shaders->solidShader.bind();
-    _shaders->solidShader.setDiffuse(vec3(1, 0, 0));
-    _shaders->solidShader.setAmbient(vec3(0.5, 0, 0));
-    _shaders->solidShader.setMVPMatrix(_camera.matrix(), MVP);
-
     for (auto& [item, renderer] : _meshRenderers) {
-        renderer->drawFaces();
+        renderer->drawFaces(_shaders, _camera.matrix(), _projection);
     }
 
     for (auto& [item, renderer] : _meshRenderers) {
