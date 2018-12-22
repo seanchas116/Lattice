@@ -1,6 +1,11 @@
 #include "GridFloor.hpp"
+#include "Shaders.hpp"
 #include "../gl/LineVAO.hpp"
 #include "../gl/VertexBuffer.hpp"
+#include "../support/Projection.hpp"
+#include "../support/Camera.hpp"
+
+using namespace glm;
 
 namespace Lattice {
 
@@ -16,8 +21,8 @@ GridFloor::GridFloor() {
     std::vector<std::vector<uint32_t>> lineStrips;
 
     for (int z = -count; z <= count; ++z) {
-        glm::vec3 v1(-count*unit, 0, z*unit);
-        glm::vec3 v2(count*unit, 0, z*unit);
+        vec3 v1(-count*unit, 0, z*unit);
+        vec3 v2(count*unit, 0, z*unit);
         auto i1 = uint32_t(vertices.size());
         vertices.push_back({v1, {}, {}});
         auto i2 = uint32_t(vertices.size());
@@ -25,8 +30,8 @@ GridFloor::GridFloor() {
         lineStrips.push_back({i1, i2});
     }
     for (int x = -count; x <= count; ++x) {
-        glm::vec3 v1(x*unit, 0, -count*unit);
-        glm::vec3 v2(x*unit, 0, count*unit);
+        vec3 v1(x*unit, 0, -count*unit);
+        vec3 v2(x*unit, 0, count*unit);
         auto i1 = uint32_t(vertices.size());
         vertices.push_back({v1, {}, {}});
         auto i2 = uint32_t(vertices.size());
@@ -38,7 +43,12 @@ GridFloor::GridFloor() {
     _vao->setLineStrips(lineStrips);
 }
 
-void GridFloor::draw() {
+void GridFloor::draw(const SP<Shaders> &shaders, const Camera &camera, const Projection &projection)
+{
+    shaders->thickLineShader.bind();
+    shaders->thickLineShader.setMVPMatrix(projection.matrix() * camera.matrix());
+    shaders->thickLineShader.setViewportSize(projection.viewSize());
+    shaders->thickLineShader.setColor(vec3(0.5));
     _vao->draw();
 }
 

@@ -26,7 +26,7 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
 void ViewportRenderer::resize(ivec2 physicalSize, ivec2 logicalSize) {
     glViewport(0, 0, physicalSize.x, physicalSize.y);
     _logicalSize = logicalSize;
-    _projection = Projection(physicalSize, glm::radians(60.f), 0.1f, 100.f);
+    _projection = Projection(logicalSize, glm::radians(60.f), 0.1f, 100.f);
 }
 
 void ViewportRenderer::render() {
@@ -43,11 +43,7 @@ void ViewportRenderer::render() {
 
     auto MVP = _projection.matrix() * _camera.matrix();
 
-    _shaders->thickLineShader.bind();
-    _shaders->thickLineShader.setMVPMatrix(MVP);
-    _shaders->thickLineShader.setViewportSize(vec2(_logicalSize));
-    _shaders->thickLineShader.setColor(vec3(0.5));
-    _gridFloor->draw();
+    _gridFloor->draw(_shaders, _camera, _projection);
 
     _shaders->solidShader.bind();
     _shaders->solidShader.setDiffuse(vec3(1, 0, 0));
