@@ -8,7 +8,8 @@ namespace Lattice {
 
 class Operations {
 public:
-    Operations() {}
+    Operations() = default;
+
     DrawCircle drawCircle;
     DrawLine drawLine;
     DrawSolid drawSolid;
