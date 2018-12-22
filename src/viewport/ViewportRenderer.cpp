@@ -2,6 +2,7 @@
 #include "GridFloor.hpp"
 #include "MeshRenderer.hpp"
 #include "Operations.hpp"
+#include "Manipulator.hpp"
 #include "../resource/Resource.hpp"
 #include "../app/AppState.hpp"
 #include "../document/Document.hpp"
@@ -21,6 +22,7 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
 
     _operations = std::make_shared<Operations>();
     _gridFloor = std::make_shared<GridFloor>();
+    _manipulator = std::make_shared<Manipulator>();
 }
 
 void ViewportRenderer::resize(ivec2 physicalSize, ivec2 logicalSize) {
@@ -54,6 +56,8 @@ void ViewportRenderer::render() {
     for (auto& [item, renderer] : _meshRenderers) {
         renderer->drawVertices(_operations, _camera.matrix(), _projection);
     }
+
+    _manipulator->draw(_operations, _camera.matrix(), _projection);
 }
 
 } // namespace Lattice

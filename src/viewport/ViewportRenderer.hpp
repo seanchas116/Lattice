@@ -13,6 +13,7 @@ namespace Lattice {
 class GridFloor;
 class MeshRenderer;
 class Operations;
+class Manipulator;
 
 class MeshItem;
 class AppState;
@@ -33,6 +34,7 @@ private:
     Projection _projection;
     SP<Operations> _operations;
     SP<GridFloor> _gridFloor;
+    SP<Manipulator> _manipulator;
     std::unordered_map<SP<MeshItem>, SP<MeshRenderer>> _meshRenderers;
     SP<AppState> _appState;
 };
