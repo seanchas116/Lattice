@@ -19,7 +19,7 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
 
     initializeOpenGLFunctions();
 
-    _shaders = std::make_shared<Shaders>();
+    _shaders = std::make_shared<Lattice::Shaders>();
     _gridFloor = std::make_shared<GridFloor>();
 }
 

@@ -31,7 +31,7 @@ private:
     glm::ivec2 _logicalSize;
     Camera _camera;
     Projection _projection;
-    SP<Shaders> _shaders;
+    SP<Lattice::Shaders> _shaders;
     SP<GridFloor> _gridFloor;
     std::unordered_map<SP<MeshItem>, SP<MeshRenderer>> _meshRenderers;
     SP<AppState> _appState;
