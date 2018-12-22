@@ -4,7 +4,7 @@
 namespace Lattice {
 
 ThickLineShader::ThickLineShader() :
-    Shader(readResource("src/viewport/ThickLine.vert"), readResource("src/viewport/ThickLine.geom"), readResource("src/viewport/ThickLine.frag"))
+    Shader(readResource("src/viewport/ThickLineShader.vert"), readResource("src/viewport/ThickLineShader.geom"), readResource("src/viewport/ThickLineShader.frag"))
 {
     setUniform("zOffset", 0.f);
     setWidth(1.f);

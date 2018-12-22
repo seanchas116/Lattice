@@ -4,9 +4,8 @@
 namespace Lattice {
 
 SolidShader::SolidShader() :
-    Shader(readResource("src/viewport/Solid.vert"), std::string(), readResource("src/viewport/Solid.frag"))
+    Shader(readResource("src/viewport/SolidShader.vert"), std::string(), readResource("src/viewport/SolidShader.frag"))
 {
-
 }
 
 void SolidShader::setDiffuse(glm::vec3 diffuse) {
