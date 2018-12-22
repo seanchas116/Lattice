@@ -6,7 +6,7 @@
 namespace Lattice {
 
 DrawLine::DrawLine() :
-    _shader(readResource("src/viewport/shaders/ThickLineShader.vert"), readResource("src/viewport/shaders/ThickLineShader.geom"), readResource("src/viewport/shaders/ThickLineShader.frag"))
+    _shader(readResource("src/viewport/shaders/DrawLine.vert"), readResource("src/viewport/shaders/DrawLine.geom"), readResource("src/viewport/shaders/DrawLine.frag"))
 {
 }
 
