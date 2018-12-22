@@ -18,7 +18,7 @@ public:
     void update(const SP<MeshShape>& shape);
 
     void drawFaces();
-    void drawEdges();
+    void drawEdges(const SP<Shaders>& shaders, const glm::mat4& viewMatrix, const Projection& projection);
     void drawVertices(const SP<Shaders>& shaders, const glm::mat4& viewMatrix, const Projection& projection);
 
 private:

@@ -43,14 +43,8 @@ GridFloor::GridFloor() {
     _vao->setLineStrips(lineStrips);
 }
 
-void GridFloor::draw(const SP<Shaders> &shaders, const Camera &camera, const Projection &projection)
-{
-    shaders->thickLineShader.bind();
-    shaders->thickLineShader.setMVMatrix(camera.matrix());
-    shaders->thickLineShader.setPMatrix(projection.matrix());
-    shaders->thickLineShader.setViewportSize(projection.viewSize());
-    shaders->thickLineShader.setColor(vec3(0.5));
-    _vao->draw();
+void GridFloor::draw(const SP<Shaders> &shaders, const Camera &camera, const Projection &projection) {
+    shaders->drawLine.draw(_vao, camera.matrix(), projection, 1, vec3(0.5));
 }
 
 } // namespace Lattice

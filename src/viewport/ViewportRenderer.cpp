@@ -54,11 +54,8 @@ void ViewportRenderer::render() {
         renderer->drawFaces();
     }
 
-    _shaders->thickLineShader.bind();
-    _shaders->thickLineShader.setWidth(1.f);
-    _shaders->thickLineShader.setColor(vec3(0));
     for (auto& [item, renderer] : _meshRenderers) {
-        renderer->drawEdges();
+        renderer->drawEdges(_shaders, _camera.matrix(), _projection);
     }
 
     for (auto& [item, renderer] : _meshRenderers) {

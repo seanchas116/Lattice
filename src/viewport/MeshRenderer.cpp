@@ -68,8 +68,8 @@ void MeshRenderer::drawFaces() {
     _faceVAO->draw();
 }
 
-void MeshRenderer::drawEdges() {
-    _edgeVAO->draw();
+void MeshRenderer::drawEdges(const SP<Shaders> &shaders, const mat4 &viewMatrix, const Projection &projection) {
+    shaders->drawLine.draw(_edgeVAO, viewMatrix, projection, 1.f, vec3(0));
 }
 
 void MeshRenderer::drawVertices(const SP<Shaders> &shaders, const glm::mat4 &viewMatrix, const Projection &projection) {

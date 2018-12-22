@@ -1,15 +1,17 @@
 #pragma once
+
 #include "../../gl/Shader.hpp"
 
 namespace Lattice {
 
-class PointVAO;
+class LineVAO;
 class Projection;
 
-class DrawCircle {
+class DrawLine {
 public:
-    DrawCircle();
-    void draw(const SP<PointVAO>& vao, const glm::mat4& matrix, const Projection& projection,
+    DrawLine();
+
+    void draw(const SP<LineVAO>& vao, const glm::mat4& matrix, const Projection& projection,
               float width, glm::vec3 color);
 
 private:
@@ -17,4 +19,3 @@ private:
 };
 
 } // namespace Lattice
-
