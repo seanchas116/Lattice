@@ -19,14 +19,7 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
 
     initializeOpenGLFunctions();
 
-    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
-
     _shaders = std::make_shared<Shaders>();
-    _shaders->circleShader.setWidth(5.f);
-    _shaders->thickLineShader.setWidth(1.f);
-    _shaders->solidShader.setDiffuse(vec3(1, 0, 0));
-    _shaders->solidShader.setAmbient(vec3(0.5, 0, 0));
-
     _gridFloor = std::make_shared<GridFloor>();
 }
 
@@ -57,6 +50,8 @@ void ViewportRenderer::render() {
     _gridFloor->draw();
 
     _shaders->solidShader.bind();
+    _shaders->solidShader.setDiffuse(vec3(1, 0, 0));
+    _shaders->solidShader.setAmbient(vec3(0.5, 0, 0));
     _shaders->solidShader.setMVPMatrix(_camera.matrix(), MVP);
 
     for (auto& [item, renderer] : _meshRenderers) {
@@ -64,6 +59,7 @@ void ViewportRenderer::render() {
     }
 
     _shaders->thickLineShader.bind();
+    _shaders->thickLineShader.setWidth(1.f);
     _shaders->thickLineShader.setColor(vec3(0));
     for (auto& [item, renderer] : _meshRenderers) {
         renderer->drawEdges();
@@ -72,6 +68,7 @@ void ViewportRenderer::render() {
     _shaders->circleShader.bind();
     _shaders->circleShader.setMVPMatrix(MVP);
     _shaders->circleShader.setViewportSize(vec2(_logicalSize));
+    _shaders->circleShader.setWidth(5.f);
     _shaders->circleShader.setColor(vec3(1));
     for (auto& [item, renderer] : _meshRenderers) {
         renderer->drawVertices();
