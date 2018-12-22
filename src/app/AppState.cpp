@@ -1,5 +1,6 @@
 #include "AppState.hpp"
 #include "../document/Document.hpp"
+#include "../document/MeshItem.hpp"
 
 namespace Lattice {
 
