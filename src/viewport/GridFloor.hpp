@@ -6,14 +6,14 @@
 namespace Lattice {
 
 class LineVAO;
-class Shaders;
+class Operations;
 class Projection;
 
 class GridFloor final {
 public:
     GridFloor();
 
-    void draw(const SP<Shaders>& shaders, const glm::mat4& viewMatrix, const Projection& projection);
+    void draw(const SP<Operations>& operations, const glm::mat4& viewMatrix, const Projection& projection);
 
 private:
     SP<LineVAO> _vao;

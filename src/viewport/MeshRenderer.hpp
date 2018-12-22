@@ -9,7 +9,7 @@ class VAO;
 class LineVAO;
 class PointVAO;
 class MeshShape;
-class Shaders;
+class Operations;
 class Projection;
 
 class MeshRenderer {
@@ -17,9 +17,9 @@ public:
     MeshRenderer();
     void update(const SP<MeshShape>& shape);
 
-    void drawFaces(const SP<Shaders>& shaders, const glm::mat4& viewMatrix, const Projection& projection);
-    void drawEdges(const SP<Shaders>& shaders, const glm::mat4& viewMatrix, const Projection& projection);
-    void drawVertices(const SP<Shaders>& shaders, const glm::mat4& viewMatrix, const Projection& projection);
+    void drawFaces(const SP<Operations>& operations, const glm::mat4& viewMatrix, const Projection& projection);
+    void drawEdges(const SP<Operations> &operations, const glm::mat4 &viewMatrix, const Projection &projection);
+    void drawVertices(const SP<Operations>& operations, const glm::mat4& viewMatrix, const Projection& projection);
 
 private:
     SP<VAO> _faceVAO;

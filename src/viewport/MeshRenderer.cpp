@@ -1,5 +1,5 @@
 #include "MeshRenderer.hpp"
-#include "Shaders.hpp"
+#include "Operations.hpp"
 #include "../document/MeshShape.hpp"
 #include "../gl/VAO.hpp"
 #include "../gl/LineVAO.hpp"
@@ -64,16 +64,16 @@ void MeshRenderer::update(const SP<MeshShape> &shape) {
     }
 }
 
-void MeshRenderer::drawFaces(const SP<Shaders> &shaders, const mat4 &viewMatrix, const Projection &projection) {
-    shaders->drawSolid.draw(_faceVAO, viewMatrix, projection, vec3(1, 0, 0), vec3(0));
+void MeshRenderer::drawFaces(const SP<Operations> &operations, const mat4 &viewMatrix, const Projection &projection) {
+    operations->drawSolid.draw(_faceVAO, viewMatrix, projection, vec3(1, 0, 0), vec3(0));
 }
 
-void MeshRenderer::drawEdges(const SP<Shaders> &shaders, const mat4 &viewMatrix, const Projection &projection) {
-    shaders->drawLine.draw(_edgeVAO, viewMatrix, projection, 1.f, vec3(0));
+void MeshRenderer::drawEdges(const SP<Operations> &operations, const mat4 &viewMatrix, const Projection &projection) {
+    operations->drawLine.draw(_edgeVAO, viewMatrix, projection, 1.f, vec3(0));
 }
 
-void MeshRenderer::drawVertices(const SP<Shaders> &shaders, const glm::mat4 &viewMatrix, const Projection &projection) {
-    shaders->drawCircle.draw(_vertexVAO, viewMatrix, projection, 5.f, vec3(1));
+void MeshRenderer::drawVertices(const SP<Operations> &operations, const glm::mat4 &viewMatrix, const Projection &projection) {
+    operations->drawCircle.draw(_vertexVAO, viewMatrix, projection, 5.f, vec3(1));
 }
 
 }

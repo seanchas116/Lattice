@@ -1,7 +1,7 @@
 #include "ViewportRenderer.hpp"
 #include "GridFloor.hpp"
 #include "MeshRenderer.hpp"
-#include "Shaders.hpp"
+#include "Operations.hpp"
 #include "../resource/Resource.hpp"
 #include "../app/AppState.hpp"
 #include "../document/Document.hpp"
@@ -19,7 +19,7 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
 
     initializeOpenGLFunctions();
 
-    _shaders = std::make_shared<Lattice::Shaders>();
+    _operations = std::make_shared<Operations>();
     _gridFloor = std::make_shared<GridFloor>();
 }
 
@@ -41,18 +41,18 @@ void ViewportRenderer::render() {
         _meshRenderers[meshItem] = renderer;
     });
 
-    _gridFloor->draw(_shaders, _camera.matrix(), _projection);
+    _gridFloor->draw(_operations, _camera.matrix(), _projection);
 
     for (auto& [item, renderer] : _meshRenderers) {
-        renderer->drawFaces(_shaders, _camera.matrix(), _projection);
+        renderer->drawFaces(_operations, _camera.matrix(), _projection);
     }
 
     for (auto& [item, renderer] : _meshRenderers) {
-        renderer->drawEdges(_shaders, _camera.matrix(), _projection);
+        renderer->drawEdges(_operations, _camera.matrix(), _projection);
     }
 
     for (auto& [item, renderer] : _meshRenderers) {
-        renderer->drawVertices(_shaders, _camera.matrix(), _projection);
+        renderer->drawVertices(_operations, _camera.matrix(), _projection);
     }
 }
 

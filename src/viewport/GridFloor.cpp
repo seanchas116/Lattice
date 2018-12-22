@@ -1,5 +1,5 @@
 #include "GridFloor.hpp"
-#include "Shaders.hpp"
+#include "Operations.hpp"
 #include "../gl/LineVAO.hpp"
 #include "../gl/VertexBuffer.hpp"
 #include "../support/Projection.hpp"
@@ -43,8 +43,8 @@ GridFloor::GridFloor() {
     _vao->setLineStrips(lineStrips);
 }
 
-void GridFloor::draw(const SP<Shaders> &shaders, const glm::mat4 &viewMatrix, const Projection &projection) {
-    shaders->drawLine.draw(_vao, viewMatrix, projection, 1, vec3(0.5));
+void GridFloor::draw(const SP<Operations> &operations, const glm::mat4 &viewMatrix, const Projection &projection) {
+    operations->drawLine.draw(_vao, viewMatrix, projection, 1, vec3(0.5));
 }
 
 } // namespace Lattice

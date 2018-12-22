@@ -6,7 +6,7 @@
 namespace Lattice {
 
 DrawSolid::DrawSolid() :
-    _shader(readResource("src/viewport/shaders/DrawSolid.vert"), std::string(), readResource("src/viewport/shaders/DrawSolid.frag"))
+    _shader(readResource("src/viewport/operations/DrawSolid.vert"), std::string(), readResource("src/viewport/operations/DrawSolid.frag"))
 {
 }
 
