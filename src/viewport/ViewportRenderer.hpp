@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../support/Camera.hpp"
+#include "../support/Projection.hpp"
 #include "../support/Pointer.hpp"
 #include <QObject>
 #include <QOpenGLExtraFunctions>
@@ -29,7 +30,7 @@ public:
 private:
     glm::ivec2 _logicalSize;
     Camera _camera;
-    glm::mat4 _projection;
+    Projection _projection;
     SP<Shaders> _shaders;
     SP<GridFloor> _gridFloor;
     std::unordered_map<SP<MeshItem>, SP<MeshRenderer>> _meshRenderers;

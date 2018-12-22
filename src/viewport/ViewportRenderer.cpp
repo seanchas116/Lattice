@@ -26,7 +26,7 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
 void ViewportRenderer::resize(ivec2 physicalSize, ivec2 logicalSize) {
     glViewport(0, 0, physicalSize.x, physicalSize.y);
     _logicalSize = logicalSize;
-    _projection = glm::perspective(glm::radians(60.f), float(physicalSize.x) / float(physicalSize.y), 0.1f, 100.f);
+    _projection = Projection(physicalSize, glm::radians(60.f), 0.1f, 100.f);
 }
 
 void ViewportRenderer::render() {
@@ -41,7 +41,7 @@ void ViewportRenderer::render() {
         _meshRenderers[meshItem] = renderer;
     });
 
-    auto MVP = _projection * _camera.matrix();
+    auto MVP = _projection.matrix() * _camera.matrix();
 
     _shaders->thickLineShader.bind();
     _shaders->thickLineShader.setMVPMatrix(MVP);
