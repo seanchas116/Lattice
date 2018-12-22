@@ -14,19 +14,23 @@ void main(void) {
 
     vec4 p0_cameraSpace = MV * p0_modelSpace;
     vec4 p1_cameraSpace = MV * p1_modelSpace;
+
+    // Don't render lines behind camera
+    if (p0_cameraSpace.z > -0.1 && p1_cameraSpace.z > -0.1) {
+        EndPrimitive();
+        return;
+    }
+
+    // Make sure p0.z < p1.z
     if (p1_cameraSpace.z < p0_cameraSpace.z) {
         vec4 tmp = p0_cameraSpace;
         p0_cameraSpace = p1_cameraSpace;
         p1_cameraSpace = tmp;
     }
 
-    vec4 pnear_cameraSpace = mix(p0_cameraSpace, p1_cameraSpace, -0.1 - p0_cameraSpace.z / (p1_cameraSpace.z - p0_cameraSpace.z));
-
-    if (p0_cameraSpace.z > -0.1 && p1_cameraSpace.z > -0.1) {
-        EndPrimitive();
-        return;
-    }
+    // Clip line using near plane
     if (p1_cameraSpace.z > -0.1) {
+        vec4 pnear_cameraSpace = mix(p0_cameraSpace, p1_cameraSpace, -0.1 - p0_cameraSpace.z / (p1_cameraSpace.z - p0_cameraSpace.z));
         p1_cameraSpace = pnear_cameraSpace;
     }
 
