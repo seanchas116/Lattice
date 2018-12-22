@@ -1,8 +1,8 @@
 #pragma once
 
-#include "CircleShader.hpp"
-#include "ThickLineShader.hpp"
-#include "SolidShader.hpp"
+#include "./shaders/CircleShader.hpp"
+#include "./shaders/ThickLineShader.hpp"
+#include "./shaders/SolidShader.hpp"
 
 namespace Lattice {
 

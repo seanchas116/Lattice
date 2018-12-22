@@ -1,10 +1,10 @@
 #include "SolidShader.hpp"
-#include "../resource/Resource.hpp"
+#include "../../resource/Resource.hpp"
 
 namespace Lattice {
 
 SolidShader::SolidShader() :
-    Shader(readResource("src/viewport/SolidShader.vert"), std::string(), readResource("src/viewport/SolidShader.frag"))
+    Shader(readResource("src/viewport/shaders/SolidShader.vert"), std::string(), readResource("src/viewport/shaders/SolidShader.frag"))
 {
 }
 

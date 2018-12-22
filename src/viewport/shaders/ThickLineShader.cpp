@@ -1,10 +1,10 @@
 #include "ThickLineShader.hpp"
-#include "../resource/Resource.hpp"
+#include "../../resource/Resource.hpp"
 
 namespace Lattice {
 
 ThickLineShader::ThickLineShader() :
-    Shader(readResource("src/viewport/ThickLineShader.vert"), readResource("src/viewport/ThickLineShader.geom"), readResource("src/viewport/ThickLineShader.frag"))
+    Shader(readResource("src/viewport/shaders/ThickLineShader.vert"), readResource("src/viewport/shaders/ThickLineShader.geom"), readResource("src/viewport/shaders/ThickLineShader.frag"))
 {
     setUniform("zOffset", 0.f);
     setWidth(1.f);

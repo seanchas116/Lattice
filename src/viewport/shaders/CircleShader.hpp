@@ -1,5 +1,5 @@
 #pragma once
-#include "../gl/Shader.hpp"
+#include "../../gl/Shader.hpp"
 
 namespace Lattice {
 

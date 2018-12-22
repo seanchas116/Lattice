@@ -1,10 +1,10 @@
 #include "CircleShader.hpp"
-#include "../resource/Resource.hpp"
+#include "../../resource/Resource.hpp"
 
 namespace Lattice {
 
 CircleShader::CircleShader() :
-    Shader(readResource("src/viewport/CircleShader.vert"), readResource("src/viewport/CircleShader.geom"), readResource("src/viewport/CircleShader.frag"))
+    Shader(readResource("src/viewport/shaders/CircleShader.vert"), readResource("src/viewport/shaders/CircleShader.geom"), readResource("src/viewport/shaders/CircleShader.frag"))
 {
     setWidth(1.f);
     setColor(glm::vec3(0, 0, 0));
