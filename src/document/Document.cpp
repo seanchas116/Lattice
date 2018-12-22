@@ -45,6 +45,18 @@ void Document::addInitialItems() {
     _selectedItems = {meshItem};
 }
 
+SP<MeshItem> Document::currentMeshItem() const {
+    return std::dynamic_pointer_cast<MeshItem>(_currentItem);
+}
+
+void Document::setCurrentItem(const SP<Item> &item) {
+    if (item != _currentItem) {
+        _currentItem = item;
+        emit currentItemChanged(item);
+        emit currentMeshItemChanged(currentMeshItem());
+    }
+}
+
 void Document::setSelectedItems(const std::vector<SP<Item>> &items) {
     if (_selectedItems != items) {
         _selectedItems = items;
