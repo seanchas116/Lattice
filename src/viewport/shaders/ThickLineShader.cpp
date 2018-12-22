@@ -19,8 +19,12 @@ void ThickLineShader::setColor(glm::vec3 color) {
     setUniform("color", color);
 }
 
-void ThickLineShader::setMVPMatrix(glm::mat4 MVP) {
-    setUniform("MVP", MVP);
+void ThickLineShader::setMVMatrix(glm::mat4 MV) {
+    setUniform("MV", MV);
+}
+
+void ThickLineShader::setPMatrix(glm::mat4 P) {
+    setUniform("P", P);
 }
 
 void ThickLineShader::setViewportSize(glm::vec2 size) {

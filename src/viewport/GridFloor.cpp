@@ -46,7 +46,8 @@ GridFloor::GridFloor() {
 void GridFloor::draw(const SP<Shaders> &shaders, const Camera &camera, const Projection &projection)
 {
     shaders->thickLineShader.bind();
-    shaders->thickLineShader.setMVPMatrix(projection.matrix() * camera.matrix());
+    shaders->thickLineShader.setMVMatrix(camera.matrix());
+    shaders->thickLineShader.setPMatrix(projection.matrix());
     shaders->thickLineShader.setViewportSize(projection.viewSize());
     shaders->thickLineShader.setColor(vec3(0.5));
     _vao->draw();

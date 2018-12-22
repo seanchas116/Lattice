@@ -10,7 +10,8 @@ public:
 
     void setWidth(float width);
     void setColor(glm::vec3 color);
-    void setMVPMatrix(glm::mat4 MVP);
+    void setMVMatrix(glm::mat4 MV);
+    void setPMatrix(glm::mat4 P);
     void setViewportSize(glm::vec2 size);
 };
 
