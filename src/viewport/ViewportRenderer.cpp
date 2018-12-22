@@ -22,10 +22,10 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
     _shaders = std::make_shared<Shaders>();
-    _shaders->circleShader.setWidth(4.f);
+    _shaders->circleShader.setWidth(5.f);
     _shaders->thickLineShader.setWidth(1.f);
     _shaders->solidShader.setDiffuse(vec3(1, 0, 0));
-    _shaders->solidShader.setAmbient(vec3(0.5));
+    _shaders->solidShader.setAmbient(vec3(0.5, 0, 0));
 
     _gridFloor = std::make_shared<GridFloor>();
 }
