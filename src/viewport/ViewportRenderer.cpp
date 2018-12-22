@@ -41,7 +41,7 @@ void ViewportRenderer::render() {
         _meshRenderers[meshItem] = renderer;
     });
 
-    _gridFloor->draw(_shaders, _camera, _projection);
+    _gridFloor->draw(_shaders, _camera.matrix(), _projection);
 
     for (auto& [item, renderer] : _meshRenderers) {
         renderer->drawFaces(_shaders, _camera.matrix(), _projection);
