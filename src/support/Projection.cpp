@@ -8,13 +8,13 @@ Projection::Projection() :
 {
 }
 
-Projection::Projection(glm::vec2 viewSize, float fieldOfView, float near, float far) :
+Projection::Projection(glm::vec2 viewSize, float fieldOfView, float zNear, float zFar) :
     _viewSize(viewSize),
     _fieldOfView(fieldOfView),
-    _near(near),
-    _far(far)
+    _zNear(zNear),
+    _zFar(zFar)
 {
-    _matrix = glm::perspective(fieldOfView, float(viewSize.x) / float(viewSize.y), near, far);
+    _matrix = glm::perspective(fieldOfView, float(viewSize.x) / float(viewSize.y), zNear, zFar);
 }
 
 } // namespace Lattice
