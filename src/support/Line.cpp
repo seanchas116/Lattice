@@ -5,6 +5,7 @@ using namespace glm;
 namespace Lattice {
 
 LinePointDistance::LinePointDistance(const Line &l, const glm::vec3 p) {
+    // http://geomalgorithms.com/a02-_lines.html#Distance-to-Infinite-Line
     glm::vec3 w = p - l.a;
     glm::vec3 v = glm::normalize(l.b - l.a);
     distance = length(cross(v, w));
@@ -12,6 +13,7 @@ LinePointDistance::LinePointDistance(const Line &l, const glm::vec3 p) {
 }
 
 LineLineDistance::LineLineDistance(const Line &l0, const Line &l1) {
+    // http://geomalgorithms.com/a07-_distance.html
     vec3 u = l0.b - l0.a;
     vec3 v = l1.b - l1.a;
     vec3 w0 = l0.a - l1.a;
