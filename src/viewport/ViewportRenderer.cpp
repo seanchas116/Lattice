@@ -61,13 +61,8 @@ void ViewportRenderer::render() {
         renderer->drawEdges();
     }
 
-    _shaders->circleShader.bind();
-    _shaders->circleShader.setMVPMatrix(MVP);
-    _shaders->circleShader.setViewportSize(vec2(_logicalSize));
-    _shaders->circleShader.setWidth(5.f);
-    _shaders->circleShader.setColor(vec3(1));
     for (auto& [item, renderer] : _meshRenderers) {
-        renderer->drawVertices();
+        renderer->drawVertices(_shaders, _camera.matrix(), _projection);
     }
 }
 

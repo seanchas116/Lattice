@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../support/Pointer.hpp"
+#include <glm/glm.hpp>
 
 namespace Lattice {
 
@@ -8,6 +9,8 @@ class VAO;
 class LineVAO;
 class PointVAO;
 class MeshShape;
+class Shaders;
+class Projection;
 
 class MeshRenderer {
 public:
@@ -16,7 +19,7 @@ public:
 
     void drawFaces();
     void drawEdges();
-    void drawVertices();
+    void drawVertices(const SP<Shaders>& shaders, const glm::mat4& viewMatrix, const Projection& projection);
 
 private:
     SP<VAO> _faceVAO;

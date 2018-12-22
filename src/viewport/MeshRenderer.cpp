@@ -1,4 +1,5 @@
 #include "MeshRenderer.hpp"
+#include "Shaders.hpp"
 #include "../document/MeshShape.hpp"
 #include "../gl/VAO.hpp"
 #include "../gl/LineVAO.hpp"
@@ -71,8 +72,8 @@ void MeshRenderer::drawEdges() {
     _edgeVAO->draw();
 }
 
-void MeshRenderer::drawVertices() {
-    _vertexVAO->draw();
+void MeshRenderer::drawVertices(const SP<Shaders> &shaders, const glm::mat4 &viewMatrix, const Projection &projection) {
+    shaders->drawCircle.draw(_vertexVAO, viewMatrix, projection, 5.f, vec3(1));
 }
 
 }
