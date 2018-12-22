@@ -1,9 +1,7 @@
 #include "ViewportRenderer.hpp"
 #include "GridFloor.hpp"
 #include "MeshRenderer.hpp"
-#include "CircleShader.hpp"
-#include "ThickLineShader.hpp"
-#include "SolidShader.hpp"
+#include "Shaders.hpp"
 #include "../resource/Resource.hpp"
 #include "../app/AppState.hpp"
 #include "../document/Document.hpp"
@@ -23,15 +21,11 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
 
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
-    _circleShader = std::make_shared<CircleShader>();
-    _circleShader->setWidth(4.f);
-
-    _lineShader = std::make_shared<ThickLineShader>();
-    _lineShader->setWidth(1.f);
-
-    _solidShader = std::make_shared<SolidShader>();
-    _solidShader->setDiffuse(vec3(1, 0, 0));
-    _solidShader->setAmbient(vec3(0.5));
+    _shaders = std::make_shared<Shaders>();
+    _shaders->circleShader.setWidth(4.f);
+    _shaders->thickLineShader.setWidth(1.f);
+    _shaders->solidShader.setDiffuse(vec3(1, 0, 0));
+    _shaders->solidShader.setAmbient(vec3(0.5));
 
     _gridFloor = std::make_shared<GridFloor>();
 }
@@ -56,30 +50,29 @@ void ViewportRenderer::render() {
 
     auto MVP = _projection * _camera.matrix();
 
-    _lineShader->bind();
-    _lineShader->setMVPMatrix(MVP);
-    _lineShader->setViewportSize(vec2(_logicalSize));
-
-    _lineShader->setColor(vec3(0.5));
+    _shaders->thickLineShader.bind();
+    _shaders->thickLineShader.setMVPMatrix(MVP);
+    _shaders->thickLineShader.setViewportSize(vec2(_logicalSize));
+    _shaders->thickLineShader.setColor(vec3(0.5));
     _gridFloor->draw();
 
-    _solidShader->bind();
-    _solidShader->setMVPMatrix(_camera.matrix(), MVP);
+    _shaders->solidShader.bind();
+    _shaders->solidShader.setMVPMatrix(_camera.matrix(), MVP);
 
     for (auto& [item, renderer] : _meshRenderers) {
         renderer->drawFaces();
     }
 
-    _lineShader->bind();
-    _lineShader->setColor(vec3(0));
+    _shaders->thickLineShader.bind();
+    _shaders->thickLineShader.setColor(vec3(0));
     for (auto& [item, renderer] : _meshRenderers) {
         renderer->drawEdges();
     }
 
-    _circleShader->bind();
-    _circleShader->setMVPMatrix(MVP);
-    _circleShader->setViewportSize(vec2(_logicalSize));
-    _circleShader->setColor(vec3(1));
+    _shaders->circleShader.bind();
+    _shaders->circleShader.setMVPMatrix(MVP);
+    _shaders->circleShader.setViewportSize(vec2(_logicalSize));
+    _shaders->circleShader.setColor(vec3(1));
     for (auto& [item, renderer] : _meshRenderers) {
         renderer->drawVertices();
     }

@@ -56,6 +56,7 @@ bool CameraController::mouseRelease(QMouseEvent *) {
 bool CameraController::wheel(QWheelEvent *event) {
     _camera.setPos(_camera.pos() + _camera.direction() * (0.01f * event->delta()));
     emit cameraChanged(_camera);
+    return false;
 }
 
 void CameraController::setPressedKeys(const std::unordered_set<int> &keys) {

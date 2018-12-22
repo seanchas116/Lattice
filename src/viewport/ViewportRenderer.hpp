@@ -9,11 +9,9 @@
 
 namespace Lattice {
 
-class ThickLineShader;
-class SolidShader;
-class CircleShader;
 class GridFloor;
 class MeshRenderer;
+class Shaders;
 
 class MeshItem;
 class AppState;
@@ -32,9 +30,7 @@ private:
     glm::ivec2 _logicalSize;
     Camera _camera;
     glm::mat4 _projection;
-    SP<CircleShader> _circleShader;
-    SP<ThickLineShader> _lineShader;
-    SP<SolidShader> _solidShader;
+    SP<Shaders> _shaders;
     SP<GridFloor> _gridFloor;
     std::unordered_map<SP<MeshItem>, SP<MeshRenderer>> _meshRenderers;
     SP<AppState> _appState;
