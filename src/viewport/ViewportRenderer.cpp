@@ -31,6 +31,7 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
 
     _solidShader = std::make_shared<SolidShader>();
     _solidShader->setDiffuse(vec3(1, 0, 0));
+    _solidShader->setAmbient(vec3(0.5));
 
     _gridFloor = std::make_shared<GridFloor>();
 }
