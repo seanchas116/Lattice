@@ -1,5 +1,7 @@
 #version 330
 
+const float zNear = 0.01;
+
 uniform mat4 P;
 uniform mat4 MV;
 uniform float width;
@@ -16,7 +18,7 @@ void main(void) {
     vec4 p1_cameraSpace = MV * p1_modelSpace;
 
     // Don't render lines behind camera
-    if (p0_cameraSpace.z > -0.1 && p1_cameraSpace.z > -0.1) {
+    if (p0_cameraSpace.z > -zNear && p1_cameraSpace.z > -zNear) {
         EndPrimitive();
         return;
     }
@@ -29,8 +31,8 @@ void main(void) {
     }
 
     // Clip line using near plane
-    if (p1_cameraSpace.z > -0.1) {
-        vec4 pnear_cameraSpace = mix(p0_cameraSpace, p1_cameraSpace, -0.1 - p0_cameraSpace.z / (p1_cameraSpace.z - p0_cameraSpace.z));
+    if (p1_cameraSpace.z > -zNear) {
+        vec4 pnear_cameraSpace = mix(p0_cameraSpace, p1_cameraSpace, -zNear - p0_cameraSpace.z / (p1_cameraSpace.z - p0_cameraSpace.z));
         p1_cameraSpace = pnear_cameraSpace;
     }
 
