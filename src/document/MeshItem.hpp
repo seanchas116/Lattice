@@ -11,18 +11,18 @@ class MeshItem final : public Item {
 public:
     MeshItem();
 
-    const SP<Mesh>& shape() const { return _shape; }
-    void setShape(const SP<Mesh> &shape);
+    const SP<Mesh>& mesh() const { return _mesh; }
+    void setMesh(const SP<Mesh> &mesh);
 
     SP<Item> clone() const override;
     void toJSON(nlohmann::json& json) const override;
     void fromJSON(const nlohmann::json& json) override;
 
 signals:
-    void shapeChanged(const SP<Mesh> &shape);
+    void meshChanged(const SP<Mesh> &mesh);
 
 private:
-    SP<Mesh> _shape;
+    SP<Mesh> _mesh;
 };
 
 } // namespace Lattice

@@ -15,7 +15,7 @@ class Projection;
 class MeshRenderer {
 public:
     MeshRenderer();
-    void update(const SP<Mesh>& shape);
+    void update(const SP<Mesh>& mesh);
 
     void drawFaces(const SP<Operations>& operations, const glm::mat4& viewMatrix, const Projection& projection);
     void drawEdges(const SP<Operations> &operations, const glm::mat4 &viewMatrix, const Projection &projection);

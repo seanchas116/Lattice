@@ -41,7 +41,7 @@ void ViewportRenderer::render() {
         auto meshItem = std::dynamic_pointer_cast<MeshItem>(item);
         if (!meshItem) { return; }
         auto renderer = std::make_shared<MeshRenderer>();
-        renderer->update(meshItem->shape());
+        renderer->update(meshItem->mesh());
         _meshRenderers[meshItem] = renderer;
     });
 

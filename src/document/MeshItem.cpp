@@ -8,14 +8,14 @@ using namespace glm;
 
 namespace Lattice {
 
-MeshItem::MeshItem() : _shape(std::make_shared<Mesh>()) {
-    connect(this, &MeshItem::shapeChanged, this, &Item::changed);
+MeshItem::MeshItem() : _mesh(std::make_shared<Mesh>()) {
+    connect(this, &MeshItem::meshChanged, this, &Item::changed);
 
-    auto v1 = _shape->addVertex(vec3(0, 0, 0));
-    auto v2 = _shape->addVertex(vec3(0, 0, 1));
-    auto v3 = _shape->addVertex(vec3(1, 0, 1));
-    auto v4 = _shape->addVertex(vec3(1, 0, 0));
-    auto f = _shape->addFace({v1, v2, v3, v4});
+    auto v1 = _mesh->addVertex(vec3(0, 0, 0));
+    auto v2 = _mesh->addVertex(vec3(0, 0, 1));
+    auto v3 = _mesh->addVertex(vec3(1, 0, 1));
+    auto v4 = _mesh->addVertex(vec3(1, 0, 0));
+    auto f = _mesh->addFace({v1, v2, v3, v4});
     auto vertices = f->vertices();
 
     for (auto&& v : vertices) {
@@ -26,25 +26,27 @@ MeshItem::MeshItem() : _shape(std::make_shared<Mesh>()) {
 
 SP<Item> MeshItem::clone() const {
     auto cloned = std::make_shared<MeshItem>();
-    cloned->_shape = _shape->clone();
+    cloned->_mesh = _mesh->clone();
     return cloned;
 }
 
 void MeshItem::toJSON(nlohmann::json &json) const {
     Item::toJSON(json);
+    throw std::runtime_error("TODO");
     // TODO
     // _shape->toJSON(json["shape"]);
 }
 
 void MeshItem::fromJSON(const nlohmann::json &json) {
     Item::fromJSON(json);
+    throw std::runtime_error("TODO");
     // TODO
     //_shape->fromJSON(json["shape"]);
 }
 
-void MeshItem::setShape(const SP<Mesh> &shape) {
-    emit shapeChanged(shape);
-    _shape = shape;
+void MeshItem::setMesh(const SP<Mesh> &mesh) {
+    emit meshChanged(mesh);
+    _mesh = mesh;
 }
 
 } // namespace Lattice

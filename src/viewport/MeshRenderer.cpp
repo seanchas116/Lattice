@@ -19,13 +19,13 @@ MeshRenderer::MeshRenderer() {
     _vertexVAO = std::make_shared<PointVAO>(vbo);
 }
 
-void MeshRenderer::update(const SP<Mesh> &shape) {
+void MeshRenderer::update(const SP<Mesh> &mesh) {
     {
         // Edge VAO
         std::unordered_map<SP<MeshVertex>, uint32_t> indices;
         std::vector<VertexBuffer::Vertex> vertices;
         std::vector<LineVAO::Line> lines;
-        for (auto& vertex : shape->vertices()) {
+        for (auto& vertex : mesh->vertices()) {
             indices[vertex] = uint32_t(vertices.size());
             VertexBuffer::Vertex vertexData = {
                     vertex->position(),
@@ -34,7 +34,7 @@ void MeshRenderer::update(const SP<Mesh> &shape) {
             };
             vertices.push_back(vertexData);
         }
-        for (auto& [_, edge] : shape->edges()) {
+        for (auto& [_, edge] : mesh->edges()) {
             auto i0 = indices[edge->vertices().first];
             auto i1 = indices[edge->vertices().second];
             lines.push_back({i0, i1});
@@ -48,7 +48,7 @@ void MeshRenderer::update(const SP<Mesh> &shape) {
         std::vector<VertexBuffer::Vertex> vertices;
         std::vector<VAO::Triangle> triangles;
 
-        for (auto& [_, face] : shape->faces()) {
+        for (auto& [_, face] : mesh->faces()) {
             auto offset = uint32_t(vertices.size());
             auto normal = face->normal();
             for (auto& vertex : face->vertices()) {
