@@ -8,7 +8,7 @@ class MeshItem;
 
 class ObjLoader {
 public:
-    static SP<MeshItem> load(const std::string& filePath);
+    static std::vector<SP<MeshItem>> load(const std::string& filePath);
 };
 
 } // namespace Lattice

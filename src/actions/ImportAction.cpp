@@ -14,9 +14,10 @@ void ImportAction::run(QWidget* window, const SP<AppState> &appState) {
 
     QFileInfo fileInfo(filePath);
 
-    auto item = ObjLoader::load(filePath.toStdString());
-    item->setName(fileInfo.baseName());
-    appState->document()->insertItemToCurrentPosition(item);
+    auto items = ObjLoader::load(filePath.toStdString());
+    for (auto& item: items) {
+        appState->document()->insertItemToCurrentPosition(item);
+    }
 }
 
 } // namespace Lattice
