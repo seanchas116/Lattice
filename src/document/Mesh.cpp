@@ -36,11 +36,20 @@ SP<MeshEdge> Mesh::addEdge(const std::pair<SP<MeshVertex>, SP<MeshVertex> > &ver
 }
 
 SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshVertex> > &vertices) {
+    std::vector<SP<MeshEdge>> edges;
+    for (size_t i = 0; i < vertices.size(); ++i) {
+        edges.push_back(addEdge({vertices[i], vertices[(i + 1) % vertices.size()]}));
+    }
+
     auto face = std::make_shared<MeshFace>(shared_from_this(), vertices);
     _faces[vertices] = face;
     for (auto& v : vertices) {
         _facesForVertex.insert({v, face});
     }
+    for (auto& e : edges) {
+        _facesForEdge.insert({e, face});
+    }
+
     return face;
 }
 
