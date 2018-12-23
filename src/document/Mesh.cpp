@@ -28,22 +28,34 @@ SP<Face> Mesh::addFace(const std::vector<SP<Vertex> > &vertices) {
     return face;
 }
 
-std::vector<SP<Edge> > Mesh::edgesForVertex(const SP<Vertex> &vertex) const {
-    auto range = _edgesForVertex.equal_range(vertex);
-    std::vector<SP<Edge>> edges;
+namespace {
+
+template <typename K, typename V>
+std::vector<V> values(const std::unordered_multimap<K, V>& multimap, const K& key) {
+    auto range = multimap.equal_range(key);
+    std::vector<V> result;
     for (auto it = range.first; it != range.second; ++it) {
-        edges.push_back(it->second);
+        result.push_back(it->second);
     }
-    return edges;
+    return result;
+}
+
+}
+
+std::vector<SP<Edge> > Mesh::edgesForVertex(const SP<Vertex> &vertex) const {
+    return values(_edgesForVertex, vertex);
 }
 
 std::vector<SP<Face> > Mesh::facesForVertex(const SP<Vertex> &vertex) const {
-    auto range = _facesForVertex.equal_range(vertex);
-    std::vector<SP<Face>> faces;
-    for (auto it = range.first; it != range.second; ++it) {
-        faces.push_back(it->second);
-    }
-    return faces;
+    return values(_facesForVertex, vertex);
+}
+
+std::vector<SP<Edge> > Mesh::edgesForFace(const SP<Face> &face) const {
+    return values(_edgesForFace, face);
+}
+
+std::vector<SP<Face> > Mesh::facesForEdge(const SP<Edge> &edge) const {
+    return values(_facesForEdge, edge);
 }
 
 } // namespace Lattice

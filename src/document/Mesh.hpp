@@ -66,6 +66,8 @@ public:
 
     std::vector<SP<Edge>> edgesForVertex(const SP<Vertex>& vertex) const;
     std::vector<SP<Face>> facesForVertex(const SP<Vertex>& vertex) const;
+    std::vector<SP<Edge>> edgesForFace(const SP<Face>& face) const;
+    std::vector<SP<Face>> facesForEdge(const SP<Edge>& edge) const;
 
 private:
 
@@ -74,6 +76,8 @@ private:
     std::unordered_map<std::vector<SP<Vertex>>, SP<Face>> _faces;
     std::unordered_multimap<SP<Vertex>, SP<Edge>> _edgesForVertex;
     std::unordered_multimap<SP<Vertex>, SP<Face>> _facesForVertex;
+    std::unordered_multimap<SP<Face>, SP<Edge>> _edgesForFace;
+    std::unordered_multimap<SP<Edge>, SP<Face>> _facesForEdge;
 };
 
 } // namespace Lattice
