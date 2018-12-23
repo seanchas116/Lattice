@@ -22,7 +22,7 @@ MeshRenderer::MeshRenderer() {
 void MeshRenderer::update(const SP<MeshShape> &shape) {
     {
         // Edge VAO
-        std::unordered_map<SP<Vertex>, int> indices;
+        std::unordered_map<SP<MeshShape::Vertex>, int> indices;
         std::vector<VertexBuffer::Vertex> vertices;
         std::vector<LineVAO::Line> lines;
         for (auto& vertex : shape->vertices()) {

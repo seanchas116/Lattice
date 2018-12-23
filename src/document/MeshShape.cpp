@@ -6,7 +6,7 @@ using namespace glm;
 
 namespace Lattice {
 
-void Vertex::removeEdge(Edge *edge) {
+void MeshShape::Vertex::removeEdge(Edge *edge) {
     for (auto it = _edges.begin(); it != _edges.end(); ++it) {
         if (*it == edge) {
             _edges.erase(it);
@@ -15,7 +15,7 @@ void Vertex::removeEdge(Edge *edge) {
     }
 }
 
-std::vector<SP<Edge>> Vertex::edges() const {
+std::vector<SP<MeshShape::Edge>> MeshShape::Vertex::edges() const {
     std::vector<SP<Edge>> edges;
     for (auto&& edge : _edges) {
         edges.push_back(edge->shared_from_this());
@@ -23,17 +23,17 @@ std::vector<SP<Edge>> Vertex::edges() const {
     return edges;
 }
 
-Edge::Edge(const SP<Vertex> &inVertex, const SP<Vertex> &outVertex) : _inVertex(inVertex), _outVertex(outVertex) {
+MeshShape::Edge::Edge(const SP<MeshShape::Vertex> &inVertex, const SP<Vertex> &outVertex) : _inVertex(inVertex), _outVertex(outVertex) {
     inVertex->_edges.push_back(this);
     outVertex->_edges.push_back(this);
 }
 
-Edge::~Edge() {
+MeshShape::Edge::~Edge() {
     _inVertex->removeEdge(this);
     _outVertex->removeEdge(this);
 }
 
-std::vector<SP<Face>> Edge::faces() const {
+std::vector<SP<MeshShape::Face>> MeshShape::Edge::faces() const {
     std::vector<SP<Face>> faces;
     for (auto&& face : _faces) {
         faces.push_back(face->shared_from_this());
@@ -41,7 +41,7 @@ std::vector<SP<Face>> Edge::faces() const {
     return faces;
 }
 
-void Edge::removeFace(Face *face) {
+void MeshShape::Edge::removeFace(MeshShape::Face *face) {
     for (auto it = _faces.begin(); it != _faces.end(); ++it) {
         if (*it == face) {
             _faces.erase(it);
@@ -52,13 +52,13 @@ void Edge::removeFace(Face *face) {
 
 namespace {
 
-std::vector<SP<Vertex>> edgeLoopToVertices(const std::vector<SP<Edge>>& edges) {
+std::vector<SP<MeshShape::Vertex>> edgeLoopToVertices(const std::vector<SP<MeshShape::Edge>>& edges) {
     if (edges.size() < 3) {
         throw std::runtime_error("edge count must >= 3");
     }
 
-    std::unordered_set<SP<Edge>> usedEdges;
-    std::vector<SP<Vertex>> vertices;
+    std::unordered_set<SP<MeshShape::Edge>> usedEdges;
+    std::vector<SP<MeshShape::Vertex>> vertices;
 
     vertices.push_back(edges[0]->inVertex());
     vertices.push_back(edges[0]->outVertex());
@@ -68,8 +68,8 @@ std::vector<SP<Vertex>> edgeLoopToVertices(const std::vector<SP<Edge>>& edges) {
         auto& lastVertex = *(vertices.end() - 1);
 
         // find next edge
-        SP<Edge> nextEdge;
-        SP<Vertex> nextVertex;
+        SP<MeshShape::Edge> nextEdge;
+        SP<MeshShape::Vertex> nextVertex;
         for (auto& edge : edges) {
             if (usedEdges.find(edge) != usedEdges.end()) {
                 continue;
@@ -103,7 +103,7 @@ std::vector<SP<Vertex>> edgeLoopToVertices(const std::vector<SP<Edge>>& edges) {
 
 }
 
-Face::Face(const std::vector<SP<Edge>> &edges) : _edges(edges)
+MeshShape::Face::Face(const std::vector<SP<Edge>> &edges) : _edges(edges)
 {
     _vertices = edgeLoopToVertices(edges);
 
@@ -112,13 +112,13 @@ Face::Face(const std::vector<SP<Edge>> &edges) : _edges(edges)
     }
 }
 
-Face::~Face() {
+MeshShape::Face::~Face() {
     for (auto&& edge : _edges) {
         edge->removeFace(this);
     }
 }
 
-vec3 Face::normal() const {
+vec3 MeshShape::Face::normal() const {
     if (_vertices.size() == 3) {
         return normalize(cross(_vertices[1]->position() - _vertices[0]->position(), _vertices[2]->position() - _vertices[0]->position()));
     }
@@ -141,19 +141,19 @@ vec3 Face::normal() const {
 MeshShape::~MeshShape() {
 }
 
-SP<Vertex> MeshShape::addVertex(vec3 pos) {
+SP<MeshShape::Vertex> MeshShape::addVertex(vec3 pos) {
     auto vertex = std::make_shared<Vertex>(pos);
     _vertices.insert(vertex);
     return vertex;
 }
 
-SP<Edge> MeshShape::addEdge(const SP<Vertex>& inVertex, const SP<Vertex>& outVertex) {
+SP<MeshShape::Edge> MeshShape::addEdge(const SP<Vertex>& inVertex, const SP<Vertex>& outVertex) {
     auto edge = std::make_shared<Edge>(inVertex, outVertex);
     _edges.insert(edge);
     return edge;
 }
 
-SP<Face> MeshShape::addFace(const std::vector<SP<Edge> > &edges) {
+SP<MeshShape::Face> MeshShape::addFace(const std::vector<SP<Edge> > &edges) {
     auto face = std::make_shared<Face>(edges);
     _faces.insert(face);
     return face;
