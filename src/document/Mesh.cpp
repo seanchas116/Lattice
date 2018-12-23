@@ -2,6 +2,22 @@
 
 namespace Lattice {
 
+std::vector<SP<MeshEdge> > MeshVertex::edges() const {
+    return mesh()->edgesForVertex(shared_from_this());
+}
+
+std::vector<SP<MeshFace> > MeshVertex::faces() const {
+    return mesh()->facesForVertex(shared_from_this());
+}
+
+std::vector<SP<MeshFace> > MeshEdge::faces() const {
+    return mesh()->facesForEdge(shared_from_this());
+}
+
+std::vector<SP<MeshEdge> > MeshFace::edges() const {
+    return mesh()->edgesForFace(shared_from_this());
+}
+
 Mesh::Mesh() {
 }
 
@@ -12,7 +28,7 @@ SP<MeshVertex> Mesh::addVertex() {
 }
 
 SP<MeshEdge> Mesh::addEdge(const std::pair<SP<MeshVertex>, SP<MeshVertex> > &vertices) {
-    auto edge = std::make_shared<MeshEdge>(vertices, shared_from_this());
+    auto edge = std::make_shared<MeshEdge>(shared_from_this(), vertices);
     _edges[vertices] = edge;
     _edgesForVertex.insert({vertices.first, edge});
     _edgesForVertex.insert({vertices.second, edge});
@@ -20,7 +36,7 @@ SP<MeshEdge> Mesh::addEdge(const std::pair<SP<MeshVertex>, SP<MeshVertex> > &ver
 }
 
 SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshVertex> > &vertices) {
-    auto face = std::make_shared<MeshFace>(vertices, shared_from_this());
+    auto face = std::make_shared<MeshFace>(shared_from_this(), vertices);
     _faces[vertices] = face;
     for (auto& v : vertices) {
         _facesForVertex.insert({v, face});
@@ -42,19 +58,19 @@ std::vector<V> values(const std::unordered_multimap<K, V>& multimap, const K& ke
 
 }
 
-std::vector<SP<MeshEdge> > Mesh::edgesForVertex(const SP<MeshVertex> &vertex) const {
+std::vector<SP<MeshEdge> > Mesh::edgesForVertex(const SP<const MeshVertex> &vertex) const {
     return values(_edgesForVertex, vertex);
 }
 
-std::vector<SP<MeshFace> > Mesh::facesForVertex(const SP<MeshVertex> &vertex) const {
+std::vector<SP<MeshFace> > Mesh::facesForVertex(const SP<const MeshVertex> &vertex) const {
     return values(_facesForVertex, vertex);
 }
 
-std::vector<SP<MeshEdge> > Mesh::edgesForFace(const SP<MeshFace> &face) const {
+std::vector<SP<MeshEdge> > Mesh::edgesForFace(const SP<const MeshFace> &face) const {
     return values(_edgesForFace, face);
 }
 
-std::vector<SP<MeshFace> > Mesh::facesForEdge(const SP<MeshEdge> &edge) const {
+std::vector<SP<MeshFace> > Mesh::facesForEdge(const SP<const MeshEdge> &edge) const {
     return values(_facesForEdge, edge);
 }
 
