@@ -4,11 +4,11 @@
 
 namespace Lattice {
 
-class MeshShape;
+class MeshItem;
 
 class ObjLoader {
 public:
-    static SP<MeshShape> load(const std::string& filePath);
+    static SP<MeshItem> load(const std::string& filePath);
 };
 
 } // namespace Lattice
