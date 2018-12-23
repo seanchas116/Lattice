@@ -3,6 +3,7 @@
 #include "../gl/VAO.hpp"
 #include "../gl/LineVAO.hpp"
 #include "../gl/VertexBuffer.hpp"
+#include <array>
 
 using namespace glm;
 
@@ -64,9 +65,20 @@ Manipulator::Manipulator() {
     }
 }
 
-void Manipulator::draw(const SP<Operations> &operations, const glm::mat4 &viewMatrix, const Projection &projection) {
-    operations->drawSolid.draw(_headVAO, viewMatrix, projection, vec3(0), vec3(1));
-    operations->drawLine.draw(_bodyVAO, viewMatrix, projection, bodyWidth, vec3(1));
+void Manipulator::draw(const SP<Operations> &operations, const mat4 &viewMatrix, const Projection &projection) {
+    auto transforms = std::array<mat4, 3> {
+            mat4(1), // x
+            mat4(0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1), // y
+            mat4(0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1), // z
+    };
+    auto colors = std::array<vec3, 3> {
+            vec3(1, 0, 0), vec3(0, 1, 0), vec3(0, 0, 1)
+    };
+
+    for (size_t i = 0; i < 3; ++i) {
+        operations->drawSolid.draw(_headVAO, viewMatrix * transforms[i], projection, vec3(0), colors[i]);
+        operations->drawLine.draw(_bodyVAO, viewMatrix * transforms[i], projection, bodyWidth, colors[i]);
+    }
 }
 
 } // namespace Lattice
