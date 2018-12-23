@@ -29,11 +29,11 @@ Manipulator::Manipulator() {
 
         for (uint32_t i = 0; i < headSegmentCount; ++i) {
             float angle = 2.f * float(M_PI) / float(headSegmentCount) * float(i);
-            vec3 pos(cos(angle) * headRadius, sin(angle) * headRadius, bodyLength);
+            vec3 pos(bodyLength, cos(angle) * headRadius, sin(angle) * headRadius);
             vertices.push_back({pos, {}, {}});
         }
-        vertices.push_back({vec3(0, 0, bodyLength), {}, {}});
-        vertices.push_back({vec3(0, 0, bodyLength + headLength), {}, {}});
+        vertices.push_back({vec3(bodyLength, 0, 0), {}, {}});
+        vertices.push_back({vec3(bodyLength + headLength, 0, 0), {}, {}});
 
         for (uint32_t i = 0; i < headSegmentCount; ++i) {
             auto index0 = i;
@@ -55,8 +55,8 @@ Manipulator::Manipulator() {
         std::vector<VertexBuffer::Vertex> bodyVertices;
         std::vector<std::vector<uint32_t>> bodyLineStrips;
 
-        bodyVertices.push_back({vec3(0, 0, 0.1), {}, {}});
-        bodyVertices.push_back({vec3(0, 0, bodyLength), {}, {}});
+        bodyVertices.push_back({vec3(0.1, 0, 0), {}, {}});
+        bodyVertices.push_back({vec3(bodyLength, 0, 0), {}, {}});
         bodyLineStrips = { {0, 1} };
 
         _bodyVAO->vertexBuffer()->setVertices(bodyVertices);
