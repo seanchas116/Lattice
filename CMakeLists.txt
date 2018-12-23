@@ -31,5 +31,5 @@ file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.hpp")
 file(GLOB_RECURSE SHADERS "src/*.vert" "src/*.geom" "src/*.frag")
 cmrc_add_resource_library(LatticeResources ${SHADERS})
 
-add_executable(Lattice ${SOURCES})
+add_executable(Lattice ${SOURCES} ${SHADERS})
 target_link_libraries(Lattice ${LIBRARIES} LatticeResources)
