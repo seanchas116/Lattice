@@ -8,8 +8,8 @@
 
 namespace Lattice {
 
-class MeshShape final {
-    Q_DISABLE_COPY(MeshShape)
+class Mesh final {
+    Q_DISABLE_COPY(Mesh)
 public:
     class Edge;
     class Face;
@@ -69,8 +69,8 @@ public:
         std::vector<SP<Vertex>> _vertices;
     };
 
-    MeshShape() = default;
-    ~MeshShape();
+    Mesh() = default;
+    ~Mesh();
 
     const auto& edges() const { return _edges; }
     const auto& vertices() const { return _vertices; }
@@ -84,7 +84,7 @@ public:
     void removeEdge(const SP<Edge>& edge);
     void removeFace(const SP<Face>& face);
 
-    std::shared_ptr<MeshShape> clone() const;
+    std::shared_ptr<Mesh> clone() const;
 
 private:
     std::unordered_set<SP<Edge>> _edges;

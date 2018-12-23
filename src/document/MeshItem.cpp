@@ -1,5 +1,5 @@
 #include "MeshItem.hpp"
-#include "MeshShape.hpp"
+#include "Mesh.hpp"
 #include "../support/Debug.hpp"
 #include <QPainterPath>
 #include <nlohmann/json.hpp>
@@ -8,7 +8,7 @@ using namespace glm;
 
 namespace Lattice {
 
-MeshItem::MeshItem() : _shape(std::make_shared<MeshShape>()) {
+MeshItem::MeshItem() : _shape(std::make_shared<Mesh>()) {
     connect(this, &MeshItem::shapeChanged, this, &Item::changed);
 
     auto v1 = _shape->addVertex(vec3(0, 0, 0));
@@ -46,7 +46,7 @@ void MeshItem::fromJSON(const nlohmann::json &json) {
     //_shape->fromJSON(json["shape"]);
 }
 
-void MeshItem::setShape(const SP<MeshShape> &shape) {
+void MeshItem::setShape(const SP<Mesh> &shape) {
     emit shapeChanged(shape);
     _shape = shape;
 }

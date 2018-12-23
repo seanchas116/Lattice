@@ -8,7 +8,7 @@
 #include "../document/Document.hpp"
 #include "../document/Item.hpp"
 #include "../document/MeshItem.hpp"
-#include "../document/MeshShape.hpp"
+#include "../document/Mesh.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace glm;
