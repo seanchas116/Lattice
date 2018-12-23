@@ -64,12 +64,22 @@ SP<MeshVertex> Mesh::addVertex() {
 }
 
 SP<MeshEdge> Mesh::addEdge(const std::pair<SP<MeshVertex>, SP<MeshVertex> > &vertices) {
+    auto it = _edges.find(vertices);
+    if (it != _edges.end()) {
+        return it->second;
+    }
+
     auto edge = std::make_shared<MeshEdge>(vertices);
     _edges[vertices] = edge;
     return edge;
 }
 
 SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshVertex> > &vertices) {
+    auto it = _faces.find(vertices);
+    if (it != _faces.end()) {
+        return it->second;
+    }
+
     std::vector<SP<MeshEdge>> edges;
     for (size_t i = 0; i < vertices.size(); ++i) {
         edges.push_back(addEdge({vertices[i], vertices[(i + 1) % vertices.size()]}));
