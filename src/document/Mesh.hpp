@@ -51,6 +51,8 @@ public:
     auto& vertices() const { return _vertices; }
     auto& edges() const { return _edges; }
 
+    glm::vec3 normal() const;
+
 private:
     WP<Mesh> _mesh;
     std::vector<SP<MeshVertex>> _vertices;
@@ -61,13 +63,15 @@ class Mesh {
 public:
     Mesh();
 
-    SP<MeshVertex> addVertex();
+    SP<MeshVertex> addVertex(glm::vec3 position);
     SP<MeshEdge> addEdge(const std::pair<SP<MeshVertex>, SP<MeshVertex>>& vertices);
     SP<MeshFace> addFace(const std::vector<SP<MeshVertex>>& vertices);
 
     const auto& vertices() const { return _vertices; }
     const auto& edges() const { return _edges; }
     const auto& faces() const { return _faces; }
+
+    SP<Mesh> clone() const;
 
 private:
 

@@ -8,14 +8,14 @@ namespace Lattice {
 class VAO;
 class LineVAO;
 class PointVAO;
-class OldMesh;
+class Mesh;
 class Operations;
 class Projection;
 
 class MeshRenderer {
 public:
     MeshRenderer();
-    void update(const SP<OldMesh>& shape);
+    void update(const SP<Mesh>& shape);
 
     void drawFaces(const SP<Operations>& operations, const glm::mat4& viewMatrix, const Projection& projection);
     void drawEdges(const SP<Operations> &operations, const glm::mat4 &viewMatrix, const Projection &projection);

@@ -1,6 +1,6 @@
 #include "MeshRenderer.hpp"
 #include "Operations.hpp"
-#include "../document/OldMesh.hpp"
+#include "../document/Mesh.hpp"
 #include "../gl/VAO.hpp"
 #include "../gl/LineVAO.hpp"
 #include "../gl/PointVAO.hpp"
@@ -19,14 +19,14 @@ MeshRenderer::MeshRenderer() {
     _vertexVAO = std::make_shared<PointVAO>(vbo);
 }
 
-void MeshRenderer::update(const SP<OldMesh> &shape) {
+void MeshRenderer::update(const SP<Mesh> &shape) {
     {
         // Edge VAO
-        std::unordered_map<SP<OldMesh::Vertex>, int> indices;
+        std::unordered_map<SP<MeshVertex>, uint32_t> indices;
         std::vector<VertexBuffer::Vertex> vertices;
         std::vector<LineVAO::Line> lines;
         for (auto& vertex : shape->vertices()) {
-            indices[vertex] = vertices.size();
+            indices[vertex] = uint32_t(vertices.size());
             VertexBuffer::Vertex vertexData = {
                     vertex->position(),
                     vec2(0), // TODO
@@ -34,9 +34,9 @@ void MeshRenderer::update(const SP<OldMesh> &shape) {
             };
             vertices.push_back(vertexData);
         }
-        for (auto& edge : shape->edges()) {
-            uint32_t i0 = indices[edge->inVertex()];
-            uint32_t i1 = indices[edge->outVertex()];
+        for (auto& [_, edge] : shape->edges()) {
+            auto i0 = indices[edge->vertices().first];
+            auto i1 = indices[edge->vertices().second];
             lines.push_back({i0, i1});
         }
         _edgeVAO->vertexBuffer()->setVertices(vertices);
@@ -48,8 +48,8 @@ void MeshRenderer::update(const SP<OldMesh> &shape) {
         std::vector<VertexBuffer::Vertex> vertices;
         std::vector<VAO::Triangle> triangles;
 
-        for (auto& face : shape->faces()) {
-            uint32_t offset = vertices.size();
+        for (auto& [_, face] : shape->faces()) {
+            auto offset = uint32_t(vertices.size());
             auto normal = face->normal();
             for (auto& vertex : face->vertices()) {
                 vertices.push_back({vertex->position(), {}, normal});

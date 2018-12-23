@@ -1,4 +1,5 @@
 #include "Mesh.hpp"
+#include "../support/Mod.hpp"
 
 namespace Lattice {
 
@@ -54,11 +55,32 @@ MeshFace::~MeshFace() {
     }
 }
 
+glm::vec3 MeshFace::normal() const {
+    if (_vertices.size() == 3) {
+        return normalize(cross(_vertices[1]->position() - _vertices[0]->position(), _vertices[2]->position() - _vertices[0]->position()));
+    }
+
+    // find average vertex normal
+    glm::vec3 normalSum(0);
+    size_t count = _vertices.size();
+
+    for (size_t i = 0; i < count; ++i) {
+        auto prev = _vertices[mod(i - 1, count)]->position();
+        auto curr = _vertices[i]->position();
+        auto next = _vertices[mod(i + 1, count)]->position();
+        auto normal = normalize(cross(next - curr, prev - curr));
+        normalSum += normal;
+    }
+
+    return normalSum / float(count);
+}
+
 Mesh::Mesh() {
 }
 
-SP<MeshVertex> Mesh::addVertex() {
+SP<MeshVertex> Mesh::addVertex(glm::vec3 position) {
     auto vertex = std::make_shared<MeshVertex>();
+    vertex->setPosition(position);
     _vertices.insert(vertex);
     return vertex;
 }
@@ -88,6 +110,10 @@ SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshVertex> > &vertices) {
     auto face = std::make_shared<MeshFace>(vertices, edges);
     _faces[vertices] = face;
     return face;
+}
+
+SP<Mesh> Mesh::clone() const {
+    throw std::runtime_error("not implemented");
 }
 
 } // namespace Lattice
