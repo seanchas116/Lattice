@@ -3,15 +3,55 @@
 namespace Lattice {
 
 std::vector<SP<MeshEdge> > MeshVertex::edges() const {
-    return mesh()->edgesForVertex(shared_from_this());
+    std::vector<SP<MeshEdge>> edges;
+    for (auto& e : _edges) {
+        edges.push_back(e->shared_from_this());
+    }
+    return edges;
 }
 
 std::vector<SP<MeshFace> > MeshVertex::faces() const {
-    return mesh()->facesForVertex(shared_from_this());
+    std::vector<SP<MeshFace>> faces;
+    for (auto& f : _faces) {
+        faces.push_back(f->shared_from_this());
+    }
+    return faces;
+}
+
+MeshEdge::MeshEdge(const std::pair<SP<MeshVertex>, SP<MeshVertex> > &vertices) : _vertices(vertices) {
+    vertices.first->_edges.insert(this);
+    vertices.second->_edges.insert(this);
+}
+
+MeshEdge::~MeshEdge() {
+    _vertices.first->_edges.erase(this);
+    _vertices.second->_edges.erase(this);
 }
 
 std::vector<SP<MeshFace> > MeshEdge::faces() const {
-    return mesh()->facesForEdge(shared_from_this());
+    std::vector<SP<MeshFace>> faces;
+    for (auto& f : _faces) {
+        faces.push_back(f->shared_from_this());
+    }
+    return faces;
+}
+
+MeshFace::MeshFace(const std::vector<SP<MeshVertex> > &vertices, const std::vector<SP<MeshEdge> > &edges) : _vertices(vertices), _edges(edges) {
+    for (auto& v : vertices) {
+        v->_faces.insert(this);
+    }
+    for (auto& e : edges) {
+        e->_faces.insert(this);
+    }
+}
+
+MeshFace::~MeshFace() {
+    for (auto& v : _vertices) {
+        v->_faces.erase(this);
+    }
+    for (auto& e : _edges) {
+        e->_faces.erase(this);
+    }
 }
 
 Mesh::Mesh() {
@@ -26,8 +66,6 @@ SP<MeshVertex> Mesh::addVertex() {
 SP<MeshEdge> Mesh::addEdge(const std::pair<SP<MeshVertex>, SP<MeshVertex> > &vertices) {
     auto edge = std::make_shared<MeshEdge>(shared_from_this(), vertices);
     _edges[vertices] = edge;
-    _edgesForVertex.insert({vertices.first, edge});
-    _edgesForVertex.insert({vertices.second, edge});
     return edge;
 }
 
@@ -39,41 +77,7 @@ SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshVertex> > &vertices) {
 
     auto face = std::make_shared<MeshFace>(shared_from_this(), vertices, edges);
     _faces[vertices] = face;
-
-    for (auto& v : vertices) {
-        _facesForVertex.insert({v, face});
-    }
-    for (auto& e : edges) {
-        _facesForEdge.insert({e, face});
-    }
-
     return face;
-}
-
-namespace {
-
-template <typename K, typename V>
-std::vector<V> values(const std::unordered_multimap<K, V>& multimap, const K& key) {
-    auto range = multimap.equal_range(key);
-    std::vector<V> result;
-    for (auto it = range.first; it != range.second; ++it) {
-        result.push_back(it->second);
-    }
-    return result;
-}
-
-}
-
-std::vector<SP<MeshEdge> > Mesh::edgesForVertex(const SP<const MeshVertex> &vertex) const {
-    return values(_edgesForVertex, vertex);
-}
-
-std::vector<SP<MeshFace> > Mesh::facesForVertex(const SP<const MeshVertex> &vertex) const {
-    return values(_facesForVertex, vertex);
-}
-
-std::vector<SP<MeshFace> > Mesh::facesForEdge(const SP<const MeshEdge> &edge) const {
-    return values(_facesForEdge, edge);
 }
 
 } // namespace Lattice
