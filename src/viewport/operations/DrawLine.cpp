@@ -16,6 +16,7 @@ void DrawLine::draw(const SP<LineVAO> &vao, const glm::mat4 &matrix, const Proje
     _shader.setUniform("MV", matrix);
     _shader.setUniform("P", projection.matrix());
     _shader.setUniform("viewportSize", projection.viewSize());
+    _shader.setUniform("zNear", projection.zNear());
     _shader.setUniform("width", width);
     _shader.setUniform("color", color);
     vao->draw();

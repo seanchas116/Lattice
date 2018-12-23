@@ -1,11 +1,11 @@
 #version 330
 
-const float zNear = 0.01;
 
 uniform mat4 P;
 uniform mat4 MV;
 uniform float width;
 uniform vec2 viewportSize;
+uniform float zNear;
 
 layout(lines) in;
 layout(triangle_strip, max_vertices = 4) out;
