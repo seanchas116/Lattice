@@ -40,7 +40,10 @@ namespace std {
     template <typename T, typename U>
     struct hash<std::pair<T, U>> {
         size_t operator()(std::pair<T, U> const& pair) const {
-            return std::hash<std::tuple<T, U>>::apply(pair);
+            size_t seed = 0;
+            hash_combine(seed, pair.first);
+            hash_combine(seed, pair.second);
+            return seed;
         }
     };
 
@@ -58,7 +61,7 @@ namespace std {
         size_t operator()(std::vector<T> const& xs) const {
             size_t seed = 0;
             for (auto& x : xs) {
-                seed = hash_combine(seed, x);
+                hash_combine(seed, x);
             }
             return seed;
         }
