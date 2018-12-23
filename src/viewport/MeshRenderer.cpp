@@ -35,8 +35,8 @@ void MeshRenderer::update(const SP<Mesh> &mesh) {
             vertices.push_back(vertexData);
         }
         for (auto& [_, edge] : mesh->edges()) {
-            auto i0 = indices[edge->vertices().first];
-            auto i1 = indices[edge->vertices().second];
+            auto i0 = indices[edge->vertices()[0]];
+            auto i1 = indices[edge->vertices()[1]];
             lines.push_back({i0, i1});
         }
         _edgeVAO->vertexBuffer()->setVertices(vertices);

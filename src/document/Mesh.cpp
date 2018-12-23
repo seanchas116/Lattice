@@ -19,14 +19,14 @@ std::vector<SP<MeshFace> > MeshVertex::faces() const {
     return faces;
 }
 
-MeshEdge::MeshEdge(const std::pair<SP<MeshVertex>, SP<MeshVertex> > &vertices) : _vertices(vertices) {
-    vertices.first->_edges.insert(this);
-    vertices.second->_edges.insert(this);
+MeshEdge::MeshEdge(const std::array<SP<MeshVertex>, 2> &vertices) : _vertices(vertices) {
+    vertices[0]->_edges.insert(this);
+    vertices[1]->_edges.insert(this);
 }
 
 MeshEdge::~MeshEdge() {
-    _vertices.first->_edges.erase(this);
-    _vertices.second->_edges.erase(this);
+    _vertices[0]->_edges.erase(this);
+    _vertices[1]->_edges.erase(this);
 }
 
 std::vector<SP<MeshFace> > MeshEdge::faces() const {
@@ -85,7 +85,7 @@ SP<MeshVertex> Mesh::addVertex(glm::vec3 position) {
     return vertex;
 }
 
-SP<MeshEdge> Mesh::addEdge(const std::pair<SP<MeshVertex>, SP<MeshVertex> > &vertices) {
+SP<MeshEdge> Mesh::addEdge(const std::array<SP<MeshVertex>, 2> &vertices) {
     auto it = _edges.find(vertices);
     if (it != _edges.end()) {
         return it->second;

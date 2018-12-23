@@ -31,7 +31,7 @@ private:
 
 class MeshEdge : public std::enable_shared_from_this<MeshEdge> {
 public:
-    MeshEdge(const std::pair<SP<MeshVertex>, SP<MeshVertex>>& vertices);
+    MeshEdge(const std::array<SP<MeshVertex>, 2>& vertices);
     ~MeshEdge();
 
     auto& vertices() const { return _vertices; }
@@ -39,7 +39,7 @@ public:
 
 private:
     friend class MeshFace;
-    std::pair<SP<MeshVertex>, SP<MeshVertex>> _vertices;
+    std::array<SP<MeshVertex>, 2> _vertices;
     std::unordered_set<MeshFace*> _faces;
 };
 
@@ -64,7 +64,7 @@ public:
     Mesh();
 
     SP<MeshVertex> addVertex(glm::vec3 position);
-    SP<MeshEdge> addEdge(const std::pair<SP<MeshVertex>, SP<MeshVertex>>& vertices);
+    SP<MeshEdge> addEdge(const std::array<SP<MeshVertex>, 2>& vertices);
     SP<MeshFace> addFace(const std::vector<SP<MeshVertex>>& vertices);
 
     const auto& vertices() const { return _vertices; }
@@ -76,7 +76,7 @@ public:
 private:
 
     std::unordered_set<SP<MeshVertex>> _vertices;
-    std::unordered_map<std::pair<SP<MeshVertex>, SP<MeshVertex>>, SP<MeshEdge>> _edges;
+    std::unordered_map<std::array<SP<MeshVertex>, 2>, SP<MeshEdge>> _edges;
     std::unordered_map<std::vector<SP<MeshVertex>>, SP<MeshFace>> _faces;
 };
 
