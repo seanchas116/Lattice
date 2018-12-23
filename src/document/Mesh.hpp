@@ -42,15 +42,15 @@ private:
 
 class MeshFace : public std::enable_shared_from_this<MeshFace> {
 public:
-    MeshFace(const SP<Mesh>& mesh, const std::vector<SP<MeshVertex>>& vertices) : _mesh(mesh), _vertices(vertices) {}
+    MeshFace(const SP<Mesh>& mesh, const std::vector<SP<MeshVertex>>& vertices, const std::vector<SP<MeshEdge>>& edges) : _mesh(mesh), _vertices(vertices), _edges(edges) {}
 
     auto mesh() const { return _mesh.lock(); }
     auto& vertices() const { return _vertices; }
-    std::vector<SP<MeshEdge>> edges() const;
 
 private:
     WP<Mesh> _mesh;
     std::vector<SP<MeshVertex>> _vertices;
+    std::vector<SP<MeshEdge>> _edges;
 };
 
 class Mesh : public std::enable_shared_from_this<Mesh> {
@@ -67,7 +67,6 @@ public:
 
     std::vector<SP<MeshEdge>> edgesForVertex(const SP<const MeshVertex>& vertex) const;
     std::vector<SP<MeshFace>> facesForVertex(const SP<const MeshVertex>& vertex) const;
-    std::vector<SP<MeshEdge>> edgesForFace(const SP<const MeshFace>& face) const;
     std::vector<SP<MeshFace>> facesForEdge(const SP<const MeshEdge>& edge) const;
 
 private:
@@ -77,7 +76,6 @@ private:
     std::unordered_map<std::vector<SP<MeshVertex>>, SP<MeshFace>> _faces;
     std::unordered_multimap<SP<const MeshVertex>, SP<MeshEdge>> _edgesForVertex;
     std::unordered_multimap<SP<const MeshVertex>, SP<MeshFace>> _facesForVertex;
-    std::unordered_multimap<SP<const MeshFace>, SP<MeshEdge>> _edgesForFace;
     std::unordered_multimap<SP<const MeshEdge>, SP<MeshFace>> _facesForEdge;
 };
 

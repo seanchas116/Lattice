@@ -14,10 +14,6 @@ std::vector<SP<MeshFace> > MeshEdge::faces() const {
     return mesh()->facesForEdge(shared_from_this());
 }
 
-std::vector<SP<MeshEdge> > MeshFace::edges() const {
-    return mesh()->edgesForFace(shared_from_this());
-}
-
 Mesh::Mesh() {
 }
 
@@ -41,8 +37,9 @@ SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshVertex> > &vertices) {
         edges.push_back(addEdge({vertices[i], vertices[(i + 1) % vertices.size()]}));
     }
 
-    auto face = std::make_shared<MeshFace>(shared_from_this(), vertices);
+    auto face = std::make_shared<MeshFace>(shared_from_this(), vertices, edges);
     _faces[vertices] = face;
+
     for (auto& v : vertices) {
         _facesForVertex.insert({v, face});
     }
@@ -73,10 +70,6 @@ std::vector<SP<MeshEdge> > Mesh::edgesForVertex(const SP<const MeshVertex> &vert
 
 std::vector<SP<MeshFace> > Mesh::facesForVertex(const SP<const MeshVertex> &vertex) const {
     return values(_facesForVertex, vertex);
-}
-
-std::vector<SP<MeshEdge> > Mesh::edgesForFace(const SP<const MeshFace> &face) const {
-    return values(_edgesForFace, face);
 }
 
 std::vector<SP<MeshFace> > Mesh::facesForEdge(const SP<const MeshEdge> &edge) const {
