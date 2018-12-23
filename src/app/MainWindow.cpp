@@ -1,6 +1,7 @@
 #include "MainWindow.hpp"
 #include "AppState.hpp"
 #include "ItemListPane.hpp"
+#include "../actions/ImportAction.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
 #include "../viewport/ViewportWidget.hpp"
@@ -50,6 +51,12 @@ void MainWindow::setupActions() {
         fileMenu->addAction(saveAsAction);
 
         fileMenu->addSeparator();
+
+        auto importAction = new QAction(tr("Import..."), this);
+        fileMenu->addAction(importAction);
+        connect(importAction, &QAction::triggered, this, [this] {
+            ImportAction::run(window(), _appState);
+        });
 
         auto exportAction = new QAction(tr("Export..."), this);
         fileMenu->addAction(exportAction);
