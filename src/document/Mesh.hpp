@@ -13,7 +13,7 @@ class MeshEdge;
 class MeshFace;
 class Mesh;
 
-class MeshVertex : public std::enable_shared_from_this<MeshVertex> {
+class MeshVertex {
 public:
     glm::vec3 position() const { return _position; }
     void setPosition(glm::vec3 position) { _position = position; }
@@ -57,7 +57,7 @@ private:
     std::vector<SP<MeshEdge>> _edges;
 };
 
-class Mesh : public std::enable_shared_from_this<Mesh> {
+class Mesh {
 public:
     Mesh();
 
