@@ -23,8 +23,8 @@ public:
     int index() const;
     std::vector<int> indexPath() const;
 
-    void setName(const QString& name);
-    QString name() const { return _name; }
+    void setName(const std::string& name);
+    auto& name() const { return _name; }
 
     Location location() const { return _location; }
     void setLocation(const Location &location);
@@ -48,7 +48,7 @@ signals:
     void changed();
     void changeFinished();
 
-    void nameChanged(const QString& name);
+    void nameChanged(const std::string& name);
     void locationChanged(const Location &location);
 
     void childItemsAboutToBeInserted(int first, int last);
@@ -62,13 +62,13 @@ private:
     class ChildInsertChange;
     class ChildRemoveChange;
 
-    void setNameInternal(const QString& name);
+    void setNameInternal(const std::string& name);
     void setLocationInternal(const Location& location);
 
     void insertItemBeforeInternal(const SP<Item>& item, const SP<const Item>& reference);
     void removeChildItemInternal(const SP<Item>& item);
 
-    QString _name;
+    std::string _name;
     Location _location;
     WP<Item> _parentItem;
     std::vector<SP<Item>> _childItems;

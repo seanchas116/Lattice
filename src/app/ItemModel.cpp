@@ -21,7 +21,7 @@ QVariant ItemModel::data(const QModelIndex &index, int role) const {
     switch (role) {
     case Qt::DisplayRole:
     case Qt::EditRole:
-        return item->name();
+        return QString::fromStdString(item->name());
     default:
         return QVariant();
     }
@@ -33,7 +33,7 @@ bool ItemModel::setData(const QModelIndex &index, const QVariant &value, int rol
     case Qt::DisplayRole:
     case Qt::EditRole:
         _document->history()->beginChange(tr("Set Item Name"));
-        item->setName(value.toString());
+        item->setName(value.toString().toStdString());
         return true;
     default:
         return false;

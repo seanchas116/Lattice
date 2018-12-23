@@ -171,7 +171,7 @@ void Item::addChange(const SP<Change> &change) {
 
 class Item::NameChange : public Change {
 public:
-    NameChange(SP<Item> item, QString name) : _item(std::move(item)), _name(std::move(name)) {
+    NameChange(SP<Item> item, std::string name) : _item(std::move(item)), _name(std::move(name)) {
         _oldName = _item->name();
     }
 
@@ -194,8 +194,8 @@ public:
 
 private:
     SP<Item> _item;
-    QString _name;
-    QString _oldName;
+    std::string _name;
+    std::string _oldName;
 };
 
 class Item::LocationChange : public Change {
@@ -227,11 +227,11 @@ private:
     Location _oldLocation;
 };
 
-void Item::setName(const QString &name) {
+void Item::setName(const std::string &name) {
     addChange(std::make_shared<NameChange>(shared_from_this(), name));
 }
 
-void Item::setNameInternal(const QString &name) {
+void Item::setNameInternal(const std::string &name) {
     if (_name != name) {
         _name = name;
         emit nameChanged(name);

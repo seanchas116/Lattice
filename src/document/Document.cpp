@@ -39,7 +39,7 @@ Document::Document() {
 void Document::addInitialItems() {
     // Add example item
     auto meshItem = std::make_shared<MeshItem>();
-    meshItem->setName(tr("Mesh"));
+    meshItem->setName(tr("Mesh").toStdString());
 
     _rootItem->appendChildItem(meshItem);
     _selectedItems = {meshItem};

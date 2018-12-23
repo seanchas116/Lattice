@@ -25,7 +25,7 @@ std::vector<SP<MeshItem>> ObjLoader::load(const std::string &filePath) {
 
     for (auto& objShape : objShapes) {
         auto item = std::make_shared<MeshItem>();
-        item->setName(QString::fromStdString(objShape.name));
+        item->setName(objShape.name);
 
         // TODO: use index_t as key
         std::unordered_map<int, SP<MeshVertex>> vertexForIndex;
