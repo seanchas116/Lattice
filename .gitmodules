@@ -7,3 +7,6 @@
 [submodule "vendor/cmrc"]
 	path = vendor/cmrc
 	url = https://github.com/vector-of-bool/cmrc.git
+[submodule "vendor/tinyobjloader"]
+	path = vendor/tinyobjloader
+	url = https://github.com/syoyo/tinyobjloader.git
