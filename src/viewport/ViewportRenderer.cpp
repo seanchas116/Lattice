@@ -20,6 +20,9 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
 
     initializeOpenGLFunctions();
 
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+
     _operations = std::make_shared<Operations>();
     _gridFloor = std::make_shared<GridFloor>();
     _manipulator = std::make_shared<Manipulator>();
