@@ -22,11 +22,13 @@ find_package(Qt5Widgets REQUIRED)
 #include_directories(${Boost_INCLUDE_DIRS})
 include_directories("vendor/glm")
 include_directories("vendor/json/include")
+include_directories("vendor/tinyobjloader")
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/_cmrc/include)
 
 set(LIBRARIES Qt5::Widgets)
 
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.hpp")
+list(APPEND SOURCES "vendor/tinyobjloader/tiny_obj_loader.cc")
 
 file(GLOB_RECURSE SHADERS "src/*.vert" "src/*.geom" "src/*.frag")
 cmrc_add_resource_library(LatticeResources ${SHADERS})

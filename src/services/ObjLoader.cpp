@@ -1,5 +1,6 @@
 #include "ObjLoader.hpp"
 #include "../document/MeshItem.hpp"
+#include <tiny_obj_loader.h>
 
 namespace Lattice {
 
