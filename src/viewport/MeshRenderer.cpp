@@ -1,6 +1,6 @@
 #include "MeshRenderer.hpp"
 #include "Operations.hpp"
-#include "../document/Mesh.hpp"
+#include "../document/OldMesh.hpp"
 #include "../gl/VAO.hpp"
 #include "../gl/LineVAO.hpp"
 #include "../gl/PointVAO.hpp"
@@ -19,10 +19,10 @@ MeshRenderer::MeshRenderer() {
     _vertexVAO = std::make_shared<PointVAO>(vbo);
 }
 
-void MeshRenderer::update(const SP<Mesh> &shape) {
+void MeshRenderer::update(const SP<OldMesh> &shape) {
     {
         // Edge VAO
-        std::unordered_map<SP<Mesh::Vertex>, int> indices;
+        std::unordered_map<SP<OldMesh::Vertex>, int> indices;
         std::vector<VertexBuffer::Vertex> vertices;
         std::vector<LineVAO::Line> lines;
         for (auto& vertex : shape->vertices()) {

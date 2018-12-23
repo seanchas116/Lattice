@@ -4,25 +4,25 @@
 
 namespace Lattice {
 
-class Mesh;
+class OldMesh;
 
 class MeshItem final : public Item {
     Q_OBJECT
 public:
     MeshItem();
 
-    const SP<Mesh>& shape() const { return _shape; }
-    void setShape(const SP<Mesh> &shape);
+    const SP<OldMesh>& shape() const { return _shape; }
+    void setShape(const SP<OldMesh> &shape);
 
     SP<Item> clone() const override;
     void toJSON(nlohmann::json& json) const override;
     void fromJSON(const nlohmann::json& json) override;
 
 signals:
-    void shapeChanged(const SP<Mesh> &shape);
+    void shapeChanged(const SP<OldMesh> &shape);
 
 private:
-    SP<Mesh> _shape;
+    SP<OldMesh> _shape;
 };
 
 } // namespace Lattice

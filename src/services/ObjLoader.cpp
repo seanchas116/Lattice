@@ -1,6 +1,6 @@
 #include "ObjLoader.hpp"
 #include "../document/MeshItem.hpp"
-#include "../document/Mesh.hpp"
+#include "../document/OldMesh.hpp"
 #include <tiny_obj_loader.h>
 #include <QtDebug>
 
