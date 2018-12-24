@@ -14,7 +14,7 @@ GridFloor::GridFloor() {
     _vao = std::make_shared<LineVAO>(buffer);
 
     // build grid
-    constexpr int count = 10;
+    constexpr int count = 200;
     constexpr float unit = 1;
 
     std::vector<VertexBuffer::Vertex> vertices;
