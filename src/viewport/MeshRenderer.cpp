@@ -12,60 +12,58 @@ using namespace glm;
 namespace Lattice {
 
 MeshRenderer::MeshRenderer() {
-    _faceVAO = std::make_shared<VAO>();
-
     auto vbo = std::make_shared<VertexBuffer>();
     _edgeVAO = std::make_shared<LineVAO>(vbo);
     _vertexVAO = std::make_shared<PointVAO>(vbo);
+    _faceVAO = std::make_shared<VAO>(vbo);
 }
 
 void MeshRenderer::update(const SP<Mesh> &mesh) {
+    std::unordered_map<SP<MeshVertex>, uint32_t> indices;
+    std::vector<VertexBuffer::Vertex> vertices;
+    for (auto& vertex : mesh->vertices()) {
+        indices[vertex] = uint32_t(vertices.size());
+        VertexBuffer::Vertex vertexData = {
+            vertex->position(),
+            vec2(0), // TODO
+            vertex->normal(),
+        };
+        vertices.push_back(vertexData);
+    }
+    _edgeVAO->vertexBuffer()->setVertices(vertices);
+
     {
-        // Edge VAO
-        std::unordered_map<SP<MeshVertex>, uint32_t> indices;
-        std::vector<VertexBuffer::Vertex> vertices;
         std::vector<LineVAO::Line> lines;
-        for (auto& vertex : mesh->vertices()) {
-            indices[vertex] = uint32_t(vertices.size());
-            VertexBuffer::Vertex vertexData = {
-                    vertex->position(),
-                    vec2(0), // TODO
-                    vec3(0) // TODO
-            };
-            vertices.push_back(vertexData);
-        }
         for (auto& [_, edge] : mesh->edges()) {
             auto i0 = indices[edge->vertices()[0]];
             auto i1 = indices[edge->vertices()[1]];
             lines.push_back({i0, i1});
         }
-        _edgeVAO->vertexBuffer()->setVertices(vertices);
         _edgeVAO->setLines(lines);
     }
 
     {
         // Face VAO
-        std::vector<VertexBuffer::Vertex> vertices;
         std::vector<VAO::Triangle> triangles;
 
         for (auto& [_, face] : mesh->faces()) {
-            auto offset = uint32_t(vertices.size());
-            auto normal = face->normal();
-            for (auto& vertex : face->vertices()) {
-                vertices.push_back({vertex->position(), {}, normal});
-            }
+            auto v0 = face->vertices()[0];
+            auto i0 = indices[v0];
             for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
-                triangles.push_back({offset, offset + i - 1, offset + i});
+                auto v1 = face->vertices()[i - 1];
+                auto v2 = face->vertices()[i];
+                auto i1 = indices[v1];
+                auto i2 = indices[v2];
+                triangles.push_back({i0, i1, i2});
             }
         }
 
-        _faceVAO->vertexBuffer()->setVertices(vertices);
         _faceVAO->setTriangles(triangles);
     }
 }
 
 void MeshRenderer::drawFaces(const SP<Operations> &operations, const mat4 &viewMatrix, const Projection &projection) {
-    operations->drawSolid.draw(_faceVAO, viewMatrix, projection, vec3(0.8), vec3(0));
+    operations->drawSolid.draw(_faceVAO, viewMatrix, projection, vec3(0.8f), vec3(0));
 }
 
 void MeshRenderer::drawEdges(const SP<Operations> &operations, const mat4 &viewMatrix, const Projection &projection) {
