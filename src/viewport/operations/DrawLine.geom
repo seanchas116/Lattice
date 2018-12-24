@@ -7,6 +7,8 @@ uniform float width;
 uniform vec2 viewportSize;
 uniform float zNear;
 
+const float zOffset = -0.00001;
+
 layout(lines) in;
 layout(triangle_strip, max_vertices = 4) out;
 
@@ -47,13 +49,13 @@ void main(void) {
     vec2 direction = p1 - p0;
     vec2 offset = normalize(vec2(-direction.y, direction.x)) * (width * 0.5);
 
-    gl_Position = vec4((p0 + offset) / (viewportSize * 0.5) - 1.0, d0, 1);
+    gl_Position = vec4((p0 + offset) / (viewportSize * 0.5) - 1.0, d0 + zOffset, 1);
     EmitVertex();
-    gl_Position = vec4((p0 - offset) / (viewportSize * 0.5) - 1.0, d0, 1);
+    gl_Position = vec4((p0 - offset) / (viewportSize * 0.5) - 1.0, d0 + zOffset, 1);
     EmitVertex();
-    gl_Position = vec4((p1 + offset) / (viewportSize * 0.5) - 1.0, d1, 1);
+    gl_Position = vec4((p1 + offset) / (viewportSize * 0.5) - 1.0, d1 + zOffset, 1);
     EmitVertex();
-    gl_Position = vec4((p1 - offset) / (viewportSize * 0.5) - 1.0, d1, 1);
+    gl_Position = vec4((p1 - offset) / (viewportSize * 0.5) - 1.0, d1 + zOffset, 1);
     EmitVertex();
 
     EndPrimitive();
