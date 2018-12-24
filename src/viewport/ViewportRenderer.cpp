@@ -21,6 +21,8 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
 
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
 
     _operations = std::make_shared<Operations>();
     _gridFloor = std::make_shared<GridFloor>();
@@ -35,7 +37,7 @@ void ViewportRenderer::resize(ivec2 physicalSize, ivec2 logicalSize) {
 
 void ViewportRenderer::render() {
     glClearColor(0.8f, 0.8f, 0.8f, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     _appState->document()->rootItem()->forEachDescendant([&] (auto& item) {
         auto meshItem = std::dynamic_pointer_cast<MeshItem>(item);
