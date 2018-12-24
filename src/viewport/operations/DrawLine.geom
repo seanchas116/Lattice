@@ -6,8 +6,7 @@ uniform mat4 MV;
 uniform float width;
 uniform vec2 viewportSize;
 uniform float zNear;
-
-const float zOffset = -0.00001;
+uniform float zOffset;
 
 layout(lines) in;
 layout(triangle_strip, max_vertices = 4) out;

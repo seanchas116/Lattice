@@ -10,8 +10,7 @@ DrawLine::DrawLine() :
 {
 }
 
-void DrawLine::draw(const SP<LineVAO> &vao, const glm::mat4 &matrix, const Projection &projection, float width, glm::vec3 color)
-{
+void DrawLine::draw(const SP<LineVAO> &vao, const glm::mat4 &matrix, const Projection &projection, float width, glm::vec3 color, float zOffset) {
     _shader.bind();
     _shader.setUniform("MV", matrix);
     _shader.setUniform("P", projection.matrix());
@@ -19,6 +18,7 @@ void DrawLine::draw(const SP<LineVAO> &vao, const glm::mat4 &matrix, const Proje
     _shader.setUniform("zNear", projection.zNear());
     _shader.setUniform("width", width);
     _shader.setUniform("color", color);
+    _shader.setUniform("zOffset", zOffset);
     vao->draw();
 }
 
