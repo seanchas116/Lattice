@@ -85,11 +85,11 @@ SP<MeshVertex> Mesh::addVertex(glm::vec3 position) {
     return vertex;
 }
 
-SP<MeshEdge> Mesh::addEdge(const std::array<SP<MeshVertex>, 2> &verticesNonSorted) {
-    auto vertices = verticesNonSorted;
-    std::sort(vertices.begin(), vertices.end());
+SP<MeshEdge> Mesh::addEdge(const std::array<SP<MeshVertex>, 2> &vertices) {
+    auto sortedVertices = vertices;
+    std::sort(sortedVertices.begin(), sortedVertices.end());
 
-    auto it = _edges.find(vertices);
+    auto it = _edges.find(sortedVertices);
     if (it != _edges.end()) {
         return it->second;
     }
@@ -99,11 +99,11 @@ SP<MeshEdge> Mesh::addEdge(const std::array<SP<MeshVertex>, 2> &verticesNonSorte
     return edge;
 }
 
-SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshVertex> > &verticesNonSorted) {
-    auto vertices = verticesNonSorted;
-    std::sort(vertices.begin(), vertices.end());
+SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshVertex> > &vertices) {
+    auto sortedVertices = vertices;
+    std::sort(sortedVertices.begin(), sortedVertices.end());
 
-    auto it = _faces.find(vertices);
+    auto it = _faces.find(sortedVertices);
     if (it != _faces.end()) {
         return it->second;
     }
