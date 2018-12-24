@@ -6,9 +6,11 @@ namespace Lattice {
 
 class Location final {
 public:
-    glm::vec3 position {0};
     glm::vec3 scale {1};
     glm::vec3 rotation {0};
+    glm::vec3 position {0};
+
+    glm::mat4 matrix() const;
 
     bool operator==(const Location& other) const;
     bool operator!=(const Location& other) const;
