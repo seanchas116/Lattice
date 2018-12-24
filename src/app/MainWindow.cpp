@@ -1,6 +1,7 @@
 #include "MainWindow.hpp"
 #include "AppState.hpp"
 #include "ItemListPane.hpp"
+#include "ItemPropertyPane.hpp"
 #include "../actions/ImportAction.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
@@ -118,6 +119,13 @@ void MainWindow::setupPanes() {
         auto dockWidget = new QDockWidget();
         dockWidget->setWindowTitle(tr("Items"));
         dockWidget->setWidget(new ItemListPane(_appState));
+        addDockWidget(Qt::LeftDockWidgetArea, dockWidget);
+    }
+
+    {
+        auto dockWidget = new QDockWidget();
+        dockWidget->setWindowTitle(tr("Property"));
+        dockWidget->setWidget(new ItemPropertyPane(_appState));
         addDockWidget(Qt::LeftDockWidgetArea, dockWidget);
     }
 }
