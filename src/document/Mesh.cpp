@@ -19,6 +19,14 @@ std::vector<SP<MeshFace> > MeshVertex::faces() const {
     return faces;
 }
 
+glm::vec3 MeshVertex::normal() const {
+    glm::vec3 normalSum(0);
+    for (auto& face : _faces) {
+        normalSum += face->normal();
+    }
+    return normalize(normalSum / float(_faces.size()));
+}
+
 MeshEdge::MeshEdge(const std::array<SP<MeshVertex>, 2> &vertices) : _vertices(vertices) {
     vertices[0]->_edges.insert(this);
     vertices[1]->_edges.insert(this);
@@ -72,7 +80,7 @@ glm::vec3 MeshFace::normal() const {
         normalSum += normal;
     }
 
-    return normalSum / float(count);
+    return normalize(normalSum / float(count));
 }
 
 Mesh::Mesh() {

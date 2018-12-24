@@ -22,6 +22,8 @@ public:
     std::vector<SP<MeshEdge>> edges() const;
     std::vector<SP<MeshFace>> faces() const;
 
+    glm::vec3 normal() const;
+
 private:
     friend class MeshEdge;
     friend class MeshFace;
