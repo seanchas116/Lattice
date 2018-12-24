@@ -4,6 +4,7 @@ const float M_PI = 3.1415926535897932384626433832795;
 
 uniform float width;
 uniform vec2 viewportSize;
+uniform float zOffset;
 
 layout(points) in;
 layout(triangle_strip, max_vertices = 16) out;
@@ -19,7 +20,7 @@ void main(void) {
     // TODO: do culling for points outside frustum
     vec4 center_clipSpace = gl_in[0].gl_Position;
     vec2 center = (center_clipSpace.xy / center_clipSpace.w + 1.0) * (0.5 * viewportSize);
-    float depth = center_clipSpace.z / center_clipSpace.w;
+    float depth = center_clipSpace.z / center_clipSpace.w + zOffset;
 
     emitForAngle(center, depth, 0);
 
