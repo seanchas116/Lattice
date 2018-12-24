@@ -32,7 +32,7 @@ void main(void) {
 
     // Clip line using near plane
     if (p1_cameraSpace.z > -zNear) {
-        vec4 pnear_cameraSpace = mix(p0_cameraSpace, p1_cameraSpace, -zNear - p0_cameraSpace.z / (p1_cameraSpace.z - p0_cameraSpace.z));
+        vec4 pnear_cameraSpace = mix(p0_cameraSpace, p1_cameraSpace, (-zNear - p0_cameraSpace.z) / (p1_cameraSpace.z - p0_cameraSpace.z));
         p1_cameraSpace = pnear_cameraSpace;
     }
 
