@@ -1,10 +1,11 @@
 #pragma once
+#include "../support/Hash.hpp"
+#include "../support/Pointer.hpp"
+#include <QImage>
 #include <glm/glm.hpp>
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
-#include "../support/Hash.hpp"
-#include "../support/Pointer.hpp"
 
 namespace Lattice {
 
@@ -57,6 +58,38 @@ private:
     WP<Mesh> _mesh;
     std::vector<SP<MeshVertex>> _vertices;
     std::vector<SP<MeshEdge>> _edges;
+};
+
+class MeshMaterial {
+public:
+    glm::vec3 baseColor() const { return _baseColor; }
+    void setBaseColor(const glm::vec3 &baseColor) { _baseColor = baseColor; }
+
+    // TODO: image should be storead as a reference to an item of per-document image list
+    QImage baseColorImage() const { return _baseColorImage; }
+    void setBaseColorImage(const QImage &baseColorImage) { _baseColorImage = baseColorImage; }
+
+    float metallic() const { return _metallic; }
+    void setMetallic(float metallic) { _metallic = metallic; }
+
+    QImage metallicImage() const { return _metallicImage; }
+    void setMetallicImage(const QImage &metallicImage) { _metallicImage = metallicImage; }
+
+    float roughness() const { return _roughness; }
+    void setRoughness(float roughness) { _roughness = roughness; }
+
+    QImage roughnessImage() const { return _roughnessImage; }
+    void setRoughnessImage(const QImage &roughnessImage) { _roughnessImage = roughnessImage; }
+
+private:
+    glm::vec3 _baseColor;
+    QImage _baseColorImage;
+
+    float _metallic;
+    QImage _metallicImage;
+
+    float _roughness;
+    QImage _roughnessImage;
 };
 
 class Mesh {
