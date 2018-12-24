@@ -14,7 +14,8 @@ if (NOT MSVC)
     add_definitions(-D_MSC_EXTENSIONS)
 endif()
 
-add_definitions(-DGLM_FORCE_SWIZZLE=1)
+add_definitions(-DGLM_FORCE_SWIZZLE)
+add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
 add_definitions(-D_USE_MATH_DEFINES)
 
 find_package(Qt5Widgets REQUIRED)
