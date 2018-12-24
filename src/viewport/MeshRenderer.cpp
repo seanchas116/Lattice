@@ -65,7 +65,7 @@ void MeshRenderer::update(const SP<Mesh> &mesh) {
 }
 
 void MeshRenderer::drawFaces(const SP<Operations> &operations, const mat4 &viewMatrix, const Projection &projection) {
-    operations->drawSolid.draw(_faceVAO, viewMatrix, projection, vec3(1, 0, 0), vec3(0));
+    operations->drawSolid.draw(_faceVAO, viewMatrix, projection, vec3(0.8), vec3(0));
 }
 
 void MeshRenderer::drawEdges(const SP<Operations> &operations, const mat4 &viewMatrix, const Projection &projection) {
@@ -73,7 +73,7 @@ void MeshRenderer::drawEdges(const SP<Operations> &operations, const mat4 &viewM
 }
 
 void MeshRenderer::drawVertices(const SP<Operations> &operations, const glm::mat4 &viewMatrix, const Projection &projection) {
-    operations->drawCircle.draw(_vertexVAO, viewMatrix, projection, 5.f, vec3(1));
+    operations->drawCircle.draw(_vertexVAO, viewMatrix, projection, 2.f, vec3(1));
 }
 
 }
