@@ -39,13 +39,25 @@ void ViewportRenderer::render() {
     glClearColor(0.8f, 0.8f, 0.8f, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    std::unordered_map<SP<MeshItem>, SP<MeshRenderer>> newMeshRenderers;
+
     _appState->document()->rootItem()->forEachDescendant([&] (auto& item) {
         auto meshItem = std::dynamic_pointer_cast<MeshItem>(item);
-        if (!meshItem) { return; }
-        auto renderer = std::make_shared<MeshRenderer>();
-        renderer->update(meshItem->mesh());
-        _meshRenderers[meshItem] = renderer;
+        if (!meshItem) {
+            return;
+        }
+
+        auto it = _meshRenderers.find(meshItem);
+        if (it != _meshRenderers.end()) {
+            newMeshRenderers[meshItem] = it->second;
+            return;
+        }
+
+        auto renderer = std::make_shared<MeshRenderer>(meshItem);
+        newMeshRenderers[meshItem] = renderer;
     });
+
+    _meshRenderers = newMeshRenderers;
 
     _gridFloor->draw(_operations, _camera.matrix(), _projection);
 

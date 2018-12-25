@@ -1,6 +1,7 @@
 #include "MeshRenderer.hpp"
 #include "Operations.hpp"
 #include "../document/Mesh.hpp"
+#include "../document/MeshItem.hpp"
 #include "../gl/VAO.hpp"
 #include "../gl/LineVAO.hpp"
 #include "../gl/PointVAO.hpp"
@@ -11,11 +12,14 @@ using namespace glm;
 
 namespace Lattice {
 
-MeshRenderer::MeshRenderer() {
+MeshRenderer::MeshRenderer(const SP<MeshItem> &item) {
     auto vbo = std::make_shared<VertexBuffer>();
     _edgeVAO = std::make_shared<LineVAO>(vbo);
     _vertexVAO = std::make_shared<PointVAO>(vbo);
     _faceVAO = std::make_shared<VAO>(vbo);
+
+    // TODO: update mesh when item is changed
+    update(item->mesh());
 }
 
 void MeshRenderer::update(const SP<Mesh> &mesh) {
