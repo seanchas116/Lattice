@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <unordered_set>
 #include "../support/Pointer.hpp"
 
 namespace Lattice {
@@ -22,8 +23,8 @@ public:
     SP<MeshItem> currentMeshItem() const;
     void setCurrentItem(const SP<Item>& item);
 
-    const std::vector<SP<Item>>& selectedItems() const { return _selectedItems; }
-    void setSelectedItems(const std::vector<SP<Item>>& items);
+    auto& selectedItems() const { return _selectedItems; }
+    void setSelectedItems(const std::unordered_set<SP<Item>>& items);
 
     void insertItemToCurrentPosition(const SP<Item>& item);
     void deleteSelectedItems();
@@ -33,7 +34,7 @@ public:
 signals:
     void currentItemChanged(const SP<Item>& item);
     void currentMeshItemChanged(const SP<Item>& item);
-    void selectedItemsChanged(const std::vector<SP<Item>>& items);
+    void selectedItemsChanged(const std::unordered_set<SP<Item>>& items);
 
     void itemInserted(const SP<Item>& item);
     void itemAboutToBeRemoved(const SP<Item>& item);
@@ -44,7 +45,7 @@ private:
     SP<Item> _rootItem;
 
     SP<Item> _currentItem;
-    std::vector<SP<Item>> _selectedItems;
+    std::unordered_set<SP<Item>> _selectedItems;
 
     SP<History> _history;
 };

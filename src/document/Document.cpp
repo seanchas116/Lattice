@@ -57,7 +57,7 @@ void Document::setCurrentItem(const SP<Item> &item) {
     }
 }
 
-void Document::setSelectedItems(const std::vector<SP<Item>> &items) {
+void Document::setSelectedItems(const std::unordered_set<SP<Item>> &items) {
     if (_selectedItems != items) {
         _selectedItems = items;
         emit selectedItemsChanged(items);

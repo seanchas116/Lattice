@@ -87,8 +87,8 @@ void ItemPropertyPane::onLocationChanged() {
     // TODO: support multiple items
     // TODO: spinboxes must be disbled when no item is selected
 
-    auto selectedItems = _appState->document()->selectedItems();
-    auto pos = selectedItems.empty() ? glm::vec3(-1) : selectedItems[0]->location().position;
+    auto currentItem = _appState->document()->currentItem();
+    auto pos = currentItem ? currentItem->location().position : glm::vec3(0);
 
     _posXSpinBox->setValue(double(pos.x));
     _posYSpinBox->setValue(double(pos.y));
