@@ -171,7 +171,7 @@ void Item::addChange(const SP<Change> &change) {
 
 class Item::NameChange : public Change {
 public:
-    NameChange(SP<Item> item, std::string name) : _item(std::move(item)), _name(std::move(name)) {
+    NameChange(const SP<Item>& item, const std::string& name) : _item(item), _name(name) {
         _oldName = _item->name();
     }
 
@@ -200,7 +200,7 @@ private:
 
 class Item::LocationChange : public Change {
 public:
-    LocationChange(SP<Item> item, Location location) : _item(std::move(item)), _location(std::move(location)) {
+    LocationChange(const SP<Item>& item, const Location& location) : _item(item), _location(location) {
         _oldLocation = item->location();
     }
 
