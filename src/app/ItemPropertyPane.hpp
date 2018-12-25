@@ -25,6 +25,8 @@ private:
     QMetaObject::Connection _itemConnection;
 
     std::array<QDoubleSpinBox*, 3> _positionSpinBoxes;
+    std::array<QDoubleSpinBox*, 3> _scaleSpinBoxes;
+    std::array<QDoubleSpinBox*, 3> _rotationSpinBoxes;
 };
 
 } // namespace Lattice
