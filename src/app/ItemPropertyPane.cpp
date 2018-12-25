@@ -49,17 +49,17 @@ ItemPropertyPane::ItemPropertyPane(const SP<AppState> &appState, QWidget *parent
     _positionSpinBoxes = positionSpinBoxes;
     layout->addLayout(positionLayout);
 
-    layout->addWidget(new QLabel("Scale"));
-
-    auto [scaleLayout, scaleSpinBoxes] = buildVec3SpinBoxes();
-    _scaleSpinBoxes = scaleSpinBoxes;
-    layout->addLayout(scaleLayout);
-
     layout->addWidget(new QLabel("Rotation"));
 
     auto [rotationLayout, rotationSpinBoxes] = buildVec3SpinBoxes();
     _rotationSpinBoxes = rotationSpinBoxes;
     layout->addLayout(rotationLayout);
+
+    layout->addWidget(new QLabel("Scale"));
+
+    auto [scaleLayout, scaleSpinBoxes] = buildVec3SpinBoxes();
+    _scaleSpinBoxes = scaleSpinBoxes;
+    layout->addLayout(scaleLayout);
 
     layout->addStretch();
     setLayout(layout);
