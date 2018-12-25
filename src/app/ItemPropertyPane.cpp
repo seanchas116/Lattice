@@ -23,8 +23,8 @@ ItemPropertyPane::ItemPropertyPane(const SP<AppState> &appState, QWidget *parent
     _posZSpinBox = new QDoubleSpinBox();
     for (auto spinBox : {_posXSpinBox, _posYSpinBox, _posZSpinBox}) {
         spinBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-        spinBox->setMinimum(-100);
-        spinBox->setMaximum(100);
+        spinBox->setMinimum(-std::numeric_limits<double>::infinity());
+        spinBox->setMaximum(std::numeric_limits<double>::infinity());
     }
 
     connect(appState->document().get(), &Document::currentItemChanged, this, &ItemPropertyPane::onCurrentItemChanged);
