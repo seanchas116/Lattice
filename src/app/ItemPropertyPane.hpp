@@ -18,6 +18,8 @@ private:
     void onCurrentItemChanged();
     void onLocationChanged();
 
+    void setLocation();
+
     SP<AppState> _appState;
     QMetaObject::Connection _itemConnection;
 

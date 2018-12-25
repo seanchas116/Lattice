@@ -30,23 +30,9 @@ ItemPropertyPane::ItemPropertyPane(const SP<AppState> &appState, QWidget *parent
     connect(appState->document().get(), &Document::currentItemChanged, this, &ItemPropertyPane::onCurrentItemChanged);
     onCurrentItemChanged();
 
-    auto setPosition = [=] {
-        auto item = _appState->document()->currentItem();
-        if (!item) {
-            return;
-        }
-        auto location = item->location();
-
-        auto x = _posXSpinBox->value();
-        auto y = _posYSpinBox->value();
-        auto z = _posZSpinBox->value();
-        location.position = glm::vec3(x, y, z);
-
-        item->setLocation(location);
-    };
-    connect(_posXSpinBox, &QDoubleSpinBox::editingFinished, this, setPosition);
-    connect(_posYSpinBox, &QDoubleSpinBox::editingFinished, this, setPosition);
-    connect(_posZSpinBox, &QDoubleSpinBox::editingFinished, this, setPosition);
+    connect(_posXSpinBox, &QDoubleSpinBox::editingFinished, this, &ItemPropertyPane::setLocation);
+    connect(_posYSpinBox, &QDoubleSpinBox::editingFinished, this, &ItemPropertyPane::setLocation);
+    connect(_posZSpinBox, &QDoubleSpinBox::editingFinished, this, &ItemPropertyPane::setLocation);
 
     positionLayout->addWidget(_posXSpinBox, 0, 0);
     positionLayout->addWidget(_posYSpinBox, 0, 1);
@@ -90,6 +76,21 @@ void ItemPropertyPane::onLocationChanged() {
     _posXSpinBox->setValue(double(pos.x));
     _posYSpinBox->setValue(double(pos.y));
     _posZSpinBox->setValue(double(pos.z));
+}
+
+void ItemPropertyPane::setLocation() {
+    auto item = _appState->document()->currentItem();
+    if (!item) {
+        return;
+    }
+    auto location = item->location();
+
+    auto x = _posXSpinBox->value();
+    auto y = _posYSpinBox->value();
+    auto z = _posZSpinBox->value();
+    location.position = glm::vec3(x, y, z);
+
+    item->setLocation(location);
 }
 
 } // namespace Lattice
