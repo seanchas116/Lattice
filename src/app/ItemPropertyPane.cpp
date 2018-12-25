@@ -27,8 +27,8 @@ ItemPropertyPane::ItemPropertyPane(const SP<AppState> &appState, QWidget *parent
         spinBox->setMaximum(100);
     }
 
-    connect(appState->document().get(), &Document::selectedItemsChanged, this, &ItemPropertyPane::onSelectedItemChanged);
-    onSelectedItemChanged();
+    connect(appState->document().get(), &Document::currentItemChanged, this, &ItemPropertyPane::onCurrentItemChanged);
+    onCurrentItemChanged();
 
     /*
     connect(editorState.get(), &EditorState::selectionChanged, this, updatePosition);
@@ -69,16 +69,12 @@ ItemPropertyPane::ItemPropertyPane(const SP<AppState> &appState, QWidget *parent
     setLayout(layout);
 }
 
-void ItemPropertyPane::onSelectedItemChanged() {
-    for (auto& c : _itemConnections) {
-        disconnect(c);
-    }
-    _itemConnections.clear();
+void ItemPropertyPane::onCurrentItemChanged() {
+    disconnect(_itemConnection);
 
-    auto selectedItems = _appState->document()->selectedItems();
-    for (auto& item : selectedItems) {
-        auto c = connect(item.get(), &Item::locationChanged, this, &ItemPropertyPane::onLocationChanged);
-        _itemConnections.push_back(c);
+    auto currentItem = _appState->document()->currentItem();
+    if (currentItem) {} {
+        _itemConnection = connect(currentItem.get(), &Item::locationChanged, this, &ItemPropertyPane::onLocationChanged);
     }
     onLocationChanged();
 }

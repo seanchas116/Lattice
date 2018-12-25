@@ -15,11 +15,11 @@ public:
     explicit ItemPropertyPane(const SP<AppState> &appState, QWidget *parent = nullptr);
 
 private:
-    void onSelectedItemChanged();
+    void onCurrentItemChanged();
     void onLocationChanged();
 
     SP<AppState> _appState;
-    std::vector<QMetaObject::Connection> _itemConnections;
+    QMetaObject::Connection _itemConnection;
 
     QDoubleSpinBox* _posXSpinBox;
     QDoubleSpinBox* _posYSpinBox;
