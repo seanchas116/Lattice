@@ -30,22 +30,23 @@ ItemPropertyPane::ItemPropertyPane(const SP<AppState> &appState, QWidget *parent
     connect(appState->document().get(), &Document::currentItemChanged, this, &ItemPropertyPane::onCurrentItemChanged);
     onCurrentItemChanged();
 
-    /*
-    connect(editorState.get(), &EditorState::selectionChanged, this, updatePosition);
-    // TODO: support current item changes
-    connect(editorState->focusedItem().get(), &Item::changed, this, updatePosition);
-
     auto setPosition = [=] {
-        auto x = xSpinBox->value();
-        auto y = ySpinBox->value();
-        auto z = zSpinBox->value();
-        _editorState->selection().setMedianPosition(glm::vec3(x, y, z));
-        _editorState->focusedItem()->notifyChanged();
+        auto item = _appState->document()->currentItem();
+        if (!item) {
+            return;
+        }
+        auto location = item->location();
+
+        auto x = _posXSpinBox->value();
+        auto y = _posYSpinBox->value();
+        auto z = _posZSpinBox->value();
+        location.position = glm::vec3(x, y, z);
+
+        item->setLocation(location);
     };
-    connect(xSpinBox, &QDoubleSpinBox::editingFinished, this, setPosition);
-    connect(ySpinBox, &QDoubleSpinBox::editingFinished, this, setPosition);
-    connect(zSpinBox, &QDoubleSpinBox::editingFinished, this, setPosition);
-    */
+    connect(_posXSpinBox, &QDoubleSpinBox::editingFinished, this, setPosition);
+    connect(_posYSpinBox, &QDoubleSpinBox::editingFinished, this, setPosition);
+    connect(_posZSpinBox, &QDoubleSpinBox::editingFinished, this, setPosition);
 
     positionLayout->addWidget(_posXSpinBox, 0, 0);
     positionLayout->addWidget(_posYSpinBox, 0, 1);
