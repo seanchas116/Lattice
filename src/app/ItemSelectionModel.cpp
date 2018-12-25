@@ -14,6 +14,10 @@ ItemSelectionModel::ItemSelectionModel(ItemModel *model, QObject *parent) : QIte
         }
         model->document()->setSelectedItems(items);
     });
+    connect(this, &QItemSelectionModel::currentChanged, model, [this, model] {
+        auto item = model->itemForIndex(currentIndex());
+        model->document()->setCurrentItem(item);
+    });
 }
 
 } // namespace Shapecraft
