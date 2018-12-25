@@ -1,7 +1,8 @@
 #pragma once
 
-#include <QWidget>
 #include "../support/Pointer.hpp"
+#include <QWidget>
+#include <array>
 
 class QDoubleSpinBox;
 
@@ -23,9 +24,7 @@ private:
     SP<AppState> _appState;
     QMetaObject::Connection _itemConnection;
 
-    QDoubleSpinBox* _posXSpinBox;
-    QDoubleSpinBox* _posYSpinBox;
-    QDoubleSpinBox* _posZSpinBox;
+    std::array<QDoubleSpinBox*, 3> _positionSpinBoxes;
 };
 
 } // namespace Lattice

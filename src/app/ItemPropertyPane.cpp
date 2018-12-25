@@ -16,44 +16,39 @@ ItemPropertyPane::ItemPropertyPane(const SP<AppState> &appState, QWidget *parent
 {
     auto layout = new QVBoxLayout();
 
-    auto positionLayout = new QGridLayout();
+    layout->addWidget(new QLabel("<b>Position</b>"));
 
-    _posXSpinBox = new QDoubleSpinBox();
-    _posYSpinBox = new QDoubleSpinBox();
-    _posZSpinBox = new QDoubleSpinBox();
-    for (auto spinBox : {_posXSpinBox, _posYSpinBox, _posZSpinBox}) {
-        spinBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-        spinBox->setMinimum(-std::numeric_limits<double>::infinity());
-        spinBox->setMaximum(std::numeric_limits<double>::infinity());
+    {
+        auto positionLayout = new QGridLayout();
+
+        _positionSpinBoxes = {
+            new QDoubleSpinBox(),
+            new QDoubleSpinBox(),
+            new QDoubleSpinBox(),
+        };
+        std::array<QString, 3> labels {"X", "Y", "Z"};
+
+        for (size_t i = 0; i < 3; ++i) {
+            auto spinBox = _positionSpinBoxes[i];
+            spinBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+            spinBox->setMinimum(-std::numeric_limits<double>::infinity());
+            spinBox->setMaximum(std::numeric_limits<double>::infinity());
+            connect(spinBox, &QDoubleSpinBox::editingFinished, this, &ItemPropertyPane::setLocation);
+            positionLayout->addWidget(spinBox, 0, int(i));
+
+            auto label = new QLabel(labels[i]);
+            label->setAlignment(Qt::AlignHCenter);
+            positionLayout->addWidget(label, 1, int(i));
+        }
+
+        layout->addLayout(positionLayout);
     }
+
+    layout->addStretch();
+    setLayout(layout);
 
     connect(appState->document().get(), &Document::currentItemChanged, this, &ItemPropertyPane::onCurrentItemChanged);
     onCurrentItemChanged();
-
-    connect(_posXSpinBox, &QDoubleSpinBox::editingFinished, this, &ItemPropertyPane::setLocation);
-    connect(_posYSpinBox, &QDoubleSpinBox::editingFinished, this, &ItemPropertyPane::setLocation);
-    connect(_posZSpinBox, &QDoubleSpinBox::editingFinished, this, &ItemPropertyPane::setLocation);
-
-    positionLayout->addWidget(_posXSpinBox, 0, 0);
-    positionLayout->addWidget(_posYSpinBox, 0, 1);
-    positionLayout->addWidget(_posZSpinBox, 0, 2);
-
-    auto xLabel = new QLabel("X");
-    xLabel->setAlignment(Qt::AlignHCenter);
-    auto yLabel = new QLabel("Y");
-    yLabel->setAlignment(Qt::AlignHCenter);
-    auto zLabel = new QLabel("Z");
-    zLabel->setAlignment(Qt::AlignHCenter);
-
-    positionLayout->addWidget(xLabel, 1, 0);
-    positionLayout->addWidget(yLabel, 1, 1);
-    positionLayout->addWidget(zLabel, 1, 2);
-
-    layout->addLayout(positionLayout);
-
-    layout->addStretch();
-
-    setLayout(layout);
 }
 
 void ItemPropertyPane::onCurrentItemChanged() {
@@ -73,9 +68,9 @@ void ItemPropertyPane::onLocationChanged() {
     auto currentItem = _appState->document()->currentItem();
     auto pos = currentItem ? currentItem->location().position : glm::vec3(0);
 
-    _posXSpinBox->setValue(double(pos.x));
-    _posYSpinBox->setValue(double(pos.y));
-    _posZSpinBox->setValue(double(pos.z));
+    _positionSpinBoxes[0]->setValue(double(pos.x));
+    _positionSpinBoxes[1]->setValue(double(pos.y));
+    _positionSpinBoxes[2]->setValue(double(pos.z));
 }
 
 void ItemPropertyPane::setLocation() {
@@ -85,9 +80,9 @@ void ItemPropertyPane::setLocation() {
     }
     auto location = item->location();
 
-    auto x = _posXSpinBox->value();
-    auto y = _posYSpinBox->value();
-    auto z = _posZSpinBox->value();
+    auto x = _positionSpinBoxes[0]->value();
+    auto y = _positionSpinBoxes[1]->value();
+    auto z = _positionSpinBoxes[2]->value();
     location.position = glm::vec3(x, y, z);
 
     item->setLocation(location);
