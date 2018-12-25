@@ -28,6 +28,9 @@ public:
 
     void setCamera(const Camera& camera) { _camera = camera; }
 
+signals:
+    void updateNeeded();
+
 private:
     glm::ivec2 _logicalSize;
     Camera _camera;

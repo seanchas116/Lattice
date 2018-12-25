@@ -7,7 +7,7 @@
 namespace Lattice {
 
 glm::mat4 Location::matrix() const {
-    glm::mat4 m(0);
+    glm::mat4 m(1);
     m = glm::scale(m, scale);
     m = glm::yawPitchRoll(rotation.y, rotation.x, rotation.z) * m;
     m = glm::translate(m, position);

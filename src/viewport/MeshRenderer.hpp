@@ -24,6 +24,7 @@ public:
 private:
     void update(const SP<Mesh>& mesh);
 
+    SP<MeshItem> _item;
     SP<VAO> _faceVAO;
     SP<LineVAO> _edgeVAO;
     SP<PointVAO> _vertexVAO;

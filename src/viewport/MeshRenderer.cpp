@@ -12,7 +12,7 @@ using namespace glm;
 
 namespace Lattice {
 
-MeshRenderer::MeshRenderer(const SP<MeshItem> &item) {
+MeshRenderer::MeshRenderer(const SP<MeshItem> &item) : _item(item) {
     auto vbo = std::make_shared<VertexBuffer>();
     _edgeVAO = std::make_shared<LineVAO>(vbo);
     _vertexVAO = std::make_shared<PointVAO>(vbo);
@@ -67,15 +67,15 @@ void MeshRenderer::update(const SP<Mesh> &mesh) {
 }
 
 void MeshRenderer::drawFaces(const SP<Operations> &operations, const mat4 &viewMatrix, const Projection &projection) {
-    operations->drawSolid.draw(_faceVAO, viewMatrix, projection, vec3(0.8f), vec3(0));
+    operations->drawSolid.draw(_faceVAO, viewMatrix * _item->location().matrix(), projection, vec3(0.8f), vec3(0));
 }
 
 void MeshRenderer::drawEdges(const SP<Operations> &operations, const mat4 &viewMatrix, const Projection &projection) {
-    operations->drawLine.draw(_edgeVAO, viewMatrix, projection, 1.f, vec3(0));
+    operations->drawLine.draw(_edgeVAO, viewMatrix * _item->location().matrix(), projection, 1.f, vec3(0));
 }
 
 void MeshRenderer::drawVertices(const SP<Operations> &operations, const glm::mat4 &viewMatrix, const Projection &projection) {
-    operations->drawCircle.draw(_vertexVAO, viewMatrix, projection, 2.f, vec3(1));
+    operations->drawCircle.draw(_vertexVAO, viewMatrix * _item->location().matrix(), projection, 2.f, vec3(1));
 }
 
 }

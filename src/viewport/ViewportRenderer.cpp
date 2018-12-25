@@ -46,6 +46,7 @@ void ViewportRenderer::render() {
         if (!meshItem) {
             return;
         }
+        connect(meshItem.get(), &MeshItem::locationChanged, this, &ViewportRenderer::updateNeeded);
 
         auto it = _meshRenderers.find(meshItem);
         if (it != _meshRenderers.end()) {
