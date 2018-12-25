@@ -228,7 +228,9 @@ private:
 };
 
 void Item::setName(const std::string &name) {
-    addChange(std::make_shared<NameChange>(shared_from_this(), name));
+    if (_name != name) {
+        addChange(std::make_shared<NameChange>(shared_from_this(), name));
+    }
 }
 
 void Item::setNameInternal(const std::string &name) {
@@ -239,7 +241,9 @@ void Item::setNameInternal(const std::string &name) {
 }
 
 void Item::setLocation(const Location &location) {
-    addChange(std::make_shared<LocationChange>(shared_from_this(), location));
+    if (_location != location) {
+        addChange(std::make_shared<LocationChange>(shared_from_this(), location));
+    }
 }
 
 void Item::forEachDescendant(const std::function<void(const SP<Item>&)> &callback) {
