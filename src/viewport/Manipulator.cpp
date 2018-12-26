@@ -12,7 +12,7 @@ namespace Lattice {
 namespace {
 
 constexpr float bodyLength = 2.f;
-constexpr float bodyWidth = 1.f;
+constexpr float bodyWidth = 2.f;
 constexpr float headLength = 0.4f;
 constexpr float headWidth = 0.2f;
 constexpr uint32_t headSegmentCount = 16;
