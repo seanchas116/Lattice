@@ -98,7 +98,7 @@ private:
     float _metallic {0};
     QImage _metallicImage;
 
-    float _roughness {0};
+    float _roughness {0.5};
     QImage _roughnessImage;
 
     std::unordered_set<MeshFace*> _faces;
