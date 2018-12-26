@@ -75,7 +75,7 @@ void MeshRenderer::drawEdges(const SP<Operations> &operations, const mat4 &viewM
 }
 
 void MeshRenderer::drawVertices(const SP<Operations> &operations, const glm::mat4 &viewMatrix, const Projection &projection) {
-    operations->drawCircle.draw(_vertexVAO, viewMatrix * _item->location().matrix(), projection, 2.f, vec3(1));
+    operations->drawCircle.draw(_vertexVAO, viewMatrix * _item->location().matrix(), projection, 4.f, vec3(0));
 }
 
 }
