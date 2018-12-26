@@ -92,13 +92,13 @@ public:
 private:
     friend class MeshFace;
 
-    glm::vec3 _baseColor;
+    glm::vec3 _baseColor {1, 0, 0};
     QImage _baseColorImage;
 
-    float _metallic;
+    float _metallic {0};
     QImage _metallicImage;
 
-    float _roughness;
+    float _roughness {0};
     QImage _roughnessImage;
 
     std::unordered_set<MeshFace*> _faces;

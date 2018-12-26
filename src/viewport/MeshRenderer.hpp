@@ -2,6 +2,7 @@
 
 #include "../support/Pointer.hpp"
 #include <glm/glm.hpp>
+#include <unordered_map>
 
 namespace Lattice {
 
@@ -12,6 +13,8 @@ class PointVAO;
 class Mesh;
 class Operations;
 class Projection;
+class MeshMaterial;
+class VertexBuffer;
 
 class MeshRenderer {
 public:
@@ -25,7 +28,8 @@ private:
     void update(const SP<Mesh>& mesh);
 
     SP<MeshItem> _item;
-    SP<VAO> _faceVAO;
+    SP<VertexBuffer> _vbo;
+    std::unordered_map<SP<MeshMaterial>, SP<VAO>> _faceVAOs;
     SP<LineVAO> _edgeVAO;
     SP<PointVAO> _vertexVAO;
 };
