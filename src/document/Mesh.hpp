@@ -13,6 +13,7 @@ class MeshVertex;
 class MeshEdge;
 class MeshFace;
 class Mesh;
+class MeshMaterial;
 
 class MeshVertex {
 public:
@@ -48,7 +49,7 @@ private:
 
 class MeshFace : public std::enable_shared_from_this<MeshFace> {
 public:
-    MeshFace(const std::vector<SP<MeshVertex>>& vertices, const std::vector<SP<MeshEdge>>& edges);
+    MeshFace(const std::vector<SP<MeshVertex>>& vertices, const std::vector<SP<MeshEdge>>& edges, const SP<MeshMaterial>& material);
     ~MeshFace();
 
     auto& vertices() const { return _vertices; }
@@ -56,10 +57,13 @@ public:
 
     glm::vec3 normal() const;
 
+    auto& material() const { return _material; }
+    void setMaterial(const SP<MeshMaterial>& material);
+
 private:
-    WP<Mesh> _mesh;
     std::vector<SP<MeshVertex>> _vertices;
     std::vector<SP<MeshEdge>> _edges;
+    SP<MeshMaterial> _material;
 };
 
 class MeshMaterial {
@@ -83,7 +87,11 @@ public:
     QImage roughnessImage() const { return _roughnessImage; }
     void setRoughnessImage(const QImage &roughnessImage) { _roughnessImage = roughnessImage; }
 
+    std::vector<SP<MeshFace> > faces() const;
+
 private:
+    friend class MeshFace;
+
     glm::vec3 _baseColor;
     QImage _baseColorImage;
 
@@ -92,6 +100,8 @@ private:
 
     float _roughness;
     QImage _roughnessImage;
+
+    std::unordered_set<MeshFace*> _faces;
 };
 
 class Mesh {
@@ -105,6 +115,7 @@ public:
     const auto& vertices() const { return _vertices; }
     const auto& edges() const { return _edges; }
     const auto& faces() const { return _faces; }
+    const auto& materials() const { return _materials; }
 
     SP<Mesh> clone() const;
 
@@ -113,6 +124,7 @@ private:
     std::unordered_set<SP<MeshVertex>> _vertices;
     std::unordered_map<std::array<SP<MeshVertex>, 2>, SP<MeshEdge>> _edges;
     std::unordered_map<std::vector<SP<MeshVertex>>, SP<MeshFace>> _faces;
+    std::vector<SP<MeshMaterial>> _materials;
 };
 
 } // namespace Lattice

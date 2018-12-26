@@ -45,13 +45,18 @@ std::vector<SP<MeshFace> > MeshEdge::faces() const {
     return faces;
 }
 
-MeshFace::MeshFace(const std::vector<SP<MeshVertex> > &vertices, const std::vector<SP<MeshEdge> > &edges) : _vertices(vertices), _edges(edges) {
+MeshFace::MeshFace(const std::vector<SP<MeshVertex> > &vertices, const std::vector<SP<MeshEdge> > &edges, const SP<MeshMaterial> &material) :
+    _vertices(vertices),
+    _edges(edges),
+    _material(material)
+{
     for (auto& v : vertices) {
         v->_faces.insert(this);
     }
     for (auto& e : edges) {
         e->_faces.insert(this);
     }
+    material->_faces.insert(this);
 }
 
 MeshFace::~MeshFace() {
@@ -61,6 +66,7 @@ MeshFace::~MeshFace() {
     for (auto& e : _edges) {
         e->_faces.erase(this);
     }
+    _material->_faces.erase(this);
 }
 
 glm::vec3 MeshFace::normal() const {
@@ -84,6 +90,7 @@ glm::vec3 MeshFace::normal() const {
 }
 
 Mesh::Mesh() {
+    _materials.push_back(std::make_shared<MeshMaterial>()); // default material
 }
 
 SP<MeshVertex> Mesh::addVertex(glm::vec3 position) {
@@ -121,13 +128,22 @@ SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshVertex> > &vertices) {
         edges.push_back(addEdge({vertices[i], vertices[(i + 1) % vertices.size()]}));
     }
 
-    auto face = std::make_shared<MeshFace>(vertices, edges);
+    auto face = std::make_shared<MeshFace>(vertices, edges, _materials[0]);
     _faces[vertices] = face;
     return face;
 }
 
 SP<Mesh> Mesh::clone() const {
     throw std::runtime_error("not implemented");
+}
+
+std::vector<SP<MeshFace>> MeshMaterial::faces() const {
+    std::vector<SP<MeshFace>> faces;
+    faces.reserve(_faces.size());
+    for (auto& f : _faces) {
+        faces.push_back(f->shared_from_this());
+    }
+    return faces;
 }
 
 } // namespace Lattice
