@@ -16,48 +16,47 @@ ItemPropertyPane::ItemPropertyPane(const SP<AppState> &appState, QWidget *parent
 {
     auto layout = new QVBoxLayout();
 
-    auto buildVec3SpinBoxes = [this] {
-        auto gridLayout = new QGridLayout();
+    auto gridLayout = new QGridLayout();
+
+    std::array<QString, 3> labels {"X", "Y", "Z"};
+    for (size_t i = 0; i < 3; ++i) {
+        auto label = new QLabel(labels[i]);
+        label->setAlignment(Qt::AlignHCenter);
+        gridLayout->addWidget(label, 0, int(i + 1));
+    }
+
+    auto buildVec3SpinBoxes = [&] (const QString& title, int row) {
+        auto label = new QLabel(title);
+        gridLayout->addWidget(label, row, 0);
 
         std::array<QDoubleSpinBox*, 3> spinBoxes = {
             new QDoubleSpinBox(),
             new QDoubleSpinBox(),
             new QDoubleSpinBox(),
         };
-        //std::array<QString, 3> labels {"X", "Y", "Z"};
 
         for (size_t i = 0; i < 3; ++i) {
             auto spinBox = spinBoxes[i];
             spinBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
             spinBox->setMinimum(-std::numeric_limits<double>::infinity());
             spinBox->setMaximum(std::numeric_limits<double>::infinity());
-            gridLayout->addWidget(spinBox, 0, int(i));
+            gridLayout->addWidget(spinBox, row, int(i + 1));
 
             connect(spinBox, &QDoubleSpinBox::editingFinished, this, &ItemPropertyPane::setLocation);
-
-            //auto label = new QLabel(labels[i]);
-            //label->setAlignment(Qt::AlignHCenter);
-            //gridLayout->addWidget(label, 1, int(i));
         }
 
         return std::tuple(gridLayout, spinBoxes);
     };
 
-    layout->addWidget(new QLabel("Position"));
-
-    auto [positionLayout, positionSpinBoxes] = buildVec3SpinBoxes();
+    auto [positionLayout, positionSpinBoxes] = buildVec3SpinBoxes("Position", 1);
     _positionSpinBoxes = positionSpinBoxes;
     layout->addLayout(positionLayout);
 
-    layout->addWidget(new QLabel("Rotation"));
-
-    auto [rotationLayout, rotationSpinBoxes] = buildVec3SpinBoxes();
+    auto [rotationLayout, rotationSpinBoxes] = buildVec3SpinBoxes("Rotation", 2);
     _rotationSpinBoxes = rotationSpinBoxes;
     layout->addLayout(rotationLayout);
 
-    layout->addWidget(new QLabel("Scale"));
-
-    auto [scaleLayout, scaleSpinBoxes] = buildVec3SpinBoxes();
+    auto [scaleLayout, scaleSpinBoxes] = buildVec3SpinBoxes("Scale", 3);
     _scaleSpinBoxes = scaleSpinBoxes;
     layout->addLayout(scaleLayout);
 
