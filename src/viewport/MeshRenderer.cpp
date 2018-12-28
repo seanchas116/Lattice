@@ -28,7 +28,7 @@ void MeshRenderer::update(const SP<Mesh> &mesh) {
         indices[vertex] = uint32_t(vertices.size());
         VertexBuffer::Vertex vertexData = {
             vertex->position(),
-            vec2(0), // TODO
+            vertex->texCoord(),
             vertex->normal(),
         };
         vertices.push_back(vertexData);
