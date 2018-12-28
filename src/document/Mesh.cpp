@@ -93,9 +93,10 @@ Mesh::Mesh() {
     _materials.push_back(std::make_shared<MeshMaterial>()); // default material
 }
 
-SP<MeshVertex> Mesh::addVertex(glm::vec3 position) {
+SP<MeshVertex> Mesh::addVertex(glm::vec3 position, glm::vec2 texCoord) {
     auto vertex = std::make_shared<MeshVertex>();
     vertex->setPosition(position);
+    vertex->setTexCoord(texCoord);
     _vertices.insert(vertex);
     return vertex;
 }

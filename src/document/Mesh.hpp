@@ -19,6 +19,8 @@ class MeshVertex {
 public:
     glm::vec3 position() const { return _position; }
     void setPosition(glm::vec3 position) { _position = position; }
+    glm::vec2 texCoord() { return _texCoord; }
+    void setTexCoord(glm::vec2 texCoord) { _texCoord = texCoord; }
 
     std::vector<SP<MeshEdge>> edges() const;
     std::vector<SP<MeshFace>> faces() const;
@@ -29,6 +31,7 @@ private:
     friend class MeshEdge;
     friend class MeshFace;
     glm::vec3 _position;
+    glm::vec2 _texCoord;
     std::unordered_set<MeshEdge*> _edges;
     std::unordered_set<MeshFace*> _faces;
 };
@@ -108,7 +111,7 @@ class Mesh {
 public:
     Mesh();
 
-    SP<MeshVertex> addVertex(glm::vec3 position);
+    SP<MeshVertex> addVertex(glm::vec3 position, glm::vec2 texCoord);
     SP<MeshEdge> addEdge(const std::array<SP<MeshVertex>, 2>& vertices);
     SP<MeshFace> addFace(const std::vector<SP<MeshVertex>>& vertices, const SP<MeshMaterial>& material);
     SP<MeshMaterial> addMaterial();

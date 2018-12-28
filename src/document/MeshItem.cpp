@@ -11,10 +11,10 @@ namespace Lattice {
 MeshItem::MeshItem() : _mesh(std::make_shared<Mesh>()) {
     connect(this, &MeshItem::meshChanged, this, &Item::changed);
 
-    auto v1 = _mesh->addVertex(vec3(0, 0, 0));
-    auto v2 = _mesh->addVertex(vec3(0, 0, 1));
-    auto v3 = _mesh->addVertex(vec3(1, 0, 1));
-    auto v4 = _mesh->addVertex(vec3(1, 0, 0));
+    auto v1 = _mesh->addVertex(vec3(0, 0, 0), vec2(0, 0));
+    auto v2 = _mesh->addVertex(vec3(0, 0, 1), vec2(0, 1));
+    auto v3 = _mesh->addVertex(vec3(1, 0, 1), vec2(1, 1));
+    auto v4 = _mesh->addVertex(vec3(1, 0, 0), vec2(1, 0));
     auto m = _mesh->addMaterial();
     auto f = _mesh->addFace({v1, v2, v3, v4}, m);
     auto vertices = f->vertices();
