@@ -15,7 +15,8 @@ MeshItem::MeshItem() : _mesh(std::make_shared<Mesh>()) {
     auto v2 = _mesh->addVertex(vec3(0, 0, 1));
     auto v3 = _mesh->addVertex(vec3(1, 0, 1));
     auto v4 = _mesh->addVertex(vec3(1, 0, 0));
-    auto f = _mesh->addFace({v1, v2, v3, v4});
+    auto m = _mesh->addMaterial();
+    auto f = _mesh->addFace({v1, v2, v3, v4}, m);
     auto vertices = f->vertices();
 
     for (auto&& v : vertices) {

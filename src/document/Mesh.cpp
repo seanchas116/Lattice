@@ -114,7 +114,7 @@ SP<MeshEdge> Mesh::addEdge(const std::array<SP<MeshVertex>, 2> &vertices) {
     return edge;
 }
 
-SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshVertex> > &vertices) {
+SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshVertex> > &vertices, const SP<MeshMaterial>& material) {
     auto sortedVertices = vertices;
     std::sort(sortedVertices.begin(), sortedVertices.end());
 
@@ -128,7 +128,7 @@ SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshVertex> > &vertices) {
         edges.push_back(addEdge({vertices[i], vertices[(i + 1) % vertices.size()]}));
     }
 
-    auto face = std::make_shared<MeshFace>(vertices, edges, _materials[0]);
+    auto face = std::make_shared<MeshFace>(vertices, edges, material);
     _faces[vertices] = face;
     return face;
 }

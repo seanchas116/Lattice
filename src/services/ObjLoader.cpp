@@ -4,6 +4,9 @@
 #include <tiny_obj_loader.h>
 #include <boost/filesystem.hpp>
 #include <QtDebug>
+#include "../support/Debug.hpp"
+
+using namespace glm;
 
 namespace Lattice {
 
@@ -34,6 +37,20 @@ std::vector<SP<MeshItem>> ObjLoader::load(const std::string &filePathString) {
         // TODO: use index_t as key
         std::unordered_map<int, SP<MeshVertex>> vertexForIndex;
 
+        std::vector<SP<MeshMaterial>> materials;
+
+        // Add materials
+        for (auto& objMaterial : objMaterials) {
+            vec3 diffuse(objMaterial.diffuse[0], objMaterial.diffuse[1], objMaterial.diffuse[2]);
+            qDebug() << "diffuse: " << diffuse;
+
+            auto material = item->mesh()->addMaterial();
+            material->setBaseColor(diffuse);
+
+            // TODO: set more values
+
+            materials.push_back(material);
+        }
         // Loop over faces(polygon)
         size_t index_offset = 0;
         for (size_t f = 0; f < objShape.mesh.num_face_vertices.size(); f++) {
@@ -65,13 +82,14 @@ std::vector<SP<MeshItem>> ObjLoader::load(const std::string &filePathString) {
             }
             index_offset += fv;
 
-            item->mesh()->addFace(vertices);
-
             auto materialID = objShape.mesh.material_ids[f];
             if (materialID >= 0) {
-                auto& objMaterial = objMaterials[materialID];
-                // TODO
+                auto material = materials[materialID];
+                item->mesh()->addFace(vertices, material);
+            } else {
+                // TODO: add default material
             }
+
         }
 
         items.push_back(item);

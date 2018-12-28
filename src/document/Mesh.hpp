@@ -110,7 +110,7 @@ public:
 
     SP<MeshVertex> addVertex(glm::vec3 position);
     SP<MeshEdge> addEdge(const std::array<SP<MeshVertex>, 2>& vertices);
-    SP<MeshFace> addFace(const std::vector<SP<MeshVertex>>& vertices);
+    SP<MeshFace> addFace(const std::vector<SP<MeshVertex>>& vertices, const SP<MeshMaterial>& material);
     SP<MeshMaterial> addMaterial();
 
     const auto& vertices() const { return _vertices; }
