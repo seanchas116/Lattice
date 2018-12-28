@@ -30,7 +30,7 @@ std::vector<SP<MeshItem>> ObjLoader::load(const std::string &filePathString) {
 
     std::vector<SP<MeshItem>> items;
 
-    auto loadTexture = [&](const std::string& name) {
+    auto loadImage = [&](const std::string& name) {
         if (name.empty()) {
             return QImage();
         }
@@ -52,11 +52,12 @@ std::vector<SP<MeshItem>> ObjLoader::load(const std::string &filePathString) {
             vec3 diffuse(objMaterial.diffuse[0], objMaterial.diffuse[1], objMaterial.diffuse[2]);
             qDebug() << "diffuse: " << diffuse;
 
-            auto diffuseTexture = loadTexture(objMaterial.diffuse_texname);
-            qDebug() << "diffuse texture: " << diffuseTexture;
+            auto diffuseImage = loadImage(objMaterial.diffuse_texname);
+            qDebug() << "diffuse image: " << diffuseImage;
 
             auto material = item->mesh()->addMaterial();
             material->setBaseColor(diffuse);
+            material->setBaseColorImage(diffuseImage);
 
             // TODO: set more values
 
