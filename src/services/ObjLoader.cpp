@@ -30,6 +30,14 @@ std::vector<SP<MeshItem>> ObjLoader::load(const std::string &filePathString) {
 
     std::vector<SP<MeshItem>> items;
 
+    auto loadTexture = [&](const std::string& name) {
+        if (name.empty()) {
+            return QImage();
+        }
+        auto path = parentPathString + name;
+        return QImage(QString::fromStdString(path));
+    };
+
     for (auto& objShape : objShapes) {
         auto item = std::make_shared<MeshItem>();
         item->setName(objShape.name);
@@ -43,6 +51,9 @@ std::vector<SP<MeshItem>> ObjLoader::load(const std::string &filePathString) {
         for (auto& objMaterial : objMaterials) {
             vec3 diffuse(objMaterial.diffuse[0], objMaterial.diffuse[1], objMaterial.diffuse[2]);
             qDebug() << "diffuse: " << diffuse;
+
+            auto diffuseTexture = loadTexture(objMaterial.diffuse_texname);
+            qDebug() << "diffuse texture: " << diffuseTexture;
 
             auto material = item->mesh()->addMaterial();
             material->setBaseColor(diffuse);
