@@ -133,6 +133,12 @@ SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshVertex> > &vertices) {
     return face;
 }
 
+SP<MeshMaterial> Mesh::addMaterial() {
+    auto material = std::make_shared<MeshMaterial>();
+    _materials.push_back(material);
+    return material;
+}
+
 SP<Mesh> Mesh::clone() const {
     throw std::runtime_error("not implemented");
 }
