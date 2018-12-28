@@ -66,6 +66,12 @@ std::vector<SP<MeshItem>> ObjLoader::load(const std::string &filePathString) {
             index_offset += fv;
 
             item->mesh()->addFace(vertices);
+
+            auto materialID = objShape.mesh.material_ids[f];
+            if (materialID >= 0) {
+                auto& objMaterial = objMaterials[materialID];
+                // TODO
+            }
         }
 
         items.push_back(item);
