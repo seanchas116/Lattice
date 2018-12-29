@@ -2,6 +2,7 @@
 #include "../../gl/Shader.hpp"
 #include "../../document/Mesh.hpp"
 #include <unordered_map>
+#include <QOpenGLExtraFunctions>
 
 namespace Lattice {
 
@@ -9,7 +10,7 @@ class VAO;
 class Projection;
 class Texture;
 
-class DrawMaterial {
+class DrawMaterial : protected QOpenGLExtraFunctions {
 public:
     DrawMaterial();
 

@@ -9,6 +9,7 @@ namespace Lattice {
 DrawMaterial::DrawMaterial() :
     _shader(readResource("src/viewport/operations/DrawMaterial.vert"), std::string(), readResource("src/viewport/operations/DrawMaterial.frag"))
 {
+    initializeOpenGLFunctions();
 }
 
 void DrawMaterial::draw(const SP<VAO> &vao, const glm::mat4 &matrix, const Projection &projection, const SP<MeshMaterial> &material) {
@@ -17,6 +18,14 @@ void DrawMaterial::draw(const SP<VAO> &vao, const glm::mat4 &matrix, const Proje
     _shader.setUniform("ambient", glm::vec3(0));
     _shader.setUniform("MV", matrix);
     _shader.setUniform("MVP", projection.matrix() * matrix);
+
+    if (!material->baseColorImage().isNull()) {
+        auto texture = getTexture(material->baseColorImage());
+        glActiveTexture(GL_TEXTURE0);
+        texture->bind();
+        _shader.setUniform("diffuseTexture", 0);
+    }
+
     vao->draw();
 }
 
