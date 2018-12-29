@@ -62,16 +62,22 @@ void ViewportRenderer::render() {
 
     _gridFloor->draw(_operations, _camera.matrix(), _projection);
 
-    for (auto& [item, renderer] : _meshRenderers) {
-        renderer->drawFaces(_operations, _camera.matrix(), _projection);
+    if (_appState->isFaceVisible()) {
+        for (auto& [item, renderer] : _meshRenderers) {
+            renderer->drawFaces(_operations, _camera.matrix(), _projection);
+        }
     }
 
-    for (auto& [item, renderer] : _meshRenderers) {
-        renderer->drawEdges(_operations, _camera.matrix(), _projection);
+    if (_appState->isEdgeVisible()) {
+        for (auto& [item, renderer] : _meshRenderers) {
+            renderer->drawEdges(_operations, _camera.matrix(), _projection);
+        }
     }
 
-    for (auto& [item, renderer] : _meshRenderers) {
-        renderer->drawVertices(_operations, _camera.matrix(), _projection);
+    if (_appState->isVertexVisible()) {
+        for (auto& [item, renderer] : _meshRenderers) {
+            renderer->drawVertices(_operations, _camera.matrix(), _projection);
+        }
     }
 
     _manipulator->draw(_operations, _camera.matrix(), _projection);
