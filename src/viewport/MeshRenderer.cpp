@@ -70,7 +70,8 @@ void MeshRenderer::update(const SP<Mesh> &mesh) {
 
 void MeshRenderer::drawFaces(const SP<Operations> &operations, const mat4 &viewMatrix, const Projection &projection) {
     for (auto& [material, vao] : _faceVAOs) {
-        operations->drawSolid.draw(vao, viewMatrix * _item->location().matrix(), projection, material->baseColor(), vec3(0));
+        //operations->drawSolid.draw(vao, viewMatrix * _item->location().matrix(), projection, material->baseColor(), vec3(0));
+        operations->drawMaterial.draw(vao, viewMatrix * _item->location().matrix(), projection, material);
     }
 }
 

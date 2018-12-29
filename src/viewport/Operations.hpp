@@ -3,6 +3,7 @@
 #include "./operations/DrawCircle.hpp"
 #include "./operations/DrawLine.hpp"
 #include "./operations/DrawSolid.hpp"
+#include "./operations/DrawMaterial.hpp"
 
 namespace Lattice {
 
@@ -13,6 +14,7 @@ public:
     DrawCircle drawCircle;
     DrawLine drawLine;
     DrawSolid drawSolid;
+    DrawMaterial drawMaterial;
 };
 
 } // namespace Lattice
