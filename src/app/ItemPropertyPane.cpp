@@ -45,22 +45,16 @@ ItemPropertyPane::ItemPropertyPane(const SP<AppState> &appState, QWidget *parent
             connect(spinBox, &QDoubleSpinBox::editingFinished, this, &ItemPropertyPane::setLocation);
         }
 
-        return std::tuple(gridLayout, spinBoxes);
+        return spinBoxes;
     };
 
-    auto [positionLayout, positionSpinBoxes] = buildVec3SpinBoxes("Position", 1);
-    _positionSpinBoxes = positionSpinBoxes;
-    layout->addLayout(positionLayout);
+    _positionSpinBoxes = buildVec3SpinBoxes("Position", 1);
+    _rotationSpinBoxes = buildVec3SpinBoxes("Rotation", 2);
+    _scaleSpinBoxes = buildVec3SpinBoxes("Scale", 3);
 
-    auto [rotationLayout, rotationSpinBoxes] = buildVec3SpinBoxes("Rotation", 2);
-    _rotationSpinBoxes = rotationSpinBoxes;
-    layout->addLayout(rotationLayout);
-
-    auto [scaleLayout, scaleSpinBoxes] = buildVec3SpinBoxes("Scale", 3);
-    _scaleSpinBoxes = scaleSpinBoxes;
-    layout->addLayout(scaleLayout);
-
+    layout->addLayout(gridLayout);
     layout->addStretch();
+
     setLayout(layout);
 
     connect(appState->document().get(), &Document::currentItemChanged, this, &ItemPropertyPane::onCurrentItemChanged);
