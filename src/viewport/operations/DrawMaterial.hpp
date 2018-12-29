@@ -1,11 +1,13 @@
 #pragma once
 #include "../../gl/Shader.hpp"
 #include "../../document/Mesh.hpp"
+#include <unordered_map>
 
 namespace Lattice {
 
 class VAO;
 class Projection;
+class Texture;
 
 class DrawMaterial {
 public:
@@ -13,8 +15,11 @@ public:
 
     void draw(const SP<VAO>& vao, const glm::mat4& matrix, const Projection& projection, const SP<MeshMaterial>& material);
 
+    SP<Texture> getTexture(const QImage& image);
+
 private:
     Shader _shader;
+    std::unordered_map<qint64, SP<Texture>> _textures;
 };
 
 } // namespace Lattice
