@@ -12,7 +12,8 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
 
 private:
-    void setupActions();
+    void setupToolBar();
+    void setupMenu();
     void setupPanes();
 
     SP<AppState> _appState;

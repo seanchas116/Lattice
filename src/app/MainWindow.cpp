@@ -10,6 +10,7 @@
 #include <QMenuBar>
 #include <QUndoStack>
 #include <QDockWidget>
+#include <QToolBar>
 
 namespace Lattice {
 
@@ -17,11 +18,49 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     _appState = std::make_shared<AppState>();
     auto viewportWidget = new ViewportWidget(_appState);
     setCentralWidget(viewportWidget);
-    setupActions();
+    setupMenu();
     setupPanes();
+    setupToolBar();
 }
 
-void MainWindow::setupActions() {
+void MainWindow::setupToolBar() {
+    auto toolBar = addToolBar(tr("Tools"));
+
+    auto spacer = new QWidget();
+    spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    toolBar->addWidget(spacer);
+
+    // toggle view visibility
+
+    {
+        auto isVertexVisibleAction = new QAction("Vertex");
+        isVertexVisibleAction->setCheckable(true);
+        isVertexVisibleAction->setChecked(_appState->isVertexVisible());
+        connect(_appState.get(), &AppState::isVertexVisibleChanged, isVertexVisibleAction, &QAction::setChecked);
+        connect(isVertexVisibleAction, &QAction::toggled, _appState.get(), &AppState::setIsVertexVisible);
+        toolBar->addAction(isVertexVisibleAction);
+    }
+
+    {
+        auto isEdgeVisibleAction = new QAction("Edge");
+        isEdgeVisibleAction->setCheckable(true);
+        isEdgeVisibleAction->setChecked(_appState->isEdgeVisible());
+        connect(_appState.get(), &AppState::isEdgeVisibleChanged, isEdgeVisibleAction, &QAction::setChecked);
+        connect(isEdgeVisibleAction, &QAction::toggled, _appState.get(), &AppState::setIsEdgeVisible);
+        toolBar->addAction(isEdgeVisibleAction);
+    }
+
+    {
+        auto isFaceVisibleAction = new QAction("Face");
+        isFaceVisibleAction->setCheckable(true);
+        isFaceVisibleAction->setChecked(_appState->isFaceVisible());
+        connect(_appState.get(), &AppState::isFaceVisibleChanged, isFaceVisibleAction, &QAction::setChecked);
+        connect(isFaceVisibleAction, &QAction::toggled, _appState.get(), &AppState::setIsFaceVisible);
+        toolBar->addAction(isFaceVisibleAction);
+    }
+}
+
+void MainWindow::setupMenu() {
     auto menuBar = new QMenuBar();
 
     {
