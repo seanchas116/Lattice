@@ -24,6 +24,9 @@ void DrawMaterial::draw(const SP<VAO> &vao, const glm::mat4 &matrix, const Proje
         glActiveTexture(GL_TEXTURE0);
         texture->bind();
         _shader.setUniform("diffuseTexture", 0);
+        _shader.setUniform("hasDiffuseTexture", true);
+    } else {
+        _shader.setUniform("hasDiffuseTexture", false);
     }
 
     vao->draw();
@@ -35,6 +38,7 @@ SP<Texture> DrawMaterial::getTexture(const QImage &image) {
     }
 
     auto rgbaTexture = image.convertToFormat(QImage::Format_RGBA8888_Premultiplied);
+    rgbaTexture = rgbaTexture.mirrored();
     glm::ivec2 size(rgbaTexture.width(), rgbaTexture.height());
 
     auto texture = std::make_shared<Texture>(size, rgbaTexture.bits());
