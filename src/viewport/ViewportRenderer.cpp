@@ -27,6 +27,10 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
     _operations = std::make_shared<Operations>();
     _gridFloor = std::make_shared<GridFloor>();
     _manipulator = std::make_shared<Manipulator>();
+
+    connect(appState.get(), &AppState::isVertexVisibleChanged, this, &ViewportRenderer::updateNeeded);
+    connect(appState.get(), &AppState::isEdgeVisibleChanged, this, &ViewportRenderer::updateNeeded);
+    connect(appState.get(), &AppState::isFaceVisibleChanged, this, &ViewportRenderer::updateNeeded);
 }
 
 void ViewportRenderer::resize(ivec2 physicalSize, ivec2 logicalSize) {
