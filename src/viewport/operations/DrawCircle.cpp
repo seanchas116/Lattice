@@ -14,7 +14,7 @@ DrawCircle::DrawCircle() :
 
 void DrawCircle::draw(const SP<PointVAO> &vao, const glm::mat4 &matrix, const Projection &projection, float width, glm::vec3 color, float zOffset) {
     _shader.bind();
-    _shader.setUniform("MVP", projection.matrix() * matrix);
+    _shader.setUniform("MVP", projection.projectionMatrix() * matrix);
     _shader.setUniform("viewportSize", projection.viewSize());
     _shader.setUniform("width", width);
     _shader.setUniform("color", color);

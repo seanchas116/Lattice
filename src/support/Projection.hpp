@@ -20,7 +20,7 @@ public:
     float zFar() const { return _zFar; }
     void setZFar(float zFar);
 
-    glm::mat4 matrix() const { return _matrix; }
+    glm::mat4 projectionMatrix() const { return _projectionMatrix; }
 
     std::pair<glm::vec3, bool> project(const glm::vec3& pos) const;
     glm::vec3 unProject(const glm::vec3& screenPos) const;
@@ -32,7 +32,7 @@ private:
     float _fieldOfView;
     float _zNear;
     float _zFar;
-    glm::mat4 _matrix;
+    glm::mat4 _projectionMatrix;
 };
 
 } // namespace Lattice

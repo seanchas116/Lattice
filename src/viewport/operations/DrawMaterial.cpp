@@ -17,7 +17,7 @@ void DrawMaterial::draw(const SP<VAO> &vao, const glm::mat4 &matrix, const Proje
     _shader.setUniform("diffuse", material->baseColor());
     _shader.setUniform("ambient", glm::vec3(0));
     _shader.setUniform("MV", matrix);
-    _shader.setUniform("MVP", projection.matrix() * matrix);
+    _shader.setUniform("MVP", projection.projectionMatrix() * matrix);
 
     if (!material->baseColorImage().isNull()) {
         auto texture = getTexture(material->baseColorImage());

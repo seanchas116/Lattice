@@ -15,7 +15,7 @@ void DrawSolid::draw(const SP<VAO> &vao, const glm::mat4 &matrix, const Projecti
     _shader.setUniform("diffuse", diffuse);
     _shader.setUniform("ambient", ambient);
     _shader.setUniform("MV", matrix);
-    _shader.setUniform("MVP", projection.matrix() * matrix);
+    _shader.setUniform("MVP", projection.projectionMatrix() * matrix);
     vao->draw();
 }
 
