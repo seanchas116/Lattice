@@ -13,7 +13,7 @@ DrawCircle::DrawCircle() :
 
 void DrawCircle::draw(const SP<PointVAO> &vao, const glm::mat4 &matrix, const Camera &camera, float width, glm::vec3 color, float zOffset) {
     _shader.bind();
-    _shader.setUniform("MVP", camera.cameraToScrenMatrix() * matrix);
+    _shader.setUniform("MVP", camera.worldToScreenMatrix() * matrix);
     _shader.setUniform("viewportSize", camera.viewSize());
     _shader.setUniform("width", width);
     _shader.setUniform("color", color);
