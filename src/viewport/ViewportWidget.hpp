@@ -30,6 +30,9 @@ protected:
     void keyReleaseEvent(QKeyEvent *event) override;
 
 private:
+    double widgetPixelRatio() const;
+    glm::vec2 mapToRenderer(const QPoint& p);
+
     SP<ViewportRenderer> _renderer;
     CameraController _cameraController;
     KeyObserver _keyObserver;

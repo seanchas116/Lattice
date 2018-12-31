@@ -2,6 +2,7 @@
 #include "ViewportRenderer.hpp"
 #include "CameraController.hpp"
 #include <QOpenGLDebugLogger>
+#include <QMouseEvent>
 
 namespace Lattice {
 
@@ -34,12 +35,7 @@ void ViewportWidget::initializeGL() {
 
 void ViewportWidget::resizeGL(int w, int h) {
     glm::vec2 physicalSize(w, h);
-
-#ifdef Q_OS_WIN
-    glm::vec2 logicalSize = physicalSize / (logicalDpiX() / 96.f);
-#else
-    glm::vec2 logicalSize = physicalSize;
-#endif
+    glm::vec2 logicalSize = physicalSize / float(widgetPixelRatio());
     _renderer->resize(physicalSize, logicalSize);
 }
 
@@ -49,14 +45,17 @@ void ViewportWidget::paintGL() {
 
 void ViewportWidget::mousePressEvent(QMouseEvent *event) {
     _cameraController.mousePress(event);
+    _renderer->mousePress(event, mapToRenderer(event->pos()));
 }
 
 void ViewportWidget::mouseMoveEvent(QMouseEvent *event) {
     _cameraController.mouseMove(event);
+    _renderer->mouseMove(event, mapToRenderer(event->pos()));
 }
 
 void ViewportWidget::mouseReleaseEvent(QMouseEvent *event) {
     _cameraController.mouseRelease(event);
+    _renderer->mouseRelease(event, mapToRenderer(event->pos()));
 }
 
 void ViewportWidget::wheelEvent(QWheelEvent *event) {
@@ -69,6 +68,18 @@ void ViewportWidget::keyPressEvent(QKeyEvent *event) {
 
 void ViewportWidget::keyReleaseEvent(QKeyEvent *event) {
     _keyObserver.keyRelease(event);
+}
+
+double ViewportWidget::widgetPixelRatio() const {
+#ifdef Q_OS_WIN
+    return logicalDpiX() / 96.0;
+#else
+    return 1.0;
+#endif
+}
+
+glm::vec2 ViewportWidget::mapToRenderer(const QPoint &p) {
+    return glm::vec2(p.x(), height() - p.y()) / float(widgetPixelRatio());
 }
 
 } // namespace Lattice
