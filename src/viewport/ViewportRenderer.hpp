@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../support/OldCamera.hpp"
 #include "../support/Camera.hpp"
 #include "../support/Pointer.hpp"
 #include <QObject>
@@ -33,7 +32,6 @@ signals:
 
 private:
     glm::ivec2 _logicalSize;
-    OldCamera _camera;
     Camera _projection;
     SP<Operations> _operations;
     SP<GridFloor> _gridFloor;

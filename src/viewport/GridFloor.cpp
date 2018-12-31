@@ -3,7 +3,6 @@
 #include "../gl/LineVAO.hpp"
 #include "../gl/VertexBuffer.hpp"
 #include "../support/Camera.hpp"
-#include "../support/OldCamera.hpp"
 
 using namespace glm;
 

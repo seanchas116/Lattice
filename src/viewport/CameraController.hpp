@@ -3,7 +3,6 @@
 #include <QObject>
 #include <QPoint>
 #include <unordered_set>
-#include "../support/OldCamera.hpp"
 #include "../support/Location.hpp"
 
 class QMouseEvent;
