@@ -110,7 +110,10 @@ bool Manipulator::mousePress(QMouseEvent *event, vec2 pos, const Camera &camera)
     LineLineDistance distance(mouseRay, arrowRay);
 
     if (0 <= distance.t1 && distance.t1 <= bodyLength + headLength && distance.distance / scale <= hitRadius) {
-        qDebug() << "hit";
+        _isDragging = true;
+        _originalValue = distance.t1;
+        qDebug() << "drag start" << _originalValue;
+
         return true;
     }
 
@@ -118,11 +121,38 @@ bool Manipulator::mousePress(QMouseEvent *event, vec2 pos, const Camera &camera)
 }
 
 bool Manipulator::mouseMove(QMouseEvent *event, vec2 pos, const Camera &camera) {
-    return false;
+    if (!_isDragging) {
+        return false;
+    }
+
+    auto [manipulatorToWorld, isInScreen] = this->manipulatorToWorldMatrix(vec3(0), camera);
+    if (!isInScreen) {
+        return false;
+    }
+
+    vec3 front = camera.mapScreenToCamera(vec3(pos, 0));
+    vec3 back = camera.mapScreenToCamera(vec3(pos, 1));
+
+    mat4 manipulatorToCamera = camera.worldToCameraMatrix() * manipulatorToWorld;
+
+    vec3 arrowXDirection = manipulatorToCamera[0].xyz;
+    float scale = glm::length(arrowXDirection);
+    vec3 arrowCenter = manipulatorToCamera[3].xyz;
+
+    Line mouseRay(front, back);
+    Line arrowRay(arrowCenter, arrowCenter + arrowXDirection);
+    LineLineDistance distance(mouseRay, arrowRay);
+
+    qDebug() << "drag move" << distance.t1;
+    return true;
 }
 
 bool Manipulator::mouseRelease(QMouseEvent *event, vec2 pos, const Camera &camera) {
-    return false;
+    if (!_isDragging) {
+        return false;
+    }
+    _isDragging = false;
+    return true;
 }
 
 std::pair<mat4, bool> Manipulator::manipulatorToWorldMatrix(vec3 targetPosition, const Camera &camera) const {
