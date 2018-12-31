@@ -32,7 +32,7 @@ private:
 
     bool _isDragging = false;
     int _dragAxis = 0;
-    float _originalValue = 0;
+    float _initialDragValue = 0;
 };
 
 } // namespace Lattice
