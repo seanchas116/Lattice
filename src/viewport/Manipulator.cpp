@@ -4,6 +4,7 @@
 #include "../gl/LineVAO.hpp"
 #include "../gl/VertexBuffer.hpp"
 #include <array>
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace glm;
 
@@ -66,6 +67,21 @@ Manipulator::Manipulator() {
 }
 
 void Manipulator::draw(const SP<Operations> &operations, const mat4 &viewMatrix, const Projection &projection) {
+    vec3 position_worldSpace(0);
+    vec3 position_cameraSpace = (viewMatrix * vec4(position_worldSpace, 1)).xyz;
+
+    auto [screenPos, isInScreen] = projection.project(position_cameraSpace);
+    if (!isInScreen){
+        return;
+    }
+    vec3 screenPosFixedDepth(screenPos.xy, 0.5f);
+    vec3 positionFixedDepth_cameraSpace = projection.unProject(screenPosFixedDepth);
+    vec3 positionFixedDepth_worldSpace = (inverse(viewMatrix) * vec4(positionFixedDepth_cameraSpace, 1)).xyz;
+
+    float scale = 1.f / float(projection.viewSize().y) * 10.f;
+
+    mat4 newModelMatrix = glm::scale(glm::translate(glm::mat4(1), positionFixedDepth_worldSpace), vec3(scale));
+
     auto transforms = std::array<mat4, 3> {
             mat4(1), // x
             mat4(0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1), // y
@@ -76,8 +92,8 @@ void Manipulator::draw(const SP<Operations> &operations, const mat4 &viewMatrix,
     };
 
     for (size_t i = 0; i < 3; ++i) {
-        operations->drawSolid.draw(_headVAO, viewMatrix * transforms[i], projection, vec3(0), colors[i]);
-        operations->drawLine.draw(_bodyVAO, viewMatrix * transforms[i], projection, bodyWidth, colors[i]);
+        operations->drawSolid.draw(_headVAO, viewMatrix * newModelMatrix* transforms[i], projection, vec3(0), colors[i]);
+        operations->drawLine.draw(_bodyVAO, viewMatrix * newModelMatrix * transforms[i], projection, bodyWidth, colors[i]);
     }
 }
 
