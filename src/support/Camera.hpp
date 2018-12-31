@@ -28,11 +28,11 @@ public:
     glm::mat4 cameraToScrenMatrix() const { return _cameraToScreenMatrix; }
     glm::mat4 worldToScreenMatrix() const { return _worldToScreenMatrix; }
 
-    std::pair<glm::vec3, bool> mapWorldToScreen(const glm::vec3& worldPos) const;
-    glm::vec3 mapScreenToWorld(const glm::vec3& screenPos) const;
+    std::pair<glm::vec3, bool> mapWorldToScreen(glm::vec3 worldPos) const;
+    glm::vec3 mapScreenToWorld(glm::vec3 screenPos) const;
 
-    std::pair<glm::vec3, bool> mapCameraToScreen(const glm::vec3& cameraPos) const;
-    glm::vec3 mapScreenToCamera(const glm::vec3& screenPos) const;
+    std::pair<glm::vec3, bool> mapCameraToScreen(glm::vec3 cameraPos) const;
+    glm::vec3 mapScreenToCamera(glm::vec3 screenPos) const;
 
 private:
     void updateMatrix();
