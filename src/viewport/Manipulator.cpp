@@ -67,8 +67,6 @@ Manipulator::Manipulator() {
 }
 
 void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
-    // TODO: refactor transform calculations
-
     vec3 position_worldSpace(0);
 
     auto [screenPos, isInScreen] = camera.worldToScreen(position_worldSpace);
