@@ -96,8 +96,8 @@ bool Manipulator::mousePress(QMouseEvent *event, vec2 pos, const Camera &camera)
     }
 
     qDebug() << "press at" << pos;
-    vec3 front = camera.screenToWorld(vec3(pos, 0));
-    vec3 back = camera.screenToWorld(vec3(pos, 1));
+    vec3 front = camera.mapScreenToWorld(vec3(pos, 0));
+    vec3 back = camera.mapScreenToWorld(vec3(pos, 1));
 
     qDebug() << front << back;
 
@@ -123,12 +123,12 @@ bool Manipulator::mouseRelease(QMouseEvent *event, vec2 pos, const Camera &camer
 }
 
 std::pair<mat4, bool> Manipulator::manipulatorToWorldMatrix(vec3 targetPosition, const Camera &camera) const {
-    auto [screenPos, isInScreen] = camera.worldToScreen(targetPosition);
+    auto [screenPos, isInScreen] = camera.mapWorldToScreen(targetPosition);
     if (!isInScreen){
         return {mat4(), false};
     }
     vec3 screenPosFixedDepth(screenPos.xy, 0.5f);
-    vec3 positionFixedDepth_worldSpace = camera.screenToWorld(screenPosFixedDepth);
+    vec3 positionFixedDepth_worldSpace = camera.mapScreenToWorld(screenPosFixedDepth);
 
     float scale = 1.f / float(camera.viewSize().y) * 10.f;
 
