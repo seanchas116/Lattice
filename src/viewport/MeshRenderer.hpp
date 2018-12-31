@@ -20,9 +20,9 @@ class MeshRenderer {
 public:
     MeshRenderer(const SP<MeshItem>& item);
 
-    void drawFaces(const SP<Operations>& operations, const glm::mat4& viewMatrix, const Camera& projection);
-    void drawEdges(const SP<Operations> &operations, const glm::mat4 &viewMatrix, const Camera &projection);
-    void drawVertices(const SP<Operations>& operations, const glm::mat4& viewMatrix, const Camera& projection);
+    void drawFaces(const SP<Operations>& operations, const Camera& camera);
+    void drawEdges(const SP<Operations> &operations, const Camera &camera);
+    void drawVertices(const SP<Operations>& operations, const Camera& camera);
 
 private:
     void update(const SP<Mesh>& mesh);

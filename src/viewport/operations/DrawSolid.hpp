@@ -10,7 +10,7 @@ class DrawSolid {
 public:
     DrawSolid();
 
-    void draw(const SP<VAO>& vao, const glm::mat4& matrix, const Camera& projection,
+    void draw(const SP<VAO>& vao, const glm::mat4& matrix, const Camera& camera,
               glm::vec3 diffuse, glm::vec3 ambient);
 
 private:

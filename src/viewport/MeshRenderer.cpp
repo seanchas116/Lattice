@@ -68,19 +68,19 @@ void MeshRenderer::update(const SP<Mesh> &mesh) {
     }
 }
 
-void MeshRenderer::drawFaces(const SP<Operations> &operations, const mat4 &viewMatrix, const Camera &projection) {
+void MeshRenderer::drawFaces(const SP<Operations> &operations, const Camera &camera) {
     for (auto& [material, vao] : _faceVAOs) {
         //operations->drawSolid.draw(vao, viewMatrix * _item->location().matrix(), projection, material->baseColor(), vec3(0));
-        operations->drawMaterial.draw(vao, viewMatrix * _item->location().matrix(), projection, material);
+        operations->drawMaterial.draw(vao, _item->location().matrix(), camera, material);
     }
 }
 
-void MeshRenderer::drawEdges(const SP<Operations> &operations, const mat4 &viewMatrix, const Camera &projection) {
-    operations->drawLine.draw(_edgeVAO, viewMatrix * _item->location().matrix(), projection, 1.f, vec3(0));
+void MeshRenderer::drawEdges(const SP<Operations> &operations, const Camera &camera) {
+    operations->drawLine.draw(_edgeVAO, _item->location().matrix(), camera, 1.f, vec3(0));
 }
 
-void MeshRenderer::drawVertices(const SP<Operations> &operations, const glm::mat4 &viewMatrix, const Camera &projection) {
-    operations->drawCircle.draw(_vertexVAO, viewMatrix * _item->location().matrix(), projection, 4.f, vec3(0));
+void MeshRenderer::drawVertices(const SP<Operations> &operations, const Camera &camera) {
+    operations->drawCircle.draw(_vertexVAO, _item->location().matrix(), camera, 4.f, vec3(0));
 }
 
 }

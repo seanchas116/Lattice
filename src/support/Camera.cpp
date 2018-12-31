@@ -11,6 +11,8 @@ Camera::Camera() :
     _zNear(0.1f),
     _zFar(100.f)
 {
+    _location.position = vec3(0, 10, 10);
+    _location.rotation.y = float(-M_PI);
 }
 
 void Camera::setLocation(const Location &location) {

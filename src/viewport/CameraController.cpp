@@ -28,15 +28,15 @@ bool CameraController::mouseMove(QMouseEvent *event) {
     QPoint offset = event->pos() - _lastMousePos;
     switch (_mode) {
     case Mode::Move: {
-        _camera.setPos(_camera.pos() + _camera.up() * float(offset.y()) * 0.05f + -_camera.right() * float(offset.x()) * 0.05f);
-        emit cameraChanged(_camera);
+        _location.position = _location.position + _location.up() * float(offset.y()) * 0.05f +  _location.right() * float(offset.x()) * 0.05f;
+        emit locationChanged(_location);
         break;
     }
     case Mode::Rotate: {
         float unit = 0.25f / 180.f * float(M_PI);
-        _camera.setYaw(_camera.yaw() - offset.x() * unit);
-        _camera.setPitch(_camera.pitch() - offset.y() * unit);
-        emit cameraChanged(_camera);
+        _location.rotation.y -= -offset.x() * unit;
+        _location.rotation.x -= offset.y() * unit;
+        emit locationChanged(_location);
         break;
     }
     default: {
@@ -54,8 +54,8 @@ bool CameraController::mouseRelease(QMouseEvent *) {
 }
 
 bool CameraController::wheel(QWheelEvent *event) {
-    _camera.setPos(_camera.pos() + _camera.direction() * (0.01f * event->delta()));
-    emit cameraChanged(_camera);
+    _location.position = _location.position + _location.backward() * (0.01f * event->delta());
+    emit locationChanged(_location);
     return false;
 }
 

@@ -66,21 +66,19 @@ Manipulator::Manipulator() {
     }
 }
 
-void Manipulator::draw(const SP<Operations> &operations, const mat4 &viewMatrix, const Camera &projection) {
+void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
     // TODO: refactor transform calculations
 
     vec3 position_worldSpace(0);
-    vec3 position_cameraSpace = (viewMatrix * vec4(position_worldSpace, 1)).xyz;
 
-    auto [screenPos, isInScreen] = projection.project(position_cameraSpace);
+    auto [screenPos, isInScreen] = camera.project(position_worldSpace);
     if (!isInScreen){
         return;
     }
     vec3 screenPosFixedDepth(screenPos.xy, 0.5f);
-    vec3 positionFixedDepth_cameraSpace = projection.unProject(screenPosFixedDepth);
-    vec3 positionFixedDepth_worldSpace = (inverse(viewMatrix) * vec4(positionFixedDepth_cameraSpace, 1)).xyz;
+    vec3 positionFixedDepth_worldSpace = camera.unProject(screenPosFixedDepth);
 
-    float scale = 1.f / float(projection.viewSize().y) * 10.f;
+    float scale = 1.f / float(camera.viewSize().y) * 10.f;
 
     mat4 newModelMatrix = glm::scale(glm::translate(glm::mat4(1), positionFixedDepth_worldSpace), vec3(scale));
 
@@ -94,8 +92,8 @@ void Manipulator::draw(const SP<Operations> &operations, const mat4 &viewMatrix,
     };
 
     for (size_t i = 0; i < 3; ++i) {
-        operations->drawSolid.draw(_headVAO, viewMatrix * newModelMatrix* transforms[i], projection, vec3(0), colors[i]);
-        operations->drawLine.draw(_bodyVAO, viewMatrix * newModelMatrix * transforms[i], projection, bodyWidth, colors[i]);
+        operations->drawSolid.draw(_headVAO, newModelMatrix * transforms[i], camera, vec3(0), colors[i]);
+        operations->drawLine.draw(_bodyVAO, newModelMatrix * transforms[i], camera, bodyWidth, colors[i]);
     }
 }
 

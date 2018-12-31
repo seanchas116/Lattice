@@ -64,27 +64,27 @@ void ViewportRenderer::render() {
 
     _meshRenderers = newMeshRenderers;
 
-    _gridFloor->draw(_operations, _camera.matrix(), _projection);
+    _gridFloor->draw(_operations, _projection);
 
     if (_appState->isFaceVisible()) {
         for (auto& [item, renderer] : _meshRenderers) {
-            renderer->drawFaces(_operations, _camera.matrix(), _projection);
+            renderer->drawFaces(_operations, _projection);
         }
     }
 
     if (_appState->isEdgeVisible()) {
         for (auto& [item, renderer] : _meshRenderers) {
-            renderer->drawEdges(_operations, _camera.matrix(), _projection);
+            renderer->drawEdges(_operations, _projection);
         }
     }
 
     if (_appState->isVertexVisible()) {
         for (auto& [item, renderer] : _meshRenderers) {
-            renderer->drawVertices(_operations, _camera.matrix(), _projection);
+            renderer->drawVertices(_operations, _projection);
         }
     }
 
-    _manipulator->draw(_operations, _camera.matrix(), _projection);
+    _manipulator->draw(_operations, _projection);
 }
 
 } // namespace Lattice

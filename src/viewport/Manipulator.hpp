@@ -10,7 +10,7 @@ class Manipulator {
 public:
     Manipulator();
 
-    void draw(const SP<Operations>& operations, const glm::mat4& viewMatrix, const Camera& projection);
+    void draw(const SP<Operations>& operations, const Camera& camera);
 
 private:
     SP<VAO> _headVAO;

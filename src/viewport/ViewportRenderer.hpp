@@ -26,7 +26,7 @@ public:
     void resize(glm::ivec2 physicalSize, glm::ivec2 logicalSize);
     void render();
 
-    void setCamera(const OldCamera& camera) { _camera = camera; }
+    void setCameraLocation(const Location& location) { _projection.setLocation(location); }
 
 signals:
     void updateNeeded();

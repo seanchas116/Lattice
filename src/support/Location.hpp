@@ -12,6 +12,10 @@ public:
 
     glm::mat4 matrix() const;
 
+    glm::vec3 right() const;
+    glm::vec3 up() const;
+    glm::vec3 backward() const;
+
     bool operator==(const Location& other) const;
     bool operator!=(const Location& other) const;
 };

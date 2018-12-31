@@ -14,7 +14,7 @@ class DrawMaterial : protected QOpenGLExtraFunctions {
 public:
     DrawMaterial();
 
-    void draw(const SP<VAO>& vao, const glm::mat4& matrix, const Camera& projection, const SP<MeshMaterial>& material);
+    void draw(const SP<VAO>& vao, const glm::mat4& matrix, const Camera& camera, const SP<MeshMaterial>& material);
 
     SP<Texture> getTexture(const QImage& image);
 

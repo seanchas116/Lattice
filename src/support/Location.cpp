@@ -14,6 +14,18 @@ glm::mat4 Location::matrix() const {
     return m;
 }
 
+glm::vec3 Location::right() const {
+    return matrix()[0].xyz;
+}
+
+glm::vec3 Location::up() const {
+    return matrix()[1].xyz;
+}
+
+glm::vec3 Location::backward() const {
+    return matrix()[2].xyz;
+}
+
 bool Location::operator==(const Location &other) const {
     return position == other.position && scale == other.scale && rotation == other.rotation;
 }

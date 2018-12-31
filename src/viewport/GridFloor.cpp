@@ -43,8 +43,8 @@ GridFloor::GridFloor() {
     _vao->setLineStrips(lineStrips);
 }
 
-void GridFloor::draw(const SP<Operations> &operations, const glm::mat4 &viewMatrix, const Camera &projection) {
-    operations->drawLine.draw(_vao, viewMatrix, projection, 1, vec3(0.5));
+void GridFloor::draw(const SP<Operations> &operations, const Camera &projection) {
+    operations->drawLine.draw(_vao, mat4(1), projection, 1, vec3(0.5));
 }
 
 } // namespace Lattice

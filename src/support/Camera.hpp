@@ -24,7 +24,9 @@ public:
     float zFar() const { return _zFar; }
     void setZFar(float zFar);
 
+    glm::mat4 viewMatrix() const { return _viewMatrix; }
     glm::mat4 projectionMatrix() const { return _projectionMatrix; }
+    glm::mat4 viewProjectionMatrix() const { return _viewProjectionMatrix; }
 
     std::pair<glm::vec3, bool> project(const glm::vec3& worldPos) const;
     glm::vec3 unProject(const glm::vec3& screenPos) const;
