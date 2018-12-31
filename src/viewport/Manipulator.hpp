@@ -19,6 +19,8 @@ public:
     bool mouseRelease(QMouseEvent* event, glm::vec2 pos, const Camera& camera);
 
 private:
+    std::pair<glm::mat4, bool> manipulatorToWorldMatrix(glm::vec3 targetPosition, const Camera& camera) const;
+
     SP<VAO> _headVAO;
     SP<LineVAO> _bodyVAO;
 };

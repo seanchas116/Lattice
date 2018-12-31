@@ -4,6 +4,7 @@
 #include "../gl/LineVAO.hpp"
 #include "../gl/VertexBuffer.hpp"
 #include "../support/Debug.hpp"
+#include "../support/Line.hpp"
 #include <array>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -68,18 +69,10 @@ Manipulator::Manipulator() {
 }
 
 void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
-    vec3 position_worldSpace(0);
-
-    auto [screenPos, isInScreen] = camera.worldToScreen(position_worldSpace);
+    auto [manipulatorToWorld, isInScreen] = this->manipulatorToWorldMatrix(vec3(0), camera);
     if (!isInScreen){
         return;
     }
-    vec3 screenPosFixedDepth(screenPos.xy, 0.5f);
-    vec3 positionFixedDepth_worldSpace = camera.screenToWorld(screenPosFixedDepth);
-
-    float scale = 1.f / float(camera.viewSize().y) * 10.f;
-
-    mat4 newModelMatrix = glm::scale(glm::translate(glm::mat4(1), positionFixedDepth_worldSpace), vec3(scale));
 
     auto transforms = std::array<mat4, 3> {
             mat4(1), // x
@@ -91,13 +84,29 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
     };
 
     for (size_t i = 0; i < 3; ++i) {
-        operations->drawSolid.draw(_headVAO, newModelMatrix * transforms[i], camera, vec3(0), colors[i]);
-        operations->drawLine.draw(_bodyVAO, newModelMatrix * transforms[i], camera, bodyWidth, colors[i]);
+        operations->drawSolid.draw(_headVAO, manipulatorToWorld * transforms[i], camera, vec3(0), colors[i]);
+        operations->drawLine.draw(_bodyVAO, manipulatorToWorld * transforms[i], camera, bodyWidth, colors[i]);
     }
 }
 
 bool Manipulator::mousePress(QMouseEvent *event, vec2 pos, const Camera &camera) {
+    auto [manipulatorToWorld, isInScreen] = this->manipulatorToWorldMatrix(vec3(0), camera);
+    if (!isInScreen) {
+        return false;
+    }
+
     qDebug() << "press at" << pos;
+    vec3 front = camera.screenToWorld(vec3(pos, 0));
+    vec3 back = camera.screenToWorld(vec3(pos, 1));
+
+    qDebug() << front << back;
+
+    mat4 manipulatorToCamera = camera.worldToCameraMatrix() * manipulatorToWorld;
+
+    vec3 arrowXDirection = manipulatorToCamera[0].xyz;
+
+    qDebug() << "arrow direction: " << arrowXDirection;
+
     return false;
 }
 
@@ -107,6 +116,20 @@ bool Manipulator::mouseMove(QMouseEvent *event, vec2 pos, const Camera &camera) 
 
 bool Manipulator::mouseRelease(QMouseEvent *event, vec2 pos, const Camera &camera) {
     return false;
+}
+
+std::pair<mat4, bool> Manipulator::manipulatorToWorldMatrix(vec3 targetPosition, const Camera &camera) const {
+    auto [screenPos, isInScreen] = camera.worldToScreen(targetPosition);
+    if (!isInScreen){
+        return {mat4(), false};
+    }
+    vec3 screenPosFixedDepth(screenPos.xy, 0.5f);
+    vec3 positionFixedDepth_worldSpace = camera.screenToWorld(screenPosFixedDepth);
+
+    float scale = 1.f / float(camera.viewSize().y) * 10.f;
+
+    mat4 modelMatrix = glm::scale(glm::translate(glm::mat4(1), positionFixedDepth_worldSpace), vec3(scale));
+    return {modelMatrix, true};
 }
 
 } // namespace Lattice
