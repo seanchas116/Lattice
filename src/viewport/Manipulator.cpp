@@ -96,8 +96,8 @@ bool Manipulator::mousePress(QMouseEvent *event, vec2 pos, const Camera &camera)
     }
 
     qDebug() << "press at" << pos;
-    vec3 front = camera.mapScreenToWorld(vec3(pos, 0));
-    vec3 back = camera.mapScreenToWorld(vec3(pos, 1));
+    vec3 front = camera.mapScreenToCamera(vec3(pos, 0));
+    vec3 back = camera.mapScreenToCamera(vec3(pos, 1));
 
     qDebug() << front << back;
 
