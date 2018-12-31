@@ -1,28 +1,28 @@
-#include "Camera.hpp"
+#include "OldCamera.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Lattice {
 
-Camera::Camera() {
+OldCamera::OldCamera() {
     update();
 }
 
-void Camera::setPos(glm::vec3 pos) {
+void OldCamera::setPos(glm::vec3 pos) {
     _pos = pos;
     update();
 }
 
-void Camera::setYaw(float yaw) {
+void OldCamera::setYaw(float yaw) {
     _yaw = yaw;
     update();
 }
 
-void Camera::setPitch(float pitch) {
+void OldCamera::setPitch(float pitch) {
     _pitch = pitch;
     update();
 }
 
-void Camera::update() {
+void OldCamera::update() {
     _direction = glm::vec3(
                 cos(_pitch) * sin(_yaw),
         sin(_pitch),

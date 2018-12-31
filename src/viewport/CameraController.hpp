@@ -3,7 +3,7 @@
 #include <QObject>
 #include <QPoint>
 #include <unordered_set>
-#include "../support/Camera.hpp"
+#include "../support/OldCamera.hpp"
 
 class QMouseEvent;
 class QWheelEvent;
@@ -22,7 +22,7 @@ public:
     void setPressedKeys(const std::unordered_set<int>& keys);
 
 signals:
-    void cameraChanged(const Camera& camera);
+    void cameraChanged(const OldCamera& camera);
 
 private:
     enum Mode {
@@ -31,7 +31,7 @@ private:
         Rotate,
     };
 
-    Camera _camera;
+    OldCamera _camera;
     Mode _mode;
     QPoint _lastMousePos;
     std::unordered_set<int> _pressedKeys;

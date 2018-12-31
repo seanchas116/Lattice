@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../support/Camera.hpp"
+#include "../support/OldCamera.hpp"
 #include "../support/Projection.hpp"
 #include "../support/Pointer.hpp"
 #include <QObject>
@@ -26,14 +26,14 @@ public:
     void resize(glm::ivec2 physicalSize, glm::ivec2 logicalSize);
     void render();
 
-    void setCamera(const Camera& camera) { _camera = camera; }
+    void setCamera(const OldCamera& camera) { _camera = camera; }
 
 signals:
     void updateNeeded();
 
 private:
     glm::ivec2 _logicalSize;
-    Camera _camera;
+    OldCamera _camera;
     Projection _projection;
     SP<Operations> _operations;
     SP<GridFloor> _gridFloor;

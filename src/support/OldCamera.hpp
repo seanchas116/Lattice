@@ -4,9 +4,9 @@
 
 namespace Lattice {
 
-class Camera final {
+class OldCamera final {
 public:
-    Camera();
+    OldCamera();
 
     glm::vec3 pos() const { return _pos; }
     void setPos(glm::vec3 pos);
