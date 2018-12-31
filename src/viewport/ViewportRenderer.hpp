@@ -7,6 +7,8 @@
 #include <glm/glm.hpp>
 #include <unordered_map>
 
+class QMouseEvent;
+
 namespace Lattice {
 
 class GridFloor;
@@ -26,6 +28,10 @@ public:
     void render();
 
     void setCameraLocation(const Location& location) { _camera.setLocation(location); }
+
+    void mousePress(QMouseEvent* event, glm::vec2 pos);
+    void mouseMove(QMouseEvent* event, glm::vec2 pos);
+    void mouseRelease(QMouseEvent* event, glm::vec2 pos);
 
 signals:
     void updateNeeded();
