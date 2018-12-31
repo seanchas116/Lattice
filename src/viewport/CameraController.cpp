@@ -2,9 +2,13 @@
 #include <QMouseEvent>
 #include <QtDebug>
 
+using namespace glm;
+
 namespace Lattice {
 
 CameraController::CameraController() {
+    _location.position = vec3(0, 10, 10);
+    _location.rotation.y = float(-M_PI);
 }
 
 bool CameraController::mousePress(QMouseEvent *event) {
