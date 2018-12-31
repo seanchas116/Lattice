@@ -13,6 +13,11 @@ Projection::Projection() :
 {
 }
 
+void Projection::setLocation(const Location &location) {
+    _location = location;
+    updateMatrix();
+}
+
 void Projection::setViewSize(const glm::vec2 &viewSize) {
     _viewSize = viewSize;
     updateMatrix();
@@ -33,8 +38,8 @@ void Projection::setZFar(float zFar) {
     updateMatrix();
 }
 
-std::pair<glm::vec3, bool> Projection::project(const glm::vec3 &pos) const {
-    vec4 pos_clipSpace = _projectionMatrix * vec4(pos, 1);
+std::pair<glm::vec3, bool> Projection::project(const glm::vec3 &worldPos) const {
+    vec4 pos_clipSpace = _viewProjectionMatrix * vec4(worldPos, 1);
     if (fabs(pos_clipSpace.x) <= pos_clipSpace.w && fabs(pos_clipSpace.y) <= pos_clipSpace.w && fabs(pos_clipSpace.z) <= pos_clipSpace.w) {
         vec3 ndc = vec3(pos_clipSpace.xyz) / pos_clipSpace.w;
         return {vec3((vec2(ndc.xy) + 1.f) * 0.5f * vec2(_viewSize), ndc.z), true};
@@ -43,11 +48,15 @@ std::pair<glm::vec3, bool> Projection::project(const glm::vec3 &pos) const {
 }
 
 glm::vec3 Projection::unProject(const glm::vec3 &screenPos) const {
-    return glm::unProject(screenPos, mat4(1), _projectionMatrix, vec4(0, 0, _viewSize));
+    auto inverseViewMatrix = inverse(_viewMatrix);
+    auto cameraPos = glm::unProject(screenPos, mat4(1), _projectionMatrix, vec4(0, 0, _viewSize));
+    return (inverseViewMatrix * vec4(cameraPos, 1)).xyz;
 }
 
 void Projection::updateMatrix() {
+    _viewMatrix = _location.matrix();
     _projectionMatrix = glm::perspective(_fieldOfView, float(_viewSize.x) / float(_viewSize.y), _zNear, _zFar);
+    _viewProjectionMatrix = _projectionMatrix * _viewMatrix;
 }
 
 } // namespace Lattice
