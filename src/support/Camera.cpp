@@ -50,13 +50,13 @@ std::pair<glm::vec3, bool> Camera::worldToScreen(const glm::vec3 &worldPos) cons
 }
 
 glm::vec3 Camera::screenToWorld(const glm::vec3 &screenPos) const {
-    auto inverseViewMatrix = inverse(_worldToCameraMatrix);
+    auto cameraToWorldMatrix = _location.matrix();
     auto cameraPos = glm::unProject(screenPos, mat4(1), _cameraToScreenMatrix, vec4(0, 0, _viewSize));
-    return (inverseViewMatrix * vec4(cameraPos, 1)).xyz;
+    return (cameraToWorldMatrix * vec4(cameraPos, 1)).xyz;
 }
 
 void Camera::updateMatrix() {
-    _worldToCameraMatrix = _location.matrix();
+    _worldToCameraMatrix = inverse(_location.matrix());
     _cameraToScreenMatrix = glm::perspective(_fieldOfView, float(_viewSize.x) / float(_viewSize.y), _zNear, _zFar);
     _worldToScreenMatrix = _cameraToScreenMatrix * _worldToCameraMatrix;
 }
