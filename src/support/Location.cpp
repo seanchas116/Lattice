@@ -4,14 +4,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
 
+using namespace glm;
+
 namespace Lattice {
 
 glm::mat4 Location::matrix() const {
-    glm::mat4 m(1);
-    m = glm::scale(m, scale);
-    m = glm::yawPitchRoll(rotation.y, rotation.x, rotation.z) * m;
-    m = glm::translate(m, position);
-    return m;
+    return glm::translate(mat4(1), position) * glm::yawPitchRoll(rotation.y, rotation.x, rotation.z) * glm::scale(mat4(1), scale);
 }
 
 glm::vec3 Location::right() const {
