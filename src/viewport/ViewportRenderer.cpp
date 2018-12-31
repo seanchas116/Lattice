@@ -36,7 +36,7 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
 void ViewportRenderer::resize(ivec2 physicalSize, ivec2 logicalSize) {
     glViewport(0, 0, physicalSize.x, physicalSize.y);
     _logicalSize = logicalSize;
-    _projection = Projection(logicalSize, glm::radians(60.f), 0.1f, 100.f);
+    _projection.setViewSize(logicalSize);
 }
 
 void ViewportRenderer::render() {

@@ -6,17 +6,31 @@ using namespace glm;
 namespace Lattice {
 
 Projection::Projection() :
-    Projection(glm::vec2(100), glm::radians(60.f), 0.1f, 100.f)
+    _viewSize(100, 100),
+    _fieldOfView(glm::radians(60.f)),
+    _zNear(0.1f),
+    _zFar(100.f)
 {
 }
 
-Projection::Projection(glm::vec2 viewSize, float fieldOfView, float zNear, float zFar) :
-    _viewSize(viewSize),
-    _fieldOfView(fieldOfView),
-    _zNear(zNear),
-    _zFar(zFar)
-{
-    _matrix = glm::perspective(fieldOfView, float(viewSize.x) / float(viewSize.y), zNear, zFar);
+void Projection::setViewSize(const glm::vec2 &viewSize) {
+    _viewSize = viewSize;
+    updateMatrix();
+}
+
+void Projection::setFieldOfView(float fieldOfView) {
+    _fieldOfView = fieldOfView;
+    updateMatrix();
+}
+
+void Projection::setZNear(float zNear) {
+    _zNear = zNear;
+    updateMatrix();
+}
+
+void Projection::setZFar(float zFar) {
+    _zFar = zFar;
+    updateMatrix();
 }
 
 std::pair<glm::vec3, bool> Projection::project(const glm::vec3 &pos) const {
@@ -30,6 +44,10 @@ std::pair<glm::vec3, bool> Projection::project(const glm::vec3 &pos) const {
 
 glm::vec3 Projection::unProject(const glm::vec3 &screenPos) const {
     return glm::unProject(screenPos, mat4(1), _matrix, vec4(0, 0, _viewSize));
+}
+
+void Projection::updateMatrix() {
+    _matrix = glm::perspective(_fieldOfView, float(_viewSize.x) / float(_viewSize.y), _zNear, _zFar);
 }
 
 } // namespace Lattice
