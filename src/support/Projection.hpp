@@ -1,4 +1,5 @@
 #pragma once
+#include <optional>
 #include <glm/glm.hpp>
 
 namespace Lattice {
@@ -15,6 +16,9 @@ public:
     float zFar() const { return _zFar; }
 
     glm::mat4 matrix() const { return _matrix; }
+
+    std::pair<glm::vec3, bool> project(const glm::vec3& pos) const;
+    glm::vec3 unProject(const glm::vec3& screenPos) const;
 
 private:
     glm::vec2 _viewSize;
