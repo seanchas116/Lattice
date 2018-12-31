@@ -1,11 +1,11 @@
-#include "Projection.hpp"
+#include "Camera.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace glm;
 
 namespace Lattice {
 
-Projection::Projection() :
+Camera::Camera() :
     _viewSize(100, 100),
     _fieldOfView(glm::radians(60.f)),
     _zNear(0.1f),
@@ -13,32 +13,32 @@ Projection::Projection() :
 {
 }
 
-void Projection::setLocation(const Location &location) {
+void Camera::setLocation(const Location &location) {
     _location = location;
     updateMatrix();
 }
 
-void Projection::setViewSize(const glm::vec2 &viewSize) {
+void Camera::setViewSize(const glm::vec2 &viewSize) {
     _viewSize = viewSize;
     updateMatrix();
 }
 
-void Projection::setFieldOfView(float fieldOfView) {
+void Camera::setFieldOfView(float fieldOfView) {
     _fieldOfView = fieldOfView;
     updateMatrix();
 }
 
-void Projection::setZNear(float zNear) {
+void Camera::setZNear(float zNear) {
     _zNear = zNear;
     updateMatrix();
 }
 
-void Projection::setZFar(float zFar) {
+void Camera::setZFar(float zFar) {
     _zFar = zFar;
     updateMatrix();
 }
 
-std::pair<glm::vec3, bool> Projection::project(const glm::vec3 &worldPos) const {
+std::pair<glm::vec3, bool> Camera::project(const glm::vec3 &worldPos) const {
     vec4 pos_clipSpace = _viewProjectionMatrix * vec4(worldPos, 1);
     if (fabs(pos_clipSpace.x) <= pos_clipSpace.w && fabs(pos_clipSpace.y) <= pos_clipSpace.w && fabs(pos_clipSpace.z) <= pos_clipSpace.w) {
         vec3 ndc = vec3(pos_clipSpace.xyz) / pos_clipSpace.w;
@@ -47,13 +47,13 @@ std::pair<glm::vec3, bool> Projection::project(const glm::vec3 &worldPos) const 
     return {vec3(0), false};
 }
 
-glm::vec3 Projection::unProject(const glm::vec3 &screenPos) const {
+glm::vec3 Camera::unProject(const glm::vec3 &screenPos) const {
     auto inverseViewMatrix = inverse(_viewMatrix);
     auto cameraPos = glm::unProject(screenPos, mat4(1), _projectionMatrix, vec4(0, 0, _viewSize));
     return (inverseViewMatrix * vec4(cameraPos, 1)).xyz;
 }
 
-void Projection::updateMatrix() {
+void Camera::updateMatrix() {
     _viewMatrix = _location.matrix();
     _projectionMatrix = glm::perspective(_fieldOfView, float(_viewSize.x) / float(_viewSize.y), _zNear, _zFar);
     _viewProjectionMatrix = _projectionMatrix * _viewMatrix;

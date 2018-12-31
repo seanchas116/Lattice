@@ -1,7 +1,7 @@
 #include "DrawSolid.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../resource/Resource.hpp"
-#include "../../support/Projection.hpp"
+#include "../../support/Camera.hpp"
 
 namespace Lattice {
 
@@ -10,7 +10,7 @@ DrawSolid::DrawSolid() :
 {
 }
 
-void DrawSolid::draw(const SP<VAO> &vao, const glm::mat4 &matrix, const Projection &projection, glm::vec3 diffuse, glm::vec3 ambient) {
+void DrawSolid::draw(const SP<VAO> &vao, const glm::mat4 &matrix, const Camera &projection, glm::vec3 diffuse, glm::vec3 ambient) {
     _shader.bind();
     _shader.setUniform("diffuse", diffuse);
     _shader.setUniform("ambient", ambient);

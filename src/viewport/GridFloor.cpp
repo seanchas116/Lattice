@@ -2,7 +2,7 @@
 #include "Operations.hpp"
 #include "../gl/LineVAO.hpp"
 #include "../gl/VertexBuffer.hpp"
-#include "../support/Projection.hpp"
+#include "../support/Camera.hpp"
 #include "../support/OldCamera.hpp"
 
 using namespace glm;
@@ -43,7 +43,7 @@ GridFloor::GridFloor() {
     _vao->setLineStrips(lineStrips);
 }
 
-void GridFloor::draw(const SP<Operations> &operations, const glm::mat4 &viewMatrix, const Projection &projection) {
+void GridFloor::draw(const SP<Operations> &operations, const glm::mat4 &viewMatrix, const Camera &projection) {
     operations->drawLine.draw(_vao, viewMatrix, projection, 1, vec3(0.5));
 }
 

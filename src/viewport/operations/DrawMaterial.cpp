@@ -2,7 +2,7 @@
 #include "../../gl/VAO.hpp"
 #include "../../gl/Texture.hpp"
 #include "../../resource/Resource.hpp"
-#include "../../support/Projection.hpp"
+#include "../../support/Camera.hpp"
 
 namespace Lattice {
 
@@ -12,7 +12,7 @@ DrawMaterial::DrawMaterial() :
     initializeOpenGLFunctions();
 }
 
-void DrawMaterial::draw(const SP<VAO> &vao, const glm::mat4 &matrix, const Projection &projection, const SP<MeshMaterial> &material) {
+void DrawMaterial::draw(const SP<VAO> &vao, const glm::mat4 &matrix, const Camera &projection, const SP<MeshMaterial> &material) {
     _shader.bind();
     _shader.setUniform("diffuse", material->baseColor());
     _shader.setUniform("ambient", glm::vec3(0));

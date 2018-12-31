@@ -12,7 +12,7 @@ class LineVAO;
 class PointVAO;
 class Mesh;
 class Operations;
-class Projection;
+class Camera;
 class MeshMaterial;
 class VertexBuffer;
 
@@ -20,9 +20,9 @@ class MeshRenderer {
 public:
     MeshRenderer(const SP<MeshItem>& item);
 
-    void drawFaces(const SP<Operations>& operations, const glm::mat4& viewMatrix, const Projection& projection);
-    void drawEdges(const SP<Operations> &operations, const glm::mat4 &viewMatrix, const Projection &projection);
-    void drawVertices(const SP<Operations>& operations, const glm::mat4& viewMatrix, const Projection& projection);
+    void drawFaces(const SP<Operations>& operations, const glm::mat4& viewMatrix, const Camera& projection);
+    void drawEdges(const SP<Operations> &operations, const glm::mat4 &viewMatrix, const Camera &projection);
+    void drawVertices(const SP<Operations>& operations, const glm::mat4& viewMatrix, const Camera& projection);
 
 private:
     void update(const SP<Mesh>& mesh);

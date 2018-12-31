@@ -3,7 +3,7 @@
 #include "../../resource/Resource.hpp"
 #include "../../support/Location.hpp"
 #include "../../support/OldCamera.hpp"
-#include "../../support/Projection.hpp"
+#include "../../support/Camera.hpp"
 
 namespace Lattice {
 
@@ -12,7 +12,7 @@ DrawCircle::DrawCircle() :
 {
 }
 
-void DrawCircle::draw(const SP<PointVAO> &vao, const glm::mat4 &matrix, const Projection &projection, float width, glm::vec3 color, float zOffset) {
+void DrawCircle::draw(const SP<PointVAO> &vao, const glm::mat4 &matrix, const Camera &projection, float width, glm::vec3 color, float zOffset) {
     _shader.bind();
     _shader.setUniform("MVP", projection.projectionMatrix() * matrix);
     _shader.setUniform("viewportSize", projection.viewSize());

@@ -4,13 +4,13 @@
 namespace Lattice {
 
 class VAO;
-class Projection;
+class Camera;
 
 class DrawSolid {
 public:
     DrawSolid();
 
-    void draw(const SP<VAO>& vao, const glm::mat4& matrix, const Projection& projection,
+    void draw(const SP<VAO>& vao, const glm::mat4& matrix, const Camera& projection,
               glm::vec3 diffuse, glm::vec3 ambient);
 
 private:

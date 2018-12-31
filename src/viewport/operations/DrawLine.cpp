@@ -1,5 +1,5 @@
 #include "DrawLine.hpp"
-#include "../../support/Projection.hpp"
+#include "../../support/Camera.hpp"
 #include "../../gl/LineVAO.hpp"
 #include "../../resource/Resource.hpp"
 
@@ -10,7 +10,7 @@ DrawLine::DrawLine() :
 {
 }
 
-void DrawLine::draw(const SP<LineVAO> &vao, const glm::mat4 &matrix, const Projection &projection, float width, glm::vec3 color, float zOffset) {
+void DrawLine::draw(const SP<LineVAO> &vao, const glm::mat4 &matrix, const Camera &projection, float width, glm::vec3 color, float zOffset) {
     _shader.bind();
     _shader.setUniform("MV", matrix);
     _shader.setUniform("P", projection.projectionMatrix());

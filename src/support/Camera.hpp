@@ -5,9 +5,9 @@
 
 namespace Lattice {
 
-class Projection {
+class Camera {
 public:
-    Projection();
+    Camera();
 
     Location location() const { return _location; }
     void setLocation(const Location &location);
