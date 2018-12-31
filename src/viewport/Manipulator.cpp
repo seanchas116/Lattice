@@ -104,8 +104,12 @@ bool Manipulator::mousePress(QMouseEvent *event, vec2 pos, const Camera &camera)
     mat4 manipulatorToCamera = camera.worldToCameraMatrix() * manipulatorToWorld;
 
     vec3 arrowXDirection = manipulatorToCamera[0].xyz;
+    vec3 arrowCenter = manipulatorToCamera[3].xyz;
 
-    qDebug() << "arrow direction: " << arrowXDirection;
+    Line mouseRay(front, back);
+    Line arrowRay(arrowCenter, arrowCenter + arrowXDirection);
+
+    qDebug() << "distance" << LineLineDistance(mouseRay, arrowRay).distance;
 
     return false;
 }
