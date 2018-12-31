@@ -67,6 +67,8 @@ Manipulator::Manipulator() {
 }
 
 void Manipulator::draw(const SP<Operations> &operations, const mat4 &viewMatrix, const Projection &projection) {
+    // TODO: refactor transform calculations
+
     vec3 position_worldSpace(0);
     vec3 position_cameraSpace = (viewMatrix * vec4(position_worldSpace, 1)).xyz;
 
