@@ -91,27 +91,14 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
 }
 
 bool Manipulator::mousePress(QMouseEvent *event, vec2 pos, const Camera &camera) {
-    auto [manipulatorToWorld, isInScreen] = this->manipulatorToWorldMatrix(vec3(0), camera);
+    auto [distance, t, isInScreen] = distanceFromArrow(pos, camera);
     if (!isInScreen) {
         return false;
     }
 
-    vec3 front = camera.mapScreenToCamera(vec3(pos, 0));
-    vec3 back = camera.mapScreenToCamera(vec3(pos, 1));
-
-    mat4 manipulatorToCamera = camera.worldToCameraMatrix() * manipulatorToWorld;
-
-    vec3 arrowXDirection = manipulatorToCamera[0].xyz;
-    float scale = glm::length(arrowXDirection);
-    vec3 arrowCenter = manipulatorToCamera[3].xyz;
-
-    Line mouseRay(front, back);
-    Line arrowRay(arrowCenter, arrowCenter + arrowXDirection);
-    LineLineDistance distance(mouseRay, arrowRay);
-
-    if (0 <= distance.t1 && distance.t1 <= bodyLength + headLength && distance.distance / scale <= hitRadius) {
+    if (0 <= t && t <= bodyLength + headLength && distance <= hitRadius) {
         _isDragging = true;
-        _originalValue = distance.t1;
+        _originalValue = t;
         qDebug() << "drag start" << _originalValue;
 
         return true;
@@ -125,25 +112,11 @@ bool Manipulator::mouseMove(QMouseEvent *event, vec2 pos, const Camera &camera) 
         return false;
     }
 
-    auto [manipulatorToWorld, isInScreen] = this->manipulatorToWorldMatrix(vec3(0), camera);
+    auto [distance, t, isInScreen] = distanceFromArrow(pos, camera);
     if (!isInScreen) {
         return false;
     }
-
-    vec3 front = camera.mapScreenToCamera(vec3(pos, 0));
-    vec3 back = camera.mapScreenToCamera(vec3(pos, 1));
-
-    mat4 manipulatorToCamera = camera.worldToCameraMatrix() * manipulatorToWorld;
-
-    vec3 arrowXDirection = manipulatorToCamera[0].xyz;
-    float scale = glm::length(arrowXDirection);
-    vec3 arrowCenter = manipulatorToCamera[3].xyz;
-
-    Line mouseRay(front, back);
-    Line arrowRay(arrowCenter, arrowCenter + arrowXDirection);
-    LineLineDistance distance(mouseRay, arrowRay);
-
-    qDebug() << "drag move" << distance.t1;
+    qDebug() << "drag move" << t;
     return true;
 }
 
@@ -167,6 +140,28 @@ std::pair<mat4, bool> Manipulator::manipulatorToWorldMatrix(vec3 targetPosition,
 
     mat4 modelMatrix = glm::scale(glm::translate(glm::mat4(1), positionFixedDepth_worldSpace), vec3(scale));
     return {modelMatrix, true};
+}
+
+std::tuple<float, float, bool> Manipulator::distanceFromArrow(vec2 screenPos, const Camera& camera) {
+    auto [manipulatorToWorld, isInScreen] = this->manipulatorToWorldMatrix(vec3(0), camera);
+    if (!isInScreen) {
+        return {0, 0, false};
+    }
+
+    vec3 front = camera.mapScreenToCamera(vec3(screenPos, 0));
+    vec3 back = camera.mapScreenToCamera(vec3(screenPos, 1));
+
+    mat4 manipulatorToCamera = camera.worldToCameraMatrix() * manipulatorToWorld;
+
+    vec3 arrowXDirection = manipulatorToCamera[0].xyz;
+    float scale = glm::length(arrowXDirection);
+    vec3 arrowCenter = manipulatorToCamera[3].xyz;
+
+    Line mouseRay(front, back);
+    Line arrowRay(arrowCenter, arrowCenter + arrowXDirection);
+    LineLineDistance distance(mouseRay, arrowRay);
+
+    return {distance.distance / scale, distance.t1, true};
 }
 
 } // namespace Lattice
