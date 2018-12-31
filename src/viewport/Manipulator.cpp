@@ -19,6 +19,7 @@ constexpr float bodyWidth = 2.f;
 constexpr float headLength = 0.4f;
 constexpr float headWidth = 0.2f;
 constexpr uint32_t headSegmentCount = 16;
+constexpr float hitRadius = 0.2f;
 
 }
 
@@ -104,12 +105,18 @@ bool Manipulator::mousePress(QMouseEvent *event, vec2 pos, const Camera &camera)
     mat4 manipulatorToCamera = camera.worldToCameraMatrix() * manipulatorToWorld;
 
     vec3 arrowXDirection = manipulatorToCamera[0].xyz;
+    float scale = glm::length(arrowXDirection);
     vec3 arrowCenter = manipulatorToCamera[3].xyz;
 
     Line mouseRay(front, back);
     Line arrowRay(arrowCenter, arrowCenter + arrowXDirection);
+    LineLineDistance distance(mouseRay, arrowRay);
 
-    qDebug() << "distance" << LineLineDistance(mouseRay, arrowRay).distance;
+    if (0 <= distance.t1 && distance.t1 <= bodyLength + headLength && distance.distance / scale <= hitRadius) {
+        qDebug() << "hit";
+    }
+
+    qDebug() << distance.distance << distance.t1;
 
     return false;
 }
