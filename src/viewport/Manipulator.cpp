@@ -96,11 +96,8 @@ bool Manipulator::mousePress(QMouseEvent *event, vec2 pos, const Camera &camera)
         return false;
     }
 
-    qDebug() << "press at" << pos;
     vec3 front = camera.mapScreenToCamera(vec3(pos, 0));
     vec3 back = camera.mapScreenToCamera(vec3(pos, 1));
-
-    qDebug() << front << back;
 
     mat4 manipulatorToCamera = camera.worldToCameraMatrix() * manipulatorToWorld;
 
@@ -114,9 +111,8 @@ bool Manipulator::mousePress(QMouseEvent *event, vec2 pos, const Camera &camera)
 
     if (0 <= distance.t1 && distance.t1 <= bodyLength + headLength && distance.distance / scale <= hitRadius) {
         qDebug() << "hit";
+        return true;
     }
-
-    qDebug() << distance.distance << distance.t1;
 
     return false;
 }
