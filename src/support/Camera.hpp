@@ -31,6 +31,9 @@ public:
     std::pair<glm::vec3, bool> mapWorldToScreen(const glm::vec3& worldPos) const;
     glm::vec3 mapScreenToWorld(const glm::vec3& screenPos) const;
 
+    std::pair<glm::vec3, bool> mapCameraToScreen(const glm::vec3& cameraPos) const;
+    glm::vec3 mapScreenToCamera(const glm::vec3& screenPos) const;
+
 private:
     void updateMatrix();
 

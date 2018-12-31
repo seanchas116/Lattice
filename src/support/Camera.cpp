@@ -39,7 +39,18 @@ void Camera::setZFar(float zFar) {
 }
 
 std::pair<glm::vec3, bool> Camera::mapWorldToScreen(const glm::vec3 &worldPos) const {
-    vec4 pos_clipSpace = _worldToScreenMatrix * vec4(worldPos, 1);
+    vec3 pos_cameraSpace = (_worldToCameraMatrix * vec4(worldPos, 1)).xyz;
+    return mapCameraToScreen(pos_cameraSpace);
+}
+
+glm::vec3 Camera::mapScreenToWorld(const glm::vec3 &screenPos) const {
+    auto cameraPos = mapScreenToCamera(screenPos);
+    auto cameraToWorldMatrix = _location.matrix();
+    return (cameraToWorldMatrix * vec4(cameraPos, 1)).xyz;
+}
+
+std::pair<vec3, bool> Camera::mapCameraToScreen(const vec3& cameraPos) const {
+    vec4 pos_clipSpace = _cameraToScreenMatrix * vec4(cameraPos, 1);
     if (fabs(pos_clipSpace.x) <= pos_clipSpace.w && fabs(pos_clipSpace.y) <= pos_clipSpace.w && fabs(pos_clipSpace.z) <= pos_clipSpace.w) {
         vec3 ndc = vec3(pos_clipSpace.xyz) / pos_clipSpace.w;
         return {vec3((vec2(ndc.xy) + 1.f) * 0.5f * vec2(_viewSize), ndc.z), true};
@@ -47,10 +58,8 @@ std::pair<glm::vec3, bool> Camera::mapWorldToScreen(const glm::vec3 &worldPos) c
     return {vec3(0), false};
 }
 
-glm::vec3 Camera::mapScreenToWorld(const glm::vec3 &screenPos) const {
-    auto cameraToWorldMatrix = _location.matrix();
-    auto cameraPos = glm::unProject(screenPos, mat4(1), _cameraToScreenMatrix, vec4(0, 0, _viewSize));
-    return (cameraToWorldMatrix * vec4(cameraPos, 1)).xyz;
+vec3 Camera::mapScreenToCamera(const vec3 &screenPos) const {
+    return glm::unProject(screenPos, mat4(1), _cameraToScreenMatrix, vec4(0, 0, _viewSize));
 }
 
 void Camera::updateMatrix() {
