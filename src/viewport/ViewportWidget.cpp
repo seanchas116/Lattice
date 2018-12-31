@@ -25,6 +25,7 @@ void ViewportWidget::initializeGL() {
     _renderer = std::make_shared<ViewportRenderer>(_appState);
     connect(_renderer.get(), &ViewportRenderer::updateNeeded, this, [this] { update(); });
 
+    _renderer->setCameraLocation(_cameraController.location());
     connect(&_cameraController, &CameraController::locationChanged, this, [this] (const Location& location) {
         _renderer->setCameraLocation(location);
         update();

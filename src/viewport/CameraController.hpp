@@ -22,6 +22,8 @@ public:
 
     void setPressedKeys(const std::unordered_set<int>& keys);
 
+    Location location() const { return _location; }
+
 signals:
     void locationChanged(const Location& location);
 
