@@ -18,17 +18,21 @@ public:
     bool mouseMove(QMouseEvent* event, glm::vec2 pos, const Camera& camera);
     bool mouseRelease(QMouseEvent* event, glm::vec2 pos, const Camera& camera);
 
+    void setTargetPosition(glm::vec3 pos) { _targetPosition = pos; }
+
 signals:
     void onDragStart();
     void onDrag(glm::vec3 offset);
     void onDragEnd();
 
 private:
-    std::pair<glm::mat4, bool> manipulatorToWorldMatrix(glm::vec3 targetPosition, const Camera& camera) const;
+    std::pair<glm::mat4, bool> manipulatorToWorldMatrix(const Camera& camera) const;
     std::tuple<float, float> distanceFromArrow(glm::vec2 screenPos, const Camera& camera);
 
     SP<VAO> _headVAO;
     SP<LineVAO> _bodyVAO;
+
+    glm::vec3 _targetPosition {0};
 
     bool _isDragging = false;
     int _dragAxis = 0;

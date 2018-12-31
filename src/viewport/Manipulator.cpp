@@ -70,7 +70,7 @@ Manipulator::Manipulator() {
 }
 
 void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
-    auto [manipulatorToWorld, isInScreen] = this->manipulatorToWorldMatrix(vec3(0), camera);
+    auto [manipulatorToWorld, isInScreen] = this->manipulatorToWorldMatrix(camera);
     if (!isInScreen){
         return;
     }
@@ -124,8 +124,8 @@ bool Manipulator::mouseRelease(QMouseEvent *event, vec2 pos, const Camera &camer
     return true;
 }
 
-std::pair<mat4, bool> Manipulator::manipulatorToWorldMatrix(vec3 targetPosition, const Camera &camera) const {
-    auto [screenPos, isInScreen] = camera.mapWorldToScreen(targetPosition);
+std::pair<mat4, bool> Manipulator::manipulatorToWorldMatrix(const Camera &camera) const {
+    auto [screenPos, isInScreen] = camera.mapWorldToScreen(_targetPosition);
     if (!isInScreen){
         return {mat4(), false};
     }
