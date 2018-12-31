@@ -36,7 +36,7 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
 void ViewportRenderer::resize(ivec2 physicalSize, ivec2 logicalSize) {
     glViewport(0, 0, physicalSize.x, physicalSize.y);
     _logicalSize = logicalSize;
-    _projection.setViewSize(logicalSize);
+    _camera.setViewSize(logicalSize);
 }
 
 void ViewportRenderer::render() {
@@ -64,27 +64,27 @@ void ViewportRenderer::render() {
 
     _meshRenderers = newMeshRenderers;
 
-    _gridFloor->draw(_operations, _projection);
+    _gridFloor->draw(_operations, _camera);
 
     if (_appState->isFaceVisible()) {
         for (auto& [item, renderer] : _meshRenderers) {
-            renderer->drawFaces(_operations, _projection);
+            renderer->drawFaces(_operations, _camera);
         }
     }
 
     if (_appState->isEdgeVisible()) {
         for (auto& [item, renderer] : _meshRenderers) {
-            renderer->drawEdges(_operations, _projection);
+            renderer->drawEdges(_operations, _camera);
         }
     }
 
     if (_appState->isVertexVisible()) {
         for (auto& [item, renderer] : _meshRenderers) {
-            renderer->drawVertices(_operations, _projection);
+            renderer->drawVertices(_operations, _camera);
         }
     }
 
-    _manipulator->draw(_operations, _projection);
+    _manipulator->draw(_operations, _camera);
 }
 
 } // namespace Lattice

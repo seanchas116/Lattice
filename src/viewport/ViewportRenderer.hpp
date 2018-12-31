@@ -25,14 +25,14 @@ public:
     void resize(glm::ivec2 physicalSize, glm::ivec2 logicalSize);
     void render();
 
-    void setCameraLocation(const Location& location) { _projection.setLocation(location); }
+    void setCameraLocation(const Location& location) { _camera.setLocation(location); }
 
 signals:
     void updateNeeded();
 
 private:
     glm::ivec2 _logicalSize;
-    Camera _projection;
+    Camera _camera;
     SP<Operations> _operations;
     SP<GridFloor> _gridFloor;
     SP<Manipulator> _manipulator;

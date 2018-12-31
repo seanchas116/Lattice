@@ -13,7 +13,7 @@ class GridFloor final {
 public:
     GridFloor();
 
-    void draw(const SP<Operations>& operations, const Camera& projection);
+    void draw(const SP<Operations>& operations, const Camera& camera);
 
 private:
     SP<LineVAO> _vao;
