@@ -88,15 +88,15 @@ void ViewportRenderer::render() {
 }
 
 void ViewportRenderer::mousePress(QMouseEvent *event, vec2 pos) {
-    // TODO
+    _manipulator->mousePress(event, pos, _camera);
 }
 
 void ViewportRenderer::mouseMove(QMouseEvent *event, vec2 pos) {
-    // TODO
+    _manipulator->mouseMove(event, pos, _camera);
 }
 
 void ViewportRenderer::mouseRelease(QMouseEvent *event, vec2 pos) {
-    // TODO
+    _manipulator->mouseRelease(event, pos, _camera);
 }
 
 } // namespace Lattice

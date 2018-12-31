@@ -44,17 +44,23 @@ void ViewportWidget::paintGL() {
 }
 
 void ViewportWidget::mousePressEvent(QMouseEvent *event) {
-    _cameraController.mousePress(event);
+    if (_cameraController.mousePress(event)) {
+        return;
+    }
     _renderer->mousePress(event, mapToRenderer(event->pos()));
 }
 
 void ViewportWidget::mouseMoveEvent(QMouseEvent *event) {
-    _cameraController.mouseMove(event);
+    if (_cameraController.mouseMove(event)) {
+        return;
+    }
     _renderer->mouseMove(event, mapToRenderer(event->pos()));
 }
 
 void ViewportWidget::mouseReleaseEvent(QMouseEvent *event) {
-    _cameraController.mouseRelease(event);
+    if (_cameraController.mouseRelease(event)) {
+        return;
+    }
     _renderer->mouseRelease(event, mapToRenderer(event->pos()));
 }
 

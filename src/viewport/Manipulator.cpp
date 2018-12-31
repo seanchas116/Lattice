@@ -3,6 +3,7 @@
 #include "../gl/VAO.hpp"
 #include "../gl/LineVAO.hpp"
 #include "../gl/VertexBuffer.hpp"
+#include "../support/Debug.hpp"
 #include <array>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -93,6 +94,19 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
         operations->drawSolid.draw(_headVAO, newModelMatrix * transforms[i], camera, vec3(0), colors[i]);
         operations->drawLine.draw(_bodyVAO, newModelMatrix * transforms[i], camera, bodyWidth, colors[i]);
     }
+}
+
+bool Manipulator::mousePress(QMouseEvent *event, vec2 pos, const Camera &camera) {
+    qDebug() << "press at" << pos;
+    return false;
+}
+
+bool Manipulator::mouseMove(QMouseEvent *event, vec2 pos, const Camera &camera) {
+    return false;
+}
+
+bool Manipulator::mouseRelease(QMouseEvent *event, vec2 pos, const Camera &camera) {
+    return false;
 }
 
 } // namespace Lattice
