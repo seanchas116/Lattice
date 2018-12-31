@@ -12,8 +12,8 @@ DrawLine::DrawLine() :
 
 void DrawLine::draw(const SP<LineVAO> &vao, const glm::mat4 &matrix, const Camera &camera, float width, glm::vec3 color, float zOffset) {
     _shader.bind();
-    _shader.setUniform("MV", camera.viewMatrix() * matrix);
-    _shader.setUniform("P", camera.projectionMatrix());
+    _shader.setUniform("MV", camera.worldToCameraMatrix() * matrix);
+    _shader.setUniform("P", camera.cameraToScrenMatrix());
     _shader.setUniform("viewportSize", camera.viewSize());
     _shader.setUniform("zNear", camera.zNear());
     _shader.setUniform("width", width);

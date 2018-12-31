@@ -71,12 +71,12 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
 
     vec3 position_worldSpace(0);
 
-    auto [screenPos, isInScreen] = camera.project(position_worldSpace);
+    auto [screenPos, isInScreen] = camera.worldToScreen(position_worldSpace);
     if (!isInScreen){
         return;
     }
     vec3 screenPosFixedDepth(screenPos.xy, 0.5f);
-    vec3 positionFixedDepth_worldSpace = camera.unProject(screenPosFixedDepth);
+    vec3 positionFixedDepth_worldSpace = camera.screenToWorld(screenPosFixedDepth);
 
     float scale = 1.f / float(camera.viewSize().y) * 10.f;
 

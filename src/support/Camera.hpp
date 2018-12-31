@@ -24,12 +24,12 @@ public:
     float zFar() const { return _zFar; }
     void setZFar(float zFar);
 
-    glm::mat4 viewMatrix() const { return _viewMatrix; }
-    glm::mat4 projectionMatrix() const { return _projectionMatrix; }
-    glm::mat4 viewProjectionMatrix() const { return _viewProjectionMatrix; }
+    glm::mat4 worldToCameraMatrix() const { return _worldToCameraMatrix; }
+    glm::mat4 cameraToScrenMatrix() const { return _cameraToScreenMatrix; }
+    glm::mat4 worldToScreenMatrix() const { return _worldToScreenMatrix; }
 
-    std::pair<glm::vec3, bool> project(const glm::vec3& worldPos) const;
-    glm::vec3 unProject(const glm::vec3& screenPos) const;
+    std::pair<glm::vec3, bool> worldToScreen(const glm::vec3& worldPos) const;
+    glm::vec3 screenToWorld(const glm::vec3& screenPos) const;
 
 private:
     void updateMatrix();
@@ -40,9 +40,9 @@ private:
     float _fieldOfView;
     float _zNear;
     float _zFar;
-    glm::mat4 _projectionMatrix;
-    glm::mat4 _viewMatrix;
-    glm::mat4 _viewProjectionMatrix;
+    glm::mat4 _cameraToScreenMatrix;
+    glm::mat4 _worldToCameraMatrix;
+    glm::mat4 _worldToScreenMatrix;
 };
 
 } // namespace Lattice
