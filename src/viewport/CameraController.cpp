@@ -37,7 +37,7 @@ bool CameraController::mouseMove(QMouseEvent *event) {
     }
     case Mode::Rotate: {
         float unit = 0.25f / 180.f * float(M_PI);
-        _location.rotation.y -= -offset.x() * unit;
+        _location.rotation.y -= offset.x() * unit;
         _location.rotation.x -= offset.y() * unit;
         emit locationChanged(_location);
         break;
