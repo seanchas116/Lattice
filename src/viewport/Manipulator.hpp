@@ -27,7 +27,7 @@ signals:
 
 private:
     std::pair<glm::mat4, bool> manipulatorToWorldMatrix(const Camera& camera) const;
-    std::tuple<float, float> distanceFromArrow(glm::vec2 screenPos, const Camera& camera);
+    std::tuple<float, float, bool> distanceFromArrow(glm::vec2 screenPos, const Camera& camera);
 
     SP<VAO> _headVAO;
     SP<LineVAO> _bodyVAO;

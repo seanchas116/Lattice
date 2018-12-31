@@ -91,8 +91,10 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
 }
 
 bool Manipulator::mousePress(QMouseEvent *event, vec2 pos, const Camera &camera) {
-    // TODO: return false if manipulating position is outside view frustum
-    auto [distance, t] = distanceFromArrow(pos, camera);
+    auto [distance, t, isInScreen] = distanceFromArrow(pos, camera);
+    if (!isInScreen) {
+        return false;
+    }
 
     if (0 <= t && t <= bodyLength + headLength && distance <= hitRadius) {
         _isDragging = true;
@@ -110,7 +112,10 @@ bool Manipulator::mouseMove(QMouseEvent *event, vec2 pos, const Camera &camera) 
         return false;
     }
 
-    auto [distance, t] = distanceFromArrow(pos, camera);
+    auto [distance, t, isInScreen] = distanceFromArrow(pos, camera);
+    if (!isInScreen) {
+        return false;
+    }
     qDebug() << "drag move" << t;
     return true;
 }
@@ -138,21 +143,26 @@ std::pair<mat4, bool> Manipulator::manipulatorToWorldMatrix(const Camera &camera
     return {modelMatrix, true};
 }
 
-std::tuple<float, float> Manipulator::distanceFromArrow(vec2 screenPos, const Camera& camera) {
+std::tuple<float, float, bool> Manipulator::distanceFromArrow(vec2 screenPos, const Camera& camera) {
+    auto [manipulatorToWorld, isInScreen] = this->manipulatorToWorldMatrix(camera);
+    if (!isInScreen) {
+        return {0, 0, false};
+    }
+
     vec3 front = camera.mapScreenToCamera(vec3(screenPos, 0));
     vec3 back = camera.mapScreenToCamera(vec3(screenPos, 1));
 
-    mat4 worldToCamera = camera.worldToCameraMatrix();
+    mat4 manipulatorToCamera = camera.worldToCameraMatrix() * manipulatorToWorld;
 
-    vec3 arrowXDirection = worldToCamera[0].xyz;
+    vec3 arrowXDirection = manipulatorToCamera[0].xyz;
     float scale = glm::length(arrowXDirection);
-    vec3 arrowCenter = worldToCamera[3].xyz;
+    vec3 arrowCenter = manipulatorToCamera[3].xyz;
 
     Line mouseRay(front, back);
     Line arrowRay(arrowCenter, arrowCenter + arrowXDirection);
     LineLineDistance distance(mouseRay, arrowRay);
 
-    return {distance.distance / scale, distance.t1};
+    return {distance.distance / scale, distance.t1, true};
 }
 
 } // namespace Lattice
