@@ -19,7 +19,7 @@ ManipulatorController::ManipulatorController(const SP<Manipulator>& manipulator,
     connect(manipulator.get(), &Manipulator::onDragEnd, this, &ManipulatorController::onDragEnd);
 }
 
-glm::vec3 ManipulatorController::position() const {
+glm::dvec3 ManipulatorController::position() const {
     return _item->location().position;
 }
 
@@ -27,7 +27,7 @@ void ManipulatorController::onDragStart() {
     _initialPosition = _item->location().position;
 }
 
-void ManipulatorController::onDrag(glm::vec3 offset) {
+void ManipulatorController::onDrag(glm::dvec3 offset) {
     auto loc = _item->location();
     loc.position = _initialPosition + offset;
     _item->setLocation(loc);

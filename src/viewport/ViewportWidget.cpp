@@ -84,8 +84,8 @@ double ViewportWidget::widgetPixelRatio() const {
 #endif
 }
 
-glm::vec2 ViewportWidget::mapToRenderer(const QPoint &p) {
-    return glm::vec2(p.x(), height() - p.y()) / float(widgetPixelRatio());
+glm::dvec2 ViewportWidget::mapToRenderer(const QPoint &p) {
+    return glm::dvec2(p.x(), height() - p.y()) / widgetPixelRatio();
 }
 
 } // namespace Lattice

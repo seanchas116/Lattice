@@ -14,14 +14,14 @@ class ManipulatorController final : public QObject {
 public:
     explicit ManipulatorController(const SP<Manipulator>& manipulator, const SP<AppState>& appState);
 
-    glm::vec3 position() const;
+    glm::dvec3 position() const;
 
     void onDragStart();
-    void onDrag(glm::vec3 offset);
+    void onDrag(glm::dvec3 offset);
     void onDragEnd();
 
 signals:
-    void positionChanged(glm::vec3 position);
+    void positionChanged(glm::dvec3 position);
 
 private:
     void connectToItem(const SP<Item>& item);
@@ -29,7 +29,7 @@ private:
     SP<Manipulator> _manipulator;
     SP<AppState> _appState;
     SP<Item> _item;
-    glm::vec3 _initialPosition;
+    glm::dvec3 _initialPosition;
     QMetaObject::Connection _connection;
 };
 

@@ -14,14 +14,14 @@ GridFloor::GridFloor() {
 
     // build grid
     constexpr int count = 200;
-    constexpr float unit = 1;
+    constexpr double unit = 1;
 
     std::vector<VertexBuffer::Vertex> vertices;
     std::vector<std::vector<uint32_t>> lineStrips;
 
     for (int z = -count; z <= count; ++z) {
-        vec3 v1(-count*unit, 0, z*unit);
-        vec3 v2(count*unit, 0, z*unit);
+        dvec3 v1(-count*unit, 0, z*unit);
+        dvec3 v2(count*unit, 0, z*unit);
         auto i1 = uint32_t(vertices.size());
         vertices.push_back({v1, {}, {}});
         auto i2 = uint32_t(vertices.size());
@@ -29,8 +29,8 @@ GridFloor::GridFloor() {
         lineStrips.push_back({i1, i2});
     }
     for (int x = -count; x <= count; ++x) {
-        vec3 v1(x*unit, 0, -count*unit);
-        vec3 v2(x*unit, 0, count*unit);
+        dvec3 v1(x*unit, 0, -count*unit);
+        dvec3 v2(x*unit, 0, count*unit);
         auto i1 = uint32_t(vertices.size());
         vertices.push_back({v1, {}, {}});
         auto i2 = uint32_t(vertices.size());
@@ -43,7 +43,7 @@ GridFloor::GridFloor() {
 }
 
 void GridFloor::draw(const SP<Operations> &operations, const Camera &camera) {
-    operations->drawLine.draw(_vao, mat4(1), camera, 1, vec3(0.5));
+    operations->drawLine.draw(_vao, dmat4(1), camera, 1, dvec3(0.5));
 }
 
 } // namespace Lattice

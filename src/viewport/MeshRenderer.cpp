@@ -76,11 +76,11 @@ void MeshRenderer::drawFaces(const SP<Operations> &operations, const Camera &cam
 }
 
 void MeshRenderer::drawEdges(const SP<Operations> &operations, const Camera &camera) {
-    operations->drawLine.draw(_edgeVAO, _item->location().matrix(), camera, 1.f, vec3(0));
+    operations->drawLine.draw(_edgeVAO, _item->location().matrix(), camera, 1.0, dvec3(0));
 }
 
 void MeshRenderer::drawVertices(const SP<Operations> &operations, const Camera &camera) {
-    operations->drawCircle.draw(_vertexVAO, _item->location().matrix(), camera, 4.f, vec3(0));
+    operations->drawCircle.draw(_vertexVAO, _item->location().matrix(), camera, 4.0, dvec3(0));
 }
 
 }

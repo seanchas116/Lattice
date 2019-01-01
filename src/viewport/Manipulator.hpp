@@ -16,9 +16,9 @@ public:
 
     void draw(const SP<Operations>& operations, const Camera& camera);
 
-    bool mousePress(QMouseEvent* event, glm::vec2 pos, const Camera& camera);
-    bool mouseMove(QMouseEvent* event, glm::vec2 pos, const Camera& camera);
-    bool mouseRelease(QMouseEvent* event, glm::vec2 pos, const Camera& camera);
+    bool mousePress(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
+    bool mouseMove(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
+    bool mouseRelease(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
 
     void setTargetPosition(glm::dvec3 pos) { _targetPosition = pos; }
 

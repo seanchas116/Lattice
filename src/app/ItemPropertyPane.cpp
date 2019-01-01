@@ -79,9 +79,9 @@ void ItemPropertyPane::onLocationChanged() {
     auto location = currentItem ? currentItem->location() : Location();
 
     for (size_t i = 0; i < 3; ++i) {
-        _positionSpinBoxes[i]->setValue(double(location.position[i]));
-        _scaleSpinBoxes[i]->setValue(double(location.scale[i]));
-        _rotationSpinBoxes[i]->setValue(double(glm::degrees(location.rotation[i])));
+        _positionSpinBoxes[i]->setValue(location.position[i]);
+        _scaleSpinBoxes[i]->setValue(location.scale[i]);
+        _rotationSpinBoxes[i]->setValue(glm::degrees(location.rotation[i]));
     }
 }
 

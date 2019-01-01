@@ -14,12 +14,12 @@ namespace Lattice {
 
 namespace {
 
-constexpr float bodyLength = 2.f;
-constexpr float bodyWidth = 2.f;
-constexpr float headLength = 0.4f;
-constexpr float headWidth = 0.2f;
+constexpr double bodyLength = 2.0;
+constexpr double bodyWidth = 2.0;
+constexpr double headLength = 0.4;
+constexpr double headWidth = 0.2;
 constexpr uint32_t headSegmentCount = 16;
-constexpr float hitRadius = 0.2f;
+constexpr double hitRadius = 0.2;
 
 }
 
@@ -30,11 +30,11 @@ Manipulator::Manipulator() {
         std::vector<VertexBuffer::Vertex> vertices;
         std::vector<VAO::Triangle> triangles;
 
-        float headRadius = headWidth * 0.5f;
+        double headRadius = headWidth * 0.5;
 
         for (uint32_t i = 0; i < headSegmentCount; ++i) {
-            float angle = 2.f * float(M_PI) / float(headSegmentCount) * float(i);
-            vec3 pos(bodyLength, cos(angle) * headRadius, sin(angle) * headRadius);
+            double angle = 2.0 * M_PI / headSegmentCount * i;
+            dvec3 pos(bodyLength, cos(angle) * headRadius, sin(angle) * headRadius);
             vertices.push_back({pos, {}, {}});
         }
         vertices.push_back({vec3(bodyLength, 0, 0), {}, {}});
@@ -76,9 +76,9 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
     }
 
     auto transforms = std::array<dmat4, 3> {
-            mat4(1), // x
-            mat4(0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1), // y
-            mat4(0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1), // z
+            dmat4(1), // x
+            dmat4(0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1), // y
+            dmat4(0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1), // z
     };
     auto colors = std::array<dvec3, 3> {
             dvec3(1, 0, 0), dvec3(0, 1, 0), dvec3(0, 0, 1)
@@ -90,7 +90,7 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
     }
 }
 
-bool Manipulator::mousePress(QMouseEvent *event, vec2 pos, const Camera &camera) {
+bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera) {
     auto [distance, t, isInScreen] = distanceFromArrow(pos, camera);
     if (!isInScreen) {
         return false;
@@ -107,7 +107,7 @@ bool Manipulator::mousePress(QMouseEvent *event, vec2 pos, const Camera &camera)
     return false;
 }
 
-bool Manipulator::mouseMove(QMouseEvent *event, vec2 pos, const Camera &camera) {
+bool Manipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera) {
     if (!_isDragging) {
         return false;
     }
@@ -120,7 +120,7 @@ bool Manipulator::mouseMove(QMouseEvent *event, vec2 pos, const Camera &camera) 
     return true;
 }
 
-bool Manipulator::mouseRelease(QMouseEvent *event, vec2 pos, const Camera &camera) {
+bool Manipulator::mouseRelease(QMouseEvent *event, dvec2 pos, const Camera &camera) {
     if (!_isDragging) {
         return false;
     }
