@@ -129,7 +129,7 @@ bool ItemModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int r
             items.push_back(item);
         }
 
-        SP<Item> ref = (row == -1 || row == parentItem->childItems().size()) ? nullptr : parentItem->childItems()[row];
+        SP<Item> ref = (row == -1 || row == int(parentItem->childItems().size())) ? nullptr : parentItem->childItems()[row];
         switch (action) {
         default:
         case Qt::CopyAction:
