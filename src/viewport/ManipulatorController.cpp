@@ -3,6 +3,7 @@
 #include "../app/AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/Item.hpp"
+#include "../document/History.hpp"
 
 namespace Lattice {
 
@@ -24,6 +25,7 @@ glm::dvec3 ManipulatorController::position() const {
 }
 
 void ManipulatorController::onDragStart() {
+    _appState->document()->history()->beginChange(tr("Move Item"));
     _initialPosition = _item->location().position;
 }
 
