@@ -9,8 +9,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_AUTOMOC ON)
 
-if (NOT MSVC)
-    set(CMAKE_CXX_FLAGS "-fms-extensions ${CMAKE_CXX_FLAGS}")
+if(MSVC)
+    set(CMAKE_CXX_FLAGS "/W4 /WX ${CMAKE_CXX_FLAGS}")
+else(MSVC)
+    set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -fms-extensions ${CMAKE_CXX_FLAGS}")
     add_definitions(-D_MSC_EXTENSIONS)
 endif()
 
