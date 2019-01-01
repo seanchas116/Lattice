@@ -29,7 +29,7 @@ signals:
 
 private:
     std::pair<glm::dmat4, bool> manipulatorToWorldMatrix(glm::vec3 targetPos, const Camera& camera) const;
-    std::tuple<double, double, double, bool> distanceFromArrow(glm::dvec3 targetPos, glm::dvec2 screenPos, const Camera& camera);
+    std::tuple<double, double, double, bool> distanceFromArrow(int axis, glm::dvec3 targetPos, glm::dvec2 screenPos, const Camera& camera);
 
     SP<VAO> _headVAO;
     SP<LineVAO> _bodyVAO;
@@ -38,7 +38,7 @@ private:
 
     bool _isDragging = false;
     int _dragAxis = 0;
-    double _initialDragValue = 0;
+    glm::dvec3 _initialDragValue {0};
     glm::dvec3 _initialTargetPosition {0};
 };
 

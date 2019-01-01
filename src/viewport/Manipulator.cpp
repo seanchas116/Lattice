@@ -93,20 +93,25 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
 bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera) {
     Q_UNUSED(event)
 
-    auto [distance, tArrow, tAxis, isInScreen] = distanceFromArrow(_targetPosition, pos, camera);
-    if (!isInScreen) {
-        return false;
+    for (int axis = 0; axis < 3; ++axis) {
+        auto [distance, tArrow, tAxis, isInScreen] = distanceFromArrow(axis, _targetPosition, pos, camera);
+        if (!isInScreen) {
+            continue;
+        }
+
+        if (0 <= tArrow && tArrow <= bodyLength + headLength && distance <= hitRadius) {
+            _isDragging = true;
+            _initialDragValue = dvec3(0);
+            _initialDragValue[axis] = tAxis;
+            _initialTargetPosition = _targetPosition;
+            _dragAxis = axis;
+            qDebug() << tAxis;
+            emit onDragStart();
+
+            return true;
+        }
     }
 
-    if (0 <= tArrow && tArrow <= bodyLength + headLength && distance <= hitRadius) {
-        _isDragging = true;
-        _initialDragValue = tAxis;
-        _initialTargetPosition = _targetPosition;
-        qDebug() << tAxis;
-        emit onDragStart();
-
-        return true;
-    }
 
     return false;
 }
@@ -118,12 +123,14 @@ bool Manipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera)
         return false;
     }
 
-    auto [distanceAxis, tArrow, tAxis, isInScreen] = distanceFromArrow(_initialTargetPosition, pos, camera);
+    auto [distanceAxis, tArrow, tAxis, isInScreen] = distanceFromArrow(_dragAxis, _initialTargetPosition, pos, camera);
     if (!isInScreen) {
         return false;
     }
     qDebug() << tAxis;
-    emit onDrag(dvec3(tAxis - _initialDragValue, 0, 0));
+    dvec3 currentValue(0);
+    currentValue[_dragAxis] = tAxis;
+    emit onDrag(currentValue - _initialDragValue);
     return true;
 }
 
@@ -154,7 +161,7 @@ std::pair<dmat4, bool> Manipulator::manipulatorToWorldMatrix(vec3 targetPos, con
     return {modelMatrix, true};
 }
 
-std::tuple<double, double, double, bool> Manipulator::distanceFromArrow(dvec3 targetPos, dvec2 screenPos, const Camera& camera) {
+std::tuple<double, double, double, bool> Manipulator::distanceFromArrow(int axis, dvec3 targetPos, dvec2 screenPos, const Camera& camera) {
     // TODO: refactor
 
     auto [manipulatorToWorld, isInScreen] = this->manipulatorToWorldMatrix(targetPos, camera);
@@ -167,7 +174,7 @@ std::tuple<double, double, double, bool> Manipulator::distanceFromArrow(dvec3 ta
 
     dmat4 manipulatorToCamera = camera.worldToCameraMatrix() * manipulatorToWorld;
 
-    dvec3 arrowXDirection = manipulatorToCamera[0].xyz;
+    dvec3 arrowXDirection = manipulatorToCamera[axis].xyz;
     double scale = glm::length(arrowXDirection);
     dvec3 arrowCenter = manipulatorToCamera[3].xyz;
 
@@ -175,7 +182,7 @@ std::tuple<double, double, double, bool> Manipulator::distanceFromArrow(dvec3 ta
     Line arrowRay(arrowCenter, arrowCenter + arrowXDirection);
 
     dvec3 targetPositionCamera = (camera.worldToCameraMatrix() * vec4(targetPos, 1)).xyz;
-    dvec3 axisDirection = camera.worldToCameraMatrix()[0].xyz;
+    dvec3 axisDirection = camera.worldToCameraMatrix()[axis].xyz;
     Line axisRay(targetPositionCamera, targetPositionCamera + axisDirection);
     qDebug() << axisDirection;
 
