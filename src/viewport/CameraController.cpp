@@ -7,7 +7,7 @@ using namespace glm;
 namespace Lattice {
 
 CameraController::CameraController() {
-    _location.position = vec3(0, 10, 10);
+    _location.position = dvec3(0, 10, 10);
 }
 
 bool CameraController::mousePress(QMouseEvent *event) {
@@ -31,12 +31,12 @@ bool CameraController::mouseMove(QMouseEvent *event) {
     QPoint offset = event->pos() - _lastMousePos;
     switch (_mode) {
     case Mode::Move: {
-        _location.position = _location.position + _location.up() * float(offset.y()) * 0.05f + _location.right() * float(-offset.x()) * 0.05f;
+        _location.position = _location.position + _location.up() * double(offset.y()) * 0.05 + _location.right() * double(-offset.x()) * 0.05;
         emit locationChanged(_location);
         break;
     }
     case Mode::Rotate: {
-        float unit = 0.25f / 180.f * float(M_PI);
+        double unit = 0.25 / 180.0 * M_PI;
         _location.rotation.y -= offset.x() * unit;
         _location.rotation.x -= offset.y() * unit;
         emit locationChanged(_location);
@@ -57,7 +57,7 @@ bool CameraController::mouseRelease(QMouseEvent *) {
 }
 
 bool CameraController::wheel(QWheelEvent *event) {
-    _location.position = _location.position + -_location.backward() * (0.01f * event->delta());
+    _location.position = _location.position + -_location.backward() * (0.01 * event->delta());
     emit locationChanged(_location);
     return false;
 }

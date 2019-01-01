@@ -12,40 +12,40 @@ public:
     Location location() const { return _location; }
     void setLocation(const Location &location);
 
-    glm::vec2 viewSize() const { return _viewSize; }
-    void setViewSize(const glm::vec2 &viewSize);
+    glm::dvec2 viewSize() const { return _viewSize; }
+    void setViewSize(const glm::dvec2 &viewSize);
 
-    float fieldOfView() const { return _fieldOfView; }
-    void setFieldOfView(float fieldOfView);
+    double fieldOfView() const { return _fieldOfView; }
+    void setFieldOfView(double fieldOfView);
 
-    float zNear() const { return _zNear; }
-    void setZNear(float zNear);
+    double zNear() const { return _zNear; }
+    void setZNear(double zNear);
 
-    float zFar() const { return _zFar; }
-    void setZFar(float zFar);
+    double zFar() const { return _zFar; }
+    void setZFar(double zFar);
 
-    glm::mat4 worldToCameraMatrix() const { return _worldToCameraMatrix; }
-    glm::mat4 cameraToScrenMatrix() const { return _cameraToScreenMatrix; }
-    glm::mat4 worldToScreenMatrix() const { return _worldToScreenMatrix; }
+    glm::dmat4 worldToCameraMatrix() const { return _worldToCameraMatrix; }
+    glm::dmat4 cameraToScrenMatrix() const { return _cameraToScreenMatrix; }
+    glm::dmat4 worldToScreenMatrix() const { return _worldToScreenMatrix; }
 
-    std::pair<glm::vec3, bool> mapWorldToScreen(glm::vec3 worldPos) const;
-    glm::vec3 mapScreenToWorld(glm::vec3 screenPos) const;
+    std::pair<glm::dvec3, bool> mapWorldToScreen(glm::dvec3 worldPos) const;
+    glm::dvec3 mapScreenToWorld(glm::dvec3 screenPos) const;
 
-    std::pair<glm::vec3, bool> mapCameraToScreen(glm::vec3 cameraPos) const;
-    glm::vec3 mapScreenToCamera(glm::vec3 screenPos) const;
+    std::pair<glm::dvec3, bool> mapCameraToScreen(glm::dvec3 cameraPos) const;
+    glm::dvec3 mapScreenToCamera(glm::dvec3 screenPos) const;
 
 private:
     void updateMatrix();
 
     Location _location;
 
-    glm::vec2 _viewSize;
-    float _fieldOfView;
-    float _zNear;
-    float _zFar;
-    glm::mat4 _cameraToScreenMatrix;
-    glm::mat4 _worldToCameraMatrix;
-    glm::mat4 _worldToScreenMatrix;
+    glm::dvec2 _viewSize;
+    double _fieldOfView;
+    double _zNear;
+    double _zFar;
+    glm::dmat4 _cameraToScreenMatrix;
+    glm::dmat4 _worldToCameraMatrix;
+    glm::dmat4 _worldToScreenMatrix;
 };
 
 } // namespace Lattice

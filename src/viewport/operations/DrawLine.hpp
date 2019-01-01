@@ -11,8 +11,8 @@ class DrawLine {
 public:
     DrawLine();
 
-    void draw(const SP<LineVAO>& vao, const glm::mat4& matrix, const Camera& camera,
-              float width, glm::vec3 color, float zOffset = -0.00001f);
+    void draw(const SP<LineVAO>& vao, const glm::dmat4 &matrix, const Camera& camera,
+              double width, glm::dvec3 color, double zOffset = -0.00001);
 
 private:
     Shader _shader;

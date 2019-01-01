@@ -89,15 +89,15 @@ void ViewportRenderer::render() {
     _manipulator->draw(_operations, _camera);
 }
 
-void ViewportRenderer::mousePress(QMouseEvent *event, vec2 pos) {
+void ViewportRenderer::mousePress(QMouseEvent *event, dvec2 pos) {
     _manipulator->mousePress(event, pos, _camera);
 }
 
-void ViewportRenderer::mouseMove(QMouseEvent *event, vec2 pos) {
+void ViewportRenderer::mouseMove(QMouseEvent *event, dvec2 pos) {
     _manipulator->mouseMove(event, pos, _camera);
 }
 
-void ViewportRenderer::mouseRelease(QMouseEvent *event, vec2 pos) {
+void ViewportRenderer::mouseRelease(QMouseEvent *event, dvec2 pos) {
     _manipulator->mouseRelease(event, pos, _camera);
 }
 

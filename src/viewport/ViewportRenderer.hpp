@@ -30,9 +30,9 @@ public:
 
     void setCameraLocation(const Location& location) { _camera.setLocation(location); }
 
-    void mousePress(QMouseEvent* event, glm::vec2 pos);
-    void mouseMove(QMouseEvent* event, glm::vec2 pos);
-    void mouseRelease(QMouseEvent* event, glm::vec2 pos);
+    void mousePress(QMouseEvent* event, glm::dvec2 pos);
+    void mouseMove(QMouseEvent* event, glm::dvec2 pos);
+    void mouseRelease(QMouseEvent* event, glm::dvec2 pos);
 
 signals:
     void updateNeeded();

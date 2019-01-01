@@ -14,6 +14,9 @@ public:
     void bind();
     void unbind();
 
+    void setUniform(const char* name, int value);
+    void setUniform(const char* name, bool value);
+
     void setUniform(const char* name, float value);
     void setUniform(const char* name, glm::vec2 value);
     void setUniform(const char* name, glm::vec3 value);
@@ -21,6 +24,14 @@ public:
     void setUniform(const char* name, glm::mat2 value);
     void setUniform(const char* name, glm::mat3 value);
     void setUniform(const char* name, glm::mat4 value);
+
+    void setUniform(const char* name, double value);
+    void setUniform(const char* name, glm::dvec2 value);
+    void setUniform(const char* name, glm::dvec3 value);
+    void setUniform(const char* name, glm::dvec4 value);
+    void setUniform(const char* name, glm::dmat2 value);
+    void setUniform(const char* name, glm::dmat3 value);
+    void setUniform(const char* name, glm::dmat4 value);
 
 private:
     GLuint loadShader(GLenum type, const std::string &src);
