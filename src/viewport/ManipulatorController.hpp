@@ -7,11 +7,12 @@ namespace Lattice {
 
 class AppState;
 class Item;
+class Manipulator;
 
 class ManipulatorController final : public QObject {
     Q_OBJECT
 public:
-    explicit ManipulatorController(const SP<AppState>& appState);
+    explicit ManipulatorController(const SP<Manipulator>& manipulator, const SP<AppState>& appState);
 
     glm::vec3 position() const;
 
@@ -25,6 +26,7 @@ signals:
 private:
     void connectToItem(const SP<Item>& item);
 
+    SP<Manipulator> _manipulator;
     SP<AppState> _appState;
     SP<Item> _item;
     glm::vec3 _initialPosition;

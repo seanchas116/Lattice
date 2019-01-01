@@ -28,12 +28,7 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
     _operations = std::make_shared<Operations>();
     _gridFloor = std::make_shared<GridFloor>();
     _manipulator = std::make_shared<Manipulator>();
-    _manipulatorController = std::make_shared<ManipulatorController>(appState);
-    _manipulator->setTargetPosition(_manipulatorController->position());
-    connect(_manipulatorController.get(), &ManipulatorController::positionChanged, _manipulator.get(), &Manipulator::setTargetPosition);
-    connect(_manipulator.get(), &Manipulator::onDragStart, _manipulatorController.get(), &ManipulatorController::onDragStart);
-    connect(_manipulator.get(), &Manipulator::onDrag, _manipulatorController.get(), &ManipulatorController::onDrag);
-    connect(_manipulator.get(), &Manipulator::onDragEnd, _manipulatorController.get(), &ManipulatorController::onDragEnd);
+    _manipulatorController = std::make_shared<ManipulatorController>(_manipulator, appState);
 
     connect(appState.get(), &AppState::isVertexVisibleChanged, this, &ViewportRenderer::updateNeeded);
     connect(appState.get(), &AppState::isEdgeVisibleChanged, this, &ViewportRenderer::updateNeeded);
