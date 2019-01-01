@@ -36,7 +36,6 @@ void ManipulatorController::onDrag(glm::dvec3 offset) {
 }
 
 void ManipulatorController::onDragEnd() {
-    // TODO
 }
 
 void ManipulatorController::connectToItem(const SP<Item> &item) {
