@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <QObject>
 #include "Operations.hpp"
 #include "../support/Camera.hpp"
 
@@ -8,7 +9,8 @@ class QMouseEvent;
 
 namespace Lattice {
 
-class Manipulator {
+class Manipulator final : public QObject {
+    Q_OBJECT
 public:
     Manipulator();
 

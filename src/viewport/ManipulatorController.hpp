@@ -8,16 +8,16 @@ namespace Lattice {
 class AppState;
 class Item;
 
-class ManipulatorHandler final : public QObject {
+class ManipulatorController final : public QObject {
     Q_OBJECT
 public:
-    explicit ManipulatorHandler(const SP<AppState>& appState);
+    explicit ManipulatorController(const SP<AppState>& appState);
 
     glm::vec3 position() const;
 
-    void onMoveStart();
-    void onMove(glm::vec3 offset);
-    void onMoveEnd();
+    void onDragStart();
+    void onDrag(glm::vec3 offset);
+    void onDragEnd();
 
 signals:
     void positionChanged(glm::vec3 position);
@@ -27,6 +27,7 @@ private:
 
     SP<AppState> _appState;
     SP<Item> _item;
+    glm::vec3 _initialPosition;
     QMetaObject::Connection _connection;
 };
 

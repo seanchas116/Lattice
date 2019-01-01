@@ -15,6 +15,7 @@ class GridFloor;
 class MeshRenderer;
 class Operations;
 class Manipulator;
+class ManipulatorController;
 
 class MeshItem;
 class AppState;
@@ -42,6 +43,7 @@ private:
     SP<Operations> _operations;
     SP<GridFloor> _gridFloor;
     SP<Manipulator> _manipulator;
+    SP<ManipulatorController> _manipulatorController;
     std::unordered_map<SP<MeshItem>, SP<MeshRenderer>> _meshRenderers;
     SP<AppState> _appState;
 };

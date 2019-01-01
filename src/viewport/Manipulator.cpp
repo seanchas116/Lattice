@@ -99,7 +99,7 @@ bool Manipulator::mousePress(QMouseEvent *event, vec2 pos, const Camera &camera)
     if (0 <= t && t <= bodyLength + headLength && distance <= hitRadius) {
         _isDragging = true;
         _initialDragValue = t;
-        qDebug() << "drag start" << _initialDragValue;
+        emit onDragStart();
 
         return true;
     }
@@ -116,7 +116,7 @@ bool Manipulator::mouseMove(QMouseEvent *event, vec2 pos, const Camera &camera) 
     if (!isInScreen) {
         return false;
     }
-    qDebug() << "drag move" << t;
+    emit onDrag(vec3(t - _initialDragValue, 0, 0));
     return true;
 }
 
@@ -125,7 +125,7 @@ bool Manipulator::mouseRelease(QMouseEvent *event, vec2 pos, const Camera &camer
         return false;
     }
     _isDragging = false;
-    qDebug() << "drag end";
+    emit onDragEnd();
     return true;
 }
 
