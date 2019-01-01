@@ -43,6 +43,16 @@ void Shader::unbind() {
     glUseProgram(0);
 }
 
+void Shader::setUniform(const char *name, int value) {
+    glUseProgram(_program);
+    glUniform1i(glGetUniformLocation(_program, name), value);
+}
+
+void Shader::setUniform(const char *name, bool value) {
+    glUseProgram(_program);
+    glUniform1i(glGetUniformLocation(_program, name), value);
+}
+
 void Shader::setUniform(const char *name, float value) {
     glUseProgram(_program);
     glUniform1f(glGetUniformLocation(_program, name), value);
@@ -76,6 +86,34 @@ void Shader::setUniform(const char *name, glm::mat3 value) {
 void Shader::setUniform(const char *name, glm::mat4 value) {
     glUseProgram(_program);
     glUniformMatrix4fv(glGetUniformLocation(_program, name), 1, GL_FALSE, &value[0][0]);
+}
+
+void Shader::setUniform(const char *name, double value) {
+    setUniform(name, float(value));
+}
+
+void Shader::setUniform(const char *name, glm::dvec2 value) {
+    setUniform(name, glm::vec2(value));
+}
+
+void Shader::setUniform(const char *name, glm::dvec3 value) {
+    setUniform(name, glm::vec3(value));
+}
+
+void Shader::setUniform(const char *name, glm::dvec4 value) {
+    setUniform(name, glm::vec4(value));
+}
+
+void Shader::setUniform(const char *name, glm::dmat2 value) {
+    setUniform(name, glm::mat2(value));
+}
+
+void Shader::setUniform(const char *name, glm::dmat3 value) {
+    setUniform(name, glm::mat3(value));
+}
+
+void Shader::setUniform(const char *name, glm::dmat4 value) {
+    setUniform(name, glm::mat4(value));
 }
 
 GLuint Shader::loadShader(GLenum type, const std::string &src) {

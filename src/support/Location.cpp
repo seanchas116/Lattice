@@ -8,19 +8,19 @@ using namespace glm;
 
 namespace Lattice {
 
-glm::mat4 Location::matrix() const {
-    return glm::translate(mat4(1), position) * glm::yawPitchRoll(rotation.y, rotation.x, rotation.z) * glm::scale(mat4(1), scale);
+dmat4 Location::matrix() const {
+    return glm::translate(dmat4(1), position) * glm::yawPitchRoll(rotation.y, rotation.x, rotation.z) * glm::scale(dmat4(1), scale);
 }
 
-glm::vec3 Location::right() const {
+glm::dvec3 Location::right() const {
     return matrix()[0].xyz;
 }
 
-glm::vec3 Location::up() const {
+glm::dvec3 Location::up() const {
     return matrix()[1].xyz;
 }
 
-glm::vec3 Location::backward() const {
+glm::dvec3 Location::backward() const {
     return matrix()[2].xyz;
 }
 

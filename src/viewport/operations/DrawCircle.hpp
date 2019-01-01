@@ -9,8 +9,8 @@ class Camera;
 class DrawCircle {
 public:
     DrawCircle();
-    void draw(const SP<PointVAO>& vao, const glm::mat4& matrix, const Camera& camera,
-              float width, glm::vec3 color, float zOffset = -0.00002f);
+    void draw(const SP<PointVAO>& vao, const glm::dmat4 &matrix, const Camera& camera,
+              double width, glm::dvec3 color, double zOffset = -0.00002);
 
 private:
     Shader _shader;
