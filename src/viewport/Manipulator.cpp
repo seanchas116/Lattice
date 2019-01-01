@@ -155,6 +155,8 @@ std::pair<dmat4, bool> Manipulator::manipulatorToWorldMatrix(vec3 targetPos, con
 }
 
 std::tuple<double, double, double, bool> Manipulator::distanceFromArrow(dvec3 targetPos, dvec2 screenPos, const Camera& camera) {
+    // TODO: refactor
+
     auto [manipulatorToWorld, isInScreen] = this->manipulatorToWorldMatrix(targetPos, camera);
     if (!isInScreen) {
         return {0, 0, 0, false};
