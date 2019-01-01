@@ -91,6 +91,8 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
 }
 
 bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera) {
+    Q_UNUSED(event)
+
     auto [distance, t, isInScreen] = distanceFromArrow(pos, camera);
     if (!isInScreen) {
         return false;
@@ -108,6 +110,8 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
 }
 
 bool Manipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera) {
+    Q_UNUSED(event)
+
     if (!_isDragging) {
         return false;
     }
@@ -121,6 +125,10 @@ bool Manipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera)
 }
 
 bool Manipulator::mouseRelease(QMouseEvent *event, dvec2 pos, const Camera &camera) {
+    Q_UNUSED(event)
+    Q_UNUSED(pos)
+    Q_UNUSED(camera)
+
     if (!_isDragging) {
         return false;
     }
