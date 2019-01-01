@@ -15,10 +15,10 @@ AppState::AppState() {
 
     auto mesh = std::dynamic_pointer_cast<MeshItem>(initialItem)->mesh();
     {
-        auto v1 = mesh->addVertex(vec3(0, 0, 0), vec2(0, 0));
-        auto v2 = mesh->addVertex(vec3(0, 0, 1), vec2(0, 1));
+        auto v1 = mesh->addVertex(vec3(-1, 0, -1), vec2(0, 0));
+        auto v2 = mesh->addVertex(vec3(-1, 0, 1), vec2(0, 1));
         auto v3 = mesh->addVertex(vec3(1, 0, 1), vec2(1, 1));
-        auto v4 = mesh->addVertex(vec3(1, 0, 0), vec2(1, 0));
+        auto v4 = mesh->addVertex(vec3(1, 0, -1), vec2(1, 0));
         auto m = mesh->addMaterial();
         mesh->addFace({v1, v2, v3, v4}, m);
     }
