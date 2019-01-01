@@ -12,6 +12,7 @@ ManipulatorController::ManipulatorController(const SP<Manipulator>& manipulator,
     _appState(appState)
 {
     connectToItem(appState->document()->currentItem());
+    connect(appState->document().get(), &Document::currentItemChanged, this, &ManipulatorController::connectToItem);
 
     manipulator->setTargetPosition(position());
     connect(this, &ManipulatorController::positionChanged, manipulator.get(), &Manipulator::setTargetPosition);
