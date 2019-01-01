@@ -19,12 +19,12 @@ template<typename T, std::size_t... I> void from_json(const nlohmann::json& json
 
 namespace glm {
 
-template<length_t L, typename T, qualifier Q, typename Indices = std::make_index_sequence<L>> void to_json(nlohmann::json& json, vec<L, T, Q> v) {
-    Lattice::impl::to_json(json, v, Indices{});
+template<length_t L, typename T, qualifier Q> void to_json(nlohmann::json& json, vec<L, T, Q> v) {
+    Lattice::impl::to_json(json, v, std::make_index_sequence<L>{});
 }
 
-template<length_t L, typename T, qualifier Q, typename Indices = std::make_index_sequence<L>> void from_json(const nlohmann::json& json, vec<L, T, Q> &v) {
-    Lattice::impl::from_json(json, v, Indices{});
+template<length_t L, typename T, qualifier Q> void from_json(const nlohmann::json& json, vec<L, T, Q> &v) {
+    Lattice::impl::from_json(json, v, std::make_index_sequence<L>{});
 }
 
 }
