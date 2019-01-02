@@ -21,6 +21,42 @@ constexpr double headWidth = 0.2;
 constexpr uint32_t headSegmentCount = 16;
 constexpr double hitRadius = 0.2;
 
+class ManipulatorMetrics {
+public:
+    ManipulatorMetrics(const Camera& camera, glm::dvec3 targetPos) : camera(camera), targetPos(targetPos) {
+        auto [screenPos, isInScreen] = camera.mapWorldToScreen(targetPos);
+        this->isInScreen = isInScreen;
+        if (!isInScreen) {
+            return;
+        }
+
+        dvec3 screenPosFixedDepth(screenPos.xy, 0.5);
+        dvec3 positionFixedDepth_worldSpace = camera.mapScreenToWorld(screenPosFixedDepth);
+
+        scale = 1.0 / double(camera.viewSize().y) * 10.0;
+
+        dmat4 worldToCamera = camera.worldToCameraMatrix();
+        manipulatorToWorld = glm::scale(glm::translate(glm::dmat4(1), positionFixedDepth_worldSpace), dvec3(scale));
+        manipulatorToCamera = worldToCamera * manipulatorToWorld;
+
+        dmat4 targetToCamera = worldToCamera * glm::translate(glm::dmat4(1), targetPos);
+
+        for (int axis = 0; axis < 3; ++axis) {
+            arrowLinesInManipulatorSpace[axis] = Line(manipulatorToCamera[3].xyz, manipulatorToCamera[3].xyz + manipulatorToCamera[axis].xyz);
+            axisLinesInCameraSpace[axis] = Line(targetToCamera[3].xyz, targetToCamera[3].xyz + targetToCamera[axis].xyz);
+        }
+    }
+
+    Camera camera;
+    dvec3 targetPos;
+    bool isInScreen;
+    dmat4 manipulatorToWorld;
+    dmat4 manipulatorToCamera;
+    double scale;
+    std::array<Line, 3> arrowLinesInManipulatorSpace;
+    std::array<Line, 3> axisLinesInCameraSpace;
+};
+
 }
 
 Manipulator::Manipulator() {
@@ -70,8 +106,8 @@ Manipulator::Manipulator() {
 }
 
 void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
-    auto [manipulatorToWorld, isInScreen] = this->manipulatorToWorldMatrix(_targetPosition, camera);
-    if (!isInScreen){
+    ManipulatorMetrics metrics(camera, _targetPosition);
+    if (!metrics.isInScreen){
         return;
     }
 
@@ -85,19 +121,28 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
     };
 
     for (size_t i = 0; i < 3; ++i) {
-        operations->drawSolid.draw(_headVAO, manipulatorToWorld * transforms[i], camera, vec3(0), colors[i]);
-        operations->drawLine.draw(_bodyVAO, manipulatorToWorld * transforms[i], camera, bodyWidth, colors[i]);
+        operations->drawSolid.draw(_headVAO, metrics.manipulatorToWorld * transforms[i], camera, vec3(0), colors[i]);
+        operations->drawLine.draw(_bodyVAO, metrics.manipulatorToWorld * transforms[i], camera, bodyWidth, colors[i]);
     }
 }
 
 bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera) {
     Q_UNUSED(event)
 
+    ManipulatorMetrics metrics(camera, _targetPosition);
+    if (!metrics.isInScreen) {
+        return false;
+    }
+
+    Line mouseRay = camera.cameraMouseRay(pos);
+
     for (int axis = 0; axis < 3; ++axis) {
-        auto [distance, tArrow, tAxis, isInScreen] = distanceFromArrow(axis, _targetPosition, pos, camera);
-        if (!isInScreen) {
-            continue;
-        }
+        LineLineDistance mouseToArrowDistance(mouseRay, metrics.arrowLinesInManipulatorSpace[axis]);
+        LineLineDistance mouseToAxisDistance(mouseRay, metrics.axisLinesInCameraSpace[axis]);
+
+        double distance = mouseToArrowDistance.distance / metrics.scale;
+        double tArrow = mouseToArrowDistance.t1;
+        double tAxis = mouseToAxisDistance.t1;
 
         if (0 <= tArrow && tArrow <= bodyLength + headLength && distance <= hitRadius) {
             _isDragging = true;
@@ -112,7 +157,6 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
         }
     }
 
-
     return false;
 }
 
@@ -123,10 +167,15 @@ bool Manipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera)
         return false;
     }
 
-    auto [distanceAxis, tArrow, tAxis, isInScreen] = distanceFromArrow(_dragAxis, _initialTargetPosition, pos, camera);
-    if (!isInScreen) {
+    ManipulatorMetrics metrics(camera, _initialTargetPosition);
+    if (!metrics.isInScreen) {
         return false;
     }
+
+    Line mouseRay = camera.cameraMouseRay(pos);
+    LineLineDistance mouseToAxisDistance(mouseRay, metrics.axisLinesInCameraSpace[_dragAxis]);
+    double tAxis = mouseToAxisDistance.t1;
+
     qDebug() << tAxis;
     dvec3 currentValue(0);
     currentValue[_dragAxis] = tAxis;
