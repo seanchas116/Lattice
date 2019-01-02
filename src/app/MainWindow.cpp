@@ -11,6 +11,7 @@
 #include <QUndoStack>
 #include <QDockWidget>
 #include <QToolBar>
+#include <QToolButton>
 
 namespace Lattice {
 
@@ -25,6 +26,34 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
 void MainWindow::setupToolBar() {
     auto toolBar = addToolBar(tr("Tools"));
+
+    auto addMenu = new QMenu();
+    addMenu->addAction("Plane");
+    addMenu->addAction("Cube");
+    addMenu->addAction("Circle");
+    addMenu->addAction("Sphere");
+    addMenu->addSeparator();
+    addMenu->addAction("Text");
+    addMenu->addAction("Image Plane...");
+    addMenu->addSeparator();
+    addMenu->addAction("Import...");
+
+    auto addMenuToolButton = new QToolButton();
+    addMenuToolButton->setText("Add");
+    addMenuToolButton->setMenu(addMenu);
+    addMenuToolButton->setPopupMode(QToolButton::InstantPopup);
+    toolBar->addWidget(addMenuToolButton);
+
+    auto modifyMenu = new QMenu();
+    modifyMenu->addAction("Extrude");
+    modifyMenu->addAction("Inset Faces");
+    modifyMenu->addAction("Loop Cut");
+
+    auto modifyMenuToolButton = new QToolButton();
+    modifyMenuToolButton->setText("Modify");
+    modifyMenuToolButton->setMenu(modifyMenu);
+    modifyMenuToolButton->setPopupMode(QToolButton::InstantPopup);
+    toolBar->addWidget(modifyMenuToolButton);
 
     auto spacer = new QWidget();
     spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
