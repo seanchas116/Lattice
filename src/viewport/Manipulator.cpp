@@ -196,46 +196,4 @@ bool Manipulator::mouseRelease(QMouseEvent *event, dvec2 pos, const Camera &came
     return true;
 }
 
-std::pair<dmat4, bool> Manipulator::manipulatorToWorldMatrix(vec3 targetPos, const Camera &camera) const {
-    auto [screenPos, isInScreen] = camera.mapWorldToScreen(targetPos);
-    if (!isInScreen){
-        return {mat4(), false};
-    }
-    dvec3 screenPosFixedDepth(screenPos.xy, 0.5);
-    dvec3 positionFixedDepth_worldSpace = camera.mapScreenToWorld(screenPosFixedDepth);
-
-    double scale = 1.0 / double(camera.viewSize().y) * 10.0;
-
-    dmat4 modelMatrix = glm::scale(glm::translate(glm::dmat4(1), positionFixedDepth_worldSpace), dvec3(scale));
-    return {modelMatrix, true};
-}
-
-std::tuple<double, double, double, bool> Manipulator::distanceFromArrow(int axis, dvec3 targetPos, dvec2 screenPos, const Camera& camera) {
-    // TODO: refactor
-
-    auto [manipulatorToWorld, isInScreen] = this->manipulatorToWorldMatrix(targetPos, camera);
-    if (!isInScreen) {
-        return {0, 0, 0, false};
-    }
-
-    dmat4 manipulatorToCamera = camera.worldToCameraMatrix() * manipulatorToWorld;
-
-    dvec3 arrowXDirection = manipulatorToCamera[axis].xyz;
-    double scale = glm::length(arrowXDirection);
-    dvec3 arrowCenter = manipulatorToCamera[3].xyz;
-
-    Line mouseRay = camera.cameraMouseRay(screenPos);
-    Line arrowRay(arrowCenter, arrowCenter + arrowXDirection);
-
-    dvec3 targetPositionCamera = (camera.worldToCameraMatrix() * vec4(targetPos, 1)).xyz;
-    dvec3 axisDirection = camera.worldToCameraMatrix()[axis].xyz;
-    Line axisRay(targetPositionCamera, targetPositionCamera + axisDirection);
-    qDebug() << axisDirection;
-
-    LineLineDistance mouseToArrayDistance(mouseRay, arrowRay);
-    LineLineDistance mouseToAxisDistance(mouseRay, axisRay);
-
-    return {mouseToArrayDistance.distance / scale, mouseToArrayDistance.t1, mouseToAxisDistance.t1, true};
-}
-
 } // namespace Lattice
