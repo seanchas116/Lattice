@@ -54,7 +54,11 @@ void AppState::setIsFaceVisible(bool isFaceVisible) {
 }
 
 void AppState::addPlane() {
-
+    _document->history()->beginChange(tr("Add Plane"));
+    auto item = std::make_shared<MeshItem>();
+    item->setName(tr("Plane").toStdString());
+    item->mesh()->addPlane(glm::vec3(0), 1.0, item->mesh()->addMaterial());
+    _document->insertItemToCurrentPosition(item);
 }
 
 void AppState::addCube() {

@@ -144,6 +144,14 @@ SP<MeshMaterial> Mesh::addMaterial() {
     return material;
 }
 
+void Mesh::addPlane(dvec3 center, double radius, const SP<MeshMaterial> &material) {
+    auto v0 = addVertex(center + dvec3(-radius, 0, -radius), vec2(0, 0));
+    auto v1 = addVertex(center + dvec3(-radius, 0, radius), vec2(0, 1));
+    auto v2 = addVertex(center + dvec3(radius, 0, radius), vec2(1, 1));
+    auto v3 = addVertex(center + dvec3(radius, 0, -radius), vec2(1, 0));
+    addFace({v0, v1, v2, v3}, material);
+}
+
 void Mesh::addCube(glm::dvec3 minPos, glm::dvec3 maxPos, const SP<MeshMaterial> &material) {
     //   2    3
     // 6    7
