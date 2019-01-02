@@ -23,7 +23,7 @@ constexpr double hitRadius = 0.2;
 
 class ManipulatorMetrics {
 public:
-    ManipulatorMetrics(const Camera& camera, glm::dvec3 targetPos) : camera(camera), targetPos(targetPos) {
+    ManipulatorMetrics(const Camera& camera, glm::dvec3 targetPos) : targetPos(targetPos) {
         auto [screenPos, isInScreen] = camera.mapWorldToScreen(targetPos);
         this->isInScreen = isInScreen;
         if (!isInScreen) {
@@ -47,7 +47,6 @@ public:
         }
     }
 
-    Camera camera;
     dvec3 targetPos;
     bool isInScreen;
     dmat4 manipulatorToWorld;
