@@ -27,15 +27,16 @@ void MainWindow::setupToolBar() {
     auto toolBar = addToolBar(tr("Tools"));
 
     auto addMenu = new QMenu();
-    addMenu->addAction(tr("Plane"));
-    addMenu->addAction(tr("Cube"));
-    addMenu->addAction(tr("Circle"));
-    addMenu->addAction(tr("Sphere"));
+    addMenu->addAction(tr("Plane"), _appState.get(), &AppState::addPlane);
+    addMenu->addAction(tr("Cube"), _appState.get(), &AppState::addCube);
+    addMenu->addAction(tr("Circle"), _appState.get(), &AppState::addCircle);
+    addMenu->addAction(tr("Sphere"), _appState.get(), &AppState::addSphere);
+    addMenu->addAction(tr("Cylinder"), _appState.get(), &AppState::addCylinder);
     addMenu->addSeparator();
-    addMenu->addAction(tr("Text"));
-    addMenu->addAction(tr("Image Plane..."));
+    addMenu->addAction(tr("Text"), _appState.get(), &AppState::addText);
+    addMenu->addAction(tr("Image Plane..."), _appState.get(), &AppState::addImagePlane);
     addMenu->addSeparator();
-    addMenu->addAction(tr("Import..."));
+    addMenu->addAction(tr("Import..."), _appState.get(), &AppState::import);
 
     auto addMenuToolButton = new QToolButton();
     addMenuToolButton->setText(tr("Add"));

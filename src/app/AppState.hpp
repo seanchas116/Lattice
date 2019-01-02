@@ -23,6 +23,14 @@ public:
     bool isFaceVisible() const { return _isFaceVisible; }
     void setIsFaceVisible(bool isFaceVisible);
 
+    void addPlane();
+    void addCube();
+    void addCircle();
+    void addSphere();
+    void addCylinder();
+
+    void addText();
+    void addImagePlane();
     void import();
 
 signals:

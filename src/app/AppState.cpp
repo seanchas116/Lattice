@@ -53,6 +53,34 @@ void AppState::setIsFaceVisible(bool isFaceVisible) {
     }
 }
 
+void AppState::addPlane() {
+
+}
+
+void AppState::addCube() {
+
+}
+
+void AppState::addCircle() {
+
+}
+
+void AppState::addSphere() {
+
+}
+
+void AppState::addCylinder() {
+
+}
+
+void AppState::addText() {
+
+}
+
+void AppState::addImagePlane() {
+
+}
+
 void AppState::import() {
     auto filePath = QFileDialog::getOpenFileName(qApp->activeWindow(), tr("Import"), {}, tr("Files (*.obj)"));
     qDebug() << filePath;
