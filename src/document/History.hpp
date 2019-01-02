@@ -18,7 +18,7 @@ public:
     virtual bool mergeWith(const SP<const Change>& other);
 };
 
-class History : public QObject {
+class History final : public QObject {
     Q_OBJECT
 public:
     History();

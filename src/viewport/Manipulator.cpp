@@ -21,7 +21,7 @@ constexpr double headWidth = 0.2;
 constexpr uint32_t headSegmentCount = 16;
 constexpr double hitRadius = 0.2;
 
-class ManipulatorMetrics {
+class ManipulatorMetrics final {
 public:
     ManipulatorMetrics(const Camera& camera, glm::dvec3 targetPos) : targetPos(targetPos) {
         auto [screenPos, isInScreen] = camera.mapWorldToScreen(targetPos);

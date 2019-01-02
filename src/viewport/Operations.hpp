@@ -7,7 +7,7 @@
 
 namespace Lattice {
 
-class Operations {
+class Operations final {
 public:
     Operations() = default;
 

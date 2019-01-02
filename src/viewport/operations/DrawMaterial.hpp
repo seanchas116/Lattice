@@ -10,7 +10,7 @@ class VAO;
 class Camera;
 class Texture;
 
-class DrawMaterial : protected QOpenGLExtraFunctions {
+class DrawMaterial final : protected QOpenGLExtraFunctions {
 public:
     DrawMaterial();
 

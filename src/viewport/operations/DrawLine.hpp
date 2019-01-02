@@ -7,7 +7,7 @@ namespace Lattice {
 class LineVAO;
 class Camera;
 
-class DrawLine {
+class DrawLine final {
 public:
     DrawLine();
 

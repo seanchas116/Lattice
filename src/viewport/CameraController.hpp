@@ -10,7 +10,7 @@ class QWheelEvent;
 
 namespace Lattice {
 
-class CameraController : public QObject {
+class CameraController final : public QObject {
     Q_OBJECT
 public:
     CameraController();

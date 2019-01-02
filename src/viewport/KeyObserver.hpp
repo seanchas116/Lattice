@@ -6,7 +6,7 @@ class QKeyEvent;
 
 namespace Lattice {
 
-class KeyObserver : public QObject {
+class KeyObserver final : public QObject {
     Q_OBJECT
 public:
     KeyObserver();

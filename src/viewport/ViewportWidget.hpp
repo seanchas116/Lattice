@@ -10,7 +10,7 @@ namespace Lattice {
 class ViewportRenderer;
 class AppState;
 
-class ViewportWidget : public QOpenGLWidget {
+class ViewportWidget final : public QOpenGLWidget {
     Q_OBJECT
 public:
     explicit ViewportWidget(const SP<AppState>& appState, QWidget *parent = nullptr);

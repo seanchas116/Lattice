@@ -6,7 +6,7 @@ namespace Lattice {
 class VAO;
 class Camera;
 
-class DrawSolid {
+class DrawSolid final {
 public:
     DrawSolid();
 

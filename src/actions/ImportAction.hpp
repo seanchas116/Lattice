@@ -5,7 +5,7 @@
 
 namespace Lattice {
 
-class ImportAction : public QObject {
+class ImportAction final : public QObject {
     Q_OBJECT
 public:
     static void run(QWidget* window, const SP<AppState>& appState);

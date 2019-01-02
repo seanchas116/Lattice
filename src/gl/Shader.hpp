@@ -5,7 +5,7 @@
 
 namespace Lattice {
 
-class Shader : protected QOpenGLExtraFunctions {
+class Shader final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(Shader)
 public:
     Shader(const std::string &vertexShader, const std::string &geometryShader, const std::string &fragmentShader);

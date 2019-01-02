@@ -7,7 +7,7 @@ namespace Lattice {
 
 class MeshItem;
 
-class ObjLoader {
+class ObjLoader final {
 public:
     static std::vector<SP<MeshItem>> load(const std::string& filePath);
 };

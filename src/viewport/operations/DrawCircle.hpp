@@ -6,7 +6,7 @@ namespace Lattice {
 class PointVAO;
 class Camera;
 
-class DrawCircle {
+class DrawCircle final {
 public:
     DrawCircle();
     void draw(const SP<PointVAO>& vao, const glm::dmat4 &matrix, const Camera& camera,

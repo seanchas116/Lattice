@@ -10,7 +10,7 @@ namespace Lattice {
 
 class AppState;
 
-class ItemPropertyPane : public QWidget {
+class ItemPropertyPane final : public QWidget {
     Q_OBJECT
 public:
     explicit ItemPropertyPane(const SP<AppState> &appState, QWidget *parent = nullptr);

@@ -6,7 +6,7 @@
 
 namespace Lattice {
 
-class Camera {
+class Camera final {
 public:
     Camera();
 

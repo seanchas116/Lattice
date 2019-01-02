@@ -6,8 +6,7 @@ namespace Lattice {
 
 class ItemModel;
 
-class ItemSelectionModel : public QItemSelectionModel
-{
+class ItemSelectionModel final : public QItemSelectionModel {
     Q_OBJECT
 public:
     explicit ItemSelectionModel(ItemModel* model, QObject *parent = nullptr);

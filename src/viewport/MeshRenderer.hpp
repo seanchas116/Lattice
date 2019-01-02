@@ -16,7 +16,7 @@ class Camera;
 class MeshMaterial;
 class VertexBuffer;
 
-class MeshRenderer {
+class MeshRenderer final {
 public:
     MeshRenderer(const SP<MeshItem>& item);
 

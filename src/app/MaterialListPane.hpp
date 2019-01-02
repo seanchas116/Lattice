@@ -7,8 +7,7 @@ namespace Lattice {
 
 class AppState;
 
-class MaterialListPane : public QWidget
-{
+class MaterialListPane final : public QWidget {
     Q_OBJECT
 public:
     explicit MaterialListPane(const SP<AppState>& appState, QWidget *parent = nullptr);

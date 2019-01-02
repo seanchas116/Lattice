@@ -15,7 +15,7 @@ class MeshFace;
 class Mesh;
 class MeshMaterial;
 
-class MeshVertex {
+class MeshVertex final {
 public:
     glm::vec3 position() const { return _position; }
     void setPosition(glm::vec3 position) { _position = position; }
@@ -36,7 +36,7 @@ private:
     std::unordered_set<MeshFace*> _faces;
 };
 
-class MeshEdge : public std::enable_shared_from_this<MeshEdge> {
+class MeshEdge final : public std::enable_shared_from_this<MeshEdge> {
 public:
     MeshEdge(const std::array<SP<MeshVertex>, 2>& vertices);
     ~MeshEdge();
@@ -50,7 +50,7 @@ private:
     std::unordered_set<MeshFace*> _faces;
 };
 
-class MeshFace : public std::enable_shared_from_this<MeshFace> {
+class MeshFace final : public std::enable_shared_from_this<MeshFace> {
 public:
     MeshFace(const std::vector<SP<MeshVertex>>& vertices, const std::vector<SP<MeshEdge>>& edges, const SP<MeshMaterial>& material);
     ~MeshFace();
@@ -69,7 +69,7 @@ private:
     SP<MeshMaterial> _material;
 };
 
-class MeshMaterial {
+class MeshMaterial final {
 public:
     glm::vec3 baseColor() const { return _baseColor; }
     void setBaseColor(const glm::vec3 &baseColor) { _baseColor = baseColor; }
@@ -107,7 +107,7 @@ private:
     std::unordered_set<MeshFace*> _faces;
 };
 
-class Mesh {
+class Mesh final {
 public:
     Mesh();
 
