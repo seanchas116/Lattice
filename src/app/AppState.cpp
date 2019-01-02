@@ -1,7 +1,13 @@
 #include "AppState.hpp"
+#include "../services/ObjLoader.hpp"
 #include "../document/Document.hpp"
+#include "../document/History.hpp"
 #include "../document/MeshItem.hpp"
 #include "../document/Mesh.hpp"
+#include <QFileDialog>
+#include <QtDebug>
+#include <QFileInfo>
+#include <QApplication>
 
 using namespace glm;
 
@@ -44,6 +50,19 @@ void AppState::setIsFaceVisible(bool isFaceVisible) {
     if (_isFaceVisible != isFaceVisible) {
         _isFaceVisible = isFaceVisible;
         emit isFaceVisibleChanged(isFaceVisible);
+    }
+}
+
+void AppState::import() {
+    auto filePath = QFileDialog::getOpenFileName(qApp->activeWindow(), tr("Import"), {}, tr("Files (*.obj)"));
+    qDebug() << filePath;
+
+    QFileInfo fileInfo(filePath);
+
+    auto items = ObjLoader::load(filePath.toStdString());
+    _document->history()->beginChange(tr("Import"));
+    for (auto& item: items) {
+        _document->insertItemToCurrentPosition(item);
     }
 }
 

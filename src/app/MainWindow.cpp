@@ -2,7 +2,6 @@
 #include "AppState.hpp"
 #include "ItemListPane.hpp"
 #include "ItemPropertyPane.hpp"
-#include "../actions/ImportAction.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
 #include "../viewport/ViewportWidget.hpp"
@@ -123,9 +122,7 @@ void MainWindow::setupMenu() {
 
         auto importAction = new QAction(tr("Import..."), this);
         fileMenu->addAction(importAction);
-        connect(importAction, &QAction::triggered, this, [this] {
-            ImportAction::run(window(), _appState);
-        });
+        connect(importAction, &QAction::triggered, _appState.get(), &AppState::import);
 
         auto exportAction = new QAction(tr("Export..."), this);
         fileMenu->addAction(exportAction);

@@ -23,6 +23,8 @@ public:
     bool isFaceVisible() const { return _isFaceVisible; }
     void setIsFaceVisible(bool isFaceVisible);
 
+    void import();
+
 signals:
     void isVertexVisibleChanged(bool isVertexVisible);
     void isEdgeVisibleChanged(bool isEdgeVisible);
