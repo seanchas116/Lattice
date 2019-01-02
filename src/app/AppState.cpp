@@ -99,7 +99,9 @@ void AppState::addImagePlane() {
 
 void AppState::import() {
     auto filePath = QFileDialog::getOpenFileName(qApp->activeWindow(), tr("Import"), {}, tr("Files (*.obj)"));
-    qDebug() << filePath;
+    if (filePath.isEmpty()) {
+        return;
+    }
 
     QFileInfo fileInfo(filePath);
 
