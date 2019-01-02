@@ -78,7 +78,11 @@ void AppState::addCircle() {
 }
 
 void AppState::addSphere() {
-
+    _document->history()->beginChange(tr("Add Sphere"));
+    auto item = std::make_shared<MeshItem>();
+    item->setName(tr("Sphere").toStdString());
+    item->mesh()->addSphere(glm::vec3(0), 1.0, 16, 8, item->mesh()->addMaterial());
+    _document->insertItemToCurrentPosition(item);
 }
 
 void AppState::addCylinder() {

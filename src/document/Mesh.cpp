@@ -191,6 +191,39 @@ void Mesh::addCircle(glm::dvec3 center, double radius, int segmentCount, Mesh::C
     addFace(vertices, material);
 }
 
+void Mesh::addSphere(dvec3 center, double radius, int segmentCount, int ringCount, const SP<MeshMaterial> &material) {
+    std::vector<std::vector<SP<MeshVertex>>> vertexMatrix;
+
+    for (int ring = 0; ring < ringCount - 1; ++ring) {
+        std::vector<SP<MeshVertex>> vertices;
+
+        double longitude = M_PI * (ring + 1 - ringCount * 0.5) / ringCount;
+
+        for (int i = 0; i < segmentCount; ++i) {
+            double latitude = M_PI * 2.0 * (double(i) / segmentCount);
+            dvec3 pos = center + dvec3(sin(latitude) * cos(longitude), sin(longitude), cos(latitude) * cos(longitude)) * radius;
+            auto v = addVertex(pos, vec2(0)); // TODO: uv
+            vertices.push_back(v);
+        }
+
+        vertexMatrix.push_back(std::move(vertices));
+    }
+
+    auto bottom = addVertex(center + dvec3(0, -radius, 0), vec2(0));
+    auto top = addVertex(center + dvec3(0, radius, 0), vec2(0));
+
+    for (int i = 0; i < segmentCount; ++i) {
+        int next = (i + 1) % segmentCount;
+        addFace({bottom, vertexMatrix[0][next], vertexMatrix[0][i]}, material);
+
+        for (int ring = 0; ring < ringCount - 2; ++ring) {
+            addFace({vertexMatrix[ring][i], vertexMatrix[ring][next], vertexMatrix[ring+1][next], vertexMatrix[ring+1][i]}, material);
+        }
+
+        addFace({vertexMatrix[ringCount - 2][i], vertexMatrix[ringCount - 2][next], top}, material);
+    }
+}
+
 SP<Mesh> Mesh::clone() const {
     throw std::runtime_error("not implemented");
 }
