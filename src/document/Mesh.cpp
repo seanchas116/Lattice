@@ -163,6 +163,9 @@ void Mesh::addCube(glm::vec3 minPos, glm::vec3 maxPos, const SP<MeshMaterial> &m
     auto f5 = addFace({v4, v5, v7, v6}, material);
 }
 
+void Mesh::addCircle(glm::vec3 center, float radius, int segmentCount, Mesh::CircleFill fill, const SP<MeshMaterial> &material) {
+}
+
 SP<Mesh> Mesh::clone() const {
     throw std::runtime_error("not implemented");
 }

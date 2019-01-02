@@ -123,6 +123,13 @@ public:
 
     void addCube(glm::vec3 minPos, glm::vec3 maxPos, const SP<MeshMaterial>& material);
 
+    enum class CircleFill {
+        None,
+        Ngon,
+        TriangleFan,
+    };
+    void addCircle(glm::vec3 center, float radius, int segmentCount, CircleFill fill, const SP<MeshMaterial>& material);
+
     SP<Mesh> clone() const;
 
 private:
