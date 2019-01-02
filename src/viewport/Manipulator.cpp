@@ -6,7 +6,7 @@
 #include "../support/Debug.hpp"
 #include "../support/Line.hpp"
 #include <array>
-#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
 
 using namespace glm;
 
@@ -39,7 +39,7 @@ public:
         manipulatorToWorld = glm::scale(glm::translate(glm::dmat4(1), positionFixedDepth_worldSpace), dvec3(scale));
         manipulatorToCamera = worldToCamera * manipulatorToWorld;
 
-        dmat4 targetToCamera = worldToCamera * glm::translate(glm::dmat4(1), targetPos);
+        dmat4 targetToCamera = worldToCamera * glm::translate(targetPos);
 
         for (int axis = 0; axis < 3; ++axis) {
             arrowLinesInManipulatorSpace[axis] = Line(manipulatorToCamera[3].xyz, manipulatorToCamera[3].xyz + manipulatorToCamera[axis].xyz);

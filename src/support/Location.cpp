@@ -1,7 +1,7 @@
 #include "Location.hpp"
 #include "JSON.hpp"
 #include <nlohmann/json.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
 
 using namespace glm;
@@ -9,7 +9,7 @@ using namespace glm;
 namespace Lattice {
 
 dmat4 Location::matrix() const {
-    return glm::translate(dmat4(1), position) * glm::yawPitchRoll(rotation.y, rotation.x, rotation.z) * glm::scale(dmat4(1), scale);
+    return glm::translate(position) * glm::yawPitchRoll(rotation.y, rotation.x, rotation.z) * glm::scale(scale);
 }
 
 glm::dvec3 Location::right() const {
