@@ -43,8 +43,8 @@ std::pair<glm::dvec3, bool> Camera::mapWorldToScreen(dvec3 worldPos) const {
     return mapCameraToScreen(pos_cameraSpace);
 }
 
-glm::dvec3 Camera::mapScreenToWorld(dvec3 screenPos) const {
-    auto cameraPos = mapScreenToCamera(screenPos);
+glm::dvec3 Camera::mapScreenToWorld(dvec3 screenPosWithDepth) const {
+    auto cameraPos = mapScreenToCamera(screenPosWithDepth);
     auto cameraToWorldMatrix = _location.matrix();
     return (cameraToWorldMatrix * vec4(cameraPos, 1)).xyz;
 }
@@ -58,8 +58,14 @@ std::pair<dvec3, bool> Camera::mapCameraToScreen(dvec3 cameraPos) const {
     return {vec3(0), false};
 }
 
-dvec3 Camera::mapScreenToCamera(dvec3 screenPos) const {
-    return glm::unProject(screenPos, dmat4(1), _cameraToScreenMatrix, dvec4(0, 0, _viewSize));
+dvec3 Camera::mapScreenToCamera(dvec3 screenPosWithDepth) const {
+    return glm::unProject(screenPosWithDepth, dmat4(1), _cameraToScreenMatrix, dvec4(0, 0, _viewSize));
+}
+
+Line Camera::cameraMouseRay(dvec2 screenPos) const {
+    dvec3 front = mapScreenToCamera(dvec3(screenPos, -1));
+    dvec3 back = mapScreenToCamera(dvec3(screenPos, 1));
+    return Line(front, back);
 }
 
 void Camera::updateMatrix() {

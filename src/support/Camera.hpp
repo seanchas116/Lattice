@@ -2,6 +2,7 @@
 #include <optional>
 #include <glm/glm.hpp>
 #include "Location.hpp"
+#include "Line.hpp"
 
 namespace Lattice {
 
@@ -29,10 +30,12 @@ public:
     glm::dmat4 worldToScreenMatrix() const { return _worldToScreenMatrix; }
 
     std::pair<glm::dvec3, bool> mapWorldToScreen(glm::dvec3 worldPos) const;
-    glm::dvec3 mapScreenToWorld(glm::dvec3 screenPos) const;
+    glm::dvec3 mapScreenToWorld(glm::dvec3 screenPosWithDepth) const;
 
     std::pair<glm::dvec3, bool> mapCameraToScreen(glm::dvec3 cameraPos) const;
-    glm::dvec3 mapScreenToCamera(glm::dvec3 screenPos) const;
+    glm::dvec3 mapScreenToCamera(glm::dvec3 screenPosWithDepth) const;
+
+    Line cameraMouseRay(glm::dvec2 screenPos) const;
 
 private:
     void updateMatrix();

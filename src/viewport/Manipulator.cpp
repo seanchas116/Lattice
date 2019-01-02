@@ -169,16 +169,13 @@ std::tuple<double, double, double, bool> Manipulator::distanceFromArrow(int axis
         return {0, 0, 0, false};
     }
 
-    dvec3 front = camera.mapScreenToCamera(vec3(screenPos, 0));
-    dvec3 back = camera.mapScreenToCamera(vec3(screenPos, 1));
-
     dmat4 manipulatorToCamera = camera.worldToCameraMatrix() * manipulatorToWorld;
 
     dvec3 arrowXDirection = manipulatorToCamera[axis].xyz;
     double scale = glm::length(arrowXDirection);
     dvec3 arrowCenter = manipulatorToCamera[3].xyz;
 
-    Line mouseRay(front, back);
+    Line mouseRay = camera.cameraMouseRay(screenPos);
     Line arrowRay(arrowCenter, arrowCenter + arrowXDirection);
 
     dvec3 targetPositionCamera = (camera.worldToCameraMatrix() * vec4(targetPos, 1)).xyz;
