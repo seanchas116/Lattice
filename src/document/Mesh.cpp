@@ -116,6 +116,8 @@ SP<MeshEdge> Mesh::addEdge(const std::array<SP<MeshVertex>, 2> &vertices) {
 }
 
 SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshVertex> > &vertices, const SP<MeshMaterial>& material) {
+    Q_ASSERT(3 <= vertices.size());
+
     auto sortedVertices = vertices;
     std::sort(sortedVertices.begin(), sortedVertices.end());
 
