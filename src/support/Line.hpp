@@ -7,10 +7,11 @@ namespace Lattice {
 
 class Line {
 public:
+    Line() : a(0), b(0) {}
     Line(glm::dvec3 a, glm::dvec3 b) : a(a), b(b) {}
 
-    const glm::dvec3 a;
-    const glm::dvec3 b;
+    glm::dvec3 a;
+    glm::dvec3 b;
 };
 
 class LinePointDistance {
