@@ -14,6 +14,8 @@ AppState::AppState() {
     _document->setCurrentItem(initialItem);
 
     auto mesh = std::dynamic_pointer_cast<MeshItem>(initialItem)->mesh();
+    mesh->addCube(glm::vec3(-1), glm::vec3(1), mesh->addMaterial());
+    /*
     {
         auto v1 = mesh->addVertex(vec3(-1, 0, -1), vec2(0, 0));
         auto v2 = mesh->addVertex(vec3(-1, 0, 1), vec2(0, 1));
@@ -21,7 +23,7 @@ AppState::AppState() {
         auto v4 = mesh->addVertex(vec3(1, 0, -1), vec2(1, 0));
         auto m = mesh->addMaterial();
         mesh->addFace({v1, v2, v3, v4}, m);
-    }
+    }*/
 }
 
 void AppState::setIsVertexVisible(bool isVertexVisible) {

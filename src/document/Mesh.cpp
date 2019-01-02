@@ -140,6 +140,29 @@ SP<MeshMaterial> Mesh::addMaterial() {
     return material;
 }
 
+void Mesh::addCube(glm::vec3 minPos, glm::vec3 maxPos, const SP<MeshMaterial> &material) {
+    //   2    3
+    // 6    7
+    //   0    1
+    // 4    5
+
+    auto v0 = addVertex(glm::vec3(minPos.x, minPos.y, minPos.z), glm::vec2(0));
+    auto v1 = addVertex(glm::vec3(maxPos.x, minPos.y, minPos.z), glm::vec2(0));
+    auto v2 = addVertex(glm::vec3(minPos.x, maxPos.y, minPos.z), glm::vec2(0));
+    auto v3 = addVertex(glm::vec3(maxPos.x, maxPos.y, minPos.z), glm::vec2(0));
+    auto v4 = addVertex(glm::vec3(minPos.x, minPos.y, maxPos.z), glm::vec2(0));
+    auto v5 = addVertex(glm::vec3(maxPos.x, minPos.y, maxPos.z), glm::vec2(0));
+    auto v6 = addVertex(glm::vec3(minPos.x, maxPos.y, maxPos.z), glm::vec2(0));
+    auto v7 = addVertex(glm::vec3(maxPos.x, maxPos.y, maxPos.z), glm::vec2(0));
+
+    auto f0 = addFace({v0, v4, v6, v2}, material);
+    auto f1 = addFace({v1, v3, v7, v5}, material);
+    auto f2 = addFace({v0, v1, v5, v4}, material);
+    auto f3 = addFace({v2, v6, v7, v3}, material);
+    auto f4 = addFace({v0, v2, v3, v1}, material);
+    auto f5 = addFace({v4, v5, v7, v6}, material);
+}
+
 SP<Mesh> Mesh::clone() const {
     throw std::runtime_error("not implemented");
 }

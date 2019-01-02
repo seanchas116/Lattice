@@ -121,6 +121,8 @@ public:
     const auto& faces() const { return _faces; }
     const auto& materials() const { return _materials; }
 
+    void addCube(glm::vec3 minPos, glm::vec3 maxPos, const SP<MeshMaterial>& material);
+
     SP<Mesh> clone() const;
 
 private:
