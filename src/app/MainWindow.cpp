@@ -27,29 +27,29 @@ void MainWindow::setupToolBar() {
     auto toolBar = addToolBar(tr("Tools"));
 
     auto addMenu = new QMenu();
-    addMenu->addAction("Plane");
-    addMenu->addAction("Cube");
-    addMenu->addAction("Circle");
-    addMenu->addAction("Sphere");
+    addMenu->addAction(tr("Plane"));
+    addMenu->addAction(tr("Cube"));
+    addMenu->addAction(tr("Circle"));
+    addMenu->addAction(tr("Sphere"));
     addMenu->addSeparator();
-    addMenu->addAction("Text");
-    addMenu->addAction("Image Plane...");
+    addMenu->addAction(tr("Text"));
+    addMenu->addAction(tr("Image Plane..."));
     addMenu->addSeparator();
-    addMenu->addAction("Import...");
+    addMenu->addAction(tr("Import..."));
 
     auto addMenuToolButton = new QToolButton();
-    addMenuToolButton->setText("Add");
+    addMenuToolButton->setText(tr("Add"));
     addMenuToolButton->setMenu(addMenu);
     addMenuToolButton->setPopupMode(QToolButton::InstantPopup);
     toolBar->addWidget(addMenuToolButton);
 
     auto modifyMenu = new QMenu();
-    modifyMenu->addAction("Extrude");
-    modifyMenu->addAction("Inset Faces");
-    modifyMenu->addAction("Loop Cut");
+    modifyMenu->addAction(tr("Extrude"));
+    modifyMenu->addAction(tr("Inset Faces"));
+    modifyMenu->addAction(tr("Loop Cut"));
 
     auto modifyMenuToolButton = new QToolButton();
-    modifyMenuToolButton->setText("Modify");
+    modifyMenuToolButton->setText(tr("Modify"));
     modifyMenuToolButton->setMenu(modifyMenu);
     modifyMenuToolButton->setPopupMode(QToolButton::InstantPopup);
     toolBar->addWidget(modifyMenuToolButton);
@@ -61,7 +61,7 @@ void MainWindow::setupToolBar() {
     // toggle view visibility
 
     {
-        auto isVertexVisibleAction = new QAction("Vertex");
+        auto isVertexVisibleAction = new QAction(tr("Vertex"));
         isVertexVisibleAction->setCheckable(true);
         isVertexVisibleAction->setChecked(_appState->isVertexVisible());
         connect(_appState.get(), &AppState::isVertexVisibleChanged, isVertexVisibleAction, &QAction::setChecked);
@@ -70,7 +70,7 @@ void MainWindow::setupToolBar() {
     }
 
     {
-        auto isEdgeVisibleAction = new QAction("Edge");
+        auto isEdgeVisibleAction = new QAction(tr("Edge"));
         isEdgeVisibleAction->setCheckable(true);
         isEdgeVisibleAction->setChecked(_appState->isEdgeVisible());
         connect(_appState.get(), &AppState::isEdgeVisibleChanged, isEdgeVisibleAction, &QAction::setChecked);
@@ -79,7 +79,7 @@ void MainWindow::setupToolBar() {
     }
 
     {
-        auto isFaceVisibleAction = new QAction("Face");
+        auto isFaceVisibleAction = new QAction(tr("Face"));
         isFaceVisibleAction->setCheckable(true);
         isFaceVisibleAction->setChecked(_appState->isFaceVisible());
         connect(_appState.get(), &AppState::isFaceVisibleChanged, isFaceVisibleAction, &QAction::setChecked);
