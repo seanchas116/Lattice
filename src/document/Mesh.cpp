@@ -1,6 +1,8 @@
 #include "Mesh.hpp"
 #include "../support/Mod.hpp"
 
+using namespace glm;
+
 namespace Lattice {
 
 std::vector<SP<MeshEdge> > MeshVertex::edges() const {
@@ -142,7 +144,7 @@ SP<MeshMaterial> Mesh::addMaterial() {
     return material;
 }
 
-void Mesh::addCube(glm::vec3 minPos, glm::vec3 maxPos, const SP<MeshMaterial> &material) {
+void Mesh::addCube(glm::dvec3 minPos, glm::dvec3 maxPos, const SP<MeshMaterial> &material) {
     //   2    3
     // 6    7
     //   0    1
@@ -165,7 +167,20 @@ void Mesh::addCube(glm::vec3 minPos, glm::vec3 maxPos, const SP<MeshMaterial> &m
     auto f5 = addFace({v4, v5, v7, v6}, material);
 }
 
-void Mesh::addCircle(glm::vec3 center, float radius, int segmentCount, Mesh::CircleFill fill, const SP<MeshMaterial> &material) {
+void Mesh::addCircle(glm::dvec3 center, double radius, int segmentCount, Mesh::CircleFill fill, const SP<MeshMaterial> &material) {
+    Q_UNUSED(fill);
+    // TODO: use CircleFill
+    std::vector<SP<MeshVertex>> vertices;
+
+    double angleStep = M_PI * 2 / segmentCount;
+    for (int i = 0 ; i < segmentCount; ++i) {
+        double angle = angleStep * i;
+        dvec3 pos = center + dvec3(sin(angle), 0, cos(angle)) * radius; // zx plane
+        auto v = addVertex(pos, vec2(0));
+        vertices.push_back(v);
+    }
+
+    addFace(vertices, material);
 }
 
 SP<Mesh> Mesh::clone() const {

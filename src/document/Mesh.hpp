@@ -121,14 +121,14 @@ public:
     const auto& faces() const { return _faces; }
     const auto& materials() const { return _materials; }
 
-    void addCube(glm::vec3 minPos, glm::vec3 maxPos, const SP<MeshMaterial>& material);
+    void addCube(glm::dvec3 minPos, glm::dvec3 maxPos, const SP<MeshMaterial>& material);
 
     enum class CircleFill {
         None,
         Ngon,
         TriangleFan,
     };
-    void addCircle(glm::vec3 center, float radius, int segmentCount, CircleFill fill, const SP<MeshMaterial>& material);
+    void addCircle(glm::dvec3 center, double radius, int segmentCount, CircleFill fill, const SP<MeshMaterial>& material);
 
     SP<Mesh> clone() const;
 
