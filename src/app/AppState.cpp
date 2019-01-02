@@ -58,7 +58,11 @@ void AppState::addPlane() {
 }
 
 void AppState::addCube() {
-
+    _document->history()->beginChange(tr("Add Cube"));
+    auto item = std::make_shared<MeshItem>();
+    item->setName(tr("Cube").toStdString());
+    item->mesh()->addCube(glm::vec3(-1), glm::vec3(1), item->mesh()->addMaterial());
+    _document->insertItemToCurrentPosition(item);
 }
 
 void AppState::addCircle() {
