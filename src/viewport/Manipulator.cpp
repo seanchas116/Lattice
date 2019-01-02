@@ -149,7 +149,6 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
             _initialDragValue[axis] = tAxis;
             _initialTargetPosition = _targetPosition;
             _dragAxis = axis;
-            qDebug() << tAxis;
             emit onDragStart();
 
             return true;
@@ -175,7 +174,6 @@ bool Manipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera)
     LineLineDistance mouseToAxisDistance(mouseRay, metrics.axisLinesInCameraSpace[_dragAxis]);
     double tAxis = mouseToAxisDistance.t1;
 
-    qDebug() << tAxis;
     dvec3 currentValue(0);
     currentValue[_dragAxis] = tAxis;
     emit onDrag(currentValue - _initialDragValue);

@@ -50,10 +50,7 @@ std::vector<SP<MeshItem>> ObjLoader::load(const std::string &filePathString) {
         // Add materials
         for (auto& objMaterial : objMaterials) {
             vec3 diffuse(objMaterial.diffuse[0], objMaterial.diffuse[1], objMaterial.diffuse[2]);
-            qDebug() << "diffuse: " << diffuse;
-
             auto diffuseImage = loadImage(objMaterial.diffuse_texname);
-            qDebug() << "diffuse image: " << diffuseImage;
 
             auto material = item->mesh()->addMaterial();
             material->setBaseColor(diffuse);
