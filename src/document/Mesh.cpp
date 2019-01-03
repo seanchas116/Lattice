@@ -46,6 +46,26 @@ MeshEdge::~MeshEdge() {
     _vertices[1]->_edges.erase(this);
 }
 
+SP<MeshVertex> MeshUVPoint::vertex() const {
+    return _vertex->shared_from_this();
+}
+
+std::vector<SP<MeshUVEdge> > MeshUVPoint::uvEdges() const {
+    std::vector<SP<MeshUVEdge>> uvEdges;
+    for (auto& e : _uvEdges) {
+        uvEdges.push_back(e->shared_from_this());
+    }
+    return uvEdges;
+}
+
+std::vector<SP<MeshFace> > MeshUVPoint::faces() const {
+    std::vector<SP<MeshFace>> faces;
+    for (auto& f : _faces) {
+        faces.push_back(f->shared_from_this());
+    }
+    return faces;
+}
+
 MeshUVEdge::MeshUVEdge(const std::array<SP<MeshUVPoint>, 2> &points) : _points(points) {
     points[0]->_uvEdges.insert(this);
     points[1]->_uvEdges.insert(this);
@@ -54,6 +74,14 @@ MeshUVEdge::MeshUVEdge(const std::array<SP<MeshUVPoint>, 2> &points) : _points(p
 MeshUVEdge::~MeshUVEdge() {
     _points[0]->_uvEdges.erase(this);
     _points[1]->_uvEdges.erase(this);
+}
+
+std::vector<SP<MeshFace> > MeshUVEdge::faces() const {
+    std::vector<SP<MeshFace>> faces;
+    for (auto& f : _faces) {
+        faces.push_back(f->shared_from_this());
+    }
+    return faces;
 }
 
 std::vector<SP<MeshFace> > MeshEdge::faces() const {
@@ -335,10 +363,6 @@ std::vector<SP<MeshFace>> MeshMaterial::faces() const {
         faces.push_back(f->shared_from_this());
     }
     return faces;
-}
-
-SP<MeshVertex> MeshUVPoint::vertex() const {
-    return _vertex->shared_from_this();
 }
 
 } // namespace Lattice

@@ -61,6 +61,7 @@ public:
 
     SP<MeshVertex> vertex() const;
     std::vector<SP<MeshUVEdge>> uvEdges() const;
+    std::vector<SP<MeshFace>> faces() const;
 
 private:
     friend class MeshVertex;
