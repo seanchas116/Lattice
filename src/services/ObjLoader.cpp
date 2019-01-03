@@ -43,7 +43,7 @@ std::vector<SP<MeshItem>> ObjLoader::load(const std::string &filePathString) {
         item->setName(objShape.name);
 
         // TODO: use index_t as key
-        std::unordered_map<int, SP<MeshVertex>> vertexForIndex;
+        std::unordered_map<int, SP<MeshUVPoint>> uvPointForVertexIndex;
 
         std::vector<SP<MeshMaterial>> materials;
 
@@ -65,14 +65,14 @@ std::vector<SP<MeshItem>> ObjLoader::load(const std::string &filePathString) {
         for (size_t f = 0; f < objShape.mesh.num_face_vertices.size(); f++) {
             size_t fv = objShape.mesh.num_face_vertices[f];
 
-            std::vector<SP<MeshVertex>> vertices;
+            std::vector<SP<MeshUVPoint>> uvPoints;
 
             // Loop over vertices in the face.
             for (size_t v = 0; v < fv; v++) {
                 // access to vertex
                 tinyobj::index_t idx = objShape.mesh.indices[index_offset + v];
 
-                if (vertexForIndex.find(idx.vertex_index) == vertexForIndex.end()) {
+                if (uvPointForVertexIndex.find(idx.vertex_index) == uvPointForVertexIndex.end()) {
                     tinyobj::real_t vx = attrib.vertices[3*idx.vertex_index+0];
                     tinyobj::real_t vy = attrib.vertices[3*idx.vertex_index+1];
                     tinyobj::real_t vz = attrib.vertices[3*idx.vertex_index+2];
@@ -88,16 +88,16 @@ std::vector<SP<MeshItem>> ObjLoader::load(const std::string &filePathString) {
                     glm::vec3 pos(vx, vy, vz);
                     glm::vec2 uv(tx, ty);
 
-                    vertexForIndex[idx.vertex_index] = item->mesh()->addVertex(pos, uv);
+                    uvPointForVertexIndex[idx.vertex_index] = item->mesh()->addUVPoint(item->mesh()->addVertex(pos), uv);
                 }
-                vertices.push_back(vertexForIndex[idx.vertex_index]);
+                uvPoints.push_back(uvPointForVertexIndex[idx.vertex_index]);
             }
             index_offset += fv;
 
             auto materialID = objShape.mesh.material_ids[f];
             if (materialID >= 0) {
                 auto material = materials[materialID];
-                item->mesh()->addFace(vertices, material);
+                item->mesh()->addFace(uvPoints, material);
             } else {
                 // TODO: add default material
             }
