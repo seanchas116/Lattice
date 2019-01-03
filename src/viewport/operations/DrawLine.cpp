@@ -6,7 +6,7 @@
 namespace Lattice::Viewport {
 
 DrawLine::DrawLine() :
-    _shader(readResource("src/viewport/operations/DrawLine.vert"), readResource("src/viewport/operations/DrawLine.geom"), readResource("src/viewport/operations/DrawLine.frag"))
+    _shader(Resource::read("src/viewport/operations/DrawLine.vert"), Resource::read("src/viewport/operations/DrawLine.geom"), Resource::read("src/viewport/operations/DrawLine.frag"))
 {
 }
 

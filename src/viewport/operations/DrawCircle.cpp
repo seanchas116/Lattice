@@ -7,7 +7,7 @@
 namespace Lattice::Viewport {
 
 DrawCircle::DrawCircle() :
-    _shader(readResource("src/viewport/operations/DrawCircle.vert"), readResource("src/viewport/operations/DrawCircle.geom"), readResource("src/viewport/operations/DrawCircle.frag"))
+    _shader(Resource::read("src/viewport/operations/DrawCircle.vert"), Resource::read("src/viewport/operations/DrawCircle.geom"), Resource::read("src/viewport/operations/DrawCircle.frag"))
 {
 }
 

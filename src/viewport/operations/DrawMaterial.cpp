@@ -7,7 +7,7 @@
 namespace Lattice::Viewport {
 
 DrawMaterial::DrawMaterial() :
-    _shader(readResource("src/viewport/operations/DrawMaterial.vert"), std::string(), readResource("src/viewport/operations/DrawMaterial.frag"))
+    _shader(Resource::read("src/viewport/operations/DrawMaterial.vert"), std::string(), Resource::read("src/viewport/operations/DrawMaterial.frag"))
 {
     initializeOpenGLFunctions();
 }
