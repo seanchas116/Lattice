@@ -22,24 +22,26 @@ MeshRenderer::MeshRenderer(const SP<MeshItem> &item) : _item(item) {
 }
 
 void MeshRenderer::update(const SP<Mesh> &mesh) {
-    std::unordered_map<SP<MeshVertex>, uint32_t> indices;
+    std::unordered_map<SP<MeshUVPoint>, uint32_t> indices;
     std::vector<VertexBuffer::Vertex> vertices;
     for (auto& vertex : mesh->vertices()) {
-        indices[vertex] = uint32_t(vertices.size());
-        VertexBuffer::Vertex vertexData = {
-            vertex->position(),
-            (*vertex->uvPoints().begin())->position(), // TODO: use uvPoints as vertex buffer source
-            vertex->normal(),
-        };
-        vertices.push_back(vertexData);
+        for (auto& uvPos : vertex->uvPoints()) {
+            indices[uvPos] = uint32_t(vertices.size());
+            VertexBuffer::Vertex vertexData = {
+                vertex->position(),
+                uvPos->position(),
+                vertex->normal(),
+            };
+            vertices.push_back(vertexData);
+        }
     }
     _vbo->setVertices(vertices);
 
     {
         std::vector<LineVAO::Line> lines;
         for (auto& [_, edge] : mesh->edges()) {
-            auto i0 = indices[edge->vertices()[0]];
-            auto i1 = indices[edge->vertices()[1]];
+            auto i0 = indices[*edge->vertices()[0]->uvPoints().begin()];
+            auto i1 = indices[*edge->vertices()[1]->uvPoints().begin()];
             lines.push_back({i0, i1});
         }
         _edgeVAO->setLines(lines);
@@ -52,11 +54,11 @@ void MeshRenderer::update(const SP<Mesh> &mesh) {
             auto vao = std::make_shared<VAO>(_vbo);
             std::vector<VAO::Triangle> triangles;
             for (auto& face : material->faces()) {
-                auto v0 = face->vertices()[0];
+                auto v0 = face->uvPoints()[0];
                 auto i0 = indices[v0];
                 for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
-                    auto v1 = face->vertices()[i - 1];
-                    auto v2 = face->vertices()[i];
+                    auto v1 = face->uvPoints()[i - 1];
+                    auto v2 = face->uvPoints()[i];
                     auto i1 = indices[v1];
                     auto i2 = indices[v2];
                     triangles.push_back({i0, i1, i2});
