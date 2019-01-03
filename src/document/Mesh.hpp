@@ -11,21 +11,24 @@ namespace Lattice {
 
 class MeshVertex;
 class MeshEdge;
+class MeshUVPoint;
+class MeshUVEdge;
 class MeshFace;
 class Mesh;
 class MeshMaterial;
 
-class MeshVertex final {
+class MeshVertex final : public std::enable_shared_from_this<MeshVertex> {
 public:
     glm::vec3 position() const { return _position; }
     void setPosition(glm::vec3 position) { _position = position; }
-    glm::vec2 texCoord() { return _texCoord; }
-    void setTexCoord(glm::vec2 texCoord) { _texCoord = texCoord; }
 
     std::vector<SP<MeshEdge>> edges() const;
     std::vector<SP<MeshFace>> faces() const;
+    auto& uvPoints() const { return _uvPoints; }
 
     glm::vec3 normal() const;
+
+    SP<MeshUVPoint> addUVPoint();
 
 private:
     friend class MeshEdge;
@@ -34,6 +37,7 @@ private:
     glm::vec2 _texCoord;
     std::unordered_set<MeshEdge*> _edges;
     std::unordered_set<MeshFace*> _faces;
+    std::unordered_set<SP<MeshUVPoint>> _uvPoints;
 };
 
 class MeshEdge final : public std::enable_shared_from_this<MeshEdge> {
@@ -50,13 +54,52 @@ private:
     std::unordered_set<MeshFace*> _faces;
 };
 
+class MeshUVPoint final : public std::enable_shared_from_this<MeshUVPoint> {
+public:
+    glm::vec2 position() const { return _position; }
+    void setPosition(glm::vec2 position) { _position = position; }
+
+    SP<MeshVertex> vertex() const;
+    std::vector<SP<MeshUVEdge>> uvEdges() const;
+    std::vector<SP<MeshFace>> faces() const;
+
+private:
+    friend class MeshVertex;
+    friend class MeshFace;
+    friend class MeshUVEdge;
+    glm::vec2 _position;
+    MeshVertex* _vertex;
+    std::unordered_set<MeshUVEdge*> _uvEdges;
+    std::unordered_set<MeshFace*> _faces;
+};
+
+class MeshUVEdge final : public std::enable_shared_from_this<MeshUVEdge> {
+public:
+    MeshUVEdge(const std::array<SP<MeshUVPoint>, 2>& points);
+    ~MeshUVEdge();
+
+    auto& points() const { return _points; }
+
+    SP<MeshEdge> edge() const;
+    std::vector<SP<MeshFace>> faces() const;
+
+private:
+    friend class MeshFace;
+    std::array<SP<MeshUVPoint>, 2> _points;
+    std::unordered_set<MeshFace*> _faces;
+};
+
 class MeshFace final : public std::enable_shared_from_this<MeshFace> {
 public:
-    MeshFace(const std::vector<SP<MeshVertex>>& vertices, const std::vector<SP<MeshEdge>>& edges, const SP<MeshMaterial>& material);
+    MeshFace(const std::vector<SP<MeshVertex>>& vertices, const std::vector<SP<MeshEdge>>& edges,
+             const std::vector<SP<MeshUVPoint>>& uvPoints, const std::vector<SP<MeshUVEdge>>& uvEdges,
+             const SP<MeshMaterial>& material);
     ~MeshFace();
 
     auto& vertices() const { return _vertices; }
     auto& edges() const { return _edges; }
+    auto& uvPoints() const { return _uvPoints; }
+    auto& uvEdges() const { return _uvEdges; }
 
     glm::vec3 normal() const;
 
@@ -66,6 +109,8 @@ public:
 private:
     std::vector<SP<MeshVertex>> _vertices;
     std::vector<SP<MeshEdge>> _edges;
+    std::vector<SP<MeshUVPoint>> _uvPoints;
+    std::vector<SP<MeshUVEdge>> _uvEdges;
     SP<MeshMaterial> _material;
 };
 
@@ -111,9 +156,13 @@ class Mesh final {
 public:
     Mesh();
 
-    SP<MeshVertex> addVertex(glm::vec3 position, glm::vec2 texCoord);
+    SP<MeshVertex> addVertex(glm::vec3 position);
     SP<MeshEdge> addEdge(const std::array<SP<MeshVertex>, 2>& vertices);
-    SP<MeshFace> addFace(const std::vector<SP<MeshVertex>>& vertices, const SP<MeshMaterial>& material);
+
+    SP<MeshUVPoint> addUVPoint(const SP<MeshVertex>& vertex, glm::vec2 position);
+    SP<MeshUVEdge> addUVEdge(const std::array<SP<MeshUVPoint>, 2>& uvPoints);
+
+    SP<MeshFace> addFace(const std::vector<SP<MeshUVPoint>>& uvPoints, const SP<MeshMaterial>& material);
     SP<MeshMaterial> addMaterial();
 
     const auto& vertices() const { return _vertices; }
@@ -142,6 +191,7 @@ private:
 
     std::unordered_set<SP<MeshVertex>> _vertices;
     std::unordered_map<std::array<SP<MeshVertex>, 2>, SP<MeshEdge>> _edges;
+    std::unordered_map<std::array<SP<MeshUVPoint>, 2>, SP<MeshUVEdge>> _uvEdges;
     std::unordered_map<std::vector<SP<MeshVertex>>, SP<MeshFace>> _faces;
     std::vector<SP<MeshMaterial>> _materials;
 };
