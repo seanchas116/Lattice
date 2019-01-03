@@ -27,6 +27,7 @@ public:
     void addCube();
     void addCircle();
     void addSphere();
+    void addCone();
     void addCylinder();
 
     void addText();

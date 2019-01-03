@@ -236,6 +236,34 @@ void Mesh::addSphere(dvec3 center, double radius, int segmentCount, int ringCoun
     }
 }
 
+void Mesh::addCone(dvec3 center, double radius, double height, int segmentCount, int axis, const SP<MeshMaterial> &material) {
+    std::vector<SP<MeshVertex>> vertices;
+
+    double angleStep = M_PI * 2 / segmentCount;
+    for (int i = 0 ; i < segmentCount; ++i) {
+        double angle = angleStep * i;
+        dvec3 offset(0);
+        offset[(axis + 1) % 3] = cos(angle);
+        offset[(axis + 2) % 3] = sin(angle);
+        dvec3 pos = center + offset * radius;
+        auto v = addVertex(pos, vec2(0));
+        vertices.push_back(v);
+    }
+
+    addFace(vertices, material);
+
+    dvec3 topPosition = center;
+    topPosition[axis] += height;
+
+    auto top = addVertex(topPosition, vec2(0));
+
+    for (int i = 0; i < segmentCount; ++i) {
+        auto v0 = vertices[i];
+        auto v1 = vertices[(i + 1) % segmentCount];
+        addFace({v0, v1, top}, material);
+    }
+}
+
 SP<Mesh> Mesh::clone() const {
     throw std::runtime_error("not implemented");
 }

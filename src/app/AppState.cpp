@@ -85,6 +85,14 @@ void AppState::addSphere() {
     _document->insertItemToCurrentPosition(item);
 }
 
+void AppState::addCone() {
+    _document->history()->beginChange(tr("Add Cone"));
+    auto item = std::make_shared<MeshItem>();
+    item->setName(tr("Cone").toStdString());
+    item->mesh()->addCone(glm::vec3(0), 1.0, 1.0, 16, 1, item->mesh()->addMaterial());
+    _document->insertItemToCurrentPosition(item);
+}
+
 void AppState::addCylinder() {
 
 }

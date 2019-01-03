@@ -134,6 +134,8 @@ public:
 
     void addSphere(glm::dvec3 center, double radius, int segmentCount, int ringCount, int axis, const SP<MeshMaterial>& material);
 
+    void addCone(glm::dvec3 center, double radius, double height, int segmentCount, int axis, const SP<MeshMaterial>& material);
+
     SP<Mesh> clone() const;
 
 private:

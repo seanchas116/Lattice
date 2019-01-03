@@ -31,6 +31,7 @@ void MainWindow::setupToolBar() {
     addMenu->addAction(tr("Cube"), _appState.get(), &AppState::addCube);
     addMenu->addAction(tr("Circle"), _appState.get(), &AppState::addCircle);
     addMenu->addAction(tr("Sphere"), _appState.get(), &AppState::addSphere);
+    addMenu->addAction(tr("Cone"), _appState.get(), &AppState::addCone);
     addMenu->addAction(tr("Cylinder"), _appState.get(), &AppState::addCylinder);
     addMenu->addSeparator();
     addMenu->addAction(tr("Text"), _appState.get(), &AppState::addText);
