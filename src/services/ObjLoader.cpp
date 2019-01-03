@@ -43,7 +43,7 @@ std::vector<SP<MeshItem>> ObjLoader::load(const std::string &filePathString) {
         item->setName(objShape.name);
 
         // TODO: use index_t as key
-        std::unordered_map<int, SP<MeshUVPoint>> uvPointForVertexIndex;
+        std::unordered_map<std::pair<int, int>, SP<MeshUVPoint>> uvPointForIndices;
 
         std::vector<SP<MeshMaterial>> materials;
 
@@ -72,7 +72,7 @@ std::vector<SP<MeshItem>> ObjLoader::load(const std::string &filePathString) {
                 // access to vertex
                 tinyobj::index_t idx = objShape.mesh.indices[index_offset + v];
 
-                if (uvPointForVertexIndex.find(idx.vertex_index) == uvPointForVertexIndex.end()) {
+                if (uvPointForIndices.find({idx.vertex_index, idx.texcoord_index}) == uvPointForIndices.end()) {
                     tinyobj::real_t vx = attrib.vertices[3*idx.vertex_index+0];
                     tinyobj::real_t vy = attrib.vertices[3*idx.vertex_index+1];
                     tinyobj::real_t vz = attrib.vertices[3*idx.vertex_index+2];
@@ -88,9 +88,9 @@ std::vector<SP<MeshItem>> ObjLoader::load(const std::string &filePathString) {
                     glm::vec3 pos(vx, vy, vz);
                     glm::vec2 uv(tx, ty);
 
-                    uvPointForVertexIndex[idx.vertex_index] = item->mesh()->addUVPoint(item->mesh()->addVertex(pos), uv);
+                    uvPointForIndices[{idx.vertex_index, idx.texcoord_index}] = item->mesh()->addUVPoint(item->mesh()->addVertex(pos), uv);
                 }
-                uvPoints.push_back(uvPointForVertexIndex[idx.vertex_index]);
+                uvPoints.push_back(uvPointForIndices[{idx.vertex_index, idx.texcoord_index}]);
             }
             index_offset += fv;
 
