@@ -5,7 +5,7 @@
 #include "Manipulator.hpp"
 #include "ManipulatorController.hpp"
 #include "../resource/Resource.hpp"
-#include "../app/AppState.hpp"
+#include "../ui/AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/Item.hpp"
 #include "../document/MeshItem.hpp"

@@ -1,6 +1,6 @@
 #include "ManipulatorController.hpp"
 #include "Manipulator.hpp"
-#include "../app/AppState.hpp"
+#include "../ui/AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/Item.hpp"
 #include "../document/History.hpp"
