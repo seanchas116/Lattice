@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-namespace Lattice {
+namespace Lattice::Document {
 
 class MeshVertex;
 class MeshEdge;

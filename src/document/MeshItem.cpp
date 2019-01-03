@@ -5,7 +5,7 @@
 
 using namespace glm;
 
-namespace Lattice {
+namespace Lattice::Document {
 
 MeshItem::MeshItem() : _mesh(std::make_shared<Mesh>()) {
     connect(this, &MeshItem::meshChanged, this, &Item::changed);

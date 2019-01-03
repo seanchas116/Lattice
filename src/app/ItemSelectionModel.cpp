@@ -24,13 +24,13 @@ ItemSelectionModel::ItemSelectionModel(ItemModel *model, QObject *parent) : QIte
             clearCurrentIndex();
         }
     };
-    connect(model->document().get(), &Document::selectedItemsChanged, this, onSelectionChange);
-    connect(model->document().get(), &Document::currentItemChanged, this, onCurrentChange);
+    connect(model->document().get(), &Document::Document::selectedItemsChanged, this, onSelectionChange);
+    connect(model->document().get(), &Document::Document::currentItemChanged, this, onCurrentChange);
     onSelectionChange();
     onCurrentChange();
 
     connect(this, &QItemSelectionModel::selectionChanged, model, [this, model] {
-        std::unordered_set<SP<Item>> items;
+        std::unordered_set<SP<Document::Item>> items;
         for (auto index : selectedIndexes()) {
             items.insert(model->itemForIndex(index));
         }

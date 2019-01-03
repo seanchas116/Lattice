@@ -10,10 +10,11 @@
 class QMouseEvent;
 
 namespace Lattice {
-
-class MeshItem;
 class AppState;
+}
 
+namespace Lattice::Document {
+class MeshItem;
 }
 
 namespace Lattice::Viewport {
@@ -48,7 +49,7 @@ private:
     SP<GridFloor> _gridFloor;
     SP<Manipulator> _manipulator;
     SP<ManipulatorController> _manipulatorController;
-    std::unordered_map<SP<MeshItem>, SP<MeshRenderer>> _meshRenderers;
+    std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> _meshRenderers;
     SP<AppState> _appState;
 };
 

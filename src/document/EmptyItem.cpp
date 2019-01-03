@@ -1,6 +1,6 @@
 #include "EmptyItem.hpp"
 
-namespace Lattice {
+namespace Lattice::Document {
 
 EmptyItem::EmptyItem() {
 }

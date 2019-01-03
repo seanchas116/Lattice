@@ -6,7 +6,7 @@
 #include <vector>
 #include <functional>
 
-namespace Lattice {
+namespace Lattice::Document {
 
 class Document;
 class Change;

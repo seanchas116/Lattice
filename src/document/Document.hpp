@@ -4,7 +4,7 @@
 #include <unordered_set>
 #include "../support/Pointer.hpp"
 
-namespace Lattice {
+namespace Lattice::Document {
 
 class Item;
 class MeshItem;

@@ -44,14 +44,14 @@ void ViewportRenderer::render() {
     glClearColor(0.8f, 0.8f, 0.8f, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    std::unordered_map<SP<MeshItem>, SP<MeshRenderer>> newMeshRenderers;
+    std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> newMeshRenderers;
 
     _appState->document()->rootItem()->forEachDescendant([&] (auto& item) {
-        auto meshItem = std::dynamic_pointer_cast<MeshItem>(item);
+        auto meshItem = std::dynamic_pointer_cast<Document::MeshItem>(item);
         if (!meshItem) {
             return;
         }
-        connect(meshItem.get(), &MeshItem::locationChanged, this, &ViewportRenderer::updateNeeded);
+        connect(meshItem.get(), &Document::MeshItem::locationChanged, this, &ViewportRenderer::updateNeeded);
 
         auto it = _meshRenderers.find(meshItem);
         if (it != _meshRenderers.end()) {

@@ -12,7 +12,7 @@ using namespace glm;
 
 namespace Lattice::Viewport {
 
-MeshRenderer::MeshRenderer(const SP<MeshItem> &item) : _item(item) {
+MeshRenderer::MeshRenderer(const SP<Document::MeshItem> &item) : _item(item) {
     _vbo = std::make_shared<GL::VertexBuffer>();
     _edgeVAO = std::make_shared<GL::LineVAO>(_vbo);
     _vertexVAO = std::make_shared<GL::PointVAO>(_vbo);
@@ -21,8 +21,8 @@ MeshRenderer::MeshRenderer(const SP<MeshItem> &item) : _item(item) {
     update(item->mesh());
 }
 
-void MeshRenderer::update(const SP<Mesh> &mesh) {
-    std::unordered_map<SP<MeshUVPoint>, uint32_t> indices;
+void MeshRenderer::update(const SP<Document::Mesh> &mesh) {
+    std::unordered_map<SP<Document::MeshUVPoint>, uint32_t> indices;
     std::vector<GL::VertexBuffer::Vertex> vertices;
     for (auto& vertex : mesh->vertices()) {
         for (auto& uvPos : vertex->uvPoints()) {

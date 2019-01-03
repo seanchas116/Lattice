@@ -2,7 +2,7 @@
 #include <QUndoStack>
 #include <QUndoCommand>
 
-namespace Lattice {
+namespace Lattice::Document {
 
 namespace {
 

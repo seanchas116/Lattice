@@ -4,10 +4,11 @@
 #include "../support/Pointer.hpp"
 
 namespace Lattice {
-
 class AppState;
-class Item;
+}
 
+namespace Lattice::Document {
+class Item;
 }
 
 namespace Lattice::Viewport {
@@ -29,11 +30,11 @@ signals:
     void positionChanged(glm::dvec3 position);
 
 private:
-    void connectToItem(const SP<Item>& item);
+    void connectToItem(const SP<Document::Item>& item);
 
     SP<Manipulator> _manipulator;
     SP<AppState> _appState;
-    SP<Item> _item;
+    SP<Document::Item> _item;
     glm::dvec3 _initialPosition;
     QMetaObject::Connection _connection;
 };

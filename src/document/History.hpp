@@ -6,7 +6,7 @@
 class QUndoCommand;
 class QUndoStack;
 
-namespace Lattice {
+namespace Lattice::Document {
 
 class Change {
     Q_DISABLE_COPY(Change)

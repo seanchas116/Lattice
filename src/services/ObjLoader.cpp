@@ -10,7 +10,7 @@ using namespace glm;
 
 namespace Lattice::Services {
 
-std::vector<SP<MeshItem>> ObjLoader::load(const std::string &filePathString) {
+std::vector<SP<Document::MeshItem>> ObjLoader::load(const std::string &filePathString) {
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> objShapes;
     std::vector<tinyobj::material_t> objMaterials;
@@ -28,7 +28,7 @@ std::vector<SP<MeshItem>> ObjLoader::load(const std::string &filePathString) {
         return {};
     }
 
-    std::vector<SP<MeshItem>> items;
+    std::vector<SP<Document::MeshItem>> items;
 
     auto loadImage = [&](const std::string& name) {
         if (name.empty()) {
@@ -39,13 +39,13 @@ std::vector<SP<MeshItem>> ObjLoader::load(const std::string &filePathString) {
     };
 
     for (auto& objShape : objShapes) {
-        auto item = std::make_shared<MeshItem>();
+        auto item = std::make_shared<Document::MeshItem>();
         item->setName(objShape.name);
 
         // TODO: use index_t as key
-        std::unordered_map<std::pair<int, int>, SP<MeshUVPoint>> uvPointForIndices;
+        std::unordered_map<std::pair<int, int>, SP<Document::MeshUVPoint>> uvPointForIndices;
 
-        std::vector<SP<MeshMaterial>> materials;
+        std::vector<SP<Document::MeshMaterial>> materials;
 
         // Add materials
         for (auto& objMaterial : objMaterials) {
@@ -65,7 +65,7 @@ std::vector<SP<MeshItem>> ObjLoader::load(const std::string &filePathString) {
         for (size_t f = 0; f < objShape.mesh.num_face_vertices.size(); f++) {
             size_t fv = objShape.mesh.num_face_vertices[f];
 
-            std::vector<SP<MeshUVPoint>> uvPoints;
+            std::vector<SP<Document::MeshUVPoint>> uvPoints;
 
             // Loop over vertices in the face.
             for (size_t v = 0; v < fv; v++) {

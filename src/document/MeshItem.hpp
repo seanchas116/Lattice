@@ -2,7 +2,7 @@
 #include "Item.hpp"
 #include <glm/glm.hpp>
 
-namespace Lattice {
+namespace Lattice::Document {
 
 class Mesh;
 

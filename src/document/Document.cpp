@@ -2,7 +2,7 @@
 #include "MeshItem.hpp"
 #include "History.hpp"
 
-namespace Lattice {
+namespace Lattice::Document {
 
 namespace {
 

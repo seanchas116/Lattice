@@ -3,7 +3,7 @@
 
 using namespace glm;
 
-namespace Lattice {
+namespace Lattice::Document {
 
 std::vector<SP<MeshEdge> > MeshVertex::edges() const {
     std::vector<SP<MeshEdge>> edges;

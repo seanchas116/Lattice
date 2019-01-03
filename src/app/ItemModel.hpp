@@ -4,20 +4,22 @@
 #include <QUuid>
 #include "../support/Pointer.hpp"
 
-namespace Lattice {
-
+namespace Lattice::Document {
 class Document;
 class Item;
+}
+
+namespace Lattice {
 
 class ItemModel final : public QAbstractItemModel {
     Q_OBJECT
 public:
-    ItemModel(const SP<Document>& document, QObject* parent = nullptr);
+    ItemModel(const SP<Document::Document>& document, QObject* parent = nullptr);
 
-    const SP<Document>& document() const { return _document; }
+    const SP<Document::Document>& document() const { return _document; }
 
-    QModelIndex indexForItem(const SP<Item>& item) const;
-    SP<Item> itemForIndex(const QModelIndex& index) const;
+    QModelIndex indexForItem(const SP<Document::Item>& item) const;
+    SP<Document::Item> itemForIndex(const QModelIndex& index) const;
 
     QVariant data(const QModelIndex &index, int role) const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
@@ -32,10 +34,10 @@ public:
     bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
 
 private:
-    void connectItem(const SP<Item>& item);
-    void disconnectItem(const SP<Item>& item);
+    void connectItem(const SP<Document::Item>& item);
+    void disconnectItem(const SP<Document::Item>& item);
 
-    SP<Document> _document;
+    SP<Document::Document> _document;
     QUuid _uuid;
 };
 
