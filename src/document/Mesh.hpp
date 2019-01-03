@@ -21,8 +21,6 @@ class MeshVertex final : public std::enable_shared_from_this<MeshVertex> {
 public:
     glm::vec3 position() const { return _position; }
     void setPosition(glm::vec3 position) { _position = position; }
-    glm::vec2 texCoord() { return _texCoord; }
-    void setTexCoord(glm::vec2 texCoord) { _texCoord = texCoord; }
 
     std::vector<SP<MeshEdge>> edges() const;
     std::vector<SP<MeshFace>> faces() const;

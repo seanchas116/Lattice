@@ -28,7 +28,7 @@ void MeshRenderer::update(const SP<Mesh> &mesh) {
         indices[vertex] = uint32_t(vertices.size());
         VertexBuffer::Vertex vertexData = {
             vertex->position(),
-            vertex->texCoord(),
+            (*vertex->uvPoints().begin())->position(), // TODO: use uvPoints as vertex buffer source
             vertex->normal(),
         };
         vertices.push_back(vertexData);
