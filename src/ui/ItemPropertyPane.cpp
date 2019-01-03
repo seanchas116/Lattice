@@ -9,7 +9,7 @@
 #include <QLabel>
 #include <QtDebug>
 
-namespace Lattice {
+namespace Lattice::UI {
 
 ItemPropertyPane::ItemPropertyPane(const SP<AppState> &appState, QWidget *parent) :
     QWidget(parent), _appState(appState)
@@ -57,7 +57,7 @@ ItemPropertyPane::ItemPropertyPane(const SP<AppState> &appState, QWidget *parent
 
     setLayout(layout);
 
-    connect(appState->document().get(), &Document::currentItemChanged, this, &ItemPropertyPane::onCurrentItemChanged);
+    connect(appState->document().get(), &Document::Document::currentItemChanged, this, &ItemPropertyPane::onCurrentItemChanged);
     onCurrentItemChanged();
 }
 
@@ -66,7 +66,7 @@ void ItemPropertyPane::onCurrentItemChanged() {
 
     auto currentItem = _appState->document()->currentItem();
     if (currentItem) {} {
-        _itemConnection = connect(currentItem.get(), &Item::locationChanged, this, &ItemPropertyPane::onLocationChanged);
+        _itemConnection = connect(currentItem.get(), &Document::Item::locationChanged, this, &ItemPropertyPane::onLocationChanged);
     }
     onLocationChanged();
 }

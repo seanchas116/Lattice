@@ -12,11 +12,11 @@
 #include <QToolBar>
 #include <QToolButton>
 
-namespace Lattice {
+namespace Lattice::UI {
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     _appState = std::make_shared<AppState>();
-    auto viewportWidget = new ViewportWidget(_appState);
+    auto viewportWidget = new Viewport::ViewportWidget(_appState);
     setCentralWidget(viewportWidget);
     setupMenu();
     setupPanes();

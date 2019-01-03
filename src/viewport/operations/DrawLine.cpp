@@ -3,14 +3,14 @@
 #include "../../gl/LineVAO.hpp"
 #include "../../resource/Resource.hpp"
 
-namespace Lattice {
+namespace Lattice::Viewport {
 
 DrawLine::DrawLine() :
-    _shader(readResource("src/viewport/operations/DrawLine.vert"), readResource("src/viewport/operations/DrawLine.geom"), readResource("src/viewport/operations/DrawLine.frag"))
+    _shader(Resource::read("src/viewport/operations/DrawLine.vert"), Resource::read("src/viewport/operations/DrawLine.geom"), Resource::read("src/viewport/operations/DrawLine.frag"))
 {
 }
 
-void DrawLine::draw(const SP<LineVAO> &vao, const glm::dmat4 &matrix, const Camera &camera, double width, glm::dvec3 color, double zOffset) {
+void DrawLine::draw(const SP<GL::LineVAO> &vao, const glm::dmat4 &matrix, const Camera &camera, double width, glm::dvec3 color, double zOffset) {
     _shader.bind();
     _shader.setUniform("MV", camera.worldToCameraMatrix() * matrix);
     _shader.setUniform("P", camera.cameraToScrenMatrix());

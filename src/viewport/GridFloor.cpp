@@ -6,17 +6,17 @@
 
 using namespace glm;
 
-namespace Lattice {
+namespace Lattice::Viewport {
 
 GridFloor::GridFloor() {
-    auto buffer = std::make_shared<VertexBuffer>();
-    _vao = std::make_shared<LineVAO>(buffer);
+    auto buffer = std::make_shared<GL::VertexBuffer>();
+    _vao = std::make_shared<GL::LineVAO>(buffer);
 
     // build grid
     constexpr int count = 200;
     constexpr double unit = 1;
 
-    std::vector<VertexBuffer::Vertex> vertices;
+    std::vector<GL::VertexBuffer::Vertex> vertices;
     std::vector<std::vector<uint32_t>> lineStrips;
 
     for (int z = -count; z <= count; ++z) {

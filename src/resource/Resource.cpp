@@ -4,9 +4,9 @@
 
 CMRC_DECLARE(LatticeResources);
 
-namespace Lattice {
+namespace Lattice::Resource {
 
-std::string readResource(const char *path) {
+std::string read(const char *path) {
     auto file = cmrc::LatticeResources::get_filesystem().open(path);
     return std::string(file.begin(), file.end());
 }

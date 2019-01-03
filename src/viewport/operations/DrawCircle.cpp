@@ -4,14 +4,14 @@
 #include "../../support/Location.hpp"
 #include "../../support/Camera.hpp"
 
-namespace Lattice {
+namespace Lattice::Viewport {
 
 DrawCircle::DrawCircle() :
-    _shader(readResource("src/viewport/operations/DrawCircle.vert"), readResource("src/viewport/operations/DrawCircle.geom"), readResource("src/viewport/operations/DrawCircle.frag"))
+    _shader(Resource::read("src/viewport/operations/DrawCircle.vert"), Resource::read("src/viewport/operations/DrawCircle.geom"), Resource::read("src/viewport/operations/DrawCircle.frag"))
 {
 }
 
-void DrawCircle::draw(const SP<PointVAO> &vao, const glm::dmat4 &matrix, const Camera &camera, double width, glm::dvec3 color, double zOffset) {
+void DrawCircle::draw(const SP<GL::PointVAO> &vao, const glm::dmat4 &matrix, const Camera &camera, double width, glm::dvec3 color, double zOffset) {
     _shader.bind();
     _shader.setUniform("MVP", camera.worldToScreenMatrix() * matrix);
     _shader.setUniform("viewportSize", camera.viewSize());

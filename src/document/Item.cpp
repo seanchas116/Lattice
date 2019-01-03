@@ -6,7 +6,7 @@
 #include <nlohmann/json.hpp>
 #include <algorithm>
 
-namespace Lattice {
+namespace Lattice::Document {
 
 class Item::ChildInsertChange : public Change {
 public:

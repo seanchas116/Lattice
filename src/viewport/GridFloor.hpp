@@ -4,10 +4,16 @@
 #include <glm/glm.hpp>
 
 namespace Lattice {
-
-class LineVAO;
-class Operations;
 class Camera;
+}
+
+namespace Lattice::GL {
+class LineVAO;
+}
+
+namespace Lattice::Viewport {
+
+class Operations;
 
 class GridFloor final {
 public:
@@ -16,7 +22,7 @@ public:
     void draw(const SP<Operations>& operations, const Camera& camera);
 
 private:
-    SP<LineVAO> _vao;
+    SP<GL::LineVAO> _vao;
 };
 
 } // namespace Lattice

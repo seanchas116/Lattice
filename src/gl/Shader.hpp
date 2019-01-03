@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include "../support/Pointer.hpp"
 
-namespace Lattice {
+namespace Lattice::GL {
 
 class Shader final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(Shader)

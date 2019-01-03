@@ -3,14 +3,14 @@
 #include "../../resource/Resource.hpp"
 #include "../../support/Camera.hpp"
 
-namespace Lattice {
+namespace Lattice::Viewport {
 
 DrawSolid::DrawSolid() :
-    _shader(readResource("src/viewport/operations/DrawSolid.vert"), std::string(), readResource("src/viewport/operations/DrawSolid.frag"))
+    _shader(Resource::read("src/viewport/operations/DrawSolid.vert"), std::string(), Resource::read("src/viewport/operations/DrawSolid.frag"))
 {
 }
 
-void DrawSolid::draw(const SP<VAO> &vao, const glm::dmat4 &matrix, const Camera &camera, glm::dvec3 diffuse, glm::dvec3 ambient) {
+void DrawSolid::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const Camera &camera, glm::dvec3 diffuse, glm::dvec3 ambient) {
     _shader.bind();
     _shader.setUniform("diffuse", diffuse);
     _shader.setUniform("ambient", ambient);

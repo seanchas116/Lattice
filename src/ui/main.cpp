@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
 
     QSurfaceFormat::setDefaultFormat(glFormat);
 
-    Lattice::MainWindow window;
+    Lattice::UI::MainWindow window;
     window.show();
     return a.exec();
 }

@@ -6,7 +6,7 @@
 
 class QDoubleSpinBox;
 
-namespace Lattice {
+namespace Lattice::UI {
 
 class AppState;
 

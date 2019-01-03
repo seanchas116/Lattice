@@ -8,7 +8,7 @@
 class QMouseEvent;
 class QWheelEvent;
 
-namespace Lattice {
+namespace Lattice::Viewport {
 
 class CameraController final : public QObject {
     Q_OBJECT

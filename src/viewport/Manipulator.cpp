@@ -10,7 +10,7 @@
 
 using namespace glm;
 
-namespace Lattice {
+namespace Lattice::Viewport {
 
 namespace {
 
@@ -60,10 +60,10 @@ public:
 
 Manipulator::Manipulator() {
     {
-        _headVAO = std::make_shared<VAO>();
+        _headVAO = std::make_shared<GL::VAO>();
 
-        std::vector<VertexBuffer::Vertex> vertices;
-        std::vector<VAO::Triangle> triangles;
+        std::vector<GL::VertexBuffer::Vertex> vertices;
+        std::vector<GL::VAO::Triangle> triangles;
 
         double headRadius = headWidth * 0.5;
 
@@ -90,9 +90,9 @@ Manipulator::Manipulator() {
     }
 
     {
-        _bodyVAO = std::make_shared<LineVAO>();
+        _bodyVAO = std::make_shared<GL::LineVAO>();
 
-        std::vector<VertexBuffer::Vertex> bodyVertices;
+        std::vector<GL::VertexBuffer::Vertex> bodyVertices;
         std::vector<std::vector<uint32_t>> bodyLineStrips;
 
         bodyVertices.push_back({vec3(0.1, 0, 0), {}, {}});

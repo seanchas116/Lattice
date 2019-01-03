@@ -3,9 +3,11 @@
 #include <QObject>
 #include "../support/Pointer.hpp"
 
-namespace Lattice {
-
+namespace Lattice::Document {
 class Document;
+}
+
+namespace Lattice::UI {
 
 class AppState final : public QObject {
     Q_OBJECT
@@ -40,7 +42,7 @@ signals:
     void isFaceVisibleChanged(bool isFaceVisible);
 
 private:
-    SP<Document> _document;
+    SP<Document::Document> _document;
 
     bool _isVertexVisible = true;
     bool _isEdgeVisible = true;

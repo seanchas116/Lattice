@@ -7,7 +7,7 @@
 
 class QMouseEvent;
 
-namespace Lattice {
+namespace Lattice::Viewport {
 
 class Manipulator final : public QObject {
     Q_OBJECT
@@ -28,8 +28,8 @@ signals:
     void onDragEnd();
 
 private:
-    SP<VAO> _headVAO;
-    SP<LineVAO> _bodyVAO;
+    SP<GL::VAO> _headVAO;
+    SP<GL::LineVAO> _bodyVAO;
 
     glm::dvec3 _targetPosition {0};
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "Item.hpp"
 
-namespace Lattice {
+namespace Lattice::Document {
 
 class EmptyItem final : public Item {
     Q_OBJECT

@@ -5,16 +5,16 @@
 #include "Manipulator.hpp"
 #include "ManipulatorController.hpp"
 #include "../resource/Resource.hpp"
-#include "../app/AppState.hpp"
+#include "../ui/AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/Item.hpp"
 #include "../document/MeshItem.hpp"
 
 using namespace glm;
 
-namespace Lattice {
+namespace Lattice::Viewport {
 
-ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
+ViewportRenderer::ViewportRenderer(const SP<UI::AppState> &appState) {
     _appState = appState;
 
     initializeOpenGLFunctions();
@@ -29,9 +29,9 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
     _manipulator = std::make_shared<Manipulator>();
     _manipulatorController = std::make_shared<ManipulatorController>(_manipulator, appState);
 
-    connect(appState.get(), &AppState::isVertexVisibleChanged, this, &ViewportRenderer::updateNeeded);
-    connect(appState.get(), &AppState::isEdgeVisibleChanged, this, &ViewportRenderer::updateNeeded);
-    connect(appState.get(), &AppState::isFaceVisibleChanged, this, &ViewportRenderer::updateNeeded);
+    connect(appState.get(), &UI::AppState::isVertexVisibleChanged, this, &ViewportRenderer::updateNeeded);
+    connect(appState.get(), &UI::AppState::isEdgeVisibleChanged, this, &ViewportRenderer::updateNeeded);
+    connect(appState.get(), &UI::AppState::isFaceVisibleChanged, this, &ViewportRenderer::updateNeeded);
 }
 
 void ViewportRenderer::resize(ivec2 physicalSize, ivec2 logicalSize) {
@@ -44,14 +44,14 @@ void ViewportRenderer::render() {
     glClearColor(0.8f, 0.8f, 0.8f, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    std::unordered_map<SP<MeshItem>, SP<MeshRenderer>> newMeshRenderers;
+    std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> newMeshRenderers;
 
     _appState->document()->rootItem()->forEachDescendant([&] (auto& item) {
-        auto meshItem = std::dynamic_pointer_cast<MeshItem>(item);
+        auto meshItem = std::dynamic_pointer_cast<Document::MeshItem>(item);
         if (!meshItem) {
             return;
         }
-        connect(meshItem.get(), &MeshItem::locationChanged, this, &ViewportRenderer::updateNeeded);
+        connect(meshItem.get(), &Document::MeshItem::locationChanged, this, &ViewportRenderer::updateNeeded);
 
         auto it = _meshRenderers.find(meshItem);
         if (it != _meshRenderers.end()) {

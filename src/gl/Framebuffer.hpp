@@ -5,7 +5,7 @@
 #include "../support/Pointer.hpp"
 #include "../support/PixelData.hpp"
 
-namespace Lattice {
+namespace Lattice::GL {
 
 class Texture;
 class DepthStencilTexture;
