@@ -57,7 +57,7 @@ void AppState::addPlane() {
     _document->history()->beginChange(tr("Add Plane"));
     auto item = std::make_shared<MeshItem>();
     item->setName(tr("Plane").toStdString());
-    item->mesh()->addPlane(glm::vec3(0), 1.0, item->mesh()->addMaterial());
+    item->mesh()->addPlane(dvec3(0), dvec2(2), 1, item->mesh()->addMaterial());
     _document->insertItemToCurrentPosition(item);
 }
 

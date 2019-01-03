@@ -144,12 +144,17 @@ SP<MeshMaterial> Mesh::addMaterial() {
     return material;
 }
 
-void Mesh::addPlane(dvec3 center, double radius, const SP<MeshMaterial> &material) {
-    auto v0 = addVertex(center + dvec3(-radius, 0, -radius), vec2(0, 0));
-    auto v1 = addVertex(center + dvec3(-radius, 0, radius), vec2(0, 1));
-    auto v2 = addVertex(center + dvec3(radius, 0, radius), vec2(1, 1));
-    auto v3 = addVertex(center + dvec3(radius, 0, -radius), vec2(1, 0));
-    addFace({v0, v1, v2, v3}, material);
+void Mesh::addPlane(dvec3 center, dvec2 size, int normalAxis, const SP<MeshMaterial> &material) {
+    std::vector<SP<MeshVertex>> vertices;
+    std::array<dvec2, 4> uvs = {dvec2(0, 0), dvec2(1, 0), dvec2(1, 1), dvec2(0, 1)};
+
+    for (dvec2 uv : uvs) {
+        dvec3 pos = center;
+        pos[(normalAxis + 1) % 3] += size.x * (uv.x - 0.5);
+        pos[(normalAxis + 2) % 3] += size.y * (uv.y - 0.5);
+        vertices.push_back(addVertex(pos, uv));
+    }
+    addFace(vertices, material);
 }
 
 void Mesh::addCube(glm::dvec3 minPos, glm::dvec3 maxPos, const SP<MeshMaterial> &material) {

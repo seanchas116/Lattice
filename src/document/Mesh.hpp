@@ -121,7 +121,7 @@ public:
     const auto& faces() const { return _faces; }
     const auto& materials() const { return _materials; }
 
-    void addPlane(glm::dvec3 center, double radius, const SP<MeshMaterial>& material);
+    void addPlane(glm::dvec3 center, glm::dvec2 size, int normalAxis, const SP<MeshMaterial>& material);
 
     void addCube(glm::dvec3 minPos, glm::dvec3 maxPos, const SP<MeshMaterial>& material);
 
