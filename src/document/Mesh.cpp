@@ -199,7 +199,7 @@ void Mesh::addCircle(glm::dvec3 center, double radius, int segmentCount, Mesh::C
     addFace(vertices, material);
 }
 
-void Mesh::addSphere(dvec3 center, double radius, int segmentCount, int ringCount, const SP<MeshMaterial> &material) {
+void Mesh::addSphere(dvec3 center, double radius, int segmentCount, int ringCount, int axis, const SP<MeshMaterial> &material) {
     std::vector<std::vector<SP<MeshVertex>>> vertexMatrix;
 
     for (int ring = 0; ring < ringCount - 1; ++ring) {
@@ -209,7 +209,11 @@ void Mesh::addSphere(dvec3 center, double radius, int segmentCount, int ringCoun
 
         for (int i = 0; i < segmentCount; ++i) {
             double latitude = M_PI * 2.0 * (double(i) / segmentCount);
-            dvec3 pos = center + dvec3(sin(latitude) * cos(longitude), sin(longitude), cos(latitude) * cos(longitude)) * radius;
+            dvec3 offset;
+            offset[axis] = sin(longitude);
+            offset[(axis + 1) % 3] = cos(latitude) * cos(longitude);
+            offset[(axis + 2) % 3] = sin(latitude) * cos(longitude);
+            dvec3 pos = center + offset * radius;
             auto v = addVertex(pos, vec2(0)); // TODO: uv
             vertices.push_back(v);
         }
