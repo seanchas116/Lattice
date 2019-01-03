@@ -73,7 +73,7 @@ void AppState::addCircle() {
     _document->history()->beginChange(tr("Add Circle"));
     auto item = std::make_shared<MeshItem>();
     item->setName(tr("Circle").toStdString());
-    item->mesh()->addCircle(glm::vec3(0), 1.0, 16, Mesh::CircleFill::Ngon, item->mesh()->addMaterial());
+    item->mesh()->addCircle(glm::vec3(0), 1.0, 16, Mesh::CircleFill::Ngon, 1, item->mesh()->addMaterial());
     _document->insertItemToCurrentPosition(item);
 }
 

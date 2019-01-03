@@ -180,7 +180,7 @@ void Mesh::addCube(glm::dvec3 minPos, glm::dvec3 maxPos, const SP<MeshMaterial> 
     auto f5 = addFace({v4, v5, v7, v6}, material);
 }
 
-void Mesh::addCircle(glm::dvec3 center, double radius, int segmentCount, Mesh::CircleFill fill, const SP<MeshMaterial> &material) {
+void Mesh::addCircle(glm::dvec3 center, double radius, int segmentCount, Mesh::CircleFill fill, int normalAxis, const SP<MeshMaterial> &material) {
     Q_UNUSED(fill);
     // TODO: use CircleFill
     std::vector<SP<MeshVertex>> vertices;
@@ -188,7 +188,10 @@ void Mesh::addCircle(glm::dvec3 center, double radius, int segmentCount, Mesh::C
     double angleStep = M_PI * 2 / segmentCount;
     for (int i = 0 ; i < segmentCount; ++i) {
         double angle = angleStep * i;
-        dvec3 pos = center + dvec3(sin(angle), 0, cos(angle)) * radius; // zx plane
+        dvec3 offset(0);
+        offset[(normalAxis + 1) % 3] = cos(angle);
+        offset[(normalAxis + 2) % 3] = sin(angle);
+        dvec3 pos = center + offset * radius;
         auto v = addVertex(pos, vec2(0));
         vertices.push_back(v);
     }

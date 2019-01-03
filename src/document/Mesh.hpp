@@ -130,7 +130,7 @@ public:
         Ngon,
         TriangleFan,
     };
-    void addCircle(glm::dvec3 center, double radius, int segmentCount, CircleFill fill, const SP<MeshMaterial>& material);
+    void addCircle(glm::dvec3 center, double radius, int segmentCount, CircleFill fill, int normalAxis, const SP<MeshMaterial>& material);
 
     void addSphere(glm::dvec3 center, double radius, int segmentCount, int ringCount, const SP<MeshMaterial>& material);
 
