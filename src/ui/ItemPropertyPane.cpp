@@ -9,7 +9,7 @@
 #include <QLabel>
 #include <QtDebug>
 
-namespace Lattice {
+namespace Lattice::UI {
 
 ItemPropertyPane::ItemPropertyPane(const SP<AppState> &appState, QWidget *parent) :
     QWidget(parent), _appState(appState)

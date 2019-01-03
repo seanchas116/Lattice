@@ -7,7 +7,7 @@ namespace Lattice::Document {
 class Document;
 }
 
-namespace Lattice {
+namespace Lattice::UI {
 
 class AppState final : public QObject {
     Q_OBJECT

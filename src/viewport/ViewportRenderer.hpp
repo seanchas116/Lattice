@@ -9,7 +9,7 @@
 
 class QMouseEvent;
 
-namespace Lattice {
+namespace Lattice::UI {
 class AppState;
 }
 
@@ -28,7 +28,7 @@ class ManipulatorController;
 class ViewportRenderer final : public QObject, protected QOpenGLExtraFunctions {
     Q_OBJECT
 public:
-    ViewportRenderer(const SP<AppState>& appState);
+    ViewportRenderer(const SP<UI::AppState>& appState);
 
     void resize(glm::ivec2 physicalSize, glm::ivec2 logicalSize);
     void render();
@@ -50,7 +50,7 @@ private:
     SP<Manipulator> _manipulator;
     SP<ManipulatorController> _manipulatorController;
     std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> _meshRenderers;
-    SP<AppState> _appState;
+    SP<UI::AppState> _appState;
 };
 
 } // namespace Lattice

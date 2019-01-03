@@ -6,7 +6,7 @@
 #include <QtDebug>
 #include <QDataStream>
 
-namespace Lattice {
+namespace Lattice::UI {
 
 ItemModel::ItemModel(const SP<Document::Document> &document, QObject *parent) :
     QAbstractItemModel(parent),

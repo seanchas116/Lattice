@@ -3,7 +3,7 @@
 #include "../document/Document.hpp"
 #include <QtDebug>
 
-namespace Lattice {
+namespace Lattice::UI {
 
 ItemSelectionModel::ItemSelectionModel(ItemModel *model, QObject *parent) : QItemSelectionModel(model, parent)
 {

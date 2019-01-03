@@ -8,7 +8,7 @@
 #include <QVBoxLayout>
 #include <QMenu>
 
-namespace Lattice {
+namespace Lattice::UI {
 
 ItemListPane::ItemListPane(const SP<AppState> &appState, QWidget *parent) :
     QWidget(parent),

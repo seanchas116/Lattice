@@ -2,7 +2,7 @@
 #include <QMainWindow>
 #include "../support/Pointer.hpp"
 
-namespace Lattice {
+namespace Lattice::UI {
 
 class AppState;
 

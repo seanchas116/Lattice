@@ -1,6 +1,6 @@
 #include "MaterialListPane.hpp"
 
-namespace Lattice {
+namespace Lattice::UI {
 
 MaterialListPane::MaterialListPane(const SP<AppState> &appState, QWidget *parent) :
     QWidget(parent),

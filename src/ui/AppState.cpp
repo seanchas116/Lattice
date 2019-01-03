@@ -11,7 +11,7 @@
 
 using namespace glm;
 
-namespace Lattice {
+namespace Lattice::UI {
 
 AppState::AppState() {
     _document = std::make_shared<Document::Document>();

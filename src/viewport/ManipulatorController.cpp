@@ -7,7 +7,7 @@
 
 namespace Lattice::Viewport {
 
-ManipulatorController::ManipulatorController(const SP<Manipulator>& manipulator, const SP<AppState> &appState) :
+ManipulatorController::ManipulatorController(const SP<Manipulator>& manipulator, const SP<UI::AppState> &appState) :
     _manipulator(manipulator),
     _appState(appState)
 {

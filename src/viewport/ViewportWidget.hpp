@@ -5,10 +5,8 @@
 #include "KeyObserver.hpp"
 #include "../support/Pointer.hpp"
 
-namespace Lattice {
-
+namespace Lattice::UI {
 class AppState;
-
 }
 
 namespace Lattice::Viewport {
@@ -18,7 +16,7 @@ class ViewportRenderer;
 class ViewportWidget final : public QOpenGLWidget {
     Q_OBJECT
 public:
-    explicit ViewportWidget(const SP<AppState>& appState, QWidget *parent = nullptr);
+    explicit ViewportWidget(const SP<UI::AppState>& appState, QWidget *parent = nullptr);
 
 protected:
     void initializeGL() override;
@@ -41,7 +39,7 @@ private:
     SP<ViewportRenderer> _renderer;
     CameraController _cameraController;
     KeyObserver _keyObserver;
-    SP<AppState> _appState;
+    SP<UI::AppState> _appState;
 };
 
 } // namespace Lattice

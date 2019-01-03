@@ -12,7 +12,7 @@
 #include <QToolBar>
 #include <QToolButton>
 
-namespace Lattice {
+namespace Lattice::UI {
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     _appState = std::make_shared<AppState>();

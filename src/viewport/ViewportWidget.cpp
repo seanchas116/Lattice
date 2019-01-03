@@ -6,7 +6,7 @@
 
 namespace Lattice::Viewport {
 
-ViewportWidget::ViewportWidget(const SP<AppState> &appState, QWidget *parent) : QOpenGLWidget(parent)
+ViewportWidget::ViewportWidget(const SP<UI::AppState> &appState, QWidget *parent) : QOpenGLWidget(parent)
 {
     _appState = appState;
     setFocusPolicy(Qt::ClickFocus);

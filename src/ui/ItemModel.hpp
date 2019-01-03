@@ -9,7 +9,7 @@ class Document;
 class Item;
 }
 
-namespace Lattice {
+namespace Lattice::UI {
 
 class ItemModel final : public QAbstractItemModel {
     Q_OBJECT

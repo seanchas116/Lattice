@@ -14,7 +14,7 @@ using namespace glm;
 
 namespace Lattice::Viewport {
 
-ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
+ViewportRenderer::ViewportRenderer(const SP<UI::AppState> &appState) {
     _appState = appState;
 
     initializeOpenGLFunctions();
@@ -29,9 +29,9 @@ ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
     _manipulator = std::make_shared<Manipulator>();
     _manipulatorController = std::make_shared<ManipulatorController>(_manipulator, appState);
 
-    connect(appState.get(), &AppState::isVertexVisibleChanged, this, &ViewportRenderer::updateNeeded);
-    connect(appState.get(), &AppState::isEdgeVisibleChanged, this, &ViewportRenderer::updateNeeded);
-    connect(appState.get(), &AppState::isFaceVisibleChanged, this, &ViewportRenderer::updateNeeded);
+    connect(appState.get(), &UI::AppState::isVertexVisibleChanged, this, &ViewportRenderer::updateNeeded);
+    connect(appState.get(), &UI::AppState::isEdgeVisibleChanged, this, &ViewportRenderer::updateNeeded);
+    connect(appState.get(), &UI::AppState::isFaceVisibleChanged, this, &ViewportRenderer::updateNeeded);
 }
 
 void ViewportRenderer::resize(ivec2 physicalSize, ivec2 logicalSize) {
