@@ -4,8 +4,10 @@
 #include "../support/Pointer.hpp"
 
 namespace Lattice {
-
 class MeshItem;
+}
+
+namespace Lattice::Services {
 
 class ObjLoader final {
 public:

@@ -8,7 +8,7 @@
 
 using namespace glm;
 
-namespace Lattice {
+namespace Lattice::Services {
 
 std::vector<SP<MeshItem>> ObjLoader::load(const std::string &filePathString) {
     tinyobj::attrib_t attrib;
