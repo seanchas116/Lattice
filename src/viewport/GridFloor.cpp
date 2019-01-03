@@ -6,7 +6,7 @@
 
 using namespace glm;
 
-namespace Lattice {
+namespace Lattice::Viewport {
 
 GridFloor::GridFloor() {
     auto buffer = std::make_shared<VertexBuffer>();

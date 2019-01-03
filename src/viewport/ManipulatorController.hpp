@@ -7,6 +7,11 @@ namespace Lattice {
 
 class AppState;
 class Item;
+
+}
+
+namespace Lattice::Viewport {
+
 class Manipulator;
 
 class ManipulatorController final : public QObject {

@@ -4,7 +4,7 @@
 #include "../../support/Location.hpp"
 #include "../../support/Camera.hpp"
 
-namespace Lattice {
+namespace Lattice::Viewport {
 
 DrawCircle::DrawCircle() :
     _shader(readResource("src/viewport/operations/DrawCircle.vert"), readResource("src/viewport/operations/DrawCircle.geom"), readResource("src/viewport/operations/DrawCircle.frag"))

@@ -7,6 +7,10 @@ namespace Lattice {
 class LineVAO;
 class Camera;
 
+}
+
+namespace Lattice::Viewport {
+
 class DrawLine final {
 public:
     DrawLine();

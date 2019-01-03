@@ -6,6 +6,10 @@ namespace Lattice {
 class VAO;
 class Camera;
 
+}
+
+namespace Lattice::Viewport {
+
 class DrawSolid final {
 public:
     DrawSolid();

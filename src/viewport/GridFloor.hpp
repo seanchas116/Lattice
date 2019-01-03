@@ -6,8 +6,13 @@
 namespace Lattice {
 
 class LineVAO;
-class Operations;
 class Camera;
+
+}
+
+namespace Lattice::Viewport {
+
+class Operations;
 
 class GridFloor final {
 public:

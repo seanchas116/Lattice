@@ -11,10 +11,15 @@ class VAO;
 class LineVAO;
 class PointVAO;
 class Mesh;
-class Operations;
 class Camera;
 class MeshMaterial;
 class VertexBuffer;
+
+}
+
+namespace Lattice::Viewport {
+
+class Operations;
 
 class MeshRenderer final {
 public:

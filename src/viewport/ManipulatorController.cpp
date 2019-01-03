@@ -5,7 +5,7 @@
 #include "../document/Item.hpp"
 #include "../document/History.hpp"
 
-namespace Lattice {
+namespace Lattice::Viewport {
 
 ManipulatorController::ManipulatorController(const SP<Manipulator>& manipulator, const SP<AppState> &appState) :
     _manipulator(manipulator),

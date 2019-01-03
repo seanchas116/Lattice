@@ -10,7 +10,7 @@
 
 using namespace glm;
 
-namespace Lattice {
+namespace Lattice::Viewport {
 
 MeshRenderer::MeshRenderer(const SP<MeshItem> &item) : _item(item) {
     _vbo = std::make_shared<VertexBuffer>();

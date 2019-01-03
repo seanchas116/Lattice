@@ -7,8 +7,13 @@
 
 namespace Lattice {
 
-class ViewportRenderer;
 class AppState;
+
+}
+
+namespace Lattice::Viewport {
+
+class ViewportRenderer;
 
 class ViewportWidget final : public QOpenGLWidget {
     Q_OBJECT

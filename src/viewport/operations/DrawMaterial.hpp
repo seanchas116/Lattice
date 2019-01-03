@@ -10,6 +10,10 @@ class VAO;
 class Camera;
 class Texture;
 
+}
+
+namespace Lattice::Viewport {
+
 class DrawMaterial final : protected QOpenGLExtraFunctions {
 public:
     DrawMaterial();

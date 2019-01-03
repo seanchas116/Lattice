@@ -3,7 +3,7 @@
 #include "../../resource/Resource.hpp"
 #include "../../support/Camera.hpp"
 
-namespace Lattice {
+namespace Lattice::Viewport {
 
 DrawSolid::DrawSolid() :
     _shader(readResource("src/viewport/operations/DrawSolid.vert"), std::string(), readResource("src/viewport/operations/DrawSolid.frag"))

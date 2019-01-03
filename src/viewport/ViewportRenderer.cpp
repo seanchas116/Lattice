@@ -12,7 +12,7 @@
 
 using namespace glm;
 
-namespace Lattice {
+namespace Lattice::Viewport {
 
 ViewportRenderer::ViewportRenderer(const SP<AppState> &appState) {
     _appState = appState;

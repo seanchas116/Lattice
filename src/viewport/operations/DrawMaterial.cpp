@@ -4,7 +4,7 @@
 #include "../../resource/Resource.hpp"
 #include "../../support/Camera.hpp"
 
-namespace Lattice {
+namespace Lattice::Viewport {
 
 DrawMaterial::DrawMaterial() :
     _shader(readResource("src/viewport/operations/DrawMaterial.vert"), std::string(), readResource("src/viewport/operations/DrawMaterial.frag"))

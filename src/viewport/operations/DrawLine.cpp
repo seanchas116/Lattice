@@ -3,7 +3,7 @@
 #include "../../gl/LineVAO.hpp"
 #include "../../resource/Resource.hpp"
 
-namespace Lattice {
+namespace Lattice::Viewport {
 
 DrawLine::DrawLine() :
     _shader(readResource("src/viewport/operations/DrawLine.vert"), readResource("src/viewport/operations/DrawLine.geom"), readResource("src/viewport/operations/DrawLine.frag"))

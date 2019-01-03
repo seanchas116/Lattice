@@ -11,14 +11,18 @@ class QMouseEvent;
 
 namespace Lattice {
 
+class MeshItem;
+class AppState;
+
+}
+
+namespace Lattice::Viewport {
+
 class GridFloor;
 class MeshRenderer;
 class Operations;
 class Manipulator;
 class ManipulatorController;
-
-class MeshItem;
-class AppState;
 
 class ViewportRenderer final : public QObject, protected QOpenGLExtraFunctions {
     Q_OBJECT

@@ -5,7 +5,7 @@
 #include "./operations/DrawSolid.hpp"
 #include "./operations/DrawMaterial.hpp"
 
-namespace Lattice {
+namespace Lattice::Viewport {
 
 class Operations final {
 public:

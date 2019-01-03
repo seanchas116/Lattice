@@ -6,6 +6,10 @@ namespace Lattice {
 class PointVAO;
 class Camera;
 
+}
+
+namespace Lattice::Viewport {
+
 class DrawCircle final {
 public:
     DrawCircle();
