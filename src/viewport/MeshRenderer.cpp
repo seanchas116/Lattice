@@ -13,9 +13,9 @@ using namespace glm;
 namespace Lattice::Viewport {
 
 MeshRenderer::MeshRenderer(const SP<MeshItem> &item) : _item(item) {
-    _vbo = std::make_shared<VertexBuffer>();
-    _edgeVAO = std::make_shared<LineVAO>(_vbo);
-    _vertexVAO = std::make_shared<PointVAO>(_vbo);
+    _vbo = std::make_shared<GL::VertexBuffer>();
+    _edgeVAO = std::make_shared<GL::LineVAO>(_vbo);
+    _vertexVAO = std::make_shared<GL::PointVAO>(_vbo);
 
     // TODO: update mesh when item is changed
     update(item->mesh());
@@ -23,11 +23,11 @@ MeshRenderer::MeshRenderer(const SP<MeshItem> &item) : _item(item) {
 
 void MeshRenderer::update(const SP<Mesh> &mesh) {
     std::unordered_map<SP<MeshUVPoint>, uint32_t> indices;
-    std::vector<VertexBuffer::Vertex> vertices;
+    std::vector<GL::VertexBuffer::Vertex> vertices;
     for (auto& vertex : mesh->vertices()) {
         for (auto& uvPos : vertex->uvPoints()) {
             indices[uvPos] = uint32_t(vertices.size());
-            VertexBuffer::Vertex vertexData = {
+            GL::VertexBuffer::Vertex vertexData = {
                 vertex->position(),
                 uvPos->position(),
                 vertex->normal(),
@@ -38,7 +38,7 @@ void MeshRenderer::update(const SP<Mesh> &mesh) {
     _vbo->setVertices(vertices);
 
     {
-        std::vector<LineVAO::Line> lines;
+        std::vector<GL::LineVAO::Line> lines;
         for (auto& [_, edge] : mesh->edges()) {
             auto i0 = indices[*edge->vertices()[0]->uvPoints().begin()];
             auto i1 = indices[*edge->vertices()[1]->uvPoints().begin()];
@@ -51,8 +51,8 @@ void MeshRenderer::update(const SP<Mesh> &mesh) {
         // Face VAO
 
         for (auto& material : mesh->materials()) {
-            auto vao = std::make_shared<VAO>(_vbo);
-            std::vector<VAO::Triangle> triangles;
+            auto vao = std::make_shared<GL::VAO>(_vbo);
+            std::vector<GL::VAO::Triangle> triangles;
             for (auto& face : material->faces()) {
                 auto v0 = face->uvPoints()[0];
                 auto i0 = indices[v0];

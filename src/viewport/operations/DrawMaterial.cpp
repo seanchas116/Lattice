@@ -12,7 +12,7 @@ DrawMaterial::DrawMaterial() :
     initializeOpenGLFunctions();
 }
 
-void DrawMaterial::draw(const SP<VAO> &vao, const glm::dmat4 &matrix, const Camera &camera, const SP<MeshMaterial> &material) {
+void DrawMaterial::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const Camera &camera, const SP<MeshMaterial> &material) {
     _shader.bind();
     _shader.setUniform("diffuse", material->baseColor());
     _shader.setUniform("ambient", glm::vec3(0));
@@ -32,7 +32,7 @@ void DrawMaterial::draw(const SP<VAO> &vao, const glm::dmat4 &matrix, const Came
     vao->draw();
 }
 
-SP<Texture> DrawMaterial::getTexture(const QImage &image) {
+SP<GL::Texture> DrawMaterial::getTexture(const QImage &image) {
     if (auto it = _textures.find(image.cacheKey()); it != _textures.end()) {
         return it->second;
     }
@@ -41,7 +41,7 @@ SP<Texture> DrawMaterial::getTexture(const QImage &image) {
     rgbaTexture = rgbaTexture.mirrored();
     glm::ivec2 size(rgbaTexture.width(), rgbaTexture.height());
 
-    auto texture = std::make_shared<Texture>(size, rgbaTexture.bits());
+    auto texture = std::make_shared<GL::Texture>(size, rgbaTexture.bits());
     _textures[image.cacheKey()] = texture;
     return texture;
 }

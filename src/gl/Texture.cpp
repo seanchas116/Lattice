@@ -1,6 +1,6 @@
 #include "Texture.hpp"
 
-namespace Lattice {
+namespace Lattice::GL {
 
 Texture::Texture(glm::ivec2 size, const void *pixels) : _size(size) {
     initializeOpenGLFunctions();

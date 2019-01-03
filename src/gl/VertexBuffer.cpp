@@ -1,6 +1,6 @@
 #include "VertexBuffer.hpp"
 
-namespace Lattice {
+namespace Lattice::GL {
 
 VertexBuffer::VertexBuffer() {
     initializeOpenGLFunctions();

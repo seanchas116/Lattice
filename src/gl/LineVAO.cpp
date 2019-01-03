@@ -2,7 +2,7 @@
 #include "VertexBuffer.hpp"
 #include <array>
 
-namespace Lattice {
+namespace Lattice::GL {
 
 LineVAO::LineVAO() : LineVAO(std::make_shared<VertexBuffer>()) {
 }

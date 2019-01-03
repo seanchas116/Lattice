@@ -10,7 +10,7 @@ DrawLine::DrawLine() :
 {
 }
 
-void DrawLine::draw(const SP<LineVAO> &vao, const glm::dmat4 &matrix, const Camera &camera, double width, glm::dvec3 color, double zOffset) {
+void DrawLine::draw(const SP<GL::LineVAO> &vao, const glm::dmat4 &matrix, const Camera &camera, double width, glm::dvec3 color, double zOffset) {
     _shader.bind();
     _shader.setUniform("MV", camera.worldToCameraMatrix() * matrix);
     _shader.setUniform("P", camera.cameraToScrenMatrix());

@@ -5,16 +5,17 @@
 #include <unordered_map>
 
 namespace Lattice {
-
 class MeshItem;
-class VAO;
-class LineVAO;
-class PointVAO;
 class Mesh;
 class Camera;
 class MeshMaterial;
-class VertexBuffer;
+}
 
+namespace Lattice::GL {
+class VertexBuffer;
+class VAO;
+class LineVAO;
+class PointVAO;
 }
 
 namespace Lattice::Viewport {
@@ -33,10 +34,10 @@ private:
     void update(const SP<Mesh>& mesh);
 
     SP<MeshItem> _item;
-    SP<VertexBuffer> _vbo;
-    std::unordered_map<SP<MeshMaterial>, SP<VAO>> _faceVAOs;
-    SP<LineVAO> _edgeVAO;
-    SP<PointVAO> _vertexVAO;
+    SP<GL::VertexBuffer> _vbo;
+    std::unordered_map<SP<MeshMaterial>, SP<GL::VAO>> _faceVAOs;
+    SP<GL::LineVAO> _edgeVAO;
+    SP<GL::PointVAO> _vertexVAO;
 };
 
 }

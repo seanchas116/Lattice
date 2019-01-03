@@ -5,11 +5,12 @@
 #include <QOpenGLExtraFunctions>
 
 namespace Lattice {
-
-class VAO;
 class Camera;
-class Texture;
+}
 
+namespace Lattice::GL {
+class VAO;
+class Texture;
 }
 
 namespace Lattice::Viewport {
@@ -18,13 +19,13 @@ class DrawMaterial final : protected QOpenGLExtraFunctions {
 public:
     DrawMaterial();
 
-    void draw(const SP<VAO>& vao, const glm::dmat4& matrix, const Camera& camera, const SP<MeshMaterial>& material);
+    void draw(const SP<GL::VAO>& vao, const glm::dmat4& matrix, const Camera& camera, const SP<MeshMaterial>& material);
 
-    SP<Texture> getTexture(const QImage& image);
+    SP<GL::Texture> getTexture(const QImage& image);
 
 private:
-    Shader _shader;
-    std::unordered_map<qint64, SP<Texture>> _textures;
+    GL::Shader _shader;
+    std::unordered_map<qint64, SP<GL::Texture>> _textures;
 };
 
 } // namespace Lattice

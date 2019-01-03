@@ -2,10 +2,11 @@
 #include "../../gl/Shader.hpp"
 
 namespace Lattice {
-
-class PointVAO;
 class Camera;
+}
 
+namespace Lattice::GL {
+class PointVAO;
 }
 
 namespace Lattice::Viewport {
@@ -13,11 +14,11 @@ namespace Lattice::Viewport {
 class DrawCircle final {
 public:
     DrawCircle();
-    void draw(const SP<PointVAO>& vao, const glm::dmat4 &matrix, const Camera& camera,
+    void draw(const SP<GL::PointVAO>& vao, const glm::dmat4 &matrix, const Camera& camera,
               double width, glm::dvec3 color, double zOffset = -0.00002);
 
 private:
-    Shader _shader;
+    GL::Shader _shader;
 };
 
 } // namespace Lattice
