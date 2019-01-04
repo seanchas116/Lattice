@@ -1,6 +1,7 @@
 #include "Document.hpp"
 #include "MeshItem.hpp"
 #include "History.hpp"
+#include "../support/Debug.hpp"
 
 namespace Lattice::Document {
 
@@ -70,7 +71,8 @@ void Document::insertItemToCurrentPosition(const SP<Item> &item) {
 }
 
 void Document::deleteSelectedItems() {
-    for (auto& item : _selectedItems) {
+    auto items = _selectedItems;
+    for (auto& item : items) {
         auto parent = item->parentItem();
         if (parent) {
             parent->removeChildItem(item);

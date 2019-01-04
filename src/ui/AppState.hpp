@@ -25,6 +25,8 @@ public:
     bool isFaceVisible() const { return _isFaceVisible; }
     void setIsFaceVisible(bool isFaceVisible);
 
+    void deleteItems();
+
     void addPlane();
     void addCube();
     void addCircle();

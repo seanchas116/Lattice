@@ -53,6 +53,11 @@ void AppState::setIsFaceVisible(bool isFaceVisible) {
     }
 }
 
+void AppState::deleteItems() {
+    _document->history()->beginChange(tr("Delete Items"));
+    _document->deleteSelectedItems();
+}
+
 void AppState::addPlane() {
     _document->history()->beginChange(tr("Add Plane"));
     auto item = std::make_shared<Document::MeshItem>();
