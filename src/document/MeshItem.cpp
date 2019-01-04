@@ -13,6 +13,7 @@ MeshItem::MeshItem() : _mesh(std::make_shared<Mesh>()) {
 
 SP<Item> MeshItem::clone() const {
     auto cloned = std::make_shared<MeshItem>();
+    // FIXME: item name is not copied
     cloned->_mesh = _mesh->clone();
     return cloned;
 }
