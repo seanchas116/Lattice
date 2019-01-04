@@ -10,10 +10,10 @@ namespace Lattice::UI {
 
 class AppState;
 
-class ItemPropertyPane final : public QWidget {
+class ItemPropertyView final : public QWidget {
     Q_OBJECT
 public:
-    explicit ItemPropertyPane(const SP<AppState> &appState, QWidget *parent = nullptr);
+    explicit ItemPropertyView(const SP<AppState> &appState, QWidget *parent = nullptr);
 
 private:
     void onCurrentItemChanged();

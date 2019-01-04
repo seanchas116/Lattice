@@ -7,13 +7,13 @@ namespace Lattice::UI {
 
 class AppState;
 
-class MaterialListPane final : public QWidget {
+class ItemListView final : public QWidget {
     Q_OBJECT
 public:
-    explicit MaterialListPane(const SP<AppState>& appState, QWidget *parent = nullptr);
+    explicit ItemListView(const SP<AppState> &appState, QWidget *parent = nullptr);
 
 private:
     SP<AppState> _appState;
 };
 
-} // namespace Lattice
+} // namespace Shapecraft

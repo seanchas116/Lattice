@@ -1,4 +1,4 @@
-#include "ItemListPane.hpp"
+#include "ItemListView.hpp"
 #include "ItemModel.hpp"
 #include "ItemSelectionModel.hpp"
 #include "AppState.hpp"
@@ -10,7 +10,7 @@
 
 namespace Lattice::UI {
 
-ItemListPane::ItemListPane(const SP<AppState> &appState, QWidget *parent) :
+ItemListView::ItemListView(const SP<AppState> &appState, QWidget *parent) :
     QWidget(parent),
     _appState(appState)
 {

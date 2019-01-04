@@ -1,4 +1,4 @@
-#include "ItemPropertyPane.hpp"
+#include "ItemPropertyView.hpp"
 #include "AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/Item.hpp"
@@ -11,7 +11,7 @@
 
 namespace Lattice::UI {
 
-ItemPropertyPane::ItemPropertyPane(const SP<AppState> &appState, QWidget *parent) :
+ItemPropertyView::ItemPropertyView(const SP<AppState> &appState, QWidget *parent) :
     QWidget(parent), _appState(appState)
 {
     auto layout = new QVBoxLayout();
@@ -42,7 +42,7 @@ ItemPropertyPane::ItemPropertyPane(const SP<AppState> &appState, QWidget *parent
             spinBox->setMaximum(std::numeric_limits<double>::infinity());
             gridLayout->addWidget(spinBox, row, int(i + 1));
 
-            connect(spinBox, &QDoubleSpinBox::editingFinished, this, &ItemPropertyPane::setLocation);
+            connect(spinBox, &QDoubleSpinBox::editingFinished, this, &ItemPropertyView::setLocation);
         }
 
         return spinBoxes;
@@ -57,21 +57,21 @@ ItemPropertyPane::ItemPropertyPane(const SP<AppState> &appState, QWidget *parent
 
     setLayout(layout);
 
-    connect(appState->document().get(), &Document::Document::currentItemChanged, this, &ItemPropertyPane::onCurrentItemChanged);
+    connect(appState->document().get(), &Document::Document::currentItemChanged, this, &ItemPropertyView::onCurrentItemChanged);
     onCurrentItemChanged();
 }
 
-void ItemPropertyPane::onCurrentItemChanged() {
+void ItemPropertyView::onCurrentItemChanged() {
     disconnect(_itemConnection);
 
     auto currentItem = _appState->document()->currentItem();
     if (currentItem) {} {
-        _itemConnection = connect(currentItem.get(), &Document::Item::locationChanged, this, &ItemPropertyPane::onLocationChanged);
+        _itemConnection = connect(currentItem.get(), &Document::Item::locationChanged, this, &ItemPropertyView::onLocationChanged);
     }
     onLocationChanged();
 }
 
-void ItemPropertyPane::onLocationChanged() {
+void ItemPropertyView::onLocationChanged() {
     // TODO: support multiple items
     // TODO: spinboxes must be disbled when no item is selected
 
@@ -85,7 +85,7 @@ void ItemPropertyPane::onLocationChanged() {
     }
 }
 
-void ItemPropertyPane::setLocation() {
+void ItemPropertyView::setLocation() {
     auto item = _appState->document()->currentItem();
     if (!item) {
         return;
