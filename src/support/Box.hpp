@@ -14,7 +14,7 @@ public:
         // https://gamedev.stackexchange.com/a/18459
         using namespace glm;
 
-        tvec3<T> dirfrac = 1.0 / ray.direction;
+        tvec3<T> dirfrac = tvec3<T>(1) / ray.direction;
 
         T t1 = (minPosition.x - ray.origin.x)*dirfrac.x;
         T t2 = (maxPosition.x - ray.origin.x)*dirfrac.x;
