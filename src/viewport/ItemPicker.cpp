@@ -1,5 +1,6 @@
 #include "ItemPicker.hpp"
 #include "../document/Item.hpp"
+#include "../document/Mesh.hpp"
 #include "../document/MeshItem.hpp"
 
 namespace Lattice {
@@ -28,8 +29,19 @@ void ItemPicker::addItemRecursive(const SP<Document::Item> &item) {
 }
 
 std::tuple<bool, float> ItemPicker::intersectsRayMesh(const Ray<float> &ray, const SP<Document::Mesh> &mesh) {
-    Q_UNUSED(ray); Q_UNUSED(mesh);
-    // TODO
+    // TODO: Use Bounding Volume Hierarchy to do faster
+    for (auto& [_, f] : mesh->faces()) {
+        auto v0 = f->vertices()[0]->position();
+        for (uint32_t i = 2; i < uint32_t(f->vertices().size()); ++i) {
+            auto v1 = f->vertices()[i - 1]->position();
+            auto v2 = f->vertices()[i]->position();
+
+            auto [intersects, t] = ray.intersectsTriangle({v0, v1, v2});
+            if (intersects) {
+                return {true, t};
+            }
+        }
+    }
     return {false, 0};
 }
 
