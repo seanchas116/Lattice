@@ -55,12 +55,13 @@ void MeshRenderer::drawVertices(const SP<Operations> &operations, const Camera &
 
 bool MeshRenderer::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera) {
     Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera);
-    qDebug() << "press";
 
     auto mouseRay = camera.worldMouseRay(pos);
-    qDebug() << _boundingBox.intersects(mouseRay);
+    if (_boundingBox.intersects(mouseRay)) {
+        qDebug() << "clicked:" << _item->name().c_str();
+        return true;
+    }
 
-    // TODO
     return false;
 }
 
