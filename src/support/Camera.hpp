@@ -35,7 +35,7 @@ public:
     std::pair<glm::dvec3, bool> mapCameraToScreen(glm::dvec3 cameraPos) const;
     glm::dvec3 mapScreenToCamera(glm::dvec3 screenPosWithDepth) const;
 
-    Ray cameraMouseRay(glm::dvec2 screenPos) const;
+    Ray<double> cameraMouseRay(glm::dvec2 screenPos) const;
 
 private:
     void updateMatrix();
