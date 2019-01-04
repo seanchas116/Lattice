@@ -52,4 +52,22 @@ void MeshRenderer::drawVertices(const SP<Operations> &operations, const Camera &
     operations->drawCircle.draw(_vertexVAO, _item->location().matrix(), camera, 4.0, dvec3(0));
 }
 
+bool MeshRenderer::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera) {
+    Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera);
+    // TODO
+    return false;
+}
+
+bool MeshRenderer::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera) {
+    Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera);
+    // TODO
+    return false;
+}
+
+bool MeshRenderer::mouseRelease(QMouseEvent *event, dvec2 pos, const Camera &camera) {
+    Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera);
+    // TODO
+    return false;
+}
+
 }

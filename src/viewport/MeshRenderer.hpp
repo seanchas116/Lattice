@@ -5,6 +5,8 @@
 #include <glm/glm.hpp>
 #include <unordered_map>
 
+class QMouseEvent;
+
 namespace Lattice {
 class Camera;
 }
@@ -32,6 +34,10 @@ public:
     void drawFaces(const SP<Operations>& operations, const Camera& camera);
     void drawEdges(const SP<Operations> &operations, const Camera &camera);
     void drawVertices(const SP<Operations>& operations, const Camera& camera);
+
+    bool mousePress(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
+    bool mouseMove(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
+    bool mouseRelease(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
 
 private:
     void updateVAOs(const SP<Document::Mesh>& mesh);
