@@ -1,6 +1,7 @@
 #include "MeshRenderer.hpp"
 #include "MeshVAOGenerator.hpp"
 #include "Operations.hpp"
+#include "../document/Document.hpp"
 #include "../document/Mesh.hpp"
 #include "../document/MeshItem.hpp"
 #include "../support/Debug.hpp"
@@ -74,10 +75,12 @@ bool MeshRenderer::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camer
 
     auto mouseRay = camera.worldMouseRay(pos);
     if (_boundingBox.intersects(mouseRay)) {
-        qDebug() << "clicked:" << _item->name().c_str();
+        if (intersectsPolygon(mouseRay)) {
+            _item->document()->setSelectedItems({_item});
+            _item->document()->setCurrentItem(_item);
 
-        qDebug() << "mesh intersection" << intersectsPolygon(mouseRay);
-        return true;
+            return true;
+        }
     }
 
     return false;
