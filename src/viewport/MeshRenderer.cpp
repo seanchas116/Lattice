@@ -76,6 +76,8 @@ bool MeshRenderer::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camer
     auto mouseRay = camera.worldMouseRay(pos);
     if (_boundingBox.intersects(mouseRay)) {
         if (intersectsPolygon(mouseRay)) {
+            // TODO: find all intersecting items and sort by depth (ray t value)
+            // TODO: Shift to select to append
             _item->document()->setSelectedItems({_item});
             _item->document()->setCurrentItem(_item);
 
