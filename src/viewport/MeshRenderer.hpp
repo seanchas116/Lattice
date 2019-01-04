@@ -15,7 +15,6 @@ class MeshMaterial;
 }
 
 namespace Lattice::GL {
-class VertexBuffer;
 class VAO;
 class LineVAO;
 class PointVAO;
@@ -37,7 +36,6 @@ private:
     void update(const SP<Document::Mesh>& mesh);
 
     SP<Document::MeshItem> _item;
-    SP<GL::VertexBuffer> _vbo;
     std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> _faceVAOs;
     SP<GL::LineVAO> _edgeVAO;
     SP<GL::PointVAO> _vertexVAO;
