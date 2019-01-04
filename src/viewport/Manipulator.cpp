@@ -43,8 +43,8 @@ public:
         dmat4 targetToCamera = worldToCamera * glm::translate(targetPos);
 
         for (int axis = 0; axis < 3; ++axis) {
-            arrowLinesInManipulatorSpace[axis] = Ray(manipulatorToCamera[3].xyz, manipulatorToCamera[3].xyz + manipulatorToCamera[axis].xyz);
-            axisLinesInCameraSpace[axis] = Ray(targetToCamera[3].xyz, targetToCamera[3].xyz + targetToCamera[axis].xyz);
+            arrowRaysInManipulatorSpace[axis] = Ray(manipulatorToCamera[3].xyz, manipulatorToCamera[3].xyz + manipulatorToCamera[axis].xyz);
+            axisRaysInCameraSpace[axis] = Ray(targetToCamera[3].xyz, targetToCamera[3].xyz + targetToCamera[axis].xyz);
         }
     }
 
@@ -53,8 +53,8 @@ public:
     dmat4 manipulatorToWorld;
     dmat4 manipulatorToCamera;
     double scale;
-    std::array<Ray, 3> arrowLinesInManipulatorSpace;
-    std::array<Ray, 3> axisLinesInCameraSpace;
+    std::array<Ray, 3> arrowRaysInManipulatorSpace;
+    std::array<Ray, 3> axisRaysInCameraSpace;
 };
 
 }
@@ -114,8 +114,8 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
     Ray mouseRay = camera.cameraMouseRay(pos);
 
     for (int axis = 0; axis < 3; ++axis) {
-        RayRayDistance mouseToArrowDistance(mouseRay, metrics.arrowLinesInManipulatorSpace[axis]);
-        RayRayDistance mouseToAxisDistance(mouseRay, metrics.axisLinesInCameraSpace[axis]);
+        RayRayDistance mouseToArrowDistance(mouseRay, metrics.arrowRaysInManipulatorSpace[axis]);
+        RayRayDistance mouseToAxisDistance(mouseRay, metrics.axisRaysInCameraSpace[axis]);
 
         double distance = mouseToArrowDistance.distance / metrics.scale;
         double tArrow = mouseToArrowDistance.t1;
@@ -149,7 +149,7 @@ bool Manipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera)
     }
 
     Ray mouseRay = camera.cameraMouseRay(pos);
-    RayRayDistance mouseToAxisDistance(mouseRay, metrics.axisLinesInCameraSpace[_dragAxis]);
+    RayRayDistance mouseToAxisDistance(mouseRay, metrics.axisRaysInCameraSpace[_dragAxis]);
     double tAxis = mouseToAxisDistance.t1;
 
     dvec3 currentValue(0);
