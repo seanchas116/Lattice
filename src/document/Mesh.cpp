@@ -153,7 +153,6 @@ glm::vec3 MeshFace::normal() const {
 }
 
 Mesh::Mesh() {
-    _materials.push_back(std::make_shared<MeshMaterial>()); // default material
 }
 
 SP<MeshVertex> Mesh::addVertex(glm::vec3 position) {
