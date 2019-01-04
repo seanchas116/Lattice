@@ -2,9 +2,7 @@
 
 namespace Lattice {
 
-ItemPicker::ItemPicker(QObject *parent) : QObject(parent)
-{
-
+ItemPicker::ItemPicker() {
 }
 
 } // namespace Lattice
