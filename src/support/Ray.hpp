@@ -11,6 +11,9 @@ public:
     Ray() = default;
     Ray(glm::tvec3<T> origin, glm::tvec3<T> direction) : origin(origin), direction(direction) {}
 
+    template <typename U>
+    Ray(const Ray<U>& other) : origin(other.origin), direction(other.direction) {}
+
     glm::tvec3<T> origin {0};
     glm::tvec3<T> direction {0};
 };
