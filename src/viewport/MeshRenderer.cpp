@@ -38,6 +38,21 @@ void MeshRenderer::updateBoundingBox() {
     qDebug() << minPos << maxPos;
 }
 
+bool MeshRenderer::intersectsPolygon(const Ray<float> &ray) const {
+    for (auto& [_, f] : _item->mesh()->faces()) {
+        auto v0 = f->vertices()[0]->position();
+        for (uint32_t i = 2; i < uint32_t(f->vertices().size()); ++i) {
+            auto v1 = f->vertices()[i - 1]->position();
+            auto v2 = f->vertices()[i]->position();
+
+            if (ray.intersectsTriangle({v0, v1, v2})) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 void MeshRenderer::drawFaces(const SP<Operations> &operations, const Camera &camera) {
     for (auto& [material, vao] : _faceVAOs) {
         //operations->drawSolid.draw(vao, viewMatrix * _item->location().matrix(), projection, material->baseColor(), vec3(0));
@@ -59,6 +74,8 @@ bool MeshRenderer::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camer
     auto mouseRay = camera.worldMouseRay(pos);
     if (_boundingBox.intersects(mouseRay)) {
         qDebug() << "clicked:" << _item->name().c_str();
+
+        qDebug() << "mesh intersection" << intersectsPolygon(mouseRay);
         return true;
     }
 

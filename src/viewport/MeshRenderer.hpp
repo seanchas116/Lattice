@@ -42,6 +42,7 @@ public:
 private:
     void updateVAOs(const SP<Document::Mesh>& mesh);
     void updateBoundingBox();
+    bool intersectsPolygon(const Ray<float>& ray) const;
 
     SP<Document::MeshItem> _item;
     std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> _faceVAOs;
