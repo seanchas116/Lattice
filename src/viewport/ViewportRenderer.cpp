@@ -89,15 +89,36 @@ void ViewportRenderer::render() {
 }
 
 void ViewportRenderer::mousePress(QMouseEvent *event, dvec2 pos) {
-    _manipulator->mousePress(event, pos, _camera);
+    if (_manipulator->mousePress(event, pos, _camera)) {
+        return;
+    }
+    for (auto& [item, renderer] : _meshRenderers) {
+        if (renderer->mousePress(event, pos, _camera)) {
+            return;
+        }
+    }
 }
 
 void ViewportRenderer::mouseMove(QMouseEvent *event, dvec2 pos) {
-    _manipulator->mouseMove(event, pos, _camera);
+    if (_manipulator->mouseMove(event, pos, _camera)) {
+        return;
+    }
+    for (auto& [item, renderer] : _meshRenderers) {
+        if (renderer->mouseMove(event, pos, _camera)) {
+            return;
+        }
+    }
 }
 
 void ViewportRenderer::mouseRelease(QMouseEvent *event, dvec2 pos) {
-    _manipulator->mouseRelease(event, pos, _camera);
+    if (_manipulator->mouseRelease(event, pos, _camera)) {
+        return;
+    }
+    for (auto& [item, renderer] : _meshRenderers) {
+        if (renderer->mouseRelease(event, pos, _camera)) {
+            return;
+        }
+    }
 }
 
 } // namespace Lattice
