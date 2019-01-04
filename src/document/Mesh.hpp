@@ -152,7 +152,7 @@ private:
     std::unordered_set<MeshFace*> _faces;
 };
 
-class Mesh final {
+class Mesh final : public std::enable_shared_from_this<Mesh> {
 public:
     Mesh();
 
@@ -167,6 +167,7 @@ public:
 
     const auto& vertices() const { return _vertices; }
     const auto& edges() const { return _edges; }
+    const auto& uvEdges() const { return _uvEdges; }
     const auto& faces() const { return _faces; }
     const auto& materials() const { return _materials; }
 
@@ -184,6 +185,8 @@ public:
     void addSphere(glm::dvec3 center, double radius, int segmentCount, int ringCount, int axis, const SP<MeshMaterial>& material);
 
     void addCone(glm::dvec3 center, double radius, double height, int segmentCount, int axis, const SP<MeshMaterial>& material);
+
+    void merge(const SP<const Mesh> &other);
 
     SP<Mesh> clone() const;
 

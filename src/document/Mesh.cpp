@@ -352,8 +352,48 @@ void Mesh::addCone(dvec3 center, double radius, double height, int segmentCount,
     }
 }
 
+void Mesh::merge(const SP<const Mesh> &other) {
+    std::unordered_map<SP<MeshMaterial>, SP<MeshMaterial>> otherToNewMaterials;
+    std::unordered_map<SP<MeshVertex>, SP<MeshVertex>> otherToNewVertices;
+    std::unordered_map<SP<MeshUVPoint>, SP<MeshUVPoint>> otherToNewUVPoints;
+
+    for (auto& otherMaterial : other->materials()) {
+        auto m = addMaterial();
+        // TODO: copy material parameters
+        otherToNewMaterials[otherMaterial] = m;
+    }
+
+    for (auto& otherV : other->vertices()) {
+        auto v = addVertex(otherV->position());
+        otherToNewVertices[otherV] = v;
+        for (auto& otherUV : otherV->uvPoints()) {
+            auto uv = addUVPoint(v, otherUV->position());
+            otherToNewUVPoints[otherUV] = uv;
+        }
+    }
+
+    for (auto& [_, otherEdge] : other->edges()) {
+        Q_UNUSED(_)
+        addEdge({otherToNewVertices[otherEdge->vertices()[0]], otherToNewVertices[otherEdge->vertices()[1]]});
+    }
+    for (auto& [_, otherUVEdge] : other->uvEdges()) {
+        Q_UNUSED(_)
+        addUVEdge({otherToNewUVPoints[otherUVEdge->points()[0]], otherToNewUVPoints[otherUVEdge->points()[1]]});
+    }
+    for (auto& [_, otherFace] : other->faces()) {
+        Q_UNUSED(_)
+        std::vector<SP<MeshUVPoint>> uvPoints;
+        for (auto& otherUV : otherFace->uvPoints()) {
+            uvPoints.push_back(otherToNewUVPoints[otherUV]);
+        }
+        addFace(uvPoints, otherToNewMaterials[otherFace->material()]);
+    }
+}
+
 SP<Mesh> Mesh::clone() const {
-    throw std::runtime_error("not implemented");
+    auto newMesh = std::make_shared<Mesh>();
+    newMesh->merge(shared_from_this());
+    return newMesh;
 }
 
 std::vector<SP<MeshFace>> MeshMaterial::faces() const {
