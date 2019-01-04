@@ -4,6 +4,7 @@
 #include "../document/Mesh.hpp"
 #include "../document/MeshItem.hpp"
 #include "../support/Debug.hpp"
+#include "../support/Camera.hpp"
 
 using namespace glm;
 
@@ -54,6 +55,11 @@ void MeshRenderer::drawVertices(const SP<Operations> &operations, const Camera &
 
 bool MeshRenderer::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera) {
     Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera);
+    qDebug() << "press";
+
+    auto mouseRay = camera.worldMouseRay(pos);
+    qDebug() << _boundingBox.intersects(mouseRay);
+
     // TODO
     return false;
 }
