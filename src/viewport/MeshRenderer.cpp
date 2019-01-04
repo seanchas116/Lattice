@@ -3,6 +3,7 @@
 #include "Operations.hpp"
 #include "../document/Mesh.hpp"
 #include "../document/MeshItem.hpp"
+#include "../support/Debug.hpp"
 
 using namespace glm;
 
@@ -10,14 +11,30 @@ namespace Lattice::Viewport {
 
 MeshRenderer::MeshRenderer(const SP<Document::MeshItem> &item) : _item(item) {
     // TODO: update mesh when item is changed
-    update(item->mesh());
+    updateVAOs(item->mesh());
+    updateBoundingBox();
 }
 
-void MeshRenderer::update(const SP<Document::Mesh> &mesh) {
+void MeshRenderer::updateVAOs(const SP<Document::Mesh> &mesh) {
     MeshVAOGenerator generator(mesh);
     _vertexVAO = generator.generateVertexVAO();
     _edgeVAO = generator.generateEdgeVAO();
     _faceVAOs= generator.generateFaceVAOs();
+}
+
+void MeshRenderer::updateBoundingBox() {
+    auto& mesh = _item->mesh();
+    vec3 minPos(INFINITY);
+    vec3 maxPos(-INFINITY);
+    mat4 M = _item->location().matrix();
+    for (auto& v : mesh->vertices()) {
+        vec3 p = (M * vec4(v->position(), 1)).xyz;
+        minPos = min(p, minPos);
+        maxPos = max(p, maxPos);
+    }
+
+    _boundingBox = Box<float>(minPos, maxPos);
+    qDebug() << minPos << maxPos;
 }
 
 void MeshRenderer::drawFaces(const SP<Operations> &operations, const Camera &camera) {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../support/Pointer.hpp"
+#include "../support/Box.hpp"
 #include <glm/glm.hpp>
 #include <unordered_map>
 
@@ -33,12 +34,14 @@ public:
     void drawVertices(const SP<Operations>& operations, const Camera& camera);
 
 private:
-    void update(const SP<Document::Mesh>& mesh);
+    void updateVAOs(const SP<Document::Mesh>& mesh);
+    void updateBoundingBox();
 
     SP<Document::MeshItem> _item;
     std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> _faceVAOs;
     SP<GL::LineVAO> _edgeVAO;
     SP<GL::PointVAO> _vertexVAO;
+    Box<float> _boundingBox;
 };
 
 }
