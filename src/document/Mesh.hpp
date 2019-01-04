@@ -1,6 +1,7 @@
 #pragma once
 #include "../support/Hash.hpp"
 #include "../support/Pointer.hpp"
+#include "../support/Box.hpp"
 #include <QImage>
 #include <glm/glm.hpp>
 #include <vector>
@@ -189,6 +190,8 @@ public:
     void merge(const SP<const Mesh> &other);
 
     SP<Mesh> clone() const;
+
+    Box<float> boundingBox() const;
 
 private:
 

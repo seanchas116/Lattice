@@ -395,6 +395,18 @@ SP<Mesh> Mesh::clone() const {
     return newMesh;
 }
 
+Box<float> Mesh::boundingBox() const {
+    vec3 minPos(INFINITY);
+    vec3 maxPos(-INFINITY);
+    for (auto& v : _vertices) {
+        vec3 p = v->position();
+        minPos = min(p, minPos);
+        maxPos = max(p, maxPos);
+    }
+
+    return {minPos, maxPos};
+}
+
 std::vector<SP<MeshFace>> MeshMaterial::faces() const {
     std::vector<SP<MeshFace>> faces;
     faces.reserve(_faces.size());
