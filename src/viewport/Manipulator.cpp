@@ -43,8 +43,8 @@ public:
         dmat4 targetToCamera = worldToCamera * glm::translate(targetPos);
 
         for (int axis = 0; axis < 3; ++axis) {
-            arrowRaysInManipulatorSpace[axis] = Ray(manipulatorToCamera[3].xyz, manipulatorToCamera[3].xyz + manipulatorToCamera[axis].xyz);
-            axisRaysInCameraSpace[axis] = Ray(targetToCamera[3].xyz, targetToCamera[3].xyz + targetToCamera[axis].xyz);
+            arrowRaysInManipulatorSpace[axis] = Ray(manipulatorToCamera[3].xyz, manipulatorToCamera[axis].xyz);
+            axisRaysInCameraSpace[axis] = Ray(targetToCamera[3].xyz, targetToCamera[axis].xyz);
         }
     }
 

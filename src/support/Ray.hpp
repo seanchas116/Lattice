@@ -7,11 +7,11 @@ namespace Lattice {
 
 class Ray final {
 public:
-    Ray() : a(0), b(0) {}
-    Ray(glm::dvec3 a, glm::dvec3 b) : a(a), b(b) {}
+    Ray() = default;
+    Ray(glm::dvec3 origin, glm::dvec3 direction) : origin(origin), direction(direction) {}
 
-    glm::dvec3 a;
-    glm::dvec3 b;
+    glm::dvec3 origin {0};
+    glm::dvec3 direction {0};
 };
 
 class RayPointDistance final {
