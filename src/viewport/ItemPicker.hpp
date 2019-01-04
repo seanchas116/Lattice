@@ -2,6 +2,7 @@
 #include <QObject>
 #include "../support/Pointer.hpp"
 #include "../support/Ray.hpp"
+#include "../support/Box.hpp"
 
 namespace Lattice {
 namespace Document {
@@ -24,7 +25,12 @@ private:
     void addItemRecursive(const SP<Document::Item>& item);
     static std::tuple<bool, float> intersectsRayMesh(const Ray<float>& ray, const SP<Document::Mesh>& mesh);
 
-    std::vector<SP<Document::MeshItem>> _items;
+    struct Entry {
+        SP<Document::MeshItem> item;
+        Box<float> box;
+    };
+
+    std::vector<Entry> _entries;
 };
 
 }

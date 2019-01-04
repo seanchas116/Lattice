@@ -16,13 +16,16 @@ void ItemPicker::update(const SP<Document::Item> &rootItem) {
 
 SP<Document::Item> ItemPicker::pick(const Ray<float> &worldMouseRay) const {
     Q_UNUSED(worldMouseRay);
+    // TODO: transform worldMouseRay to model space
 
     std::map<float, SP<Document::Item>> intersectingItems;
-    for (auto& item : _items) {
-        // TODO: use bounding box
-        auto [intersects, t] = intersectsRayMesh(worldMouseRay, item->mesh());
+    for (auto& entry : _entries) {
+        if (!entry.box.intersects(worldMouseRay)) {
+            continue;
+        }
+        auto [intersects, t] = intersectsRayMesh(worldMouseRay, entry.item->mesh());
         if (intersects) {
-            intersectingItems[t] = item;
+            intersectingItems[t] = entry.item;
         }
     }
 
@@ -34,7 +37,7 @@ SP<Document::Item> ItemPicker::pick(const Ray<float> &worldMouseRay) const {
 
 void ItemPicker::addItemRecursive(const SP<Document::Item> &item) {
     if (auto meshItem = std::dynamic_pointer_cast<Document::MeshItem>(item); meshItem) {
-        _items.push_back(meshItem);
+        _entries.push_back({meshItem, meshItem->mesh()->boundingBox()});
     }
     for (auto& child : item->childItems()) {
         addItemRecursive(child);
