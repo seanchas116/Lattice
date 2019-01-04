@@ -4,11 +4,13 @@
 #include "Operations.hpp"
 #include "Manipulator.hpp"
 #include "ManipulatorController.hpp"
+#include "ItemPicker.hpp"
 #include "../resource/Resource.hpp"
 #include "../ui/AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/Item.hpp"
 #include "../document/MeshItem.hpp"
+#include "../support/Debug.hpp"
 
 using namespace glm;
 
@@ -28,6 +30,7 @@ ViewportRenderer::ViewportRenderer(const SP<UI::AppState> &appState) {
     _gridFloor = std::make_shared<GridFloor>();
     _manipulator = std::make_shared<Manipulator>();
     _manipulatorController = std::make_shared<ManipulatorController>(_manipulator, appState);
+    _itemPicker = std::make_shared<ItemPicker>();
 
     connect(appState.get(), &UI::AppState::isVertexVisibleChanged, this, &ViewportRenderer::updateNeeded);
     connect(appState.get(), &UI::AppState::isEdgeVisibleChanged, this, &ViewportRenderer::updateNeeded);
@@ -43,6 +46,8 @@ void ViewportRenderer::resize(ivec2 physicalSize, ivec2 logicalSize) {
 void ViewportRenderer::render() {
     glClearColor(0.8f, 0.8f, 0.8f, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    _itemPicker->update(_appState->document()->rootItem());
 
     std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> newMeshRenderers;
 
@@ -92,32 +97,20 @@ void ViewportRenderer::mousePress(QMouseEvent *event, dvec2 pos) {
     if (_manipulator->mousePress(event, pos, _camera)) {
         return;
     }
-    for (auto& [item, renderer] : _meshRenderers) {
-        if (renderer->mousePress(event, pos, _camera)) {
-            return;
-        }
-    }
+
+    auto item = _itemPicker->pick(_camera.worldMouseRay(pos));
+    qDebug() << item.get();
 }
 
 void ViewportRenderer::mouseMove(QMouseEvent *event, dvec2 pos) {
     if (_manipulator->mouseMove(event, pos, _camera)) {
         return;
     }
-    for (auto& [item, renderer] : _meshRenderers) {
-        if (renderer->mouseMove(event, pos, _camera)) {
-            return;
-        }
-    }
 }
 
 void ViewportRenderer::mouseRelease(QMouseEvent *event, dvec2 pos) {
     if (_manipulator->mouseRelease(event, pos, _camera)) {
         return;
-    }
-    for (auto& [item, renderer] : _meshRenderers) {
-        if (renderer->mouseRelease(event, pos, _camera)) {
-            return;
-        }
     }
 }
 

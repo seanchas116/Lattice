@@ -24,6 +24,7 @@ class MeshRenderer;
 class Operations;
 class Manipulator;
 class ManipulatorController;
+class ItemPicker;
 
 class ViewportRenderer final : public QObject, protected QOpenGLExtraFunctions {
     Q_OBJECT
@@ -51,6 +52,7 @@ private:
     SP<ManipulatorController> _manipulatorController;
     std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> _meshRenderers;
     SP<UI::AppState> _appState;
+    SP<ItemPicker> _itemPicker;
 };
 
 } // namespace Lattice
