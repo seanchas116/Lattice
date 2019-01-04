@@ -2,7 +2,7 @@
 #include <optional>
 #include <glm/glm.hpp>
 #include "Location.hpp"
-#include "Line.hpp"
+#include "Ray.hpp"
 
 namespace Lattice {
 
@@ -35,7 +35,7 @@ public:
     std::pair<glm::dvec3, bool> mapCameraToScreen(glm::dvec3 cameraPos) const;
     glm::dvec3 mapScreenToCamera(glm::dvec3 screenPosWithDepth) const;
 
-    Line cameraMouseRay(glm::dvec2 screenPos) const;
+    Ray cameraMouseRay(glm::dvec2 screenPos) const;
 
 private:
     void updateMatrix();

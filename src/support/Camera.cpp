@@ -62,10 +62,10 @@ dvec3 Camera::mapScreenToCamera(dvec3 screenPosWithDepth) const {
     return glm::unProject(screenPosWithDepth, dmat4(1), _cameraToScreenMatrix, dvec4(0, 0, _viewSize));
 }
 
-Line Camera::cameraMouseRay(dvec2 screenPos) const {
+Ray Camera::cameraMouseRay(dvec2 screenPos) const {
     dvec3 front = mapScreenToCamera(dvec3(screenPos, -1));
     dvec3 back = mapScreenToCamera(dvec3(screenPos, 1));
-    return Line(front, back);
+    return Ray(front, back);
 }
 
 void Camera::updateMatrix() {

@@ -1,10 +1,10 @@
-#include "Line.hpp"
+#include "Ray.hpp"
 
 using namespace glm;
 
 namespace Lattice {
 
-LinePointDistance::LinePointDistance(const Line &l, const dvec3 p) {
+RayPointDistance::RayPointDistance(const Ray &l, const dvec3 p) {
     // http://geomalgorithms.com/a02-_lines.html#Distance-to-Infinite-Line
     dvec3 w = p - l.a;
     dvec3 v = glm::normalize(l.b - l.a);
@@ -12,7 +12,7 @@ LinePointDistance::LinePointDistance(const Line &l, const dvec3 p) {
     t = dot(v, w);
 }
 
-LineLineDistance::LineLineDistance(const Line &l0, const Line &l1) {
+RayRayDistance::RayRayDistance(const Ray &l0, const Ray &l1) {
     // http://geomalgorithms.com/a07-_distance.html
     dvec3 u = l0.b - l0.a;
     dvec3 v = l1.b - l1.a;

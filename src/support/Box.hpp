@@ -3,14 +3,14 @@
 
 namespace Lattice {
 
-class Line;
+class Ray;
 
 class Box {
 public:
     Box() = default;
     Box(glm::dvec3 min, glm::dvec3 max) : min(min), max(max) {}
 
-    bool intersects(const Line& line) const;
+    bool intersects(const Ray& line) const;
 
     glm::dvec3 min {0};
     glm::dvec3 max {0};

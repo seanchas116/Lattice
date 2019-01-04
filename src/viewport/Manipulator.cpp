@@ -6,7 +6,7 @@
 #include "../gl/LineVAO.hpp"
 #include "../gl/VertexBuffer.hpp"
 #include "../support/Debug.hpp"
-#include "../support/Line.hpp"
+#include "../support/Ray.hpp"
 #include <array>
 #include <glm/gtx/transform.hpp>
 
@@ -43,8 +43,8 @@ public:
         dmat4 targetToCamera = worldToCamera * glm::translate(targetPos);
 
         for (int axis = 0; axis < 3; ++axis) {
-            arrowLinesInManipulatorSpace[axis] = Line(manipulatorToCamera[3].xyz, manipulatorToCamera[3].xyz + manipulatorToCamera[axis].xyz);
-            axisLinesInCameraSpace[axis] = Line(targetToCamera[3].xyz, targetToCamera[3].xyz + targetToCamera[axis].xyz);
+            arrowLinesInManipulatorSpace[axis] = Ray(manipulatorToCamera[3].xyz, manipulatorToCamera[3].xyz + manipulatorToCamera[axis].xyz);
+            axisLinesInCameraSpace[axis] = Ray(targetToCamera[3].xyz, targetToCamera[3].xyz + targetToCamera[axis].xyz);
         }
     }
 
@@ -53,8 +53,8 @@ public:
     dmat4 manipulatorToWorld;
     dmat4 manipulatorToCamera;
     double scale;
-    std::array<Line, 3> arrowLinesInManipulatorSpace;
-    std::array<Line, 3> axisLinesInCameraSpace;
+    std::array<Ray, 3> arrowLinesInManipulatorSpace;
+    std::array<Ray, 3> axisLinesInCameraSpace;
 };
 
 }
@@ -111,11 +111,11 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
         return false;
     }
 
-    Line mouseRay = camera.cameraMouseRay(pos);
+    Ray mouseRay = camera.cameraMouseRay(pos);
 
     for (int axis = 0; axis < 3; ++axis) {
-        LineLineDistance mouseToArrowDistance(mouseRay, metrics.arrowLinesInManipulatorSpace[axis]);
-        LineLineDistance mouseToAxisDistance(mouseRay, metrics.axisLinesInCameraSpace[axis]);
+        RayRayDistance mouseToArrowDistance(mouseRay, metrics.arrowLinesInManipulatorSpace[axis]);
+        RayRayDistance mouseToAxisDistance(mouseRay, metrics.axisLinesInCameraSpace[axis]);
 
         double distance = mouseToArrowDistance.distance / metrics.scale;
         double tArrow = mouseToArrowDistance.t1;
@@ -148,8 +148,8 @@ bool Manipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera)
         return false;
     }
 
-    Line mouseRay = camera.cameraMouseRay(pos);
-    LineLineDistance mouseToAxisDistance(mouseRay, metrics.axisLinesInCameraSpace[_dragAxis]);
+    Ray mouseRay = camera.cameraMouseRay(pos);
+    RayRayDistance mouseToAxisDistance(mouseRay, metrics.axisLinesInCameraSpace[_dragAxis]);
     double tAxis = mouseToAxisDistance.t1;
 
     dvec3 currentValue(0);
