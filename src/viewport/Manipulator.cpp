@@ -1,5 +1,7 @@
 #include "Manipulator.hpp"
 #include "Operations.hpp"
+#include "MeshVAOGenerator.hpp"
+#include "../document/Mesh.hpp"
 #include "../gl/VAO.hpp"
 #include "../gl/LineVAO.hpp"
 #include "../gl/VertexBuffer.hpp"
@@ -18,7 +20,6 @@ constexpr double bodyLength = 2.0;
 constexpr double bodyWidth = 2.0;
 constexpr double headLength = 0.4;
 constexpr double headWidth = 0.2;
-constexpr uint32_t headSegmentCount = 16;
 constexpr double hitRadius = 0.2;
 
 class ManipulatorMetrics final {
@@ -60,33 +61,10 @@ public:
 
 Manipulator::Manipulator() {
     {
-        _headVAO = std::make_shared<GL::VAO>();
-
-        std::vector<GL::VertexBuffer::Vertex> vertices;
-        std::vector<GL::VAO::Triangle> triangles;
-
-        double headRadius = headWidth * 0.5;
-
-        for (uint32_t i = 0; i < headSegmentCount; ++i) {
-            double angle = 2.0 * M_PI / headSegmentCount * i;
-            dvec3 pos(bodyLength, cos(angle) * headRadius, sin(angle) * headRadius);
-            vertices.push_back({pos, {}, {}});
-        }
-        vertices.push_back({vec3(bodyLength, 0, 0), {}, {}});
-        vertices.push_back({vec3(bodyLength + headLength, 0, 0), {}, {}});
-
-        for (uint32_t i = 0; i < headSegmentCount; ++i) {
-            auto index0 = i;
-            auto index1 = (i + 1) % headSegmentCount;
-            auto indexBottom = headSegmentCount;
-            auto indexTop = headSegmentCount + 1;
-
-            triangles.push_back({index0, index1, indexTop});
-            triangles.push_back({index1, index0, indexBottom});
-        }
-
-        _headVAO->vertexBuffer()->setVertices(vertices);
-        _headVAO->setTriangles(triangles);
+        auto headMesh = std::make_shared<Document::Mesh>();
+        auto material = headMesh->addMaterial();
+        headMesh->addCone(dvec3(bodyLength, 0, 0), headWidth * 0.5, headLength, 8, 0, material);
+        _headVAO = MeshVAOGenerator(headMesh).generateFaceVAOs().at(material);
     }
 
     {
