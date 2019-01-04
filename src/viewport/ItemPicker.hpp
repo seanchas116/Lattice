@@ -22,7 +22,7 @@ public:
 
 private:
     void addItemRecursive(const SP<Document::Item>& item);
-    std::tuple<bool, float> intersectsRayMesh(const Ray<float>& ray, const SP<Document::Mesh>& mesh);
+    static std::tuple<bool, float> intersectsRayMesh(const Ray<float>& ray, const SP<Document::Mesh>& mesh);
 
     std::vector<SP<Document::MeshItem>> _items;
 };

@@ -2,6 +2,7 @@
 #include "../document/Item.hpp"
 #include "../document/Mesh.hpp"
 #include "../document/MeshItem.hpp"
+#include <map>
 
 namespace Lattice {
 namespace Viewport {
@@ -15,8 +16,20 @@ void ItemPicker::update(const SP<Document::Item> &rootItem) {
 
 SP<Document::Item> ItemPicker::pick(const Ray<float> &worldMouseRay) const {
     Q_UNUSED(worldMouseRay);
-    // TODO
-    return {};
+
+    std::map<float, SP<Document::Item>> intersectingItems;
+    for (auto& item : _items) {
+        // TODO: use bounding box
+        auto [intersects, t] = intersectsRayMesh(worldMouseRay, item->mesh());
+        if (intersects) {
+            intersectingItems[t] = item;
+        }
+    }
+
+    if (intersectingItems.empty()) {
+        return {};
+    }
+    return intersectingItems.rbegin()->second; // nearset item
 }
 
 void ItemPicker::addItemRecursive(const SP<Document::Item> &item) {
