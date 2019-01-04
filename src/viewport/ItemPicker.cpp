@@ -15,9 +15,6 @@ void ItemPicker::update(const SP<Document::Item> &rootItem) {
 }
 
 SP<Document::Item> ItemPicker::pick(const Ray<float> &worldMouseRay) const {
-    Q_UNUSED(worldMouseRay);
-    // TODO: transform worldMouseRay to model space
-
     std::map<float, SP<Document::Item>> intersectingItems;
     for (auto& entry : _entries) {
         glm::mat4 inverseModelMatrix = glm::inverse(entry.item->location().matrix());
