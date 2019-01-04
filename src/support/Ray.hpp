@@ -15,7 +15,7 @@ public:
     template <typename U>
     Ray(const Ray<U>& other) : origin(other.origin), direction(other.direction) {}
 
-    bool intersectsTriangle(const std::array<glm::tvec3<T>, 3>& triangle) const {
+    std::tuple<bool, float> intersectsTriangle(const std::array<glm::tvec3<T>, 3>& triangle) const {
         // https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
         using namespace glm;
         const T EPSILON = 0.0000001;
@@ -27,22 +27,26 @@ public:
         h = cross(direction, edge2);
         a = dot(edge1, h);
         if (a > -EPSILON && a < EPSILON) {
-            return false;    // This ray is parallel to this triangle.
+            return {false, 0};    // This ray is parallel to this triangle.
         }
         f = 1/a;
         s = origin - vertex0;
         u = f * (dot(s, h));
         if (u < 0.0 || u > 1.0) {
-            return false;
+            return {false, 0};
         }
         q = cross(s, edge1);
         v = f * dot(direction, q);
         if (v < 0.0 || u + v > 1.0) {
-            return false;
+            return {false, 0};
         }
         // At this stage we can compute t to find out where the intersection point is on the line.
         T t = f * dot(edge2, q);
-        return t > EPSILON;
+        if (t > EPSILON) {
+            return {true, t};
+        } else {
+            return {false, 0};
+        }
     }
 
     glm::tvec3<T> origin {0};

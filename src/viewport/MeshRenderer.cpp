@@ -47,7 +47,9 @@ bool MeshRenderer::intersectsPolygon(const Ray<float> &ray) const {
             auto v1 = f->vertices()[i - 1]->position();
             auto v2 = f->vertices()[i]->position();
 
-            if (ray.intersectsTriangle({v0, v1, v2})) {
+            auto [intersects, t] = ray.intersectsTriangle({v0, v1, v2});
+            if (intersects) {
+                qDebug() << "t:" << t;
                 return true;
             }
         }
