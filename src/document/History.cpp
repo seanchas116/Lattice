@@ -8,16 +8,20 @@ namespace {
 
 class ChangeCommand : public QUndoCommand {
 public:
-    ChangeCommand(int id, const QString& text, SP<Change> change) : _id(id), _change(change) {
+    ChangeCommand(int id, const QString& text, const SP<Change>& change) : _id(id), _changes({change}) {
         setText(text);
     }
 
     void redo() override {
-        _change->redo();
+        for (auto& change : _changes) {
+            change->redo();
+        }
     }
 
     void undo() override {
-        _change->undo();
+        for (int i = _changes.size() - 1; i >= 0; --i) {
+            _changes[i]->undo();
+        }
     }
 
     int id() const override {
@@ -29,12 +33,19 @@ public:
         if (!otherChangeCommand) {
             return false;
         }
-        return _change->mergeWith(otherChangeCommand->_change);
+
+        for (auto& change : otherChangeCommand->_changes) {
+            if (_changes[_changes.size() - 1]->mergeWith(change)) {
+                continue;
+            }
+            _changes.push_back(change);
+        }
+        return true;
     }
 
 private:
     int _id;
-    SP<Change> _change;
+    std::vector<SP<Change>> _changes;
 };
 
 }
