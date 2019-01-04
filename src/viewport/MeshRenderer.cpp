@@ -39,6 +39,7 @@ void MeshRenderer::updateBoundingBox() {
 }
 
 bool MeshRenderer::intersectsPolygon(const Ray<float> &ray) const {
+    // TODO: Use Bounding Volume Hierarchy to do faster
     for (auto& [_, f] : _item->mesh()->faces()) {
         auto v0 = f->vertices()[0]->position();
         for (uint32_t i = 2; i < uint32_t(f->vertices().size()); ++i) {
