@@ -8,12 +8,12 @@ class Ray;
 class Box {
 public:
     Box() = default;
-    Box(glm::dvec3 min, glm::dvec3 max) : min(min), max(max) {}
+    Box(glm::dvec3 min, glm::dvec3 max) : minPosition(min), maxPosition(max) {}
 
-    bool intersects(const Ray& line) const;
+    bool intersects(const Ray& ray) const;
 
-    glm::dvec3 min {0};
-    glm::dvec3 max {0};
+    glm::dvec3 minPosition {0};
+    glm::dvec3 maxPosition {0};
 };
 
 } // namespace Lattice
