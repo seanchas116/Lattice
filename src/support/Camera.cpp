@@ -68,6 +68,12 @@ Ray<double> Camera::cameraMouseRay(dvec2 screenPos) const {
     return {front, back - front};
 }
 
+Ray<double> Camera::worldMouseRay(dvec2 screenPos) const {
+    dvec3 front = mapScreenToWorld(dvec3(screenPos, -1));
+    dvec3 back = mapScreenToWorld(dvec3(screenPos, 1));
+    return {front, back - front};
+}
+
 void Camera::updateMatrix() {
     _worldToCameraMatrix = inverse(_location.matrix());
     _cameraToScreenMatrix = glm::perspective(_fieldOfView, double(_viewSize.x) / double(_viewSize.y), _zNear, _zFar);

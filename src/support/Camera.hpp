@@ -36,6 +36,7 @@ public:
     glm::dvec3 mapScreenToCamera(glm::dvec3 screenPosWithDepth) const;
 
     Ray<double> cameraMouseRay(glm::dvec2 screenPos) const;
+    Ray<double> worldMouseRay(glm::dvec2 screenPos) const;
 
 private:
     void updateMatrix();
