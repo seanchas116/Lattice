@@ -20,10 +20,14 @@ SP<Document::Item> ItemPicker::pick(const Ray<float> &worldMouseRay) const {
 
     std::map<float, SP<Document::Item>> intersectingItems;
     for (auto& entry : _entries) {
-        if (!entry.box.intersects(worldMouseRay)) {
+        glm::mat4 inverseModelMatrix = glm::inverse(entry.item->location().matrix());
+        Ray<float> modelMouseRay((inverseModelMatrix * glm::vec4(worldMouseRay.origin, 1)).xyz,
+                                 (inverseModelMatrix * glm::vec4(worldMouseRay.direction, 0)).xyz);
+
+        if (!entry.box.intersects(modelMouseRay)) {
             continue;
         }
-        auto [intersects, t] = intersectsRayMesh(worldMouseRay, entry.item->mesh());
+        auto [intersects, t] = intersectsRayMesh(modelMouseRay, entry.item->mesh());
         if (intersects) {
             intersectingItems[t] = entry.item;
         }
