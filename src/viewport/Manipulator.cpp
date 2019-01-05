@@ -34,7 +34,7 @@ public:
         dvec3 screenPosFixedDepth(screenPos.xy, 0.5);
         dvec3 positionFixedDepth_worldSpace = camera.mapScreenToWorld(screenPosFixedDepth);
 
-        scale = 1.0 / double(camera.viewSize().y) * 10.0;
+        scale = 1.0 / double(camera.viewSize().y) * 20.0;
 
         dmat4 worldToCamera = camera.worldToCameraMatrix();
         manipulatorToWorld = glm::scale(glm::translate(glm::dmat4(1), positionFixedDepth_worldSpace), dvec3(scale));
