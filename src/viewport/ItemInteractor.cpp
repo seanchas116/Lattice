@@ -12,7 +12,7 @@ ItemInteractor::ItemInteractor(const SP<ItemPicker> &picker) : _picker(picker) {
 
 bool ItemInteractor::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
     Q_UNUSED(event);
-    auto item = _picker->pick(camera.worldMouseRay(pos));
+    auto [item, t] = _picker->pick(camera.worldMouseRay(pos));
     if (!item) {
         return true;
     }

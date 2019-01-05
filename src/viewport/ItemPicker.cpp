@@ -16,7 +16,7 @@ void ItemPicker::update(const SP<Document::Item> &rootItem) {
     addItemRecursive(rootItem);
 }
 
-SP<Document::Item> ItemPicker::pick(const Ray<float> &worldMouseRay) const {
+std::tuple<SP<Document::Item>, float> ItemPicker::pick(const Ray<float> &worldMouseRay) const {
     std::map<float, SP<Document::Item>> intersectingItems;
     for (auto& entry : _entries) {
         glm::mat4 inverseModelMatrix = glm::inverse(entry.item->location().matrix());
@@ -35,7 +35,8 @@ SP<Document::Item> ItemPicker::pick(const Ray<float> &worldMouseRay) const {
     if (intersectingItems.empty()) {
         return {};
     }
-    return intersectingItems.rbegin()->second; // nearset item
+    auto nearest = intersectingItems.begin();
+    return {nearest->second, nearest->first};
 }
 
 void ItemPicker::addItemRecursive(const SP<Document::Item> &item) {
