@@ -30,6 +30,7 @@ signals:
 private:
     SP<GL::VAO> _headVAO;
     SP<GL::LineVAO> _bodyVAO;
+    SP<GL::PointVAO> _centerVAO;
 
     glm::dvec3 _targetPosition {0};
 

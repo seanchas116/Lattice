@@ -4,6 +4,7 @@
 #include "../document/Mesh.hpp"
 #include "../gl/VAO.hpp"
 #include "../gl/LineVAO.hpp"
+#include "../gl/PointVAO.hpp"
 #include "../gl/VertexBuffer.hpp"
 #include "../support/Debug.hpp"
 #include "../support/Ray.hpp"
@@ -80,6 +81,12 @@ Manipulator::Manipulator() {
         _bodyVAO->vertexBuffer()->setVertices(bodyVertices);
         _bodyVAO->setLineStrips(bodyLineStrips);
     }
+
+    {
+        _centerVAO = std::make_shared<GL::PointVAO>();
+        GL::VertexBuffer::Vertex vertex{vec3(0), vec2(0), vec3(0)};
+        _centerVAO->vertexBuffer()->setVertices({vertex});
+    }
 }
 
 void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
@@ -101,6 +108,7 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
         operations->drawSolid.draw(_headVAO, metrics.manipulatorToWorld * transforms[i], camera, vec3(0), colors[i]);
         operations->drawLine.draw(_bodyVAO, metrics.manipulatorToWorld * transforms[i], camera, bodyWidth, colors[i]);
     }
+    operations->drawCircle.draw(_centerVAO, dmat4(1), camera, 8, vec3(1));
 }
 
 bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera) {
