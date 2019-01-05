@@ -1,6 +1,8 @@
 #include "ItemInteractor.hpp"
 #include "ItemPicker.hpp"
 #include "../document/Item.hpp"
+#include "../document/Document.hpp"
+#include "../document/History.hpp"
 #include "../support/Camera.hpp"
 #include "../support/Debug.hpp"
 #include <QtDebug>
@@ -29,6 +31,9 @@ bool ItemInteractor::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera
     _initialLocation = _draggedItem->location();
     _initialWorldPos = worldDragPos;
     _initialDragDepth = screenDragPos.z;
+
+    item->document()->history()->beginChange(tr("Move Item"));
+
     return true;
 }
 
