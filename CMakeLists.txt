@@ -23,14 +23,15 @@ add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
 add_definitions(-D_USE_MATH_DEFINES)
 
 find_package(Qt5Widgets REQUIRED)
-find_package(Boost REQUIRED COMPONENTS filesystem)
-include_directories(${Boost_INCLUDE_DIRS})
+#find_package(Boost REQUIRED COMPONENTS filesystem)
+#include_directories(${Boost_INCLUDE_DIRS})
 include_directories("vendor/glm")
 include_directories("vendor/json/include")
 include_directories("vendor/tinyobjloader")
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/_cmrc/include)
 
-set(LIBRARIES Qt5::Widgets Boost::system Boost::filesystem)
+#set(LIBRARIES Qt5::Widgets Boost::system Boost::filesystem)
+set(LIBRARIES Qt5::Widgets)
 
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.hpp")
 list(APPEND SOURCES "vendor/tinyobjloader/tiny_obj_loader.cc")
