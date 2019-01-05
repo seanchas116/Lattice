@@ -2,6 +2,7 @@
 #include "../document/Item.hpp"
 #include "../document/Mesh.hpp"
 #include "../document/MeshItem.hpp"
+#include "../support/ScopedTimer.hpp"
 #include <map>
 
 namespace Lattice {
@@ -11,6 +12,7 @@ ItemPicker::ItemPicker() {
 }
 
 void ItemPicker::update(const SP<Document::Item> &rootItem) {
+    _entries.clear();
     addItemRecursive(rootItem);
 }
 
@@ -46,6 +48,7 @@ void ItemPicker::addItemRecursive(const SP<Document::Item> &item) {
 }
 
 std::tuple<bool, float> ItemPicker::intersectsRayMesh(const Ray<float> &ray, const SP<Document::Mesh> &mesh) {
+    ScopedTimer timer("intersectsRayMesh");
     // TODO: Use Bounding Volume Hierarchy to do faster
     for (auto& [_, f] : mesh->faces()) {
         auto v0 = f->vertices()[0]->position();
