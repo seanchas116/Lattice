@@ -14,7 +14,7 @@ bool ItemInteractor::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera
     Q_UNUSED(event);
     auto [item, t] = _picker->pick(camera.worldMouseRay(pos));
     if (!item) {
-        return true;
+        return false;
     }
     _draggedItem = item;
     qDebug() << item->name().c_str();
