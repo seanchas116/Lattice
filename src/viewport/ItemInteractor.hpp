@@ -1,18 +1,29 @@
 #pragma once
 
+#include <glm/glm.hpp>
 #include <QObject>
+#include "../support/Pointer.hpp"
+
+class QMouseEvent;
 
 namespace Lattice {
+class Camera;
+
 namespace Viewport {
+
+class ItemPicker;
 
 class ItemInteractor : public QObject {
     Q_OBJECT
 public:
-    ItemInteractor();
+    ItemInteractor(const SP<ItemPicker>& picker);
 
-signals:
+    bool mousePress(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
+    bool mouseMove(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
+    bool mouseRelease(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
 
-public slots:
+private:
+    SP<ItemPicker> _picker;
 };
 
 } // namespace Viewport

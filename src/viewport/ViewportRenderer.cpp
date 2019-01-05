@@ -5,6 +5,7 @@
 #include "Manipulator.hpp"
 #include "ManipulatorController.hpp"
 #include "ItemPicker.hpp"
+#include "ItemInteractor.hpp"
 #include "../resource/Resource.hpp"
 #include "../ui/AppState.hpp"
 #include "../document/Document.hpp"
@@ -31,6 +32,7 @@ ViewportRenderer::ViewportRenderer(const SP<UI::AppState> &appState) {
     _manipulator = std::make_shared<Manipulator>();
     _manipulatorController = std::make_shared<ManipulatorController>(_manipulator, appState);
     _itemPicker = std::make_shared<ItemPicker>();
+    _itemInteractor = std::make_shared<ItemInteractor>(_itemPicker);
 
     connect(appState.get(), &UI::AppState::isVertexVisibleChanged, this, &ViewportRenderer::updateNeeded);
     connect(appState.get(), &UI::AppState::isEdgeVisibleChanged, this, &ViewportRenderer::updateNeeded);
@@ -97,19 +99,25 @@ void ViewportRenderer::mousePress(QMouseEvent *event, dvec2 pos) {
     if (_manipulator->mousePress(event, pos, _camera)) {
         return;
     }
-
-    auto item = _itemPicker->pick(_camera.worldMouseRay(pos));
-    qDebug() << item.get();
+    if (_itemInteractor->mousePress(event, pos, _camera)) {
+        return;
+    }
 }
 
 void ViewportRenderer::mouseMove(QMouseEvent *event, dvec2 pos) {
     if (_manipulator->mouseMove(event, pos, _camera)) {
         return;
     }
+    if (_itemInteractor->mouseMove(event, pos, _camera)) {
+        return;
+    }
 }
 
 void ViewportRenderer::mouseRelease(QMouseEvent *event, dvec2 pos) {
     if (_manipulator->mouseRelease(event, pos, _camera)) {
+        return;
+    }
+    if (_itemInteractor->mouseRelease(event, pos, _camera)) {
         return;
     }
 }
