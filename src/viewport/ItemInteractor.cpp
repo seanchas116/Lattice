@@ -25,8 +25,6 @@ bool ItemInteractor::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera
     if (!isInScreen) {
         return false;
     }
-    auto worldDragPos2 = camera.mapScreenToWorld(screenDragPos);
-    qDebug() << "initial pos" << worldDragPos << worldDragPos2;
 
     _initialLocation = _draggedItem->location();
     _initialWorldPos = worldDragPos;
@@ -41,7 +39,6 @@ bool ItemInteractor::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera 
     }
 
     auto newWorldPos = camera.mapScreenToWorld(glm::dvec3(pos, _initialDragDepth));
-    qDebug() << "drag pos" << newWorldPos;
     auto newLocation = _initialLocation;
     newLocation.position += newWorldPos - _initialWorldPos;
     _draggedItem->setLocation(newLocation);
