@@ -118,7 +118,7 @@ void AppState::import() {
 
     QFileInfo fileInfo(filePath);
 
-    auto items = Services::ObjLoader::load(filePath.toStdString());
+    auto items = Services::ObjLoader::load(filePath);
     _document->history()->beginChange(tr("Import"));
     for (auto& item: items) {
         _document->insertItemToCurrentPosition(item);
