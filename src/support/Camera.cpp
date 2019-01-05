@@ -59,7 +59,7 @@ std::pair<dvec3, bool> Camera::mapCameraToScreen(dvec3 cameraPos) const {
 }
 
 dvec3 Camera::mapScreenToCamera(dvec3 screenPosWithDepth) const {
-    return glm::unProject(screenPosWithDepth, dmat4(1), _cameraToScreenMatrix, dvec4(0, 0, _viewSize));
+    return glm::unProject(dvec3(screenPosWithDepth.xy, (screenPosWithDepth.z + 1.0) * 0.5), dmat4(1), _cameraToScreenMatrix, dvec4(0, 0, _viewSize));
 }
 
 Ray<double> Camera::cameraMouseRay(dvec2 screenPos) const {
