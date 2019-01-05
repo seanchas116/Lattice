@@ -17,7 +17,8 @@ namespace Lattice::Viewport {
 
 namespace {
 
-constexpr double bodyLength = 2.0;
+constexpr double bodyBegin = 0.2;
+constexpr double bodyEnd = 2.0;
 constexpr double bodyWidth = 2.0;
 constexpr double headLength = 0.4;
 constexpr double headWidth = 0.2;
@@ -64,7 +65,7 @@ Manipulator::Manipulator() {
     {
         auto headMesh = std::make_shared<Document::Mesh>();
         auto material = headMesh->addMaterial();
-        headMesh->addCone(dvec3(bodyLength, 0, 0), headWidth * 0.5, headLength, 8, 0, material);
+        headMesh->addCone(dvec3(bodyEnd, 0, 0), headWidth * 0.5, headLength, 8, 0, material);
         _headVAO = MeshVAOGenerator(headMesh).generateFaceVAOs().at(material);
     }
 
@@ -74,8 +75,8 @@ Manipulator::Manipulator() {
         std::vector<GL::VertexBuffer::Vertex> bodyVertices;
         std::vector<std::vector<uint32_t>> bodyLineStrips;
 
-        bodyVertices.push_back({vec3(0.1, 0, 0), {}, {}});
-        bodyVertices.push_back({vec3(bodyLength, 0, 0), {}, {}});
+        bodyVertices.push_back({vec3(bodyBegin, 0, 0), {}, {}});
+        bodyVertices.push_back({vec3(bodyEnd, 0, 0), {}, {}});
         bodyLineStrips = { {0, 1} };
 
         _bodyVAO->vertexBuffer()->setVertices(bodyVertices);
@@ -129,7 +130,7 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
         double tArrow = mouseToArrowDistance.t1;
         double tAxis = mouseToAxisDistance.t1;
 
-        if (0 <= tArrow && tArrow <= bodyLength + headLength && distance <= hitRadius) {
+        if (bodyBegin <= tArrow && tArrow <= bodyEnd + headLength && distance <= hitRadius) {
             _isDragging = true;
             _initialDragValue = dvec3(0);
             _initialDragValue[axis] = tAxis;
