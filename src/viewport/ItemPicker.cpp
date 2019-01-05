@@ -51,6 +51,7 @@ void ItemPicker::addItemRecursive(const SP<Document::Item> &item) {
 std::tuple<bool, float> ItemPicker::intersectsRayMesh(const Ray<float> &ray, const SP<Document::Mesh> &mesh) {
     ScopedTimer timer("intersectsRayMesh");
     // TODO: Use Bounding Volume Hierarchy to do faster
+    // TODO: sort intersectings
     for (auto& [_, f] : mesh->faces()) {
         auto v0 = f->vertices()[0]->position();
         for (uint32_t i = 2; i < uint32_t(f->vertices().size()); ++i) {
