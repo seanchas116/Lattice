@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <QObject>
 #include "../support/Pointer.hpp"
+#include "../support/Location.hpp"
 
 class QMouseEvent;
 
@@ -30,6 +31,9 @@ private:
     SP<ItemPicker> _picker;
 
     SP<Document::Item> _draggedItem;
+    Location _initialLocation;
+    glm::dvec3 _initialWorldPos;
+    double _initialDragDepth;
 };
 
 } // namespace Viewport
