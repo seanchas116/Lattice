@@ -9,6 +9,10 @@ class QMouseEvent;
 namespace Lattice {
 class Camera;
 
+namespace Document {
+class Item;
+}
+
 namespace Viewport {
 
 class ItemPicker;
@@ -24,6 +28,8 @@ public:
 
 private:
     SP<ItemPicker> _picker;
+
+    SP<Document::Item> _draggedItem;
 };
 
 } // namespace Viewport
