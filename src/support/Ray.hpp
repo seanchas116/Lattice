@@ -49,6 +49,10 @@ public:
         }
     }
 
+    glm::tvec3<T> at(T t) const {
+        return origin + direction * t;
+    }
+
     glm::tvec3<T> origin {0};
     glm::tvec3<T> direction {0};
 };
