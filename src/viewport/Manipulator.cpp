@@ -108,7 +108,7 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
         operations->drawSolid.draw(_headVAO, metrics.manipulatorToWorld * transforms[i], camera, vec3(0), colors[i]);
         operations->drawLine.draw(_bodyVAO, metrics.manipulatorToWorld * transforms[i], camera, bodyWidth, colors[i]);
     }
-    operations->drawCircle.draw(_centerVAO, dmat4(1), camera, 8, vec3(1));
+    operations->drawCircle.draw(_centerVAO, metrics.manipulatorToWorld, camera, 8, vec3(1));
 }
 
 bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera) {

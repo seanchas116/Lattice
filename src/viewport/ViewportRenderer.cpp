@@ -92,6 +92,8 @@ void ViewportRenderer::render() {
         }
     }
 
+    glClear(GL_DEPTH_BUFFER_BIT);
+
     _manipulator->draw(_operations, _camera);
 }
 
