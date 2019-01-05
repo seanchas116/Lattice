@@ -35,20 +35,13 @@ public:
     void drawEdges(const SP<Operations> &operations, const Camera &camera);
     void drawVertices(const SP<Operations>& operations, const Camera& camera);
 
-    bool mousePress(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
-    bool mouseMove(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
-    bool mouseRelease(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
-
 private:
     void updateVAOs(const SP<Document::Mesh>& mesh);
-    void updateBoundingBox();
-    bool intersectsPolygon(const Ray<float>& ray) const;
 
     SP<Document::MeshItem> _item;
     std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> _faceVAOs;
     SP<GL::LineVAO> _edgeVAO;
     SP<GL::PointVAO> _vertexVAO;
-    Box<float> _boundingBox;
 };
 
 }

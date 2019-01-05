@@ -14,7 +14,6 @@ namespace Lattice::Viewport {
 MeshRenderer::MeshRenderer(const SP<Document::MeshItem> &item) : _item(item) {
     // TODO: update mesh when item is changed
     updateVAOs(item->mesh());
-    updateBoundingBox();
 }
 
 void MeshRenderer::updateVAOs(const SP<Document::Mesh> &mesh) {
@@ -22,39 +21,6 @@ void MeshRenderer::updateVAOs(const SP<Document::Mesh> &mesh) {
     _vertexVAO = generator.generateVertexVAO();
     _edgeVAO = generator.generateEdgeVAO();
     _faceVAOs= generator.generateFaceVAOs();
-}
-
-void MeshRenderer::updateBoundingBox() {
-    auto& mesh = _item->mesh();
-    vec3 minPos(INFINITY);
-    vec3 maxPos(-INFINITY);
-    mat4 M = _item->location().matrix();
-    for (auto& v : mesh->vertices()) {
-        vec3 p = (M * vec4(v->position(), 1)).xyz;
-        minPos = min(p, minPos);
-        maxPos = max(p, maxPos);
-    }
-
-    _boundingBox = Box<float>(minPos, maxPos);
-    qDebug() << minPos << maxPos;
-}
-
-bool MeshRenderer::intersectsPolygon(const Ray<float> &ray) const {
-    // TODO: Use Bounding Volume Hierarchy to do faster
-    for (auto& [_, f] : _item->mesh()->faces()) {
-        auto v0 = f->vertices()[0]->position();
-        for (uint32_t i = 2; i < uint32_t(f->vertices().size()); ++i) {
-            auto v1 = f->vertices()[i - 1]->position();
-            auto v2 = f->vertices()[i]->position();
-
-            auto [intersects, t] = ray.intersectsTriangle({v0, v1, v2});
-            if (intersects) {
-                qDebug() << "t:" << t;
-                return true;
-            }
-        }
-    }
-    return false;
 }
 
 void MeshRenderer::drawFaces(const SP<Operations> &operations, const Camera &camera) {
@@ -70,36 +36,6 @@ void MeshRenderer::drawEdges(const SP<Operations> &operations, const Camera &cam
 
 void MeshRenderer::drawVertices(const SP<Operations> &operations, const Camera &camera) {
     operations->drawCircle.draw(_vertexVAO, _item->location().matrix(), camera, 4.0, dvec3(0));
-}
-
-bool MeshRenderer::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera) {
-    Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera);
-
-    auto mouseRay = camera.worldMouseRay(pos);
-    if (_boundingBox.intersects(mouseRay)) {
-        if (intersectsPolygon(mouseRay)) {
-            // TODO: find all intersecting items and sort by depth (ray t value)
-            // TODO: Shift to select to append
-            _item->document()->setSelectedItems({_item});
-            _item->document()->setCurrentItem(_item);
-
-            return true;
-        }
-    }
-
-    return false;
-}
-
-bool MeshRenderer::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera) {
-    Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera);
-    // TODO
-    return false;
-}
-
-bool MeshRenderer::mouseRelease(QMouseEvent *event, dvec2 pos, const Camera &camera) {
-    Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera);
-    // TODO
-    return false;
 }
 
 }
