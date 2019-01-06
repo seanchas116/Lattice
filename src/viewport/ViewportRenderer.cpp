@@ -22,8 +22,8 @@ ViewportRenderer::ViewportRenderer(const SP<UI::AppState> &appState) {
 
     initializeOpenGLFunctions();
 
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
+    //glEnable(GL_CULL_FACE);
+    //glCullFace(GL_BACK);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
