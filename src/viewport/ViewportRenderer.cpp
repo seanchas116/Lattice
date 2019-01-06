@@ -54,6 +54,7 @@ void ViewportRenderer::resize(ivec2 physicalSize, ivec2 logicalSize) {
 }
 
 void ViewportRenderer::render() {
+    glClearDepthf(1.f);
     glClearColor(0.8f, 0.8f, 0.8f, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

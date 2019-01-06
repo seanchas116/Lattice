@@ -23,6 +23,7 @@ constexpr double scaleHandleSize = 0.2;
 constexpr double translateHandleLength = 0.4;
 constexpr double translateHandleWidth = 0.2;
 constexpr double hitRadius = 0.2;
+constexpr double fixedDepth = 0.5;
 
 class ManipulatorCoordinates final {
 public:
@@ -33,7 +34,7 @@ public:
             return;
         }
 
-        dvec3 screenPosFixedDepth(screenPos.xy, 0.5);
+        dvec3 screenPosFixedDepth(screenPos.xy, fixedDepth);
         dvec3 positionFixedDepth_worldSpace = camera.mapScreenToWorld(screenPosFixedDepth);
 
         scale = 1.0 / double(camera.viewSize().y) * 20.0;
@@ -62,6 +63,8 @@ public:
 }
 
 Manipulator::Manipulator() {
+    initializeOpenGLFunctions();
+
     {
         auto mesh = std::make_shared<Document::Mesh>();
         auto material = mesh->addMaterial();
@@ -128,7 +131,11 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
             operations->drawSolid.draw(_scaleHandleVAO, coordinates.manipulatorToWorld * transforms[i] * translate, camera, vec3(0), colors[i]);
         }
         if (_isRotateHandleVisible) {
+            glClearDepthf(float((fixedDepth + 1.0) * 0.5));
+            glClear(GL_DEPTH_BUFFER_BIT);
             operations->drawLine.draw(_rotateHandleVAO, coordinates.manipulatorToWorld * transforms[i], camera, bodyWidth, colors[i]);
+            glClearDepthf(1);
+            glClear(GL_DEPTH_BUFFER_BIT);
         }
 
         operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * transforms[i], camera, bodyWidth, colors[i]);

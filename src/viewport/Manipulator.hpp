@@ -9,7 +9,7 @@ class QMouseEvent;
 
 namespace Lattice::Viewport {
 
-class Manipulator final : public QObject {
+class Manipulator final : public QObject, protected QOpenGLExtraFunctions {
     Q_OBJECT
 public:
     Manipulator();
