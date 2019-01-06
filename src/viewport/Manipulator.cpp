@@ -18,6 +18,8 @@ namespace {
 
 constexpr double bodyLength = 2.0;
 constexpr double bodyWidth = 2.0;
+constexpr double scaleHandleOffset = 1.6;
+constexpr double scaleHandleSize = 0.2;
 constexpr double headLength = 0.4;
 constexpr double headWidth = 0.2;
 constexpr double hitRadius = 0.2;
@@ -64,6 +66,10 @@ Manipulator::Manipulator() {
         auto headMesh = std::make_shared<Document::Mesh>();
         auto material = headMesh->addMaterial();
         headMesh->addCone(dvec3(bodyLength, 0, 0), headWidth * 0.5, headLength, 8, 0, material);
+
+        dvec3 scaleHandleCenter(scaleHandleOffset, 0, 0);
+        headMesh->addCube(scaleHandleCenter - dvec3(scaleHandleSize*0.5), scaleHandleCenter + dvec3(scaleHandleSize*0.5), material);
+
         _headVAO = MeshVAOGenerator(headMesh).generateFaceVAOs().at(material);
     }
 
