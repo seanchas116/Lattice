@@ -22,8 +22,8 @@ constexpr double bodyEnd = 2.0;
 constexpr double bodyWidth = 2.0;
 constexpr double scaleHandleOffset = 1.6;
 constexpr double scaleHandleSize = 0.2;
-constexpr double headLength = 0.4;
-constexpr double headWidth = 0.2;
+constexpr double translateHandleLength = 0.4;
+constexpr double translateHandleWidth = 0.2;
 constexpr double hitRadius = 0.2;
 
 class ManipulatorMetrics final {
@@ -67,7 +67,7 @@ Manipulator::Manipulator() {
     {
         auto mesh = std::make_shared<Document::Mesh>();
         auto material = mesh->addMaterial();
-        mesh->addCone(dvec3(bodyEnd, 0, 0), headWidth * 0.5, headLength, 8, 0, material);
+        mesh->addCone(dvec3(bodyEnd, 0, 0), translateHandleWidth * 0.5, translateHandleLength, 8, 0, material);
 
         _translateHandleVAO = MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
     }
@@ -147,7 +147,7 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
         double tArrow = mouseToArrowDistance.t1;
         double tAxis = mouseToAxisDistance.t1;
 
-        if (bodyBegin <= tArrow && tArrow <= bodyEnd + headLength && distance <= hitRadius) {
+        if (bodyBegin <= tArrow && tArrow <= bodyEnd + translateHandleLength && distance <= hitRadius) {
             _isDragging = true;
             _initialDragValue = dvec3(0);
             _initialDragValue[axis] = tAxis;
