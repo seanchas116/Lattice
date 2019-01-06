@@ -62,32 +62,23 @@ void MainWindow::setupToolBar() {
 
     // toggle view visibility
 
-    {
-        auto isVertexVisibleAction = new QAction(tr("Vertex"));
-        isVertexVisibleAction->setCheckable(true);
-        isVertexVisibleAction->setChecked(_appState->isVertexVisible());
-        connect(_appState.get(), &AppState::isVertexVisibleChanged, isVertexVisibleAction, &QAction::setChecked);
-        connect(isVertexVisibleAction, &QAction::toggled, _appState.get(), &AppState::setIsVertexVisible);
-        toolBar->addAction(isVertexVisibleAction);
-    }
+    auto isVertexVisibleAction = toolBar->addAction(tr("Vertex"));
+    isVertexVisibleAction->setCheckable(true);
+    isVertexVisibleAction->setChecked(_appState->isVertexVisible());
+    connect(_appState.get(), &AppState::isVertexVisibleChanged, isVertexVisibleAction, &QAction::setChecked);
+    connect(isVertexVisibleAction, &QAction::toggled, _appState.get(), &AppState::setIsVertexVisible);
 
-    {
-        auto isEdgeVisibleAction = new QAction(tr("Edge"));
-        isEdgeVisibleAction->setCheckable(true);
-        isEdgeVisibleAction->setChecked(_appState->isEdgeVisible());
-        connect(_appState.get(), &AppState::isEdgeVisibleChanged, isEdgeVisibleAction, &QAction::setChecked);
-        connect(isEdgeVisibleAction, &QAction::toggled, _appState.get(), &AppState::setIsEdgeVisible);
-        toolBar->addAction(isEdgeVisibleAction);
-    }
+    auto isEdgeVisibleAction = toolBar->addAction(tr("Edge"));
+    isEdgeVisibleAction->setCheckable(true);
+    isEdgeVisibleAction->setChecked(_appState->isEdgeVisible());
+    connect(_appState.get(), &AppState::isEdgeVisibleChanged, isEdgeVisibleAction, &QAction::setChecked);
+    connect(isEdgeVisibleAction, &QAction::toggled, _appState.get(), &AppState::setIsEdgeVisible);
 
-    {
-        auto isFaceVisibleAction = new QAction(tr("Face"));
-        isFaceVisibleAction->setCheckable(true);
-        isFaceVisibleAction->setChecked(_appState->isFaceVisible());
-        connect(_appState.get(), &AppState::isFaceVisibleChanged, isFaceVisibleAction, &QAction::setChecked);
-        connect(isFaceVisibleAction, &QAction::toggled, _appState.get(), &AppState::setIsFaceVisible);
-        toolBar->addAction(isFaceVisibleAction);
-    }
+    auto isFaceVisibleAction = toolBar->addAction(tr("Face"));
+    isFaceVisibleAction->setCheckable(true);
+    isFaceVisibleAction->setChecked(_appState->isFaceVisible());
+    connect(_appState.get(), &AppState::isFaceVisibleChanged, isFaceVisibleAction, &QAction::setChecked);
+    connect(isFaceVisibleAction, &QAction::toggled, _appState.get(), &AppState::setIsFaceVisible);
 }
 
 void MainWindow::setupMenu() {
