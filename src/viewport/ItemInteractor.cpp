@@ -6,6 +6,7 @@
 #include "../support/Camera.hpp"
 #include "../support/Debug.hpp"
 #include <QtDebug>
+#include <QMouseEvent>
 
 namespace Lattice {
 namespace Viewport {
@@ -14,7 +15,6 @@ ItemInteractor::ItemInteractor(const SP<ItemPicker> &picker) : _picker(picker) {
 }
 
 bool ItemInteractor::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
-    Q_UNUSED(event);
     auto worldMouseRay = camera.worldMouseRay(pos);
     auto [item, t] = _picker->pick(worldMouseRay);
     if (!item) {
@@ -33,11 +33,13 @@ bool ItemInteractor::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera
     _initialDragDepth = screenDragPos.z;
     _dragStarted = false;
 
+    item->document()->selectItem(item, event->modifiers() & Qt::ShiftModifier);
+
     return true;
 }
 
 bool ItemInteractor::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
-    Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera);
+    Q_UNUSED(event);
     if (!_draggedItem) {
         return false;
     }
