@@ -20,7 +20,17 @@ public:
     bool mouseMove(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
     bool mouseRelease(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
 
+    glm::dvec3 targetPosition() const { return _targetPosition; }
     void setTargetPosition(glm::dvec3 pos) { _targetPosition = pos; }
+
+    bool isTranslateHandleVisible() const { return _isTranslateHandleVisible; }
+    void setIsTranslateHandleVisible(bool isTranslateHandleVisible) { _isTranslateHandleVisible = isTranslateHandleVisible; }
+
+    bool isRotateHandleVisible() const { return _isRotateHandleVisible; }
+    void setIsRotateHandleVisible(bool isRotateHandleVisible) { _isRotateHandleVisible = isRotateHandleVisible; }
+
+    bool isScaleHandleVisible() const { return _isScaleHandleVisible; }
+    void setIsScaleHandleVisible(bool isScaleHandleVisible) { _isScaleHandleVisible = isScaleHandleVisible; }
 
 signals:
     void onDragStart();
@@ -33,6 +43,10 @@ private:
     SP<GL::PointVAO> _centerVAO;
 
     glm::dvec3 _targetPosition {0};
+
+    bool _isTranslateHandleVisible = true;
+    bool _isRotateHandleVisible = false;
+    bool _isScaleHandleVisible = false;
 
     bool _isDragging = false;
     int _dragAxis = 0;
