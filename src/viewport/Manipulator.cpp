@@ -20,7 +20,6 @@ namespace {
 constexpr double bodyBegin = 0.2;
 constexpr double bodyEnd = 2.0;
 constexpr double bodyWidth = 2.0;
-constexpr double scaleHandleOffset = 1.6;
 constexpr double scaleHandleSize = 0.2;
 constexpr double translateHandleLength = 0.4;
 constexpr double translateHandleWidth = 0.2;
@@ -67,7 +66,7 @@ Manipulator::Manipulator() {
     {
         auto mesh = std::make_shared<Document::Mesh>();
         auto material = mesh->addMaterial();
-        mesh->addCone(dvec3(bodyEnd, 0, 0), translateHandleWidth * 0.5, translateHandleLength, 8, 0, material);
+        mesh->addCone(dvec3(0), translateHandleWidth * 0.5, translateHandleLength, 8, 0, material);
 
         _translateHandleVAO = MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
     }
@@ -75,8 +74,7 @@ Manipulator::Manipulator() {
     {
         auto mesh = std::make_shared<Document::Mesh>();
         auto material = mesh->addMaterial();
-        dvec3 scaleHandleCenter(scaleHandleOffset, 0, 0);
-        mesh->addCube(scaleHandleCenter - dvec3(scaleHandleSize*0.5), scaleHandleCenter + dvec3(scaleHandleSize*0.5), material);
+        mesh->addCube(-dvec3(scaleHandleSize*0.5), +dvec3(scaleHandleSize*0.5), material);
 
         _scaleHandleVAO = MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
     }
@@ -119,10 +117,16 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
 
     for (size_t i = 0; i < 3; ++i) {
         if (_isTranslateHandleVisible) {
-            operations->drawSolid.draw(_translateHandleVAO, metrics.manipulatorToWorld * transforms[i], camera, vec3(0), colors[i]);
+            double offset = _isScaleHandleVisible ? 2.2 : 2.0;
+            dmat4 translate = glm::translate(dvec3(offset, 0, 0));
+
+            operations->drawSolid.draw(_translateHandleVAO, metrics.manipulatorToWorld * transforms[i] * translate, camera, vec3(0), colors[i]);
         }
         if (_isScaleHandleVisible) {
-            operations->drawSolid.draw(_scaleHandleVAO, metrics.manipulatorToWorld * transforms[i], camera, vec3(0), colors[i]);
+            double offset = _isTranslateHandleVisible ? 1.8: 2.0;
+            dmat4 translate = glm::translate(dvec3(offset, 0, 0));
+
+            operations->drawSolid.draw(_scaleHandleVAO, metrics.manipulatorToWorld * transforms[i] * translate, camera, vec3(0), colors[i]);
         }
         operations->drawLine.draw(_bodyVAO, metrics.manipulatorToWorld * transforms[i], camera, bodyWidth, colors[i]);
     }
