@@ -18,7 +18,6 @@ namespace Lattice::Viewport {
 namespace {
 
 constexpr double bodyBegin = 0.2;
-constexpr double bodyEnd = 2.0;
 constexpr double bodyWidth = 2.0;
 constexpr double scaleHandleSize = 0.2;
 constexpr double translateHandleLength = 0.4;
@@ -81,16 +80,8 @@ Manipulator::Manipulator() {
 
     {
         _bodyVAO = std::make_shared<GL::LineVAO>();
-
-        std::vector<GL::VertexBuffer::Vertex> bodyVertices;
-        std::vector<std::vector<uint32_t>> bodyLineStrips;
-
-        bodyVertices.push_back({vec3(bodyBegin, 0, 0), {}, {}});
-        bodyVertices.push_back({vec3(bodyEnd, 0, 0), {}, {}});
-        bodyLineStrips = { {0, 1} };
-
-        _bodyVAO->vertexBuffer()->setVertices(bodyVertices);
-        _bodyVAO->setLineStrips(bodyLineStrips);
+        _bodyVAO->vertexBuffer()->setVertices({{}, {}});
+        _bodyVAO->setLineStrips({{0, 1}});
     }
 
     {
@@ -115,6 +106,9 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
             dvec3(1, 0, 0), dvec3(0, 1, 0), dvec3(0, 0, 1)
     };
 
+    double bodyEnd = _isScaleHandleVisible && _isTranslateHandleVisible ? 2.2 : 2.0;
+    _bodyVAO->vertexBuffer()->setVertices({{vec3(bodyBegin, 0, 0), {}, {}}, {vec3(bodyEnd, 0, 0), {}, {}}});
+
     for (size_t i = 0; i < 3; ++i) {
         if (_isTranslateHandleVisible) {
             double offset = _isScaleHandleVisible ? 2.2 : 2.0;
@@ -128,6 +122,7 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
 
             operations->drawSolid.draw(_scaleHandleVAO, metrics.manipulatorToWorld * transforms[i] * translate, camera, vec3(0), colors[i]);
         }
+
         operations->drawLine.draw(_bodyVAO, metrics.manipulatorToWorld * transforms[i], camera, bodyWidth, colors[i]);
     }
     operations->drawCircle.draw(_centerVAO, metrics.manipulatorToWorld, camera, 8, vec3(1));
@@ -142,6 +137,8 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
     }
 
     Ray mouseRay = camera.cameraMouseRay(pos);
+
+    double bodyEnd = _isScaleHandleVisible && _isTranslateHandleVisible ? 2.2 : 2.0; // TODO: refactor to somewhere
 
     for (int axis = 0; axis < 3; ++axis) {
         RayRayDistance mouseToArrowDistance(mouseRay, metrics.arrowRaysInManipulatorSpace[axis]);

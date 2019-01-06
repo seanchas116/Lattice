@@ -9,9 +9,9 @@ class VertexBuffer final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(VertexBuffer)
 public:
     struct Vertex {
-        glm::vec3 position;
-        glm::vec2 texCoord;
-        glm::vec3 normal;
+        glm::vec3 position {0};
+        glm::vec2 texCoord {0};
+        glm::vec3 normal {0};
     };
 
     VertexBuffer();
