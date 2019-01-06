@@ -43,7 +43,8 @@ private:
     double bodyEnd() const;
 
     SP<GL::VAO> _translateHandleVAO;
-    SP<GL::VAO>  _scaleHandleVAO;
+    SP<GL::VAO> _scaleHandleVAO;
+    SP<GL::LineVAO> _rotateHandleVAO;
     SP<GL::LineVAO> _bodyVAO;
     SP<GL::PointVAO> _centerVAO;
 

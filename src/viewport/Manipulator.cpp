@@ -79,6 +79,14 @@ Manipulator::Manipulator() {
     }
 
     {
+        auto mesh = std::make_shared<Document::Mesh>();
+        auto material = mesh->addMaterial();
+        mesh->addCircle(dvec3(0), 2.0, 64, Document::Mesh::CircleFill::None, 0, material);
+
+        _rotateHandleVAO = MeshVAOGenerator(mesh).generateEdgeVAO();
+    }
+
+    {
         _bodyVAO = std::make_shared<GL::LineVAO>();
         _bodyVAO->vertexBuffer()->setVertices({{}, {}});
         _bodyVAO->setLineStrips({{0, 1}});
@@ -118,6 +126,9 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
             dmat4 translate = glm::translate(dvec3(scaleHandleOffset(), 0, 0));
 
             operations->drawSolid.draw(_scaleHandleVAO, coordinates.manipulatorToWorld * transforms[i] * translate, camera, vec3(0), colors[i]);
+        }
+        if (_isRotateHandleVisible) {
+            operations->drawLine.draw(_rotateHandleVAO, coordinates.manipulatorToWorld * transforms[i], camera, bodyWidth, colors[i]);
         }
 
         operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * transforms[i], camera, bodyWidth, colors[i]);
