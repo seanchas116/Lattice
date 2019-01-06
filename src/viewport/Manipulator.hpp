@@ -38,6 +38,10 @@ signals:
     void onDragEnd();
 
 private:
+    double translateHandleOffset() const;
+    double scaleHandleOffset() const;
+    double bodyEnd() const;
+
     SP<GL::VAO> _translateHandleVAO;
     SP<GL::VAO>  _scaleHandleVAO;
     SP<GL::LineVAO> _bodyVAO;

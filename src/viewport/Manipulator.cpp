@@ -106,19 +106,16 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
             dvec3(1, 0, 0), dvec3(0, 1, 0), dvec3(0, 0, 1)
     };
 
-    double bodyEnd = _isScaleHandleVisible && _isTranslateHandleVisible ? 2.2 : 2.0;
-    _bodyVAO->vertexBuffer()->setVertices({{vec3(bodyBegin, 0, 0), {}, {}}, {vec3(bodyEnd, 0, 0), {}, {}}});
+    _bodyVAO->vertexBuffer()->setVertices({{vec3(bodyBegin, 0, 0), {}, {}}, {vec3(bodyEnd(), 0, 0), {}, {}}});
 
     for (size_t i = 0; i < 3; ++i) {
         if (_isTranslateHandleVisible) {
-            double offset = _isScaleHandleVisible ? 2.2 : 2.0;
-            dmat4 translate = glm::translate(dvec3(offset, 0, 0));
+            dmat4 translate = glm::translate(dvec3(translateHandleOffset(), 0, 0));
 
             operations->drawSolid.draw(_translateHandleVAO, metrics.manipulatorToWorld * transforms[i] * translate, camera, vec3(0), colors[i]);
         }
         if (_isScaleHandleVisible) {
-            double offset = _isTranslateHandleVisible ? 1.8: 2.0;
-            dmat4 translate = glm::translate(dvec3(offset, 0, 0));
+            dmat4 translate = glm::translate(dvec3(scaleHandleOffset(), 0, 0));
 
             operations->drawSolid.draw(_scaleHandleVAO, metrics.manipulatorToWorld * transforms[i] * translate, camera, vec3(0), colors[i]);
         }
@@ -138,8 +135,6 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
 
     Ray mouseRay = camera.cameraMouseRay(pos);
 
-    double bodyEnd = _isScaleHandleVisible && _isTranslateHandleVisible ? 2.2 : 2.0; // TODO: refactor to somewhere
-
     for (int axis = 0; axis < 3; ++axis) {
         RayRayDistance mouseToArrowDistance(mouseRay, metrics.arrowRaysInManipulatorSpace[axis]);
         RayRayDistance mouseToAxisDistance(mouseRay, metrics.axisRaysInCameraSpace[axis]);
@@ -148,7 +143,7 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
         double tArrow = mouseToArrowDistance.t1;
         double tAxis = mouseToAxisDistance.t1;
 
-        if (bodyBegin <= tArrow && tArrow <= bodyEnd + translateHandleLength && distance <= hitRadius) {
+        if (bodyBegin <= tArrow && tArrow <= bodyEnd() + translateHandleLength && distance <= hitRadius) {
             _isDragging = true;
             _initialDragValue = dvec3(0);
             _initialDragValue[axis] = tAxis;
@@ -196,6 +191,18 @@ bool Manipulator::mouseRelease(QMouseEvent *event, dvec2 pos, const Camera &came
     _isDragging = false;
     emit onDragEnd();
     return true;
+}
+
+double Manipulator::translateHandleOffset() const {
+    return _isScaleHandleVisible ? 2.2 : 2.0;
+}
+
+double Manipulator::scaleHandleOffset() const {
+    return _isTranslateHandleVisible ? 1.8: 2.0;
+}
+
+double Manipulator::bodyEnd() const {
+    return max(translateHandleOffset(), scaleHandleOffset());
 }
 
 } // namespace Lattice
