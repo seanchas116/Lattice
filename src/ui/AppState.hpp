@@ -2,7 +2,7 @@
 
 #include <QObject>
 #include "../support/Pointer.hpp"
-#include "Property.hpp"
+#include "../support/Property.hpp"
 
 namespace Lattice::Document {
 class Document;
