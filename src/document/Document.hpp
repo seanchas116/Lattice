@@ -26,6 +26,8 @@ public:
     auto& selectedItems() const { return _selectedItems; }
     void setSelectedItems(const std::unordered_set<SP<Item>>& items);
 
+    void selectItem(const SP<Item>& item, bool append);
+
     void insertItemToCurrentPosition(const SP<Item>& item);
     void deleteSelectedItems();
 

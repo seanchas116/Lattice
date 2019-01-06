@@ -65,6 +65,16 @@ void Document::setSelectedItems(const std::unordered_set<SP<Item>> &items) {
     }
 }
 
+void Document::selectItem(const SP<Item> &item, bool append) {
+    std::unordered_set<SP<Item>> items;
+    if (append) {
+        items = _selectedItems;
+    }
+    items.insert(item);
+    setSelectedItems(items);
+    setCurrentItem(item);
+}
+
 void Document::insertItemToCurrentPosition(const SP<Item> &item) {
     // TODO: better insertion positon
     _rootItem->appendChildItem(item);
