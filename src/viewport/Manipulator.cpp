@@ -24,9 +24,9 @@ constexpr double translateHandleLength = 0.4;
 constexpr double translateHandleWidth = 0.2;
 constexpr double hitRadius = 0.2;
 
-class ManipulatorMetrics final {
+class ManipulatorCoordinates final {
 public:
-    ManipulatorMetrics(const Camera& camera, glm::dvec3 targetPos) : targetPos(targetPos) {
+    ManipulatorCoordinates(const Camera& camera, glm::dvec3 targetPos) : targetPos(targetPos) {
         auto [screenPos, isInScreen] = camera.mapWorldToScreen(targetPos);
         this->isInScreen = isInScreen;
         if (!isInScreen) {
@@ -92,8 +92,8 @@ Manipulator::Manipulator() {
 }
 
 void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
-    ManipulatorMetrics metrics(camera, _targetPosition);
-    if (!metrics.isInScreen){
+    ManipulatorCoordinates coordinates(camera, _targetPosition);
+    if (!coordinates.isInScreen){
         return;
     }
 
@@ -112,34 +112,34 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
         if (_isTranslateHandleVisible) {
             dmat4 translate = glm::translate(dvec3(translateHandleOffset(), 0, 0));
 
-            operations->drawSolid.draw(_translateHandleVAO, metrics.manipulatorToWorld * transforms[i] * translate, camera, vec3(0), colors[i]);
+            operations->drawSolid.draw(_translateHandleVAO, coordinates.manipulatorToWorld * transforms[i] * translate, camera, vec3(0), colors[i]);
         }
         if (_isScaleHandleVisible) {
             dmat4 translate = glm::translate(dvec3(scaleHandleOffset(), 0, 0));
 
-            operations->drawSolid.draw(_scaleHandleVAO, metrics.manipulatorToWorld * transforms[i] * translate, camera, vec3(0), colors[i]);
+            operations->drawSolid.draw(_scaleHandleVAO, coordinates.manipulatorToWorld * transforms[i] * translate, camera, vec3(0), colors[i]);
         }
 
-        operations->drawLine.draw(_bodyVAO, metrics.manipulatorToWorld * transforms[i], camera, bodyWidth, colors[i]);
+        operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * transforms[i], camera, bodyWidth, colors[i]);
     }
-    operations->drawCircle.draw(_centerVAO, metrics.manipulatorToWorld, camera, 8, vec3(1));
+    operations->drawCircle.draw(_centerVAO, coordinates.manipulatorToWorld, camera, 8, vec3(1));
 }
 
 bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera) {
     Q_UNUSED(event)
 
-    ManipulatorMetrics metrics(camera, _targetPosition);
-    if (!metrics.isInScreen) {
+    ManipulatorCoordinates coordinates(camera, _targetPosition);
+    if (!coordinates.isInScreen) {
         return false;
     }
 
     Ray mouseRay = camera.cameraMouseRay(pos);
 
     for (int axis = 0; axis < 3; ++axis) {
-        RayRayDistance mouseToArrowDistance(mouseRay, metrics.arrowRaysInManipulatorSpace[axis]);
-        RayRayDistance mouseToAxisDistance(mouseRay, metrics.axisRaysInCameraSpace[axis]);
+        RayRayDistance mouseToArrowDistance(mouseRay, coordinates.arrowRaysInManipulatorSpace[axis]);
+        RayRayDistance mouseToAxisDistance(mouseRay, coordinates.axisRaysInCameraSpace[axis]);
 
-        double distance = mouseToArrowDistance.distance / metrics.scale;
+        double distance = mouseToArrowDistance.distance / coordinates.scale;
         double tArrow = mouseToArrowDistance.t1;
         double tAxis = mouseToAxisDistance.t1;
 
@@ -165,13 +165,13 @@ bool Manipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera)
         return false;
     }
 
-    ManipulatorMetrics metrics(camera, _initialTargetPosition);
-    if (!metrics.isInScreen) {
+    ManipulatorCoordinates coordinates(camera, _initialTargetPosition);
+    if (!coordinates.isInScreen) {
         return false;
     }
 
     Ray mouseRay = camera.cameraMouseRay(pos);
-    RayRayDistance mouseToAxisDistance(mouseRay, metrics.axisRaysInCameraSpace[_dragAxis]);
+    RayRayDistance mouseToAxisDistance(mouseRay, coordinates.axisRaysInCameraSpace[_dragAxis]);
     double tAxis = mouseToAxisDistance.t1;
 
     dvec3 currentValue(0);
