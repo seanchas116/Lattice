@@ -39,6 +39,7 @@ signals:
 
 private:
     SP<GL::VAO> _headVAO;
+    SP<GL::VAO>  _scaleHandleVAO;
     SP<GL::LineVAO> _bodyVAO;
     SP<GL::PointVAO> _centerVAO;
 

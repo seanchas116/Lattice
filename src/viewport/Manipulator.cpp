@@ -69,10 +69,16 @@ Manipulator::Manipulator() {
         auto material = headMesh->addMaterial();
         headMesh->addCone(dvec3(bodyEnd, 0, 0), headWidth * 0.5, headLength, 8, 0, material);
 
-        dvec3 scaleHandleCenter(scaleHandleOffset, 0, 0);
-        headMesh->addCube(scaleHandleCenter - dvec3(scaleHandleSize*0.5), scaleHandleCenter + dvec3(scaleHandleSize*0.5), material);
-
         _headVAO = MeshVAOGenerator(headMesh).generateFaceVAOs().at(material);
+    }
+
+    {
+        auto mesh = std::make_shared<Document::Mesh>();
+        auto material = mesh->addMaterial();
+        dvec3 scaleHandleCenter(scaleHandleOffset, 0, 0);
+        mesh->addCube(scaleHandleCenter - dvec3(scaleHandleSize*0.5), scaleHandleCenter + dvec3(scaleHandleSize*0.5), material);
+
+        _scaleHandleVAO = MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
     }
 
     {
@@ -112,7 +118,12 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
     };
 
     for (size_t i = 0; i < 3; ++i) {
-        operations->drawSolid.draw(_headVAO, metrics.manipulatorToWorld * transforms[i], camera, vec3(0), colors[i]);
+        if (_isTranslateHandleVisible) {
+            operations->drawSolid.draw(_headVAO, metrics.manipulatorToWorld * transforms[i], camera, vec3(0), colors[i]);
+        }
+        if (_isScaleHandleVisible) {
+            operations->drawSolid.draw(_scaleHandleVAO, metrics.manipulatorToWorld * transforms[i], camera, vec3(0), colors[i]);
+        }
         operations->drawLine.draw(_bodyVAO, metrics.manipulatorToWorld * transforms[i], camera, bodyWidth, colors[i]);
     }
     operations->drawCircle.draw(_centerVAO, metrics.manipulatorToWorld, camera, 8, vec3(1));
