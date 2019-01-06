@@ -63,12 +63,21 @@ void MainWindow::setupToolBar() {
     // toggle manipulator handles
     auto isTranslateHandleVisible = toolBar->addAction(tr("Translate"));
     isTranslateHandleVisible->setCheckable(true);
+    isTranslateHandleVisible->setChecked(_appState->isTranslateHandleVisible());
+    connect(_appState.get(), &AppState::isTranslateHandleVisibleChanged, isTranslateHandleVisible, &QAction::setChecked);
+    connect(isTranslateHandleVisible, &QAction::toggled, _appState.get(), &AppState::setIsTranslateHandleVisible);
 
     auto isRotateHandleVisible = toolBar->addAction(tr("Rotate"));
     isRotateHandleVisible->setCheckable(true);
+    isRotateHandleVisible->setChecked(_appState->isRotateHandleVisible());
+    connect(_appState.get(), &AppState::isRotateHandleVisibleChanged, isRotateHandleVisible, &QAction::setChecked);
+    connect(isRotateHandleVisible, &QAction::toggled, _appState.get(), &AppState::setIsRotateHandleVisible);
 
     auto isScaleHandleVisibleAction = toolBar->addAction(tr("Scale"));
     isScaleHandleVisibleAction->setCheckable(true);
+    isScaleHandleVisibleAction->setChecked(_appState->isScaleHandleVisible());
+    connect(_appState.get(), &AppState::isScaleHandleVisibleChanged, isScaleHandleVisibleAction, &QAction::setChecked);
+    connect(isScaleHandleVisibleAction, &QAction::toggled, _appState.get(), &AppState::setIsScaleHandleVisible);
 
     toolBar->addSeparator();
 

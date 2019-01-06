@@ -12,6 +12,11 @@ namespace Lattice::UI {
 
 class AppState final : public QObject {
     Q_OBJECT
+
+    LATTICE_AUTO_PROPERTY(bool, isTranslateHandleVisible, setIsTranslateHandleVisible, true)
+    LATTICE_AUTO_PROPERTY(bool, isRotateHandleVisible, setIsRotateHandleVisible, false)
+    LATTICE_AUTO_PROPERTY(bool, isScaleHandleVisible, setIsScaleHandleVisible, false)
+
     LATTICE_AUTO_PROPERTY(bool, isVertexVisible, setIsVertexVisible, true)
     LATTICE_AUTO_PROPERTY(bool, isEdgeVisible, setIsEdgeVisible, true)
     LATTICE_AUTO_PROPERTY(bool, isFaceVisible, setIsFaceVisible, true)
