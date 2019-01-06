@@ -65,11 +65,11 @@ public:
 
 Manipulator::Manipulator() {
     {
-        auto headMesh = std::make_shared<Document::Mesh>();
-        auto material = headMesh->addMaterial();
-        headMesh->addCone(dvec3(bodyEnd, 0, 0), headWidth * 0.5, headLength, 8, 0, material);
+        auto mesh = std::make_shared<Document::Mesh>();
+        auto material = mesh->addMaterial();
+        mesh->addCone(dvec3(bodyEnd, 0, 0), headWidth * 0.5, headLength, 8, 0, material);
 
-        _headVAO = MeshVAOGenerator(headMesh).generateFaceVAOs().at(material);
+        _translateHandleVAO = MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
     }
 
     {
@@ -119,7 +119,7 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
 
     for (size_t i = 0; i < 3; ++i) {
         if (_isTranslateHandleVisible) {
-            operations->drawSolid.draw(_headVAO, metrics.manipulatorToWorld * transforms[i], camera, vec3(0), colors[i]);
+            operations->drawSolid.draw(_translateHandleVAO, metrics.manipulatorToWorld * transforms[i], camera, vec3(0), colors[i]);
         }
         if (_isScaleHandleVisible) {
             operations->drawSolid.draw(_scaleHandleVAO, metrics.manipulatorToWorld * transforms[i], camera, vec3(0), colors[i]);
