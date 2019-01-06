@@ -60,6 +60,18 @@ void MainWindow::setupToolBar() {
     spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     toolBar->addWidget(spacer);
 
+    // toggle manipulator handles
+    auto isTranslateHandleVisible = toolBar->addAction(tr("Translate"));
+    isTranslateHandleVisible->setCheckable(true);
+
+    auto isRotateHandleVisible = toolBar->addAction(tr("Rotate"));
+    isRotateHandleVisible->setCheckable(true);
+
+    auto isScaleHandleVisibleAction = toolBar->addAction(tr("Scale"));
+    isScaleHandleVisibleAction->setCheckable(true);
+
+    toolBar->addSeparator();
+
     // toggle view visibility
 
     auto isVertexVisibleAction = toolBar->addAction(tr("Vertex"));
