@@ -2,7 +2,8 @@
 #include "../document/Mesh.hpp"
 #include "../document/MeshItem.hpp"
 #include <tiny_obj_loader.h>
-#include <boost/filesystem.hpp>
+#include <QDir>
+#include <QFileInfo>
 #include <QtDebug>
 #include "../support/Debug.hpp"
 
@@ -10,16 +11,16 @@ using namespace glm;
 
 namespace Lattice::Services {
 
-std::vector<SP<Document::MeshItem>> ObjLoader::load(const std::string &filePathString) {
+std::vector<SP<Document::MeshItem>> ObjLoader::load(const QString &filePathString) {
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> objShapes;
     std::vector<tinyobj::material_t> objMaterials;
 
-    boost::filesystem::path filePath(filePathString);
-    auto parentPathString = filePath.parent_path().string() + "/";
+    QFileInfo fileInfo(filePathString);
+    auto parentPathString = fileInfo.dir().path() + "/";
 
     std::string err;
-    bool ret = tinyobj::LoadObj(&attrib, &objShapes, &objMaterials, &err, filePathString.c_str(), parentPathString.c_str());
+    bool ret = tinyobj::LoadObj(&attrib, &objShapes, &objMaterials, &err, filePathString.toUtf8().data(), parentPathString.toUtf8().data());
 
     if (!err.empty()) {
         qWarning() << err.c_str();
@@ -34,8 +35,8 @@ std::vector<SP<Document::MeshItem>> ObjLoader::load(const std::string &filePathS
         if (name.empty()) {
             return QImage();
         }
-        auto path = parentPathString + name;
-        return QImage(QString::fromStdString(path));
+        auto path = parentPathString + QString::fromStdString(name);
+        return QImage(path);
     };
 
     for (auto& objShape : objShapes) {

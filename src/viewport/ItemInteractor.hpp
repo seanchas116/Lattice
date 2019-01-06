@@ -31,6 +31,7 @@ private:
     SP<ItemPicker> _picker;
 
     SP<Document::Item> _draggedItem;
+    bool _dragStarted = false;
     Location _initialLocation;
     glm::dvec3 _initialWorldPos;
     double _initialDragDepth;
