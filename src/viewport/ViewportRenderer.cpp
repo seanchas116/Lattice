@@ -37,6 +37,14 @@ ViewportRenderer::ViewportRenderer(const SP<UI::AppState> &appState) {
     connect(appState.get(), &UI::AppState::isVertexVisibleChanged, this, &ViewportRenderer::updateNeeded);
     connect(appState.get(), &UI::AppState::isEdgeVisibleChanged, this, &ViewportRenderer::updateNeeded);
     connect(appState.get(), &UI::AppState::isFaceVisibleChanged, this, &ViewportRenderer::updateNeeded);
+
+    connect(appState.get(), &UI::AppState::isTranslateHandleVisibleChanged, this, &ViewportRenderer::updateNeeded);
+    connect(appState.get(), &UI::AppState::isRotateHandleVisibleChanged, this, &ViewportRenderer::updateNeeded);
+    connect(appState.get(), &UI::AppState::isScaleHandleVisibleChanged, this, &ViewportRenderer::updateNeeded);
+
+    connect(appState.get(), &UI::AppState::isTranslateHandleVisibleChanged, _manipulator.get(), &Manipulator::setIsTranslateHandleVisible);
+    connect(appState.get(), &UI::AppState::isRotateHandleVisibleChanged, _manipulator.get(), &Manipulator::setIsRotateHandleVisible);
+    connect(appState.get(), &UI::AppState::isScaleHandleVisibleChanged, _manipulator.get(), &Manipulator::setIsScaleHandleVisible);
 }
 
 void ViewportRenderer::resize(ivec2 physicalSize, ivec2 logicalSize) {
