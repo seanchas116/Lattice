@@ -45,6 +45,9 @@ ViewportRenderer::ViewportRenderer(const SP<UI::AppState> &appState) {
     connect(appState.get(), &UI::AppState::isTranslateHandleVisibleChanged, _manipulator.get(), &Manipulator::setIsTranslateHandleVisible);
     connect(appState.get(), &UI::AppState::isRotateHandleVisibleChanged, _manipulator.get(), &Manipulator::setIsRotateHandleVisible);
     connect(appState.get(), &UI::AppState::isScaleHandleVisibleChanged, _manipulator.get(), &Manipulator::setIsScaleHandleVisible);
+
+    connect(appState->document().get(), &Document::Document::itemInserted, this, &ViewportRenderer::updateNeeded);
+    connect(appState->document().get(), &Document::Document::currentItemChanged, this, &ViewportRenderer::updateNeeded);
 }
 
 void ViewportRenderer::resize(ivec2 physicalSize, ivec2 logicalSize) {
@@ -103,7 +106,9 @@ void ViewportRenderer::render() {
 
     glClear(GL_DEPTH_BUFFER_BIT);
 
-    _manipulator->draw(_operations, _camera);
+    if (_appState->document()->currentItem()) {
+        _manipulator->draw(_operations, _camera);
+    }
 }
 
 void ViewportRenderer::mousePress(QMouseEvent *event, dvec2 pos) {
