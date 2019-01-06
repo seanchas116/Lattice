@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include "../support/Pointer.hpp"
+#include "Property.hpp"
 
 namespace Lattice::Document {
 class Document;
@@ -11,19 +12,13 @@ namespace Lattice::UI {
 
 class AppState final : public QObject {
     Q_OBJECT
+    LATTICE_AUTO_PROPERTY(bool, isVertexVisible, setIsVertexVisible, true)
+    LATTICE_AUTO_PROPERTY(bool, isEdgeVisible, setIsEdgeVisible, true)
+    LATTICE_AUTO_PROPERTY(bool, isFaceVisible, setIsFaceVisible, true)
 public:
     AppState();
 
     const auto& document() const { return _document; }
-
-    bool isVertexVisible() const { return _isVertexVisible; }
-    void setIsVertexVisible(bool isVertexVisible);
-
-    bool isEdgeVisible() const { return _isEdgeVisible; }
-    void setIsEdgeVisible(bool isEdgeVisible);
-
-    bool isFaceVisible() const { return _isFaceVisible; }
-    void setIsFaceVisible(bool isFaceVisible);
 
     void deleteItems();
 
@@ -38,17 +33,8 @@ public:
     void addImagePlane();
     void import();
 
-signals:
-    void isVertexVisibleChanged(bool isVertexVisible);
-    void isEdgeVisibleChanged(bool isEdgeVisible);
-    void isFaceVisibleChanged(bool isFaceVisible);
-
 private:
     SP<Document::Document> _document;
-
-    bool _isVertexVisible = true;
-    bool _isEdgeVisible = true;
-    bool _isFaceVisible = true;
 };
 
 } // namespace Lattice
