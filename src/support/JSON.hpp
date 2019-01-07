@@ -2,6 +2,7 @@
 
 #include <nlohmann/json.hpp>
 #include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 class QString;
 
@@ -25,6 +26,14 @@ template<length_t L, typename T, qualifier Q> void to_json(nlohmann::json& json,
 
 template<length_t L, typename T, qualifier Q> void from_json(const nlohmann::json& json, vec<L, T, Q> &v) {
     Lattice::impl::from_json(json, v, std::make_index_sequence<L>{});
+}
+
+template<typename T> void to_json(nlohmann::json& json, tquat<T> v) {
+    json = {v.x, v.y, v.z, v.w};
+}
+
+template<typename T> void from_json(const nlohmann::json& json, tquat<T>& v) {
+    v = {json[0], json[1], json[2], json[3]};
 }
 
 }
