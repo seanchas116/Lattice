@@ -1,4 +1,5 @@
 #include "ItemPicker.hpp"
+#include "MeshPicker.hpp"
 #include "../document/Item.hpp"
 #include "../document/Mesh.hpp"
 #include "../document/MeshItem.hpp"
@@ -26,8 +27,9 @@ std::tuple<SP<Document::Item>, float> ItemPicker::pick(const Ray<float> &worldMo
         if (!entry.box.intersects(modelMouseRay)) {
             continue;
         }
-        auto [intersects, t] = intersectsRayMesh(modelMouseRay, entry.item->mesh());
-        if (intersects) {
+        MeshPicker picker(entry.item->mesh());
+        auto [face, t] = picker.picKFace(modelMouseRay);
+        if (face) {
             intersectingItems[t] = entry.item;
         }
     }
@@ -46,25 +48,6 @@ void ItemPicker::addItemRecursive(const SP<Document::Item> &item) {
     for (auto& child : item->childItems()) {
         addItemRecursive(child);
     }
-}
-
-std::tuple<bool, float> ItemPicker::intersectsRayMesh(const Ray<float> &ray, const SP<Document::Mesh> &mesh) {
-    ScopedTimer timer("intersectsRayMesh");
-    // TODO: Use Bounding Volume Hierarchy to do faster
-    // TODO: sort intersectings
-    for (auto& [_, f] : mesh->faces()) {
-        auto v0 = f->vertices()[0]->position();
-        for (uint32_t i = 2; i < uint32_t(f->vertices().size()); ++i) {
-            auto v1 = f->vertices()[i - 1]->position();
-            auto v2 = f->vertices()[i]->position();
-
-            auto [intersects, t] = ray.intersectsTriangle({v0, v1, v2});
-            if (intersects) {
-                return {true, t};
-            }
-        }
-    }
-    return {false, 0};
 }
 
 }
