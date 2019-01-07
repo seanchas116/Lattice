@@ -67,7 +67,7 @@ private:
 
     DragMode _dragMode = DragMode::None;
     int _dragAxis = 0;
-    glm::dvec3 _initialDragValue {0};
+    double _initialDragValue = 0;
     glm::dvec3 _initialTargetPosition {0};
 };
 

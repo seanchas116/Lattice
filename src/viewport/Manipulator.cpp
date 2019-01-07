@@ -165,8 +165,7 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
             if (_isScaleHandleVisible && abs(tArrow - scaleHandleOffset()) <= scaleHandleSize) {
                 qDebug() << "scale";
                 _dragMode = DragMode::Scale;
-                _initialDragValue = dvec3(0);
-                _initialDragValue[axis] = tAxis;
+                _initialDragValue = tAxis;
                 _dragAxis = axis;
                 emit onScaleBegin();
 
@@ -175,8 +174,7 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
             if (_isTranslateHandleVisible && bodyBegin <= tArrow && tArrow <= bodyEnd() + translateHandleLength) {
                 qDebug() << "translate";
                 _dragMode = DragMode::Translate;
-                _initialDragValue = dvec3(0);
-                _initialDragValue[axis] = tAxis;
+                _initialDragValue = tAxis;
                 _initialTargetPosition = _targetPosition;
                 _dragAxis = axis;
                 emit onTranslateBegin();
@@ -207,9 +205,9 @@ bool Manipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera)
 
     switch (_dragMode) {
     case DragMode::Translate:{
-        dvec3 currentValue(0);
-        currentValue[_dragAxis] = tAxis;
-        emit onTranslateMove(currentValue - _initialDragValue);
+        dvec3 offset(0);
+        offset[_dragAxis] = tAxis - _initialDragValue;
+        emit onTranslateMove(offset);
         return true;
     }
     case DragMode::Scale: {
