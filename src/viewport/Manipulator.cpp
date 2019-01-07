@@ -126,12 +126,10 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
     for (size_t i = 0; i < 3; ++i) {
         if (_isTranslateHandleVisible) {
             dmat4 translate = glm::translate(dvec3(translateHandleOffset(), 0, 0));
-
             operations->drawSolid.draw(_translateHandleVAO, coordinates.manipulatorToWorld * swizzleTransforms[i] * translate, camera, vec3(0), colors[i]);
         }
         if (_isScaleHandleVisible) {
             dmat4 translate = glm::translate(dvec3(scaleHandleOffset(), 0, 0));
-
             operations->drawSolid.draw(_scaleHandleVAO, coordinates.manipulatorToWorld * swizzleTransforms[i] * translate, camera, vec3(0), colors[i]);
         }
         if (_isRotateHandleVisible) {
@@ -142,7 +140,9 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
             glClear(GL_DEPTH_BUFFER_BIT);
         }
 
-        operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * swizzleTransforms[i], camera, bodyWidth, colors[i]);
+        if (_isTranslateHandleVisible || _isScaleHandleVisible) {
+            operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * swizzleTransforms[i], camera, bodyWidth, colors[i]);
+        }
     }
     operations->drawCircle.draw(_centerVAO, coordinates.manipulatorToWorld, camera, 8, vec3(1));
 }
