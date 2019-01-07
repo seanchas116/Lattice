@@ -9,6 +9,8 @@ class QMouseEvent;
 
 namespace Lattice::Viewport {
 
+class MeshPicker;
+
 class Manipulator final : public QObject, protected QOpenGLExtraFunctions {
     Q_OBJECT
 public:
@@ -53,6 +55,7 @@ private:
     SP<GL::VAO> _translateHandleVAO;
     SP<GL::VAO> _scaleHandleVAO;
     SP<GL::LineVAO> _rotateHandleVAO;
+    SP<MeshPicker> _rotateHandlePicker;
     SP<GL::LineVAO> _bodyVAO;
     SP<GL::PointVAO> _centerVAO;
 
