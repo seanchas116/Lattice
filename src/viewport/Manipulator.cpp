@@ -231,18 +231,21 @@ bool Manipulator::mouseRelease(QMouseEvent *event, dvec2 pos, const Camera &came
     Q_UNUSED(camera)
 
     switch (_dragMode) {
-    case DragMode::Translate:
-        emit translateFinished();
-        return true;
-    case DragMode::Scale:
-        emit scaleFinished();
-        return true;
-    case DragMode::Rotate:
-        emit rotateFinished();
-        return true;
     default:
         return false;
+    case DragMode::Translate:
+        emit translateFinished();
+        break;
+    case DragMode::Scale:
+        emit scaleFinished();
+        break;
+    case DragMode::Rotate:
+        emit rotateFinished();
+        break;
     }
+
+    _dragMode = DragMode::None;
+    return true;
 }
 
 double Manipulator::translateHandleOffset() const {
