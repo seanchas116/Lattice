@@ -192,7 +192,8 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
             dmat4 rotateHandleMatrixInverse = inverse(rotateHandleMatrix);
             auto rotateHandleRay = rotateHandleMatrixInverse * mouseRay;
             auto [edge, t] = _rotateHandlePicker->pickEdge(rotateHandleRay, 0.1);
-            if (edge) {
+            auto [hitPos_screenSpace, isInScreen] = camera.mapCameraToScreen((rotateHandleMatrix * dvec4(rotateHandleRay.at(t), 1)).xyz);
+            if (edge && hitPos_screenSpace.z <= fixedDepth) {
                 dvec3 intersection = rotateHandleRay.whereXIsZero();
                 double angle = atan2(intersection.z, intersection.y);
 
