@@ -53,6 +53,14 @@ public:
         return origin + direction * t;
     }
 
+    glm::tvec3<T> whereXIsZero() const { // TODO: find better name
+         glm::tvec3<T> p0 = origin;
+         glm::tvec3<T> p1 = direction + origin;
+
+         glm::tvec2<T> yz = (p1.x * p0.yz - p0.x * p1.yz) / (p1.x - p0.x);
+         return {0, yz};
+    }
+
     glm::tvec3<T> origin {0};
     glm::tvec3<T> direction {0};
 };
