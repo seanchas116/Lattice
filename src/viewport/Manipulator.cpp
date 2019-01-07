@@ -197,6 +197,7 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
 
                 _dragMode = DragMode::Rotate;
                 _initialDragValue = angle;
+                _initialTargetPosition = _targetPosition;
                 _dragAxis = axis;
                 emit rotateStarted();
             }
