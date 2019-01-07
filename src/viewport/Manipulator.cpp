@@ -222,19 +222,15 @@ bool Manipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera)
 
     Ray mouseRay = camera.cameraMouseRay(pos);
     RayRayDistance mouseToAxisDistance(mouseRay, coordinates.axisRaysInCameraSpace[_dragAxis]);
-    double tAxis = mouseToAxisDistance.t1;
+    double value = mouseToAxisDistance.t1;
 
     switch (_dragMode) {
     case DragMode::Translate:{
-        dvec3 offset(0);
-        offset[_dragAxis] = tAxis - _initialDragValue;
-        emit translateChanged(offset);
+        emit translateChanged(_dragAxis, value - _initialDragValue);
         return true;
     }
     case DragMode::Scale: {
-        dvec3 scale(1);
-        scale[_dragAxis] = tAxis / _initialDragValue;
-        emit scaleChanged(scale);
+        emit scaleChanged(_dragAxis, value / _initialDragValue);
         return true;
     }
     case DragMode::Rotate: {

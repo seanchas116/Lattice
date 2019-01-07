@@ -36,15 +36,15 @@ public:
 
 signals:
     void translateStarted();
-    void translateChanged(glm::dvec3 offset);
+    void translateChanged(int axis, double offset);
     void translateFinished();
 
     void scaleStarted();
-    void scaleChanged(glm::dvec3 offset);
+    void scaleChanged(int axis, double offset);
     void scaleFinished();
 
     void rotateStarted();
-    void rotateChanged(glm::dvec3 offset);
+    void rotateChanged(int axis, double offset);
     void rotateFinished();
 
 private:

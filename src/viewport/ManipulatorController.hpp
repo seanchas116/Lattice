@@ -28,11 +28,11 @@ signals:
 
 private:
     void onTranslateStarted();
-    void onTranslateChanged(glm::dvec3 offset);
+    void onTranslateChanged(int axis, double offset);
     void onTranslateFinished();
 
     void onScaleStarted();
-    void onScaleChanged(glm::dvec3 offset);
+    void onScaleChanged(int axis, double offset);
     void onScaleFinished();
 
     void connectToItem(const SP<Document::Item>& item);

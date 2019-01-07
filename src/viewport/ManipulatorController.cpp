@@ -35,9 +35,9 @@ void ManipulatorController::onTranslateStarted() {
     _initialLocation = _item->location();
 }
 
-void ManipulatorController::onTranslateChanged(glm::dvec3 offset) {
+void ManipulatorController::onTranslateChanged(int axis, double offset) {
     auto loc = _initialLocation;
-    loc.position += offset;
+    loc.position[axis] += offset;
     _item->setLocation(loc);
 }
 
@@ -49,9 +49,9 @@ void ManipulatorController::onScaleStarted() {
     _initialLocation = _item->location();
 }
 
-void ManipulatorController::onScaleChanged(glm::dvec3 offset) {
+void ManipulatorController::onScaleChanged(int axis, double offset) {
     auto loc = _initialLocation;
-    loc.scale *= offset;
+    loc.scale[axis] *= offset;
     _item->setLocation(loc);
 }
 
