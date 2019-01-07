@@ -1,8 +1,9 @@
 #pragma once
-#include <QObject>
-#include <glm/glm.hpp>
 #include "../support/Pointer.hpp"
 #include "../support/Location.hpp"
+#include <QObject>
+#include <glm/glm.hpp>
+#include <optional>
 
 namespace Lattice::UI {
 class AppState;
@@ -39,11 +40,11 @@ private:
     void onRotateChanged(int axis, double offset);
     void onRotateFinished();
 
-    void connectToItem(const SP<Document::Item>& item);
+    void connectToItem(const std::optional<SP<Document::Item> > &maybeItem);
 
     SP<Manipulator> _manipulator;
     SP<UI::AppState> _appState;
-    SP<Document::Item> _item;
+    std::optional<SP<Document::Item>> _item;
     Location _initialLocation;
     QMetaObject::Connection _connection;
 };

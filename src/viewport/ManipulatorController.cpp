@@ -31,59 +31,80 @@ ManipulatorController::ManipulatorController(const SP<Manipulator>& manipulator,
 }
 
 glm::dvec3 ManipulatorController::position() const {
-    return _item->location().position;
+    return _item ? (*_item)->location().position : glm::dvec3(0);
 }
 
 void ManipulatorController::onTranslateStarted() {
+    if (!_item) { return; }
+    auto item = *_item;
+
     _appState->document()->history()->beginChange(tr("Move Item"));
-    _initialLocation = _item->location();
+    _initialLocation = item->location();
 }
 
 void ManipulatorController::onTranslateChanged(int axis, double offset) {
+    if (!_item) { return; }
+    auto item = *_item;
+
     auto loc = _initialLocation;
     loc.position[axis] += offset;
-    _item->setLocation(loc);
+    item->setLocation(loc);
 }
 
 void ManipulatorController::onTranslateFinished() {
 }
 
 void ManipulatorController::onScaleStarted() {
+    if (!_item) { return; }
+    auto item = *_item;
+
     _appState->document()->history()->beginChange(tr("Scale Item"));
-    _initialLocation = _item->location();
+    _initialLocation = item->location();
 }
 
 void ManipulatorController::onScaleChanged(int axis, double offset) {
+    if (!_item) { return; }
+    auto item = *_item;
+
     auto loc = _initialLocation;
     loc.scale[axis] *= offset;
-    _item->setLocation(loc);
+    item->setLocation(loc);
 }
 
 void ManipulatorController::onScaleFinished() {
 }
 
 void ManipulatorController::onRotateStarted() {
+    if (!_item) { return; }
+    auto item = *_item;
+
     _appState->document()->history()->beginChange(tr("Rotate Item"));
-    _initialLocation = _item->location();
+    _initialLocation = item->location();
 }
 
 void ManipulatorController::onRotateChanged(int axis, double offset) {
+    if (!_item) { return; }
+    auto item = *_item;
+
     auto loc = _initialLocation;
 
     glm::dvec3 eulerAngles(0);
     eulerAngles[axis] = offset;
 
     loc.rotation = glm::dquat(eulerAngles) * loc.rotation;
-    _item->setLocation(loc);
+    item->setLocation(loc);
 }
 
 void ManipulatorController::onRotateFinished() {
 }
 
-void ManipulatorController::connectToItem(const SP<Document::Item> &item) {
+void ManipulatorController::connectToItem(const std::optional<SP<Document::Item>> &maybeItem) {
     disconnect(_connection);
-    _item = item;
-    auto itemPtr = item.get();
+    _item = maybeItem;
+    if (!maybeItem) {
+        return;
+    }
+    auto itemPtr = maybeItem->get();
     _connection = connect(itemPtr, &Document::Item::locationChanged, this, [this] {
         emit positionChanged(position());
     });
