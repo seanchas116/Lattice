@@ -2,6 +2,7 @@
 #include "AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/Item.hpp"
+#include "../support/Debug.hpp"
 #include <QDoubleSpinBox>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -77,12 +78,18 @@ void ItemPropertyView::onLocationChanged() {
 
     auto currentItem = _appState->document()->currentItem();
     auto location = currentItem ? currentItem->location() : Location();
+    if (_location == location) {
+        return;
+    }
+
+    glm::dvec3 eulerAngles = glm::eulerAngles(location.rotation);
 
     for (size_t i = 0; i < 3; ++i) {
         _positionSpinBoxes[i]->setValue(location.position[i]);
         _scaleSpinBoxes[i]->setValue(location.scale[i]);
-        _rotationSpinBoxes[i]->setValue(glm::degrees(location.rotation[i]));
+        _rotationSpinBoxes[i]->setValue(glm::degrees(eulerAngles[i]));
     }
+    _location = location;
 }
 
 void ItemPropertyView::setLocation() {
@@ -90,14 +97,18 @@ void ItemPropertyView::setLocation() {
     if (!item) {
         return;
     }
-    auto location = item->location();
+    Location location;
+
+    glm::dvec3 eulerAngles(0);
 
     for (size_t i = 0; i < 3; ++i) {
         location.position[i] = _positionSpinBoxes[i]->value();
         location.scale[i] = _scaleSpinBoxes[i]->value();
-        location.rotation[i] = glm::radians(glm::mod(_rotationSpinBoxes[i]->value(), 360.0));
+        eulerAngles[i] = glm::radians(glm::mod(_rotationSpinBoxes[i]->value(), 360.0));
     }
+    location.rotation = glm::normalize(glm::dquat(eulerAngles));
 
+    _location = location;
     item->setLocation(location);
 }
 
