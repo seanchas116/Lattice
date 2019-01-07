@@ -280,7 +280,10 @@ double Manipulator::scaleHandleOffset() const {
 }
 
 double Manipulator::bodyEnd() const {
-    return max(translateHandleOffset(), scaleHandleOffset());
+    if (_isScaleHandleVisible && _isTranslateHandleVisible) {
+        return 2.2;
+    }
+    return 2.0;
 }
 
 } // namespace Lattice
