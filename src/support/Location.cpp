@@ -9,7 +9,7 @@ using namespace glm;
 namespace Lattice {
 
 dmat4 Location::matrix() const {
-    return glm::translate(position) * glm::yawPitchRoll(rotation.y, rotation.x, rotation.z) * glm::scale(scale);
+    return glm::translate(position) * glm::mat4_cast(rotation) * glm::scale(scale);
 }
 
 glm::dvec3 Location::right() const {

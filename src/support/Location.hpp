@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include <nlohmann/json_fwd.hpp>
 
 namespace Lattice {
@@ -7,7 +8,7 @@ namespace Lattice {
 class Location final {
 public:
     glm::dvec3 scale {1};
-    glm::dvec3 rotation {0};
+    glm::dquat rotation {0, 0, 0, 1};
     glm::dvec3 position {0};
 
     glm::dmat4 matrix() const;
