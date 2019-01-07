@@ -81,6 +81,7 @@ void ItemPropertyView::onLocationChanged() {
     if (_location == location) {
         return;
     }
+    _location = location;
 
     glm::dvec3 eulerAngles = glm::eulerAngles(location.rotation);
 
@@ -89,7 +90,6 @@ void ItemPropertyView::onLocationChanged() {
         _scaleSpinBoxes[i]->setValue(location.scale[i]);
         _rotationSpinBoxes[i]->setValue(glm::degrees(eulerAngles[i]));
     }
-    _location = location;
 }
 
 void ItemPropertyView::setLocation() {
