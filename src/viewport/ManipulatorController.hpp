@@ -2,6 +2,7 @@
 #include <QObject>
 #include <glm/glm.hpp>
 #include "../support/Pointer.hpp"
+#include "../support/Location.hpp"
 
 namespace Lattice::UI {
 class AppState;
@@ -30,12 +31,16 @@ private:
     void onTranslateChanged(glm::dvec3 offset);
     void onTranslateFinished();
 
+    void onScaleStarted();
+    void onScaleChanged(glm::dvec3 offset);
+    void onScaleFinished();
+
     void connectToItem(const SP<Document::Item>& item);
 
     SP<Manipulator> _manipulator;
     SP<UI::AppState> _appState;
     SP<Document::Item> _item;
-    glm::dvec3 _initialPosition;
+    Location _initialLocation;
     QMetaObject::Connection _connection;
 };
 

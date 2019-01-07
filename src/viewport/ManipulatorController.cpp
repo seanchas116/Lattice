@@ -16,9 +16,14 @@ ManipulatorController::ManipulatorController(const SP<Manipulator>& manipulator,
 
     manipulator->setTargetPosition(position());
     connect(this, &ManipulatorController::positionChanged, manipulator.get(), &Manipulator::setTargetPosition);
+
     connect(manipulator.get(), &Manipulator::translateStarted, this, &ManipulatorController::onTranslateStarted);
     connect(manipulator.get(), &Manipulator::translateChanged, this, &ManipulatorController::onTranslateChanged);
     connect(manipulator.get(), &Manipulator::translateFinished, this, &ManipulatorController::onTranslateFinished);
+
+    connect(manipulator.get(), &Manipulator::scaleStarted, this, &ManipulatorController::onScaleStarted);
+    connect(manipulator.get(), &Manipulator::scaleChanged, this, &ManipulatorController::onScaleChanged);
+    connect(manipulator.get(), &Manipulator::scaleFinished, this, &ManipulatorController::onScaleFinished);
 }
 
 glm::dvec3 ManipulatorController::position() const {
@@ -27,16 +32,30 @@ glm::dvec3 ManipulatorController::position() const {
 
 void ManipulatorController::onTranslateStarted() {
     _appState->document()->history()->beginChange(tr("Move Item"));
-    _initialPosition = _item->location().position;
+    _initialLocation = _item->location();
 }
 
 void ManipulatorController::onTranslateChanged(glm::dvec3 offset) {
-    auto loc = _item->location();
-    loc.position = _initialPosition + offset;
+    auto loc = _initialLocation;
+    loc.position += offset;
     _item->setLocation(loc);
 }
 
 void ManipulatorController::onTranslateFinished() {
+}
+
+void ManipulatorController::onScaleStarted() {
+    _appState->document()->history()->beginChange(tr("Scale Item"));
+    _initialLocation = _item->location();
+}
+
+void ManipulatorController::onScaleChanged(glm::dvec3 offset) {
+    auto loc = _initialLocation;
+    loc.scale *= offset;
+    _item->setLocation(loc);
+}
+
+void ManipulatorController::onScaleFinished() {
 }
 
 void ManipulatorController::connectToItem(const SP<Document::Item> &item) {
