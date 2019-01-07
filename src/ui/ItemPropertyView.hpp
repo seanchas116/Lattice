@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../support/Pointer.hpp"
+#include "../support/Location.hpp"
 #include <QWidget>
 #include <array>
 
@@ -23,6 +24,8 @@ private:
 
     SP<AppState> _appState;
     QMetaObject::Connection _itemConnection;
+
+    Location _location;
 
     std::array<QDoubleSpinBox*, 3> _positionSpinBoxes;
     std::array<QDoubleSpinBox*, 3> _scaleSpinBoxes;
