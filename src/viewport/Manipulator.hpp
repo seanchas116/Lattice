@@ -54,7 +54,14 @@ private:
     bool _isRotateHandleVisible = false;
     bool _isScaleHandleVisible = false;
 
-    bool _isDragging = false;
+    enum class DragMode {
+        None,
+        Translate,
+        Scale,
+        Rotate,
+    };
+
+    DragMode _dragMode = DragMode::None;
     int _dragAxis = 0;
     glm::dvec3 _initialDragValue {0};
     glm::dvec3 _initialTargetPosition {0};
