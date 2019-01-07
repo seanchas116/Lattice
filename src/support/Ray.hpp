@@ -65,4 +65,12 @@ public:
     glm::tvec3<T> direction {0};
 };
 
+template <typename T>
+Ray<T> operator*(const glm::tmat4x4<T>& mat, const Ray<T>& ray) {
+     return {
+         (mat * glm::dvec4(ray.origin, 1)).xyz,
+         (mat * glm::dvec4(ray.direction, 0)).xyz,
+     };
+}
+
 } // namespace Lattice
