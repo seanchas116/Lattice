@@ -66,8 +66,8 @@ void ItemPropertyView::onCurrentItemChanged() {
     disconnect(_itemConnection);
 
     auto currentItem = _appState->document()->currentItem();
-    if (currentItem) {
-        _itemConnection = connect(currentItem->get(), &Document::Item::locationChanged, this, &ItemPropertyView::onLocationChanged);
+    if (currentItem) {} {
+        _itemConnection = connect(currentItem.get(), &Document::Item::locationChanged, this, &ItemPropertyView::onLocationChanged);
     }
     onLocationChanged();
 }
@@ -77,7 +77,7 @@ void ItemPropertyView::onLocationChanged() {
     // TODO: spinboxes must be disbled when no item is selected
 
     auto currentItem = _appState->document()->currentItem();
-    auto location = currentItem ? (*currentItem)->location() : Location();
+    auto location = currentItem ? currentItem->location() : Location();
     if (_location == location) {
         return;
     }
@@ -93,11 +93,10 @@ void ItemPropertyView::onLocationChanged() {
 }
 
 void ItemPropertyView::setLocation() {
-    auto maybeItem = _appState->document()->currentItem();
-    if (!maybeItem) {
+    auto item = _appState->document()->currentItem();
+    if (!item) {
         return;
     }
-    auto item = *maybeItem;
     Location location;
 
     glm::dvec3 eulerAngles(0);

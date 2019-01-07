@@ -2,7 +2,6 @@
 
 #include <QObject>
 #include <unordered_set>
-#include <optional>
 #include "../support/Pointer.hpp"
 
 namespace Lattice::Document {
@@ -20,9 +19,9 @@ public:
 
     const SP<Item>& rootItem() const { return _rootItem; }
 
-    const auto& currentItem() const { return _currentItem; }
-    std::optional<SP<MeshItem>> currentMeshItem() const;
-    void setCurrentItem(const std::optional<SP<Item>>& item);
+    const SP<Item>& currentItem() const { return _currentItem; }
+    SP<MeshItem> currentMeshItem() const;
+    void setCurrentItem(const SP<Item>& item);
 
     auto& selectedItems() const { return _selectedItems; }
     void setSelectedItems(const std::unordered_set<SP<Item>>& items);
@@ -35,8 +34,8 @@ public:
     const SP<History>& history() const { return _history; }
 
 signals:
-    void currentItemChanged(const std::optional<SP<Item>>& item);
-    void currentMeshItemChanged(const std::optional<SP<MeshItem>>& item);
+    void currentItemChanged(const SP<Item>& item);
+    void currentMeshItemChanged(const SP<Item>& item);
     void selectedItemsChanged(const std::unordered_set<SP<Item>>& items);
 
     void itemInserted(const SP<Item>& item);
@@ -47,7 +46,7 @@ private:
 
     SP<Item> _rootItem;
 
-    std::optional<SP<Item>> _currentItem;
+    SP<Item> _currentItem;
     std::unordered_set<SP<Item>> _selectedItems;
 
     SP<History> _history;

@@ -46,18 +46,11 @@ void Document::addInitialItems() {
     _selectedItems = {meshItem};
 }
 
-std::optional<SP<MeshItem> > Document::currentMeshItem() const {
-    if (!_currentItem) {
-        return {};
-    }
-    auto meshItem = std::dynamic_pointer_cast<MeshItem>(*_currentItem);
-    if (!meshItem) {
-        return {};
-    }
-    return meshItem;
+SP<MeshItem> Document::currentMeshItem() const {
+    return std::dynamic_pointer_cast<MeshItem>(_currentItem);
 }
 
-void Document::setCurrentItem(const std::optional<SP<Item> > &item) {
+void Document::setCurrentItem(const SP<Item> &item) {
     if (item != _currentItem) {
         _currentItem = item;
         emit currentItemChanged(item);
