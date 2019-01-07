@@ -35,6 +35,10 @@ private:
     void onScaleChanged(int axis, double offset);
     void onScaleFinished();
 
+    void onRotateStarted();
+    void onRotateChanged(int axis, double offset);
+    void onRotateFinished();
+
     void connectToItem(const SP<Document::Item>& item);
 
     SP<Manipulator> _manipulator;
