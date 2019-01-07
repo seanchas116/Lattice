@@ -8,7 +8,7 @@ namespace Lattice {
 class Location final {
 public:
     glm::dvec3 scale {1};
-    glm::dquat rotation {0, 0, 0, 1};
+    glm::dquat rotation {1, 0, 0, 0};
     glm::dvec3 position {0};
 
     glm::dmat4 matrix() const;
