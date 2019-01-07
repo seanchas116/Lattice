@@ -33,9 +33,9 @@ public:
     void setIsScaleHandleVisible(bool isScaleHandleVisible) { _isScaleHandleVisible = isScaleHandleVisible; }
 
 signals:
-    void onDragStart();
-    void onDrag(glm::dvec3 offset);
-    void onDragEnd();
+    void onTranslateBegin();
+    void onTranslateMove(glm::dvec3 offset);
+    void onTranslateEnd();
 
 private:
     double translateHandleOffset() const;

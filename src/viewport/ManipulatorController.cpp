@@ -16,9 +16,9 @@ ManipulatorController::ManipulatorController(const SP<Manipulator>& manipulator,
 
     manipulator->setTargetPosition(position());
     connect(this, &ManipulatorController::positionChanged, manipulator.get(), &Manipulator::setTargetPosition);
-    connect(manipulator.get(), &Manipulator::onDragStart, this, &ManipulatorController::onDragStart);
-    connect(manipulator.get(), &Manipulator::onDrag, this, &ManipulatorController::onDrag);
-    connect(manipulator.get(), &Manipulator::onDragEnd, this, &ManipulatorController::onDragEnd);
+    connect(manipulator.get(), &Manipulator::onTranslateBegin, this, &ManipulatorController::onDragStart);
+    connect(manipulator.get(), &Manipulator::onTranslateMove, this, &ManipulatorController::onDrag);
+    connect(manipulator.get(), &Manipulator::onTranslateEnd, this, &ManipulatorController::onDragEnd);
 }
 
 glm::dvec3 ManipulatorController::position() const {
