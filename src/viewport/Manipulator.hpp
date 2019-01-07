@@ -37,6 +37,10 @@ signals:
     void onTranslateMove(glm::dvec3 offset);
     void onTranslateEnd();
 
+    void onScaleBegin();
+    void onScaleMove(glm::dvec3 offset);
+    void onScaleEnd();
+
 private:
     double translateHandleOffset() const;
     double scaleHandleOffset() const;

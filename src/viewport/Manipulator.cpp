@@ -164,6 +164,12 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
         if (distance <= hitRadius) {
             if (_isScaleHandleVisible && abs(tArrow - scaleHandleOffset()) <= scaleHandleSize) {
                 qDebug() << "scale";
+                _dragMode = DragMode::Scale;
+                _initialDragValue = dvec3(0);
+                _initialDragValue[axis] = tAxis;
+                _dragAxis = axis;
+                emit onScaleBegin();
+
                 return true; // TODO
             }
             if (_isTranslateHandleVisible && bodyBegin <= tArrow && tArrow <= bodyEnd() + translateHandleLength) {
@@ -199,10 +205,23 @@ bool Manipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera)
     RayRayDistance mouseToAxisDistance(mouseRay, coordinates.axisRaysInCameraSpace[_dragAxis]);
     double tAxis = mouseToAxisDistance.t1;
 
-    dvec3 currentValue(0);
-    currentValue[_dragAxis] = tAxis;
-    emit onTranslateMove(currentValue - _initialDragValue);
-    return true;
+    switch (_dragMode) {
+    case DragMode::Translate:{
+        dvec3 currentValue(0);
+        currentValue[_dragAxis] = tAxis;
+        emit onTranslateMove(currentValue - _initialDragValue);
+        return true;
+    }
+    case DragMode::Scale: {
+        return true;
+    }
+    case DragMode::Rotate: {
+        // TODO
+        return true;
+    }
+    default:
+        return false;
+    }
 }
 
 bool Manipulator::mouseRelease(QMouseEvent *event, dvec2 pos, const Camera &camera) {
