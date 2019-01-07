@@ -8,6 +8,7 @@
 #include "../gl/VertexBuffer.hpp"
 #include "../support/Debug.hpp"
 #include "../support/Ray.hpp"
+#include "../support/Distance.hpp"
 #include <array>
 #include <glm/gtx/transform.hpp>
 
