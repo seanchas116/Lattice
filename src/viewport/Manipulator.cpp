@@ -27,7 +27,7 @@ constexpr double translateHandleWidth = 0.2;
 constexpr double hitRadius = 0.2;
 constexpr double fixedDepth = 0.5;
 
-const auto axisSwizzleTransforms = std::array<dmat4, 3> {
+const auto swizzleTransforms = std::array<dmat4, 3> {
         dmat4(1), // x
         dmat4(0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1), // y
         dmat4(0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1), // z
@@ -127,22 +127,22 @@ void Manipulator::draw(const SP<Operations> &operations, const Camera &camera) {
         if (_isTranslateHandleVisible) {
             dmat4 translate = glm::translate(dvec3(translateHandleOffset(), 0, 0));
 
-            operations->drawSolid.draw(_translateHandleVAO, coordinates.manipulatorToWorld * axisSwizzleTransforms[i] * translate, camera, vec3(0), colors[i]);
+            operations->drawSolid.draw(_translateHandleVAO, coordinates.manipulatorToWorld * swizzleTransforms[i] * translate, camera, vec3(0), colors[i]);
         }
         if (_isScaleHandleVisible) {
             dmat4 translate = glm::translate(dvec3(scaleHandleOffset(), 0, 0));
 
-            operations->drawSolid.draw(_scaleHandleVAO, coordinates.manipulatorToWorld * axisSwizzleTransforms[i] * translate, camera, vec3(0), colors[i]);
+            operations->drawSolid.draw(_scaleHandleVAO, coordinates.manipulatorToWorld * swizzleTransforms[i] * translate, camera, vec3(0), colors[i]);
         }
         if (_isRotateHandleVisible) {
             glClearDepthf(float((fixedDepth + 1.0) * 0.5));
             glClear(GL_DEPTH_BUFFER_BIT);
-            operations->drawLine.draw(_rotateHandleVAO, coordinates.manipulatorToWorld * axisSwizzleTransforms[i], camera, bodyWidth, colors[i]);
+            operations->drawLine.draw(_rotateHandleVAO, coordinates.manipulatorToWorld * swizzleTransforms[i], camera, bodyWidth, colors[i]);
             glClearDepthf(1);
             glClear(GL_DEPTH_BUFFER_BIT);
         }
 
-        operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * axisSwizzleTransforms[i], camera, bodyWidth, colors[i]);
+        operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * swizzleTransforms[i], camera, bodyWidth, colors[i]);
     }
     operations->drawCircle.draw(_centerVAO, coordinates.manipulatorToWorld, camera, 8, vec3(1));
 }
@@ -188,7 +188,7 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
         }
 
         if (_isRotateHandleVisible) {
-            dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * axisSwizzleTransforms[axis];
+            dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * swizzleTransforms[axis];
             dmat4 rotateHandleMatrixInverse = inverse(rotateHandleMatrix);
             auto rotateHandleRay = rotateHandleMatrixInverse * mouseRay;
             auto [edge, t] = _rotateHandlePicker->pickEdge(rotateHandleRay, 0.1);
@@ -222,24 +222,25 @@ bool Manipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera)
 
     Ray mouseRay = camera.cameraMouseRay(pos);
     RayRayDistance mouseToAxisDistance(mouseRay, coordinates.axisRaysInCameraSpace[_dragAxis]);
-    double value = mouseToAxisDistance.t1;
+    double tAxis = mouseToAxisDistance.t1;
 
     switch (_dragMode) {
     case DragMode::Translate:{
-        emit translateChanged(_dragAxis, value - _initialDragValue);
+        emit translateChanged(_dragAxis, tAxis - _initialDragValue);
         return true;
     }
     case DragMode::Scale: {
-        emit scaleChanged(_dragAxis, value / _initialDragValue);
+        emit scaleChanged(_dragAxis, tAxis / _initialDragValue);
         return true;
     }
     case DragMode::Rotate: {
-        dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * axisSwizzleTransforms[_dragAxis];
+        dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * swizzleTransforms[_dragAxis];
         dmat4 rotateHandleMatrixInverse = inverse(rotateHandleMatrix);
         auto rotateHandleRay = rotateHandleMatrixInverse * mouseRay;
         dvec3 intersection = rotateHandleRay.whereXIsZero();
         double angle = atan2(intersection.z, intersection.y);
 
+        emit rotateChanged(_dragAxis, angle - _initialDragValue);
         qDebug() << angle;
 
         return true;
