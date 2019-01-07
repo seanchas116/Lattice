@@ -190,12 +190,11 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
         if (_isRotateHandleVisible) {
             dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * axisSwizzleTransforms[axis];
             dmat4 rotateHandleMatrixInverse = inverse(rotateHandleMatrix);
-            Ray<double> rotateHandleRay((rotateHandleMatrixInverse * dvec4(mouseRay.origin, 1)).xyz,
-                                        (rotateHandleMatrixInverse * dvec4(mouseRay.direction, 0)).xyz);
+            auto rotateHandleRay = rotateHandleMatrixInverse * mouseRay;
             auto [edge, t] = _rotateHandlePicker->pickEdge(rotateHandleRay, 0.1);
             if (edge) {
-                dvec3 pos = rotateHandleRay.whereXIsZero();
-                double angle = atan2(pos.z, pos.y);
+                dvec3 intersection = rotateHandleRay.whereXIsZero();
+                double angle = atan2(intersection.z, intersection.y);
 
                 qDebug() << "rotate" << angle;
                 _dragMode = DragMode::Rotate;
@@ -239,7 +238,14 @@ bool Manipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera)
         return true;
     }
     case DragMode::Rotate: {
-        // TODO
+        dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * axisSwizzleTransforms[_dragAxis];
+        dmat4 rotateHandleMatrixInverse = inverse(rotateHandleMatrix);
+        auto rotateHandleRay = rotateHandleMatrixInverse * mouseRay;
+        dvec3 intersection = rotateHandleRay.whereXIsZero();
+        double angle = atan2(intersection.z, intersection.y);
+
+        qDebug() << angle;
+
         return true;
     }
     default:
