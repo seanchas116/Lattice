@@ -68,9 +68,12 @@ void ManipulatorController::onRotateStarted() {
 }
 
 void ManipulatorController::onRotateChanged(int axis, double offset) {
-    // TODO: Use Quaternion
     auto loc = _initialLocation;
-    loc.rotation[axis] += offset;
+
+    glm::dvec3 eulerAngles(0);
+    eulerAngles[axis] = offset;
+
+    loc.rotation = glm::dquat(eulerAngles) * loc.rotation;
     _item->setLocation(loc);
 }
 
