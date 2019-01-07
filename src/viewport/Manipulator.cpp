@@ -167,7 +167,6 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
 
         if (distance <= hitRadius) {
             if (_isScaleHandleVisible && abs(tArrow - scaleHandleOffset()) <= scaleHandleSize) {
-                qDebug() << "scale";
                 _dragMode = DragMode::Scale;
                 _initialDragValue = tAxis;
                 _dragAxis = axis;
@@ -176,7 +175,6 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
                 return true; // TODO
             }
             if (_isTranslateHandleVisible && bodyBegin <= tArrow && tArrow <= bodyEnd() + translateHandleLength) {
-                qDebug() << "translate";
                 _dragMode = DragMode::Translate;
                 _initialDragValue = tAxis;
                 _initialTargetPosition = _targetPosition;
@@ -197,7 +195,6 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
                 dvec3 intersection = rotateHandleRay.whereXIsZero();
                 double angle = atan2(intersection.z, intersection.y);
 
-                qDebug() << "rotate" << angle;
                 _dragMode = DragMode::Rotate;
                 _initialDragValue = angle;
                 _dragAxis = axis;
@@ -242,7 +239,6 @@ bool Manipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera)
         double angle = atan2(intersection.z, intersection.y);
 
         emit rotateChanged(_dragAxis, angle - _initialDragValue);
-        qDebug() << angle;
 
         return true;
     }
