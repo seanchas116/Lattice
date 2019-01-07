@@ -83,7 +83,6 @@ void ItemPropertyView::onLocationChanged() {
     }
 
     glm::dvec3 eulerAngles = glm::eulerAngles(location.rotation);
-    qDebug() << "angles:" << eulerAngles;
 
     for (size_t i = 0; i < 3; ++i) {
         _positionSpinBoxes[i]->setValue(location.position[i]);
