@@ -194,7 +194,7 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
                                         (rotateHandleMatrixInverse * dvec4(mouseRay.direction, 0)).xyz);
             auto [edge, t] = _rotateHandlePicker->pickEdge(rotateHandleRay, 0.1);
             if (edge) {
-                dvec3 pos = rotateHandleRay.at(t);
+                dvec3 pos = rotateHandleRay.whereXIsZero();
                 double angle = atan2(pos.z, pos.y);
 
                 qDebug() << "rotate" << angle;
