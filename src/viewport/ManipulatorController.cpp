@@ -16,27 +16,27 @@ ManipulatorController::ManipulatorController(const SP<Manipulator>& manipulator,
 
     manipulator->setTargetPosition(position());
     connect(this, &ManipulatorController::positionChanged, manipulator.get(), &Manipulator::setTargetPosition);
-    connect(manipulator.get(), &Manipulator::onTranslateBegin, this, &ManipulatorController::onDragStart);
-    connect(manipulator.get(), &Manipulator::onTranslateMove, this, &ManipulatorController::onDrag);
-    connect(manipulator.get(), &Manipulator::onTranslateEnd, this, &ManipulatorController::onDragEnd);
+    connect(manipulator.get(), &Manipulator::translateStarted, this, &ManipulatorController::onTranslateStarted);
+    connect(manipulator.get(), &Manipulator::translateChanged, this, &ManipulatorController::onTranslateChanged);
+    connect(manipulator.get(), &Manipulator::translateFinished, this, &ManipulatorController::onTranslateFinished);
 }
 
 glm::dvec3 ManipulatorController::position() const {
     return _item->location().position;
 }
 
-void ManipulatorController::onDragStart() {
+void ManipulatorController::onTranslateStarted() {
     _appState->document()->history()->beginChange(tr("Move Item"));
     _initialPosition = _item->location().position;
 }
 
-void ManipulatorController::onDrag(glm::dvec3 offset) {
+void ManipulatorController::onTranslateChanged(glm::dvec3 offset) {
     auto loc = _item->location();
     loc.position = _initialPosition + offset;
     _item->setLocation(loc);
 }
 
-void ManipulatorController::onDragEnd() {
+void ManipulatorController::onTranslateFinished() {
 }
 
 void ManipulatorController::connectToItem(const SP<Document::Item> &item) {

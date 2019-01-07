@@ -33,17 +33,17 @@ public:
     void setIsScaleHandleVisible(bool isScaleHandleVisible) { _isScaleHandleVisible = isScaleHandleVisible; }
 
 signals:
-    void onTranslateBegin();
-    void onTranslateMove(glm::dvec3 offset);
-    void onTranslateEnd();
+    void translateStarted();
+    void translateChanged(glm::dvec3 offset);
+    void translateFinished();
 
-    void onScaleBegin();
-    void onScaleMove(glm::dvec3 offset);
-    void onScaleEnd();
+    void scaleStarted();
+    void scaleChanged(glm::dvec3 offset);
+    void scaleFinished();
 
-    void onRotateBegin();
-    void onRotateMove(glm::dvec3 offset);
-    void onRotateEnd();
+    void rotateStarted();
+    void rotateChanged(glm::dvec3 offset);
+    void rotateFinished();
 
 private:
     double translateHandleOffset() const;

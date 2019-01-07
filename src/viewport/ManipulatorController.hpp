@@ -22,14 +22,14 @@ public:
 
     glm::dvec3 position() const;
 
-    void onDragStart();
-    void onDrag(glm::dvec3 offset);
-    void onDragEnd();
-
 signals:
     void positionChanged(glm::dvec3 position);
 
 private:
+    void onTranslateStarted();
+    void onTranslateChanged(glm::dvec3 offset);
+    void onTranslateFinished();
+
     void connectToItem(const SP<Document::Item>& item);
 
     SP<Manipulator> _manipulator;

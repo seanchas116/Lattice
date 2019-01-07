@@ -167,7 +167,7 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
                 _dragMode = DragMode::Scale;
                 _initialDragValue = tAxis;
                 _dragAxis = axis;
-                emit onScaleBegin();
+                emit scaleStarted();
 
                 return true; // TODO
             }
@@ -177,7 +177,7 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
                 _initialDragValue = tAxis;
                 _initialTargetPosition = _targetPosition;
                 _dragAxis = axis;
-                emit onTranslateBegin();
+                emit translateStarted();
 
                 return true;
             }
@@ -207,13 +207,13 @@ bool Manipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera)
     case DragMode::Translate:{
         dvec3 offset(0);
         offset[_dragAxis] = tAxis - _initialDragValue;
-        emit onTranslateMove(offset);
+        emit translateChanged(offset);
         return true;
     }
     case DragMode::Scale: {
         dvec3 scale(1);
         scale[_dragAxis] = tAxis / _initialDragValue;
-        emit onScaleMove(scale);
+        emit scaleChanged(scale);
         return true;
     }
     case DragMode::Rotate: {
@@ -232,13 +232,13 @@ bool Manipulator::mouseRelease(QMouseEvent *event, dvec2 pos, const Camera &came
 
     switch (_dragMode) {
     case DragMode::Translate:
-        emit onTranslateEnd();
+        emit translateFinished();
         return true;
     case DragMode::Scale:
-        emit onScaleEnd();
+        emit scaleFinished();
         return true;
     case DragMode::Rotate:
-        emit onRotateEnd();
+        emit rotateFinished();
         return true;
     default:
         return false;
