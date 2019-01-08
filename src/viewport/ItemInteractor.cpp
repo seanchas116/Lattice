@@ -30,7 +30,7 @@ bool ItemInteractor::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera
         return false;
     }
 
-    _initialLocation = _draggedItem->location();
+    _initialLocation = item->location();
     _initialWorldPos = worldDragPos;
     _initialDragDepth = screenDragPos.z;
     _dragStarted = false;
@@ -42,10 +42,8 @@ bool ItemInteractor::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera
 
 bool ItemInteractor::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
     Q_UNUSED(event);
-    if (!_draggedItem) {
-        return false;
-    }
-    LATTICE_OPTIONAL_GUARD(document, _draggedItem->document(), return false;)
+    LATTICE_OPTIONAL_GUARD(item, _draggedItem, return false;)
+    LATTICE_OPTIONAL_GUARD(document, item->document(), return false;)
 
     auto newWorldPos = camera.mapScreenToWorld(glm::dvec3(pos, _initialDragDepth));
     auto newLocation = _initialLocation;
@@ -55,7 +53,7 @@ bool ItemInteractor::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera 
         document->history()->beginChange(tr("Move Item"));
         _dragStarted = true;
     }
-    _draggedItem->setLocation(newLocation);
+    item->setLocation(newLocation);
 
     return true;
 }

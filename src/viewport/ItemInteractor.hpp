@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <glm/glm.hpp>
 #include <QObject>
 #include "../support/Pointer.hpp"
@@ -30,7 +31,7 @@ public:
 private:
     SP<ItemPicker> _picker;
 
-    SP<Document::Item> _draggedItem;
+    std::optional<SP<Document::Item>> _draggedItem;
     bool _dragStarted = false;
     Location _initialLocation;
     glm::dvec3 _initialWorldPos;
