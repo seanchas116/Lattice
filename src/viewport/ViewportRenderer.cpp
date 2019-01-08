@@ -84,19 +84,19 @@ void ViewportRenderer::render() {
 
     if (_appState->isFaceVisible()) {
         for (auto& [item, renderer] : _meshRenderers) {
-            renderer->drawFaces(_operations, _camera);
+            renderer->facesRenderer()->draw(_operations, _camera);
         }
     }
 
     if (_appState->isEdgeVisible()) {
         for (auto& [item, renderer] : _meshRenderers) {
-            renderer->drawEdges(_operations, _camera);
+            renderer->edgesRenderer()->draw(_operations, _camera);
         }
     }
 
     if (_appState->isVertexVisible()) {
         for (auto& [item, renderer] : _meshRenderers) {
-            renderer->drawVertices(_operations, _camera);
+            renderer->verticesRenderer()->draw(_operations, _camera);
         }
     }
 

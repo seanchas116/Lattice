@@ -28,13 +28,13 @@ namespace Lattice::Viewport {
 
 class Operations;
 
-class MeshRenderer final {
+class MeshRenderer final : public Render::Renderable {
 public:
     MeshRenderer(const SP<Document::MeshItem>& item);
 
-    void drawFaces(const SP<Render::Operations>& operations, const Camera& camera);
-    void drawEdges(const SP<Render::Operations> &operations, const Camera &camera);
-    void drawVertices(const SP<Render::Operations>& operations, const Camera& camera);
+    auto& facesRenderer() { return _facesRenderer; }
+    auto& edgesRenderer() { return _edgesRenderer; }
+    auto& verticesRenderer() { return _verticesRenderer; }
 
 private:
     void updateVAOs(const SP<Document::Mesh>& mesh);
@@ -43,6 +43,14 @@ private:
     std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> _faceVAOs;
     SP<GL::LineVAO> _edgeVAO;
     SP<GL::PointVAO> _vertexVAO;
+
+    class FacesRenderer;
+    class EdgesRenderer;
+    class VerticesRenderer;
+
+    SP<Render::Renderable> _facesRenderer;
+    SP<Render::Renderable> _edgesRenderer;
+    SP<Render::Renderable> _verticesRenderer;
 };
 
 }
