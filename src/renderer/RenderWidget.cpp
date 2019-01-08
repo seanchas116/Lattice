@@ -1,5 +1,6 @@
 #include "RenderWidget.hpp"
 #include "Renderable.hpp"
+#include <QResizeEvent>
 
 namespace Lattice {
 namespace Renderer {
@@ -7,6 +8,12 @@ namespace Renderer {
 RenderWidget::RenderWidget(QWidget *parent) :
     QOpenGLWidget(parent)
 {
+}
+
+void RenderWidget::resizeEvent(QResizeEvent *event) {
+    glm::ivec2 physicalSize(event->size().width(), event->size().height());
+    glm::ivec2 logicalSize = glm::round(glm::dvec2(physicalSize) * widgetPixelRatio());
+    emit sizeChanged(logicalSize, physicalSize);
 }
 
 void RenderWidget::mousePressEvent(QMouseEvent *event) {

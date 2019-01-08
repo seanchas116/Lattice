@@ -20,7 +20,12 @@ public:
     auto& renderables() const { return _renderables; }
     void setRenderables(const std::vector<SP<Renderable>>& renderables) { _renderables = renderables; }
 
+signals:
+    void sizeChanged(glm::ivec2 logicalSize, glm::ivec2 physicalSize);
+
 protected:
+    void resizeEvent(QResizeEvent *event) override;
+
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
