@@ -29,6 +29,8 @@ protected:
     void paintGL() override;
 
 private:
+    double widgetPixelRatio() const;
+
     std::vector<SP<Renderable>> _renderables;
     std::vector<Viewport> _viewports;
 };

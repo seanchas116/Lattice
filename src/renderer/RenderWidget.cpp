@@ -31,5 +31,13 @@ void RenderWidget::resizeGL(int w, int h) {
 void RenderWidget::paintGL() {
 }
 
+double RenderWidget::widgetPixelRatio() const {
+#ifdef Q_OS_WIN
+    return logicalDpiX() / 96.0;
+#else
+    return 1.0;
+#endif
+}
+
 } // namespace Renderer
 } // namespace Lattice
