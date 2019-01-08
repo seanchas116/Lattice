@@ -25,7 +25,8 @@ void RenderWidget::mousePressEvent(QMouseEvent *event) {
 
     auto& camera = _viewports[0].camera; // FIXME
 
-    for (auto& layer : _layers) {
+    for (auto it = _layers.rbegin(); it != _layers.rend(); ++it) {
+        auto& layer = *it;
         std::map<double, SP<Renderable>> hitRenderables;
         for (auto& renderable : layer) {
             auto [hit, t] = renderable->mousePress(event, pos, camera);
