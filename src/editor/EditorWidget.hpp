@@ -12,6 +12,8 @@ class AppState;
 
 namespace Lattice::Editor {
 
+class EditorScene;
+
 class EditorWidget final : public Render::RenderWidget {
     Q_OBJECT
 public:
@@ -34,6 +36,7 @@ private:
     KeyObserver _keyObserver;
     Camera _camera;
     SP<UI::AppState> _appState;
+    std::optional<SP<EditorScene>> _scene;
 };
 
 } // namespace Lattice
