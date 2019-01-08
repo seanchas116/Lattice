@@ -22,7 +22,7 @@ public:
     std::vector<Layer> layers() const { return _layers; }
     void setLayers(const std::vector<Layer> &layers) { _layers = layers; }
 
-    glm::ivec2 logicalSize() const { return _logicalSize; }
+    glm::ivec2 logicalSize() const;
 
 signals:
     void sizeChanged(glm::ivec2 logicalSize, glm::ivec2 physicalSize);
