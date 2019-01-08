@@ -15,17 +15,17 @@ namespace Viewport {
 ItemInteractor::ItemInteractor(const SP<ItemPicker> &picker) : _picker(picker) {
 }
 
-bool ItemInteractor::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
+std::pair<bool, double> ItemInteractor::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
     auto worldMouseRay = camera.worldMouseRay(pos);
-    LATTICE_OPTIONAL_GUARD(pickResult, _picker->pick(worldMouseRay), return false;)
+    LATTICE_OPTIONAL_GUARD(pickResult, _picker->pick(worldMouseRay), return {true, 0};)
     auto [item, t] = pickResult;
-    LATTICE_OPTIONAL_GUARD(document, item->document(), return false;)
+            LATTICE_OPTIONAL_GUARD(document, item->document(), return {true, 0};)
     _draggedItem = item;
 
     glm::dvec3 worldDragPos = worldMouseRay.at(t);
     auto [screenDragPos, isInScreen] = camera.mapWorldToScreen(worldDragPos);
     if (!isInScreen) {
-        return false;
+        return {false, 0};
     }
 
     _initialLocation = item->location();
@@ -35,13 +35,13 @@ bool ItemInteractor::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera
 
     document->selectItem(item, event->modifiers() & Qt::ShiftModifier);
 
-    return true;
+    return {true, 0};
 }
 
-bool ItemInteractor::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
+void ItemInteractor::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
     Q_UNUSED(event);
-    LATTICE_OPTIONAL_GUARD(item, _draggedItem, return false;)
-    LATTICE_OPTIONAL_GUARD(document, item->document(), return false;)
+    LATTICE_OPTIONAL_GUARD(item, _draggedItem, return;)
+    LATTICE_OPTIONAL_GUARD(document, item->document(), return;)
 
     auto newWorldPos = camera.mapScreenToWorld(glm::dvec3(pos, _initialDragDepth));
     auto newLocation = _initialLocation;
@@ -52,17 +52,14 @@ bool ItemInteractor::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera 
         _dragStarted = true;
     }
     item->setLocation(newLocation);
-
-    return true;
 }
 
-bool ItemInteractor::mouseRelease(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
+void ItemInteractor::mouseRelease(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
     Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera);
     if (!_draggedItem) {
-        return false;
+        return;
     }
     _draggedItem = {};
-    return true;
 }
 
 } // namespace Viewport

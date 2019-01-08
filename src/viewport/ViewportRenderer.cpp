@@ -108,14 +108,20 @@ void ViewportRenderer::render() {
 }
 
 void ViewportRenderer::mousePress(QMouseEvent *event, dvec2 pos) {
-    auto [hit, t] = _manipulator->mousePress(event, pos, _camera);
-    if (hit) {
-        _manipulatorDragged = true;
-        return;
+    {
+        auto [hit, t] = _manipulator->mousePress(event, pos, _camera);
+        if (hit) {
+            _manipulatorDragged = true;
+            return;
+        }
     }
-    if (_itemInteractor->mousePress(event, pos, _camera)) {
-        _itemInteractorDragged = true;
-        return;
+
+    {
+        auto [hit, t] = _itemInteractor->mousePress(event, pos, _camera);
+        if (hit) {
+            _itemInteractorDragged = true;
+            return;
+        }
     }
 }
 

@@ -5,6 +5,7 @@
 #include <QObject>
 #include "../support/Pointer.hpp"
 #include "../support/Location.hpp"
+#include "../render/Renderable.hpp"
 
 class QMouseEvent;
 
@@ -19,14 +20,14 @@ namespace Viewport {
 
 class ItemPicker;
 
-class ItemInteractor : public QObject {
+class ItemInteractor : public QObject, public Render::Renderable {
     Q_OBJECT
 public:
     ItemInteractor(const SP<ItemPicker>& picker);
 
-    bool mousePress(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
-    bool mouseMove(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
-    bool mouseRelease(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
+    std::pair<bool, double> mousePress(QMouseEvent* event, glm::dvec2 pos, const Camera& camera) override;
+    void mouseMove(QMouseEvent* event, glm::dvec2 pos, const Camera& camera) override;
+    void mouseRelease(QMouseEvent* event, glm::dvec2 pos, const Camera& camera) override;
 
 private:
     SP<ItemPicker> _picker;
