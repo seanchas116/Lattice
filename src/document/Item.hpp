@@ -12,7 +12,7 @@ namespace Lattice::Document {
 class Document;
 class Change;
 
-class Item : public QObject, public std::enable_shared_from_this<Item> {
+class Item : public QObject, public EnableSharedFromThis<Item> {
     Q_OBJECT
 public:
     std::optional<SP<Item>> parentItem() const;

@@ -17,10 +17,8 @@ ItemInteractor::ItemInteractor(const SP<ItemPicker> &picker) : _picker(picker) {
 
 bool ItemInteractor::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
     auto worldMouseRay = camera.worldMouseRay(pos);
-    auto [item, t] = _picker->pick(worldMouseRay);
-    if (!item) {
-        return false;
-    }
+    LATTICE_OPTIONAL_GUARD(pickResult, _picker->pick(worldMouseRay), return false;)
+    auto [item, t] = pickResult;
     LATTICE_OPTIONAL_GUARD(document, item->document(), return false;)
     _draggedItem = item;
 

@@ -22,7 +22,7 @@ public:
     }
 
     std::optional<SP<Document>> document() const override {
-        return _document->shared_from_this();
+        return _document->sharedFromThis();
     }
 
 private:
@@ -31,16 +31,16 @@ private:
 
 }
 
-Document::Document() {
-    _history = std::make_shared<History>();
-
-    _rootItem = std::make_shared<RootItem>(this);
+Document::Document() :
+    _rootItem(makeShared<RootItem>(this)),
+    _history(makeShared<History>())
+{
     watchChildrenInsertRemove(_rootItem);
 }
 
 void Document::addInitialItems() {
     // Add example item
-    auto meshItem = std::make_shared<MeshItem>();
+    auto meshItem = makeShared<MeshItem>();
     meshItem->setName(tr("Mesh").toStdString());
 
     _rootItem->appendChildItem(meshItem);
@@ -48,14 +48,8 @@ void Document::addInitialItems() {
 }
 
 std::optional<SP<MeshItem> > Document::currentMeshItem() const {
-    if (!_currentItem) {
-        return {};
-    }
-    auto meshItem = std::dynamic_pointer_cast<MeshItem>(*_currentItem);
-    if (!meshItem) {
-        return {};
-    }
-    return meshItem;
+    LATTICE_OPTIONAL_GUARD(currentItem, _currentItem, return {};)
+    return dynamicPointerCast<MeshItem>(currentItem);
 }
 
 void Document::setCurrentItem(const std::optional<SP<Item> > &item) {

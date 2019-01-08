@@ -14,7 +14,7 @@ class Framebuffer final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(Framebuffer)
 public:
     Framebuffer(glm::ivec2 size); // default framebuffer
-    Framebuffer(glm::ivec2 size, const std::vector<SP<Texture>>& colorBuffers, const SP<DepthStencilTexture>& depthStencilBuffer = nullptr);
+    Framebuffer(glm::ivec2 size, const std::vector<SP<Texture>>& colorBuffers, const std::optional<SP<DepthStencilTexture>>& depthStencilBuffer = {});
     ~Framebuffer();
 
     void bind();
@@ -33,7 +33,7 @@ private:
     GLuint _name = 0;
     glm::ivec2 _size;
     std::vector<SP<Texture>> _colorBuffers;
-    SP<DepthStencilTexture> _depthStencilBuffer;
+    std::optional<SP<DepthStencilTexture>> _depthStencilBuffer;
 };
 
 } // namespace Lattice

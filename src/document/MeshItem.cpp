@@ -7,12 +7,12 @@ using namespace glm;
 
 namespace Lattice::Document {
 
-MeshItem::MeshItem() : _mesh(std::make_shared<Mesh>()) {
+MeshItem::MeshItem() : _mesh(makeShared<Mesh>()) {
     connect(this, &MeshItem::meshChanged, this, &Item::changed);
 }
 
 SP<Item> MeshItem::clone() const {
-    auto cloned = std::make_shared<MeshItem>();
+    auto cloned = makeShared<MeshItem>();
     // FIXME: item name is not copied
     cloned->_mesh = _mesh->clone();
     return cloned;

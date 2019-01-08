@@ -70,11 +70,19 @@ public:
 
 }
 
-Manipulator::Manipulator() {
+Manipulator::Manipulator() :
+    // TODO: do not create meaningless default objects
+    _translateHandleVAO(makeShared<GL::VAO>()),
+    _scaleHandleVAO(makeShared<GL::VAO>()),
+    _rotateHandleVAO(makeShared<GL::LineVAO>()),
+    _rotateHandlePicker(makeShared<MeshPicker>(makeShared<Document::Mesh>())),
+    _bodyVAO(makeShared<GL::LineVAO>()),
+    _centerVAO(makeShared<GL::PointVAO>())
+{
     initializeOpenGLFunctions();
 
     {
-        auto mesh = std::make_shared<Document::Mesh>();
+        auto mesh = makeShared<Document::Mesh>();
         auto material = mesh->addMaterial();
         mesh->addCone(dvec3(0), translateHandleWidth * 0.5, translateHandleLength, 8, 0, material);
 
@@ -82,7 +90,7 @@ Manipulator::Manipulator() {
     }
 
     {
-        auto mesh = std::make_shared<Document::Mesh>();
+        auto mesh = makeShared<Document::Mesh>();
         auto material = mesh->addMaterial();
         mesh->addCube(-dvec3(scaleHandleSize*0.5), +dvec3(scaleHandleSize*0.5), material);
 
@@ -90,22 +98,22 @@ Manipulator::Manipulator() {
     }
 
     {
-        auto mesh = std::make_shared<Document::Mesh>();
+        auto mesh = makeShared<Document::Mesh>();
         auto material = mesh->addMaterial();
         mesh->addCircle(dvec3(0), 2.0, 64, Document::Mesh::CircleFill::None, 0, material);
-        _rotateHandlePicker = std::make_shared<MeshPicker>(mesh);
+        _rotateHandlePicker = makeShared<MeshPicker>(mesh);
 
         _rotateHandleVAO = MeshVAOGenerator(mesh).generateEdgeVAO();
     }
 
     {
-        _bodyVAO = std::make_shared<GL::LineVAO>();
+        _bodyVAO = makeShared<GL::LineVAO>();
         _bodyVAO->vertexBuffer()->setVertices({{}, {}});
         _bodyVAO->setLineStrips({{0, 1}});
     }
 
     {
-        _centerVAO = std::make_shared<GL::PointVAO>();
+        _centerVAO = makeShared<GL::PointVAO>();
         GL::VertexBuffer::Vertex vertex{vec3(0), vec2(0), vec3(0)};
         _centerVAO->vertexBuffer()->setVertices({vertex});
     }
@@ -189,17 +197,20 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
             dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * swizzleTransforms[axis];
             dmat4 rotateHandleMatrixInverse = inverse(rotateHandleMatrix);
             auto rotateHandleRay = rotateHandleMatrixInverse * mouseRay;
-            auto [edge, t] = _rotateHandlePicker->pickEdge(rotateHandleRay, 0.1);
-            auto [hitPos_screenSpace, isInScreen] = camera.mapCameraToScreen((rotateHandleMatrix * dvec4(rotateHandleRay.at(t), 1)).xyz);
-            if (edge && hitPos_screenSpace.z <= fixedDepth) {
-                dvec3 intersection = rotateHandleRay.whereXIsZero();
-                double angle = atan2(intersection.z, intersection.y);
+            auto pickResult = _rotateHandlePicker->pickEdge(rotateHandleRay, 0.1);
+            if (pickResult) {
+                auto [edge, t] = *pickResult;
+                auto [hitPos_screenSpace, isInScreen] = camera.mapCameraToScreen((rotateHandleMatrix * dvec4(rotateHandleRay.at(t), 1)).xyz);
+                if (hitPos_screenSpace.z <= fixedDepth) {
+                    dvec3 intersection = rotateHandleRay.whereXIsZero();
+                    double angle = atan2(intersection.z, intersection.y);
 
-                _dragMode = DragMode::Rotate;
-                _initialDragValue = angle;
-                _initialTargetPosition = _targetPosition;
-                _dragAxis = axis;
-                emit rotateStarted();
+                    _dragMode = DragMode::Rotate;
+                    _initialDragValue = angle;
+                    _initialTargetPosition = _targetPosition;
+                    _dragAxis = axis;
+                    emit rotateStarted();
+                }
             }
         }
     }

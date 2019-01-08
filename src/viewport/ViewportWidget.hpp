@@ -36,7 +36,7 @@ private:
     double widgetPixelRatio() const;
     glm::dvec2 mapToRenderer(const QPoint& p);
 
-    SP<ViewportRenderer> _renderer;
+    std::optional<SP<ViewportRenderer>> _renderer;
     CameraController _cameraController;
     KeyObserver _keyObserver;
     SP<UI::AppState> _appState;

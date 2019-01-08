@@ -11,7 +11,7 @@ class Item;
 class MeshItem;
 class History;
 
-class Document final : public QObject, public std::enable_shared_from_this<Document> {
+class Document final : public QObject, public EnableSharedFromThis<Document> {
     Q_OBJECT
 public:
     Document();

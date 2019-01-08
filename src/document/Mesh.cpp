@@ -8,7 +8,7 @@ namespace Lattice::Document {
 std::vector<SP<MeshEdge> > MeshVertex::edges() const {
     std::vector<SP<MeshEdge>> edges;
     for (auto& e : _edges) {
-        edges.push_back(e->shared_from_this());
+        edges.push_back(e->sharedFromThis());
     }
     return edges;
 }
@@ -16,7 +16,7 @@ std::vector<SP<MeshEdge> > MeshVertex::edges() const {
 std::vector<SP<MeshFace> > MeshVertex::faces() const {
     std::vector<SP<MeshFace>> faces;
     for (auto& f : _faces) {
-        faces.push_back(f->shared_from_this());
+        faces.push_back(f->sharedFromThis());
     }
     return faces;
 }
@@ -30,7 +30,7 @@ glm::vec3 MeshVertex::normal() const {
 }
 
 SP<MeshUVPoint> MeshVertex::addUVPoint() {
-    auto uv = std::make_shared<MeshUVPoint>();
+    auto uv = makeShared<MeshUVPoint>();
     _uvPoints.insert(uv);
     uv->_vertex = this;
     return uv;
@@ -47,13 +47,13 @@ MeshEdge::~MeshEdge() {
 }
 
 SP<MeshVertex> MeshUVPoint::vertex() const {
-    return _vertex->shared_from_this();
+    return _vertex->sharedFromThis();
 }
 
 std::vector<SP<MeshUVEdge> > MeshUVPoint::uvEdges() const {
     std::vector<SP<MeshUVEdge>> uvEdges;
     for (auto& e : _uvEdges) {
-        uvEdges.push_back(e->shared_from_this());
+        uvEdges.push_back(e->sharedFromThis());
     }
     return uvEdges;
 }
@@ -61,7 +61,7 @@ std::vector<SP<MeshUVEdge> > MeshUVPoint::uvEdges() const {
 std::vector<SP<MeshFace> > MeshUVPoint::faces() const {
     std::vector<SP<MeshFace>> faces;
     for (auto& f : _faces) {
-        faces.push_back(f->shared_from_this());
+        faces.push_back(f->sharedFromThis());
     }
     return faces;
 }
@@ -79,7 +79,7 @@ MeshUVEdge::~MeshUVEdge() {
 std::vector<SP<MeshFace> > MeshUVEdge::faces() const {
     std::vector<SP<MeshFace>> faces;
     for (auto& f : _faces) {
-        faces.push_back(f->shared_from_this());
+        faces.push_back(f->sharedFromThis());
     }
     return faces;
 }
@@ -87,7 +87,7 @@ std::vector<SP<MeshFace> > MeshUVEdge::faces() const {
 std::vector<SP<MeshFace> > MeshEdge::faces() const {
     std::vector<SP<MeshFace>> faces;
     for (auto& f : _faces) {
-        faces.push_back(f->shared_from_this());
+        faces.push_back(f->sharedFromThis());
     }
     return faces;
 }
@@ -156,7 +156,7 @@ Mesh::Mesh() {
 }
 
 SP<MeshVertex> Mesh::addVertex(glm::vec3 position) {
-    auto vertex = std::make_shared<MeshVertex>();
+    auto vertex = makeShared<MeshVertex>();
     vertex->setPosition(position);
     //vertex->setTexCoord(texCoord);
     _vertices.insert(vertex);
@@ -172,8 +172,8 @@ SP<MeshEdge> Mesh::addEdge(const std::array<SP<MeshVertex>, 2> &vertices) {
         return it->second;
     }
 
-    auto edge = std::make_shared<MeshEdge>(vertices);
-    _edges[vertices] = edge;
+    auto edge = makeShared<MeshEdge>(vertices);
+    _edges.insert({vertices, edge});
     return edge;
 }
 
@@ -192,8 +192,8 @@ SP<MeshUVEdge> Mesh::addUVEdge(const std::array<SP<MeshUVPoint>, 2> &uvPoints) {
         return it->second;
     }
 
-    auto uvEdge = std::make_shared<MeshUVEdge>(uvPoints);
-    _uvEdges[uvPoints] = uvEdge;
+    auto uvEdge = makeShared<MeshUVEdge>(uvPoints);
+    _uvEdges.insert({uvPoints, uvEdge});
     return uvEdge;
 }
 
@@ -220,13 +220,13 @@ SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshUVPoint> > &uvPoints, const 
         uvEdges.push_back(addUVEdge({uvPoints[i], uvPoints[(i + 1) % vertices.size()]}));
     }
 
-    auto face = std::make_shared<MeshFace>(vertices, edges, uvPoints, uvEdges, material);
-    _faces[vertices] = face;
+    auto face = makeShared<MeshFace>(vertices, edges, uvPoints, uvEdges, material);
+    _faces.insert({vertices, face});
     return face;
 }
 
 SP<MeshMaterial> Mesh::addMaterial() {
-    auto material = std::make_shared<MeshMaterial>();
+    auto material = makeShared<MeshMaterial>();
     _materials.push_back(material);
     return material;
 }
@@ -359,39 +359,39 @@ void Mesh::merge(const SP<const Mesh> &other) {
     for (auto& otherMaterial : other->materials()) {
         auto m = addMaterial();
         // TODO: copy material parameters
-        otherToNewMaterials[otherMaterial] = m;
+        otherToNewMaterials.insert({otherMaterial, m});
     }
 
     for (auto& otherV : other->vertices()) {
         auto v = addVertex(otherV->position());
-        otherToNewVertices[otherV] = v;
+        otherToNewVertices.insert({otherV, v});
         for (auto& otherUV : otherV->uvPoints()) {
             auto uv = addUVPoint(v, otherUV->position());
-            otherToNewUVPoints[otherUV] = uv;
+            otherToNewUVPoints.insert({otherUV, uv});
         }
     }
 
     for (auto& [_, otherEdge] : other->edges()) {
         Q_UNUSED(_)
-        addEdge({otherToNewVertices[otherEdge->vertices()[0]], otherToNewVertices[otherEdge->vertices()[1]]});
+        addEdge({otherToNewVertices.at(otherEdge->vertices()[0]), otherToNewVertices.at(otherEdge->vertices()[1])});
     }
     for (auto& [_, otherUVEdge] : other->uvEdges()) {
         Q_UNUSED(_)
-        addUVEdge({otherToNewUVPoints[otherUVEdge->points()[0]], otherToNewUVPoints[otherUVEdge->points()[1]]});
+        addUVEdge({otherToNewUVPoints.at(otherUVEdge->points()[0]), otherToNewUVPoints.at(otherUVEdge->points()[1])});
     }
     for (auto& [_, otherFace] : other->faces()) {
         Q_UNUSED(_)
         std::vector<SP<MeshUVPoint>> uvPoints;
         for (auto& otherUV : otherFace->uvPoints()) {
-            uvPoints.push_back(otherToNewUVPoints[otherUV]);
+            uvPoints.push_back(otherToNewUVPoints.at(otherUV));
         }
-        addFace(uvPoints, otherToNewMaterials[otherFace->material()]);
+        addFace(uvPoints, otherToNewMaterials.at(otherFace->material()));
     }
 }
 
 SP<Mesh> Mesh::clone() const {
-    auto newMesh = std::make_shared<Mesh>();
-    newMesh->merge(shared_from_this());
+    auto newMesh = makeShared<Mesh>();
+    newMesh->merge(sharedFromThis());
     return newMesh;
 }
 
@@ -411,7 +411,7 @@ std::vector<SP<MeshFace>> MeshMaterial::faces() const {
     std::vector<SP<MeshFace>> faces;
     faces.reserve(_faces.size());
     for (auto& f : _faces) {
-        faces.push_back(f->shared_from_this());
+        faces.push_back(f->sharedFromThis());
     }
     return faces;
 }

@@ -13,23 +13,14 @@ using namespace glm;
 
 namespace Lattice::UI {
 
-AppState::AppState() {
-    _document = std::make_shared<Document::Document>();
+AppState::AppState() : _document(makeShared<Document::Document>()) {
     _document->addInitialItems();
     auto initialItem = _document->rootItem()->childItems()[0];
     _document->setCurrentItem(initialItem);
 
-    auto mesh = std::dynamic_pointer_cast<Document::MeshItem>(initialItem)->mesh();
+    LATTICE_OPTIONAL_GUARD(meshItem, dynamicPointerCast<Document::MeshItem>(initialItem), return;)
+    auto mesh = meshItem->mesh();
     mesh->addCube(glm::vec3(-1), glm::vec3(1), mesh->addMaterial());
-    /*
-    {
-        auto v1 = mesh->addVertex(vec3(-1, 0, -1), vec2(0, 0));
-        auto v2 = mesh->addVertex(vec3(-1, 0, 1), vec2(0, 1));
-        auto v3 = mesh->addVertex(vec3(1, 0, 1), vec2(1, 1));
-        auto v4 = mesh->addVertex(vec3(1, 0, -1), vec2(1, 0));
-        auto m = mesh->addMaterial();
-        mesh->addFace({v1, v2, v3, v4}, m);
-    }*/
 }
 
 void AppState::deleteItems() {
@@ -39,7 +30,7 @@ void AppState::deleteItems() {
 
 void AppState::addPlane() {
     _document->history()->beginChange(tr("Add Plane"));
-    auto item = std::make_shared<Document::MeshItem>();
+    auto item = makeShared<Document::MeshItem>();
     item->setName(tr("Plane").toStdString());
     item->mesh()->addPlane(dvec3(0), dvec2(2), 1, item->mesh()->addMaterial());
     _document->insertItemToCurrentPosition(item);
@@ -47,7 +38,7 @@ void AppState::addPlane() {
 
 void AppState::addCube() {
     _document->history()->beginChange(tr("Add Cube"));
-    auto item = std::make_shared<Document::MeshItem>();
+    auto item = makeShared<Document::MeshItem>();
     item->setName(tr("Cube").toStdString());
     item->mesh()->addCube(glm::vec3(-1), glm::vec3(1), item->mesh()->addMaterial());
     _document->insertItemToCurrentPosition(item);
@@ -55,7 +46,7 @@ void AppState::addCube() {
 
 void AppState::addCircle() {
     _document->history()->beginChange(tr("Add Circle"));
-    auto item = std::make_shared<Document::MeshItem>();
+    auto item = makeShared<Document::MeshItem>();
     item->setName(tr("Circle").toStdString());
     item->mesh()->addCircle(glm::vec3(0), 1.0, 16, Document::Mesh::CircleFill::Ngon, 1, item->mesh()->addMaterial());
     _document->insertItemToCurrentPosition(item);
@@ -63,7 +54,7 @@ void AppState::addCircle() {
 
 void AppState::addSphere() {
     _document->history()->beginChange(tr("Add Sphere"));
-    auto item = std::make_shared<Document::MeshItem>();
+    auto item = makeShared<Document::MeshItem>();
     item->setName(tr("Sphere").toStdString());
     item->mesh()->addSphere(glm::vec3(0), 1.0, 16, 8, 1, item->mesh()->addMaterial());
     _document->insertItemToCurrentPosition(item);
@@ -71,7 +62,7 @@ void AppState::addSphere() {
 
 void AppState::addCone() {
     _document->history()->beginChange(tr("Add Cone"));
-    auto item = std::make_shared<Document::MeshItem>();
+    auto item = makeShared<Document::MeshItem>();
     item->setName(tr("Cone").toStdString());
     item->mesh()->addCone(glm::vec3(0), 1.0, 1.0, 16, 1, item->mesh()->addMaterial());
     _document->insertItemToCurrentPosition(item);

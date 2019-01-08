@@ -6,7 +6,7 @@ EmptyItem::EmptyItem() {
 }
 
 SP<Item> EmptyItem::clone() const {
-    auto cloned = std::make_shared<EmptyItem>();
+    auto cloned = makeShared<EmptyItem>();
     return cloned;
 }
 

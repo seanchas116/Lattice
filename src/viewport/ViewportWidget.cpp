@@ -6,9 +6,10 @@
 
 namespace Lattice::Viewport {
 
-ViewportWidget::ViewportWidget(const SP<UI::AppState> &appState, QWidget *parent) : QOpenGLWidget(parent)
+ViewportWidget::ViewportWidget(const SP<UI::AppState> &appState, QWidget *parent) :
+    QOpenGLWidget(parent),
+    _appState(appState)
 {
-    _appState = appState;
     setFocusPolicy(Qt::ClickFocus);
     connect(&_keyObserver, &KeyObserver::selectedKeysChanged, &_cameraController, &CameraController::setPressedKeys);
 }
@@ -23,45 +24,52 @@ void ViewportWidget::initializeGL() {
         qDebug() << "OpenGL debug enabled";
     }
 
-    _renderer = std::make_shared<ViewportRenderer>(_appState);
-    connect(_renderer.get(), &ViewportRenderer::updateNeeded, this, [this] { update(); });
+    auto renderer = makeShared<ViewportRenderer>(_appState);
+    _renderer = renderer;
+    connect(renderer.get(), &ViewportRenderer::updateNeeded, this, [this] { update(); });
 
-    _renderer->setCameraLocation(_cameraController.location());
+    renderer->setCameraLocation(_cameraController.location());
     connect(&_cameraController, &CameraController::locationChanged, this, [this] (const Location& location) {
-        _renderer->setCameraLocation(location);
+        LATTICE_OPTIONAL_GUARD(renderer, _renderer, return;)
+        renderer->setCameraLocation(location);
         update();
     });
 }
 
 void ViewportWidget::resizeGL(int w, int h) {
+    LATTICE_OPTIONAL_GUARD(renderer, _renderer, return;)
     glm::vec2 physicalSize(w, h);
     glm::vec2 logicalSize = physicalSize / float(widgetPixelRatio());
-    _renderer->resize(physicalSize, logicalSize);
+    renderer->resize(physicalSize, logicalSize);
 }
 
 void ViewportWidget::paintGL() {
-    _renderer->render();
+    LATTICE_OPTIONAL_GUARD(renderer, _renderer, return;)
+    renderer->render();
 }
 
 void ViewportWidget::mousePressEvent(QMouseEvent *event) {
+    LATTICE_OPTIONAL_GUARD(renderer, _renderer, return;)
     if (_cameraController.mousePress(event)) {
         return;
     }
-    _renderer->mousePress(event, mapToRenderer(event->pos()));
+    renderer->mousePress(event, mapToRenderer(event->pos()));
 }
 
 void ViewportWidget::mouseMoveEvent(QMouseEvent *event) {
+    LATTICE_OPTIONAL_GUARD(renderer, _renderer, return;)
     if (_cameraController.mouseMove(event)) {
         return;
     }
-    _renderer->mouseMove(event, mapToRenderer(event->pos()));
+    renderer->mouseMove(event, mapToRenderer(event->pos()));
 }
 
 void ViewportWidget::mouseReleaseEvent(QMouseEvent *event) {
+    LATTICE_OPTIONAL_GUARD(renderer, _renderer, return;)
     if (_cameraController.mouseRelease(event)) {
         return;
     }
-    _renderer->mouseRelease(event, mapToRenderer(event->pos()));
+    renderer->mouseRelease(event, mapToRenderer(event->pos()));
 }
 
 void ViewportWidget::wheelEvent(QWheelEvent *event) {

@@ -4,7 +4,7 @@
 
 namespace Lattice::GL {
 
-LineVAO::LineVAO() : LineVAO(std::make_shared<VertexBuffer>()) {
+LineVAO::LineVAO() : LineVAO(makeShared<VertexBuffer>()) {
 }
 
 LineVAO::LineVAO(const SP<VertexBuffer> &vertexBuffer) : _vertexBuffer(vertexBuffer) {

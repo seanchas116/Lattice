@@ -11,7 +11,7 @@ namespace Viewport {
 
 MeshVAOGenerator::MeshVAOGenerator(const SP<Document::Mesh> &mesh) :
     _mesh(mesh),
-    _vertexBuffer(std::make_shared<GL::VertexBuffer>())
+    _vertexBuffer(makeShared<GL::VertexBuffer>())
 {
     std::vector<GL::VertexBuffer::Vertex> vertices;
     for (auto& vertex : mesh->vertices()) {
@@ -29,11 +29,11 @@ MeshVAOGenerator::MeshVAOGenerator(const SP<Document::Mesh> &mesh) :
 }
 
 SP<GL::PointVAO> MeshVAOGenerator::generateVertexVAO() const {
-    return std::make_shared<GL::PointVAO>(_vertexBuffer);
+    return makeShared<GL::PointVAO>(_vertexBuffer);
 }
 
 SP<GL::LineVAO> MeshVAOGenerator::generateEdgeVAO() const {
-    auto edgeVAO = std::make_shared<GL::LineVAO>(_vertexBuffer);
+    auto edgeVAO = makeShared<GL::LineVAO>(_vertexBuffer);
     std::vector<GL::LineVAO::Line> lines;
     for (auto& [_, edge] : _mesh->edges()) {
         auto i0 = _indices.at(*edge->vertices()[0]->uvPoints().begin());
@@ -48,7 +48,7 @@ std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO> > MeshVAOGenerator::g
     std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO> > faceVAOs;
 
     for (auto& material : _mesh->materials()) {
-        auto vao = std::make_shared<GL::VAO>(_vertexBuffer);
+        auto vao = makeShared<GL::VAO>(_vertexBuffer);
         std::vector<GL::VAO::Triangle> triangles;
         for (auto& face : material->faces()) {
             auto v0 = face->uvPoints()[0];
@@ -62,7 +62,7 @@ std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO> > MeshVAOGenerator::g
             }
         }
         vao->setTriangles(triangles);
-        faceVAOs[material] = vao;
+        faceVAOs.insert({material, vao});
     }
 
     return faceVAOs;

@@ -17,7 +17,7 @@ void ItemPicker::update(const SP<Document::Item> &rootItem) {
     addItemRecursive(rootItem);
 }
 
-std::tuple<SP<Document::Item>, float> ItemPicker::pick(const Ray<float> &worldMouseRay) const {
+std::optional<std::pair<SP<Document::Item>, float> > ItemPicker::pick(const Ray<float> &worldMouseRay) const {
     std::map<float, SP<Document::Item>> intersectingItems;
     for (auto& entry : _entries) {
         glm::mat4 inverseModelMatrix = glm::inverse(entry.item->location().matrix());
@@ -28,23 +28,23 @@ std::tuple<SP<Document::Item>, float> ItemPicker::pick(const Ray<float> &worldMo
             continue;
         }
         MeshPicker picker(entry.item->mesh());
-        auto [face, t] = picker.picKFace(modelMouseRay);
-        if (face) {
-            intersectingItems[t] = entry.item;
-        }
+        LATTICE_OPTIONAL_LET(result, picker.picKFace(modelMouseRay),
+            auto [face, t] = result;
+            intersectingItems.insert({t, entry.item});
+        )
     }
 
     if (intersectingItems.empty()) {
         return {};
     }
     auto nearest = intersectingItems.begin();
-    return {nearest->second, nearest->first};
+    return {{nearest->second, nearest->first}};
 }
 
 void ItemPicker::addItemRecursive(const SP<Document::Item> &item) {
-    if (auto meshItem = std::dynamic_pointer_cast<Document::MeshItem>(item); meshItem) {
+    LATTICE_OPTIONAL_LET(meshItem, dynamicPointerCast<Document::MeshItem>(item),
         _entries.push_back({meshItem, meshItem->mesh()->boundingBox()});
-    }
+    )
     for (auto& child : item->childItems()) {
         addItemRecursive(child);
     }

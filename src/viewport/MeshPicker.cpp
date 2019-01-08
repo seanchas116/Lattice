@@ -10,7 +10,7 @@ namespace Viewport {
 MeshPicker::MeshPicker(const SP<Document::Mesh> &mesh) : _mesh(mesh) {
 }
 
-std::pair<SP<Document::MeshFace>, double> MeshPicker::picKFace(const Ray<double> &ray) const {
+std::optional<std::pair<SP<Document::MeshFace>, double> > MeshPicker::picKFace(const Ray<double> &ray) const {
     // TODO: Use Bounding Volume Hierarchy to do faster
     ScopedTimer timer("MeshPicker::pickFace");
     std::map<float, SP<Document::MeshFace>> intersectings;
@@ -22,7 +22,7 @@ std::pair<SP<Document::MeshFace>, double> MeshPicker::picKFace(const Ray<double>
 
             auto [intersects, t] = ray.intersectsTriangle({v0, v1, v2});
             if (intersects) {
-                intersectings[t] = f;
+                intersectings.insert({t, f});
             }
         }
     }
@@ -30,16 +30,16 @@ std::pair<SP<Document::MeshFace>, double> MeshPicker::picKFace(const Ray<double>
         return {};
     }
     auto nearest = intersectings.begin();
-    return {nearest->second, nearest->first};
+    return {{nearest->second, nearest->first}};
 }
 
-std::pair<SP<Document::MeshVertex>, double> MeshPicker::pickVertex(const Ray<double> &ray, double distance) const {
+std::optional<std::pair<SP<Document::MeshVertex>, double> > MeshPicker::pickVertex(const Ray<double> &ray, double distance) const {
     Q_UNUSED(ray);
     Q_UNUSED(distance);
     return {}; // TODO
 }
 
-std::pair<SP<Document::MeshEdge>, double> MeshPicker::pickEdge(const Ray<double> &ray, double distance) const {
+std::optional<std::pair<SP<Document::MeshEdge>, double> > MeshPicker::pickEdge(const Ray<double> &ray, double distance) const {
     std::map<double, SP<Document::MeshEdge>> intersectings;
     for (auto& [_, e] : _mesh->edges()) {
         dvec3 p0 = e->vertices()[0]->position();
@@ -47,7 +47,7 @@ std::pair<SP<Document::MeshEdge>, double> MeshPicker::pickEdge(const Ray<double>
         Ray<double> edgeRay(p0, p1 - p0);
         RayRayDistance edgeMouseDistance(edgeRay, ray);
         if (edgeMouseDistance.distance <= distance && 0 <= edgeMouseDistance.t0 && edgeMouseDistance.t0 <= 1) {
-            intersectings[edgeMouseDistance.t1] = e;
+            intersectings.insert({edgeMouseDistance.t1, e});
         }
     }
 
@@ -55,7 +55,7 @@ std::pair<SP<Document::MeshEdge>, double> MeshPicker::pickEdge(const Ray<double>
         return {};
     }
     auto nearest = intersectings.begin();
-    return {nearest->second, nearest->first};
+    return {{nearest->second, nearest->first}};
 }
 
 } // namespace Viewport

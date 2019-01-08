@@ -18,7 +18,7 @@ class MeshFace;
 class Mesh;
 class MeshMaterial;
 
-class MeshVertex final : public std::enable_shared_from_this<MeshVertex> {
+class MeshVertex final : public EnableSharedFromThis<MeshVertex> {
 public:
     glm::vec3 position() const { return _position; }
     void setPosition(glm::vec3 position) { _position = position; }
@@ -41,7 +41,7 @@ private:
     std::unordered_set<SP<MeshUVPoint>> _uvPoints;
 };
 
-class MeshEdge final : public std::enable_shared_from_this<MeshEdge> {
+class MeshEdge final : public EnableSharedFromThis<MeshEdge> {
 public:
     MeshEdge(const std::array<SP<MeshVertex>, 2>& vertices);
     ~MeshEdge();
@@ -55,7 +55,7 @@ private:
     std::unordered_set<MeshFace*> _faces;
 };
 
-class MeshUVPoint final : public std::enable_shared_from_this<MeshUVPoint> {
+class MeshUVPoint final : public EnableSharedFromThis<MeshUVPoint> {
 public:
     glm::vec2 position() const { return _position; }
     void setPosition(glm::vec2 position) { _position = position; }
@@ -74,7 +74,7 @@ private:
     std::unordered_set<MeshFace*> _faces;
 };
 
-class MeshUVEdge final : public std::enable_shared_from_this<MeshUVEdge> {
+class MeshUVEdge final : public EnableSharedFromThis<MeshUVEdge> {
 public:
     MeshUVEdge(const std::array<SP<MeshUVPoint>, 2>& points);
     ~MeshUVEdge();
@@ -90,7 +90,7 @@ private:
     std::unordered_set<MeshFace*> _faces;
 };
 
-class MeshFace final : public std::enable_shared_from_this<MeshFace> {
+class MeshFace final : public EnableSharedFromThis<MeshFace> {
 public:
     MeshFace(const std::vector<SP<MeshVertex>>& vertices, const std::vector<SP<MeshEdge>>& edges,
              const std::vector<SP<MeshUVPoint>>& uvPoints, const std::vector<SP<MeshUVEdge>>& uvEdges,
@@ -153,7 +153,7 @@ private:
     std::unordered_set<MeshFace*> _faces;
 };
 
-class Mesh final : public std::enable_shared_from_this<Mesh> {
+class Mesh final : public EnableSharedFromThis<Mesh> {
 public:
     Mesh();
 

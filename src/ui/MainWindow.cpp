@@ -14,8 +14,7 @@
 
 namespace Lattice::UI {
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
-    _appState = std::make_shared<AppState>();
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), _appState(makeShared<AppState>()) {
     auto viewportWidget = new Viewport::ViewportWidget(_appState);
     setCentralWidget(viewportWidget);
     setupMenu();

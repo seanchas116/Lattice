@@ -41,8 +41,8 @@ SP<GL::Texture> DrawMaterial::getTexture(const QImage &image) {
     rgbaTexture = rgbaTexture.mirrored();
     glm::ivec2 size(rgbaTexture.width(), rgbaTexture.height());
 
-    auto texture = std::make_shared<GL::Texture>(size, rgbaTexture.bits());
-    _textures[image.cacheKey()] = texture;
+    auto texture = makeShared<GL::Texture>(size, rgbaTexture.bits());
+    _textures.insert({image.cacheKey(), texture});
     return texture;
 }
 

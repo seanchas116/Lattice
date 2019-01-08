@@ -17,22 +17,21 @@ using namespace glm;
 
 namespace Lattice::Viewport {
 
-ViewportRenderer::ViewportRenderer(const SP<UI::AppState> &appState) {
-    _appState = appState;
-
+ViewportRenderer::ViewportRenderer(const SP<UI::AppState> &appState) :
+    _appState(appState),
+    _operations(makeShared<Operations>()),
+    _gridFloor(makeShared<GridFloor>()),
+    _manipulator(makeShared<Manipulator>()),
+    _manipulatorController(makeShared<ManipulatorController>(_manipulator, appState)),
+    _itemPicker(makeShared<ItemPicker>()),
+    _itemInteractor(makeShared<ItemInteractor>(_itemPicker))
+{
     initializeOpenGLFunctions();
 
     //glEnable(GL_CULL_FACE);
     //glCullFace(GL_BACK);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
-
-    _operations = std::make_shared<Operations>();
-    _gridFloor = std::make_shared<GridFloor>();
-    _manipulator = std::make_shared<Manipulator>();
-    _manipulatorController = std::make_shared<ManipulatorController>(_manipulator, appState);
-    _itemPicker = std::make_shared<ItemPicker>();
-    _itemInteractor = std::make_shared<ItemInteractor>(_itemPicker);
 
     connect(appState.get(), &UI::AppState::isVertexVisibleChanged, this, &ViewportRenderer::updateNeeded);
     connect(appState.get(), &UI::AppState::isEdgeVisibleChanged, this, &ViewportRenderer::updateNeeded);
@@ -66,20 +65,17 @@ void ViewportRenderer::render() {
     std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> newMeshRenderers;
 
     _appState->document()->rootItem()->forEachDescendant([&] (auto& item) {
-        auto meshItem = std::dynamic_pointer_cast<Document::MeshItem>(item);
-        if (!meshItem) {
-            return;
-        }
+        LATTICE_OPTIONAL_GUARD(meshItem, dynamicPointerCast<Document::MeshItem>(item), return;)
         connect(meshItem.get(), &Document::MeshItem::locationChanged, this, &ViewportRenderer::updateNeeded);
 
         auto it = _meshRenderers.find(meshItem);
         if (it != _meshRenderers.end()) {
-            newMeshRenderers[meshItem] = it->second;
+            newMeshRenderers.insert({meshItem, it->second});
             return;
         }
 
-        auto renderer = std::make_shared<MeshRenderer>(meshItem);
-        newMeshRenderers[meshItem] = renderer;
+        auto renderer = makeShared<MeshRenderer>(meshItem);
+        newMeshRenderers.insert({meshItem, renderer});
     });
 
     _meshRenderers = newMeshRenderers;

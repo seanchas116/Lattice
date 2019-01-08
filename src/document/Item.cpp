@@ -66,7 +66,7 @@ std::optional<SP<Item> > Item::parentItem() const {
 std::optional<SP<Item>> Item::nextItem() const {
     LATTICE_OPTIONAL_GUARD(parent, parentItem(), return {};)
 
-    auto it = std::find(parent->_childItems.begin(), parent->_childItems.end(), shared_from_this());
+    auto it = std::find(parent->_childItems.begin(), parent->_childItems.end(), sharedFromThis());
     if (it == parent->_childItems.end() || it == parent->_childItems.end() - 1) {
         return {};
     }
@@ -78,7 +78,7 @@ void Item::appendChildItem(const SP<Item> &item) {
 }
 
 void Item::insertItemBefore(const SP<Item> &item, const std::optional<SP<const Item>> &reference) {
-    addChange(std::make_shared<Item::ChildInsertChange>(shared_from_this(), item, reference));
+    addChange(makeShared<Item::ChildInsertChange>(sharedFromThis(), item, reference));
 }
 
 void Item::insertItemBeforeInternal(const SP<Item> &item, const std::optional<SP<const Item>> &reference) {
@@ -99,12 +99,12 @@ void Item::insertItemBeforeInternal(const SP<Item> &item, const std::optional<SP
     int index = it - _childItems.begin();
     emit childItemsAboutToBeInserted(index, index);
     _childItems.insert(it, item);
-    item->_parentItem = shared_from_this();
+    item->_parentItem = sharedFromThis();
     emit childItemsInserted(index, index);
 }
 
 void Item::removeChildItem(const SP<Item>& item) {
-    addChange(std::make_shared<Item::ChildRemoveChange>(shared_from_this(), item));
+    addChange(makeShared<Item::ChildRemoveChange>(sharedFromThis(), item));
 }
 
 void Item::removeChildItemInternal(const SP<Item>& item) {
@@ -120,16 +120,14 @@ void Item::removeChildItemInternal(const SP<Item>& item) {
 }
 
 int Item::index() const {
-    auto parent = _parentItem.lock();
-    if (parent) {
-        auto& siblings = parent->_childItems;
-        auto it = std::find(siblings.begin(), siblings.end(), shared_from_this());
-        if (it == siblings.end()) {
-            return -1;
-        }
-        return it - siblings.begin();
+    LATTICE_OPTIONAL_GUARD(parent, _parentItem.lock(), return -1;)
+
+    auto& siblings = parent->_childItems;
+    auto it = std::find(siblings.begin(), siblings.end(), sharedFromThis());
+    if (it == siblings.end()) {
+        return -1;
     }
-    return -1;
+    return it - siblings.begin();
 }
 
 std::vector<int> Item::indexPath() const {
@@ -155,10 +153,7 @@ void Item::fromJSON(const nlohmann::json &json) {
 }
 
 std::optional<SP<Document>> Item::document() const {
-    auto parent = _parentItem.lock();
-    if (!parent) {
-        return {};
-    }
+    LATTICE_OPTIONAL_GUARD(parent, _parentItem.lock(), return {};)
     return parent->document();
 }
 
@@ -182,12 +177,10 @@ public:
     }
 
     bool mergeWith(const SP<const Change>& other) override {
-        auto change = std::dynamic_pointer_cast<const NameChange>(other);
-        if (change && change->_item == _item) {
-            _name = change->_name;
-            return true;
-        }
-        return false;
+        LATTICE_OPTIONAL_GUARD(change, dynamicPointerCast<const NameChange>(other), return false;)
+        if (change->_item != _item) { return false; }
+        _name = change->_name;
+        return true;
     }
 
 private:
@@ -211,12 +204,10 @@ public:
     }
 
     bool mergeWith(const SP<const Change>& other) override {
-        auto change = std::dynamic_pointer_cast<const LocationChange>(other);
-        if (change && change->_item == _item) {
-            _location = change->_location;
-            return true;
-        }
-        return false;
+        LATTICE_OPTIONAL_GUARD(change, dynamicPointerCast<const LocationChange>(other), return false;)
+        if (change->_item != _item) { return false; }
+        _location = change->_location;
+        return true;
     }
 
 private:
@@ -227,7 +218,7 @@ private:
 
 void Item::setName(const std::string &name) {
     if (_name != name) {
-        addChange(std::make_shared<NameChange>(shared_from_this(), name));
+        addChange(makeShared<NameChange>(sharedFromThis(), name));
     }
 }
 
@@ -240,12 +231,12 @@ void Item::setNameInternal(const std::string &name) {
 
 void Item::setLocation(const Location &location) {
     if (_location != location) {
-        addChange(std::make_shared<LocationChange>(shared_from_this(), location));
+        addChange(makeShared<LocationChange>(sharedFromThis(), location));
     }
 }
 
 void Item::forEachDescendant(const std::function<void(const SP<Item>&)> &callback) {
-    callback(shared_from_this());
+    callback(sharedFromThis());
     for (auto& child : _childItems) {
         child->forEachDescendant(callback);
     }

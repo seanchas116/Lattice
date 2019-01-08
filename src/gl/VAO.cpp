@@ -5,7 +5,7 @@
 
 namespace Lattice::GL {
 
-VAO::VAO() : VAO(std::make_shared<VertexBuffer>()) {
+VAO::VAO() : VAO(makeShared<VertexBuffer>()) {
 }
 
 VAO::VAO(const SP<VertexBuffer> &vertexBuffer) : _vertexBuffer(vertexBuffer) {

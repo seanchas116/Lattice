@@ -40,11 +40,13 @@ public:
 
 private:
     template <typename U> friend class WeakPointer;
-    SharedPointer(const std::shared_ptr<element_type>& ptr) : _ptr(ptr) {}
-    SharedPointer(std::shared_ptr<element_type>&& ptr) : _ptr(std::move(ptr)) {}
+    template <typename TDerived> friend class EnableSharedFromThis;
 
     template <typename T, typename U>
     friend std::optional<SharedPointer<T>> dynamicPointerCast(const SharedPointer<U>& original);
+
+    SharedPointer(const std::shared_ptr<element_type>& ptr) : _ptr(ptr) {}
+    SharedPointer(std::shared_ptr<element_type>&& ptr) : _ptr(std::move(ptr)) {}
 
     std::shared_ptr<element_type> _ptr;
 };
@@ -61,7 +63,7 @@ bool operator!=(const SharedPointer<A>& left, const SharedPointer<B>& right) {
 
 template <typename A, typename B>
 bool operator<(const SharedPointer<A>& left, const SharedPointer<B>& right) {
-    return left < right;
+    return left._ptr < right._ptr;
 }
 
 template <typename T>
@@ -93,10 +95,14 @@ private:
 };
 
 template <typename TDerived>
-class EnableSharedFromThis : private std::enable_shared_from_this<TDerived> {
+class EnableSharedFromThis : public std::enable_shared_from_this<TDerived> {
 public:
-    SharedPointer<TDerived> sharedFromThis();
-    SharedPointer<const TDerived> sharedFromThis() const;
+    SharedPointer<TDerived> sharedFromThis() {
+        return {this->shared_from_this()};
+    }
+    SharedPointer<const TDerived> sharedFromThis() const {
+        return {this->shared_from_this()};
+    }
 };
 
 template <typename T, typename ...TArgs>

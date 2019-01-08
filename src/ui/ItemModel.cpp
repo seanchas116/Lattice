@@ -127,7 +127,10 @@ bool ItemModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int r
             items.push_back(item);
         }
 
-        SP<Document::Item> ref = (row == -1 || row == int(parentItem->childItems().size())) ? nullptr : parentItem->childItems()[row];
+        std::optional<SP<Document::Item>> ref;
+        if (row != -1 && row != int(parentItem->childItems().size())) {
+            ref = parentItem->childItems()[row];
+        }
         switch (action) {
         default:
         case Qt::CopyAction:
@@ -158,21 +161,21 @@ SP<Document::Item> ItemModel::itemForIndex(const QModelIndex &index) const {
     if (!index.isValid()) {
         return _document->rootItem();
     }
-    return static_cast<Document::Item *>(index.internalPointer())->shared_from_this();
+    return static_cast<Document::Item *>(index.internalPointer())->sharedFromThis();
 }
 
 void ItemModel::connectItem(const SP<Document::Item> &item) {
     auto itemPtr = item.get();
     connect(itemPtr, &Document::Item::nameChanged, this, [this, itemPtr] () {
-        auto index = indexForItem(itemPtr->shared_from_this());
+        auto index = indexForItem(itemPtr->sharedFromThis());
         emit dataChanged(index, index, {Qt::DisplayRole});
     });
     connect(itemPtr, &Document::Item::childItemsAboutToBeInserted, this, [this, itemPtr] (int first, int last) {
-        auto index = indexForItem(itemPtr->shared_from_this());
+        auto index = indexForItem(itemPtr->sharedFromThis());
         beginInsertRows(index, first, last);
     });
     connect(itemPtr, &Document::Item::childItemsInserted, this, [this, itemPtr] (int first, int last) {
-        auto item = itemPtr->shared_from_this();
+        auto item = itemPtr->sharedFromThis();
         for (int i = first; i <= last; ++i) {
             auto& child = item->childItems()[i];
             connectItem(child);
@@ -180,7 +183,7 @@ void ItemModel::connectItem(const SP<Document::Item> &item) {
         endInsertRows();
     });
     connect(itemPtr, &Document::Item::childItemsAboutToBeRemoved, this, [this, itemPtr] (int first, int last) {
-        auto item = itemPtr->shared_from_this();
+        auto item = itemPtr->sharedFromThis();
         for (int i = first; i <= last; ++i) {
             auto& child = item->childItems()[i];
             disconnectItem(child);

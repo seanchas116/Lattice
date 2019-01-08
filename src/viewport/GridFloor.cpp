@@ -8,10 +8,7 @@ using namespace glm;
 
 namespace Lattice::Viewport {
 
-GridFloor::GridFloor() {
-    auto buffer = std::make_shared<GL::VertexBuffer>();
-    _vao = std::make_shared<GL::LineVAO>(buffer);
-
+GridFloor::GridFloor() : _vao(makeShared<GL::LineVAO>()) {
     // build grid
     constexpr int count = 200;
     constexpr double unit = 1;
@@ -38,7 +35,7 @@ GridFloor::GridFloor() {
         lineStrips.push_back({i1, i2});
     }
 
-    buffer->setVertices(vertices);
+    _vao->vertexBuffer()->setVertices(vertices);
     _vao->setLineStrips(lineStrips);
 }
 

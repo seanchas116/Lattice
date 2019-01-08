@@ -47,12 +47,12 @@ signals:
 private:
     glm::ivec2 _logicalSize;
     Camera _camera;
+    SP<UI::AppState> _appState;
     SP<Operations> _operations;
     SP<GridFloor> _gridFloor;
     SP<Manipulator> _manipulator;
     SP<ManipulatorController> _manipulatorController;
     std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> _meshRenderers;
-    SP<UI::AppState> _appState;
     SP<ItemPicker> _itemPicker;
     SP<ItemInteractor> _itemInteractor;
 };

@@ -40,7 +40,7 @@ std::vector<SP<Document::MeshItem>> ObjLoader::load(const QString &filePathStrin
     };
 
     for (auto& objShape : objShapes) {
-        auto item = std::make_shared<Document::MeshItem>();
+        auto item = makeShared<Document::MeshItem>();
         item->setName(objShape.name);
 
         // TODO: use index_t as key
@@ -89,15 +89,15 @@ std::vector<SP<Document::MeshItem>> ObjLoader::load(const QString &filePathStrin
                     glm::vec3 pos(vx, vy, vz);
                     glm::vec2 uv(tx, ty);
 
-                    uvPointForIndices[{idx.vertex_index, idx.texcoord_index}] = item->mesh()->addUVPoint(item->mesh()->addVertex(pos), uv);
+                    uvPointForIndices.insert({{idx.vertex_index, idx.texcoord_index}, item->mesh()->addUVPoint(item->mesh()->addVertex(pos), uv)});
                 }
-                uvPoints.push_back(uvPointForIndices[{idx.vertex_index, idx.texcoord_index}]);
+                uvPoints.push_back(uvPointForIndices.at({idx.vertex_index, idx.texcoord_index}));
             }
             index_offset += fv;
 
             auto materialID = objShape.mesh.material_ids[f];
             if (materialID >= 0) {
-                auto material = materials[materialID];
+                auto material = materials.at(materialID);
                 item->mesh()->addFace(uvPoints, material);
             } else {
                 // TODO: add default material

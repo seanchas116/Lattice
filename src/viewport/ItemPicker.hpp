@@ -19,7 +19,7 @@ public:
     ItemPicker();
     void update(const SP<Document::Item>& rootItem);
 
-    std::tuple<SP<Document::Item>, float> pick(const Ray<float>& worldMouseRay) const;
+    std::optional<std::pair<SP<Document::Item>, float>> pick(const Ray<float>& worldMouseRay) const;
 
 private:
     void addItemRecursive(const SP<Document::Item>& item);

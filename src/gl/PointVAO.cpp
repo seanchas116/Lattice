@@ -3,7 +3,7 @@
 
 namespace Lattice::GL {
 
-PointVAO::PointVAO() : PointVAO(std::make_shared<VertexBuffer>()) {
+PointVAO::PointVAO() : PointVAO(makeShared<VertexBuffer>()) {
 }
 
 PointVAO::PointVAO(const SP<VertexBuffer> &vertexBuffer) : _vertexBuffer(vertexBuffer) {

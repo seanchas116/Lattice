@@ -12,7 +12,7 @@ Framebuffer::Framebuffer(glm::ivec2 size) :
     _name = QOpenGLContext::currentContext()->defaultFramebufferObject();
 }
 
-Framebuffer::Framebuffer(glm::ivec2 size, const std::vector<SP<Texture> > &colorBuffers, const SP<DepthStencilTexture>& depthStencilBuffer) :
+Framebuffer::Framebuffer(glm::ivec2 size, const std::vector<SP<Texture> > &colorBuffers, const std::optional<SP<DepthStencilTexture> > &depthStencilBuffer) :
     _size(size),
     _colorBuffers(colorBuffers),
     _depthStencilBuffer(depthStencilBuffer)
@@ -25,9 +25,9 @@ Framebuffer::Framebuffer(glm::ivec2 size, const std::vector<SP<Texture> > &color
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + uint32_t(i), GL_TEXTURE_2D,
                                colorBuffers[i]->name(), 0);
     }
-    if (depthStencilBuffer) {
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthStencilBuffer->name(), 0);
-    }
+    LATTICE_OPTIONAL_LET(depthStencil, depthStencilBuffer, {
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthStencil->name(), 0);
+    })
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
