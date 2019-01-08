@@ -154,7 +154,7 @@ void Item::fromJSON(const nlohmann::json &json) {
     setLocation(json["location"]);
 }
 
-SP<Document> Item::document() const {
+std::optional<SP<Document>> Item::document() const {
     auto parent = _parentItem.lock();
     if (!parent) {
         return {};
@@ -163,12 +163,8 @@ SP<Document> Item::document() const {
 }
 
 void Item::addChange(const SP<Change> &change) {
-    auto document = this->document();
-    if (document) {
-        document->history()->addChange(change);
-    } else {
-        change->redo(); // only apply change
-    }
+    LATTICE_OPTIONAL_GUARD(ducument, this->document(), change->redo(); return;);
+    ducument->history()->addChange(change);
 }
 
 class Item::NameChange : public Change {

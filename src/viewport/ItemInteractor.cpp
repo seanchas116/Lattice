@@ -5,6 +5,7 @@
 #include "../document/History.hpp"
 #include "../support/Camera.hpp"
 #include "../support/Debug.hpp"
+#include "../support/OptionalGuard.hpp"
 #include <QtDebug>
 #include <QMouseEvent>
 
@@ -20,6 +21,7 @@ bool ItemInteractor::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera
     if (!item) {
         return false;
     }
+    LATTICE_OPTIONAL_GUARD(document, item->document(), return false;)
     _draggedItem = item;
 
     glm::dvec3 worldDragPos = worldMouseRay.at(t);
@@ -33,7 +35,7 @@ bool ItemInteractor::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera
     _initialDragDepth = screenDragPos.z;
     _dragStarted = false;
 
-    item->document()->selectItem(item, event->modifiers() & Qt::ShiftModifier);
+    document->selectItem(item, event->modifiers() & Qt::ShiftModifier);
 
     return true;
 }
@@ -43,13 +45,14 @@ bool ItemInteractor::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera 
     if (!_draggedItem) {
         return false;
     }
+    LATTICE_OPTIONAL_GUARD(document, _draggedItem->document(), return false;)
 
     auto newWorldPos = camera.mapScreenToWorld(glm::dvec3(pos, _initialDragDepth));
     auto newLocation = _initialLocation;
     newLocation.position += newWorldPos - _initialWorldPos;
 
     if (!_dragStarted) {
-        _draggedItem->document()->history()->beginChange(tr("Move Item"));
+        document->history()->beginChange(tr("Move Item"));
         _dragStarted = true;
     }
     _draggedItem->setLocation(newLocation);

@@ -40,7 +40,7 @@ public:
     virtual SP<Item> clone() const = 0;
     virtual void toJSON(nlohmann::json& json) const;
     virtual void fromJSON(const nlohmann::json& json);
-    virtual SP<Document> document() const;
+    virtual std::optional<SP<Document>> document() const;
 
 protected:
     void addChange(const SP<Change>& change);

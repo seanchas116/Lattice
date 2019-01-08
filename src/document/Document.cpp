@@ -21,7 +21,7 @@ public:
         return true;
     }
 
-    SP<Document> document() const override {
+    std::optional<SP<Document>> document() const override {
         return _document->shared_from_this();
     }
 
