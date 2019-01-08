@@ -16,8 +16,6 @@ class Document final : public QObject, public EnableSharedFromThis<Document> {
 public:
     Document();
 
-    void addInitialItems();
-
     const SP<Item>& rootItem() const { return _rootItem; }
 
     const auto& currentItem() const { return _currentItem; }

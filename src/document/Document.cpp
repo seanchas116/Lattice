@@ -38,15 +38,6 @@ Document::Document() :
     watchChildrenInsertRemove(_rootItem);
 }
 
-void Document::addInitialItems() {
-    // Add example item
-    auto meshItem = makeShared<MeshItem>();
-    meshItem->setName(tr("Mesh").toStdString());
-
-    _rootItem->appendChildItem(meshItem);
-    _selectedItems = {meshItem};
-}
-
 std::optional<SP<MeshItem> > Document::currentMeshItem() const {
     LATTICE_OPTIONAL_GUARD(currentItem, _currentItem, return {};)
     return dynamicPointerCast<MeshItem>(currentItem);

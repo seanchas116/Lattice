@@ -14,13 +14,10 @@ using namespace glm;
 namespace Lattice::UI {
 
 AppState::AppState() : _document(makeShared<Document::Document>()) {
-    _document->addInitialItems();
-    auto initialItem = _document->rootItem()->childItems()[0];
-    _document->setCurrentItem(initialItem);
-
-    LATTICE_OPTIONAL_GUARD(meshItem, dynamicPointerCast<Document::MeshItem>(initialItem), return;)
-    auto mesh = meshItem->mesh();
-    mesh->addCube(glm::vec3(-1), glm::vec3(1), mesh->addMaterial());
+    addCube();
+    auto item = _document->rootItem()->childItems()[0];
+    _document->setCurrentItem(item);
+    _document->history()->clear();
 }
 
 void AppState::deleteItems() {
