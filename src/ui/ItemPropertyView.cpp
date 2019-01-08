@@ -3,6 +3,7 @@
 #include "../document/Document.hpp"
 #include "../document/Item.hpp"
 #include "../support/Debug.hpp"
+#include "../support/OptionalGuard.hpp"
 #include <QDoubleSpinBox>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -93,11 +94,7 @@ void ItemPropertyView::onLocationChanged() {
 }
 
 void ItemPropertyView::setLocation() {
-    auto maybeItem = _appState->document()->currentItem();
-    if (!maybeItem) {
-        return;
-    }
-    auto item = *maybeItem;
+    LATTICE_OPTIONAL_GUARD(item,  _appState->document()->currentItem(), return;)
     Location location;
 
     glm::dvec3 eulerAngles(0);

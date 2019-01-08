@@ -1,6 +1,7 @@
 #include "ItemSelectionModel.hpp"
 #include "ItemModel.hpp"
 #include "../document/Document.hpp"
+#include "../support/OptionalGuard.hpp"
 #include <QtDebug>
 
 namespace Lattice::UI {
@@ -16,13 +17,9 @@ ItemSelectionModel::ItemSelectionModel(ItemModel *model, QObject *parent) : QIte
         select(selection, QItemSelectionModel::ClearAndSelect);
     };
     auto onCurrentChange = [this, model] {
-        auto currentItem = model->document()->currentItem();
-        if (currentItem) {
-            auto current = model->indexForItem(*currentItem);
-            select(current, QItemSelectionModel::Current);
-        } else {
-            clearCurrentIndex();
-        }
+        LATTICE_OPTIONAL_GUARD(currentItem, model->document()->currentItem(), clearCurrentIndex();)
+        auto current = model->indexForItem(currentItem);
+        select(current, QItemSelectionModel::Current);
     };
     connect(model->document().get(), &Document::Document::selectedItemsChanged, this, onSelectionChange);
     connect(model->document().get(), &Document::Document::currentItemChanged, this, onCurrentChange);
