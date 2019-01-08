@@ -25,13 +25,11 @@ public:
     glm::ivec2 logicalSize() const;
 
 signals:
-    void sizeChanged(glm::ivec2 logicalSize, glm::ivec2 physicalSize);
+    void resized();
     void initialized();
     void aboutToBePainted();
 
 protected:
-    void resizeEvent(QResizeEvent *event) override;
-
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
