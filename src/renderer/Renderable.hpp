@@ -15,7 +15,7 @@ public:
 
     virtual void draw(const SP<Operations>& operations, const Camera& camera);
 
-    virtual bool hitTest(glm::dvec2 pos, const Camera& camera) const;
+    virtual std::pair<bool, double> hitTest(glm::dvec2 pos, const Camera& camera) const;
 
     virtual void mousePress(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
     virtual void mouseMove(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);

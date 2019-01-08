@@ -13,9 +13,9 @@ void Renderable::draw(const SP<Operations> &operations, const Camera &camera) {
     Q_UNUSED(operations); Q_UNUSED(camera);
 }
 
-bool Renderable::hitTest(glm::dvec2 pos, const Camera &camera) const {
+std::pair<bool, double> Renderable::hitTest(glm::dvec2 pos, const Camera &camera) const {
     Q_UNUSED(pos); Q_UNUSED(camera);
-    return false;
+    return {false, 0};
 }
 
 void Renderable::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
