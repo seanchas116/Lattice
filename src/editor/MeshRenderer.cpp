@@ -57,8 +57,6 @@ MeshRenderer::MeshRenderer(const SP<Document::MeshItem> &item) :
 {
     // TODO: update mesh when item is changed
     updateVAOs(item->mesh());
-
-    setChildren({_facesRenderer, _edgesRenderer, _verticesRenderer});
 }
 
 void MeshRenderer::updateVAOs(const SP<Document::Mesh> &mesh) {

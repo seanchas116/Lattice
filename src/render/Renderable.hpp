@@ -19,16 +19,6 @@ public:
     virtual std::pair<bool, double> mousePress(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
     virtual void mouseMove(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
     virtual void mouseRelease(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
-
-    auto& children() const { return _children; }
-    void setChildren(const std::vector<SP<Renderable>> &children) { _children = children; }
-
-    bool isVisible() const { return _isVisible; }
-    void setVisible(bool visible) { _isVisible = visible; }
-
-private:
-    std::vector<SP<Renderable>> _children;
-    bool _isVisible = true;
 };
 
 } // namespace Renderer
