@@ -26,6 +26,8 @@ public:
 
 signals:
     void sizeChanged(glm::ivec2 logicalSize, glm::ivec2 physicalSize);
+    void initialized();
+    void aboutToBePainted();
 
 protected:
     void resizeEvent(QResizeEvent *event) override;

@@ -31,6 +31,7 @@ void RenderWidget::mouseMoveEvent(QMouseEvent *event) {
 
 void RenderWidget::initializeGL() {
     initializeOpenGLFunctions();
+    emit initialized();
 }
 
 void RenderWidget::resizeGL(int w, int h) {
@@ -38,6 +39,8 @@ void RenderWidget::resizeGL(int w, int h) {
 }
 
 void RenderWidget::paintGL() {
+    emit aboutToBePainted();
+
     for (auto& viewport : _viewports) {
         glm::dvec2 minPos = viewport.offset;
         glm::dvec2 maxPos = minPos + viewport.camera.viewSize();
