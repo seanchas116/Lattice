@@ -1,4 +1,5 @@
 #include "RenderWidget.hpp"
+#include "Renderable.hpp"
 
 namespace Lattice {
 namespace Renderer {
