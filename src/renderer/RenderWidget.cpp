@@ -46,8 +46,10 @@ void RenderWidget::paintGL() {
 
         glViewport(minPosWidget.x, minPosWidget.y, sizeWidget.x, sizeWidget.y);
 
-        for (auto& renderable : _renderables) {
-            renderable->draw(_operations.sharedFromThis(), viewport.camera);
+        for (auto& layer : _layers) {
+            for (auto& renderable : layer) {
+                renderable->draw(_operations.sharedFromThis(), viewport.camera);
+            }
         }
     }
 }

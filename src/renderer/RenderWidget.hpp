@@ -9,6 +9,8 @@ namespace Renderer {
 
 class Renderable;
 
+using Layer = std::vector<SP<Renderable>>;
+
 class RenderWidget : public QOpenGLWidget, protected QOpenGLExtraFunctions {
     Q_OBJECT
 public:
@@ -17,8 +19,8 @@ public:
     auto& viewports() const { return _viewports; }
     void setViewports(const std::vector<Viewport>& viewports) { _viewports = viewports; }
 
-    auto& renderables() const { return _renderables; }
-    void setRenderables(const std::vector<SP<Renderable>>& renderables) { _renderables = renderables; }
+    std::vector<Layer> layers() const { return _layers; }
+    void setLayers(const std::vector<Layer> &layers) { _layers = layers; }
 
 signals:
     void sizeChanged(glm::ivec2 logicalSize, glm::ivec2 physicalSize);
@@ -38,7 +40,7 @@ private:
     double widgetPixelRatio() const;
 
     Operations _operations;
-    std::vector<SP<Renderable>> _renderables;
+    std::vector<Layer> _layers;
     std::vector<Viewport> _viewports;
 };
 
