@@ -17,6 +17,10 @@ namespace Lattice::Document {
 class MeshItem;
 }
 
+namespace Lattice::Renderer {
+class Operations;
+}
+
 namespace Lattice::Viewport {
 
 class GridFloor;
@@ -48,7 +52,7 @@ private:
     glm::ivec2 _logicalSize;
     Camera _camera;
     SP<UI::AppState> _appState;
-    SP<Operations> _operations;
+    SP<Renderer::Operations> _operations;
     SP<GridFloor> _gridFloor;
     SP<Manipulator> _manipulator;
     SP<ManipulatorController> _manipulatorController;

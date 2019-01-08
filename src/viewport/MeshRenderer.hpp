@@ -2,6 +2,7 @@
 
 #include "../support/Pointer.hpp"
 #include "../support/Box.hpp"
+#include "../renderer/Renderable.hpp"
 #include <glm/glm.hpp>
 #include <unordered_map>
 
@@ -31,9 +32,9 @@ class MeshRenderer final {
 public:
     MeshRenderer(const SP<Document::MeshItem>& item);
 
-    void drawFaces(const SP<Operations>& operations, const Camera& camera);
-    void drawEdges(const SP<Operations> &operations, const Camera &camera);
-    void drawVertices(const SP<Operations>& operations, const Camera& camera);
+    void drawFaces(const SP<Renderer::Operations>& operations, const Camera& camera);
+    void drawEdges(const SP<Renderer::Operations> &operations, const Camera &camera);
+    void drawVertices(const SP<Renderer::Operations>& operations, const Camera& camera);
 
 private:
     void updateVAOs(const SP<Document::Mesh>& mesh);

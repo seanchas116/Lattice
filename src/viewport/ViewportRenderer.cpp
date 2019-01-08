@@ -1,11 +1,11 @@
 #include "ViewportRenderer.hpp"
 #include "GridFloor.hpp"
 #include "MeshRenderer.hpp"
-#include "Operations.hpp"
 #include "Manipulator.hpp"
 #include "ManipulatorController.hpp"
 #include "ItemPicker.hpp"
 #include "ItemInteractor.hpp"
+#include "../renderer/Operations.hpp"
 #include "../resource/Resource.hpp"
 #include "../ui/AppState.hpp"
 #include "../document/Document.hpp"
@@ -19,7 +19,7 @@ namespace Lattice::Viewport {
 
 ViewportRenderer::ViewportRenderer(const SP<UI::AppState> &appState) :
     _appState(appState),
-    _operations(makeShared<Operations>()),
+    _operations(makeShared<Renderer::Operations>()),
     _gridFloor(makeShared<GridFloor>()),
     _manipulator(makeShared<Manipulator>()),
     _manipulatorController(makeShared<ManipulatorController>(_manipulator, appState)),

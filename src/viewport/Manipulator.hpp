@@ -2,8 +2,8 @@
 
 #include <glm/glm.hpp>
 #include <QObject>
-#include "Operations.hpp"
 #include "../support/Camera.hpp"
+#include "../renderer/Renderable.hpp"
 
 class QMouseEvent;
 
@@ -16,7 +16,7 @@ class Manipulator final : public QObject, protected QOpenGLExtraFunctions {
 public:
     Manipulator();
 
-    void draw(const SP<Operations>& operations, const Camera& camera);
+    void draw(const SP<Renderer::Operations>& operations, const Camera& camera);
 
     bool mousePress(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
     bool mouseMove(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);

@@ -1,5 +1,4 @@
 #include "GridFloor.hpp"
-#include "Operations.hpp"
 #include "../gl/LineVAO.hpp"
 #include "../gl/VertexBuffer.hpp"
 #include "../support/Camera.hpp"
@@ -58,7 +57,7 @@ GridFloor::GridFloor() :
     _zAxisVAO->setLineStrips({zLineStrip});
 }
 
-void GridFloor::draw(const SP<Operations> &operations, const Camera &camera) {
+void GridFloor::draw(const SP<Renderer::Operations> &operations, const Camera &camera) {
     operations->drawLine.draw(_vao, dmat4(1), camera, 1, dvec3(0.5));
     operations->drawLine.draw(_xAxisVAO, dmat4(1), camera, 1, dvec3(0.8, 0.5, 0.5));
     operations->drawLine.draw(_zAxisVAO, dmat4(1), camera, 1, dvec3(0.5, 0.5, 0.8));

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../support/Pointer.hpp"
+#include "../renderer/Renderable.hpp"
 #include <glm/glm.hpp>
 
 namespace Lattice {
@@ -14,13 +15,11 @@ class LineVAO;
 
 namespace Lattice::Viewport {
 
-class Operations;
-
-class GridFloor final {
+class GridFloor final : public Renderer::Renderable {
 public:
     GridFloor();
 
-    void draw(const SP<Operations>& operations, const Camera& camera);
+    void draw(const SP<Renderer::Operations>& operations, const Camera& camera) override;
 
 private:
     SP<GL::VertexBuffer> _vbo;
