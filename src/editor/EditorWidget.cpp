@@ -15,7 +15,7 @@ EditorWidget::EditorWidget(const SP<UI::AppState> &appState, QWidget *parent) :
     connect(&_keyObserver, &KeyObserver::selectedKeysChanged, &_cameraController, &CameraController::setPressedKeys);
 
     connect(this, &RenderWidget::initialized, this, [this] {
-        _scene = makeShared<EditorScene>();
+        _scene = makeShared<EditorScene>(_appState);
         connect(_scene->get(), &EditorScene::updateRequested, this, [this] { update(); });
         connect(this, &RenderWidget::aboutToBePainted, this, [this] {
             LATTICE_OPTIONAL_GUARD(scene, _scene, return;)
@@ -69,7 +69,6 @@ void EditorWidget::updateCamera() {
     _camera.setLocation(_cameraController.location());
     _camera.setViewSize(logicalSize());
 
-    qDebug() << "camera updated";
     setViewports({{glm::ivec2(0), _camera}});
     update();
 }
