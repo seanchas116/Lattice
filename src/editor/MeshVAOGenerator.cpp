@@ -7,7 +7,7 @@
 #include "../gl/VertexBuffer.hpp"
 
 namespace Lattice {
-namespace Viewport {
+namespace Editor {
 
 MeshVAOGenerator::MeshVAOGenerator(const SP<Document::Mesh> &mesh) :
     _mesh(mesh),

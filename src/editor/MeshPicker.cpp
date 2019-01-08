@@ -5,7 +5,7 @@
 using namespace glm;
 
 namespace Lattice {
-namespace Viewport {
+namespace Editor {
 
 MeshPicker::MeshPicker(const SP<Document::Mesh> &mesh) : _mesh(mesh) {
 }

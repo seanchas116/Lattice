@@ -15,7 +15,7 @@
 
 using namespace glm;
 
-namespace Lattice::Viewport {
+namespace Lattice::Editor {
 
 ViewportRenderer::ViewportRenderer(const SP<UI::AppState> &appState) :
     _appState(appState),

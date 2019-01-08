@@ -4,7 +4,7 @@
 #include <QOpenGLDebugLogger>
 #include <QMouseEvent>
 
-namespace Lattice::Viewport {
+namespace Lattice::Editor {
 
 ViewportWidget::ViewportWidget(const SP<UI::AppState> &appState, QWidget *parent) :
     QOpenGLWidget(parent),

@@ -13,7 +13,7 @@ namespace Lattice::Document {
 class Item;
 }
 
-namespace Lattice::Viewport {
+namespace Lattice::Editor {
 
 class Manipulator;
 

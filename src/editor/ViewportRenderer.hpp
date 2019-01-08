@@ -21,7 +21,7 @@ namespace Lattice::Render {
 class Operations;
 }
 
-namespace Lattice::Viewport {
+namespace Lattice::Editor {
 
 class GridFloor;
 class MeshRenderer;

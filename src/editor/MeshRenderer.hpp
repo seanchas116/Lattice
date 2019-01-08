@@ -24,7 +24,7 @@ class LineVAO;
 class PointVAO;
 }
 
-namespace Lattice::Viewport {
+namespace Lattice::Editor {
 
 class Operations;
 

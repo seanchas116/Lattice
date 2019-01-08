@@ -10,7 +10,7 @@
 #include <QMouseEvent>
 
 namespace Lattice {
-namespace Viewport {
+namespace Editor {
 
 ItemInteractor::ItemInteractor(const SP<ItemPicker> &picker) : _picker(picker) {
 }

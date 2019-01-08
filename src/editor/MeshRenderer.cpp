@@ -10,7 +10,7 @@
 
 using namespace glm;
 
-namespace Lattice::Viewport {
+namespace Lattice::Editor {
 
 class MeshRenderer::FacesRenderer : public Render::Renderable {
 public:

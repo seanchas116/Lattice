@@ -16,7 +16,7 @@ namespace Document {
 class Item;
 }
 
-namespace Viewport {
+namespace Editor {
 
 class ItemPicker;
 

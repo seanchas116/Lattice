@@ -3,7 +3,7 @@
 #include "../support/Ray.hpp"
 
 namespace Lattice {
-namespace Viewport {
+namespace Editor {
 
 class MeshPicker {
 public:

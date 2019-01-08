@@ -4,7 +4,7 @@
 
 using namespace glm;
 
-namespace Lattice::Viewport {
+namespace Lattice::Editor {
 
 CameraController::CameraController() {
     _location.position = dvec3(0, 10, 10);

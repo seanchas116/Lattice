@@ -6,7 +6,7 @@
 #include "../document/History.hpp"
 #include "../support/OptionalGuard.hpp"
 
-namespace Lattice::Viewport {
+namespace Lattice::Editor {
 
 ManipulatorController::ManipulatorController(const SP<Manipulator>& manipulator, const SP<UI::AppState> &appState) :
     _manipulator(manipulator),

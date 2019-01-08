@@ -1,7 +1,7 @@
 #include "KeyObserver.hpp"
 #include <QKeyEvent>
 
-namespace Lattice::Viewport {
+namespace Lattice::Editor {
 
 KeyObserver::KeyObserver() {
 }

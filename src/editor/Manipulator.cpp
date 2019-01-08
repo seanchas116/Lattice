@@ -15,7 +15,7 @@
 
 using namespace glm;
 
-namespace Lattice::Viewport {
+namespace Lattice::Editor {
 
 namespace {
 

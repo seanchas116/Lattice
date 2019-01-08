@@ -11,7 +11,7 @@ class MeshItem;
 class Mesh;
 }
 
-namespace Viewport {
+namespace Editor {
 
 class ItemPicker : public QObject {
     Q_OBJECT

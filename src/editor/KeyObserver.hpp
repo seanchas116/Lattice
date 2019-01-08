@@ -4,7 +4,7 @@
 
 class QKeyEvent;
 
-namespace Lattice::Viewport {
+namespace Lattice::Editor {
 
 class KeyObserver final : public QObject {
     Q_OBJECT

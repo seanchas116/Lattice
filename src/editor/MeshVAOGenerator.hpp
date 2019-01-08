@@ -16,7 +16,7 @@ class PointVAO;
 class VAO;
 }
 
-namespace Viewport {
+namespace Editor {
 
 class MeshVAOGenerator {
 public:

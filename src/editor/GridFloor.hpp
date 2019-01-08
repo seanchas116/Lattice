@@ -13,7 +13,7 @@ class VertexBuffer;
 class LineVAO;
 }
 
-namespace Lattice::Viewport {
+namespace Lattice::Editor {
 
 class GridFloor final : public Render::Renderable {
 public:

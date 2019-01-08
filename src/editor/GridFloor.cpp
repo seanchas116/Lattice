@@ -5,7 +5,7 @@
 
 using namespace glm;
 
-namespace Lattice::Viewport {
+namespace Lattice::Editor {
 
 GridFloor::GridFloor() :
     _vbo(makeShared<GL::VertexBuffer>()),

@@ -7,7 +7,7 @@
 #include <map>
 
 namespace Lattice {
-namespace Viewport {
+namespace Editor {
 
 ItemPicker::ItemPicker() {
 }

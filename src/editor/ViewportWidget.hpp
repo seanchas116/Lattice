@@ -9,7 +9,7 @@ namespace Lattice::UI {
 class AppState;
 }
 
-namespace Lattice::Viewport {
+namespace Lattice::Editor {
 
 class ViewportRenderer;
 

@@ -7,7 +7,7 @@
 
 class QMouseEvent;
 
-namespace Lattice::Viewport {
+namespace Lattice::Editor {
 
 class MeshPicker;
 
