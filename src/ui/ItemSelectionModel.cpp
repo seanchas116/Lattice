@@ -18,7 +18,7 @@ ItemSelectionModel::ItemSelectionModel(ItemModel *model, QObject *parent) : QIte
     auto onCurrentChange = [this, model] {
         auto currentItem = model->document()->currentItem();
         if (currentItem) {
-            auto current = model->indexForItem(currentItem);
+            auto current = model->indexForItem(*currentItem);
             select(current, QItemSelectionModel::Current);
         } else {
             clearCurrentIndex();
@@ -37,8 +37,13 @@ ItemSelectionModel::ItemSelectionModel(ItemModel *model, QObject *parent) : QIte
         model->document()->setSelectedItems(std::move(items));
     });
     connect(this, &QItemSelectionModel::currentChanged, model, [this, model] {
-        auto item = model->itemForIndex(currentIndex());
-        model->document()->setCurrentItem(item);
+        auto index = currentIndex();
+        if (index.isValid()) {
+            auto item = model->itemForIndex(currentIndex());
+            model->document()->setCurrentItem(item);
+        } else {
+            model->document()->setCurrentItem({});
+        }
     });
 }
 
