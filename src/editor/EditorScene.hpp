@@ -5,6 +5,7 @@
 namespace Lattice {
 namespace Editor {
 
+class Background;
 class GridFloor;
 
 class EditorScene : public QObject {
@@ -21,6 +22,7 @@ signals:
 
 private:
     std::vector<Render::Layer> _layers;
+    SP<Background> _background;
     SP<GridFloor> _gridFloor;
 };
 

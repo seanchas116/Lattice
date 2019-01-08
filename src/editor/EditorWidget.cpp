@@ -23,6 +23,10 @@ EditorWidget::EditorWidget(const SP<UI::AppState> &appState, QWidget *parent) :
             this->setLayers(scene->layers());
         });
     });
+
+    updateCamera();
+    connect(&_cameraController, &CameraController::locationChanged, this, &EditorWidget::updateCamera);
+    connect(this, &RenderWidget::resized, this, &EditorWidget::updateCamera);
 }
 
 void EditorWidget::mousePressEvent(QMouseEvent *event) {
@@ -65,7 +69,9 @@ void EditorWidget::updateCamera() {
     _camera.setLocation(_cameraController.location());
     _camera.setViewSize(logicalSize());
 
+    qDebug() << "camera updated";
     setViewports({{glm::ivec2(0), _camera}});
+    update();
 }
 
 } // namespace Lattice
