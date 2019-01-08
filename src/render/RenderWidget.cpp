@@ -2,6 +2,7 @@
 #include "Renderable.hpp"
 #include "../support/Debug.hpp"
 #include <QResizeEvent>
+#include <QOpenGLDebugLogger>
 
 namespace Lattice {
 namespace Render {
@@ -29,6 +30,16 @@ void RenderWidget::mouseMoveEvent(QMouseEvent *event) {
 
 void RenderWidget::initializeGL() {
     initializeOpenGLFunctions();
+
+    auto logger = new QOpenGLDebugLogger(this);
+    if (logger->initialize()) {
+        connect(logger, &QOpenGLDebugLogger::messageLogged, [](const auto& message) {
+            qWarning() << message;
+        });
+        logger->startLogging();
+        qDebug() << "OpenGL debug enabled";
+    }
+
     _operations = makeShared<Operations>();
     emit initialized();
 }
