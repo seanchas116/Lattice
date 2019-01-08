@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include "SharedPointer.hpp"
 
 namespace Lattice {
 
