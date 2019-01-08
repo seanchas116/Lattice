@@ -2,6 +2,7 @@
 #include "../document/Item.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
+#include "../support/OptionalGuard.hpp"
 #include <QMimeData>
 #include <QtDebug>
 #include <QDataStream>
@@ -53,10 +54,7 @@ QModelIndex ItemModel::index(int row, int column, const QModelIndex &parentIndex
 
 QModelIndex ItemModel::parent(const QModelIndex &child) const {
     auto item = itemForIndex(child);
-    auto parent = item->parentItem();
-    if (!parent) {
-        return {};
-    }
+    LATTICE_OPTIONAL_GUARD(parent, item->parentItem(), return {};)
     return indexForItem(parent);
 }
 

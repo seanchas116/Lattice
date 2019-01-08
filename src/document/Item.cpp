@@ -2,6 +2,7 @@
 #include "Document.hpp"
 #include "History.hpp"
 #include "../support/JSON.hpp"
+#include "../support/OptionalGuard.hpp"
 #include <QtDebug>
 #include <nlohmann/json.hpp>
 #include <algorithm>
@@ -10,7 +11,7 @@ namespace Lattice::Document {
 
 class Item::ChildInsertChange : public Change {
 public:
-    ChildInsertChange(const SP<Item>& parent, const SP<Item>& item, const SP<const Item>& reference) :
+    ChildInsertChange(const SP<Item>& parent, const SP<Item>& item, const std::optional<SP<const Item>>& reference) :
         _parent(parent),
         _item(item),
         _reference(reference)
@@ -29,7 +30,7 @@ private:
 
     SP<Item> _parent;
     SP<Item> _item;
-    SP<const Item> _reference;
+    std::optional<SP<const Item>> _reference;
 };
 
 class Item::ChildRemoveChange : public Change {
@@ -50,14 +51,21 @@ private:
 
     SP<Item> _parent;
     SP<Item> _item;
-    SP<Item> _reference;
+    std::optional<SP<Item>> _reference;
 };
 
-SP<Item> Item::nextItem() const {
-    auto parent = parentItem();
-    if (!parent) {
+std::optional<SP<Item> > Item::parentItem() const {
+    auto ptr = _parentItem.lock();
+    if (ptr) {
+        return {ptr};
+    } else {
         return {};
     }
+}
+
+std::optional<SP<Item>> Item::nextItem() const {
+    LATTICE_OPTIONAL_GUARD(parent, parentItem(), return {};)
+
     auto it = std::find(parent->_childItems.begin(), parent->_childItems.end(), shared_from_this());
     if (it == parent->_childItems.end() || it == parent->_childItems.end() - 1) {
         return {};
@@ -66,21 +74,18 @@ SP<Item> Item::nextItem() const {
 }
 
 void Item::appendChildItem(const SP<Item> &item) {
-    insertItemBefore(item, nullptr);
+    insertItemBefore(item, {});
 }
 
-void Item::insertItemBefore(const SP<Item> &item, const SP<const Item> &reference) {
+void Item::insertItemBefore(const SP<Item> &item, const std::optional<SP<const Item>> &reference) {
     addChange(std::make_shared<Item::ChildInsertChange>(shared_from_this(), item, reference));
 }
 
-void Item::insertItemBeforeInternal(const SP<Item> &item, const SP<const Item> &reference) {
+void Item::insertItemBeforeInternal(const SP<Item> &item, const std::optional<SP<const Item>> &reference) {
     if (!canInsertItem(item)) {
         throw std::runtime_error("cannot insert item");
     }
-    auto oldParent = item->parentItem();
-    if (oldParent) {
-        oldParent->removeChildItem(item);
-    }
+    LATTICE_OPTIONAL_LET(oldParent, item->parentItem(), oldParent->removeChildItem(item);)
 
     decltype(_childItems)::iterator it;
     if (reference) {
@@ -128,10 +133,7 @@ int Item::index() const {
 }
 
 std::vector<int> Item::indexPath() const {
-    auto parent = parentItem();
-    if (!parent) {
-        return {};
-    }
+    LATTICE_OPTIONAL_GUARD(parent, parentItem(), return {};)
     auto path = parent->indexPath();
     path.push_back(index());
     return path;

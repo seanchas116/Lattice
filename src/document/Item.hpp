@@ -5,6 +5,7 @@
 #include <nlohmann/json_fwd.hpp>
 #include <vector>
 #include <functional>
+#include <optional>
 
 namespace Lattice::Document {
 
@@ -14,11 +15,11 @@ class Change;
 class Item : public QObject, public std::enable_shared_from_this<Item> {
     Q_OBJECT
 public:
-    SP<Item> parentItem() const { return _parentItem.lock(); }
+    std::optional<SP<Item>> parentItem() const;
     const std::vector<SP<Item>>& childItems() const { return _childItems; }
-    SP<Item> nextItem() const;
+    std::optional<SP<Item>> nextItem() const;
     void appendChildItem(const SP<Item>& item);
-    void insertItemBefore(const SP<Item>& item, const SP<const Item>& reference);
+    void insertItemBefore(const SP<Item>& item, const std::optional<SP<const Item> > &reference);
     void removeChildItem(const SP<Item>& item);
     int index() const;
     std::vector<int> indexPath() const;
@@ -65,7 +66,7 @@ private:
     void setNameInternal(const std::string& name);
     void setLocationInternal(const Location& location);
 
-    void insertItemBeforeInternal(const SP<Item>& item, const SP<const Item>& reference);
+    void insertItemBeforeInternal(const SP<Item>& item, const std::optional<SP<const Item> > &reference);
     void removeChildItemInternal(const SP<Item>& item);
 
     std::string _name;
