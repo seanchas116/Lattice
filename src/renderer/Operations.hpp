@@ -8,7 +8,7 @@
 namespace Lattice {
 namespace Renderer {
 
-class Operations final {
+class Operations final : public EnableSharedFromThis<Operations> {
 public:
     Operations() = default;
 

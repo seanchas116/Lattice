@@ -2,13 +2,14 @@
 #include <QOpenGLWidget>
 #include "../support/Pointer.hpp"
 #include "Viewport.hpp"
+#include "Operations.hpp"
 
 namespace Lattice {
 namespace Renderer {
 
 class Renderable;
 
-class RenderWidget : public QOpenGLWidget {
+class RenderWidget : public QOpenGLWidget, protected QOpenGLExtraFunctions {
     Q_OBJECT
 public:
     RenderWidget(QWidget* parent = nullptr);
@@ -31,6 +32,7 @@ protected:
 private:
     double widgetPixelRatio() const;
 
+    Operations _operations;
     std::vector<SP<Renderable>> _renderables;
     std::vector<Viewport> _viewports;
 };

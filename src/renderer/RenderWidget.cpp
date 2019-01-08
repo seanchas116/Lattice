@@ -22,6 +22,7 @@ void RenderWidget::mouseMoveEvent(QMouseEvent *event) {
 }
 
 void RenderWidget::initializeGL() {
+    initializeOpenGLFunctions();
 }
 
 void RenderWidget::resizeGL(int w, int h) {
@@ -29,6 +30,19 @@ void RenderWidget::resizeGL(int w, int h) {
 }
 
 void RenderWidget::paintGL() {
+    for (auto& viewport : _viewports) {
+        glm::dvec2 minPos = viewport.offset;
+        glm::dvec2 maxPos = minPos + viewport.camera.viewSize();
+        glm::ivec2 minPosWidget = round(minPos * widgetPixelRatio());
+        glm::ivec2 maxPosWidget = round(maxPos * widgetPixelRatio());
+        glm::ivec2 sizeWidget = maxPosWidget - minPosWidget;
+
+        glViewport(minPosWidget.x, minPosWidget.y, sizeWidget.x, sizeWidget.y);
+
+        for (auto& renderable : _renderables) {
+            renderable->draw(_operations.sharedFromThis(), viewport.camera);
+        }
+    }
 }
 
 double RenderWidget::widgetPixelRatio() const {
