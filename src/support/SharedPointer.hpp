@@ -22,15 +22,6 @@ public:
               typename std::enable_if<std::is_convertible<std::shared_ptr<TOther>, std::shared_ptr<T>>::value, int>::type = 0>
     SharedPointer(SharedPointer<TOther>&& other) : _ptr(std::move(other).operator std::shared_ptr<TOther> &&()) {}
 
-    template <typename A, typename B>
-    friend bool operator==(const SharedPointer<A>& left, const SharedPointer<B>& right);
-
-    template <typename A, typename B>
-    friend bool operator!=(const SharedPointer<A>& left, const SharedPointer<B>& right);
-
-    template <typename A, typename B>
-    friend bool operator<(const SharedPointer<A>& left, const SharedPointer<B>& right);
-
     element_type& operator*() const { return *_ptr; }
     element_type* operator->() const { return _ptr.get(); }
     element_type* get() const { return _ptr.get(); }
@@ -41,6 +32,15 @@ public:
 private:
     template <typename U> friend class WeakPointer;
     template <typename TDerived> friend class EnableSharedFromThis;
+
+    template <typename A, typename B>
+    friend bool operator==(const SharedPointer<A>& left, const SharedPointer<B>& right);
+
+    template <typename A, typename B>
+    friend bool operator!=(const SharedPointer<A>& left, const SharedPointer<B>& right);
+
+    template <typename A, typename B>
+    friend bool operator<(const SharedPointer<A>& left, const SharedPointer<B>& right);
 
     template <typename T, typename U>
     friend std::optional<SharedPointer<T>> dynamicPointerCast(const SharedPointer<U>& original);
@@ -64,6 +64,22 @@ bool operator!=(const SharedPointer<A>& left, const SharedPointer<B>& right) {
 template <typename A, typename B>
 bool operator<(const SharedPointer<A>& left, const SharedPointer<B>& right) {
     return left._ptr < right._ptr;
+}
+
+template <typename T, typename ...TArgs>
+SharedPointer<T> makeShared(TArgs&& ...args) {
+    auto ptr = std::make_shared<T>(std::forward<TArgs>(args)...);
+    return {ptr};
+}
+
+template <typename T, typename U>
+std::optional<SharedPointer<T>> dynamicPointerCast(const SharedPointer<U>& original) {
+    auto ptr = std::dynamic_pointer_cast<T>(original._ptr);
+    if (ptr) {
+        return {{ptr}};
+    } else {
+        return {};
+    }
 }
 
 template <typename T>
@@ -104,22 +120,6 @@ public:
         return {this->shared_from_this()};
     }
 };
-
-template <typename T, typename ...TArgs>
-SharedPointer<T> makeShared(TArgs&& ...args) {
-    auto ptr = std::make_shared<T>(std::forward<TArgs>(args)...);
-    return {ptr};
-}
-
-template <typename T, typename U>
-std::optional<SharedPointer<T>> dynamicPointerCast(const SharedPointer<U>& original) {
-    auto ptr = std::dynamic_pointer_cast<T>(original._ptr);
-    if (ptr) {
-        return {{ptr}};
-    } else {
-        return {};
-    }
-}
 
 } // namespace Lattice
 
