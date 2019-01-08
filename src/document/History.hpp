@@ -25,12 +25,12 @@ public:
 
     void beginChange(const QString& title);
     void addChange(const SP<Change>& change);
+    void clear();
 
     const QUndoStack* undoStack() const { return _undoStack; }
 
 private:
     QUndoStack* _undoStack;
-    std::vector<SP<Change>> _stagedChanges;
     int _currentID = 0;
     QString _currentTitle;
 };

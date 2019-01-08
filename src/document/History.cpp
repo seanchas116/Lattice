@@ -71,4 +71,10 @@ void History::addChange(const SP<Change> &change) {
     _undoStack->push(command);
 }
 
+void History::clear() {
+    _undoStack->clear();
+    _currentID = 0;
+    _currentTitle.clear();
+}
+
 } // namespace Lattice
