@@ -1,6 +1,7 @@
 #pragma once
 #include <QOpenGLWidget>
 #include "../support/Pointer.hpp"
+#include "Viewport.hpp"
 
 namespace Lattice {
 namespace Renderer {
@@ -11,6 +12,9 @@ class RenderWidget : public QOpenGLWidget {
     Q_OBJECT
 public:
     RenderWidget(QWidget* parent = nullptr);
+
+    auto& viewports() const { return _viewports; }
+    void setViewports(const std::vector<Viewport>& viewports) { _viewports = viewports; }
 
     auto& renderables() const { return _renderables; }
     void setRenderables(const std::vector<SP<Renderable>>& renderables) { _renderables = renderables; }
@@ -26,6 +30,7 @@ protected:
 
 private:
     std::vector<SP<Renderable>> _renderables;
+    std::vector<Viewport> _viewports;
 };
 
 } // namespace Renderer
