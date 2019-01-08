@@ -1,7 +1,7 @@
 #include "RenderWidget.hpp"
 #include "Renderable.hpp"
 #include "../support/Debug.hpp"
-#include <QResizeEvent>
+#include <QMouseEvent>
 #include <QOpenGLDebugLogger>
 
 namespace Lattice {
@@ -16,16 +16,39 @@ glm::ivec2 RenderWidget::logicalSize() const {
     return glm::round(glm::dvec2(width(), height()) / widgetPixelRatio());
 }
 
+glm::dvec2 RenderWidget::mapQtToGL(const QPoint &p) const {
+    return glm::dvec2(p.x(), height() - p.y()) / widgetPixelRatio();
+}
+
 void RenderWidget::mousePressEvent(QMouseEvent *event) {
-    Q_UNUSED(event);
+    auto pos = mapQtToGL(event->pos());
+
+    auto& camera = _viewports[0].camera; // FIXME
+
+    for (auto& layer : _layers) {
+        std::map<double, SP<Renderable>> hitRenderables;
+        for (auto& renderable : layer) {
+            auto [hit, t] = renderable->mousePress(event, pos, camera);
+            if (hit) {
+                hitRenderables.insert({t, renderable});
+            }
+        }
+        if (!hitRenderables.empty()) {
+            _draggedRenderable = hitRenderables.begin()->second;
+            break;
+        }
+    }
 }
 
 void RenderWidget::mouseReleaseEvent(QMouseEvent *event) {
-    Q_UNUSED(event);
+    LATTICE_OPTIONAL_GUARD(renderable, _draggedRenderable, return;)
+    renderable->mouseRelease(event, mapQtToGL(event->pos()), _viewports[_draggedViewportIndex].camera);
+    _draggedRenderable = {};
 }
 
 void RenderWidget::mouseMoveEvent(QMouseEvent *event) {
-    Q_UNUSED(event);
+    LATTICE_OPTIONAL_GUARD(renderable, _draggedRenderable, return;)
+    renderable->mouseMove(event, mapQtToGL(event->pos()), _viewports[_draggedViewportIndex].camera);
 }
 
 void RenderWidget::initializeGL() {

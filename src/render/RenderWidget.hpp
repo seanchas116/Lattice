@@ -24,6 +24,8 @@ public:
 
     glm::ivec2 logicalSize() const;
 
+    glm::dvec2 mapQtToGL(const QPoint& p) const;
+
 signals:
     void resized();
     void initialized();
@@ -41,8 +43,11 @@ protected:
 private:
     double widgetPixelRatio() const;
 
+
     glm::ivec2 _logicalSize;
     std::optional<SP<Operations>> _operations;
+    std::optional<SP<Renderable>> _draggedRenderable;
+    int _draggedViewportIndex = 0;
     std::vector<Layer> _layers;
     std::vector<Viewport> _viewports;
 };
