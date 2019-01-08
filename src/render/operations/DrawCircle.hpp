@@ -9,7 +9,7 @@ namespace Lattice::GL {
 class PointVAO;
 }
 
-namespace Lattice::Renderer {
+namespace Lattice::Render {
 
 class DrawCircle final {
 public:

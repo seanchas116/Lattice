@@ -1,7 +1,7 @@
 #include "Viewport.hpp"
 
 namespace Lattice {
-namespace Renderer {
+namespace Render {
 
 } // namespace Renderer
 } // namespace Lattice

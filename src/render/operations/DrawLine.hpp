@@ -10,7 +10,7 @@ namespace Lattice::GL {
 class LineVAO;
 }
 
-namespace Lattice::Renderer {
+namespace Lattice::Render {
 
 class DrawLine final {
 public:

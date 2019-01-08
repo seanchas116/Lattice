@@ -28,18 +28,18 @@ void MeshRenderer::updateVAOs(const SP<Document::Mesh> &mesh) {
     _faceVAOs= generator.generateFaceVAOs();
 }
 
-void MeshRenderer::drawFaces(const SP<Renderer::Operations> &operations, const Camera &camera) {
+void MeshRenderer::drawFaces(const SP<Render::Operations> &operations, const Camera &camera) {
     for (auto& [material, vao] : _faceVAOs) {
         //operations->drawSolid.draw(vao, viewMatrix * _item->location().matrix(), projection, material->baseColor(), vec3(0));
         operations->drawMaterial.draw(vao, _item->location().matrix(), camera, material);
     }
 }
 
-void MeshRenderer::drawEdges(const SP<Renderer::Operations> &operations, const Camera &camera) {
+void MeshRenderer::drawEdges(const SP<Render::Operations> &operations, const Camera &camera) {
     operations->drawLine.draw(_edgeVAO, _item->location().matrix(), camera, 1.0, dvec3(0));
 }
 
-void MeshRenderer::drawVertices(const SP<Renderer::Operations> &operations, const Camera &camera) {
+void MeshRenderer::drawVertices(const SP<Render::Operations> &operations, const Camera &camera) {
     operations->drawCircle.draw(_vertexVAO, _item->location().matrix(), camera, 4.0, dvec3(0));
 }
 

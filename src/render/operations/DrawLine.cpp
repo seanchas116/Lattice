@@ -3,10 +3,10 @@
 #include "../../gl/LineVAO.hpp"
 #include "../../resource/Resource.hpp"
 
-namespace Lattice::Renderer {
+namespace Lattice::Render {
 
 DrawLine::DrawLine() :
-    _shader(Resource::read("src/renderer/operations/DrawLine.vert"), Resource::read("src/renderer/operations/DrawLine.geom"), Resource::read("src/renderer/operations/DrawLine.frag"))
+    _shader(Resource::read("src/render/operations/DrawLine.vert"), Resource::read("src/render/operations/DrawLine.geom"), Resource::read("src/render/operations/DrawLine.frag"))
 {
 }
 

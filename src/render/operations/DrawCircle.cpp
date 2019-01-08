@@ -4,10 +4,10 @@
 #include "../../support/Location.hpp"
 #include "../../support/Camera.hpp"
 
-namespace Lattice::Renderer {
+namespace Lattice::Render {
 
 DrawCircle::DrawCircle() :
-    _shader(Resource::read("src/renderer/operations/DrawCircle.vert"), Resource::read("src/renderer/operations/DrawCircle.geom"), Resource::read("src/renderer/operations/DrawCircle.frag"))
+    _shader(Resource::read("src/render/operations/DrawCircle.vert"), Resource::read("src/render/operations/DrawCircle.geom"), Resource::read("src/render/operations/DrawCircle.frag"))
 {
 }
 

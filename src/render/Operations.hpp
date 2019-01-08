@@ -6,7 +6,7 @@
 #include "./operations/DrawMaterial.hpp"
 
 namespace Lattice {
-namespace Renderer {
+namespace Render {
 
 class Operations final : public EnableSharedFromThis<Operations> {
 public:

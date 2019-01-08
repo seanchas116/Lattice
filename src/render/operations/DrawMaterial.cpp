@@ -4,10 +4,10 @@
 #include "../../resource/Resource.hpp"
 #include "../../support/Camera.hpp"
 
-namespace Lattice::Renderer {
+namespace Lattice::Render {
 
 DrawMaterial::DrawMaterial() :
-    _shader(Resource::read("src/renderer/operations/DrawMaterial.vert"), std::string(), Resource::read("src/renderer/operations/DrawMaterial.frag"))
+    _shader(Resource::read("src/render/operations/DrawMaterial.vert"), std::string(), Resource::read("src/render/operations/DrawMaterial.frag"))
 {
     initializeOpenGLFunctions();
 }

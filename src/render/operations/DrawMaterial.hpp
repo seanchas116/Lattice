@@ -13,7 +13,7 @@ class VAO;
 class Texture;
 }
 
-namespace Lattice::Renderer {
+namespace Lattice::Render {
 
 class DrawMaterial final : protected QOpenGLExtraFunctions {
 public:

@@ -5,7 +5,7 @@
 #include "Operations.hpp"
 
 namespace Lattice {
-namespace Renderer {
+namespace Render {
 
 class Renderable;
 

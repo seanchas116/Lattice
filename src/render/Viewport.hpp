@@ -3,7 +3,7 @@
 #include "../support/Camera.hpp"
 
 namespace Lattice {
-namespace Renderer {
+namespace Render {
 
 struct Viewport {
     Camera camera;

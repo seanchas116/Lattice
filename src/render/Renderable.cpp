@@ -1,7 +1,7 @@
 #include "Renderable.hpp"
 
 namespace Lattice {
-namespace Renderer {
+namespace Render {
 
 Renderable::Renderable() {
 }

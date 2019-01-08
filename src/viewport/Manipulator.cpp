@@ -1,7 +1,7 @@
 #include "Manipulator.hpp"
 #include "MeshPicker.hpp"
 #include "MeshVAOGenerator.hpp"
-#include "../renderer/Operations.hpp"
+#include "../render/Operations.hpp"
 #include "../document/Mesh.hpp"
 #include "../gl/VAO.hpp"
 #include "../gl/LineVAO.hpp"
@@ -119,7 +119,7 @@ Manipulator::Manipulator() :
     }
 }
 
-void Manipulator::draw(const SP<Renderer::Operations> &operations, const Camera &camera) {
+void Manipulator::draw(const SP<Render::Operations> &operations, const Camera &camera) {
     ManipulatorCoordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInScreen){
         return;

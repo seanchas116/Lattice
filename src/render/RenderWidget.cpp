@@ -3,7 +3,7 @@
 #include <QResizeEvent>
 
 namespace Lattice {
-namespace Renderer {
+namespace Render {
 
 RenderWidget::RenderWidget(QWidget *parent) :
     QOpenGLWidget(parent)

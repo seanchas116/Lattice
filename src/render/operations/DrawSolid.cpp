@@ -3,10 +3,10 @@
 #include "../../resource/Resource.hpp"
 #include "../../support/Camera.hpp"
 
-namespace Lattice::Renderer {
+namespace Lattice::Render {
 
 DrawSolid::DrawSolid() :
-    _shader(Resource::read("src/renderer/operations/DrawSolid.vert"), std::string(), Resource::read("src/renderer/operations/DrawSolid.frag"))
+    _shader(Resource::read("src/render/operations/DrawSolid.vert"), std::string(), Resource::read("src/render/operations/DrawSolid.frag"))
 {
 }
 

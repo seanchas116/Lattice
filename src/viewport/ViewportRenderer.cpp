@@ -5,7 +5,7 @@
 #include "ManipulatorController.hpp"
 #include "ItemPicker.hpp"
 #include "ItemInteractor.hpp"
-#include "../renderer/Operations.hpp"
+#include "../render/Operations.hpp"
 #include "../resource/Resource.hpp"
 #include "../ui/AppState.hpp"
 #include "../document/Document.hpp"
@@ -19,7 +19,7 @@ namespace Lattice::Viewport {
 
 ViewportRenderer::ViewportRenderer(const SP<UI::AppState> &appState) :
     _appState(appState),
-    _operations(makeShared<Renderer::Operations>()),
+    _operations(makeShared<Render::Operations>()),
     _gridFloor(makeShared<GridFloor>()),
     _manipulator(makeShared<Manipulator>()),
     _manipulatorController(makeShared<ManipulatorController>(_manipulator, appState)),

@@ -9,7 +9,7 @@ namespace Lattice::GL {
 class VAO;
 }
 
-namespace Lattice::Renderer {
+namespace Lattice::Render {
 
 class DrawSolid final {
 public:

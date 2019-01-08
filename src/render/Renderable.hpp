@@ -5,7 +5,7 @@
 class QMouseEvent;
 
 namespace Lattice {
-namespace Renderer {
+namespace Render {
 
 class Renderable {
     Q_DISABLE_COPY(Renderable)
