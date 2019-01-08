@@ -8,6 +8,7 @@ class Camera;
 }
 
 namespace Lattice::GL {
+class VertexBuffer;
 class LineVAO;
 }
 
@@ -22,7 +23,10 @@ public:
     void draw(const SP<Operations>& operations, const Camera& camera);
 
 private:
+    SP<GL::VertexBuffer> _vbo;
     SP<GL::LineVAO> _vao;
+    SP<GL::LineVAO> _xAxisVAO;
+    SP<GL::LineVAO> _zAxisVAO;
 };
 
 } // namespace Lattice
