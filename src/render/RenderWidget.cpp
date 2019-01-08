@@ -13,6 +13,7 @@ RenderWidget::RenderWidget(QWidget *parent) :
 void RenderWidget::resizeEvent(QResizeEvent *event) {
     glm::ivec2 physicalSize(event->size().width(), event->size().height());
     glm::ivec2 logicalSize = glm::round(glm::dvec2(physicalSize) * widgetPixelRatio());
+    _logicalSize = logicalSize;
     emit sizeChanged(logicalSize, physicalSize);
 }
 

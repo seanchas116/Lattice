@@ -22,6 +22,8 @@ public:
     std::vector<Layer> layers() const { return _layers; }
     void setLayers(const std::vector<Layer> &layers) { _layers = layers; }
 
+    glm::ivec2 logicalSize() const { return _logicalSize; }
+
 signals:
     void sizeChanged(glm::ivec2 logicalSize, glm::ivec2 physicalSize);
 
@@ -39,6 +41,7 @@ protected:
 private:
     double widgetPixelRatio() const;
 
+    glm::ivec2 _logicalSize;
     Operations _operations;
     std::vector<Layer> _layers;
     std::vector<Viewport> _viewports;
