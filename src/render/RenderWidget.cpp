@@ -31,6 +31,7 @@ void RenderWidget::mouseMoveEvent(QMouseEvent *event) {
 
 void RenderWidget::initializeGL() {
     initializeOpenGLFunctions();
+    _operations = makeShared<Operations>();
     emit initialized();
 }
 
@@ -40,6 +41,8 @@ void RenderWidget::resizeGL(int w, int h) {
 
 void RenderWidget::paintGL() {
     emit aboutToBePainted();
+
+    LATTICE_OPTIONAL_GUARD(operations, _operations, return;)
 
     for (auto& viewport : _viewports) {
         glm::dvec2 minPos = viewport.offset;
@@ -52,7 +55,7 @@ void RenderWidget::paintGL() {
 
         for (auto& layer : _layers) {
             for (auto& renderable : layer) {
-                renderable->draw(_operations.sharedFromThis(), viewport.camera);
+                renderable->draw(operations, viewport.camera);
             }
         }
     }

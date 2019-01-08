@@ -44,7 +44,7 @@ private:
     double widgetPixelRatio() const;
 
     glm::ivec2 _logicalSize;
-    Operations _operations;
+    std::optional<SP<Operations>> _operations;
     std::vector<Layer> _layers;
     std::vector<Viewport> _viewports;
 };
