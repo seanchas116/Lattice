@@ -85,7 +85,9 @@ void Item::insertItemBeforeInternal(const SP<Item> &item, const std::optional<SP
     if (!canInsertItem(item)) {
         throw std::runtime_error("cannot insert item");
     }
-    LATTICE_OPTIONAL_LET(oldParent, item->parentItem(), oldParent->removeChildItem(item);)
+    LATTICE_OPTIONAL_LET(oldParent, item->parentItem(),
+         oldParent->removeChildItem(item);
+    )
 
     decltype(_childItems)::iterator it;
     if (reference) {
