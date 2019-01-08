@@ -108,30 +108,36 @@ void ViewportRenderer::render() {
 }
 
 void ViewportRenderer::mousePress(QMouseEvent *event, dvec2 pos) {
-    if (_manipulator->mousePress(event, pos, _camera)) {
+    auto [hit, t] = _manipulator->mousePress(event, pos, _camera);
+    if (hit) {
+        _manipulatorDragged = true;
         return;
     }
     if (_itemInteractor->mousePress(event, pos, _camera)) {
+        _itemInteractorDragged = true;
         return;
     }
 }
 
 void ViewportRenderer::mouseMove(QMouseEvent *event, dvec2 pos) {
-    if (_manipulator->mouseMove(event, pos, _camera)) {
-        return;
+    if (_manipulatorDragged) {
+        _manipulator->mouseMove(event, pos, _camera);
     }
-    if (_itemInteractor->mouseMove(event, pos, _camera)) {
-        return;
+    if (_itemInteractorDragged) {
+        _itemInteractor->mouseMove(event, pos, _camera);
     }
 }
 
 void ViewportRenderer::mouseRelease(QMouseEvent *event, dvec2 pos) {
-    if (_manipulator->mouseRelease(event, pos, _camera)) {
-        return;
+    if (_manipulatorDragged) {
+        _manipulator->mouseRelease(event, pos, _camera);
     }
-    if (_itemInteractor->mouseRelease(event, pos, _camera)) {
-        return;
+    if (_itemInteractorDragged) {
+        _itemInteractor->mouseRelease(event, pos, _camera);
     }
+
+    _manipulatorDragged = false;
+    _itemInteractorDragged = false;
 }
 
 } // namespace Lattice

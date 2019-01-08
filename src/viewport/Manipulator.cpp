@@ -155,12 +155,12 @@ void Manipulator::draw(const SP<Render::Operations> &operations, const Camera &c
     operations->drawCircle.draw(_centerVAO, coordinates.manipulatorToWorld, camera, 8, vec3(1));
 }
 
-bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera) {
+std::pair<bool, double> Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera) {
     Q_UNUSED(event)
 
     ManipulatorCoordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInScreen) {
-        return false;
+        return {false, 0};
     }
 
     Ray mouseRay = camera.cameraMouseRay(pos);
@@ -180,7 +180,7 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
                 _dragAxis = axis;
                 emit scaleStarted();
 
-                return true; // TODO
+                return {true, 0};
             }
             if (_isTranslateHandleVisible && bodyBegin <= tArrow && tArrow <= bodyEnd() + translateHandleLength) {
                 _dragMode = DragMode::Translate;
@@ -189,7 +189,7 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
                 _dragAxis = axis;
                 emit translateStarted();
 
-                return true;
+                return {true, 0};
             }
         }
 
@@ -210,24 +210,26 @@ bool Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
                     _initialTargetPosition = _targetPosition;
                     _dragAxis = axis;
                     emit rotateStarted();
+
+                    return {true, 0};
                 }
             }
         }
     }
 
-    return false;
+    return {false, 0};
 }
 
-bool Manipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera) {
+void Manipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera) {
     Q_UNUSED(event)
 
     if (_dragMode == DragMode::None) {
-        return false;
+        return;
     }
 
     ManipulatorCoordinates coordinates(camera, _initialTargetPosition);
     if (!coordinates.isInScreen) {
-        return false;
+        return;
     }
 
     Ray mouseRay = camera.cameraMouseRay(pos);
@@ -237,11 +239,11 @@ bool Manipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera)
     switch (_dragMode) {
     case DragMode::Translate:{
         emit translateChanged(_dragAxis, tAxis - _initialDragValue);
-        return true;
+        break;
     }
     case DragMode::Scale: {
         emit scaleChanged(_dragAxis, tAxis / _initialDragValue);
-        return true;
+        break;
     }
     case DragMode::Rotate: {
         dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * swizzleTransforms[_dragAxis];
@@ -251,22 +253,21 @@ bool Manipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera)
         double angle = atan2(intersection.z, intersection.y);
 
         emit rotateChanged(_dragAxis, angle - _initialDragValue);
-
-        return true;
+        break;
     }
     default:
-        return false;
+        break;
     }
 }
 
-bool Manipulator::mouseRelease(QMouseEvent *event, dvec2 pos, const Camera &camera) {
+void Manipulator::mouseRelease(QMouseEvent *event, dvec2 pos, const Camera &camera) {
     Q_UNUSED(event)
     Q_UNUSED(pos)
     Q_UNUSED(camera)
 
     switch (_dragMode) {
     default:
-        return false;
+        break;
     case DragMode::Translate:
         emit translateFinished();
         break;
@@ -279,7 +280,6 @@ bool Manipulator::mouseRelease(QMouseEvent *event, dvec2 pos, const Camera &came
     }
 
     _dragMode = DragMode::None;
-    return true;
 }
 
 double Manipulator::translateHandleOffset() const {

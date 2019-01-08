@@ -59,6 +59,8 @@ private:
     std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> _meshRenderers;
     SP<ItemPicker> _itemPicker;
     SP<ItemInteractor> _itemInteractor;
+    bool _manipulatorDragged = false;
+    bool _itemInteractorDragged = false;
 };
 
 } // namespace Lattice

@@ -11,16 +11,16 @@ namespace Lattice::Viewport {
 
 class MeshPicker;
 
-class Manipulator final : public QObject, protected QOpenGLExtraFunctions {
+class Manipulator final : public QObject, public Render::Renderable, protected QOpenGLExtraFunctions {
     Q_OBJECT
 public:
     Manipulator();
 
-    void draw(const SP<Render::Operations>& operations, const Camera& camera);
+    void draw(const SP<Render::Operations>& operations, const Camera& camera) override;
 
-    bool mousePress(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
-    bool mouseMove(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
-    bool mouseRelease(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
+    std::pair<bool, double> mousePress(QMouseEvent* event, glm::dvec2 pos, const Camera& camera) override;
+    void mouseMove(QMouseEvent* event, glm::dvec2 pos, const Camera& camera) override;
+    void mouseRelease(QMouseEvent* event, glm::dvec2 pos, const Camera& camera) override;
 
     glm::dvec3 targetPosition() const { return _targetPosition; }
     void setTargetPosition(glm::dvec3 pos) { _targetPosition = pos; }
