@@ -5,6 +5,7 @@
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
 #include "../editor/ViewportWidget.hpp"
+#include "../editor/EditorWidget.hpp"
 #include <QAction>
 #include <QMenuBar>
 #include <QUndoStack>
@@ -15,8 +16,9 @@
 namespace Lattice::UI {
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), _appState(makeShared<AppState>()) {
-    auto viewportWidget = new Editor::ViewportWidget(_appState);
-    setCentralWidget(viewportWidget);
+    //auto editorWidget = new Editor::ViewportWidget(_appState);
+    auto editorWidget = new Editor::EditorWidget(_appState);
+    setCentralWidget(editorWidget);
     setupMenu();
     setupPanes();
     setupToolBar();
