@@ -28,8 +28,11 @@ protected:
     void keyReleaseEvent(QKeyEvent *event) override;
 
 private:
+    void updateCamera();
+
     CameraController _cameraController;
     KeyObserver _keyObserver;
+    Camera _camera;
     SP<UI::AppState> _appState;
 };
 

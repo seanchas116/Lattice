@@ -50,4 +50,11 @@ void EditorWidget::keyReleaseEvent(QKeyEvent *event) {
     RenderWidget::keyReleaseEvent(event);
 }
 
+void EditorWidget::updateCamera() {
+    _camera.setLocation(_cameraController.location());
+    _camera.setViewSize(logicalSize());
+
+    setViewports({{glm::ivec2(0), _camera}});
+}
+
 } // namespace Lattice
