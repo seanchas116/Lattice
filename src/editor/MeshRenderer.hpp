@@ -28,7 +28,7 @@ namespace Lattice::Editor {
 
 class Operations;
 
-class MeshRenderer final : public Render::Renderable {
+class MeshRenderer final {
 public:
     MeshRenderer(const SP<Document::MeshItem>& item);
 
