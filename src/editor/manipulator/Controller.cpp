@@ -1,5 +1,5 @@
-#include "ManipulatorController.hpp"
-#include "TranslateManipulator.hpp"
+#include "Controller.hpp"
+#include "TranslateArrow.hpp"
 #include "../../ui/AppState.hpp"
 #include "../../document/Document.hpp"
 #include "../../document/Item.hpp"
@@ -10,36 +10,36 @@ namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
-ManipulatorController::ManipulatorController(const SP<UI::AppState> &appState) : _appState(appState)
+Controller::Controller(const SP<UI::AppState> &appState) : _appState(appState)
 {
     connectToItem(appState->document()->currentItem());
-    connect(appState->document().get(), &Document::Document::currentItemChanged, this, &ManipulatorController::connectToItem);
+    connect(appState->document().get(), &Document::Document::currentItemChanged, this, &Controller::connectToItem);
 
     for (int axis = 0; axis < 3; ++axis) {
-        auto handle = makeShared<TranslateManipulator>(axis);
+        auto handle = makeShared<TranslateArrow>(axis);
         handle->setTargetPosition(position());
-        connect(this, &ManipulatorController::positionChanged, handle.get(), &TranslateManipulator::setTargetPosition);
+        connect(this, &Controller::positionChanged, handle.get(), &TranslateArrow::setTargetPosition);
 
-        connect(handle.get(), &TranslateManipulator::translateStarted, this, [this] { onTranslateStarted(); });
-        connect(handle.get(), &TranslateManipulator::translateChanged, this, [this, axis] (double offset) { onTranslateChanged(axis, offset); });
-        connect(handle.get(), &TranslateManipulator::translateFinished, this, [this] { onTranslateFinished(); });
+        connect(handle.get(), &TranslateArrow::translateStarted, this, [this] { onTranslateStarted(); });
+        connect(handle.get(), &TranslateArrow::translateChanged, this, [this, axis] (double offset) { onTranslateChanged(axis, offset); });
+        connect(handle.get(), &TranslateArrow::translateFinished, this, [this] { onTranslateFinished(); });
         _translateHandles.push_back(std::move(handle));
     }
 }
 
-glm::dvec3 ManipulatorController::position() const {
+glm::dvec3 Controller::position() const {
     LATTICE_OPTIONAL_GUARD(item, _item, return glm::dvec3(0);)
     return item->location().position;
 }
 
-void ManipulatorController::onTranslateStarted() {
+void Controller::onTranslateStarted() {
     LATTICE_OPTIONAL_GUARD(item, _item, return;)
 
     _appState->document()->history()->beginChange(tr("Move Item"));
     _initialLocation = item->location();
 }
 
-void ManipulatorController::onTranslateChanged(int axis, double offset) {
+void Controller::onTranslateChanged(int axis, double offset) {
     LATTICE_OPTIONAL_GUARD(item, _item, return;)
 
     auto loc = _initialLocation;
@@ -47,17 +47,17 @@ void ManipulatorController::onTranslateChanged(int axis, double offset) {
     item->setLocation(loc);
 }
 
-void ManipulatorController::onTranslateFinished() {
+void Controller::onTranslateFinished() {
 }
 
-void ManipulatorController::onScaleStarted() {
+void Controller::onScaleStarted() {
     LATTICE_OPTIONAL_GUARD(item, _item, return;)
 
     _appState->document()->history()->beginChange(tr("Scale Item"));
     _initialLocation = item->location();
 }
 
-void ManipulatorController::onScaleChanged(int axis, double offset) {
+void Controller::onScaleChanged(int axis, double offset) {
     LATTICE_OPTIONAL_GUARD(item, _item, return;)
 
     auto loc = _initialLocation;
@@ -65,17 +65,17 @@ void ManipulatorController::onScaleChanged(int axis, double offset) {
     item->setLocation(loc);
 }
 
-void ManipulatorController::onScaleFinished() {
+void Controller::onScaleFinished() {
 }
 
-void ManipulatorController::onRotateStarted() {
+void Controller::onRotateStarted() {
     LATTICE_OPTIONAL_GUARD(item, _item, return;)
 
     _appState->document()->history()->beginChange(tr("Rotate Item"));
     _initialLocation = item->location();
 }
 
-void ManipulatorController::onRotateChanged(int axis, double offset) {
+void Controller::onRotateChanged(int axis, double offset) {
     LATTICE_OPTIONAL_GUARD(item, _item, return;)
 
     auto loc = _initialLocation;
@@ -87,10 +87,10 @@ void ManipulatorController::onRotateChanged(int axis, double offset) {
     item->setLocation(loc);
 }
 
-void ManipulatorController::onRotateFinished() {
+void Controller::onRotateFinished() {
 }
 
-void ManipulatorController::connectToItem(const std::optional<SP<Document::Item> > &maybeItem) {
+void Controller::connectToItem(const std::optional<SP<Document::Item> > &maybeItem) {
     disconnect(_connection);
     _item = maybeItem;
     LATTICE_OPTIONAL_GUARD(item, maybeItem, return;)

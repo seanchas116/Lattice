@@ -7,9 +7,9 @@ namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
-class ManipulatorCoordinates final {
+class Coordinates final {
 public:
-    ManipulatorCoordinates(const Camera& camera, glm::dvec3 targetPos) : targetPos(targetPos) {
+    Coordinates(const Camera& camera, glm::dvec3 targetPos) : targetPos(targetPos) {
         using namespace glm;
 
         auto [screenPos, isInScreen] = camera.mapWorldToScreen(targetPos);
