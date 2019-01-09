@@ -31,21 +31,11 @@ void TranslateHandle::draw(const SP<Render::Operations> &operations, const Camer
         return;
     }
 
-    const auto colors = std::array<dvec3, 3> {
-            dvec3(1, 0, 0), dvec3(0, 1, 0), dvec3(0, 0, 1)
-    };
-
-    const auto swizzleTransforms = std::array<dmat4, 3> {
-            dmat4(1), // x
-            dmat4(0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1), // y
-            dmat4(0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1), // z
-    };
-
     dmat4 translate = glm::translate(dvec3(_length, 0, 0));
-    operations->drawSolid.draw(_handleVAO, coordinates.manipulatorToWorld * swizzleTransforms[_axis] * translate, camera, vec3(0), colors[_axis]);
+    operations->drawSolid.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis] * translate, camera, vec3(0), Constants::colors[_axis]);
 
     _bodyVAO->vertexBuffer()->setVertices({{vec3(Constants::bodyBegin, 0, 0), {}, {}}, {vec3(_length, 0, 0), {}, {}}});
-    operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * swizzleTransforms[_axis], camera, Constants::bodyWidth, colors[_axis]);
+    operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, Constants::colors[_axis]);
 }
 
 std::pair<bool, double> TranslateHandle::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {

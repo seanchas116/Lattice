@@ -19,20 +19,6 @@ namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
-namespace {
-
-const auto colors = std::array<dvec3, 3> {
-        dvec3(1, 0, 0), dvec3(0, 1, 0), dvec3(0, 0, 1)
-};
-
-const auto swizzleTransforms = std::array<dmat4, 3> {
-        dmat4(1), // x
-        dmat4(0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1), // y
-        dmat4(0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1), // z
-};
-
-}
-
 RotateHandle::RotateHandle(int axis) :
     _axis(axis),
     _handleMesh(createMesh()),
@@ -50,7 +36,7 @@ void RotateHandle::draw(const SP<Render::Operations> &operations, const Camera &
 
     glClearDepthf(float((Constants::fixedDepth + 1.0) * 0.5));
     glClear(GL_DEPTH_BUFFER_BIT);
-    operations->drawLine.draw(_handleVAO, coordinates.manipulatorToWorld * swizzleTransforms[_axis], camera, Constants::bodyWidth, colors[_axis]);
+    operations->drawLine.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, Constants::colors[_axis]);
     glClearDepthf(1);
     glClear(GL_DEPTH_BUFFER_BIT);
 }
@@ -72,7 +58,7 @@ std::pair<bool, double> RotateHandle::mousePress(QMouseEvent *event, glm::dvec2 
     double tArrow = mouseToArrowDistance.t1;
     double tAxis = mouseToAxisDistance.t1;
 
-    dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * swizzleTransforms[_axis];
+    dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * Constants::swizzleTransforms[_axis];
     dmat4 rotateHandleMatrixInverse = inverse(rotateHandleMatrix);
     auto rotateHandleRay = rotateHandleMatrixInverse * mouseRay;
     auto pickResult = _handleMeshPicker->pickEdge(rotateHandleRay, 0.1);
@@ -108,7 +94,7 @@ void RotateHandle::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &c
     RayRayDistance mouseToAxisDistance(mouseRay, coordinates.axisRaysInCameraSpace[_axis]);
     double tAxis = mouseToAxisDistance.t1;
 
-    dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * swizzleTransforms[_axis];
+    dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * Constants::swizzleTransforms[_axis];
     dmat4 rotateHandleMatrixInverse = inverse(rotateHandleMatrix);
     auto rotateHandleRay = rotateHandleMatrixInverse * mouseRay;
     dvec3 intersection = rotateHandleRay.whereXIsZero();
