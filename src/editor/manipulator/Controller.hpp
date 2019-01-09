@@ -24,6 +24,7 @@ public:
 
     auto& translateHandles() const { return _translateHandles; }
     auto& scaleHandles() const { return _scaleHandles; }
+    auto& rotateHandles() const { return _rotateHandles; }
 
 signals:
     void positionChanged(glm::dvec3 position);
@@ -46,6 +47,7 @@ private:
     SP<UI::AppState> _appState;
     std::vector<SP<Render::Renderable>> _translateHandles;
     std::vector<SP<Render::Renderable>> _scaleHandles;
+    std::vector<SP<Render::Renderable>> _rotateHandles;
     std::optional<SP<Document::Item>> _item;
     Location _initialLocation;
     QMetaObject::Connection _connection;
