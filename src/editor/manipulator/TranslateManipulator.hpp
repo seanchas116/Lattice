@@ -21,6 +21,9 @@ public:
     void mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) override;
     void mouseRelease(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) override;
 
+    void setTargetPosition(const glm::dvec3 &targetPosition) { _targetPosition = targetPosition; }
+    void setLength(double length) { _length = length; }
+
 signals:
     void translateStarted();
     void translateChanged(double offset);
