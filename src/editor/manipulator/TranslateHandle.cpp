@@ -78,7 +78,7 @@ std::pair<bool, double> TranslateHandle::mousePress(QMouseEvent *event, glm::dve
 }
 
 void TranslateHandle::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
-    Q_UNUSED(event)
+    Q_UNUSED(event);
 
     Coordinates coordinates(camera, _initialTargetPosition);
     if (!coordinates.isInScreen) {
@@ -93,6 +93,7 @@ void TranslateHandle::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera
 }
 
 void TranslateHandle::mouseRelease(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
+    Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera);
     emit translateFinished();
 }
 
