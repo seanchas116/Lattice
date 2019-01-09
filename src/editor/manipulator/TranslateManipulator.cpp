@@ -70,6 +70,7 @@ std::pair<bool, double> TranslateManipulator::mousePress(QMouseEvent *event, glm
             return {true, 0};
         }
     }
+    return {false, 0};
 }
 
 void TranslateManipulator::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
