@@ -41,7 +41,7 @@ private:
     SP<Background> _background;
     SP<GridFloor> _gridFloor;
     SP<Manipulator> _manipulator;
-    SP<OldManipulatorController> _manipulatorController;
+    SP<OldManipulatorController> _oldManipulatorController;
     std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> _meshRenderers;
     SP<ItemPicker> _itemPicker;
     SP<ItemInteractor> _itemInteractor;
