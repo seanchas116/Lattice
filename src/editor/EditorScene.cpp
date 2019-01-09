@@ -2,7 +2,7 @@
 #include "Background.hpp"
 #include "GridFloor.hpp"
 #include "MeshRenderer.hpp"
-#include "Manipulator.hpp"
+#include "OldManipulator.hpp"
 #include "OldManipulatorController.hpp"
 #include "./manipulator/ManipulatorController.hpp"
 #include "ItemPicker.hpp"
@@ -19,7 +19,7 @@ EditorScene::EditorScene(const SP<UI::AppState> &appState) :
     _appState(appState),
     _background(makeShared<Background>()),
     _gridFloor(makeShared<GridFloor>()),
-    _manipulator(makeShared<Manipulator>()),
+    _manipulator(makeShared<OldManipulator>()),
     _oldManipulatorController(makeShared<OldManipulatorController>(_manipulator, appState)),
     _manipulatorController(makeShared<ManipulatorController>(appState)),
     _itemPicker(makeShared<ItemPicker>()),
@@ -33,9 +33,9 @@ EditorScene::EditorScene(const SP<UI::AppState> &appState) :
     connect(appState.get(), &UI::AppState::isRotateHandleVisibleChanged, this, &EditorScene::updateRequested);
     connect(appState.get(), &UI::AppState::isScaleHandleVisibleChanged, this, &EditorScene::updateRequested);
 
-    connect(appState.get(), &UI::AppState::isTranslateHandleVisibleChanged, _manipulator.get(), &Manipulator::setIsTranslateHandleVisible);
-    connect(appState.get(), &UI::AppState::isRotateHandleVisibleChanged, _manipulator.get(), &Manipulator::setIsRotateHandleVisible);
-    connect(appState.get(), &UI::AppState::isScaleHandleVisibleChanged, _manipulator.get(), &Manipulator::setIsScaleHandleVisible);
+    connect(appState.get(), &UI::AppState::isTranslateHandleVisibleChanged, _manipulator.get(), &OldManipulator::setIsTranslateHandleVisible);
+    connect(appState.get(), &UI::AppState::isRotateHandleVisibleChanged, _manipulator.get(), &OldManipulator::setIsRotateHandleVisible);
+    connect(appState.get(), &UI::AppState::isScaleHandleVisibleChanged, _manipulator.get(), &OldManipulator::setIsScaleHandleVisible);
 
     connect(appState->document().get(), &Document::Document::itemInserted, this, &EditorScene::updateRequested);
     connect(appState->document().get(), &Document::Document::currentItemChanged, this, &EditorScene::updateRequested);

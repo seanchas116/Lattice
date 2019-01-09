@@ -1,5 +1,5 @@
 #include "OldManipulatorController.hpp"
-#include "Manipulator.hpp"
+#include "OldManipulator.hpp"
 #include "../ui/AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/Item.hpp"
@@ -8,7 +8,7 @@
 
 namespace Lattice::Editor {
 
-OldManipulatorController::OldManipulatorController(const SP<Manipulator>& manipulator, const SP<UI::AppState> &appState) :
+OldManipulatorController::OldManipulatorController(const SP<OldManipulator>& manipulator, const SP<UI::AppState> &appState) :
     _manipulator(manipulator),
     _appState(appState)
 {
@@ -16,19 +16,19 @@ OldManipulatorController::OldManipulatorController(const SP<Manipulator>& manipu
     connect(appState->document().get(), &Document::Document::currentItemChanged, this, &OldManipulatorController::connectToItem);
 
     manipulator->setTargetPosition(position());
-    connect(this, &OldManipulatorController::positionChanged, manipulator.get(), &Manipulator::setTargetPosition);
+    connect(this, &OldManipulatorController::positionChanged, manipulator.get(), &OldManipulator::setTargetPosition);
 
-    connect(manipulator.get(), &Manipulator::translateStarted, this, &OldManipulatorController::onTranslateStarted);
-    connect(manipulator.get(), &Manipulator::translateChanged, this, &OldManipulatorController::onTranslateChanged);
-    connect(manipulator.get(), &Manipulator::translateFinished, this, &OldManipulatorController::onTranslateFinished);
+    connect(manipulator.get(), &OldManipulator::translateStarted, this, &OldManipulatorController::onTranslateStarted);
+    connect(manipulator.get(), &OldManipulator::translateChanged, this, &OldManipulatorController::onTranslateChanged);
+    connect(manipulator.get(), &OldManipulator::translateFinished, this, &OldManipulatorController::onTranslateFinished);
 
-    connect(manipulator.get(), &Manipulator::scaleStarted, this, &OldManipulatorController::onScaleStarted);
-    connect(manipulator.get(), &Manipulator::scaleChanged, this, &OldManipulatorController::onScaleChanged);
-    connect(manipulator.get(), &Manipulator::scaleFinished, this, &OldManipulatorController::onScaleFinished);
+    connect(manipulator.get(), &OldManipulator::scaleStarted, this, &OldManipulatorController::onScaleStarted);
+    connect(manipulator.get(), &OldManipulator::scaleChanged, this, &OldManipulatorController::onScaleChanged);
+    connect(manipulator.get(), &OldManipulator::scaleFinished, this, &OldManipulatorController::onScaleFinished);
 
-    connect(manipulator.get(), &Manipulator::rotateStarted, this, &OldManipulatorController::onRotateStarted);
-    connect(manipulator.get(), &Manipulator::rotateChanged, this, &OldManipulatorController::onRotateChanged);
-    connect(manipulator.get(), &Manipulator::rotateFinished, this, &OldManipulatorController::onRotateFinished);
+    connect(manipulator.get(), &OldManipulator::rotateStarted, this, &OldManipulatorController::onRotateStarted);
+    connect(manipulator.get(), &OldManipulator::rotateChanged, this, &OldManipulatorController::onRotateChanged);
+    connect(manipulator.get(), &OldManipulator::rotateFinished, this, &OldManipulatorController::onRotateFinished);
 }
 
 glm::dvec3 OldManipulatorController::position() const {

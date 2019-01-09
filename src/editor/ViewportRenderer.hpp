@@ -26,7 +26,7 @@ namespace Lattice::Editor {
 class GridFloor;
 class MeshRenderer;
 class Operations;
-class Manipulator;
+class OldManipulator;
 class OldManipulatorController;
 class ItemPicker;
 class ItemInteractor;
@@ -54,7 +54,7 @@ private:
     SP<UI::AppState> _appState;
     SP<Render::Operations> _operations;
     SP<GridFloor> _gridFloor;
-    SP<Manipulator> _manipulator;
+    SP<OldManipulator> _manipulator;
     SP<OldManipulatorController> _manipulatorController;
     std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> _meshRenderers;
     SP<ItemPicker> _itemPicker;

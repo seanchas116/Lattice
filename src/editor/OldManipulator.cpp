@@ -1,4 +1,4 @@
-#include "Manipulator.hpp"
+#include "OldManipulator.hpp"
 #include "MeshPicker.hpp"
 #include "MeshVAOGenerator.hpp"
 #include "../render/Operations.hpp"
@@ -70,7 +70,7 @@ public:
 
 }
 
-Manipulator::Manipulator() :
+OldManipulator::OldManipulator() :
     // TODO: do not create meaningless default objects
     _translateHandleVAO(makeShared<GL::VAO>()),
     _scaleHandleVAO(makeShared<GL::VAO>()),
@@ -119,7 +119,7 @@ Manipulator::Manipulator() :
     }
 }
 
-void Manipulator::draw(const SP<Render::Operations> &operations, const Camera &camera) {
+void OldManipulator::draw(const SP<Render::Operations> &operations, const Camera &camera) {
     ManipulatorCoordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInScreen){
         return;
@@ -155,7 +155,7 @@ void Manipulator::draw(const SP<Render::Operations> &operations, const Camera &c
     operations->drawCircle.draw(_centerVAO, coordinates.manipulatorToWorld, camera, 8, vec3(1));
 }
 
-std::pair<bool, double> Manipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera) {
+std::pair<bool, double> OldManipulator::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera) {
     Q_UNUSED(event)
 
     ManipulatorCoordinates coordinates(camera, _targetPosition);
@@ -220,7 +220,7 @@ std::pair<bool, double> Manipulator::mousePress(QMouseEvent *event, dvec2 pos, c
     return {false, 0};
 }
 
-void Manipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera) {
+void OldManipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera) {
     Q_UNUSED(event)
 
     if (_dragMode == DragMode::None) {
@@ -260,7 +260,7 @@ void Manipulator::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera)
     }
 }
 
-void Manipulator::mouseRelease(QMouseEvent *event, dvec2 pos, const Camera &camera) {
+void OldManipulator::mouseRelease(QMouseEvent *event, dvec2 pos, const Camera &camera) {
     Q_UNUSED(event)
     Q_UNUSED(pos)
     Q_UNUSED(camera)
@@ -282,15 +282,15 @@ void Manipulator::mouseRelease(QMouseEvent *event, dvec2 pos, const Camera &came
     _dragMode = DragMode::None;
 }
 
-double Manipulator::translateHandleOffset() const {
+double OldManipulator::translateHandleOffset() const {
     return _isScaleHandleVisible ? 2.2 : 2.0;
 }
 
-double Manipulator::scaleHandleOffset() const {
+double OldManipulator::scaleHandleOffset() const {
     return _isTranslateHandleVisible ? 1.8: 2.0;
 }
 
-double Manipulator::bodyEnd() const {
+double OldManipulator::bodyEnd() const {
     if (_isScaleHandleVisible && _isTranslateHandleVisible) {
         return 2.2;
     }

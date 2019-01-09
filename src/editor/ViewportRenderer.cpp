@@ -1,7 +1,7 @@
 #include "ViewportRenderer.hpp"
 #include "GridFloor.hpp"
 #include "MeshRenderer.hpp"
-#include "Manipulator.hpp"
+#include "OldManipulator.hpp"
 #include "OldManipulatorController.hpp"
 #include "ItemPicker.hpp"
 #include "ItemInteractor.hpp"
@@ -21,7 +21,7 @@ ViewportRenderer::ViewportRenderer(const SP<UI::AppState> &appState) :
     _appState(appState),
     _operations(makeShared<Render::Operations>()),
     _gridFloor(makeShared<GridFloor>()),
-    _manipulator(makeShared<Manipulator>()),
+    _manipulator(makeShared<OldManipulator>()),
     _manipulatorController(makeShared<OldManipulatorController>(_manipulator, appState)),
     _itemPicker(makeShared<ItemPicker>()),
     _itemInteractor(makeShared<ItemInteractor>(_itemPicker))
@@ -41,9 +41,9 @@ ViewportRenderer::ViewportRenderer(const SP<UI::AppState> &appState) :
     connect(appState.get(), &UI::AppState::isRotateHandleVisibleChanged, this, &ViewportRenderer::updateNeeded);
     connect(appState.get(), &UI::AppState::isScaleHandleVisibleChanged, this, &ViewportRenderer::updateNeeded);
 
-    connect(appState.get(), &UI::AppState::isTranslateHandleVisibleChanged, _manipulator.get(), &Manipulator::setIsTranslateHandleVisible);
-    connect(appState.get(), &UI::AppState::isRotateHandleVisibleChanged, _manipulator.get(), &Manipulator::setIsRotateHandleVisible);
-    connect(appState.get(), &UI::AppState::isScaleHandleVisibleChanged, _manipulator.get(), &Manipulator::setIsScaleHandleVisible);
+    connect(appState.get(), &UI::AppState::isTranslateHandleVisibleChanged, _manipulator.get(), &OldManipulator::setIsTranslateHandleVisible);
+    connect(appState.get(), &UI::AppState::isRotateHandleVisibleChanged, _manipulator.get(), &OldManipulator::setIsRotateHandleVisible);
+    connect(appState.get(), &UI::AppState::isScaleHandleVisibleChanged, _manipulator.get(), &OldManipulator::setIsScaleHandleVisible);
 
     connect(appState->document().get(), &Document::Document::itemInserted, this, &ViewportRenderer::updateNeeded);
     connect(appState->document().get(), &Document::Document::currentItemChanged, this, &ViewportRenderer::updateNeeded);

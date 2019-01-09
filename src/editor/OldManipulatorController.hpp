@@ -15,12 +15,12 @@ class Item;
 
 namespace Lattice::Editor {
 
-class Manipulator;
+class OldManipulator;
 
 class OldManipulatorController final : public QObject {
     Q_OBJECT
 public:
-    explicit OldManipulatorController(const SP<Manipulator>& manipulator, const SP<UI::AppState>& appState);
+    explicit OldManipulatorController(const SP<OldManipulator>& manipulator, const SP<UI::AppState>& appState);
 
     glm::dvec3 position() const;
 
@@ -42,7 +42,7 @@ private:
 
     void connectToItem(const std::optional<SP<Document::Item> > &maybeItem);
 
-    SP<Manipulator> _manipulator;
+    SP<OldManipulator> _manipulator;
     SP<UI::AppState> _appState;
     std::optional<SP<Document::Item>> _item;
     Location _initialLocation;

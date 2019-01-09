@@ -11,10 +11,10 @@ namespace Lattice::Editor {
 
 class MeshPicker;
 
-class Manipulator final : public QObject, public Render::Renderable, protected QOpenGLExtraFunctions {
+class OldManipulator final : public QObject, public Render::Renderable, protected QOpenGLExtraFunctions {
     Q_OBJECT
 public:
-    Manipulator();
+    OldManipulator();
 
     void draw(const SP<Render::Operations>& operations, const Camera& camera) override;
 
