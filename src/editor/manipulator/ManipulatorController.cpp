@@ -11,13 +11,18 @@ namespace Editor {
 
 ManipulatorController::ManipulatorController(const SP<UI::AppState> &appState) : _appState(appState)
 {
+    connectToItem(appState->document()->currentItem());
+    connect(appState->document().get(), &Document::Document::currentItemChanged, this, &ManipulatorController::connectToItem);
+
     for (int axis = 0; axis < 3; ++axis) {
         auto handle = makeShared<TranslateManipulator>(axis);
+        handle->setTargetPosition(position());
         connect(this, &ManipulatorController::positionChanged, handle.get(), &TranslateManipulator::setTargetPosition);
 
         connect(handle.get(), &TranslateManipulator::translateStarted, this, [this] { onTranslateStarted(); });
         connect(handle.get(), &TranslateManipulator::translateChanged, this, [this, axis] (double offset) { onTranslateChanged(axis, offset); });
         connect(handle.get(), &TranslateManipulator::translateFinished, this, [this] { onTranslateFinished(); });
+        _translateHandles.push_back(std::move(handle));
     }
 }
 
