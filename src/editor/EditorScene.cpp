@@ -3,7 +3,7 @@
 #include "GridFloor.hpp"
 #include "MeshRenderer.hpp"
 #include "Manipulator.hpp"
-#include "ManipulatorController.hpp"
+#include "OldManipulatorController.hpp"
 #include "ItemPicker.hpp"
 #include "ItemInteractor.hpp"
 #include "../ui/AppState.hpp"
@@ -19,7 +19,7 @@ EditorScene::EditorScene(const SP<UI::AppState> &appState) :
     _background(makeShared<Background>()),
     _gridFloor(makeShared<GridFloor>()),
     _manipulator(makeShared<Manipulator>()),
-    _manipulatorController(makeShared<ManipulatorController>(_manipulator, appState)),
+    _manipulatorController(makeShared<OldManipulatorController>(_manipulator, appState)),
     _itemPicker(makeShared<ItemPicker>()),
     _itemInteractor(makeShared<ItemInteractor>(_itemPicker))
 {

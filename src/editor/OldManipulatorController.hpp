@@ -17,10 +17,10 @@ namespace Lattice::Editor {
 
 class Manipulator;
 
-class ManipulatorController final : public QObject {
+class OldManipulatorController final : public QObject {
     Q_OBJECT
 public:
-    explicit ManipulatorController(const SP<Manipulator>& manipulator, const SP<UI::AppState>& appState);
+    explicit OldManipulatorController(const SP<Manipulator>& manipulator, const SP<UI::AppState>& appState);
 
     glm::dvec3 position() const;
 

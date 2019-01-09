@@ -19,7 +19,7 @@ class GridFloor;
 class MeshRenderer;
 class Operations;
 class Manipulator;
-class ManipulatorController;
+class OldManipulatorController;
 class ItemPicker;
 class ItemInteractor;
 
@@ -41,7 +41,7 @@ private:
     SP<Background> _background;
     SP<GridFloor> _gridFloor;
     SP<Manipulator> _manipulator;
-    SP<ManipulatorController> _manipulatorController;
+    SP<OldManipulatorController> _manipulatorController;
     std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> _meshRenderers;
     SP<ItemPicker> _itemPicker;
     SP<ItemInteractor> _itemInteractor;
