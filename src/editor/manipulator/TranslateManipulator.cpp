@@ -42,6 +42,9 @@ void TranslateManipulator::draw(const SP<Render::Operations> &operations, const 
 
     dmat4 translate = glm::translate(dvec3(_length, 0, 0));
     operations->drawSolid.draw(_handleVAO, coordinates.manipulatorToWorld * swizzleTransforms[_axis] * translate, camera, vec3(0), colors[_axis]);
+
+    _bodyVAO->vertexBuffer()->setVertices({{vec3(ManipulatorConstants::bodyBegin, 0, 0), {}, {}}, {vec3(_length, 0, 0), {}, {}}});
+    operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * swizzleTransforms[_axis], camera, ManipulatorConstants::bodyWidth, colors[_axis]);
 }
 
 std::pair<bool, double> TranslateManipulator::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
