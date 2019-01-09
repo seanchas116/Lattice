@@ -51,13 +51,6 @@ std::pair<bool, double> RotateHandle::mousePress(QMouseEvent *event, glm::dvec2 
 
     Ray mouseRay = camera.cameraMouseRay(pos);
 
-    RayRayDistance mouseToArrowDistance(mouseRay, coordinates.arrowRaysInManipulatorSpace[_axis]);
-    RayRayDistance mouseToAxisDistance(mouseRay, coordinates.axisRaysInCameraSpace[_axis]);
-
-    double distance = mouseToArrowDistance.distance / coordinates.scale;
-    double tArrow = mouseToArrowDistance.t1;
-    double tAxis = mouseToAxisDistance.t1;
-
     dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * Constants::swizzleTransforms[_axis];
     dmat4 rotateHandleMatrixInverse = inverse(rotateHandleMatrix);
     auto rotateHandleRay = rotateHandleMatrixInverse * mouseRay;
@@ -91,8 +84,6 @@ void RotateHandle::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &c
     }
 
     Ray mouseRay = camera.cameraMouseRay(pos);
-    RayRayDistance mouseToAxisDistance(mouseRay, coordinates.axisRaysInCameraSpace[_axis]);
-    double tAxis = mouseToAxisDistance.t1;
 
     dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * Constants::swizzleTransforms[_axis];
     dmat4 rotateHandleMatrixInverse = inverse(rotateHandleMatrix);
