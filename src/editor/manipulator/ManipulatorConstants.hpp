@@ -1,5 +1,6 @@
 namespace Lattice {
 namespace Editor {
+namespace Manipulator {
 
 namespace ManipulatorConstants {
     constexpr double bodyBegin = 0.2;
@@ -11,5 +12,6 @@ namespace ManipulatorConstants {
     constexpr double fixedDepth = 0.5;
 }
 
+}
 } // namespace Editor
 } // namespace Lattice

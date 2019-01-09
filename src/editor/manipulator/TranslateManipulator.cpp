@@ -16,6 +16,7 @@ using namespace glm;
 
 namespace Lattice {
 namespace Editor {
+namespace Manipulator {
 
 TranslateManipulator::TranslateManipulator(int axis) :
     _axis(axis),
@@ -110,5 +111,6 @@ SP<GL::LineVAO> TranslateManipulator::createBodyVAO() {
     return bodyVAO;
 }
 
+}
 } // namespace Editor
 } // namespace Lattice

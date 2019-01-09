@@ -10,6 +10,7 @@ class LineVAO;
 }
 
 namespace Editor {
+namespace Manipulator {
 
 class TranslateManipulator : public QObject, public Render::Renderable {
     Q_OBJECT
@@ -42,5 +43,6 @@ private:
     glm::dvec3 _initialTargetPosition {0};
 };
 
+}
 } // namespace Editor
 } // namespace Lattice

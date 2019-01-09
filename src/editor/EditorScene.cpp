@@ -21,7 +21,7 @@ EditorScene::EditorScene(const SP<UI::AppState> &appState) :
     _gridFloor(makeShared<GridFloor>()),
     _manipulator(makeShared<OldManipulator>()),
     _oldManipulatorController(makeShared<OldManipulatorController>(_manipulator, appState)),
-    _manipulatorController(makeShared<ManipulatorController>(appState)),
+    _manipulatorController(makeShared<Manipulator::ManipulatorController>(appState)),
     _itemPicker(makeShared<ItemPicker>()),
     _itemInteractor(makeShared<ItemInteractor>(_itemPicker))
 {

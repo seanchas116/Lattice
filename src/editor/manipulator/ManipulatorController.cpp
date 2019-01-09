@@ -8,6 +8,7 @@
 
 namespace Lattice {
 namespace Editor {
+namespace Manipulator {
 
 ManipulatorController::ManipulatorController(const SP<UI::AppState> &appState) : _appState(appState)
 {
@@ -100,5 +101,6 @@ void ManipulatorController::connectToItem(const std::optional<SP<Document::Item>
     emit positionChanged(position());
 }
 
+}
 } // namespace Editor
 } // namespace Lattice

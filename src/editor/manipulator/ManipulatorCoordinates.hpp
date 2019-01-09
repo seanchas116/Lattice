@@ -4,6 +4,7 @@
 
 namespace Lattice {
 namespace Editor {
+namespace Manipulator {
 
 class ManipulatorCoordinates final {
 public:
@@ -43,5 +44,6 @@ public:
     std::array<Ray<double>, 3> axisRaysInCameraSpace;
 };
 
+}
 } // namespace Editor
 } // namespace Lattice

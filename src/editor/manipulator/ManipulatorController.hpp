@@ -13,6 +13,7 @@ class Item;
 }
 
 namespace Editor {
+namespace Manipulator {
 
 class ManipulatorController : public QObject {
     Q_OBJECT
@@ -48,5 +49,6 @@ private:
     QMetaObject::Connection _connection;
 };
 
+}
 } // namespace Editor
 } // namespace Lattice

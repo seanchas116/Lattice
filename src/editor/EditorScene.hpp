@@ -20,9 +20,12 @@ class MeshRenderer;
 class Operations;
 class OldManipulator;
 class OldManipulatorController;
-class ManipulatorController;
 class ItemPicker;
 class ItemInteractor;
+
+namespace Manipulator {
+class ManipulatorController;
+}
 
 class EditorScene : public QObject {
     Q_OBJECT
@@ -43,7 +46,7 @@ private:
     SP<GridFloor> _gridFloor;
     SP<OldManipulator> _manipulator;
     SP<OldManipulatorController> _oldManipulatorController;
-    SP<ManipulatorController> _manipulatorController;
+    SP<Manipulator::ManipulatorController> _manipulatorController;
     std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> _meshRenderers;
     SP<ItemPicker> _itemPicker;
     SP<ItemInteractor> _itemInteractor;
