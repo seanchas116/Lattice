@@ -1,4 +1,4 @@
-#include "TranslateArrow.hpp"
+#include "TranslateHandle.hpp"
 #include "Constants.hpp"
 #include "Coordinates.hpp"
 #include "../MeshVAOGenerator.hpp"
@@ -18,14 +18,14 @@ namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
-TranslateArrow::TranslateArrow(int axis) :
+TranslateHandle::TranslateHandle(int axis) :
     _axis(axis),
     _handleVAO(createHandleVAO()),
     _bodyVAO(createBodyVAO())
 {
 }
 
-void TranslateArrow::draw(const SP<Render::Operations> &operations, const Camera &camera) {
+void TranslateHandle::draw(const SP<Render::Operations> &operations, const Camera &camera) {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInScreen){
         return;
@@ -48,7 +48,7 @@ void TranslateArrow::draw(const SP<Render::Operations> &operations, const Camera
     operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * swizzleTransforms[_axis], camera, Constants::bodyWidth, colors[_axis]);
 }
 
-std::pair<bool, double> TranslateArrow::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
+std::pair<bool, double> TranslateHandle::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
     Q_UNUSED(event)
 
     Coordinates coordinates(camera, _targetPosition);
@@ -77,7 +77,7 @@ std::pair<bool, double> TranslateArrow::mousePress(QMouseEvent *event, glm::dvec
     return {false, 0};
 }
 
-void TranslateArrow::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
+void TranslateHandle::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
     Q_UNUSED(event)
 
     Coordinates coordinates(camera, _initialTargetPosition);
@@ -92,11 +92,11 @@ void TranslateArrow::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera 
     emit translateChanged(tAxis - _initialDragValue);
 }
 
-void TranslateArrow::mouseRelease(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
+void TranslateHandle::mouseRelease(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
     emit translateFinished();
 }
 
-SP<GL::VAO> TranslateArrow::createHandleVAO() {
+SP<GL::VAO> TranslateHandle::createHandleVAO() {
     auto mesh = makeShared<Document::Mesh>();
     auto material = mesh->addMaterial();
     mesh->addCone(dvec3(0), Constants::translateHandleWidth * 0.5, Constants::translateHandleLength, 8, 0, material);
@@ -104,7 +104,7 @@ SP<GL::VAO> TranslateArrow::createHandleVAO() {
     return MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
 }
 
-SP<GL::LineVAO> TranslateArrow::createBodyVAO() {
+SP<GL::LineVAO> TranslateHandle::createBodyVAO() {
     auto bodyVAO = makeShared<GL::LineVAO>();
     bodyVAO->vertexBuffer()->setVertices({{}, {}});
     bodyVAO->setLineStrips({{0, 1}});

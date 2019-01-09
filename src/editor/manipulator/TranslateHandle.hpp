@@ -12,10 +12,10 @@ class LineVAO;
 namespace Editor {
 namespace Manipulator {
 
-class TranslateArrow : public QObject, public Render::Renderable {
+class TranslateHandle : public QObject, public Render::Renderable {
     Q_OBJECT
 public:
-    TranslateArrow(int axis);
+    TranslateHandle(int axis);
 
     void draw(const SP<Render::Operations> &operations, const Camera &camera) override;
     std::pair<bool, double> mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) override;

@@ -1,5 +1,5 @@
 #include "Controller.hpp"
-#include "TranslateArrow.hpp"
+#include "TranslateHandle.hpp"
 #include "../../ui/AppState.hpp"
 #include "../../document/Document.hpp"
 #include "../../document/Item.hpp"
@@ -16,13 +16,13 @@ Controller::Controller(const SP<UI::AppState> &appState) : _appState(appState)
     connect(appState->document().get(), &Document::Document::currentItemChanged, this, &Controller::connectToItem);
 
     for (int axis = 0; axis < 3; ++axis) {
-        auto handle = makeShared<TranslateArrow>(axis);
+        auto handle = makeShared<TranslateHandle>(axis);
         handle->setTargetPosition(position());
-        connect(this, &Controller::positionChanged, handle.get(), &TranslateArrow::setTargetPosition);
+        connect(this, &Controller::positionChanged, handle.get(), &TranslateHandle::setTargetPosition);
 
-        connect(handle.get(), &TranslateArrow::translateStarted, this, [this] { onTranslateStarted(); });
-        connect(handle.get(), &TranslateArrow::translateChanged, this, [this, axis] (double offset) { onTranslateChanged(axis, offset); });
-        connect(handle.get(), &TranslateArrow::translateFinished, this, [this] { onTranslateFinished(); });
+        connect(handle.get(), &TranslateHandle::translateStarted, this, [this] { onTranslateStarted(); });
+        connect(handle.get(), &TranslateHandle::translateChanged, this, [this, axis] (double offset) { onTranslateChanged(axis, offset); });
+        connect(handle.get(), &TranslateHandle::translateFinished, this, [this] { onTranslateFinished(); });
         _translateHandles.push_back(std::move(handle));
     }
 }
