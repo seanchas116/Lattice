@@ -1,5 +1,6 @@
 #include "Controller.hpp"
 #include "TranslateHandle.hpp"
+#include "ScaleHandle.hpp"
 #include "../../ui/AppState.hpp"
 #include "../../document/Document.hpp"
 #include "../../document/Item.hpp"
@@ -24,6 +25,17 @@ Controller::Controller(const SP<UI::AppState> &appState) : _appState(appState)
         connect(handle.get(), &TranslateHandle::translateChanged, this, [this, axis] (double offset) { onTranslateChanged(axis, offset); });
         connect(handle.get(), &TranslateHandle::translateFinished, this, [this] { onTranslateFinished(); });
         _translateHandles.push_back(std::move(handle));
+    }
+
+    for (int axis = 0; axis < 3; ++axis) {
+        auto handle = makeShared<ScaleHandle>(axis);
+        handle->setTargetPosition(position());
+        connect(this, &Controller::positionChanged, handle.get(), &ScaleHandle::setTargetPosition);
+
+        connect(handle.get(), &ScaleHandle::scaleStarted, this, [this] { onScaleStarted(); });
+        connect(handle.get(), &ScaleHandle::scaleChanged, this, [this, axis] (double offset) { onScaleChanged(axis, offset); });
+        connect(handle.get(), &ScaleHandle::scaleFinished, this, [this] { onScaleFinished(); });
+        _scaleHandles.push_back(std::move(handle));
     }
 }
 

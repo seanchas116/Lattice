@@ -81,7 +81,7 @@ void EditorScene::updateLayers() {
         objectsLayer,
         {_itemInteractor},
         //{_manipulator},
-        _manipulatorController->translateHandles()
+        _manipulatorController->scaleHandles()
     };
 }
 
