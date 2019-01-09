@@ -1,5 +1,5 @@
 #include "TranslateManipulator.hpp"
-#include "ManipulatorConstants.hpp"
+#include "Constants.hpp"
 #include "ManipulatorCoordinates.hpp"
 #include "../MeshVAOGenerator.hpp"
 #include "../../render/Operations.hpp"
@@ -44,8 +44,8 @@ void TranslateManipulator::draw(const SP<Render::Operations> &operations, const 
     dmat4 translate = glm::translate(dvec3(_length, 0, 0));
     operations->drawSolid.draw(_handleVAO, coordinates.manipulatorToWorld * swizzleTransforms[_axis] * translate, camera, vec3(0), colors[_axis]);
 
-    _bodyVAO->vertexBuffer()->setVertices({{vec3(ManipulatorConstants::bodyBegin, 0, 0), {}, {}}, {vec3(_length, 0, 0), {}, {}}});
-    operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * swizzleTransforms[_axis], camera, ManipulatorConstants::bodyWidth, colors[_axis]);
+    _bodyVAO->vertexBuffer()->setVertices({{vec3(Constants::bodyBegin, 0, 0), {}, {}}, {vec3(_length, 0, 0), {}, {}}});
+    operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * swizzleTransforms[_axis], camera, Constants::bodyWidth, colors[_axis]);
 }
 
 std::pair<bool, double> TranslateManipulator::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
@@ -65,8 +65,8 @@ std::pair<bool, double> TranslateManipulator::mousePress(QMouseEvent *event, glm
     double tArrow = mouseToArrowDistance.t1;
     double tAxis = mouseToAxisDistance.t1;
 
-    if (distance <= ManipulatorConstants::hitRadius) {
-        if (ManipulatorConstants::bodyBegin <= tArrow && tArrow <= _length + ManipulatorConstants::translateHandleLength) {
+    if (distance <= Constants::hitRadius) {
+        if (Constants::bodyBegin <= tArrow && tArrow <= _length + Constants::translateHandleLength) {
             _initialDragValue = tAxis;
             _initialTargetPosition = _targetPosition;
             emit translateStarted();
@@ -99,7 +99,7 @@ void TranslateManipulator::mouseRelease(QMouseEvent *event, glm::dvec2 pos, cons
 SP<GL::VAO> TranslateManipulator::createHandleVAO() {
     auto mesh = makeShared<Document::Mesh>();
     auto material = mesh->addMaterial();
-    mesh->addCone(dvec3(0), ManipulatorConstants::translateHandleWidth * 0.5, ManipulatorConstants::translateHandleLength, 8, 0, material);
+    mesh->addCone(dvec3(0), Constants::translateHandleWidth * 0.5, Constants::translateHandleLength, 8, 0, material);
 
     return MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
 }

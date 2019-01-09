@@ -1,8 +1,10 @@
+#pragma once
+
 namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
-namespace ManipulatorConstants {
+namespace Constants {
     constexpr double bodyBegin = 0.2;
     constexpr double bodyWidth = 2.0;
     constexpr double scaleHandleSize = 0.2;

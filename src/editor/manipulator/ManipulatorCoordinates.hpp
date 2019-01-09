@@ -1,5 +1,6 @@
 #pragma once
 #include "../../support/Camera.hpp"
+#include "Constants.hpp"
 #include <glm/gtx/transform.hpp>
 
 namespace Lattice {
@@ -17,7 +18,7 @@ public:
             return;
         }
 
-        dvec3 screenPosFixedDepth(screenPos.xy, fixedDepth);
+        dvec3 screenPosFixedDepth(screenPos.xy, Constants::fixedDepth);
         dvec3 positionFixedDepth_worldSpace = camera.mapScreenToWorld(screenPosFixedDepth);
 
         scale = 1.0 / double(camera.viewSize().y) * 20.0;
@@ -34,7 +35,6 @@ public:
         }
     }
 
-    constexpr static double fixedDepth = 0.5;
     glm::dvec3 targetPos;
     bool isInScreen;
     glm::dmat4 manipulatorToWorld;
