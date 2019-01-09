@@ -76,12 +76,28 @@ void EditorScene::updateLayers() {
         }
     }
 
+    Render::Layer handles;
+    if (_appState->isRotateHandleVisible()) {
+        for (auto& h : _manipulatorController->rotateHandles()) {
+            handles.push_back(h);
+        }
+    }
+    if (_appState->isScaleHandleVisible()) {
+        for (auto& h : _manipulatorController->scaleHandles()) {
+            handles.push_back(h);
+        }
+    }
+    if (_appState->isTranslateHandleVisible()) {
+        for (auto& h : _manipulatorController->translateHandles()) {
+            handles.push_back(h);
+        }
+    }
+
     _layers = {
         {_background},
         objectsLayer,
         {_itemInteractor},
-        //{_manipulator},
-        _manipulatorController->rotateHandles()
+        handles,
     };
 }
 
