@@ -19,11 +19,7 @@ EditorScene::EditorScene(const SP<UI::AppState> &appState) :
     _appState(appState),
     _background(makeShared<Background>()),
     _gridFloor(makeShared<GridFloor>()),
-    _manipulator(makeShared<OldManipulator>()),
-    _oldManipulatorController(makeShared<OldManipulatorController>(_manipulator, appState)),
-    _manipulatorController(makeShared<Manipulator::Controller>(appState)),
-    _itemPicker(makeShared<ItemPicker>()),
-    _itemInteractor(makeShared<ItemInteractor>(_itemPicker))
+    _manipulatorController(makeShared<Manipulator::Controller>(appState))
 {
     connect(appState.get(), &UI::AppState::isVertexVisibleChanged, this, &EditorScene::updateRequested);
     connect(appState.get(), &UI::AppState::isEdgeVisibleChanged, this, &EditorScene::updateRequested);
@@ -33,17 +29,11 @@ EditorScene::EditorScene(const SP<UI::AppState> &appState) :
     connect(appState.get(), &UI::AppState::isRotateHandleVisibleChanged, this, &EditorScene::updateRequested);
     connect(appState.get(), &UI::AppState::isScaleHandleVisibleChanged, this, &EditorScene::updateRequested);
 
-    connect(appState.get(), &UI::AppState::isTranslateHandleVisibleChanged, _manipulator.get(), &OldManipulator::setIsTranslateHandleVisible);
-    connect(appState.get(), &UI::AppState::isRotateHandleVisibleChanged, _manipulator.get(), &OldManipulator::setIsRotateHandleVisible);
-    connect(appState.get(), &UI::AppState::isScaleHandleVisibleChanged, _manipulator.get(), &OldManipulator::setIsScaleHandleVisible);
-
     connect(appState->document().get(), &Document::Document::itemInserted, this, &EditorScene::updateRequested);
     connect(appState->document().get(), &Document::Document::currentItemChanged, this, &EditorScene::updateRequested);
 }
 
 void EditorScene::updateLayers() {
-    _itemPicker->update(_appState->document()->rootItem());
-
     std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> newMeshRenderers;
 
     _appState->document()->rootItem()->forEachDescendant([&] (auto& item) {
