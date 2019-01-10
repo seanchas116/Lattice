@@ -1,6 +1,5 @@
 #include "EditorWidget.hpp"
 #include "EditorScene.hpp"
-#include "ViewportRenderer.hpp"
 #include "CameraController.hpp"
 #include <QOpenGLDebugLogger>
 #include <QMouseEvent>
