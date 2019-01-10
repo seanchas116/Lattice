@@ -56,7 +56,7 @@ void EditorScene::updateLayers() {
             return;
         }
 
-        auto renderer = makeShared<MeshRenderer>(meshItem);
+        auto renderer = makeShared<MeshRenderer>(_appState, meshItem);
         newMeshRenderers.insert({meshItem, renderer});
     });
 
@@ -65,15 +65,7 @@ void EditorScene::updateLayers() {
     Render::Layer objectsLayer;
     objectsLayer.push_back(_gridFloor);
     for (auto& [item, renderer] : _meshRenderers) {
-        if (_appState->isFaceVisible()) {
-            objectsLayer.push_back(renderer->facesRenderer());
-        }
-        if (_appState->isEdgeVisible()) {
-            objectsLayer.push_back(renderer->edgesRenderer());
-        }
-        if (_appState->isVertexVisible()) {
-            objectsLayer.push_back(renderer->verticesRenderer());
-        }
+        objectsLayer.push_back(renderer);
     }
 
     Render::Layer handles;

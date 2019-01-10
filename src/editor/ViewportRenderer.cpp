@@ -74,7 +74,7 @@ void ViewportRenderer::render() {
             return;
         }
 
-        auto renderer = makeShared<MeshRenderer>(meshItem);
+        auto renderer = makeShared<MeshRenderer>(_appState, meshItem);
         newMeshRenderers.insert({meshItem, renderer});
     });
 
@@ -82,22 +82,8 @@ void ViewportRenderer::render() {
 
     _gridFloor->draw(_operations, _camera);
 
-    if (_appState->isFaceVisible()) {
-        for (auto& [item, renderer] : _meshRenderers) {
-            renderer->facesRenderer()->draw(_operations, _camera);
-        }
-    }
-
-    if (_appState->isEdgeVisible()) {
-        for (auto& [item, renderer] : _meshRenderers) {
-            renderer->edgesRenderer()->draw(_operations, _camera);
-        }
-    }
-
-    if (_appState->isVertexVisible()) {
-        for (auto& [item, renderer] : _meshRenderers) {
-            renderer->verticesRenderer()->draw(_operations, _camera);
-        }
+    for (auto& [item, renderer] : _meshRenderers) {
+        renderer->draw(_operations, _camera);
     }
 
     glClear(GL_DEPTH_BUFFER_BIT);

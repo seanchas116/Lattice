@@ -1,5 +1,6 @@
 #include "MeshRenderer.hpp"
 #include "MeshVAOGenerator.hpp"
+#include "../ui/AppState.hpp"
 #include "../gl/LineVAO.hpp"
 #include "../gl/PointVAO.hpp"
 #include "../document/Document.hpp"
@@ -12,51 +13,29 @@ using namespace glm;
 
 namespace Lattice::Editor {
 
-class MeshRenderer::FacesRenderer : public Render::Renderable {
-public:
-    FacesRenderer(MeshRenderer* renderer) : renderer(renderer) {}
-
-    void draw(const SP<Render::Operations>& operations, const Camera& camera) override {
-        for (auto& [material, vao] : renderer->_faceVAOs) {
-            operations->drawMaterial.draw(vao, renderer->_item->location().matrix(), camera, material);
-        }
-    }
-
-    MeshRenderer* renderer;
-};
-
-class MeshRenderer::EdgesRenderer : public Render::Renderable {
-public:
-    EdgesRenderer(MeshRenderer* renderer) : renderer(renderer) {}
-
-    void draw(const SP<Render::Operations>& operations, const Camera& camera) override {
-        operations->drawLine.draw(renderer->_edgeVAO, renderer->_item->location().matrix(), camera, 1.0, dvec3(0));
-    }
-
-    MeshRenderer* renderer;
-};
-
-class MeshRenderer::VerticesRenderer : public Render::Renderable {
-public:
-    VerticesRenderer(MeshRenderer* renderer) : renderer(renderer) {}
-
-    void draw(const SP<Render::Operations>& operations, const Camera& camera) override {
-        operations->drawCircle.draw(renderer->_vertexVAO, renderer->_item->location().matrix(), camera, 4.0, dvec3(0));
-    }
-
-    MeshRenderer* renderer;
-};
-
-MeshRenderer::MeshRenderer(const SP<Document::MeshItem> &item) :
+MeshRenderer::MeshRenderer(const SP<UI::AppState>& appState, const SP<Document::MeshItem> &item) :
+    _appState(appState),
     _item(item),
     _edgeVAO(makeShared<GL::LineVAO>()),
-    _vertexVAO(makeShared<GL::PointVAO>()),
-    _facesRenderer(makeShared<FacesRenderer>(this)),
-    _edgesRenderer(makeShared<EdgesRenderer>(this)),
-    _verticesRenderer(makeShared<VerticesRenderer>(this))
+    _vertexVAO(makeShared<GL::PointVAO>())
 {
     // TODO: update mesh when item is changed
     updateVAOs(item->mesh());
+}
+
+void MeshRenderer::draw(const SP<Render::Operations> &operations, const Camera &camera) {
+    if (_appState->isFaceVisible()) {
+        for (auto& [material, vao] : _faceVAOs) {
+            operations->drawMaterial.draw(vao, _item->location().matrix(), camera, material);
+        }
+    }
+    if (_appState->isEdgeVisible()) {
+        operations->drawLine.draw(_edgeVAO, _item->location().matrix(), camera, 1.0, dvec3(0));
+    }
+    if (_appState->isVertexVisible()) {
+        operations->drawCircle.draw(_vertexVAO, _item->location().matrix(), camera, 4.0, dvec3(0));
+
+    }
 }
 
 void MeshRenderer::updateVAOs(const SP<Document::Mesh> &mesh) {

@@ -12,6 +12,10 @@ namespace Lattice {
 class Camera;
 }
 
+namespace Lattice::UI {
+class AppState;
+}
+
 namespace Lattice::Document {
 class MeshItem;
 class Mesh;
@@ -28,29 +32,20 @@ namespace Lattice::Editor {
 
 class Operations;
 
-class MeshRenderer final {
+class MeshRenderer final : public Render::Renderable {
 public:
-    MeshRenderer(const SP<Document::MeshItem>& item);
+    MeshRenderer(const SP<UI::AppState>& appState, const SP<Document::MeshItem>& item);
 
-    auto& facesRenderer() { return _facesRenderer; }
-    auto& edgesRenderer() { return _edgesRenderer; }
-    auto& verticesRenderer() { return _verticesRenderer; }
+    void draw(const SP<Render::Operations> &operations, const Camera &camera) override;
 
 private:
     void updateVAOs(const SP<Document::Mesh>& mesh);
 
+    SP<UI::AppState> _appState;
     SP<Document::MeshItem> _item;
     std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> _faceVAOs;
     SP<GL::LineVAO> _edgeVAO;
     SP<GL::PointVAO> _vertexVAO;
-
-    class FacesRenderer;
-    class EdgesRenderer;
-    class VerticesRenderer;
-
-    SP<Render::Renderable> _facesRenderer;
-    SP<Render::Renderable> _edgesRenderer;
-    SP<Render::Renderable> _verticesRenderer;
 };
 
 }
