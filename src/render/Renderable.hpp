@@ -7,6 +7,10 @@ class QMouseEvent;
 namespace Lattice {
 namespace Render {
 
+struct HitResult {
+    double t;
+};
+
 class Renderable {
     Q_DISABLE_COPY(Renderable)
 public:
@@ -15,8 +19,8 @@ public:
 
     virtual void draw(const SP<Operations>& operations, const Camera& camera);
 
-    // The Renderable which returned true in first value and largest t in second value is considered dragged
-    virtual std::pair<bool, double> mousePress(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
+    virtual std::optional<HitResult> hitTest(glm::dvec2 pos, const Camera& camera) const;
+    virtual void mousePress(QMouseEvent* event, glm::dvec2 pos, const Camera& camera, const HitResult& hitResult);
     virtual void mouseMove(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
     virtual void mouseRelease(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
 };

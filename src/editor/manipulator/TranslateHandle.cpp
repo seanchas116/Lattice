@@ -38,33 +38,43 @@ void TranslateHandle::draw(const SP<Render::Operations> &operations, const Camer
     operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, Constants::colors[_axis]);
 }
 
-std::pair<bool, double> TranslateHandle::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
-    Q_UNUSED(event)
-
+std::optional<Render::HitResult> TranslateHandle::hitTest(dvec2 pos, const Camera &camera) const {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInScreen) {
-        return {false, 0};
+        return {};
     }
 
     Ray mouseRay = camera.cameraMouseRay(pos);
 
     RayRayDistance mouseToArrowDistance(mouseRay, coordinates.arrowRaysInManipulatorSpace[_axis]);
-    RayRayDistance mouseToAxisDistance(mouseRay, coordinates.axisRaysInCameraSpace[_axis]);
-
     double distance = mouseToArrowDistance.distance / coordinates.scale;
     double tArrow = mouseToArrowDistance.t1;
-    double tAxis = mouseToAxisDistance.t1;
 
     if (distance <= Constants::hitRadius) {
         if (Constants::bodyBegin <= tArrow && tArrow <= _length + Constants::translateHandleLength) {
-            _initialDragValue = tAxis;
-            _initialTargetPosition = _targetPosition;
-            emit translateStarted();
-
-            return {true, 0};
+            return {{mouseToArrowDistance.t0}};
         }
     }
-    return {false, 0};
+
+    return {};
+}
+
+void TranslateHandle::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera, const Render::HitResult &hitResult) {
+    Q_UNUSED(event)
+
+    Coordinates coordinates(camera, _targetPosition);
+    if (!coordinates.isInScreen) {
+        return;
+    }
+
+    Ray mouseRay = camera.cameraMouseRay(pos);
+
+    RayRayDistance mouseToAxisDistance(mouseRay, coordinates.axisRaysInCameraSpace[_axis]);
+    double tAxis = mouseToAxisDistance.t1;
+
+    _initialDragValue = tAxis;
+    _initialTargetPosition = _targetPosition;
+    emit translateStarted();
 }
 
 void TranslateHandle::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {

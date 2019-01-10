@@ -41,12 +41,10 @@ void RotateHandle::draw(const SP<Render::Operations> &operations, const Camera &
     glClear(GL_DEPTH_BUFFER_BIT);
 }
 
-std::pair<bool, double> RotateHandle::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
-    Q_UNUSED(event)
-
+std::optional<Render::HitResult> RotateHandle::hitTest(dvec2 pos, const Camera &camera) const {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInScreen) {
-        return {false, 0};
+        return {};
     }
 
     Ray mouseRay = camera.cameraMouseRay(pos);
@@ -56,14 +54,29 @@ std::pair<bool, double> RotateHandle::mousePress(QMouseEvent *event, glm::dvec2 
     auto rotateHandleRay = rotateHandleMatrixInverse * mouseRay;
     auto pickResult = _handleMeshPicker->pickEdge(rotateHandleRay, 0.1);
     if (!pickResult) {
-        return {false, 0};
+        return {};
     }
     auto [edge, t] = *pickResult;
     auto [hitPos_screenSpace, isInScreen] = camera.mapCameraToScreen((rotateHandleMatrix * dvec4(rotateHandleRay.at(t), 1)).xyz);
 
     if (hitPos_screenSpace.z > Constants::fixedDepth) {
-        return {false, 0};
+        return {};
     }
+    return {{t}};
+}
+
+void RotateHandle::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera, const Render::HitResult &hitResult)  {
+    Q_UNUSED(event)
+
+    Coordinates coordinates(camera, _targetPosition);
+    if (!coordinates.isInScreen) {
+        return;
+    }
+
+    dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * Constants::swizzleTransforms[_axis];
+    dmat4 rotateHandleMatrixInverse = inverse(rotateHandleMatrix);
+    auto rotateHandleRay = rotateHandleMatrixInverse * camera.cameraMouseRay(pos);
+    auto pickResult = _handleMeshPicker->pickEdge(rotateHandleRay, 0.1);
 
     dvec3 intersection = rotateHandleRay.whereXIsZero();
     double angle = atan2(intersection.z, intersection.y);
@@ -71,8 +84,6 @@ std::pair<bool, double> RotateHandle::mousePress(QMouseEvent *event, glm::dvec2 
     _initialDragValue = angle;
     _initialTargetPosition = _targetPosition;
     emit rotateStarted();
-
-    return {true, 0};
 }
 
 void RotateHandle::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {

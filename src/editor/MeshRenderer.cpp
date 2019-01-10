@@ -41,15 +41,19 @@ void MeshRenderer::draw(const SP<Render::Operations> &operations, const Camera &
     }
 }
 
-std::pair<bool, double> MeshRenderer::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera) {
+std::optional<Render::HitResult> MeshRenderer::hitTest(dvec2 pos, const Camera &camera) const {
     auto worldMouseRay = camera.worldMouseRay(pos);
-    LATTICE_OPTIONAL_GUARD(pickResult, _meshPicker->picKFace(worldMouseRay), return {true, 0};)
+    auto modelMouseRay = glm::inverse(_item->location().matrix()) * worldMouseRay;
+    LATTICE_OPTIONAL_GUARD(pickResult, _meshPicker->picKFace(modelMouseRay), return {};)
     auto [face, t] = pickResult;
+    return {{t}};
+}
 
-    glm::dvec3 worldDragPos = worldMouseRay.at(t);
+void MeshRenderer::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera, const Render::HitResult& hitResult) {
+    glm::dvec3 worldDragPos = camera.worldMouseRay(pos).at(hitResult.t);
     auto [screenDragPos, isInScreen] = camera.mapWorldToScreen(worldDragPos);
     if (!isInScreen) {
-        return {false, 0};
+        return;
     }
 
     _dragInitLocation = _item->location();
@@ -58,8 +62,6 @@ std::pair<bool, double> MeshRenderer::mousePress(QMouseEvent *event, dvec2 pos, 
     _dragStarted = false;
 
     _appState->document()->selectItem(_item, event->modifiers() & Qt::ShiftModifier);
-
-    return {true, 0};
 }
 
 void MeshRenderer::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera) {
