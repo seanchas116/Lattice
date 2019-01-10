@@ -1,5 +1,6 @@
 #include "MeshRenderer.hpp"
 #include "MeshVAOGenerator.hpp"
+#include "MeshPicker.hpp"
 #include "../ui/AppState.hpp"
 #include "../gl/LineVAO.hpp"
 #include "../gl/PointVAO.hpp"
@@ -16,6 +17,7 @@ namespace Lattice::Editor {
 MeshRenderer::MeshRenderer(const SP<UI::AppState>& appState, const SP<Document::MeshItem> &item) :
     _appState(appState),
     _item(item),
+    _meshPicker(makeShared<MeshPicker>(item->mesh())),
     _edgeVAO(makeShared<GL::LineVAO>()),
     _vertexVAO(makeShared<GL::PointVAO>())
 {
@@ -34,7 +36,6 @@ void MeshRenderer::draw(const SP<Render::Operations> &operations, const Camera &
     }
     if (_appState->isVertexVisible()) {
         operations->drawCircle.draw(_vertexVAO, _item->location().matrix(), camera, 4.0, dvec3(0));
-
     }
 }
 

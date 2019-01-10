@@ -9,28 +9,28 @@
 class QMouseEvent;
 
 namespace Lattice {
-class Camera;
-}
 
-namespace Lattice::UI {
+class Camera;
+
+namespace UI {
 class AppState;
 }
 
-namespace Lattice::Document {
+namespace Document {
 class MeshItem;
 class Mesh;
 class MeshMaterial;
 }
 
-namespace Lattice::GL {
+namespace GL {
 class VAO;
 class LineVAO;
 class PointVAO;
 }
 
-namespace Lattice::Editor {
+namespace Editor {
 
-class Operations;
+class MeshPicker;
 
 class MeshRenderer final : public Render::Renderable {
 public:
@@ -43,9 +43,11 @@ private:
 
     SP<UI::AppState> _appState;
     SP<Document::MeshItem> _item;
+    SP<MeshPicker> _meshPicker;
     std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> _faceVAOs;
     SP<GL::LineVAO> _edgeVAO;
     SP<GL::PointVAO> _vertexVAO;
 };
 
+}
 }
