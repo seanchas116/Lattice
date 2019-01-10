@@ -88,7 +88,6 @@ void EditorScene::updateLayers() {
     _layers = {
         {_background},
         objectsLayer,
-        {_itemInteractor},
         handles,
     };
 }
