@@ -25,22 +25,19 @@ void RenderWidget::mousePressEvent(QMouseEvent *event) {
 
     auto& camera = _viewports[0].camera; // FIXME
 
-    HitResult result;
-
     for (auto it = _layers.rbegin(); it != _layers.rend(); ++it) {
         auto& layer = *it;
-        std::map<double, SP<Renderable>> hitRenderables;
+        std::map<double, std::pair<SP<Renderable>, HitResult>> hitRenderables;
         for (auto& renderable : layer) {
             auto maybeHitResult = renderable->hitTest(pos, camera);
             if (maybeHitResult) {
-                hitRenderables.insert({maybeHitResult->t, renderable});
-                result = *maybeHitResult;
+                hitRenderables.insert({maybeHitResult->t, {renderable, *maybeHitResult}});
             }
         }
         if (!hitRenderables.empty()) {
-            auto target = hitRenderables.begin()->second;
-            target->mousePress(event, pos, camera, result);
-            _draggedRenderable = target;
+            auto [renderable, hitResult] = hitRenderables.begin()->second;
+            renderable->mousePress(event, pos, camera, hitResult);
+            _draggedRenderable = renderable;
             break;
         }
     }
