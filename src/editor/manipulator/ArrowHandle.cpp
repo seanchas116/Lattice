@@ -1,4 +1,4 @@
-#include "ScaleHandle.hpp"
+#include "ArrowHandle.hpp"
 #include "Constants.hpp"
 #include "Coordinates.hpp"
 #include "../MeshVAOGenerator.hpp"
@@ -18,14 +18,15 @@ namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
-ScaleHandle::ScaleHandle(int axis) :
+ArrowHandle::ArrowHandle(int axis, HandleType handleType) :
     _axis(axis),
+    _handleType(handleType),
     _handleVAO(createHandleVAO()),
     _bodyVAO(createBodyVAO())
 {
 }
 
-void ScaleHandle::draw(const SP<Render::Operations> &operations, const Camera &camera) {
+void ArrowHandle::draw(const SP<Render::Operations> &operations, const Camera &camera) {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInScreen){
         return;
@@ -38,7 +39,7 @@ void ScaleHandle::draw(const SP<Render::Operations> &operations, const Camera &c
     operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, Constants::colors[_axis]);
 }
 
-std::optional<Render::HitResult> ScaleHandle::hitTest(dvec2 pos, const Camera &camera) const {
+std::optional<Render::HitResult> ArrowHandle::hitTest(dvec2 pos, const Camera &camera) const {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInScreen) {
         return {};
@@ -55,10 +56,11 @@ std::optional<Render::HitResult> ScaleHandle::hitTest(dvec2 pos, const Camera &c
             return {{mouseToArrowDistance.t0}};
         }
     }
+
     return {};
 }
 
-void ScaleHandle::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera, const Render::HitResult &hitResult) {
+void ArrowHandle::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera, const Render::HitResult &hitResult) {
     Q_UNUSED(event); Q_UNUSED(hitResult);
 
     Coordinates coordinates(camera, _targetPosition);
@@ -75,7 +77,7 @@ void ScaleHandle::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
     emit onBegin(tAxis);
 }
 
-void ScaleHandle::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
+void ArrowHandle::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
     Q_UNUSED(event);
 
     Coordinates coordinates(camera, _initialTargetPosition);
@@ -87,23 +89,27 @@ void ScaleHandle::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &ca
     RayRayDistance mouseToAxisDistance(mouseRay, coordinates.axisRaysInCameraSpace[_axis]);
     double tAxis = mouseToAxisDistance.t1;
 
-     emit onChange(tAxis);
+    emit onChange(tAxis);
 }
 
-void ScaleHandle::mouseRelease(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
+void ArrowHandle::mouseRelease(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
     Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera);
     emit onEnd();
 }
 
-SP<GL::VAO> ScaleHandle::createHandleVAO() {
+SP<GL::VAO> ArrowHandle::createHandleVAO() {
     auto mesh = makeShared<Document::Mesh>();
     auto material = mesh->addMaterial();
-    mesh->addCube(-dvec3(Constants::scaleHandleSize*0.5), +dvec3(Constants::scaleHandleSize*0.5), material);
+    if (_handleType == HandleType::Translate) {
+        mesh->addCone(dvec3(0), Constants::translateHandleWidth * 0.5, Constants::translateHandleLength, 8, 0, material);
+    } else {
+        mesh->addCube(-dvec3(Constants::scaleHandleSize*0.5), +dvec3(Constants::scaleHandleSize*0.5), material);
+    }
 
     return MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
 }
 
-SP<GL::LineVAO> ScaleHandle::createBodyVAO() {
+SP<GL::LineVAO> ArrowHandle::createBodyVAO() {
     auto bodyVAO = makeShared<GL::LineVAO>();
     bodyVAO->vertexBuffer()->setVertices({{}, {}});
     bodyVAO->setLineStrips({{0, 1}});

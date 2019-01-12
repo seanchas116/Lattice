@@ -1,6 +1,5 @@
 #include "Controller.hpp"
-#include "TranslateHandle.hpp"
-#include "ScaleHandle.hpp"
+#include "ArrowHandle.hpp"
 #include "RotateHandle.hpp"
 #include "../../ui/AppState.hpp"
 #include "../../document/Document.hpp"
@@ -18,24 +17,24 @@ Controller::Controller(const SP<UI::AppState> &appState) : _appState(appState)
     connect(appState->document().get(), &Document::Document::currentItemChanged, this, &Controller::connectToItem);
 
     for (int axis = 0; axis < 3; ++axis) {
-        auto handle = makeShared<TranslateHandle>(axis, TranslateHandle::HandleType::Translate);
+        auto handle = makeShared<ArrowHandle>(axis, ArrowHandle::HandleType::Translate);
         handle->setTargetPosition(position());
-        connect(this, &Controller::positionChanged, handle.get(), &TranslateHandle::setTargetPosition);
+        connect(this, &Controller::positionChanged, handle.get(), &ArrowHandle::setTargetPosition);
 
-        connect(handle.get(), &TranslateHandle::onBegin, this, [this] (double value) { handleOnBegin(ValueType::Translate, value); });
-        connect(handle.get(), &TranslateHandle::onChange, this, [this, axis] (double value) { handleOnChange(ValueType::Translate, axis, value); });
-        connect(handle.get(), &TranslateHandle::onEnd, this, [this] { handleOnEnd(ValueType::Translate); });
+        connect(handle.get(), &ArrowHandle::onBegin, this, [this] (double value) { handleOnBegin(ValueType::Translate, value); });
+        connect(handle.get(), &ArrowHandle::onChange, this, [this, axis] (double value) { handleOnChange(ValueType::Translate, axis, value); });
+        connect(handle.get(), &ArrowHandle::onEnd, this, [this] { handleOnEnd(ValueType::Translate); });
         _translateHandles.push_back(std::move(handle));
     }
 
     for (int axis = 0; axis < 3; ++axis) {
-        auto handle = makeShared<TranslateHandle>(axis, TranslateHandle::HandleType::Scale);
+        auto handle = makeShared<ArrowHandle>(axis, ArrowHandle::HandleType::Scale);
         handle->setTargetPosition(position());
-        connect(this, &Controller::positionChanged, handle.get(), &TranslateHandle::setTargetPosition);
+        connect(this, &Controller::positionChanged, handle.get(), &ArrowHandle::setTargetPosition);
 
-        connect(handle.get(), &TranslateHandle::onBegin, this, [this] (double value) { handleOnBegin(ValueType::Scale, value); });
-        connect(handle.get(), &TranslateHandle::onChange, this, [this, axis] (double value) { handleOnChange(ValueType::Scale, axis, value); });
-        connect(handle.get(), &TranslateHandle::onEnd, this, [this] { handleOnEnd(ValueType::Scale); });
+        connect(handle.get(), &ArrowHandle::onBegin, this, [this] (double value) { handleOnBegin(ValueType::Scale, value); });
+        connect(handle.get(), &ArrowHandle::onChange, this, [this, axis] (double value) { handleOnChange(ValueType::Scale, axis, value); });
+        connect(handle.get(), &ArrowHandle::onEnd, this, [this] { handleOnEnd(ValueType::Scale); });
         _scaleHandles.push_back(std::move(handle));
     }
 

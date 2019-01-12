@@ -12,10 +12,15 @@ class LineVAO;
 namespace Editor {
 namespace Manipulator {
 
-class ScaleHandle : public QObject, public Render::Renderable {
+class ArrowHandle : public QObject, public Render::Renderable {
     Q_OBJECT
 public:
-    ScaleHandle(int axis);
+    enum class HandleType {
+        Translate,
+        Scale,
+    };
+
+    ArrowHandle(int axis, HandleType handleType);
 
     void draw(const SP<Render::Operations> &operations, const Camera &camera) override;
 
@@ -37,6 +42,7 @@ private:
     SP<GL::LineVAO> createBodyVAO();
 
     int _axis;
+    HandleType _handleType;
     glm::dvec3 _targetPosition {0};
     double _length {2.0};
     SP<GL::VAO> _handleVAO;
