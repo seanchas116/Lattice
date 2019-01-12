@@ -31,12 +31,12 @@ bool CameraController::mouseMove(QMouseEvent *event) {
     QPoint offset = event->pos() - _lastMousePos;
     switch (_mode) {
     case Mode::Move: {
-        _location.position = _location.position + _location.up() * double(offset.y()) * 0.05 + _location.right() * double(-offset.x()) * 0.05;
+        _location.position = _location.position + _location.up() * double(offset.y()) * 0.02 + _location.right() * double(-offset.x()) * 0.02;
         emit locationChanged(_location);
         break;
     }
     case Mode::Rotate: {
-        double unit = 0.25 / 180.0 * M_PI;
+        double unit = 0.2 / 180.0 * M_PI;
         _eulerAngles.y -= offset.x() * unit;
         _eulerAngles.x -= offset.y() * unit;
 
