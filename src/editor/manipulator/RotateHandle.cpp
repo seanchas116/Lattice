@@ -82,7 +82,7 @@ void RotateHandle::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camer
     double angle = atan2(intersection.z, intersection.y);
 
     _initialTargetPosition = _targetPosition;
-    emit rotateStarted(angle);
+    emit onBegin(angle);
 }
 
 void RotateHandle::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
@@ -101,12 +101,12 @@ void RotateHandle::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &c
     dvec3 intersection = rotateHandleRay.whereXIsZero();
     double angle = atan2(intersection.z, intersection.y);
 
-    emit rotateChanged(angle);
+    emit onChange(angle);
 }
 
 void RotateHandle::mouseRelease(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
     Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera);
-    emit rotateFinished();
+    emit onEnd();
 }
 
 SP<Document::Mesh> RotateHandle::createMesh() {

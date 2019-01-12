@@ -32,9 +32,9 @@ public:
     void setTargetPosition(const glm::dvec3 &targetPosition) { _targetPosition = targetPosition; }
 
 signals:
-    void rotateStarted(double value);
-    void rotateChanged(double value);
-    void rotateFinished();
+    void onBegin(double value);
+    void onChange(double value);
+    void onEnd();
 
 private:
     SP<Document::Mesh> createMesh();
