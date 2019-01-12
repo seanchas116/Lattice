@@ -66,7 +66,7 @@ std::optional<Render::HitResult> RotateHandle::hitTest(dvec2 pos, const Camera &
 }
 
 void RotateHandle::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera, const Render::HitResult &hitResult)  {
-    Q_UNUSED(event)
+    Q_UNUSED(event); Q_UNUSED(hitResult);
 
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInScreen) {

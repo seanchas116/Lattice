@@ -59,7 +59,7 @@ std::optional<Render::HitResult> ScaleHandle::hitTest(dvec2 pos, const Camera &c
 }
 
 void ScaleHandle::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera, const Render::HitResult &hitResult) {
-    Q_UNUSED(event)
+    Q_UNUSED(event); Q_UNUSED(hitResult);
 
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInScreen) {

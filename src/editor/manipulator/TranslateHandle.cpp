@@ -60,7 +60,7 @@ std::optional<Render::HitResult> TranslateHandle::hitTest(dvec2 pos, const Camer
 }
 
 void TranslateHandle::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera, const Render::HitResult &hitResult) {
-    Q_UNUSED(event)
+    Q_UNUSED(event); Q_UNUSED(hitResult);
 
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInScreen) {
