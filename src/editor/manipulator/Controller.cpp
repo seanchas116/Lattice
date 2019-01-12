@@ -72,7 +72,6 @@ void Controller::onBegin(ValueType type) {
 
     _appState->document()->history()->beginChange(changeText);
     _initialLocation = item->location();
-
 }
 
 void Controller::onChange(ValueType type, int axis, double offset) {
