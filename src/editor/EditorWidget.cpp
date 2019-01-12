@@ -18,8 +18,7 @@ EditorWidget::EditorWidget(const SP<UI::AppState> &appState, QWidget *parent) :
         connect(_scene->get(), &EditorScene::updateRequested, this, [this] { update(); });
         connect(this, &RenderWidget::aboutToBePainted, this, [this] {
             LATTICE_OPTIONAL_GUARD(scene, _scene, return;)
-            scene->updateLayers();
-            this->setLayers(scene->layers());
+            this->setRenderables(scene->updateRenderables());
         });
     });
 

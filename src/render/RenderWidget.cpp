@@ -25,21 +25,18 @@ void RenderWidget::mousePressEvent(QMouseEvent *event) {
 
     auto& camera = _viewports[0].camera; // FIXME
 
-    for (auto it = _layers.rbegin(); it != _layers.rend(); ++it) {
-        auto& layer = *it;
-        std::map<double, std::pair<SP<Renderable>, HitResult>> hitRenderables;
-        for (auto& renderable : layer) {
-            auto maybeHitResult = renderable->hitTest(pos, camera);
-            if (maybeHitResult) {
-                hitRenderables.insert({maybeHitResult->t, {renderable, *maybeHitResult}});
-            }
+    std::map<double, std::pair<SP<Renderable>, HitResult>> hitRenderables;
+    for (auto it = _renderables.rbegin(); it != _renderables.rend(); ++it) {
+        auto& renderable = *it;
+        auto maybeHitResult = renderable->hitTest(pos, camera);
+        if (maybeHitResult) {
+            hitRenderables.insert({maybeHitResult->t, {renderable, *maybeHitResult}});
         }
-        if (!hitRenderables.empty()) {
-            auto [renderable, hitResult] = hitRenderables.begin()->second;
-            renderable->mousePress(event, pos, camera, hitResult);
-            _draggedRenderable = renderable;
-            break;
-        }
+    }
+    if (!hitRenderables.empty()) {
+        auto [renderable, hitResult] = hitRenderables.begin()->second;
+        renderable->mousePress(event, pos, camera, hitResult);
+        _draggedRenderable = renderable;
     }
 }
 
@@ -89,10 +86,8 @@ void RenderWidget::paintGL() {
 
         glViewport(minPosWidget.x, minPosWidget.y, sizeWidget.x, sizeWidget.y);
 
-        for (auto& layer : _layers) {
-            for (auto& renderable : layer) {
-                renderable->draw(operations, viewport.camera);
-            }
+        for (auto& renderable : _renderables) {
+            renderable->draw(operations, viewport.camera);
         }
     }
 }

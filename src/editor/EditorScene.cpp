@@ -29,7 +29,7 @@ EditorScene::EditorScene(const SP<UI::AppState> &appState) :
     connect(appState->document().get(), &Document::Document::currentItemChanged, this, &EditorScene::updateRequested);
 }
 
-void EditorScene::updateLayers() {
+std::vector<SP<Render::Renderable> > EditorScene::updateRenderables() {
     std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> newMeshRenderers;
 
     _appState->document()->rootItem()->forEachDescendant([&] (auto& item) {
@@ -48,34 +48,31 @@ void EditorScene::updateLayers() {
 
     _meshRenderers = newMeshRenderers;
 
-    Render::Layer objectsLayer;
-    objectsLayer.push_back(_gridFloor);
+    std::vector<SP<Render::Renderable>> renderables;
+    renderables.push_back(_background);
+
+    renderables.push_back(_gridFloor);
     for (auto& [item, renderer] : _meshRenderers) {
-        objectsLayer.push_back(renderer);
+        renderables.push_back(renderer);
     }
 
-    Render::Layer handles;
     if (_appState->isRotateHandleVisible()) {
         for (auto& h : _manipulatorController->rotateHandles()) {
-            handles.push_back(h);
+            renderables.push_back(h);
         }
     }
     if (_appState->isScaleHandleVisible()) {
         for (auto& h : _manipulatorController->scaleHandles()) {
-            handles.push_back(h);
+            renderables.push_back(h);
         }
     }
     if (_appState->isTranslateHandleVisible()) {
         for (auto& h : _manipulatorController->translateHandles()) {
-            handles.push_back(h);
+            renderables.push_back(h);
         }
     }
 
-    _layers = {
-        {_background},
-        objectsLayer,
-        handles,
-    };
+    return renderables;
 }
 
 } // namespace Editor

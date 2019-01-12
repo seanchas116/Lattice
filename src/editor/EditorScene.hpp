@@ -27,9 +27,7 @@ class EditorScene : public QObject {
 public:
     EditorScene(const SP<UI::AppState>& appState);
 
-    auto& layers() const { return _layers; }
-
-    void updateLayers();
+    std::vector<SP<Render::Renderable>> updateRenderables();
 
 signals:
     void updateRequested();
@@ -41,8 +39,6 @@ private:
     SP<GridFloor> _gridFloor;
     SP<Manipulator::Controller> _manipulatorController;
     std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> _meshRenderers;
-
-    std::vector<Render::Layer> _layers;
 };
 
 } // namespace Editor
