@@ -33,9 +33,9 @@ public:
     void setLength(double length) { _length = length; }
 
 signals:
-    void translateStarted(double value);
-    void translateChanged(double value);
-    void translateFinished();
+    void onBegin(double value);
+    void onChange(double value);
+    void onEnd();
 
 private:
     SP<GL::VAO> createHandleVAO();

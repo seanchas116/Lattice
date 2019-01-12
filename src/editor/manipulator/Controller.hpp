@@ -34,9 +34,9 @@ private:
         Translate, Scale, Rotate
     };
 
-    void onBegin(ValueType type, double value);
-    void onChange(ValueType type, int axis, double value);
-    void onEnd(ValueType type);
+    void handleOnBegin(ValueType type, double value);
+    void handleOnChange(ValueType type, int axis, double value);
+    void handleOnEnd(ValueType type);
 
     void connectToItem(const std::optional<SP<Document::Item>> &maybeItem);
 

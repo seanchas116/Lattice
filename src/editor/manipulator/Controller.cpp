@@ -22,9 +22,9 @@ Controller::Controller(const SP<UI::AppState> &appState) : _appState(appState)
         handle->setTargetPosition(position());
         connect(this, &Controller::positionChanged, handle.get(), &TranslateHandle::setTargetPosition);
 
-        connect(handle.get(), &TranslateHandle::translateStarted, this, [this] (double value) { onBegin(ValueType::Translate, value); });
-        connect(handle.get(), &TranslateHandle::translateChanged, this, [this, axis] (double value) { onChange(ValueType::Translate, axis, value); });
-        connect(handle.get(), &TranslateHandle::translateFinished, this, [this] { onEnd(ValueType::Translate); });
+        connect(handle.get(), &TranslateHandle::onBegin, this, [this] (double value) { handleOnBegin(ValueType::Translate, value); });
+        connect(handle.get(), &TranslateHandle::onChange, this, [this, axis] (double value) { handleOnChange(ValueType::Translate, axis, value); });
+        connect(handle.get(), &TranslateHandle::onEnd, this, [this] { handleOnEnd(ValueType::Translate); });
         _translateHandles.push_back(std::move(handle));
     }
 
@@ -33,9 +33,9 @@ Controller::Controller(const SP<UI::AppState> &appState) : _appState(appState)
         handle->setTargetPosition(position());
         connect(this, &Controller::positionChanged, handle.get(), &ScaleHandle::setTargetPosition);
 
-        connect(handle.get(), &ScaleHandle::scaleStarted, this, [this] (double value) { onBegin(ValueType::Scale, value); });
-        connect(handle.get(), &ScaleHandle::scaleChanged, this, [this, axis] (double value) { onChange(ValueType::Scale, axis, value); });
-        connect(handle.get(), &ScaleHandle::scaleFinished, this, [this] { onEnd(ValueType::Scale); });
+        connect(handle.get(), &ScaleHandle::scaleStarted, this, [this] (double value) { handleOnBegin(ValueType::Scale, value); });
+        connect(handle.get(), &ScaleHandle::scaleChanged, this, [this, axis] (double value) { handleOnChange(ValueType::Scale, axis, value); });
+        connect(handle.get(), &ScaleHandle::scaleFinished, this, [this] { handleOnEnd(ValueType::Scale); });
         _scaleHandles.push_back(std::move(handle));
     }
 
@@ -44,9 +44,9 @@ Controller::Controller(const SP<UI::AppState> &appState) : _appState(appState)
         handle->setTargetPosition(position());
         connect(this, &Controller::positionChanged, handle.get(), &RotateHandle::setTargetPosition);
 
-        connect(handle.get(), &RotateHandle::rotateStarted, this, [this] (double value) { onBegin(ValueType::Rotate, value); });
-        connect(handle.get(), &RotateHandle::rotateChanged, this, [this, axis] (double value) { onChange(ValueType::Rotate, axis, value); });
-        connect(handle.get(), &RotateHandle::rotateFinished, this, [this] { onEnd(ValueType::Rotate); });
+        connect(handle.get(), &RotateHandle::rotateStarted, this, [this] (double value) { handleOnBegin(ValueType::Rotate, value); });
+        connect(handle.get(), &RotateHandle::rotateChanged, this, [this, axis] (double value) { handleOnChange(ValueType::Rotate, axis, value); });
+        connect(handle.get(), &RotateHandle::rotateFinished, this, [this] { handleOnEnd(ValueType::Rotate); });
         _rotateHandles.push_back(std::move(handle));
     }
 }
@@ -56,7 +56,7 @@ glm::dvec3 Controller::position() const {
     return item->location().position;
 }
 
-void Controller::onBegin(ValueType type, double value) {
+void Controller::handleOnBegin(ValueType type, double value) {
     LATTICE_OPTIONAL_GUARD(item, _item, return;)
 
     auto changeText = [&] {
@@ -75,7 +75,7 @@ void Controller::onBegin(ValueType type, double value) {
     _initialValue = value;
 }
 
-void Controller::onChange(ValueType type, int axis, double value) {
+void Controller::handleOnChange(ValueType type, int axis, double value) {
     LATTICE_OPTIONAL_GUARD(item, _item, return;)
 
     auto loc = _initialLocation;
@@ -96,7 +96,7 @@ void Controller::onChange(ValueType type, int axis, double value) {
     item->setLocation(loc);
 }
 
-void Controller::onEnd(ValueType type) {
+void Controller::handleOnEnd(ValueType type) {
     Q_UNUSED(type);
 }
 
