@@ -18,8 +18,9 @@ namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
-TranslateHandle::TranslateHandle(int axis) :
+TranslateHandle::TranslateHandle(int axis, HandleType handleType) :
     _axis(axis),
+    _handleType(handleType),
     _handleVAO(createHandleVAO()),
     _bodyVAO(createBodyVAO())
 {
@@ -100,7 +101,11 @@ void TranslateHandle::mouseRelease(QMouseEvent *event, glm::dvec2 pos, const Cam
 SP<GL::VAO> TranslateHandle::createHandleVAO() {
     auto mesh = makeShared<Document::Mesh>();
     auto material = mesh->addMaterial();
-    mesh->addCone(dvec3(0), Constants::translateHandleWidth * 0.5, Constants::translateHandleLength, 8, 0, material);
+    if (_handleType == HandleType::Translate) {
+        mesh->addCone(dvec3(0), Constants::translateHandleWidth * 0.5, Constants::translateHandleLength, 8, 0, material);
+    } else {
+        mesh->addCube(-dvec3(Constants::scaleHandleSize*0.5), +dvec3(Constants::scaleHandleSize*0.5), material);
+    }
 
     return MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
 }

@@ -15,7 +15,12 @@ namespace Manipulator {
 class TranslateHandle : public QObject, public Render::Renderable {
     Q_OBJECT
 public:
-    TranslateHandle(int axis);
+    enum class HandleType {
+        Translate,
+        Scale,
+    };
+
+    TranslateHandle(int axis, HandleType handleType);
 
     void draw(const SP<Render::Operations> &operations, const Camera &camera) override;
 
@@ -37,6 +42,7 @@ private:
     SP<GL::LineVAO> createBodyVAO();
 
     int _axis;
+    HandleType _handleType;
     glm::dvec3 _targetPosition {0};
     double _length {2.0};
     SP<GL::VAO> _handleVAO;

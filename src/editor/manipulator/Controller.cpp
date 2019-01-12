@@ -18,7 +18,7 @@ Controller::Controller(const SP<UI::AppState> &appState) : _appState(appState)
     connect(appState->document().get(), &Document::Document::currentItemChanged, this, &Controller::connectToItem);
 
     for (int axis = 0; axis < 3; ++axis) {
-        auto handle = makeShared<TranslateHandle>(axis);
+        auto handle = makeShared<TranslateHandle>(axis, TranslateHandle::HandleType::Translate);
         handle->setTargetPosition(position());
         connect(this, &Controller::positionChanged, handle.get(), &TranslateHandle::setTargetPosition);
 
