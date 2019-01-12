@@ -30,17 +30,13 @@ signals:
     void positionChanged(glm::dvec3 position);
 
 private:
-    void onTranslateStarted();
-    void onTranslateChanged(int axis, double offset);
-    void onTranslateFinished();
+    enum class ValueType {
+        Translate, Scale, Rotate
+    };
 
-    void onScaleStarted();
-    void onScaleChanged(int axis, double offset);
-    void onScaleFinished();
-
-    void onRotateStarted();
-    void onRotateChanged(int axis, double offset);
-    void onRotateFinished();
+    void onBegin(ValueType type);
+    void onChange(ValueType type, int axis, double offset);
+    void onEnd(ValueType type);
 
     void connectToItem(const std::optional<SP<Document::Item>> &maybeItem);
 

@@ -22,9 +22,9 @@ Controller::Controller(const SP<UI::AppState> &appState) : _appState(appState)
         handle->setTargetPosition(position());
         connect(this, &Controller::positionChanged, handle.get(), &TranslateHandle::setTargetPosition);
 
-        connect(handle.get(), &TranslateHandle::translateStarted, this, [this] { onTranslateStarted(); });
-        connect(handle.get(), &TranslateHandle::translateChanged, this, [this, axis] (double offset) { onTranslateChanged(axis, offset); });
-        connect(handle.get(), &TranslateHandle::translateFinished, this, [this] { onTranslateFinished(); });
+        connect(handle.get(), &TranslateHandle::translateStarted, this, [this] { onBegin(ValueType::Translate); });
+        connect(handle.get(), &TranslateHandle::translateChanged, this, [this, axis] (double offset) { onChange(ValueType::Translate, axis, offset); });
+        connect(handle.get(), &TranslateHandle::translateFinished, this, [this] { onEnd(ValueType::Translate); });
         _translateHandles.push_back(std::move(handle));
     }
 
@@ -33,9 +33,9 @@ Controller::Controller(const SP<UI::AppState> &appState) : _appState(appState)
         handle->setTargetPosition(position());
         connect(this, &Controller::positionChanged, handle.get(), &ScaleHandle::setTargetPosition);
 
-        connect(handle.get(), &ScaleHandle::scaleStarted, this, [this] { onScaleStarted(); });
-        connect(handle.get(), &ScaleHandle::scaleChanged, this, [this, axis] (double offset) { onScaleChanged(axis, offset); });
-        connect(handle.get(), &ScaleHandle::scaleFinished, this, [this] { onScaleFinished(); });
+        connect(handle.get(), &ScaleHandle::scaleStarted, this, [this] { onBegin(ValueType::Scale); });
+        connect(handle.get(), &ScaleHandle::scaleChanged, this, [this, axis] (double offset) { onChange(ValueType::Scale, axis, offset); });
+        connect(handle.get(), &ScaleHandle::scaleFinished, this, [this] { onEnd(ValueType::Scale); });
         _scaleHandles.push_back(std::move(handle));
     }
 
@@ -44,9 +44,9 @@ Controller::Controller(const SP<UI::AppState> &appState) : _appState(appState)
         handle->setTargetPosition(position());
         connect(this, &Controller::positionChanged, handle.get(), &RotateHandle::setTargetPosition);
 
-        connect(handle.get(), &RotateHandle::rotateStarted, this, [this] { onRotateStarted(); });
-        connect(handle.get(), &RotateHandle::rotateChanged, this, [this, axis] (double offset) { onRotateChanged(axis, offset); });
-        connect(handle.get(), &RotateHandle::rotateFinished, this, [this] { onRotateFinished(); });
+        connect(handle.get(), &RotateHandle::rotateStarted, this, [this] { onBegin(ValueType::Rotate); });
+        connect(handle.get(), &RotateHandle::rotateChanged, this, [this, axis] (double offset) { onChange(ValueType::Rotate, axis, offset); });
+        connect(handle.get(), &RotateHandle::rotateFinished, this, [this] { onEnd(ValueType::Rotate); });
         _rotateHandles.push_back(std::move(handle));
     }
 }
@@ -56,62 +56,48 @@ glm::dvec3 Controller::position() const {
     return item->location().position;
 }
 
-void Controller::onTranslateStarted() {
+void Controller::onBegin(ValueType type) {
     LATTICE_OPTIONAL_GUARD(item, _item, return;)
 
-    _appState->document()->history()->beginChange(tr("Move Item"));
+    auto changeText = [&] {
+        switch (type) {
+        case ValueType::Translate:
+            return tr("Move Item");
+        case ValueType::Scale:
+            return tr("Scale Item");
+        case ValueType::Rotate:
+            return tr("Rotate Item");
+        }
+    }();
+
+    _appState->document()->history()->beginChange(changeText);
     _initialLocation = item->location();
+
 }
 
-void Controller::onTranslateChanged(int axis, double offset) {
+void Controller::onChange(ValueType type, int axis, double offset) {
     LATTICE_OPTIONAL_GUARD(item, _item, return;)
 
     auto loc = _initialLocation;
-    loc.position[axis] += offset;
+    switch (type) {
+    case ValueType::Translate:
+        loc.position[axis] += offset;
+        break;
+    case ValueType::Scale:
+        loc.scale[axis] *= offset;
+        break;
+    case ValueType::Rotate: {
+        glm::dvec3 eulerAngles(0);
+        eulerAngles[axis] = offset;
+        loc.rotation = glm::dquat(eulerAngles) * loc.rotation;
+        break;
+    }
+    }
     item->setLocation(loc);
 }
 
-void Controller::onTranslateFinished() {
-}
-
-void Controller::onScaleStarted() {
-    LATTICE_OPTIONAL_GUARD(item, _item, return;)
-
-    _appState->document()->history()->beginChange(tr("Scale Item"));
-    _initialLocation = item->location();
-}
-
-void Controller::onScaleChanged(int axis, double offset) {
-    LATTICE_OPTIONAL_GUARD(item, _item, return;)
-
-    auto loc = _initialLocation;
-    loc.scale[axis] *= offset;
-    item->setLocation(loc);
-}
-
-void Controller::onScaleFinished() {
-}
-
-void Controller::onRotateStarted() {
-    LATTICE_OPTIONAL_GUARD(item, _item, return;)
-
-    _appState->document()->history()->beginChange(tr("Rotate Item"));
-    _initialLocation = item->location();
-}
-
-void Controller::onRotateChanged(int axis, double offset) {
-    LATTICE_OPTIONAL_GUARD(item, _item, return;)
-
-    auto loc = _initialLocation;
-
-    glm::dvec3 eulerAngles(0);
-    eulerAngles[axis] = offset;
-
-    loc.rotation = glm::dquat(eulerAngles) * loc.rotation;
-    item->setLocation(loc);
-}
-
-void Controller::onRotateFinished() {
+void Controller::onEnd(ValueType type) {
+    Q_UNUSED(type);
 }
 
 void Controller::connectToItem(const std::optional<SP<Document::Item> > &maybeItem) {
