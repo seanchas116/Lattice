@@ -29,13 +29,13 @@ Controller::Controller(const SP<UI::AppState> &appState) : _appState(appState)
     }
 
     for (int axis = 0; axis < 3; ++axis) {
-        auto handle = makeShared<ScaleHandle>(axis);
+        auto handle = makeShared<TranslateHandle>(axis, TranslateHandle::HandleType::Scale);
         handle->setTargetPosition(position());
-        connect(this, &Controller::positionChanged, handle.get(), &ScaleHandle::setTargetPosition);
+        connect(this, &Controller::positionChanged, handle.get(), &TranslateHandle::setTargetPosition);
 
-        connect(handle.get(), &ScaleHandle::onBegin, this, [this] (double value) { handleOnBegin(ValueType::Scale, value); });
-        connect(handle.get(), &ScaleHandle::onChange, this, [this, axis] (double value) { handleOnChange(ValueType::Scale, axis, value); });
-        connect(handle.get(), &ScaleHandle::onEnd, this, [this] { handleOnEnd(ValueType::Scale); });
+        connect(handle.get(), &TranslateHandle::onBegin, this, [this] (double value) { handleOnBegin(ValueType::Scale, value); });
+        connect(handle.get(), &TranslateHandle::onChange, this, [this, axis] (double value) { handleOnChange(ValueType::Scale, axis, value); });
+        connect(handle.get(), &TranslateHandle::onEnd, this, [this] { handleOnEnd(ValueType::Scale); });
         _scaleHandles.push_back(std::move(handle));
     }
 
