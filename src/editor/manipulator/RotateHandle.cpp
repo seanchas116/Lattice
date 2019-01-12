@@ -81,9 +81,8 @@ void RotateHandle::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camer
     dvec3 intersection = rotateHandleRay.whereXIsZero();
     double angle = atan2(intersection.z, intersection.y);
 
-    _initialDragValue = angle;
     _initialTargetPosition = _targetPosition;
-    emit rotateStarted();
+    emit rotateStarted(angle);
 }
 
 void RotateHandle::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
@@ -102,7 +101,7 @@ void RotateHandle::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &c
     dvec3 intersection = rotateHandleRay.whereXIsZero();
     double angle = atan2(intersection.z, intersection.y);
 
-    emit rotateChanged(angle - _initialDragValue);
+    emit rotateChanged(angle);
 }
 
 void RotateHandle::mouseRelease(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {

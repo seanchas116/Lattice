@@ -32,8 +32,8 @@ public:
     void setTargetPosition(const glm::dvec3 &targetPosition) { _targetPosition = targetPosition; }
 
 signals:
-    void rotateStarted();
-    void rotateChanged(double offset);
+    void rotateStarted(double value);
+    void rotateChanged(double value);
     void rotateFinished();
 
 private:
@@ -45,7 +45,6 @@ private:
     SP<Document::Mesh> _handleMesh;
     SP<MeshPicker> _handleMeshPicker;
     SP<GL::LineVAO> _handleVAO;
-    double _initialDragValue = 0;
     glm::dvec3 _initialTargetPosition {0};
 };
 

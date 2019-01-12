@@ -28,8 +28,8 @@ public:
     void setLength(double length) { _length = length; }
 
 signals:
-    void scaleStarted();
-    void scaleChanged(double offset);
+    void scaleStarted(double value);
+    void scaleChanged(double value);
     void scaleFinished();
 
 private:
@@ -41,7 +41,6 @@ private:
     double _length {2.0};
     SP<GL::VAO> _handleVAO;
     SP<GL::LineVAO> _bodyVAO;
-    double _initialDragValue = 0;
     glm::dvec3 _initialTargetPosition {0};
 };
 

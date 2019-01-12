@@ -71,9 +71,8 @@ void ScaleHandle::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera
     RayRayDistance mouseToAxisDistance(mouseRay, coordinates.axisRaysInCameraSpace[_axis]);
     double tAxis = mouseToAxisDistance.t1;
 
-    _initialDragValue = tAxis;
     _initialTargetPosition = _targetPosition;
-    emit scaleStarted();
+    emit scaleStarted(tAxis);
 }
 
 void ScaleHandle::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
@@ -88,7 +87,7 @@ void ScaleHandle::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &ca
     RayRayDistance mouseToAxisDistance(mouseRay, coordinates.axisRaysInCameraSpace[_axis]);
     double tAxis = mouseToAxisDistance.t1;
 
-     emit scaleChanged(tAxis / _initialDragValue);
+     emit scaleChanged(tAxis);
 }
 
 void ScaleHandle::mouseRelease(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {

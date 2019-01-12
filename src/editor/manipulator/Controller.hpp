@@ -34,8 +34,8 @@ private:
         Translate, Scale, Rotate
     };
 
-    void onBegin(ValueType type);
-    void onChange(ValueType type, int axis, double offset);
+    void onBegin(ValueType type, double value);
+    void onChange(ValueType type, int axis, double value);
     void onEnd(ValueType type);
 
     void connectToItem(const std::optional<SP<Document::Item>> &maybeItem);
@@ -45,6 +45,7 @@ private:
     std::vector<SP<Render::Renderable>> _scaleHandles;
     std::vector<SP<Render::Renderable>> _rotateHandles;
     std::optional<SP<Document::Item>> _item;
+    double _initialValue;
     Location _initialLocation;
     QMetaObject::Connection _connection;
 };

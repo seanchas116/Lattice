@@ -73,9 +73,8 @@ void TranslateHandle::mousePress(QMouseEvent *event, dvec2 pos, const Camera &ca
     RayRayDistance mouseToAxisDistance(mouseRay, coordinates.axisRaysInCameraSpace[_axis]);
     double tAxis = mouseToAxisDistance.t1;
 
-    _initialDragValue = tAxis;
     _initialTargetPosition = _targetPosition;
-    emit translateStarted();
+    emit translateStarted(tAxis);
 }
 
 void TranslateHandle::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
@@ -90,7 +89,7 @@ void TranslateHandle::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera
     RayRayDistance mouseToAxisDistance(mouseRay, coordinates.axisRaysInCameraSpace[_axis]);
     double tAxis = mouseToAxisDistance.t1;
 
-    emit translateChanged(tAxis - _initialDragValue);
+    emit translateChanged(tAxis);
 }
 
 void TranslateHandle::mouseRelease(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
