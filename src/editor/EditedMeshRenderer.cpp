@@ -44,9 +44,15 @@ void EditedMeshRenderer::draw(const SP<Render::Operations> &operations, const Ca
 std::optional<Render::HitResult> EditedMeshRenderer::hitTest(dvec2 pos, const Camera &camera) const {
     auto worldMouseRay = camera.worldMouseRay(pos);
     auto modelMouseRay = glm::inverse(_item->location().matrix()) * worldMouseRay;
-    LATTICE_OPTIONAL_GUARD(pickResult, _meshPicker->picKFace(modelMouseRay), return {};)
-    auto [face, t] = pickResult;
-            return {{t}};
+    auto pickResult = _meshPicker->pickVertex(modelMouseRay, 1);
+    if (!pickResult) {
+        return std::nullopt;
+    }
+    auto [vertex, t] = *pickResult;
+    Render::HitResult result;
+    result.t = t;
+    result.vertex = vertex;
+    return result;
 }
 
 void EditedMeshRenderer::mousePress(const Render::MouseEvent &event) {
