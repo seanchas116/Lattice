@@ -73,6 +73,8 @@ void MainWindow::setupToolBar() {
 
     auto isEditingAction = toolBar->addAction(tr("Edit"));
     isEditingAction->setCheckable(true);
+    connect(_appState->document().get(), &Document::Document::isEditingChanged, isEditingAction, &QAction::setChecked);
+    connect(isEditingAction, &QAction::toggled, _appState->document().get(), &Document::Document::setIsEditing);
     toolBar->addSeparator();
 
     // toggle manipulator handles
