@@ -18,8 +18,11 @@ public:
 
     const SP<Item>& rootItem() const { return _rootItem; }
 
-    const auto& currentItem() const { return _currentItem; }
+    auto& currentItem() const { return _currentItem; }
     void setCurrentItem(const std::optional<SP<Item>>& item);
+
+    auto& editedItem() const { return _editedItem; }
+    void setEditedItem(const std::optional<SP<MeshItem>>& item);
 
     auto& selectedItems() const { return _selectedItems; }
     void setSelectedItems(const std::unordered_set<SP<Item>>& items);
@@ -33,6 +36,7 @@ public:
 
 signals:
     void currentItemChanged(const std::optional<SP<Item>>& item);
+    void editedItemChanged(const std::optional<SP<Item>>& item);
     void selectedItemsChanged(const std::unordered_set<SP<Item>>& items);
 
     void itemInserted(const SP<Item>& item);
@@ -44,6 +48,7 @@ private:
     SP<Item> _rootItem;
 
     std::optional<SP<Item>> _currentItem;
+    std::optional<SP<MeshItem>> _editedItem;
     std::unordered_set<SP<Item>> _selectedItems;
 
     SP<History> _history;

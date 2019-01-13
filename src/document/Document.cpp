@@ -45,6 +45,13 @@ void Document::setCurrentItem(const std::optional<SP<Item> > &item) {
     }
 }
 
+void Document::setEditedItem(const std::optional<SP<MeshItem> > &item) {
+    if (item != _editedItem) {
+        _editedItem = item;
+        emit editedItemChanged(item);
+    }
+}
+
 void Document::setSelectedItems(const std::unordered_set<SP<Item>> &items) {
     if (_selectedItems != items) {
         _selectedItems = items;
