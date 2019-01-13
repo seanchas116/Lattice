@@ -26,6 +26,7 @@ EditorScene::EditorScene(const SP<UI::AppState> &appState) :
     connect(appState.get(), &UI::AppState::isScaleHandleVisibleChanged, this, &EditorScene::updateRequested);
 
     connect(appState->document().get(), &Document::Document::itemInserted, this, &EditorScene::updateRequested);
+    connect(appState->document().get(), &Document::Document::itemAboutToBeRemoved, this, &EditorScene::updateRequested);
     connect(appState->document().get(), &Document::Document::currentItemChanged, this, &EditorScene::updateRequested);
 }
 
