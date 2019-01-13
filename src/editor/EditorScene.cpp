@@ -56,19 +56,21 @@ std::vector<SP<Render::Renderable> > EditorScene::updateRenderables() {
         renderables.push_back(renderer);
     }
 
-    if (_appState->isRotateHandleVisible()) {
-        for (auto& h : _manipulatorController->rotateHandles()) {
-            renderables.push_back(h);
+    if (_appState->document()->currentItem()) {
+        if (_appState->isRotateHandleVisible()) {
+            for (auto& h : _manipulatorController->rotateHandles()) {
+                renderables.push_back(h);
+            }
         }
-    }
-    if (_appState->isScaleHandleVisible()) {
-        for (auto& h : _manipulatorController->scaleHandles()) {
-            renderables.push_back(h);
+        if (_appState->isScaleHandleVisible()) {
+            for (auto& h : _manipulatorController->scaleHandles()) {
+                renderables.push_back(h);
+            }
         }
-    }
-    if (_appState->isTranslateHandleVisible()) {
-        for (auto& h : _manipulatorController->translateHandles()) {
-            renderables.push_back(h);
+        if (_appState->isTranslateHandleVisible()) {
+            for (auto& h : _manipulatorController->translateHandles()) {
+                renderables.push_back(h);
+            }
         }
     }
 
