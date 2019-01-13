@@ -4,20 +4,13 @@
 #include <unordered_set>
 #include <optional>
 #include "../support/Pointer.hpp"
-#include "Mesh.hpp"
+#include "MeshSelection.hpp"
 
 namespace Lattice::Document {
 
 class Item;
 class MeshItem;
 class History;
-
-struct MeshSelection {
-    std::unordered_set<SP<MeshVertex>> vertices;
-    bool operator==(const MeshSelection& other) const {
-        return vertices == other.vertices;
-    }
-};
 
 class Document final : public QObject, public EnableSharedFromThis<Document> {
     Q_OBJECT
