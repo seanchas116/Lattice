@@ -13,7 +13,7 @@ namespace Editor {
 
 EditorScene::EditorScene(const SP<UI::AppState> &appState) :
     _appState(appState),
-    _background(makeShared<Background>()),
+    _background(makeShared<Background>(appState)),
     _gridFloor(makeShared<GridFloor>()),
     _manipulatorController(makeShared<Manipulator::Controller>(appState))
 {

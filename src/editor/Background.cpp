@@ -1,10 +1,11 @@
 #include "Background.hpp"
+#include "../document/Document.hpp"
 #include <QtDebug>
 
 namespace Lattice {
 namespace Editor {
 
-Background::Background() {
+Background::Background(const SP<UI::AppState> &appState) : _appState(appState) {
     initializeOpenGLFunctions();
 }
 
@@ -27,7 +28,7 @@ std::optional<Render::HitResult> Background::hitTest(glm::dvec2 pos, const Camer
 
 void Background::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera &camera, const Render::HitResult &hitResult) {
     Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera); Q_UNUSED(hitResult);
-    qDebug() << "background press";
+    _appState->document()->setSelectedItems({});
 }
 
 } // namespace Editor
