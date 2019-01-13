@@ -82,6 +82,14 @@ std::optional<SharedPointer<T>> dynamicPointerCast(const SharedPointer<U>& origi
     }
 }
 
+template <typename T, typename U>
+std::optional<SharedPointer<T>> dynamicPointerCast(const std::optional<SharedPointer<U>>& original) {
+    if (!original) {
+        return {};
+    }
+    return dynamicPointerCast<T>(*original);
+}
+
 template <typename T>
 class WeakPointer {
 public:
