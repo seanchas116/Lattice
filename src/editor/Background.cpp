@@ -1,4 +1,5 @@
 #include "Background.hpp"
+#include <QtDebug>
 
 namespace Lattice {
 namespace Editor {
@@ -17,6 +18,16 @@ void Background::draw(const SP<Render::Operations> &operations, const Camera &ca
     glClearDepthf(1.f);
     glClearColor(0.8f, 0.8f, 0.8f, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+std::optional<Render::HitResult> Background::hitTest(glm::dvec2 pos, const Camera &camera) const {
+    Q_UNUSED(pos); Q_UNUSED(camera);
+    return {{1}};
+}
+
+void Background::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera &camera, const Render::HitResult &hitResult) {
+    Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera); Q_UNUSED(hitResult);
+    qDebug() << "background press";
 }
 
 } // namespace Editor
