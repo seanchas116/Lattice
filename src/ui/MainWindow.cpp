@@ -71,6 +71,10 @@ void MainWindow::setupToolBar() {
     spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     toolBar->addWidget(spacer);
 
+    auto isEditingAction = toolBar->addAction(tr("Edit"));
+    isEditingAction->setCheckable(true);
+    toolBar->addSeparator();
+
     // toggle manipulator handles
     auto isTranslateHandleVisible = toolBar->addAction(tr("Translate"));
     isTranslateHandleVisible->setCheckable(true);
