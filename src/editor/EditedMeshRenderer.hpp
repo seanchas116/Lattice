@@ -38,6 +38,8 @@ class EditedMeshRenderer final : public QObject, public Render::Renderable {
 public:
     EditedMeshRenderer(const SP<UI::AppState>& appState, const SP<Document::MeshItem>& item);
 
+    auto& item() const { return _item; }
+
     void draw(const SP<Render::Operations> &operations, const Camera &camera) override;
 
     std::optional<Render::HitResult> hitTest(glm::dvec2 pos, const Camera& camera) const override;

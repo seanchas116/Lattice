@@ -17,6 +17,7 @@ namespace Editor {
 class Background;
 class GridFloor;
 class MeshRenderer;
+class EditedMeshRenderer;
 
 namespace Manipulator {
 class Controller;
@@ -39,6 +40,7 @@ private:
     SP<GridFloor> _gridFloor;
     SP<Manipulator::Controller> _manipulatorController;
     std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> _meshRenderers;
+    std::optional<SP<EditedMeshRenderer>> _editedMeshRenderers;
 };
 
 } // namespace Editor

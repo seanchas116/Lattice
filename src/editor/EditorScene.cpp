@@ -2,6 +2,7 @@
 #include "Background.hpp"
 #include "GridFloor.hpp"
 #include "MeshRenderer.hpp"
+#include "EditedMeshRenderer.hpp"
 #include "./manipulator/Controller.hpp"
 #include "../ui/AppState.hpp"
 #include "../document/Document.hpp"
@@ -28,10 +29,18 @@ EditorScene::EditorScene(const SP<UI::AppState> &appState) :
     connect(appState->document().get(), &Document::Document::itemInserted, this, &EditorScene::updateRequested);
     connect(appState->document().get(), &Document::Document::itemAboutToBeRemoved, this, &EditorScene::updateRequested);
     connect(appState->document().get(), &Document::Document::currentItemChanged, this, &EditorScene::updateRequested);
+    connect(appState->document().get(), &Document::Document::editingItemChanged, this, &EditorScene::updateRequested);
 }
 
 std::vector<SP<Render::Renderable> > EditorScene::updateRenderables() {
     std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> newMeshRenderers;
+
+    auto editingItem = _appState->document()->editingItem();
+    if (editingItem) {
+        _editedMeshRenderers = makeShared<EditedMeshRenderer>(_appState, *editingItem);
+    } else {
+        _editedMeshRenderers = std::nullopt;
+    }
 
     _appState->document()->rootItem()->forEachDescendant([&] (auto& item) {
         LATTICE_OPTIONAL_GUARD(meshItem, dynamicPointerCast<Document::MeshItem>(item), return;)
@@ -54,7 +63,11 @@ std::vector<SP<Render::Renderable> > EditorScene::updateRenderables() {
 
     renderables.push_back(_gridFloor);
     for (auto& [item, renderer] : _meshRenderers) {
-        renderables.push_back(renderer);
+        if (_editedMeshRenderers && (*_editedMeshRenderers)->item() == item) {
+            renderables.push_back(*_editedMeshRenderers);
+        } else {
+            renderables.push_back(renderer);
+        }
     }
 
     if (_appState->document()->currentItem()) {

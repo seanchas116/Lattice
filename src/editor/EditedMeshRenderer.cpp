@@ -50,32 +50,11 @@ std::optional<Render::HitResult> EditedMeshRenderer::hitTest(dvec2 pos, const Ca
 }
 
 void EditedMeshRenderer::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera, const Render::HitResult& hitResult) {
-    glm::dvec3 worldDragPos = camera.worldMouseRay(pos).at(hitResult.t);
-    auto [screenDragPos, isInScreen] = camera.mapWorldToScreen(worldDragPos);
-    if (!isInScreen) {
-        return;
-    }
-
-    _dragInitLocation = _item->location();
-    _dragInitWorldPos = worldDragPos;
-    _dragInitDepth = screenDragPos.z;
-    _dragStarted = false;
-
-    _appState->document()->selectItem(_item, event->modifiers() & Qt::ShiftModifier);
+    Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera); Q_UNUSED(hitResult);
 }
 
 void EditedMeshRenderer::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera) {
-    Q_UNUSED(event);
-
-    auto newWorldPos = camera.mapScreenToWorld(glm::dvec3(pos, _dragInitDepth));
-    auto newLocation = _dragInitLocation;
-    newLocation.position += newWorldPos - _dragInitWorldPos;
-
-    if (!_dragStarted) {
-        _appState->document()->history()->beginChange(tr("Move Item"));
-        _dragStarted = true;
-    }
-    _item->setLocation(newLocation);
+    Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera);
 }
 
 void EditedMeshRenderer::mouseRelease(QMouseEvent *event, dvec2 pos, const Camera &camera) {

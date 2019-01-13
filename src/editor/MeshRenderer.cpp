@@ -33,12 +33,14 @@ void MeshRenderer::draw(const SP<Render::Operations> &operations, const Camera &
             operations->drawMaterial.draw(vao, _item->location().matrix(), camera, material);
         }
     }
+    /*
     if (_appState->isEdgeVisible()) {
         operations->drawLine.draw(_edgeVAO, _item->location().matrix(), camera, 1.0, dvec3(0));
     }
     if (_appState->isVertexVisible()) {
         operations->drawCircle.draw(_vertexVAO, _item->location().matrix(), camera, 4.0, dvec3(0));
     }
+    */
 }
 
 std::optional<Render::HitResult> MeshRenderer::hitTest(dvec2 pos, const Camera &camera) const {
