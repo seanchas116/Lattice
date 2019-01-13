@@ -35,8 +35,8 @@ void RenderWidget::mousePressEvent(QMouseEvent *event) {
     }
     if (!hitRenderables.empty()) {
         auto [renderable, hitResult] = hitRenderables.begin()->second;
-        MouseEvent mouseEvent(event, pos, camera, hitResult);
-        renderable->mousePress(mouseEvent);
+        MouseEvent renderMouseEvent(event, pos, camera, hitResult);
+        renderable->mousePress(renderMouseEvent);
         _draggedRenderable = renderable;
         _hitResult = hitResult;
     }
@@ -44,14 +44,14 @@ void RenderWidget::mousePressEvent(QMouseEvent *event) {
 
 void RenderWidget::mouseMoveEvent(QMouseEvent *event) {
     LATTICE_OPTIONAL_GUARD(renderable, _draggedRenderable, return;)
-    MouseEvent renderEvent(event, mapQtToGL(event->pos()), _viewports[_draggedViewportIndex].camera, _hitResult);
-    renderable->mouseMove(renderEvent);
+    MouseEvent renderMouseEvent(event, mapQtToGL(event->pos()), _viewports[_draggedViewportIndex].camera, _hitResult);
+    renderable->mouseMove(renderMouseEvent);
 }
 
 void RenderWidget::mouseReleaseEvent(QMouseEvent *event) {
     LATTICE_OPTIONAL_GUARD(renderable, _draggedRenderable, return;)
-    MouseEvent renderEvent(event, mapQtToGL(event->pos()), _viewports[_draggedViewportIndex].camera, _hitResult);
-    renderable->mouseRelease(renderEvent);
+    MouseEvent renderMouseEvent(event, mapQtToGL(event->pos()), _viewports[_draggedViewportIndex].camera, _hitResult);
+    renderable->mouseRelease(renderMouseEvent);
     _draggedRenderable = {};
 }
 
