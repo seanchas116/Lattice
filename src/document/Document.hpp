@@ -19,7 +19,6 @@ public:
     const SP<Item>& rootItem() const { return _rootItem; }
 
     const auto& currentItem() const { return _currentItem; }
-    std::optional<SP<MeshItem>> currentMeshItem() const;
     void setCurrentItem(const std::optional<SP<Item>>& item);
 
     auto& selectedItems() const { return _selectedItems; }
@@ -34,7 +33,6 @@ public:
 
 signals:
     void currentItemChanged(const std::optional<SP<Item>>& item);
-    void currentMeshItemChanged(const std::optional<SP<MeshItem>>& item);
     void selectedItemsChanged(const std::unordered_set<SP<Item>>& items);
 
     void itemInserted(const SP<Item>& item);

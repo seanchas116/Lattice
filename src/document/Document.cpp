@@ -38,16 +38,10 @@ Document::Document() :
     watchChildrenInsertRemove(_rootItem);
 }
 
-std::optional<SP<MeshItem> > Document::currentMeshItem() const {
-    LATTICE_OPTIONAL_GUARD(currentItem, _currentItem, return {};)
-    return dynamicPointerCast<MeshItem>(currentItem);
-}
-
 void Document::setCurrentItem(const std::optional<SP<Item> > &item) {
     if (item != _currentItem) {
         _currentItem = item;
         emit currentItemChanged(item);
-        emit currentMeshItemChanged(currentMeshItem());
     }
 }
 
