@@ -44,6 +44,7 @@ public:
     void mousePress(const Render::MouseEvent &event) override;
     void mouseMove(const Render::MouseEvent &event) override;
     void mouseRelease(const Render::MouseEvent &event) override;
+    void mouseDoubleClick(const Render::MouseEvent &event) override;
 
 private:
     void updateVAOs(const SP<Document::Mesh>& mesh);

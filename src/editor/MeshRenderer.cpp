@@ -82,6 +82,11 @@ void MeshRenderer::mouseRelease(const Render::MouseEvent &event) {
     Q_UNUSED(event);
 }
 
+void MeshRenderer::mouseDoubleClick(const Render::MouseEvent &event) {
+    Q_UNUSED(event);
+    _appState->document()->setEditedItem(_item);
+}
+
 void MeshRenderer::updateVAOs(const SP<Document::Mesh> &mesh) {
     MeshVAOGenerator generator(mesh);
     _vertexVAO = generator.generateVertexVAO();
