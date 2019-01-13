@@ -34,6 +34,7 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
 
     void initializeGL() override;
     void resizeGL(int w, int h) override;
@@ -41,6 +42,8 @@ protected:
 
 private:
     double widgetPixelRatio() const;
+
+    std::optional<std::pair<SP<Renderable>, HitResult>> hitTest(glm::dvec2 pos, const Camera& camera);
 
     glm::ivec2 _logicalSize;
     std::optional<SP<Operations>> _operations;

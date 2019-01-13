@@ -25,27 +25,35 @@ void RenderWidget::mousePressEvent(QMouseEvent *event) {
 
     auto& camera = _viewports[0].camera; // FIXME
 
-    std::map<double, std::pair<SP<Renderable>, HitResult>> hitRenderables;
-    for (auto it = _renderables.rbegin(); it != _renderables.rend(); ++it) {
-        auto& renderable = *it;
-        auto maybeHitResult = renderable->hitTest(pos, camera);
-        if (maybeHitResult) {
-            hitRenderables.insert({maybeHitResult->t, {renderable, *maybeHitResult}});
-        }
-    }
-    if (!hitRenderables.empty()) {
-        auto [renderable, hitResult] = hitRenderables.begin()->second;
-        MouseEvent renderMouseEvent(event, pos, camera, hitResult);
-        renderable->mousePress(renderMouseEvent);
-        _draggedRenderable = renderable;
-        _hitResult = hitResult;
-    }
+    auto maybeHitResult = hitTest(pos, camera);
+    if (!maybeHitResult) { return; }
+
+    auto [renderable, hitResult] = *maybeHitResult;
+
+    MouseEvent renderMouseEvent(event, pos, camera, hitResult);
+    renderable->mousePress(renderMouseEvent);
+    _draggedRenderable = renderable;
+    _hitResult = hitResult;
 }
 
 void RenderWidget::mouseMoveEvent(QMouseEvent *event) {
     LATTICE_OPTIONAL_GUARD(renderable, _draggedRenderable, return;)
     MouseEvent renderMouseEvent(event, mapQtToGL(event->pos()), _viewports[_draggedViewportIndex].camera, _hitResult);
     renderable->mouseMove(renderMouseEvent);
+}
+
+void RenderWidget::mouseDoubleClickEvent(QMouseEvent *event) {
+    auto pos = mapQtToGL(event->pos());
+
+    auto& camera = _viewports[0].camera; // FIXME
+
+    auto maybeHitResult = hitTest(pos, camera);
+    if (!maybeHitResult) { return; }
+
+    auto [renderable, hitResult] = *maybeHitResult;
+
+    MouseEvent renderMouseEvent(event, pos, camera, hitResult);
+    renderable->mouseDoubleClick(renderMouseEvent);
 }
 
 void RenderWidget::mouseReleaseEvent(QMouseEvent *event) {
@@ -102,6 +110,21 @@ double RenderWidget::widgetPixelRatio() const {
 #else
     return 1.0;
 #endif
+}
+
+std::optional<std::pair<SP<Renderable>, HitResult> > RenderWidget::hitTest(glm::dvec2 pos, const Camera &camera) {
+    std::map<double, std::pair<SP<Renderable>, HitResult>> hitRenderables;
+    for (auto it = _renderables.rbegin(); it != _renderables.rend(); ++it) {
+        auto& renderable = *it;
+        auto maybeHitResult = renderable->hitTest(pos, camera);
+        if (maybeHitResult) {
+            hitRenderables.insert({maybeHitResult->t, {renderable, *maybeHitResult}});
+        }
+    }
+    if (hitRenderables.empty()) {
+        return std::nullopt;
+    }
+    return hitRenderables.begin()->second;
 }
 
 } // namespace Renderer

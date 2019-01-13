@@ -20,6 +20,7 @@ public:
     virtual void mousePress(const MouseEvent& event);
     virtual void mouseMove(const MouseEvent& event);
     virtual void mouseRelease(const MouseEvent& event);
+    virtual void mouseDoubleClick(const MouseEvent& event);
 };
 
 } // namespace Renderer
