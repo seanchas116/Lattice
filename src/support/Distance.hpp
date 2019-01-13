@@ -16,7 +16,7 @@ public:
         tvec3<T> w = p - l.origin;
         tvec3<T> v = glm::normalize(l.direction);
         distance = length(cross(v, w));
-        t = dot(v, w);
+        t = dot(l.direction, w) / glm::dot(l.direction, l.direction);
     }
     T t;
     T distance;
