@@ -1,15 +1,12 @@
 #pragma once
 #include <QtGlobal>
 #include "Operations.hpp"
+#include "MouseEvent.hpp"
 
 class QMouseEvent;
 
 namespace Lattice {
 namespace Render {
-
-struct HitResult {
-    double t;
-};
 
 class Renderable {
     Q_DISABLE_COPY(Renderable)
@@ -20,9 +17,9 @@ public:
     virtual void draw(const SP<Operations>& operations, const Camera& camera);
 
     virtual std::optional<HitResult> hitTest(glm::dvec2 pos, const Camera& camera) const;
-    virtual void mousePress(QMouseEvent* event, glm::dvec2 pos, const Camera& camera, const HitResult& hitResult);
-    virtual void mouseMove(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
-    virtual void mouseRelease(QMouseEvent* event, glm::dvec2 pos, const Camera& camera);
+    virtual void mousePress(const MouseEvent& event);
+    virtual void mouseMove(const MouseEvent& event);
+    virtual void mouseRelease(const MouseEvent& event);
 };
 
 } // namespace Renderer

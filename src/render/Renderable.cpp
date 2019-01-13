@@ -18,16 +18,16 @@ std::optional<HitResult> Renderable::hitTest(glm::dvec2 pos, const Camera &camer
     return {};
 }
 
-void Renderable::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera &camera, const HitResult &hitResult) {
-    Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera); Q_UNUSED(hitResult);
+void Renderable::mousePress(const MouseEvent &event) {
+    Q_UNUSED(event);
 }
 
-void Renderable::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
-    Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera);
+void Renderable::mouseMove(const MouseEvent &event) {
+    Q_UNUSED(event);
 }
 
-void Renderable::mouseRelease(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
-    Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera);
+void Renderable::mouseRelease(const MouseEvent &event) {
+    Q_UNUSED(event);
 }
 
 } // namespace Renderer

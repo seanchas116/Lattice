@@ -48,12 +48,12 @@ std::optional<Render::HitResult> MeshRenderer::hitTest(dvec2 pos, const Camera &
     auto modelMouseRay = glm::inverse(_item->location().matrix()) * worldMouseRay;
     LATTICE_OPTIONAL_GUARD(pickResult, _meshPicker->picKFace(modelMouseRay), return {};)
     auto [face, t] = pickResult;
-    return {{t}};
+            return {{t}};
 }
 
-void MeshRenderer::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera, const Render::HitResult& hitResult) {
-    glm::dvec3 worldDragPos = camera.worldMouseRay(pos).at(hitResult.t);
-    auto [screenDragPos, isInScreen] = camera.mapWorldToScreen(worldDragPos);
+void MeshRenderer::mousePress(const Render::MouseEvent &event) {
+    glm::dvec3 worldDragPos = event.camera.worldMouseRay(event.screenPos).at(event.hitResult.t);
+    auto [screenDragPos, isInScreen] = event.camera.mapWorldToScreen(worldDragPos);
     if (!isInScreen) {
         return;
     }
@@ -63,13 +63,11 @@ void MeshRenderer::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camer
     _dragInitDepth = screenDragPos.z;
     _dragStarted = false;
 
-    _appState->document()->selectItem(_item, event->modifiers() & Qt::ShiftModifier);
+    _appState->document()->selectItem(_item, event.originalEvent->modifiers() & Qt::ShiftModifier);
 }
 
-void MeshRenderer::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera) {
-    Q_UNUSED(event);
-
-    auto newWorldPos = camera.mapScreenToWorld(glm::dvec3(pos, _dragInitDepth));
+void MeshRenderer::mouseMove(const Render::MouseEvent &event) {
+    auto newWorldPos = event.camera.mapScreenToWorld(glm::dvec3(event.screenPos, _dragInitDepth));
     auto newLocation = _dragInitLocation;
     newLocation.position += newWorldPos - _dragInitWorldPos;
 
@@ -80,8 +78,8 @@ void MeshRenderer::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera
     _item->setLocation(newLocation);
 }
 
-void MeshRenderer::mouseRelease(QMouseEvent *event, dvec2 pos, const Camera &camera) {
-    Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera);
+void MeshRenderer::mouseRelease(const Render::MouseEvent &event) {
+    Q_UNUSED(event);
 }
 
 void MeshRenderer::updateVAOs(const SP<Document::Mesh> &mesh) {

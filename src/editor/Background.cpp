@@ -26,8 +26,8 @@ std::optional<Render::HitResult> Background::hitTest(glm::dvec2 pos, const Camer
     return {{1}};
 }
 
-void Background::mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera &camera, const Render::HitResult &hitResult) {
-    Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera); Q_UNUSED(hitResult);
+void Background::mousePress(const Render::MouseEvent &event) {
+    Q_UNUSED(event);
     _appState->document()->setSelectedItems({});
 }
 

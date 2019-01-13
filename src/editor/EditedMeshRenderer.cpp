@@ -46,19 +46,19 @@ std::optional<Render::HitResult> EditedMeshRenderer::hitTest(dvec2 pos, const Ca
     auto modelMouseRay = glm::inverse(_item->location().matrix()) * worldMouseRay;
     LATTICE_OPTIONAL_GUARD(pickResult, _meshPicker->picKFace(modelMouseRay), return {};)
     auto [face, t] = pickResult;
-    return {{t}};
+            return {{t}};
 }
 
-void EditedMeshRenderer::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera, const Render::HitResult& hitResult) {
-    Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera); Q_UNUSED(hitResult);
+void EditedMeshRenderer::mousePress(const Render::MouseEvent &event) {
+    Q_UNUSED(event);
 }
 
-void EditedMeshRenderer::mouseMove(QMouseEvent *event, dvec2 pos, const Camera &camera) {
-    Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera);
+void EditedMeshRenderer::mouseMove(const Render::MouseEvent &event) {
+    Q_UNUSED(event);
 }
 
-void EditedMeshRenderer::mouseRelease(QMouseEvent *event, dvec2 pos, const Camera &camera) {
-    Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera);
+void EditedMeshRenderer::mouseRelease(const Render::MouseEvent &event) {
+    Q_UNUSED(event);
 }
 
 void EditedMeshRenderer::updateVAOs(const SP<Document::Mesh> &mesh) {

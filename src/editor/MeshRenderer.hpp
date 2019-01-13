@@ -41,9 +41,9 @@ public:
     void draw(const SP<Render::Operations> &operations, const Camera &camera) override;
 
     std::optional<Render::HitResult> hitTest(glm::dvec2 pos, const Camera& camera) const override;
-    void mousePress(QMouseEvent *event, glm::dvec2 pos, const Camera &camera, const Render::HitResult& hitResult) override;
-    void mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) override;
-    void mouseRelease(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) override;
+    void mousePress(const Render::MouseEvent &event) override;
+    void mouseMove(const Render::MouseEvent &event) override;
+    void mouseRelease(const Render::MouseEvent &event) override;
 
 private:
     void updateVAOs(const SP<Document::Mesh>& mesh);

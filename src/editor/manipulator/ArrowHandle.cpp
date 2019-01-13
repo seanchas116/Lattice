@@ -60,40 +60,33 @@ std::optional<Render::HitResult> ArrowHandle::hitTest(dvec2 pos, const Camera &c
     return {};
 }
 
-void ArrowHandle::mousePress(QMouseEvent *event, dvec2 pos, const Camera &camera, const Render::HitResult &hitResult) {
-    Q_UNUSED(event); Q_UNUSED(hitResult);
-
-    Coordinates coordinates(camera, _targetPosition);
+void ArrowHandle::mousePress(const Render::MouseEvent &event) {
+    Coordinates coordinates(event.camera, _targetPosition);
     if (!coordinates.isInScreen) {
         return;
     }
 
-    Ray mouseRay = camera.cameraMouseRay(pos);
-
-    RayRayDistance mouseToAxisDistance(mouseRay, coordinates.axisRaysInCameraSpace[_axis]);
+    RayRayDistance mouseToAxisDistance(event.camera.cameraMouseRay(event.screenPos), coordinates.axisRaysInCameraSpace[_axis]);
     double tAxis = mouseToAxisDistance.t1;
 
     _initialTargetPosition = _targetPosition;
     emit onBegin(tAxis);
 }
 
-void ArrowHandle::mouseMove(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
-    Q_UNUSED(event);
-
-    Coordinates coordinates(camera, _initialTargetPosition);
+void ArrowHandle::mouseMove(const Render::MouseEvent &event) {
+    Coordinates coordinates(event.camera, _initialTargetPosition);
     if (!coordinates.isInScreen) {
         return;
     }
 
-    Ray mouseRay = camera.cameraMouseRay(pos);
-    RayRayDistance mouseToAxisDistance(mouseRay, coordinates.axisRaysInCameraSpace[_axis]);
+    RayRayDistance mouseToAxisDistance(event.camera.cameraMouseRay(event.screenPos), coordinates.axisRaysInCameraSpace[_axis]);
     double tAxis = mouseToAxisDistance.t1;
 
     emit onChange(tAxis);
 }
 
-void ArrowHandle::mouseRelease(QMouseEvent *event, glm::dvec2 pos, const Camera &camera) {
-    Q_UNUSED(event); Q_UNUSED(pos); Q_UNUSED(camera);
+void ArrowHandle::mouseRelease(const Render::MouseEvent &event) {
+    Q_UNUSED(event);
     emit onEnd();
 }
 

@@ -3,6 +3,7 @@
 #include "../support/Pointer.hpp"
 #include "Viewport.hpp"
 #include "Operations.hpp"
+#include "MouseEvent.hpp"
 
 namespace Lattice {
 namespace Render {
@@ -44,6 +45,7 @@ private:
     glm::ivec2 _logicalSize;
     std::optional<SP<Operations>> _operations;
     std::optional<SP<Renderable>> _draggedRenderable;
+    HitResult _hitResult;
     int _draggedViewportIndex = 0;
     std::vector<SP<Renderable>> _renderables;
     std::vector<Viewport> _viewports;
