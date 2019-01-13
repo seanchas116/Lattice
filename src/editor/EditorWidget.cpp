@@ -54,12 +54,10 @@ void EditorWidget::wheelEvent(QWheelEvent *event) {
 }
 
 void EditorWidget::keyPressEvent(QKeyEvent *event) {
-    _keyObserver.keyPress(event);
     RenderWidget::keyPressEvent(event);
 }
 
 void EditorWidget::keyReleaseEvent(QKeyEvent *event) {
-    _keyObserver.keyRelease(event);
     RenderWidget::keyReleaseEvent(event);
 }
 

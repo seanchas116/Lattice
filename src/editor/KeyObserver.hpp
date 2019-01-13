@@ -10,7 +10,9 @@ class KeyObserver final : public QObject {
     Q_OBJECT
 public:
     KeyObserver();
+    ~KeyObserver() override;
 
+    bool eventFilter(QObject *watched, QEvent *event) override;
     void keyPress(QKeyEvent* event);
     void keyRelease(QKeyEvent* event);
 
