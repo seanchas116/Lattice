@@ -11,6 +11,7 @@
 #include <QDockWidget>
 #include <QToolBar>
 #include <QToolButton>
+#include <QKeyEvent>
 
 namespace Lattice::UI {
 
@@ -21,6 +22,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), _appState(makeSha
     setupMenu();
     setupPanes();
     setupToolBar();
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event) {
+    switch (event->key()) {
+    case Qt::Key_Delete:
+    case Qt::Key_Backspace:
+        _appState->document()->deleteSelectedItems();
+        break;
+    }
+    QMainWindow::keyPressEvent(event);
 }
 
 void MainWindow::setupToolBar() {
