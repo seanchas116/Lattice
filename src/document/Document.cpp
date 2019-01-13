@@ -36,7 +36,7 @@ Document::Document() :
     _history(makeShared<History>())
 {
     watchChildrenInsertRemove(_rootItem);
-    connect(this, &Document::editingItemChanged, this, [this] {
+    connect(this, &Document::editedItemChanged, this, [this] {
         emit isEditingChanged(isEditing());
     });
 }
@@ -48,17 +48,17 @@ void Document::setCurrentItem(const std::optional<SP<Item> > &item) {
     }
 }
 
-void Document::setEditingItem(const std::optional<SP<MeshItem> > &item) {
-    if (item != _editingItem) {
-        _editingItem = item;
-        emit editingItemChanged(item);
+void Document::setEditedItem(const std::optional<SP<MeshItem> > &item) {
+    if (item != _editedItem) {
+        _editedItem = item;
+        emit editedItemChanged(item);
     }
 }
 
 void Document::setIsEditing(bool isEditing) {
     if (isEditing) {
         LATTICE_OPTIONAL_LET(item, dynamicPointerCast<MeshItem>(_currentItem), {
-            setEditingItem(item);
+            setEditedItem(item);
         })
     }
 }
