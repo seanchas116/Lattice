@@ -69,6 +69,9 @@ void ItemPropertyView::onCurrentItemChanged() {
     auto currentItem = _appState->document()->currentItem();
     if (currentItem) {
         _itemConnection = connect(currentItem->get(), &Document::Item::locationChanged, this, &ItemPropertyView::onLocationChanged);
+        setEnabled(true);
+    } else {
+        setEnabled(false);
     }
     onLocationChanged();
 }
@@ -108,6 +111,18 @@ void ItemPropertyView::setLocation() {
 
     _location = location;
     item->setLocation(location);
+}
+
+void ItemPropertyView::setEnabled(bool enabled) {
+    for (auto& sb : _positionSpinBoxes) {
+        sb->setEnabled(enabled);
+    }
+    for (auto& sb : _rotationSpinBoxes) {
+        sb->setEnabled(enabled);
+    }
+    for (auto& sb : _scaleSpinBoxes) {
+        sb->setEnabled(enabled);
+    }
 }
 
 } // namespace Lattice

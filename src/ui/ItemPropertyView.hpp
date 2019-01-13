@@ -22,6 +22,8 @@ private:
 
     void setLocation();
 
+    void setEnabled(bool enabled);
+
     SP<AppState> _appState;
     QMetaObject::Connection _itemConnection;
 
