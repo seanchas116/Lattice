@@ -1,6 +1,7 @@
 #include "MeshPicker.hpp"
 #include "../support/ScopedTimer.hpp"
 #include "../support/Distance.hpp"
+#include "../support/Debug.hpp"
 
 using namespace glm;
 
@@ -36,7 +37,21 @@ std::optional<std::pair<SP<Document::MeshFace>, double> > MeshPicker::picKFace(c
 std::optional<std::pair<SP<Document::MeshVertex>, double> > MeshPicker::pickVertex(const Ray<double> &ray, double distance) const {
     Q_UNUSED(ray);
     Q_UNUSED(distance);
-    return {}; // TODO
+
+    std::map<double, SP<Document::MeshVertex>> intersectings;
+
+    for (auto& v : _mesh->vertices()) {
+        RayPointDistance<double> vertexMouseDistance(ray, v->position());
+        if (vertexMouseDistance.distance <= distance) {
+            intersectings.insert({vertexMouseDistance.t, v});
+        }
+    }
+
+    if (intersectings.empty()) {
+        return {};
+    }
+    auto nearest = intersectings.begin();
+    return {{nearest->second, nearest->first}};
 }
 
 std::optional<std::pair<SP<Document::MeshEdge>, double> > MeshPicker::pickEdge(const Ray<double> &ray, double distance) const {
