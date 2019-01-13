@@ -35,9 +35,9 @@ EditorScene::EditorScene(const SP<UI::AppState> &appState) :
 std::vector<SP<Render::Renderable> > EditorScene::updateRenderables() {
     std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> newMeshRenderers;
 
-    auto editingItem = _appState->document()->editingItem();
-    if (editingItem) {
-        _editedMeshRenderers = makeShared<EditedMeshRenderer>(_appState, *editingItem);
+    auto editedItem = _appState->document()->editedItem();
+    if (editedItem) {
+        _editedMeshRenderers = makeShared<EditedMeshRenderer>(_appState, *editedItem);
     } else {
         _editedMeshRenderers = std::nullopt;
     }
