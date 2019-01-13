@@ -24,6 +24,9 @@ public:
     auto& editedItem() const { return _editedItem; }
     void setEditedItem(const std::optional<SP<MeshItem>>& item);
 
+    bool isEditing() const { return bool(_editedItem); }
+    void setIsEditing(bool isEditing);
+
     auto& selectedItems() const { return _selectedItems; }
     void setSelectedItems(const std::unordered_set<SP<Item>>& items);
 
@@ -37,6 +40,7 @@ public:
 signals:
     void currentItemChanged(const std::optional<SP<Item>>& item);
     void editedItemChanged(const std::optional<SP<Item>>& item);
+    void isEditingChanged(bool isEditing);
     void selectedItemsChanged(const std::unordered_set<SP<Item>>& items);
 
     void itemInserted(const SP<Item>& item);
