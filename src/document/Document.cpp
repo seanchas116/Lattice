@@ -57,9 +57,10 @@ void Document::setEditedItem(const std::optional<SP<MeshItem> > &item) {
 
 void Document::setIsEditing(bool isEditing) {
     if (isEditing) {
-        LATTICE_OPTIONAL_LET(item, dynamicPointerCast<MeshItem>(_currentItem), {
-            setEditedItem(item);
-        })
+        auto item = dynamicPointerCast<MeshItem>(_currentItem);
+        setEditedItem(item);
+    } else {
+        setEditedItem(std::nullopt);
     }
 }
 
