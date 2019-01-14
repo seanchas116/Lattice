@@ -1,9 +1,10 @@
 #include "EditedMeshRenderer.hpp"
-#include "MeshVAOGenerator.hpp"
 #include "MeshPicker.hpp"
 #include "../ui/AppState.hpp"
 #include "../gl/LineVAO.hpp"
 #include "../gl/PointVAO.hpp"
+#include "../gl/VAO.hpp"
+#include "../gl/VertexBuffer.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
 #include "../document/Mesh.hpp"
@@ -20,11 +21,11 @@ EditedMeshRenderer::EditedMeshRenderer(const SP<UI::AppState>& appState, const S
     _appState(appState),
     _item(item),
     _meshPicker(makeShared<MeshPicker>(item->mesh())),
-    _edgeVAO(makeShared<GL::LineVAO>()),
-    _vertexVAO(makeShared<GL::PointVAO>())
+    _faceVAOs(generateFaceVAOs()),
+    _edgeVAO(generateEdgeVAO()),
+    _vertexVAO(generateVertexVAO())
 {
     // TODO: update mesh when item is changed
-    updateVAOs(item->mesh());
 }
 
 void EditedMeshRenderer::draw(const SP<Render::Operations> &operations, const Camera &camera) {
@@ -67,11 +68,80 @@ void EditedMeshRenderer::mouseRelease(const Render::MouseEvent &event) {
     Q_UNUSED(event);
 }
 
-void EditedMeshRenderer::updateVAOs(const SP<Document::Mesh> &mesh) {
-    MeshVAOGenerator generator(mesh);
-    _vertexVAO = generator.generateVertexVAO();
-    _edgeVAO = generator.generateEdgeVAO();
-    _faceVAOs= generator.generateFaceVAOs();
+void EditedMeshRenderer::updateVAOs() {
+    _vertexVAO = generateVertexVAO();
+    _edgeVAO = generateEdgeVAO();
+    _faceVAOs = generateFaceVAOs();
+}
+
+SP<GL::PointVAO> EditedMeshRenderer::generateVertexVAO() const {
+    auto vao = makeShared<GL::PointVAO>();
+    std::vector<GL::VertexBuffer::Vertex> attribs;
+    for (auto& v : _item->mesh()->vertices()) {
+        GL::VertexBuffer::Vertex attrib;
+        attrib.position = v->position();
+        // TODO: selected flags
+        attribs.push_back(attrib);
+    }
+
+    vao->vertexBuffer()->setVertices(attribs);
+    return vao;
+}
+
+SP<GL::LineVAO> EditedMeshRenderer::generateEdgeVAO() const {
+    auto vao = makeShared<GL::LineVAO>();
+    std::vector<GL::VertexBuffer::Vertex> attribs;
+    std::vector<GL::LineVAO::Line> indices;
+    for (auto& [_, e] : _item->mesh()->edges()) {
+        auto offset = uint32_t(attribs.size());
+        for (auto& v : e->vertices()) {
+            GL::VertexBuffer::Vertex attrib;
+            attrib.position = v->position();
+            // TODO: selected flags
+            attribs.push_back(attrib);
+        }
+        indices.push_back({offset, offset+1});
+    }
+
+    vao->vertexBuffer()->setVertices(attribs);
+    vao->setLines(indices);
+    return vao;
+}
+
+std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO> > EditedMeshRenderer::generateFaceVAOs() const {
+    auto vbo = makeShared<GL::VertexBuffer>();
+    std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO> > faceVAOs;
+    std::vector<GL::VertexBuffer::Vertex> attribs;
+
+    auto addPoint = [&](const SP<Document::MeshUVPoint>& p) {
+        GL::VertexBuffer::Vertex attrib;
+        attrib.position = p->vertex()->position();
+        attrib.texCoord = p->position();
+        attrib.normal = p->vertex()->normal();
+        // TODO: selected flags
+
+        auto index = uint32_t(attribs.size());
+        attribs.push_back(attrib);
+        return index;
+    };
+
+    for (auto& material : _item->mesh()->materials()) {
+        auto vao = makeShared<GL::VAO>(vbo);
+        std::vector<GL::VAO::Triangle> triangles;
+        for (auto& face : material->faces()) {
+            auto i0 = addPoint(face->uvPoints()[0]);
+            for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
+                auto i1 = addPoint(face->uvPoints()[i - 1]);
+                auto i2 = addPoint(face->uvPoints()[i]);
+                triangles.push_back({i0, i1, i2});
+            }
+        }
+        vao->setTriangles(triangles);
+        faceVAOs.insert({material, vao});
+    }
+    vbo->setVertices(attribs);
+
+    return faceVAOs;
 }
 
 }

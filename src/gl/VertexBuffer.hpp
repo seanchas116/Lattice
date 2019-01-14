@@ -14,6 +14,9 @@ public:
         glm::vec3 normal {0};
         uint32_t flags {0};
     };
+    enum VertexFlags {
+        VertexSelected = 1,
+    };
 
     VertexBuffer();
     VertexBuffer(const std::vector<Vertex>& vertices);

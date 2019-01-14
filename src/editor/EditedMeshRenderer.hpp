@@ -48,7 +48,10 @@ public:
     void mouseRelease(const Render::MouseEvent &event) override;
 
 private:
-    void updateVAOs(const SP<Document::Mesh>& mesh);
+    void updateVAOs();
+    SP<GL::PointVAO> generateVertexVAO() const;
+    SP<GL::LineVAO> generateEdgeVAO() const;
+    std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> generateFaceVAOs() const;
 
     SP<UI::AppState> _appState;
     SP<Document::MeshItem> _item;
