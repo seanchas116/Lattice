@@ -12,6 +12,7 @@ public:
         glm::vec3 position {0};
         glm::vec2 texCoord {0};
         glm::vec3 normal {0};
+        uint32_t flags {0};
     };
 
     VertexBuffer();
