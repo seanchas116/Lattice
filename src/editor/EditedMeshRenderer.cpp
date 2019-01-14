@@ -67,7 +67,10 @@ std::optional<Render::HitResult> EditedMeshRenderer::hitTest(dvec2 pos, const Ca
 void EditedMeshRenderer::mousePress(const Render::MouseEvent &event) {
     if (event.hitResult.vertex) {
         Document::MeshSelection selection;
-        selection.vertices = {*event.hitResult.vertex};
+        if (event.originalEvent->modifiers() & Qt::ShiftModifier) {
+            selection = _appState->document()->meshSelection();
+        }
+        selection.vertices.insert(*event.hitResult.vertex);
         _appState->document()->setMeshSelection(selection);
     }
 }
