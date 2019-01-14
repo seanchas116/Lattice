@@ -8,10 +8,11 @@ using namespace glm;
 namespace Lattice {
 namespace Editor {
 
-MeshPicker::MeshPicker(const SP<Document::Mesh> &mesh) : _mesh(mesh) {
+MeshPicker::MeshPicker(const dmat4 &matrix, const SP<Document::Mesh> &mesh) : _matrix(matrix), _mesh(mesh) {
 }
 
-std::optional<std::pair<SP<Document::MeshFace>, double> > MeshPicker::picKFace(const Ray<double> &ray) const {
+std::optional<std::pair<SP<Document::MeshFace>, double> > MeshPicker::picKFace(const Camera &camera, dvec2 screenPos) const {
+    Ray<float> ray = _matrix * camera.worldMouseRay(screenPos);
     // TODO: Use Bounding Volume Hierarchy to do faster
     ScopedTimer timer("MeshPicker::pickFace");
     std::map<float, SP<Document::MeshFace>> intersectings;

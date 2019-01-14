@@ -22,7 +22,7 @@ namespace Manipulator {
 RotateHandle::RotateHandle(int axis) :
     _axis(axis),
     _handleMesh(createMesh()),
-    _handleMeshPicker(makeShared<MeshPicker>(_handleMesh)),
+    _handleMeshPicker(makeShared<MeshPicker>(dmat4(1), _handleMesh)),
     _handleVAO(MeshVAOGenerator(_handleMesh).generateEdgeVAO())
 {
     initializeOpenGLFunctions();
