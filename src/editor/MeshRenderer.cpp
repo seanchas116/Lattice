@@ -19,21 +19,21 @@ namespace Lattice::Editor {
 MeshRenderer::MeshRenderer(const SP<UI::AppState>& appState, const SP<Document::MeshItem> &item) :
     _appState(appState),
     _item(item),
-    _meshPicker(makeShared<MeshPicker>(inverse(item->location().matrix()), item->mesh())),
+    _meshPicker(makeShared<MeshPicker>(item->location().matrixToModel(), item->mesh())),
     _edgeVAO(makeShared<GL::LineVAO>()),
     _vertexVAO(makeShared<GL::PointVAO>())
 {
     updateVAOs(item->mesh());
     connect(_item.get(), &Document::MeshItem::meshChanged, this, &MeshRenderer::updateVAOs);
     connect(_item.get(), &Document::Item::locationChanged, this, [this](auto& loc) {
-        _meshPicker->setWorldToModel(inverse(loc.matrix()));
+        _meshPicker->setWorldToModel(loc.matrixToModel());
     });
 }
 
 void MeshRenderer::draw(const SP<Render::Operations> &operations, const Camera &camera) {
     if (_appState->isFaceVisible()) {
         for (auto& [material, vao] : _faceVAOs) {
-            operations->drawMaterial.draw(vao, _item->location().matrix(), camera, material);
+            operations->drawMaterial.draw(vao, _item->location().matrixToWorld(), camera, material);
         }
     }
     /*
@@ -48,7 +48,7 @@ void MeshRenderer::draw(const SP<Render::Operations> &operations, const Camera &
 
 std::optional<Render::HitResult> MeshRenderer::hitTest(dvec2 pos, const Camera &camera) const {
     auto worldMouseRay = camera.worldMouseRay(pos);
-    auto modelMouseRay = glm::inverse(_item->location().matrix()) * worldMouseRay;
+    auto modelMouseRay = glm::inverse(_item->location().matrixToWorld()) * worldMouseRay;
     LATTICE_OPTIONAL_GUARD(pickResult, _meshPicker->picKFace(camera, pos), return {};)
     auto [face, t] = pickResult;
     Render::HitResult result;

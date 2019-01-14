@@ -8,20 +8,20 @@ using namespace glm;
 
 namespace Lattice {
 
-dmat4 Location::matrix() const {
+dmat4 Location::matrixToWorld() const {
     return glm::translate(position) * glm::mat4_cast(rotation) * glm::scale(scale);
 }
 
 glm::dvec3 Location::right() const {
-    return matrix()[0].xyz;
+    return matrixToWorld()[0].xyz;
 }
 
 glm::dvec3 Location::up() const {
-    return matrix()[1].xyz;
+    return matrixToWorld()[1].xyz;
 }
 
 glm::dvec3 Location::backward() const {
-    return matrix()[2].xyz;
+    return matrixToWorld()[2].xyz;
 }
 
 bool Location::operator==(const Location &other) const {

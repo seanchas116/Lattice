@@ -27,14 +27,14 @@ const vec3 selectedColor = vec3(1);
 EditedMeshRenderer::EditedMeshRenderer(const SP<UI::AppState>& appState, const SP<Document::MeshItem> &item) :
     _appState(appState),
     _item(item),
-    _meshPicker(makeShared<MeshPicker>(inverse(item->location().matrix()), item->mesh())),
+    _meshPicker(makeShared<MeshPicker>(item->location().matrixToModel(), item->mesh())),
     _faceVAOs(generateFaceVAOs()),
     _edgeVAO(generateEdgeVAO()),
     _vertexVAO(generateVertexVAO())
 {
     connect(_item.get(), &Document::MeshItem::meshChanged, this, &EditedMeshRenderer::updateVAOs);
     connect(_item.get(), &Document::Item::locationChanged, this, [this](auto& loc) {
-        _meshPicker->setWorldToModel(inverse(loc.matrix()));
+        _meshPicker->setWorldToModel(loc.matrixToModel());
     });
     connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, &EditedMeshRenderer::updateVAOs);
 }
@@ -42,20 +42,20 @@ EditedMeshRenderer::EditedMeshRenderer(const SP<UI::AppState>& appState, const S
 void EditedMeshRenderer::draw(const SP<Render::Operations> &operations, const Camera &camera) {
     if (_appState->isFaceVisible()) {
         for (auto& [material, vao] : _faceVAOs) {
-            operations->drawMaterial.draw(vao, _item->location().matrix(), camera, material);
+            operations->drawMaterial.draw(vao, _item->location().matrixToWorld(), camera, material);
         }
     }
     if (_appState->isEdgeVisible()) {
-        operations->drawLine.draw(_edgeVAO, _item->location().matrix(), camera, 1.0, dvec3(0), true);
+        operations->drawLine.draw(_edgeVAO, _item->location().matrixToWorld(), camera, 1.0, dvec3(0), true);
     }
     if (_appState->isVertexVisible()) {
-        operations->drawCircle.draw(_vertexVAO, _item->location().matrix(), camera, 6.0, dvec3(0), true);
+        operations->drawCircle.draw(_vertexVAO, _item->location().matrixToWorld(), camera, 6.0, dvec3(0), true);
     }
 }
 
 std::optional<Render::HitResult> EditedMeshRenderer::hitTest(dvec2 pos, const Camera &camera) const {
     auto worldMouseRay = camera.worldMouseRay(pos);
-    auto modelMouseRay = glm::inverse(_item->location().matrix()) * worldMouseRay;
+    auto modelMouseRay = glm::inverse(_item->location().matrixToWorld()) * worldMouseRay;
     auto pickResult = _meshPicker->pickVertex(modelMouseRay, 0.1); // TODO: tweak hit distance based on depth
     if (!pickResult) {
         return std::nullopt;

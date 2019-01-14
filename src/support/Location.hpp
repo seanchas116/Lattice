@@ -11,7 +11,8 @@ public:
     glm::dquat rotation {1, 0, 0, 0};
     glm::dvec3 position {0};
 
-    glm::dmat4 matrix() const;
+    glm::dmat4 matrixToWorld() const;
+    glm::dmat4 matrixToModel() const { return glm::inverse(matrixToWorld()); }
 
     glm::dvec3 right() const;
     glm::dvec3 up() const;

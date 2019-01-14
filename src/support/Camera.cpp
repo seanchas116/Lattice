@@ -45,7 +45,7 @@ std::pair<glm::dvec3, bool> Camera::mapWorldToScreen(dvec3 worldPos) const {
 
 glm::dvec3 Camera::mapScreenToWorld(dvec3 screenPosWithDepth) const {
     auto cameraPos = mapScreenToCamera(screenPosWithDepth);
-    auto cameraToWorldMatrix = _location.matrix();
+    auto cameraToWorldMatrix = _location.matrixToWorld();
     return (cameraToWorldMatrix * vec4(cameraPos, 1)).xyz;
 }
 
@@ -75,7 +75,7 @@ Ray<double> Camera::worldMouseRay(dvec2 screenPos) const {
 }
 
 void Camera::updateMatrix() {
-    _worldToCameraMatrix = inverse(_location.matrix());
+    _worldToCameraMatrix = inverse(_location.matrixToWorld());
     _cameraToScreenMatrix = glm::perspective(_fieldOfView, double(_viewSize.x) / double(_viewSize.y), _zNear, _zFar);
     _worldToScreenMatrix = _cameraToScreenMatrix * _worldToCameraMatrix;
 }
