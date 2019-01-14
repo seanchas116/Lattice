@@ -11,6 +11,9 @@ uniform float zOffset;
 layout(lines) in;
 layout(triangle_strip, max_vertices = 4) out;
 
+in vec3 vertexColor_vert[];
+out vec3 vertexColor_geom;
+
 void main(void) {
     vec4 p0_modelSpace = gl_in[0].gl_Position;
     vec4 p1_modelSpace = gl_in[1].gl_Position;
@@ -49,12 +52,19 @@ void main(void) {
     vec2 offset = normalize(vec2(-direction.y, direction.x)) * (width * 0.5);
 
     gl_Position = vec4((p0 + offset) / (viewportSize * 0.5) - 1.0, d0 + zOffset, 1);
+    vertexColor_geom = vertexColor_vert[0];
     EmitVertex();
+
     gl_Position = vec4((p0 - offset) / (viewportSize * 0.5) - 1.0, d0 + zOffset, 1);
+    vertexColor_geom = vertexColor_vert[0];
     EmitVertex();
+
     gl_Position = vec4((p1 + offset) / (viewportSize * 0.5) - 1.0, d1 + zOffset, 1);
+    vertexColor_geom = vertexColor_vert[1];
     EmitVertex();
+
     gl_Position = vec4((p1 - offset) / (viewportSize * 0.5) - 1.0, d1 + zOffset, 1);
+    vertexColor_geom = vertexColor_vert[1];
     EmitVertex();
 
     EndPrimitive();
