@@ -17,6 +17,13 @@ using namespace glm;
 
 namespace Lattice::Editor {
 
+namespace {
+
+const vec3 unselectedColor = vec3(0);
+const vec3 selectedColor = vec3(1);
+
+}
+
 EditedMeshRenderer::EditedMeshRenderer(const SP<UI::AppState>& appState, const SP<Document::MeshItem> &item) :
     _appState(appState),
     _item(item),
@@ -90,7 +97,7 @@ SP<GL::PointVAO> EditedMeshRenderer::generateVertexVAO() const {
 
         GL::VertexBuffer::Vertex attrib;
         attrib.position = v->position();
-        attrib.color = selected ? vec3(1) : vec3(0);
+        attrib.color = selected ? selectedColor : unselectedColor;
 
         attribs.push_back(attrib);
     }
@@ -112,7 +119,7 @@ SP<GL::LineVAO> EditedMeshRenderer::generateEdgeVAO() const {
 
             GL::VertexBuffer::Vertex attrib;
             attrib.position = v->position();
-            attrib.color = selected ? vec3(1) : vec3(0);
+            attrib.color = selected ? selectedColor : unselectedColor;
             attribs.push_back(attrib);
         }
         indices.push_back({offset, offset+1});
