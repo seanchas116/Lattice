@@ -4,6 +4,8 @@
 #include <QDebug>
 #include <QtDebug>
 #include <array>
+#include <optional>
+#include "Pointer.hpp"
 
 namespace Lattice {
 
@@ -33,6 +35,25 @@ QDebug operator<<(QDebug debug, const std::array<T, N>& array) {
         debug << array[i];
     }
     debug << "]";
+    return debug;
+}
+
+template <typename T>
+QDebug operator<<(QDebug debug, const std::optional<T>& optional) {
+    if (optional) {
+        return debug << *optional;
+    } else {
+        return debug << "nullopt";
+    }
+}
+
+template <typename T>
+QDebug operator<<(QDebug debug, const SP<T>& ptr) {
+    QDebugStateSaver saver(debug);
+    debug.nospace();
+    debug << "SP(";
+    debug << ptr.get();
+    debug << ")";
     return debug;
 }
 
