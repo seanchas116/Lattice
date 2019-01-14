@@ -19,14 +19,14 @@ namespace Lattice::Editor {
 MeshRenderer::MeshRenderer(const SP<UI::AppState>& appState, const SP<Document::MeshItem> &item) :
     _appState(appState),
     _item(item),
-    _meshPicker(makeShared<MeshPicker>(item->location().matrix(), item->mesh())),
+    _meshPicker(makeShared<MeshPicker>(inverse(item->location().matrix()), item->mesh())),
     _edgeVAO(makeShared<GL::LineVAO>()),
     _vertexVAO(makeShared<GL::PointVAO>())
 {
     updateVAOs(item->mesh());
     connect(_item.get(), &Document::MeshItem::meshChanged, this, &MeshRenderer::updateVAOs);
     connect(_item.get(), &Document::Item::locationChanged, this, [this](auto& loc) {
-        _meshPicker->setMatrix(loc.matrix());
+        _meshPicker->setWorldToModel(inverse(loc.matrix()));
     });
 }
 
