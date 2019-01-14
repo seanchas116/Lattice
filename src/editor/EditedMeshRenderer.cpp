@@ -88,7 +88,7 @@ SP<GL::PointVAO> EditedMeshRenderer::generateVertexVAO() const {
 
         GL::VertexBuffer::Vertex attrib;
         attrib.position = v->position();
-        attrib.flags = selected ? GL::VertexBuffer::VertexSelected : 0;
+        attrib.color = selected ? vec3(0, 0, 1) : vec3(0);
 
         attribs.push_back(attrib);
     }
@@ -106,7 +106,6 @@ SP<GL::LineVAO> EditedMeshRenderer::generateEdgeVAO() const {
         for (auto& v : e->vertices()) {
             GL::VertexBuffer::Vertex attrib;
             attrib.position = v->position();
-            // TODO: selected flags
             attribs.push_back(attrib);
         }
         indices.push_back({offset, offset+1});
@@ -127,7 +126,6 @@ std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO> > EditedMeshRenderer:
         attrib.position = p->vertex()->position();
         attrib.texCoord = p->position();
         attrib.normal = p->vertex()->normal();
-        // TODO: selected flags
 
         auto index = uint32_t(attribs.size());
         attribs.push_back(attrib);
