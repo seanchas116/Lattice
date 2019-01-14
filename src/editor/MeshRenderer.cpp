@@ -23,8 +23,8 @@ MeshRenderer::MeshRenderer(const SP<UI::AppState>& appState, const SP<Document::
     _edgeVAO(makeShared<GL::LineVAO>()),
     _vertexVAO(makeShared<GL::PointVAO>())
 {
-    // TODO: update mesh when item is changed
     updateVAOs(item->mesh());
+    connect(_item.get(), &Document::MeshItem::meshChanged, this, &MeshRenderer::updateVAOs);
 }
 
 void MeshRenderer::draw(const SP<Render::Operations> &operations, const Camera &camera) {

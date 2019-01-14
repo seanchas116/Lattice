@@ -25,7 +25,8 @@ EditedMeshRenderer::EditedMeshRenderer(const SP<UI::AppState>& appState, const S
     _edgeVAO(generateEdgeVAO()),
     _vertexVAO(generateVertexVAO())
 {
-    // TODO: update mesh when item is changed
+    connect(_item.get(), &Document::MeshItem::meshChanged, this, &EditedMeshRenderer::updateVAOs);
+    connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, &EditedMeshRenderer::updateVAOs);
 }
 
 void EditedMeshRenderer::draw(const SP<Render::Operations> &operations, const Camera &camera) {
