@@ -35,6 +35,7 @@ std::optional<std::pair<SP<Document::MeshFace>, double> > MeshPicker::picKFace(c
 }
 
 std::optional<std::pair<SP<Document::MeshVertex>, double> > MeshPicker::pickVertex(const Ray<double> &ray, double distance) const {
+    // TODO: Use screen space distance
     Q_UNUSED(ray);
     Q_UNUSED(distance);
 
@@ -55,6 +56,7 @@ std::optional<std::pair<SP<Document::MeshVertex>, double> > MeshPicker::pickVert
 }
 
 std::optional<std::pair<SP<Document::MeshEdge>, double> > MeshPicker::pickEdge(const Ray<double> &ray, double distance) const {
+    // TODO: Use screen space distance
     std::map<double, SP<Document::MeshEdge>> intersectings;
     for (auto& [_, e] : _mesh->edges()) {
         dvec3 p0 = e->vertices()[0]->position();
