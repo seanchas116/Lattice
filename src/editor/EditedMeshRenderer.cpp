@@ -51,9 +51,7 @@ void EditedMeshRenderer::draw(const SP<Render::Operations> &operations, const Ca
 }
 
 std::optional<Render::HitResult> EditedMeshRenderer::hitTest(dvec2 pos, const Camera &camera) const {
-    auto worldMouseRay = camera.worldMouseRay(pos);
-    auto modelMouseRay = glm::inverse(_item->location().matrixToWorld()) * worldMouseRay;
-    auto pickResult = _meshPicker->pickVertex(modelMouseRay, 0.1); // TODO: tweak hit distance based on depth
+    auto pickResult = _meshPicker->pickVertex(_item->location().matrixToModel(), camera, pos, 0.1);
     if (!pickResult) {
         return std::nullopt;
     }

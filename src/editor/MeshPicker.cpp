@@ -35,10 +35,9 @@ std::optional<std::pair<SP<Document::MeshFace>, double> > MeshPicker::picKFace(c
     return {{nearest->second, nearest->first}};
 }
 
-std::optional<std::pair<SP<Document::MeshVertex>, double> > MeshPicker::pickVertex(const Ray<double> &ray, double distance) const {
+std::optional<std::pair<SP<Document::MeshVertex>, double> > MeshPicker::pickVertex(const dmat4 &worldToModel, const Camera &camera, dvec2 screenPos, double distance) const {
     // TODO: Use screen space distance
-    Q_UNUSED(ray);
-    Q_UNUSED(distance);
+    Ray<double> ray = worldToModel * camera.worldMouseRay(screenPos);
 
     std::map<double, SP<Document::MeshVertex>> intersectings;
 
@@ -56,9 +55,12 @@ std::optional<std::pair<SP<Document::MeshVertex>, double> > MeshPicker::pickVert
     return {{nearest->second, nearest->first}};
 }
 
-std::optional<std::pair<SP<Document::MeshEdge>, double> > MeshPicker::pickEdge(const Ray<double> &ray, double distance) const {
+std::optional<std::pair<SP<Document::MeshEdge>, double> > MeshPicker::pickEdge(const dmat4 &worldToModel, const Camera &camera, dvec2 screenPos, double distance) const {
     // TODO: Use screen space distance
+    Ray<double> ray = worldToModel * camera.worldMouseRay(screenPos);
+
     std::map<double, SP<Document::MeshEdge>> intersectings;
+
     for (auto& [_, e] : _mesh->edges()) {
         dvec3 p0 = e->vertices()[0]->position();
         dvec3 p1 = e->vertices()[1]->position();

@@ -52,7 +52,7 @@ std::optional<Render::HitResult> RotateHandle::hitTest(dvec2 pos, const Camera &
     dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * Constants::swizzleTransforms[_axis];
     dmat4 rotateHandleMatrixInverse = inverse(rotateHandleMatrix);
     auto rotateHandleRay = rotateHandleMatrixInverse * mouseRay;
-    auto pickResult = _handleMeshPicker->pickEdge(rotateHandleRay, 0.1);
+    auto pickResult = _handleMeshPicker->pickEdge(inverse(coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis]), camera, pos, 0.1);
     if (!pickResult) {
         return {};
     }
@@ -76,7 +76,6 @@ void RotateHandle::mousePress(const Render::MouseEvent &event) {
     dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * Constants::swizzleTransforms[_axis];
     dmat4 rotateHandleMatrixInverse = inverse(rotateHandleMatrix);
     auto rotateHandleRay = rotateHandleMatrixInverse * event.camera.cameraMouseRay(event.screenPos);
-    auto pickResult = _handleMeshPicker->pickEdge(rotateHandleRay, 0.1);
 
     dvec3 intersection = rotateHandleRay.whereXIsZero();
     double angle = atan2(intersection.z, intersection.y);
