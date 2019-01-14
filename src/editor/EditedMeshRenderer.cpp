@@ -27,15 +27,12 @@ const vec3 selectedColor = vec3(1);
 EditedMeshRenderer::EditedMeshRenderer(const SP<UI::AppState>& appState, const SP<Document::MeshItem> &item) :
     _appState(appState),
     _item(item),
-    _meshPicker(makeShared<MeshPicker>(item->location().matrixToModel(), item->mesh())),
+    _meshPicker(makeShared<MeshPicker>(item->mesh())),
     _faceVAOs(generateFaceVAOs()),
     _edgeVAO(generateEdgeVAO()),
     _vertexVAO(generateVertexVAO())
 {
     connect(_item.get(), &Document::MeshItem::meshChanged, this, &EditedMeshRenderer::updateVAOs);
-    connect(_item.get(), &Document::Item::locationChanged, this, [this](auto& loc) {
-        _meshPicker->setWorldToModel(loc.matrixToModel());
-    });
     connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, &EditedMeshRenderer::updateVAOs);
 }
 
