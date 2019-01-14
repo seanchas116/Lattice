@@ -48,7 +48,9 @@ std::optional<Render::HitResult> MeshRenderer::hitTest(dvec2 pos, const Camera &
     auto modelMouseRay = glm::inverse(_item->location().matrix()) * worldMouseRay;
     LATTICE_OPTIONAL_GUARD(pickResult, _meshPicker->picKFace(modelMouseRay), return {};)
     auto [face, t] = pickResult;
-            return {{t}};
+    Render::HitResult result;
+    result.t = t;
+    return result;
 }
 
 void MeshRenderer::mousePress(const Render::MouseEvent &event) {

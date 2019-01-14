@@ -53,7 +53,9 @@ std::optional<Render::HitResult> ArrowHandle::hitTest(dvec2 pos, const Camera &c
 
     if (distance <= Constants::hitRadius) {
         if (Constants::bodyBegin <= tArrow && tArrow <= _length + Constants::translateHandleLength) {
-            return {{mouseToArrowDistance.t0}};
+            Render::HitResult result;
+            result.t = mouseToArrowDistance.t0;
+            return result;
         }
     }
 

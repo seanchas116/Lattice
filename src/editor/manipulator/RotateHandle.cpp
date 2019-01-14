@@ -62,7 +62,9 @@ std::optional<Render::HitResult> RotateHandle::hitTest(dvec2 pos, const Camera &
     if (hitPos_screenSpace.z > Constants::fixedDepth) {
         return {};
     }
-    return {{t}};
+    Render::HitResult result;
+    result.t = t;
+    return result;
 }
 
 void RotateHandle::mousePress(const Render::MouseEvent &event) {

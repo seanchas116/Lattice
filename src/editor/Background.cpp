@@ -23,7 +23,9 @@ void Background::draw(const SP<Render::Operations> &operations, const Camera &ca
 
 std::optional<Render::HitResult> Background::hitTest(glm::dvec2 pos, const Camera &camera) const {
     Q_UNUSED(pos); Q_UNUSED(camera);
-    return {{1}};
+    Render::HitResult result;
+    result.t = 1;
+    return result;
 }
 
 void Background::mousePress(const Render::MouseEvent &event) {
