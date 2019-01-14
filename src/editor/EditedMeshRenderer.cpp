@@ -58,7 +58,11 @@ std::optional<Render::HitResult> EditedMeshRenderer::hitTest(dvec2 pos, const Ca
 }
 
 void EditedMeshRenderer::mousePress(const Render::MouseEvent &event) {
-    qDebug() << "vertex click at" << event.hitResult.vertex;
+    if (event.hitResult.vertex) {
+        Document::MeshSelection selection;
+        selection.vertices = {*event.hitResult.vertex};
+        _appState->document()->setMeshSelection(selection);
+    }
 }
 
 void EditedMeshRenderer::mouseMove(const Render::MouseEvent &event) {
