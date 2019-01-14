@@ -36,7 +36,7 @@ void EditedMeshRenderer::draw(const SP<Render::Operations> &operations, const Ca
         }
     }
     if (_appState->isEdgeVisible()) {
-        operations->drawLine.draw(_edgeVAO, _item->location().matrix(), camera, 1.0, dvec3(0));
+        operations->drawLine.draw(_edgeVAO, _item->location().matrix(), camera, 1.0, dvec3(0), true);
     }
     if (_appState->isVertexVisible()) {
         operations->drawCircle.draw(_vertexVAO, _item->location().matrix(), camera, 6.0, dvec3(0), true);
@@ -81,15 +81,16 @@ void EditedMeshRenderer::updateVAOs() {
 }
 
 SP<GL::PointVAO> EditedMeshRenderer::generateVertexVAO() const {
+    auto& selectedVertices = _appState->document()->meshSelection().vertices;
+
     auto vao = makeShared<GL::PointVAO>();
     std::vector<GL::VertexBuffer::Vertex> attribs;
-    auto& selectedVertices = _appState->document()->meshSelection().vertices;
     for (auto& v : _item->mesh()->vertices()) {
         bool selected = selectedVertices.find(v) != selectedVertices.end();
 
         GL::VertexBuffer::Vertex attrib;
         attrib.position = v->position();
-        attrib.color = selected ? vec3(0, 0, 1) : vec3(0);
+        attrib.color = selected ? vec3(1) : vec3(0);
 
         attribs.push_back(attrib);
     }
@@ -99,14 +100,19 @@ SP<GL::PointVAO> EditedMeshRenderer::generateVertexVAO() const {
 }
 
 SP<GL::LineVAO> EditedMeshRenderer::generateEdgeVAO() const {
+    auto& selectedVertices = _appState->document()->meshSelection().vertices;
+
     auto vao = makeShared<GL::LineVAO>();
     std::vector<GL::VertexBuffer::Vertex> attribs;
     std::vector<GL::LineVAO::Line> indices;
     for (auto& [_, e] : _item->mesh()->edges()) {
         auto offset = uint32_t(attribs.size());
         for (auto& v : e->vertices()) {
+            bool selected = selectedVertices.find(v) != selectedVertices.end();
+
             GL::VertexBuffer::Vertex attrib;
             attrib.position = v->position();
+            attrib.color = selected ? vec3(1) : vec3(0);
             attribs.push_back(attrib);
         }
         indices.push_back({offset, offset+1});
