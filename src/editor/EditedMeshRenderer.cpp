@@ -82,10 +82,14 @@ void EditedMeshRenderer::updateVAOs() {
 SP<GL::PointVAO> EditedMeshRenderer::generateVertexVAO() const {
     auto vao = makeShared<GL::PointVAO>();
     std::vector<GL::VertexBuffer::Vertex> attribs;
+    auto& selectedVertices = _appState->document()->meshSelection().vertices;
     for (auto& v : _item->mesh()->vertices()) {
+        bool selected = selectedVertices.find(v) != selectedVertices.end();
+
         GL::VertexBuffer::Vertex attrib;
         attrib.position = v->position();
-        // TODO: selected flags
+        attrib.flags = selected ? GL::VertexBuffer::VertexSelected : 0;
+
         attribs.push_back(attrib);
     }
 
