@@ -37,7 +37,9 @@ std::vector<SP<Render::Renderable> > EditorScene::updateRenderables() {
 
     auto editedItem = _appState->document()->editedItem();
     if (editedItem) {
-        _editedMeshRenderers = makeShared<EditedMeshRenderer>(_appState, *editedItem);
+        if (!_editedMeshRenderers || (*_editedMeshRenderers)->item() != editedItem) {
+            _editedMeshRenderers = makeShared<EditedMeshRenderer>(_appState, *editedItem);
+        }
     } else {
         _editedMeshRenderers = std::nullopt;
     }
