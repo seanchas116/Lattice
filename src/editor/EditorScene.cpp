@@ -30,6 +30,7 @@ EditorScene::EditorScene(const SP<UI::AppState> &appState) :
     connect(appState->document().get(), &Document::Document::itemAboutToBeRemoved, this, &EditorScene::updateRequested);
     connect(appState->document().get(), &Document::Document::currentItemChanged, this, &EditorScene::updateRequested);
     connect(appState->document().get(), &Document::Document::editedItemChanged, this, &EditorScene::updateRequested);
+    connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &EditorScene::updateRequested);
 }
 
 std::vector<SP<Render::Renderable> > EditorScene::updateRenderables() {

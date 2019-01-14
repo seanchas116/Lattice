@@ -4,6 +4,7 @@
 #include "../support/Box.hpp"
 #include "../support/Location.hpp"
 #include "../render/Renderable.hpp"
+#include "../gl/ContextRecallable.hpp"
 #include <glm/glm.hpp>
 #include <unordered_map>
 
@@ -33,7 +34,7 @@ namespace Editor {
 
 class MeshPicker;
 
-class EditedMeshRenderer final : public QObject, public Render::Renderable {
+class EditedMeshRenderer final : public QObject, public Render::Renderable, public GL::ContextRecallable {
     Q_OBJECT
 public:
     EditedMeshRenderer(const SP<UI::AppState>& appState, const SP<Document::MeshItem>& item);

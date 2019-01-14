@@ -39,7 +39,7 @@ void EditedMeshRenderer::draw(const SP<Render::Operations> &operations, const Ca
         operations->drawLine.draw(_edgeVAO, _item->location().matrix(), camera, 1.0, dvec3(0));
     }
     if (_appState->isVertexVisible()) {
-        operations->drawCircle.draw(_vertexVAO, _item->location().matrix(), camera, 4.0, dvec3(0));
+        operations->drawCircle.draw(_vertexVAO, _item->location().matrix(), camera, 6.0, dvec3(0), true);
     }
 }
 
@@ -74,6 +74,7 @@ void EditedMeshRenderer::mouseRelease(const Render::MouseEvent &event) {
 }
 
 void EditedMeshRenderer::updateVAOs() {
+    recallContext();
     _vertexVAO = generateVertexVAO();
     _edgeVAO = generateEdgeVAO();
     _faceVAOs = generateFaceVAOs();
