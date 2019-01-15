@@ -32,6 +32,7 @@ private:
     SP<UI::AppState> _appState;
     std::optional<SP<Document::MeshItem>> _item;
     std::unordered_map<SP<Document::MeshVertex>, glm::dvec3> _initialPositions;
+    glm::dvec3 _initialMedianPos;
     double _initialValue;
     QMetaObject::Connection _connection;
 };

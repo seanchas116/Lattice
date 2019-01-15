@@ -27,6 +27,7 @@ void MeshManipulator::handleOnBegin(ValueType type, double value) {
     for (auto& v : _appState->document()->meshSelection().vertices) {
         _initialPositions[v] = v->position();
     }
+    _initialMedianPos = _appState->document()->meshSelection().medianPosition();
 }
 
 void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
@@ -39,6 +40,15 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
         offset[axis] = value - _initialValue;
         for (auto& [vertex, initialPos] : _initialPositions) {
             vertex->setPosition(initialPos + offset);
+        }
+        break;
+    }
+    case ValueType::Scale: {
+        glm::dvec3 ratio(1);
+        ratio[axis] = value / _initialValue;
+        for (auto& [vertex, initialPos] : _initialPositions) {
+            glm::dvec3 initialOffset = initialPos - _initialMedianPos;
+            vertex->setPosition(_initialMedianPos + initialOffset * ratio);
         }
         break;
     }
