@@ -81,7 +81,7 @@ std::vector<SP<Render::Renderable> > EditorScene::updateRenderables() {
         }
     }
     if (_appState->document()->isEditing()) {
-        for (auto& h : _objectManipulator->handles(_appState->isTranslateHandleVisible(), _appState->isRotateHandleVisible(), _appState->isScaleHandleVisible())) {
+        for (auto& h : _meshManipulator->handles(_appState->isTranslateHandleVisible(), _appState->isRotateHandleVisible(), _appState->isScaleHandleVisible())) {
             renderables.push_back(h);
         }
     }
