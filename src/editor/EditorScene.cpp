@@ -80,7 +80,7 @@ std::vector<SP<Render::Renderable> > EditorScene::updateRenderables() {
             renderables.push_back(h);
         }
     }
-    if (_appState->document()->isEditing()) {
+    if (_appState->document()->isEditing() && !_appState->document()->meshSelection().vertices.empty()) {
         for (auto& h : _meshManipulator->handles(_appState->isTranslateHandleVisible(), _appState->isRotateHandleVisible(), _appState->isScaleHandleVisible())) {
             renderables.push_back(h);
         }
