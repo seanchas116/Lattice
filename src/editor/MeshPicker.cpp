@@ -48,7 +48,7 @@ bool mapLineToScreen(const mat4& P, vec2 viewportSize, float zNear, vec4 p0_came
 MeshPicker::MeshPicker(const SP<Document::Mesh> &mesh) : _mesh(mesh) {
 }
 
-std::optional<std::pair<SP<Document::MeshFace>, double> > MeshPicker::picKFace(const dmat4 &modelToWorld, const Camera &camera, dvec2 screenPos) const {
+std::optional<std::pair<SP<Document::MeshFace>, double> > MeshPicker::pickFace(const dmat4 &modelToWorld, const Camera &camera, dvec2 screenPos) const {
     Ray<float> ray = inverse(modelToWorld) * camera.worldMouseRay(screenPos);
     // TODO: Use Bounding Volume Hierarchy to do faster
     ScopedTimer timer("MeshPicker::pickFace");
