@@ -88,6 +88,8 @@ void MeshRenderer::mouseDoubleClick(const Render::MouseEvent &event) {
 }
 
 void MeshRenderer::updateVAOs(const SP<Document::Mesh> &mesh) {
+    recallContext();
+
     MeshVAOGenerator generator(mesh);
     _vertexVAO = generator.generateVertexVAO();
     _edgeVAO = generator.generateEdgeVAO();
