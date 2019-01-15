@@ -3,7 +3,7 @@
 #include "GridFloor.hpp"
 #include "MeshRenderer.hpp"
 #include "EditedMeshRenderer.hpp"
-#include "./manipulator/Controller.hpp"
+#include "./manipulator/ObjectManipulator.hpp"
 #include "../ui/AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/Item.hpp"
@@ -16,7 +16,7 @@ EditorScene::EditorScene(const SP<UI::AppState> &appState) :
     _appState(appState),
     _background(makeShared<Background>(appState)),
     _gridFloor(makeShared<GridFloor>()),
-    _manipulatorController(makeShared<Manipulator::Controller>(appState))
+    _objectManipulator(makeShared<Manipulator::ObjectManipulator>(appState))
 {
     connect(appState.get(), &UI::AppState::isVertexVisibleChanged, this, &EditorScene::updateRequested);
     connect(appState.get(), &UI::AppState::isEdgeVisibleChanged, this, &EditorScene::updateRequested);
@@ -75,17 +75,17 @@ std::vector<SP<Render::Renderable> > EditorScene::updateRenderables() {
 
     if (_appState->document()->currentItem()) {
         if (_appState->isRotateHandleVisible()) {
-            for (auto& h : _manipulatorController->rotateHandles()) {
+            for (auto& h : _objectManipulator->rotateHandles()) {
                 renderables.push_back(h);
             }
         }
         if (_appState->isScaleHandleVisible()) {
-            for (auto& h : _manipulatorController->scaleHandles()) {
+            for (auto& h : _objectManipulator->scaleHandles()) {
                 renderables.push_back(h);
             }
         }
         if (_appState->isTranslateHandleVisible()) {
-            for (auto& h : _manipulatorController->translateHandles()) {
+            for (auto& h : _objectManipulator->translateHandles()) {
                 renderables.push_back(h);
             }
         }

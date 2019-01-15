@@ -15,10 +15,10 @@ class Item;
 namespace Editor {
 namespace Manipulator {
 
-class Controller : public QObject {
+class ObjectManipulator : public QObject {
     Q_OBJECT
 public:
-    Controller(const SP<UI::AppState>& appState);
+    ObjectManipulator(const SP<UI::AppState>& appState);
 
     glm::dvec3 position() const;
 

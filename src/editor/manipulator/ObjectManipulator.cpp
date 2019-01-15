@@ -1,4 +1,4 @@
-#include "Controller.hpp"
+#include "ObjectManipulator.hpp"
 #include "ArrowHandle.hpp"
 #include "RotateHandle.hpp"
 #include "../../ui/AppState.hpp"
@@ -11,15 +11,15 @@ namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
-Controller::Controller(const SP<UI::AppState> &appState) : _appState(appState)
+ObjectManipulator::ObjectManipulator(const SP<UI::AppState> &appState) : _appState(appState)
 {
     connectToItem(appState->document()->currentItem());
-    connect(appState->document().get(), &Document::Document::currentItemChanged, this, &Controller::connectToItem);
+    connect(appState->document().get(), &Document::Document::currentItemChanged, this, &ObjectManipulator::connectToItem);
 
     for (int axis = 0; axis < 3; ++axis) {
         auto handle = makeShared<ArrowHandle>(axis, ArrowHandle::HandleType::Translate);
         handle->setTargetPosition(position());
-        connect(this, &Controller::positionChanged, handle.get(), &ArrowHandle::setTargetPosition);
+        connect(this, &ObjectManipulator::positionChanged, handle.get(), &ArrowHandle::setTargetPosition);
 
         connect(handle.get(), &ArrowHandle::onBegin, this, [this] (double value) { handleOnBegin(ValueType::Translate, value); });
         connect(handle.get(), &ArrowHandle::onChange, this, [this, axis] (double value) { handleOnChange(ValueType::Translate, axis, value); });
@@ -30,7 +30,7 @@ Controller::Controller(const SP<UI::AppState> &appState) : _appState(appState)
     for (int axis = 0; axis < 3; ++axis) {
         auto handle = makeShared<ArrowHandle>(axis, ArrowHandle::HandleType::Scale);
         handle->setTargetPosition(position());
-        connect(this, &Controller::positionChanged, handle.get(), &ArrowHandle::setTargetPosition);
+        connect(this, &ObjectManipulator::positionChanged, handle.get(), &ArrowHandle::setTargetPosition);
 
         connect(handle.get(), &ArrowHandle::onBegin, this, [this] (double value) { handleOnBegin(ValueType::Scale, value); });
         connect(handle.get(), &ArrowHandle::onChange, this, [this, axis] (double value) { handleOnChange(ValueType::Scale, axis, value); });
@@ -41,7 +41,7 @@ Controller::Controller(const SP<UI::AppState> &appState) : _appState(appState)
     for (int axis = 0; axis < 3; ++axis) {
         auto handle = makeShared<RotateHandle>(axis);
         handle->setTargetPosition(position());
-        connect(this, &Controller::positionChanged, handle.get(), &RotateHandle::setTargetPosition);
+        connect(this, &ObjectManipulator::positionChanged, handle.get(), &RotateHandle::setTargetPosition);
 
         connect(handle.get(), &RotateHandle::onBegin, this, [this] (double value) { handleOnBegin(ValueType::Rotate, value); });
         connect(handle.get(), &RotateHandle::onChange, this, [this, axis] (double value) { handleOnChange(ValueType::Rotate, axis, value); });
@@ -50,12 +50,12 @@ Controller::Controller(const SP<UI::AppState> &appState) : _appState(appState)
     }
 }
 
-glm::dvec3 Controller::position() const {
+glm::dvec3 ObjectManipulator::position() const {
     LATTICE_OPTIONAL_GUARD(item, _item, return glm::dvec3(0);)
     return item->location().position;
 }
 
-void Controller::handleOnBegin(ValueType type, double value) {
+void ObjectManipulator::handleOnBegin(ValueType type, double value) {
     LATTICE_OPTIONAL_GUARD(item, _item, return;)
 
     auto changeText = [&] {
@@ -74,7 +74,7 @@ void Controller::handleOnBegin(ValueType type, double value) {
     _initialValue = value;
 }
 
-void Controller::handleOnChange(ValueType type, int axis, double value) {
+void ObjectManipulator::handleOnChange(ValueType type, int axis, double value) {
     LATTICE_OPTIONAL_GUARD(item, _item, return;)
 
     auto loc = _initialLocation;
@@ -95,11 +95,11 @@ void Controller::handleOnChange(ValueType type, int axis, double value) {
     item->setLocation(loc);
 }
 
-void Controller::handleOnEnd(ValueType type) {
+void ObjectManipulator::handleOnEnd(ValueType type) {
     Q_UNUSED(type);
 }
 
-void Controller::connectToItem(const std::optional<SP<Document::Item> > &maybeItem) {
+void ObjectManipulator::connectToItem(const std::optional<SP<Document::Item> > &maybeItem) {
     disconnect(_connection);
     _item = maybeItem;
     LATTICE_OPTIONAL_GUARD(item, maybeItem, return;)
