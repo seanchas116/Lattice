@@ -1,5 +1,4 @@
 #pragma once
-#include <QObject>
 #include "../../render/Renderable.hpp"
 
 namespace Lattice {
@@ -12,7 +11,7 @@ class LineVAO;
 namespace Editor {
 namespace Manipulator {
 
-class ArrowHandle : public QObject, public Render::Renderable {
+class ArrowHandle : public Render::Renderable {
     Q_OBJECT
 public:
     enum class HandleType {

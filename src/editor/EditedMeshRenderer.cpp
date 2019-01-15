@@ -133,6 +133,8 @@ void EditedMeshRenderer::updateVAOs() {
     _vertexVAO = generateVertexVAO();
     _edgeVAO = generateEdgeVAO();
     _faceVAOs = generateFaceVAOs();
+
+    updateRequested();
 }
 
 SP<GL::PointVAO> EditedMeshRenderer::generateVertexVAO() const {

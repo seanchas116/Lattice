@@ -16,6 +16,7 @@ class LineVAO;
 namespace Lattice::Editor {
 
 class GridFloor final : public Render::Renderable {
+    Q_OBJECT
 public:
     GridFloor();
 

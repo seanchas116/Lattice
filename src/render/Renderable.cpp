@@ -6,9 +6,6 @@ namespace Render {
 Renderable::Renderable() {
 }
 
-Renderable::~Renderable() {
-}
-
 void Renderable::draw(const SP<Operations> &operations, const Camera &camera) {
     Q_UNUSED(operations); Q_UNUSED(camera);
 }

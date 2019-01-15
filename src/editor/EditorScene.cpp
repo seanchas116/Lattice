@@ -86,6 +86,10 @@ std::vector<SP<Render::Renderable> > EditorScene::updateRenderables() {
         }
     }
 
+    for (auto& r : renderables) {
+        connect(r.get(), &Render::Renderable::updateRequested, this, &EditorScene::updateRequested);
+    }
+
     return renderables;
 }
 

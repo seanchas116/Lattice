@@ -1,5 +1,6 @@
 #pragma once
 #include <QtGlobal>
+#include <QObject>
 #include "Operations.hpp"
 #include "MouseEvent.hpp"
 
@@ -8,11 +9,10 @@ class QMouseEvent;
 namespace Lattice {
 namespace Render {
 
-class Renderable {
-    Q_DISABLE_COPY(Renderable)
+class Renderable : public QObject {
+    Q_OBJECT
 public:
     Renderable();
-    virtual ~Renderable();
 
     virtual void draw(const SP<Operations>& operations, const Camera& camera);
 
@@ -21,6 +21,9 @@ public:
     virtual void mouseMove(const MouseEvent& event);
     virtual void mouseRelease(const MouseEvent& event);
     virtual void mouseDoubleClick(const MouseEvent& event);
+
+signals:
+    void updateRequested();
 };
 
 } // namespace Renderer

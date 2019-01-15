@@ -94,6 +94,8 @@ void MeshRenderer::updateVAOs(const SP<Document::Mesh> &mesh) {
     _vertexVAO = generator.generateVertexVAO();
     _edgeVAO = generator.generateEdgeVAO();
     _faceVAOs= generator.generateFaceVAOs();
+
+    emit updateRequested();
 }
 
 }

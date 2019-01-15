@@ -34,7 +34,7 @@ namespace Editor {
 
 class MeshPicker;
 
-class MeshRenderer final : public QObject, public Render::Renderable, public GL::ContextRecallable {
+class MeshRenderer final : public Render::Renderable, public GL::ContextRecallable {
     Q_OBJECT
 public:
     MeshRenderer(const SP<UI::AppState>& appState, const SP<Document::MeshItem>& item);
