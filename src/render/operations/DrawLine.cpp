@@ -13,7 +13,7 @@ DrawLine::DrawLine() :
 void DrawLine::draw(const SP<GL::LineVAO> &vao, const glm::dmat4 &matrix, const Camera &camera, double width, glm::dvec3 color, bool useVertexColor, double zOffset) {
     _shader.bind();
     _shader.setUniform("MV", camera.worldToCameraMatrix() * matrix);
-    _shader.setUniform("P", camera.cameraToScrenMatrix());
+    _shader.setUniform("P", camera.cameraToScreenMatrix());
     _shader.setUniform("viewportSize", camera.viewSize());
     _shader.setUniform("zNear", camera.zNear());
     _shader.setUniform("width", width);

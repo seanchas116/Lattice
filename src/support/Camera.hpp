@@ -26,7 +26,7 @@ public:
     void setZFar(double zFar);
 
     glm::dmat4 worldToCameraMatrix() const { return _worldToCameraMatrix; }
-    glm::dmat4 cameraToScrenMatrix() const { return _cameraToScreenMatrix; }
+    glm::dmat4 cameraToScreenMatrix() const { return _cameraToScreenMatrix; }
     glm::dmat4 worldToScreenMatrix() const { return _worldToScreenMatrix; }
 
     std::pair<glm::dvec3, bool> mapWorldToScreen(glm::dvec3 worldPos) const;

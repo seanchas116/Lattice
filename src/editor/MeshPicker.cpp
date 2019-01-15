@@ -101,7 +101,7 @@ std::optional<std::pair<SP<Document::MeshEdge>, double> > MeshPicker::pickEdge(c
         vec4 p1_cameraSpace = camera.worldToCameraMatrix() * modelToWorld * p1_modelSpace;
         vec3 p0_screenSpace;
         vec3 p1_screenSpace;
-        bool ok = mapLineToScreen(camera.cameraToScrenMatrix(), camera.viewSize(), camera.zNear(), p0_cameraSpace, p1_cameraSpace, p0_screenSpace, p1_screenSpace);
+        bool ok = mapLineToScreen(camera.cameraToScreenMatrix(), camera.viewSize(), camera.zNear(), p0_cameraSpace, p1_cameraSpace, p0_screenSpace, p1_screenSpace);
         if (!ok) {
             continue;
         }
