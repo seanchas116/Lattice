@@ -14,7 +14,7 @@ namespace Constants {
     constexpr double translateHandleLength = 0.4;
     constexpr double translateHandleWidth = 0.2;
     constexpr double hitRadius = 0.2;
-    constexpr double fixedDepth = 0.5;
+    constexpr double fixedDepth = 0.75;
 
     inline const std::array<glm::dvec3, 3> colors {
         glm::dvec3(1, 0, 0),

@@ -53,13 +53,13 @@ std::pair<dvec3, bool> Camera::mapCameraToScreen(dvec3 cameraPos) const {
     vec4 pos_clipSpace = _cameraToScreenMatrix * vec4(cameraPos, 1);
     if (fabs(pos_clipSpace.x) <= pos_clipSpace.w && fabs(pos_clipSpace.y) <= pos_clipSpace.w && fabs(pos_clipSpace.z) <= pos_clipSpace.w) {
         vec3 ndc = vec3(pos_clipSpace.xyz) / pos_clipSpace.w;
-        return {vec3((vec2(ndc.xy) + 1.f) * 0.5f * vec2(_viewSize), ndc.z), true};
+        return {vec3((vec2(ndc.xy) + 1.f) * 0.5f * vec2(_viewSize), ndc.z * 0.5f + 0.5f), true};
     }
     return {vec3(0), false};
 }
 
 dvec3 Camera::mapScreenToCamera(dvec3 screenPosWithDepth) const {
-    return glm::unProject(dvec3(screenPosWithDepth.xy, (screenPosWithDepth.z + 1.0) * 0.5), dmat4(1), _cameraToScreenMatrix, dvec4(0, 0, _viewSize));
+    return glm::unProject(screenPosWithDepth, dmat4(1), _cameraToScreenMatrix, dvec4(0, 0, _viewSize));
 }
 
 Ray<double> Camera::cameraMouseRay(dvec2 screenPos) const {
