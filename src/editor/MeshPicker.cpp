@@ -36,15 +36,14 @@ std::optional<std::pair<SP<Document::MeshFace>, double> > MeshPicker::picKFace(c
 }
 
 std::optional<std::pair<SP<Document::MeshVertex>, double> > MeshPicker::pickVertex(const dmat4 &modelToWorld, const Camera &camera, dvec2 screenPos, double distance) const {
-    // TODO: Use screen space distance
-    Ray<double> ray = inverse(modelToWorld) * camera.worldMouseRay(screenPos);
-
     std::map<double, SP<Document::MeshVertex>> intersectings;
 
     for (auto& v : _mesh->vertices()) {
-        RayPointDistance<double> vertexMouseDistance(ray, v->position());
-        if (vertexMouseDistance.distance <= distance) {
-            intersectings.insert({vertexMouseDistance.t, v});
+        auto [screenVertexPos, isInScreen] = camera.mapWorldToScreen((modelToWorld * vec4(v->position(), 1)).xyz);
+        if (!isInScreen) { continue; }
+
+        if (glm::distance(dvec2(screenVertexPos.xy), screenPos) <= distance) {
+            intersectings.insert({screenVertexPos.z, v});
         }
     }
 
