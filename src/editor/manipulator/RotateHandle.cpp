@@ -47,19 +47,12 @@ std::optional<Render::HitResult> RotateHandle::hitTest(dvec2 pos, const Camera &
         return {};
     }
 
-    Ray mouseRay = camera.cameraMouseRay(pos);
-
-    dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * Constants::swizzleTransforms[_axis];
-    dmat4 rotateHandleMatrixInverse = inverse(rotateHandleMatrix);
-    auto rotateHandleRay = rotateHandleMatrixInverse * mouseRay;
-    auto pickResult = _handleMeshPicker->pickEdge(coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, pos, 0.1);
+    auto pickResult = _handleMeshPicker->pickEdge(coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, pos, 6);
     if (!pickResult) {
         return {};
     }
     auto [edge, depth] = *pickResult;
-    auto [hitPos_screenSpace, isInScreen] = camera.mapCameraToScreen((rotateHandleMatrix * dvec4(rotateHandleRay.at(depth), 1)).xyz);
-
-    if (hitPos_screenSpace.z > Constants::fixedDepth) {
+    if (depth > Constants::fixedDepth) {
         return {};
     }
     Render::HitResult result;
