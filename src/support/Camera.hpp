@@ -32,6 +32,10 @@ public:
     std::pair<glm::dvec3, bool> mapWorldToScreen(glm::dvec3 worldPos) const;
     glm::dvec3 mapScreenToWorld(glm::dvec3 screenPosWithDepth) const;
 
+    // screen coordinate range:
+    //  0 <= x <= logical window width
+    //  0 <= y <= logical window height
+    //  0 <= z <= 1 (1 is farthest from camera)
     std::pair<glm::dvec3, bool> mapCameraToScreen(glm::dvec3 cameraPos) const;
     glm::dvec3 mapScreenToCamera(glm::dvec3 screenPosWithDepth) const;
 
