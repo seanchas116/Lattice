@@ -22,6 +22,8 @@ void MeshManipulator::handleOnBegin(ValueType type, double value) {
     // TODO
     LATTICE_OPTIONAL_GUARD(item, _item, return;)
 
+    _initialValue = value;
+
     for (auto& v : _appState->document()->meshSelection().vertices) {
         _initialPositions[v] = v->position();
     }
@@ -34,7 +36,7 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
     switch (type) {
     case ValueType::Translate: {
         glm::dvec3 offset(0);
-        offset[axis] = value;
+        offset[axis] = value - _initialValue;
         for (auto& [vertex, initialPos] : _initialPositions) {
             vertex->setPosition(initialPos + offset);
         }
