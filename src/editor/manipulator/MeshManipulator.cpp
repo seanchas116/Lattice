@@ -52,6 +52,18 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
         }
         break;
     }
+    case ValueType::Rotate: {
+        glm::dvec3 eulerAngles(0);
+        eulerAngles[axis] = value - _initialValue;
+        auto matrix = glm::mat4_cast(glm::dquat(eulerAngles));
+
+        for (auto& [vertex, initialPos] : _initialPositions) {
+            glm::dvec3 initialOffset = initialPos - _initialMedianPos;
+            glm::dvec3 offset = (matrix * glm::dvec4(initialOffset, 0)).xyz;
+            vertex->setPosition(_initialMedianPos + offset);
+        }
+        break;
+    }
     default:
         // TODO
         break;
