@@ -43,7 +43,7 @@ public:
 
 signals:
     void currentItemChanged(const std::optional<SP<Item>>& item);
-    void editedItemChanged(const std::optional<SP<Item>>& item);
+    void editedItemChanged(const std::optional<SP<MeshItem>>& item);
     void isEditingChanged(bool isEditing);
     void selectedItemsChanged(const std::unordered_set<SP<Item>>& items);
     void meshSelectionChanged(const MeshSelection &meshSelection);
