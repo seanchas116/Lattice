@@ -19,7 +19,7 @@ MeshManipulator::MeshManipulator(const SP<UI::AppState> &appState) : _appState(a
 }
 
 void MeshManipulator::handleOnBegin(ValueType type, double value) {
-    // TODO
+    Q_UNUSED(type) // TODO
     LATTICE_OPTIONAL_GUARD(item, _item, return;)
 
     _initialValue = value;
