@@ -21,15 +21,36 @@ MeshManipulator::MeshManipulator(const SP<UI::AppState> &appState) : _appState(a
 void MeshManipulator::handleOnBegin(ValueType type, double value) {
     // TODO
     LATTICE_OPTIONAL_GUARD(item, _item, return;)
+
+    for (auto& v : _appState->document()->meshSelection().vertices) {
+        _initialPositions[v] = v->position();
+    }
 }
 
 void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
     // TODO
     LATTICE_OPTIONAL_GUARD(item, _item, return;)
+
+    switch (type) {
+    case ValueType::Translate: {
+        glm::dvec3 offset(0);
+        offset[axis] = value;
+        for (auto& [vertex, initialPos] : _initialPositions) {
+            vertex->setPosition(initialPos + offset);
+        }
+        break;
+    }
+    default:
+        // TODO
+        break;
+    }
+
+    item->emitMeshChanged();
 }
 
 void MeshManipulator::handleOnEnd(ValueType type) {
     Q_UNUSED(type);
+    _initialPositions.clear();
 }
 
 void MeshManipulator::connectToItem(const std::optional<SP<Document::MeshItem> > &maybeItem) {
