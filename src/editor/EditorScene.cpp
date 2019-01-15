@@ -73,7 +73,7 @@ std::vector<SP<Render::Renderable> > EditorScene::updateRenderables() {
         }
     }
 
-    if (_appState->document()->currentItem()) {
+    if (_appState->document()->currentItem() && !_appState->document()->editedItem()) {
         if (_appState->isRotateHandleVisible()) {
             for (auto& h : _objectManipulator->rotateHandles()) {
                 renderables.push_back(h);
