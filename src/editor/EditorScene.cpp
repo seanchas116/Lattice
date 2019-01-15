@@ -76,37 +76,13 @@ std::vector<SP<Render::Renderable> > EditorScene::updateRenderables() {
     }
 
     if (_appState->document()->currentItem() && !_appState->document()->isEditing()) {
-        if (_appState->isRotateHandleVisible()) {
-            for (auto& h : _objectManipulator->rotateHandles()) {
-                renderables.push_back(h);
-            }
-        }
-        if (_appState->isScaleHandleVisible()) {
-            for (auto& h : _objectManipulator->scaleHandles()) {
-                renderables.push_back(h);
-            }
-        }
-        if (_appState->isTranslateHandleVisible()) {
-            for (auto& h : _objectManipulator->translateHandles()) {
-                renderables.push_back(h);
-            }
+        for (auto& h : _objectManipulator->handles(_appState->isTranslateHandleVisible(), _appState->isRotateHandleVisible(), _appState->isScaleHandleVisible())) {
+            renderables.push_back(h);
         }
     }
     if (_appState->document()->isEditing()) {
-        if (_appState->isRotateHandleVisible()) {
-            for (auto& h : _meshManipulator->rotateHandles()) {
-                renderables.push_back(h);
-            }
-        }
-        if (_appState->isScaleHandleVisible()) {
-            for (auto& h : _meshManipulator->scaleHandles()) {
-                renderables.push_back(h);
-            }
-        }
-        if (_appState->isTranslateHandleVisible()) {
-            for (auto& h : _meshManipulator->translateHandles()) {
-                renderables.push_back(h);
-            }
+        for (auto& h : _objectManipulator->handles(_appState->isTranslateHandleVisible(), _appState->isRotateHandleVisible(), _appState->isScaleHandleVisible())) {
+            renderables.push_back(h);
         }
     }
 

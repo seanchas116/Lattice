@@ -16,8 +16,9 @@ public:
     void setTargetPosition(glm::dvec3 position);
 
     auto& translateHandles() const { return _translateHandles; }
-    auto& scaleHandles() const { return _scaleHandles; }
     auto& rotateHandles() const { return _rotateHandles; }
+    auto& scaleHandles() const { return _scaleHandles; }
+    std::vector<SP<Render::Renderable>> handles(bool withTranslate, bool withRotate, bool withScale) const;
 
     enum class ValueType {
         Translate, Scale, Rotate
@@ -31,8 +32,8 @@ signals:
 
 private:
     std::vector<SP<Render::Renderable>> _translateHandles;
-    std::vector<SP<Render::Renderable>> _scaleHandles;
     std::vector<SP<Render::Renderable>> _rotateHandles;
+    std::vector<SP<Render::Renderable>> _scaleHandles;
     glm::dvec3 _targetPosition;
 };
 
