@@ -67,6 +67,14 @@ std::optional<Render::HitResult> EditedMeshRenderer::hitTest(dvec2 pos, const Ca
         result.edge = edge;
         return result;
     }
+    auto facePickResult = _meshPicker->pickFace(_item->location().matrixToWorld(), camera, pos);
+    if (facePickResult) {
+        auto [face, depth] = *facePickResult;
+        Render::HitResult result;
+        result.depth = depth;
+        result.face = face;
+        return result;
+    }
 
     return std::nullopt;
 }
