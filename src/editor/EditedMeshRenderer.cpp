@@ -51,26 +51,39 @@ void EditedMeshRenderer::draw(const SP<Render::Operations> &operations, const Ca
 }
 
 std::optional<Render::HitResult> EditedMeshRenderer::hitTest(dvec2 pos, const Camera &camera) const {
-    auto pickResult = _meshPicker->pickVertex(_item->location().matrixToWorld(), camera, pos, 8);
-    if (!pickResult) {
-        return std::nullopt;
+    auto vertexPickResult = _meshPicker->pickVertex(_item->location().matrixToWorld(), camera, pos, 8);
+    if (vertexPickResult) {
+        auto [vertex, depth] = *vertexPickResult;
+        Render::HitResult result;
+        result.depth = depth;
+        result.vertex = vertex;
+        return result;
     }
-    auto [vertex, depth] = *pickResult;
-    Render::HitResult result;
-    result.depth = depth;
-    result.vertex = vertex;
-    return result;
+    auto edgePickResult = _meshPicker->pickEdge(_item->location().matrixToWorld(), camera, pos, 0.2);
+    if (edgePickResult) {
+        auto [edge, depth] = *edgePickResult;
+        Render::HitResult result;
+        result.depth = depth;
+        result.edge = edge;
+        return result;
+    }
+
+    return std::nullopt;
 }
 
 void EditedMeshRenderer::mousePress(const Render::MouseEvent &event) {
-    if (event.hitResult.vertex) {
-        Document::MeshSelection selection;
-        if (event.originalEvent->modifiers() & Qt::ShiftModifier) {
-            selection = _appState->document()->meshSelection();
-        }
-        selection.vertices.insert(*event.hitResult.vertex);
-        _appState->document()->setMeshSelection(selection);
+    Document::MeshSelection selection;
+    if (event.originalEvent->modifiers() & Qt::ShiftModifier) {
+        selection = _appState->document()->meshSelection();
     }
+    if (event.hitResult.vertex) {
+        selection.vertices.insert(*event.hitResult.vertex);
+    } else if (event.hitResult.edge) {
+        auto& edge = *event.hitResult.edge;
+        selection.vertices.insert(edge->vertices()[0]);
+        selection.vertices.insert(edge->vertices()[1]);
+    }
+    _appState->document()->setMeshSelection(selection);
 }
 
 void EditedMeshRenderer::mouseMove(const Render::MouseEvent &event) {
