@@ -80,22 +80,43 @@ std::optional<Render::HitResult> EditedMeshRenderer::hitTest(dvec2 pos, const Ca
 }
 
 void EditedMeshRenderer::mousePress(const Render::MouseEvent &event) {
-    Document::MeshSelection selection;
-    if (event.originalEvent->modifiers() & Qt::ShiftModifier) {
-        selection = _appState->document()->meshSelection();
-    }
+    std::unordered_set<SP<Document::MeshVertex>> newVertices;
     if (event.hitResult.vertex) {
-        selection.vertices.insert(*event.hitResult.vertex);
+        newVertices.insert(*event.hitResult.vertex);
     } else if (event.hitResult.edge) {
         auto& edge = *event.hitResult.edge;
-        selection.vertices.insert(edge->vertices()[0]);
-        selection.vertices.insert(edge->vertices()[1]);
+        newVertices.insert(edge->vertices()[0]);
+        newVertices.insert(edge->vertices()[1]);
     } else if (event.hitResult.face) {
         auto& face = *event.hitResult.face;
         for (auto& v : face->vertices()) {
-            selection.vertices.insert(v);
+            newVertices.insert(v);
         }
     }
+
+    Document::MeshSelection selection;
+    if (event.originalEvent->modifiers() & Qt::ShiftModifier) {
+        selection = _appState->document()->meshSelection();
+
+        bool alreadyAdded = true;
+        for (auto& v : newVertices) {
+            if (selection.vertices.find(v) == selection.vertices.end()) {
+                alreadyAdded = false;
+            }
+        }
+        if (alreadyAdded) {
+            for (auto& v : newVertices) {
+                selection.vertices.erase(v);
+            }
+        } else {
+            for (auto& v: newVertices) {
+                selection.vertices.insert(v);
+            }
+        }
+    } else {
+        selection.vertices = newVertices;
+    }
+
     _appState->document()->setMeshSelection(selection);
 }
 
