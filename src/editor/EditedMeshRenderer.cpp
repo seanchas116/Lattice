@@ -51,7 +51,7 @@ void EditedMeshRenderer::draw(const SP<Render::Operations> &operations, const Ca
 }
 
 std::optional<Render::HitResult> EditedMeshRenderer::hitTest(dvec2 pos, const Camera &camera) const {
-    auto vertexPickResult = _meshPicker->pickVertex(_item->location().matrixToWorld(), camera, pos, 8);
+    auto vertexPickResult = _meshPicker->pickVertex(_item->location().matrixToWorld(), camera, pos, 6);
     if (vertexPickResult) {
         auto [vertex, depth] = *vertexPickResult;
         Render::HitResult result;
@@ -59,7 +59,7 @@ std::optional<Render::HitResult> EditedMeshRenderer::hitTest(dvec2 pos, const Ca
         result.vertex = vertex;
         return result;
     }
-    auto edgePickResult = _meshPicker->pickEdge(_item->location().matrixToWorld(), camera, pos, 8);
+    auto edgePickResult = _meshPicker->pickEdge(_item->location().matrixToWorld(), camera, pos, 6);
     if (edgePickResult) {
         auto [edge, depth] = *edgePickResult;
         Render::HitResult result;
