@@ -59,7 +59,7 @@ std::optional<Render::HitResult> EditedMeshRenderer::hitTest(dvec2 pos, const Ca
         result.vertex = vertex;
         return result;
     }
-    auto edgePickResult = _meshPicker->pickEdge(_item->location().matrixToWorld(), camera, pos, 0.2);
+    auto edgePickResult = _meshPicker->pickEdge(_item->location().matrixToWorld(), camera, pos, 8);
     if (edgePickResult) {
         auto [edge, depth] = *edgePickResult;
         Render::HitResult result;
