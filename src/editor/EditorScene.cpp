@@ -4,6 +4,7 @@
 #include "MeshRenderer.hpp"
 #include "EditedMeshRenderer.hpp"
 #include "./manipulator/ObjectManipulator.hpp"
+#include "./manipulator/MeshManipulator.hpp"
 #include "../ui/AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/Item.hpp"
@@ -16,7 +17,8 @@ EditorScene::EditorScene(const SP<UI::AppState> &appState) :
     _appState(appState),
     _background(makeShared<Background>(appState)),
     _gridFloor(makeShared<GridFloor>()),
-    _objectManipulator(makeShared<Manipulator::ObjectManipulator>(appState))
+    _objectManipulator(makeShared<Manipulator::ObjectManipulator>(appState)),
+    _meshManipulator(makeShared<Manipulator::MeshManipulator>(appState))
 {
     connect(appState.get(), &UI::AppState::isVertexVisibleChanged, this, &EditorScene::updateRequested);
     connect(appState.get(), &UI::AppState::isEdgeVisibleChanged, this, &EditorScene::updateRequested);
@@ -73,7 +75,7 @@ std::vector<SP<Render::Renderable> > EditorScene::updateRenderables() {
         }
     }
 
-    if (_appState->document()->currentItem() && !_appState->document()->editedItem()) {
+    if (_appState->document()->currentItem() && !_appState->document()->isEditing()) {
         if (_appState->isRotateHandleVisible()) {
             for (auto& h : _objectManipulator->rotateHandles()) {
                 renderables.push_back(h);
@@ -86,6 +88,23 @@ std::vector<SP<Render::Renderable> > EditorScene::updateRenderables() {
         }
         if (_appState->isTranslateHandleVisible()) {
             for (auto& h : _objectManipulator->translateHandles()) {
+                renderables.push_back(h);
+            }
+        }
+    }
+    if (_appState->document()->isEditing()) {
+        if (_appState->isRotateHandleVisible()) {
+            for (auto& h : _meshManipulator->rotateHandles()) {
+                renderables.push_back(h);
+            }
+        }
+        if (_appState->isScaleHandleVisible()) {
+            for (auto& h : _meshManipulator->scaleHandles()) {
+                renderables.push_back(h);
+            }
+        }
+        if (_appState->isTranslateHandleVisible()) {
+            for (auto& h : _meshManipulator->translateHandles()) {
                 renderables.push_back(h);
             }
         }

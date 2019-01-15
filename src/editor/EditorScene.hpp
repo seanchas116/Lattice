@@ -21,6 +21,7 @@ class EditedMeshRenderer;
 
 namespace Manipulator {
 class ObjectManipulator;
+class MeshManipulator;
 }
 
 class EditorScene : public QObject {
@@ -39,6 +40,7 @@ private:
     SP<Background> _background;
     SP<GridFloor> _gridFloor;
     SP<Manipulator::ObjectManipulator> _objectManipulator;
+    SP<Manipulator::MeshManipulator> _meshManipulator;
     std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> _meshRenderers;
     std::optional<SP<EditedMeshRenderer>> _editedMeshRenderers;
 };
