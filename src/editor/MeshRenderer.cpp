@@ -45,14 +45,14 @@ void MeshRenderer::draw(const SP<Render::Operations> &operations, const Camera &
 
 std::optional<Render::HitResult> MeshRenderer::hitTest(dvec2 pos, const Camera &camera) const {
     LATTICE_OPTIONAL_GUARD(pickResult, _meshPicker->picKFace(_item->location().matrixToWorld(), camera, pos), return {};)
-    auto [face, t] = pickResult;
+    auto [face, depth] = pickResult;
     Render::HitResult result;
-    result.t = t;
+    result.depth = depth;
     return result;
 }
 
 void MeshRenderer::mousePress(const Render::MouseEvent &event) {
-    glm::dvec3 worldDragPos = event.camera.worldMouseRay(event.screenPos).at(event.hitResult.t);
+    glm::dvec3 worldDragPos = event.camera.worldMouseRay(event.screenPos).at(event.hitResult.depth);
     auto [screenDragPos, isInScreen] = event.camera.mapWorldToScreen(worldDragPos);
     if (!isInScreen) {
         return;

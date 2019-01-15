@@ -56,14 +56,14 @@ std::optional<Render::HitResult> RotateHandle::hitTest(dvec2 pos, const Camera &
     if (!pickResult) {
         return {};
     }
-    auto [edge, t] = *pickResult;
-    auto [hitPos_screenSpace, isInScreen] = camera.mapCameraToScreen((rotateHandleMatrix * dvec4(rotateHandleRay.at(t), 1)).xyz);
+    auto [edge, depth] = *pickResult;
+    auto [hitPos_screenSpace, isInScreen] = camera.mapCameraToScreen((rotateHandleMatrix * dvec4(rotateHandleRay.at(depth), 1)).xyz);
 
     if (hitPos_screenSpace.z > Constants::fixedDepth) {
         return {};
     }
     Render::HitResult result;
-    result.t = t;
+    result.depth = depth;
     return result;
 }
 

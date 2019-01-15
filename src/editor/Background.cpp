@@ -24,7 +24,7 @@ void Background::draw(const SP<Render::Operations> &operations, const Camera &ca
 std::optional<Render::HitResult> Background::hitTest(glm::dvec2 pos, const Camera &camera) const {
     Q_UNUSED(pos); Q_UNUSED(camera);
     Render::HitResult result;
-    result.t = 1;
+    result.depth = 1;
     return result;
 }
 

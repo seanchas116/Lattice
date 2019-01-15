@@ -118,7 +118,7 @@ std::optional<std::pair<SP<Renderable>, HitResult> > RenderWidget::hitTest(glm::
         auto& renderable = *it;
         auto maybeHitResult = renderable->hitTest(pos, camera);
         if (maybeHitResult) {
-            hitRenderables.insert({maybeHitResult->t, {renderable, *maybeHitResult}});
+            hitRenderables.insert({maybeHitResult->depth, {renderable, *maybeHitResult}});
         }
     }
     if (hitRenderables.empty()) {

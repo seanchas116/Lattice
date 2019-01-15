@@ -55,9 +55,9 @@ std::optional<Render::HitResult> EditedMeshRenderer::hitTest(dvec2 pos, const Ca
     if (!pickResult) {
         return std::nullopt;
     }
-    auto [vertex, t] = *pickResult;
+    auto [vertex, depth] = *pickResult;
     Render::HitResult result;
-    result.t = t;
+    result.depth = depth;
     result.vertex = vertex;
     return result;
 }

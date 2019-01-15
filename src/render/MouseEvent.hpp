@@ -14,7 +14,7 @@ class MeshFace;
 namespace Render {
 
 struct HitResult {
-    double t;
+    double depth;
     std::optional<SP<Document::MeshVertex>> vertex;
     std::optional<SP<Document::MeshEdge>> edge;
     std::optional<SP<Document::MeshFace>> face;
