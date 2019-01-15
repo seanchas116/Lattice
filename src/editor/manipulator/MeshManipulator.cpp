@@ -60,7 +60,7 @@ void MeshManipulator::connectToItem(const std::optional<SP<Document::MeshItem> >
     _item = maybeItem;
     LATTICE_OPTIONAL_GUARD(item, maybeItem, return;)
     auto itemPtr = item.get();
-    _connection = connect(itemPtr, &Document::Item::locationChanged, this, [this] {
+    _connection = connect(itemPtr, &Document::MeshItem::meshChanged, this, [this] {
         updatePosition();
     });
     updatePosition();
