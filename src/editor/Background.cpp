@@ -31,6 +31,7 @@ std::optional<Render::HitResult> Background::hitTest(glm::dvec2 pos, const Camer
 void Background::mousePress(const Render::MouseEvent &event) {
     Q_UNUSED(event);
     _appState->document()->setSelectedItems({});
+    _appState->document()->setMeshSelection({});
 }
 
 } // namespace Editor
