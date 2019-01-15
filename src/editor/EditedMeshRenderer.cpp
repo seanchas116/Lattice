@@ -90,6 +90,11 @@ void EditedMeshRenderer::mousePress(const Render::MouseEvent &event) {
         auto& edge = *event.hitResult.edge;
         selection.vertices.insert(edge->vertices()[0]);
         selection.vertices.insert(edge->vertices()[1]);
+    } else if (event.hitResult.face) {
+        auto& face = *event.hitResult.face;
+        for (auto& v : face->vertices()) {
+            selection.vertices.insert(v);
+        }
     }
     _appState->document()->setMeshSelection(selection);
 }
