@@ -11,8 +11,8 @@ namespace Editor {
 MeshPicker::MeshPicker(const SP<Document::Mesh> &mesh) : _mesh(mesh) {
 }
 
-std::optional<std::pair<SP<Document::MeshFace>, double> > MeshPicker::picKFace(const dmat4 &worldToModel, const Camera &camera, dvec2 screenPos) const {
-    Ray<float> ray = worldToModel * camera.worldMouseRay(screenPos);
+std::optional<std::pair<SP<Document::MeshFace>, double> > MeshPicker::picKFace(const dmat4 &modelToWorld, const Camera &camera, dvec2 screenPos) const {
+    Ray<float> ray = inverse(modelToWorld) * camera.worldMouseRay(screenPos);
     // TODO: Use Bounding Volume Hierarchy to do faster
     ScopedTimer timer("MeshPicker::pickFace");
     std::map<float, SP<Document::MeshFace>> intersectings;
@@ -35,9 +35,9 @@ std::optional<std::pair<SP<Document::MeshFace>, double> > MeshPicker::picKFace(c
     return {{nearest->second, nearest->first}};
 }
 
-std::optional<std::pair<SP<Document::MeshVertex>, double> > MeshPicker::pickVertex(const dmat4 &worldToModel, const Camera &camera, dvec2 screenPos, double distance) const {
+std::optional<std::pair<SP<Document::MeshVertex>, double> > MeshPicker::pickVertex(const dmat4 &modelToWorld, const Camera &camera, dvec2 screenPos, double distance) const {
     // TODO: Use screen space distance
-    Ray<double> ray = worldToModel * camera.worldMouseRay(screenPos);
+    Ray<double> ray = inverse(modelToWorld) * camera.worldMouseRay(screenPos);
 
     std::map<double, SP<Document::MeshVertex>> intersectings;
 
@@ -55,9 +55,9 @@ std::optional<std::pair<SP<Document::MeshVertex>, double> > MeshPicker::pickVert
     return {{nearest->second, nearest->first}};
 }
 
-std::optional<std::pair<SP<Document::MeshEdge>, double> > MeshPicker::pickEdge(const dmat4 &worldToModel, const Camera &camera, dvec2 screenPos, double distance) const {
+std::optional<std::pair<SP<Document::MeshEdge>, double> > MeshPicker::pickEdge(const dmat4 &modelToWorld, const Camera &camera, dvec2 screenPos, double distance) const {
     // TODO: Use screen space distance
-    Ray<double> ray = worldToModel * camera.worldMouseRay(screenPos);
+    Ray<double> ray = inverse(modelToWorld) * camera.worldMouseRay(screenPos);
 
     std::map<double, SP<Document::MeshEdge>> intersectings;
 
