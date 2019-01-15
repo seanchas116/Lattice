@@ -44,7 +44,7 @@ void MeshManipulator::connectToItem(const std::optional<SP<Document::MeshItem> >
 }
 
 void MeshManipulator::updatePosition() {
-    // TODO
+    setTargetPosition(_appState->document()->meshSelection().medianPosition());
 }
 
 }
