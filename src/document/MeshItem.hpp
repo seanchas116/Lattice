@@ -13,6 +13,7 @@ public:
 
     const SP<Mesh>& mesh() const { return _mesh; }
     void setMesh(const SP<Mesh> &mesh);
+    void emitMeshChanged(); // TODO: better way to notify
 
     SP<Item> clone() const override;
     void toJSON(nlohmann::json& json) const override;

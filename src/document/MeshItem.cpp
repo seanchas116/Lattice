@@ -33,8 +33,12 @@ void MeshItem::fromJSON(const nlohmann::json &json) {
 }
 
 void MeshItem::setMesh(const SP<Mesh> &mesh) {
-    emit meshChanged(mesh);
     _mesh = mesh;
+    emit meshChanged(mesh);
+}
+
+void MeshItem::emitMeshChanged() {
+    emit meshChanged(_mesh);
 }
 
 } // namespace Lattice
