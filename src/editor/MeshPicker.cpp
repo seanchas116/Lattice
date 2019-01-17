@@ -35,8 +35,8 @@ bool mapLineToScreen(const mat4& P, vec2 viewportSize, float zNear, vec4 p0_came
 
     vec2 p0 = (vec2(p0_clipSpace.xy) / p0_clipSpace.w + 1.f) * (0.5f * viewportSize);
     vec2 p1 = (vec2(p1_clipSpace.xy) / p1_clipSpace.w + 1.f) * (0.5f * viewportSize);
-    float d0 = p0_clipSpace.z / p0_clipSpace.w;
-    float d1 = p1_clipSpace.z / p1_clipSpace.w;
+    float d0 = p0_clipSpace.z / p0_clipSpace.w * 0.5f + 0.5f;
+    float d1 = p1_clipSpace.z / p1_clipSpace.w * 0.5f + 0.5f;
 
     p0_screenSpace = vec3(p0, d0);
     p1_screenSpace = vec3(p1, d1);
