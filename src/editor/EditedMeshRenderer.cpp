@@ -117,11 +117,24 @@ void EditedMeshRenderer::mousePress(const Render::MouseEvent &event) {
         selection.vertices = newVertices;
     }
 
+    _initialPositions.clear();
+    for (auto& v : selection.vertices) {
+        _initialPositions[v] = v->position();
+    }
+    _dragStartWorldPos = event.camera.mapScreenToWorld(glm::vec3(event.screenPos, event.hitResult.depth));
+    qDebug() << _dragStartWorldPos;
+
     _appState->document()->setMeshSelection(selection);
 }
 
 void EditedMeshRenderer::mouseMove(const Render::MouseEvent &event) {
-    Q_UNUSED(event);
+    dvec3 worldPos = event.camera.mapScreenToWorld(glm::vec3(event.screenPos, event.hitResult.depth));
+    dvec3 offset = worldPos - _dragStartWorldPos;
+
+    for (auto& [v, initialPos] : _initialPositions) {
+        v->setPosition(initialPos + offset);
+    }
+    _item->emitMeshChanged();
 }
 
 void EditedMeshRenderer::mouseRelease(const Render::MouseEvent &event) {
