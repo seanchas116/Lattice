@@ -52,7 +52,7 @@ std::optional<std::pair<SP<Document::MeshFace>, double> > MeshPicker::pickFace(c
     Ray<float> ray = inverse(modelToWorld) * camera.worldMouseRay(screenPos);
     // TODO: Use Bounding Volume Hierarchy to do faster
     ScopedTimer timer("MeshPicker::pickFace");
-    std::map<float, SP<Document::MeshFace>> intersectings;
+    std::map<double, SP<Document::MeshFace>> intersectings;
     for (auto& [_, f] : _mesh->faces()) {
         auto v0 = f->vertices()[0]->position();
         for (uint32_t i = 2; i < uint32_t(f->vertices().size()); ++i) {
@@ -61,7 +61,9 @@ std::optional<std::pair<SP<Document::MeshFace>, double> > MeshPicker::pickFace(c
 
             auto [intersects, t] = ray.intersectsTriangle({v0, v1, v2});
             if (intersects) {
-                intersectings.insert({t, f});
+                dvec3 intersectingPos = ray.at(t);
+                auto [intersectingPosScreen, isInScreen] = camera.mapWorldToScreen((modelToWorld * dvec4(intersectingPos, 1)).xyz);
+                intersectings.insert({intersectingPosScreen.z, f});
             }
         }
     }
