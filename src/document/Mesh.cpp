@@ -135,10 +135,7 @@ SP<MeshVertex> Mesh::addVertex(glm::vec3 position) {
 }
 
 SP<MeshEdge> Mesh::addEdge(const std::array<SP<MeshVertex>, 2> &vertices) {
-    auto sortedVertices = vertices;
-    std::sort(sortedVertices.begin(), sortedVertices.end());
-
-    auto it = _edges.find(sortedVertices);
+    auto it = _edges.find(vertices);
     if (it != _edges.end()) {
         return it->second;
     }
@@ -155,10 +152,7 @@ SP<MeshUVPoint> Mesh::addUVPoint(const SP<MeshVertex> &vertex, vec2 position) {
 }
 
 SP<MeshUVEdge> Mesh::addUVEdge(const std::array<SP<MeshUVPoint>, 2> &uvPoints) {
-    auto sortedUVPoints = uvPoints;
-    std::sort(sortedUVPoints.begin(), sortedUVPoints.end());
-
-    auto it = _uvEdges.find(sortedUVPoints);
+    auto it = _uvEdges.find(uvPoints);
     if (it != _uvEdges.end()) {
         return it->second;
     }

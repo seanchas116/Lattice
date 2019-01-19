@@ -2,6 +2,7 @@
 #include "../support/Hash.hpp"
 #include "../support/Pointer.hpp"
 #include "../support/Box.hpp"
+#include "../support/SortedArray.hpp"
 #include <QImage>
 #include <glm/glm.hpp>
 #include <vector>
@@ -203,8 +204,8 @@ public:
 private:
 
     std::unordered_set<SP<MeshVertex>> _vertices;
-    std::unordered_map<std::array<SP<MeshVertex>, 2>, SP<MeshEdge>> _edges;
-    std::unordered_map<std::array<SP<MeshUVPoint>, 2>, SP<MeshUVEdge>> _uvEdges;
+    std::unordered_map<SortedArray<SP<MeshVertex>, 2>, SP<MeshEdge>> _edges;
+    std::unordered_map<SortedArray<SP<MeshUVPoint>, 2>, SP<MeshUVEdge>> _uvEdges;
     std::unordered_map<std::vector<SP<MeshVertex>>, SP<MeshFace>> _faces;
     std::vector<SP<MeshMaterial>> _materials;
 };
