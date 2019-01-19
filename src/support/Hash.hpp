@@ -2,6 +2,7 @@
 #include <tuple>
 #include <array>
 #include <vector>
+#include <set>
 
 namespace std {
     namespace {
@@ -59,6 +60,17 @@ namespace std {
     template <typename T>
     struct hash<std::vector<T>> {
         size_t operator()(std::vector<T> const& xs) const {
+            size_t seed = 0;
+            for (auto& x : xs) {
+                hash_combine(seed, x);
+            }
+            return seed;
+        }
+    };
+
+    template <typename T>
+    struct hash<std::set<T>> {
+        size_t operator()(std::set<T> const& xs) const {
             size_t seed = 0;
             for (auto& x : xs) {
                 hash_combine(seed, x);

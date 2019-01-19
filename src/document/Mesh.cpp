@@ -170,10 +170,8 @@ SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshUVPoint> > &uvPoints, const 
         vertices.push_back((uv->vertex()));
     }
 
-    auto sortedVertices = vertices;
-    std::sort(sortedVertices.begin(), sortedVertices.end());
-
-    auto it = _faces.find(sortedVertices);
+    std::set<SP<MeshVertex>> vertexSet(vertices.begin(), vertices.end());
+    auto it = _faces.find(vertexSet);
     if (it != _faces.end()) {
         return it->second;
     }
@@ -201,7 +199,7 @@ SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshUVPoint> > &uvPoints, const 
     }
     material->_faces.insert(face.get());
 
-    _faces.insert({vertices, face});
+    _faces.insert({vertexSet, face});
     return face;
 }
 

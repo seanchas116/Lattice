@@ -8,6 +8,7 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
+#include <set>
 
 namespace Lattice::Document {
 
@@ -206,7 +207,7 @@ private:
     std::unordered_set<SP<MeshVertex>> _vertices;
     std::unordered_map<SortedArray<SP<MeshVertex>, 2>, SP<MeshEdge>> _edges;
     std::unordered_map<SortedArray<SP<MeshUVPoint>, 2>, SP<MeshUVEdge>> _uvEdges;
-    std::unordered_map<std::vector<SP<MeshVertex>>, SP<MeshFace>> _faces;
+    std::unordered_map<std::set<SP<MeshVertex>>, SP<MeshFace>> _faces;
     std::vector<SP<MeshMaterial>> _materials;
 };
 
