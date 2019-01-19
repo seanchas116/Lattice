@@ -169,7 +169,7 @@ SP<MeshUVEdge> Mesh::addUVEdge(const std::array<SP<MeshUVPoint>, 2> &uvPoints) {
 }
 
 SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshUVPoint> > &uvPoints, const SP<MeshMaterial> &material) {
-    Q_ASSERT(3 <= uvPoints.size());
+    Q_ASSERT(2 <= uvPoints.size());
 
     std::vector<SP<MeshVertex>> vertices;
     for (auto& uv : uvPoints) {
