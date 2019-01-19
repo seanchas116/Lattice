@@ -1,4 +1,5 @@
 #include "Item.hpp"
+#include "Change.hpp"
 #include "Document.hpp"
 #include "History.hpp"
 #include "../support/JSON.hpp"

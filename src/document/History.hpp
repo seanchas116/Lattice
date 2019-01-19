@@ -8,15 +8,7 @@ class QUndoStack;
 
 namespace Lattice::Document {
 
-class Change {
-    Q_DISABLE_COPY(Change)
-public:
-    Change() = default;
-    virtual ~Change();
-    virtual void redo() = 0;
-    virtual void undo() = 0;
-    virtual bool mergeWith(const SP<const Change>& other);
-};
+class Change;
 
 class History final : public QObject {
     Q_OBJECT

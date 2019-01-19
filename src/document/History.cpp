@@ -1,4 +1,5 @@
 #include "History.hpp"
+#include "Change.hpp"
 #include <QUndoStack>
 #include <QUndoCommand>
 
@@ -48,13 +49,6 @@ private:
     std::vector<SP<Change>> _changes;
 };
 
-}
-
-Change::~Change() = default;
-
-bool Change::mergeWith(const SP<const Change> &other) {
-    Q_UNUSED(other)
-    return false;
 }
 
 History::History() {
