@@ -2,6 +2,7 @@
 #include "AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/Item.hpp"
+#include "../document/History.hpp"
 #include "../support/Debug.hpp"
 #include "../support/OptionalGuard.hpp"
 #include <QDoubleSpinBox>
@@ -82,9 +83,6 @@ void ItemPropertyView::onLocationChanged() {
 
     auto currentItem = _appState->document()->currentItem();
     auto location = currentItem ? (*currentItem)->location() : Location();
-    if (_location == location) {
-        return;
-    }
     _location = location;
 
     glm::dvec3 eulerAngles = glm::eulerAngles(location.rotation);
@@ -110,6 +108,7 @@ void ItemPropertyView::setLocation() {
     location.rotation = glm::normalize(glm::dquat(eulerAngles));
 
     _location = location;
+    _appState->document()->history()->beginChange(tr("Move Item"));
     item->setLocation(location);
 }
 
