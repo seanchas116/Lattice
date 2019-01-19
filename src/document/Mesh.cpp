@@ -101,35 +101,6 @@ MeshFace::MeshFace(const std::vector<SP<MeshVertex> > &vertices, const std::vect
     _uvEdges(uvEdges),
     _material(material)
 {
-    for (auto& v : vertices) {
-        v->_faces.insert(this);
-    }
-    for (auto& e : edges) {
-        e->_faces.insert(this);
-    }
-    for (auto& uv : uvPoints) {
-        uv->_faces.insert(this);
-    }
-    for (auto& uvEdge : uvEdges) {
-        uvEdge->_faces.insert(this);
-    }
-    material->_faces.insert(this);
-}
-
-MeshFace::~MeshFace() {
-    for (auto& v : _vertices) {
-        v->_faces.erase(this);
-    }
-    for (auto& e : _edges) {
-        e->_faces.erase(this);
-    }
-    for (auto& uv : _uvPoints) {
-        uv->_faces.erase(this);
-    }
-    for (auto& uvEdge : _uvEdges) {
-        uvEdge->_faces.erase(this);
-    }
-    _material->_faces.erase(this);
 }
 
 glm::vec3 MeshFace::normal() const {
@@ -221,6 +192,21 @@ SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshUVPoint> > &uvPoints, const 
     }
 
     auto face = makeShared<MeshFace>(vertices, edges, uvPoints, uvEdges, material);
+
+    for (auto& v : vertices) {
+        v->_faces.insert(face.get());
+    }
+    for (auto& e : edges) {
+        e->_faces.insert(face.get());
+    }
+    for (auto& uv : uvPoints) {
+        uv->_faces.insert(face.get());
+    }
+    for (auto& uvEdge : uvEdges) {
+        uvEdge->_faces.insert(face.get());
+    }
+    material->_faces.insert(face.get());
+
     _faces.insert({vertices, face});
     return face;
 }
@@ -229,6 +215,35 @@ SP<MeshMaterial> Mesh::addMaterial() {
     auto material = makeShared<MeshMaterial>();
     _materials.push_back(material);
     return material;
+}
+
+void Mesh::removeFace(const SP<MeshFace> &face) {
+    // TODO: erase face with O(1) way
+    auto it = std::find_if(_faces.begin(), _faces.end(), [&](const auto& pair) { return pair.second == face; });
+    if (it == _faces.end()) {
+        return;
+    }
+    for (auto& v : face->_vertices) {
+        v->_faces.erase(face.get());
+    }
+    for (auto& e : face->_edges) {
+        e->_faces.erase(face.get());
+    }
+    for (auto& uv : face->_uvPoints) {
+        uv->_faces.erase(face.get());
+    }
+    for (auto& uvEdge : face->_uvEdges) {
+        uvEdge->_faces.erase(face.get());
+    }
+    face->_material->_faces.erase(face.get());
+
+    face->_vertices.clear();
+    face->_edges.clear();
+    face->_uvPoints.clear();
+    face->_uvEdges.clear();
+    // TODO: clear material
+
+    _faces.erase(it);
 }
 
 void Mesh::addPlane(dvec3 center, dvec2 size, int normalAxis, const SP<MeshMaterial> &material) {

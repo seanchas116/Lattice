@@ -34,6 +34,7 @@ public:
 private:
     friend class MeshEdge;
     friend class MeshFace;
+    friend class Mesh;
     glm::vec3 _position;
     glm::vec2 _texCoord;
     std::unordered_set<MeshEdge*> _edges;
@@ -50,6 +51,7 @@ public:
     std::vector<SP<MeshFace>> faces() const;
 
 private:
+    friend class Mesh;
     friend class MeshFace;
     std::array<SP<MeshVertex>, 2> _vertices;
     std::unordered_set<MeshFace*> _faces;
@@ -65,6 +67,7 @@ public:
     std::vector<SP<MeshFace>> faces() const;
 
 private:
+    friend class Mesh;
     friend class MeshVertex;
     friend class MeshFace;
     friend class MeshUVEdge;
@@ -85,6 +88,7 @@ public:
     std::vector<SP<MeshFace>> faces() const;
 
 private:
+    friend class Mesh;
     friend class MeshFace;
     std::array<SP<MeshUVPoint>, 2> _points;
     std::unordered_set<MeshFace*> _faces;
@@ -95,7 +99,6 @@ public:
     MeshFace(const std::vector<SP<MeshVertex>>& vertices, const std::vector<SP<MeshEdge>>& edges,
              const std::vector<SP<MeshUVPoint>>& uvPoints, const std::vector<SP<MeshUVEdge>>& uvEdges,
              const SP<MeshMaterial>& material);
-    ~MeshFace();
 
     auto& vertices() const { return _vertices; }
     auto& edges() const { return _edges; }
@@ -108,6 +111,7 @@ public:
     void setMaterial(const SP<MeshMaterial>& material);
 
 private:
+    friend class Mesh;
     std::vector<SP<MeshVertex>> _vertices;
     std::vector<SP<MeshEdge>> _edges;
     std::vector<SP<MeshUVPoint>> _uvPoints;
@@ -139,6 +143,7 @@ public:
     std::vector<SP<MeshFace> > faces() const;
 
 private:
+    friend class Mesh;
     friend class MeshFace;
 
     glm::vec3 _baseColor {1, 0, 0};
@@ -165,6 +170,8 @@ public:
 
     SP<MeshFace> addFace(const std::vector<SP<MeshUVPoint>>& uvPoints, const SP<MeshMaterial>& material);
     SP<MeshMaterial> addMaterial();
+
+    void removeFace(const SP<MeshFace>& face);
 
     const auto& vertices() const { return _vertices; }
     const auto& edges() const { return _edges; }
