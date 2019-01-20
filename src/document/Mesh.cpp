@@ -189,6 +189,70 @@ SP<Change> Mesh::RemoveEdgeChange::invert() const {
     return makeShared<AddEdgeChange>(mesh, edge);
 }
 
+
+class Mesh::AddFaceChange : public Change {
+public:
+    AddFaceChange(const SP<Mesh>& mesh, const SP<MeshFace>& face) :
+        mesh(mesh),
+        face(face)
+    {
+    }
+
+    void apply() override {
+        for (auto& v : face->vertices()) {
+            v->_faces.insert(face.get());
+        }
+        for (auto& e : face->edges()) {
+            e->_faces.insert(face.get());
+        }
+        for (auto& uv : face->uvPoints()) {
+            uv->_faces.insert(face.get());
+        }
+        face->material()->_faces.insert(face.get());
+
+        std::set<SP<MeshVertex>> vertexSet(face->vertices().begin(), face->vertices().end());
+        mesh->_faces.insert({vertexSet, face});
+    }
+    SP<Change> invert() const override;
+
+    SP<Mesh> mesh;
+    SP<MeshFace> face;
+};
+
+class Mesh::RemoveFaceChange : public Change {
+public:
+    RemoveFaceChange(const SP<Mesh>& mesh, const SP<MeshFace>& face) :
+        mesh(mesh),
+        face(face)
+    {
+    }
+
+    void apply() override {
+        for (auto& v : face->_vertices) {
+            v->_faces.erase(face.get());
+        }
+        for (auto& e : face->_edges) {
+            e->_faces.erase(face.get());
+        }
+        for (auto& uv : face->_uvPoints) {
+            uv->_faces.erase(face.get());
+        }
+        face->_material->_faces.erase(face.get());
+    }
+    SP<Change> invert() const override;
+
+    SP<Mesh> mesh;
+    SP<MeshFace> face;
+};
+
+SP<Change> Mesh::AddFaceChange::invert() const {
+    return makeShared<RemoveFaceChange>(mesh, face);
+}
+
+SP<Change> Mesh::RemoveFaceChange::invert() const {
+    return makeShared<AddFaceChange>(mesh, face);
+}
+
 class Mesh::SetVertexPositionChange : public Change {
 public:
     SetVertexPositionChange(const SP<Mesh>& mesh, const std::unordered_map<SP<MeshVertex>, glm::vec3>& positions) :
@@ -274,8 +338,10 @@ SP<MeshEdge> Mesh::addEdge(const std::array<SP<MeshVertex>, 2> &vertices) {
     if (it != _edges.end()) {
         return it->second;
     }
-
     auto edge = makeShared<MeshEdge>(vertices);
+    auto change = makeShared<AddEdgeChange>(sharedFromThis(), edge);
+    _changeHandler(change);
+
     vertices[0]->_edges.insert(edge.get());
     vertices[1]->_edges.insert(edge.get());
     _edges.insert({vertices, edge});
@@ -309,19 +375,8 @@ SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshUVPoint> > &uvPoints, const 
     }
 
     auto face = makeShared<MeshFace>(vertices, edges, uvPoints, material);
-
-    for (auto& v : vertices) {
-        v->_faces.insert(face.get());
-    }
-    for (auto& e : edges) {
-        e->_faces.insert(face.get());
-    }
-    for (auto& uv : uvPoints) {
-        uv->_faces.insert(face.get());
-    }
-    material->_faces.insert(face.get());
-
-    _faces.insert({vertexSet, face});
+    auto change = makeShared<AddFaceChange>(sharedFromThis(), face);
+    _changeHandler(change);
     return face;
 }
 
@@ -349,18 +404,8 @@ void Mesh::removeFace(const SP<MeshFace> &face) {
     if (it == _faces.end()) {
         return;
     }
-    for (auto& v : face->_vertices) {
-        v->_faces.erase(face.get());
-    }
-    for (auto& e : face->_edges) {
-        e->_faces.erase(face.get());
-    }
-    for (auto& uv : face->_uvPoints) {
-        uv->_faces.erase(face.get());
-    }
-    face->_material->_faces.erase(face.get());
-
-    _faces.erase(it);
+    auto change = makeShared<RemoveFaceChange>(sharedFromThis(), face);
+    _changeHandler(change);
 }
 
 void Mesh::removeEdge(const SP<MeshEdge> &edge) {
