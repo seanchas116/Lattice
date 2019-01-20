@@ -77,10 +77,10 @@ class Mesh::AddVertexChange : public Change {
 public:
     AddVertexChange(const SP<Mesh>& mesh, const SP<MeshVertex>& vertex) : mesh(mesh), vertex(vertex) {
     }
-    void redo() override {
+    void apply() override {
         mesh->_vertices.insert(vertex);
     }
-    SP<Change> reverse() const override;
+    SP<Change> invert() const override;
 
     SP<Mesh> mesh;
     SP<MeshVertex> vertex;
@@ -90,20 +90,20 @@ class Mesh::RemoveVertexChange : public Change {
 public:
     RemoveVertexChange(const SP<Mesh>& mesh, const SP<MeshVertex>& vertex) : mesh(mesh), vertex(vertex) {
     }
-    void redo() override {
+    void apply() override {
         mesh->_vertices.erase(vertex);
     }
-    SP<Change> reverse() const override;
+    SP<Change> invert() const override;
 
     SP<Mesh> mesh;
     SP<MeshVertex> vertex;
 };
 
-SP<Change> Mesh::AddVertexChange::reverse() const {
+SP<Change> Mesh::AddVertexChange::invert() const {
     return makeShared<RemoveVertexChange>(mesh, vertex);
 }
 
-SP<Change> Mesh::RemoveVertexChange::reverse() const {
+SP<Change> Mesh::RemoveVertexChange::invert() const {
     return makeShared<AddVertexChange>(mesh, vertex);
 }
 
@@ -112,10 +112,10 @@ public:
     AddUVPointChange(const SP<Mesh>& mesh, const SP<MeshUVPoint>& uvPoint) : mesh(mesh), uvPoint(uvPoint) {
     }
 
-    void redo() override {
+    void apply() override {
         uvPoint->vertex()->_uvPoints.insert(uvPoint.get());
     }
-    SP<Change> reverse() const override;
+    SP<Change> invert() const override;
 
     SP<Mesh> mesh;
     SP<MeshUVPoint> uvPoint;
@@ -126,20 +126,20 @@ public:
     RemoveUVPointChange(const SP<Mesh>& mesh, const SP<MeshUVPoint>& uvPoint) : mesh(mesh), uvPoint(uvPoint) {
     }
 
-    void redo() override {
+    void apply() override {
         uvPoint->vertex()->_uvPoints.erase(uvPoint.get());
     }
-    SP<Change> reverse() const override;
+    SP<Change> invert() const override;
 
     SP<Mesh> mesh;
     SP<MeshUVPoint> uvPoint;
 };
 
-SP<Change> Mesh::AddUVPointChange::reverse() const {
+SP<Change> Mesh::AddUVPointChange::invert() const {
     return makeShared<RemoveUVPointChange>(mesh, uvPoint);
 }
 
-SP<Change> Mesh::RemoveUVPointChange::reverse() const {
+SP<Change> Mesh::RemoveUVPointChange::invert() const {
     return makeShared<AddUVPointChange>(mesh, uvPoint);
 }
 
@@ -151,12 +151,12 @@ public:
     {
     }
 
-    void redo() override {
+    void apply() override {
         edge->_vertices[0]->_edges.insert(edge.get());
         edge->_vertices[1]->_edges.insert(edge.get());
         mesh->_edges.insert({edge->_vertices, edge});
     }
-    SP<Change> reverse() const override;
+    SP<Change> invert() const override;
 
     SP<Mesh> mesh;
     SP<MeshEdge> edge;
@@ -170,22 +170,22 @@ public:
     {
     }
 
-    void redo() override {
+    void apply() override {
         edge->_vertices[0]->_edges.erase(edge.get());
         edge->_vertices[1]->_edges.erase(edge.get());
         mesh->_edges.erase(edge->_vertices);
     }
-    SP<Change> reverse() const override;
+    SP<Change> invert() const override;
 
     SP<Mesh> mesh;
     SP<MeshEdge> edge;
 };
 
-SP<Change> Mesh::AddEdgeChange::reverse() const {
+SP<Change> Mesh::AddEdgeChange::invert() const {
     return makeShared<RemoveEdgeChange>(mesh, edge);
 }
 
-SP<Change> Mesh::RemoveEdgeChange::reverse() const {
+SP<Change> Mesh::RemoveEdgeChange::invert() const {
     return makeShared<AddEdgeChange>(mesh, edge);
 }
 
@@ -195,14 +195,14 @@ public:
         mesh(mesh), newPositions(positions)
     {
     }
-    void redo() override {
+    void apply() override {
         for (auto& [v, pos] : newPositions) {
             oldPositions[v] = v->position();
             v->_position = pos;
         }
     }
 
-    SP<Change> reverse() const override {
+    SP<Change> invert() const override {
         return makeShared<SetVertexPositionChange>(mesh, oldPositions);
     }
 
@@ -229,13 +229,13 @@ public:
         mesh(mesh), newPositions(positions)
     {
     }
-    void redo() override {
+    void apply() override {
         for (auto& [v, pos] : newPositions) {
             oldPositions[v] = v->position();
             v->_position = pos;
         }
     }
-    SP<Change> reverse() const override {
+    SP<Change> invert() const override {
         return makeShared<SetUVPositionChange>(mesh, oldPositions);
     }
     bool mergeWith(const SP<const Change>& other) override {
@@ -258,7 +258,7 @@ public:
 
 Mesh::Mesh() {
     _changeHandler = [](const auto& change) {
-        change->redo();
+        change->apply();
     };
 }
 

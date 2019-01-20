@@ -19,11 +19,11 @@ public:
     {
     }
 
-    void redo() override {
+    void apply() override {
         _parent->insertItemBeforeInternal(_item, _reference);
     }
 
-    SP<Change> reverse() const override;
+    SP<Change> invert() const override;
 
 private:
 
@@ -37,12 +37,12 @@ public:
     ChildRemoveChange(const SP<Item>& parent, const SP<Item>& item) : _parent(parent), _item(item) {
     }
 
-    void redo() override {
+    void apply() override {
         _reference = _item->nextItem();
         _parent->removeChildItemInternal(_item);
     }
 
-    SP<Change> reverse() const override;
+    SP<Change> invert() const override;
 
 private:
 
@@ -51,11 +51,11 @@ private:
     std::optional<SP<Item>> _reference;
 };
 
-SP<Change> Item::ChildInsertChange::reverse() const {
+SP<Change> Item::ChildInsertChange::invert() const {
     return makeShared<ChildRemoveChange>(_parent, _item);
 }
 
-SP<Change> Item::ChildRemoveChange::reverse() const {
+SP<Change> Item::ChildRemoveChange::invert() const {
     return makeShared<ChildInsertChange>(_parent, _item, _reference);
 }
 
@@ -165,7 +165,7 @@ std::optional<SP<Document>> Item::document() const {
 }
 
 void Item::addChange(const SP<Change> &change) {
-    LATTICE_OPTIONAL_GUARD(ducument, this->document(), change->redo(); return;);
+    LATTICE_OPTIONAL_GUARD(ducument, this->document(), change->apply(); return;);
     ducument->history()->addChange(change);
 }
 
@@ -174,12 +174,12 @@ public:
     NameChange(const SP<Item>& item, const std::string& name) : _item(item), _name(name) {
     }
 
-    void redo() override {
+    void apply() override {
         _oldName = _item->name();
         _item->setNameInternal(_name);
     }
 
-    SP<Change> reverse() const override {
+    SP<Change> invert() const override {
         return makeShared<NameChange>(_item, _oldName);
     }
 
@@ -201,12 +201,12 @@ public:
     LocationChange(const SP<Item>& item, const Location& location) : _item(item), _location(location) {
     }
 
-    void redo() override {
+    void apply() override {
         _oldLocation = _item->location();
         _item->setLocationInternal(_location);
     }
 
-    SP<Change> reverse() const override {
+    SP<Change> invert() const override {
         return makeShared<LocationChange>(_item, _oldLocation);
     }
 
