@@ -24,6 +24,8 @@ void MeshManipulator::handleOnBegin(ValueType type, double value) {
     Q_UNUSED(type) // TODO
     LATTICE_OPTIONAL_GUARD(item, _item, return;)
 
+    _appState->document()->history()->beginChange(tr("Move Vertex"));
+
     _initialValue = value;
 
     for (auto& v : _appState->document()->meshSelection().vertices) {
@@ -35,23 +37,28 @@ void MeshManipulator::handleOnBegin(ValueType type, double value) {
 void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
     // TODO
     LATTICE_OPTIONAL_GUARD(item, _item, return;)
+    auto& mesh = item->mesh();
 
     switch (type) {
     case ValueType::Translate: {
         dvec3 offset(0);
         offset[axis] = value - _initialValue;
+        std::unordered_map<SP<Document::MeshVertex>, vec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
-            vertex->setPosition(initialPos + offset);
+            positions[vertex] = initialPos + offset;
         }
+        mesh->setPositions(positions);
         break;
     }
     case ValueType::Scale: {
         dvec3 ratio(1);
         ratio[axis] = value / _initialValue;
+        std::unordered_map<SP<Document::MeshVertex>, vec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
             dvec3 initialOffset = initialPos - _initialMedianPos;
-            vertex->setPosition(_initialMedianPos + initialOffset * ratio);
+            positions[vertex] = _initialMedianPos + initialOffset * ratio;
         }
+        mesh->setPositions(positions);
         break;
     }
     case ValueType::Rotate: {
@@ -59,19 +66,19 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
         eulerAngles[axis] = value - _initialValue;
         auto matrix = mat4_cast(dquat(eulerAngles));
 
+        std::unordered_map<SP<Document::MeshVertex>, vec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
             dvec3 initialOffset = initialPos - _initialMedianPos;
             dvec3 offset = (matrix * dvec4(initialOffset, 0)).xyz;
-            vertex->setPosition(_initialMedianPos + offset);
+            positions[vertex] = _initialMedianPos + offset;
         }
+        mesh->setPositions(positions);
         break;
     }
     default:
         // TODO
         break;
     }
-
-    item->emitMeshChanged();
 }
 
 void MeshManipulator::handleOnEnd(ValueType type) {
@@ -83,8 +90,7 @@ void MeshManipulator::connectToItem(const std::optional<SP<Document::MeshItem> >
     disconnect(_connection);
     _item = maybeItem;
     LATTICE_OPTIONAL_GUARD(item, maybeItem, return;)
-    auto itemPtr = item.get();
-    _connection = connect(itemPtr, &Document::MeshItem::meshChanged, this, [this] {
+    _connection = connect(item->mesh().get(), &Document::Mesh::changed, this, [this] {
         updatePosition();
     });
     updatePosition();

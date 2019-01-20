@@ -3,12 +3,15 @@
 #include "../support/Pointer.hpp"
 #include "../support/Box.hpp"
 #include "../support/SortedArray.hpp"
+#include "Change.hpp"
+#include <QObject>
 #include <QImage>
 #include <glm/glm.hpp>
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
 #include <set>
+#include <functional>
 
 namespace Lattice::Document {
 
@@ -22,11 +25,10 @@ class MeshMaterial;
 class MeshVertex final : public EnableSharedFromThis<MeshVertex> {
 public:
     glm::vec3 position() const { return _position; }
-    void setPosition(glm::vec3 position) { _position = position; }
 
     std::vector<SP<MeshEdge>> edges() const;
     std::vector<SP<MeshFace>> faces() const;
-    auto& uvPoints() const { return _uvPoints; }
+    std::vector<SP<MeshUVPoint>> uvPoints() const;
 
     glm::vec3 normal() const;
 
@@ -35,7 +37,7 @@ private:
     glm::vec3 _position;
     std::unordered_set<MeshEdge*> _edges;
     std::unordered_set<MeshFace*> _faces;
-    std::unordered_set<SP<MeshUVPoint>> _uvPoints;
+    std::unordered_set<MeshUVPoint*> _uvPoints;
 };
 
 class MeshEdge final : public EnableSharedFromThis<MeshEdge> {
@@ -53,16 +55,17 @@ private:
 
 class MeshUVPoint final : public EnableSharedFromThis<MeshUVPoint> {
 public:
-    glm::vec2 position() const { return _position; }
-    void setPosition(glm::vec2 position) { _position = position; }
+    MeshUVPoint(const SP<MeshVertex>& vertex) : _vertex(vertex) {}
 
-    SP<MeshVertex> vertex() const;
+    glm::vec2 position() const { return _position; }
+
+    auto& vertex() const { return _vertex; }
     std::vector<SP<MeshFace>> faces() const;
 
 private:
     friend class Mesh;
     glm::vec2 _position;
-    MeshVertex* _vertex;
+    SP<MeshVertex> _vertex;
     std::unordered_set<MeshFace*> _faces;
 };
 
@@ -133,9 +136,12 @@ private:
     std::unordered_set<MeshFace*> _faces;
 };
 
-class Mesh final : public EnableSharedFromThis<Mesh> {
+class Mesh final : public QObject, public EnableSharedFromThis<Mesh> {
+    Q_OBJECT
 public:
     Mesh();
+
+    void setChangeHandler(const std::function<void(const SP<Change>& change)> &changeHandler) { _changeHandler = changeHandler; }
 
     SP<MeshVertex> addVertex(glm::vec3 position);
     SP<MeshEdge> addEdge(const std::array<SP<MeshVertex>, 2>& vertices);
@@ -144,6 +150,9 @@ public:
 
     SP<MeshFace> addFace(const std::vector<SP<MeshUVPoint>>& uvPoints, const SP<MeshMaterial>& material);
     SP<MeshMaterial> addMaterial();
+
+    void setPositions(const std::unordered_map<SP<MeshVertex>, glm::vec3>& positions);
+    void setPositions(const std::unordered_map<SP<MeshUVPoint>, glm::vec2>& positions);
 
     void removeFace(const SP<MeshFace>& face);
     void removeEdge(const SP<MeshEdge>& edge);
@@ -175,12 +184,44 @@ public:
 
     Box<float> boundingBox() const;
 
+signals:
+    void vertexAdded(const SP<MeshVertex>& vertex);
+    void vertexRemoved(const SP<MeshVertex>& vertex);
+
+    void uvPointAdded(const SP<MeshUVPoint>& uvPoint);
+    void uvPointRemoved(const SP<MeshUVPoint>& uvPoint);
+
+    void edgeAdded(const SP<MeshEdge>& edge);
+    void edgeRemoved(const SP<MeshEdge>& edge);
+
+    void faceAdded(const SP<MeshFace>& face);
+    void faceRemoved(const SP<MeshFace>& face);
+
+    void verticesChanged(const std::vector<SP<MeshVertex>>& vertices);
+    void uvPointsChanged(const std::vector<SP<MeshUVPoint>>& uvPoint);
+
+    void topologyChanged();
+    void changed();
+
 private:
+    class AddVertexChange;
+    class RemoveVertexChange;
+    class AddUVPointChange;
+    class RemoveUVPointChange;
+    class AddEdgeChange;
+    class RemoveEdgeChange;
+    class AddFaceChange;
+    class RemoveFaceChange;
+    class SetVertexPositionChange;
+    class SetUVPositionChange;
+
+    void handleChange(const SP<Change>& change);
 
     std::unordered_set<SP<MeshVertex>> _vertices;
     std::unordered_map<SortedArray<SP<MeshVertex>, 2>, SP<MeshEdge>> _edges;
     std::unordered_map<std::set<SP<MeshVertex>>, SP<MeshFace>> _faces;
     std::vector<SP<MeshMaterial>> _materials;
+    std::function<void(const SP<Change>& change)> _changeHandler;
 };
 
 } // namespace Lattice

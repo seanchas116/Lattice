@@ -15,13 +15,13 @@ public:
 
     void redo() override {
         for (auto& change : _changes) {
-            change->redo();
+            change->apply();
         }
     }
 
     void undo() override {
         for (int i = _changes.size() - 1; i >= 0; --i) {
-            _changes[i]->undo();
+            _changes[i]->invert()->apply();
         }
     }
 

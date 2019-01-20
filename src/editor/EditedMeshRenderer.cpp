@@ -32,7 +32,7 @@ EditedMeshRenderer::EditedMeshRenderer(const SP<UI::AppState>& appState, const S
     _edgeVAO(generateEdgeVAO()),
     _vertexVAO(generateVertexVAO())
 {
-    connect(_item.get(), &Document::MeshItem::meshChanged, this, &EditedMeshRenderer::updateVAOs);
+    connect(_item->mesh().get(), &Document::Mesh::changed, this, &EditedMeshRenderer::updateVAOs);
     connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, &EditedMeshRenderer::updateVAOs);
 }
 
@@ -122,7 +122,7 @@ void EditedMeshRenderer::mousePress(const Render::MouseEvent &event) {
         _initialPositions[v] = v->position();
     }
     _dragStartWorldPos = event.camera.mapScreenToWorld(glm::vec3(event.screenPos, event.hitResult.depth));
-    qDebug() << _dragStartWorldPos;
+    _dragStarted = false;
 
     _appState->document()->setMeshSelection(selection);
 }
@@ -131,10 +131,17 @@ void EditedMeshRenderer::mouseMove(const Render::MouseEvent &event) {
     dvec3 worldPos = event.camera.mapScreenToWorld(glm::vec3(event.screenPos, event.hitResult.depth));
     dvec3 offset = worldPos - _dragStartWorldPos;
 
-    for (auto& [v, initialPos] : _initialPositions) {
-        v->setPosition(initialPos + offset);
+    if (!_dragStarted) {
+        _appState->document()->history()->beginChange(tr("Move Vertex"));
+        _dragStarted = true;
     }
-    _item->emitMeshChanged();
+
+    auto& mesh = _item->mesh();
+    std::unordered_map<SP<Document::MeshVertex>, vec3> positions;
+    for (auto& [v, initialPos] : _initialPositions) {
+        positions[v] = initialPos + offset;
+    }
+    mesh->setPositions(positions);
 }
 
 void EditedMeshRenderer::mouseRelease(const Render::MouseEvent &event) {

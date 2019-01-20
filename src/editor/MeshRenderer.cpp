@@ -23,8 +23,8 @@ MeshRenderer::MeshRenderer(const SP<UI::AppState>& appState, const SP<Document::
     _edgeVAO(makeShared<GL::LineVAO>()),
     _vertexVAO(makeShared<GL::PointVAO>())
 {
-    updateVAOs(item->mesh());
-    connect(_item.get(), &Document::MeshItem::meshChanged, this, &MeshRenderer::updateVAOs);
+    updateVAOs();
+    connect(item->mesh().get(), &Document::Mesh::changed, this, &MeshRenderer::updateVAOs);
 }
 
 void MeshRenderer::draw(const SP<Render::Operations> &operations, const Camera &camera) {
@@ -87,10 +87,10 @@ void MeshRenderer::mouseDoubleClick(const Render::MouseEvent &event) {
     _appState->document()->setEditedItem(_item);
 }
 
-void MeshRenderer::updateVAOs(const SP<Document::Mesh> &mesh) {
+void MeshRenderer::updateVAOs() {
     recallContext();
 
-    MeshVAOGenerator generator(mesh);
+    MeshVAOGenerator generator(_item->mesh());
     _vertexVAO = generator.generateVertexVAO();
     _edgeVAO = generator.generateEdgeVAO();
     _faceVAOs= generator.generateFaceVAOs();

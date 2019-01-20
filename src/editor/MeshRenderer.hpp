@@ -48,7 +48,7 @@ public:
     void mouseDoubleClick(const Render::MouseEvent &event) override;
 
 private:
-    void updateVAOs(const SP<Document::Mesh>& mesh);
+    void updateVAOs();
 
     SP<UI::AppState> _appState;
     SP<Document::MeshItem> _item;
