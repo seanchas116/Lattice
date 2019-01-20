@@ -184,6 +184,7 @@ public:
 private:
     class AddVertexChange;
     class SetVertexPositionChange;
+    class SetUVPositionChange;
 
     void handleChange(const SP<Change>& change);
 

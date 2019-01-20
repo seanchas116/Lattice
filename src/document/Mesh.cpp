@@ -119,6 +119,44 @@ public:
     std::unordered_map<SP<MeshVertex>, glm::vec3> newPositions;
 };
 
+
+class Mesh::SetUVPositionChange : public Change {
+public:
+    SetUVPositionChange(const SP<Mesh>& mesh, const std::unordered_map<SP<MeshUVPoint>, glm::vec2>& positions) :
+        mesh(mesh), newPositions(positions)
+    {
+        for (auto& [v, _] : positions) {
+            oldPositions[v] = v->position();
+        }
+    }
+    void redo() override {
+        for (auto& [v, pos] : newPositions) {
+            v->_position = pos;
+        }
+    }
+    void undo() override {
+        for (auto& [v, pos] : oldPositions) {
+            v->_position = pos;
+        }
+    }
+    bool mergeWith(const SP<const Change>& other) override {
+        LATTICE_OPTIONAL_GUARD(change, dynamicPointerCast<const SetUVPositionChange>(other), return false;)
+        if (change->mesh != mesh) { return false; }
+        for (auto& [v, p] : change->oldPositions) {
+            oldPositions[v] = p;
+        }
+        for (auto& [v, p] : change->newPositions) {
+            newPositions[v] = p;
+        }
+        return true;
+    }
+
+    SP<Mesh> mesh;
+    std::unordered_map<SP<MeshUVPoint>, glm::vec2> oldPositions;
+    std::unordered_map<SP<MeshUVPoint>, glm::vec2> newPositions;
+};
+
+
 Mesh::Mesh() {
     _changeHandler = [](const auto& change) {
         change->redo();
@@ -202,7 +240,9 @@ void Mesh::setPosition(const SP<MeshVertex> &vertex, vec3 pos) {
 }
 
 void Mesh::setPosition(const SP<MeshUVPoint> &uvPoint, vec2 pos) {
-    uvPoint->_position = pos;
+    std::unordered_map<SP<MeshUVPoint>, vec2> positons = {{uvPoint, pos}};
+    auto change = makeShared<SetUVPositionChange>(sharedFromThis(), positons);
+    _changeHandler(change);
 }
 
 void Mesh::removeFace(const SP<MeshFace> &face) {
