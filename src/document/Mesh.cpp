@@ -144,7 +144,7 @@ SP<MeshMaterial> Mesh::addMaterial() {
 }
 
 void Mesh::removeFace(const SP<MeshFace> &face) {
-    std::set vertexSet(face->_vertices.begin(), face->_vertices.end());
+    std::set<SP<MeshVertex>> vertexSet(face->_vertices.begin(), face->_vertices.end());
     auto it = _faces.find(vertexSet);
     if (it == _faces.end()) {
         return;

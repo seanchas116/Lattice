@@ -33,7 +33,6 @@ public:
 private:
     friend class Mesh;
     glm::vec3 _position;
-    glm::vec2 _texCoord;
     std::unordered_set<MeshEdge*> _edges;
     std::unordered_set<MeshFace*> _faces;
     std::unordered_set<SP<MeshUVPoint>> _uvPoints;
