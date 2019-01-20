@@ -166,14 +166,12 @@ public:
     SP<MeshEdge> addEdge(const std::array<SP<MeshVertex>, 2>& vertices);
 
     SP<MeshUVPoint> addUVPoint(const SP<MeshVertex>& vertex, glm::vec2 position);
-    SP<MeshUVEdge> addUVEdge(const std::array<SP<MeshUVPoint>, 2>& uvPoints);
 
     SP<MeshFace> addFace(const std::vector<SP<MeshUVPoint>>& uvPoints, const SP<MeshMaterial>& material);
     SP<MeshMaterial> addMaterial();
 
     void removeFace(const SP<MeshFace>& face);
     void removeEdge(const SP<MeshEdge>& edge);
-    void removeUVEdge(const SP<MeshUVEdge>& uvEdge);
 
     const auto& vertices() const { return _vertices; }
     const auto& edges() const { return _edges; }
@@ -203,6 +201,8 @@ public:
     Box<float> boundingBox() const;
 
 private:
+    SP<MeshUVEdge> addUVEdge(const std::array<SP<MeshUVPoint>, 2>& uvPoints);
+    void removeUVEdge(const SP<MeshUVEdge>& uvEdge);
 
     std::unordered_set<SP<MeshVertex>> _vertices;
     std::unordered_map<SortedArray<SP<MeshVertex>, 2>, SP<MeshEdge>> _edges;
