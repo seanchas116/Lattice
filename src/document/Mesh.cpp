@@ -113,7 +113,7 @@ SP<MeshUVPoint> Mesh::addUVPoint(const SP<MeshVertex> &vertex, vec2 position) {
     auto uv = makeShared<MeshUVPoint>();
     vertex->_uvPoints.insert(uv);
     uv->_vertex = vertex.get();
-    uv->setPosition(position);
+    setPosition(uv, position);
     return uv;
 }
 
@@ -161,6 +161,10 @@ SP<MeshMaterial> Mesh::addMaterial() {
 
 void Mesh::setPosition(const SP<MeshVertex> &vertex, vec3 pos) {
     vertex->_position = pos;
+}
+
+void Mesh::setPosition(const SP<MeshUVPoint> &uvPoint, vec2 pos) {
+    uvPoint->_position = pos;
 }
 
 void Mesh::removeFace(const SP<MeshFace> &face) {

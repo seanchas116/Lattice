@@ -56,7 +56,6 @@ private:
 class MeshUVPoint final : public EnableSharedFromThis<MeshUVPoint> {
 public:
     glm::vec2 position() const { return _position; }
-    void setPosition(glm::vec2 position) { _position = position; }
 
     SP<MeshVertex> vertex() const;
     std::vector<SP<MeshFace>> faces() const;
@@ -150,6 +149,7 @@ public:
     SP<MeshMaterial> addMaterial();
 
     void setPosition(const SP<MeshVertex>& vertex, glm::vec3 pos);
+    void setPosition(const SP<MeshUVPoint>& uvPoint, glm::vec2 pos);
 
     void removeFace(const SP<MeshFace>& face);
     void removeEdge(const SP<MeshEdge>& edge);
