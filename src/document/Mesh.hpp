@@ -3,12 +3,15 @@
 #include "../support/Pointer.hpp"
 #include "../support/Box.hpp"
 #include "../support/SortedArray.hpp"
+#include "Change.hpp"
+#include <QObject>
 #include <QImage>
 #include <glm/glm.hpp>
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
 #include <set>
+#include <functional>
 
 namespace Lattice::Document {
 
@@ -133,9 +136,20 @@ private:
     std::unordered_set<MeshFace*> _faces;
 };
 
+class AddMeshVertexChange : public Change {
+public:
+    AddMeshVertexChange(const SP<Mesh>& mesh);
+    void redo() override;
+    void undo() override;
+    const SP<Mesh> mesh;
+    const SP<MeshVertex> vertex;
+};
+
 class Mesh final : public EnableSharedFromThis<Mesh> {
 public:
     Mesh();
+
+    void setChangeHandler(const std::function<void(const SP<Change>& change)> &changeHandler) { _changeHandler = changeHandler; }
 
     SP<MeshVertex> addVertex(glm::vec3 position);
     SP<MeshEdge> addEdge(const std::array<SP<MeshVertex>, 2>& vertices);
@@ -176,11 +190,15 @@ public:
     Box<float> boundingBox() const;
 
 private:
+    friend class AddMeshVertexChange;
+
+    void handleChange(const SP<Change>& change);
 
     std::unordered_set<SP<MeshVertex>> _vertices;
     std::unordered_map<SortedArray<SP<MeshVertex>, 2>, SP<MeshEdge>> _edges;
     std::unordered_map<std::set<SP<MeshVertex>>, SP<MeshFace>> _faces;
     std::vector<SP<MeshMaterial>> _materials;
+    std::function<void(const SP<Change>& change)> _changeHandler;
 };
 
 } // namespace Lattice

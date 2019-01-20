@@ -70,13 +70,16 @@ glm::vec3 MeshFace::normal() const {
 }
 
 Mesh::Mesh() {
+    _changeHandler = [](const auto& change) {
+        change->redo();
+    };
 }
 
 SP<MeshVertex> Mesh::addVertex(glm::vec3 position) {
-    auto vertex = makeShared<MeshVertex>();
-    vertex->setPosition(position);
-    _vertices.insert(vertex);
-    return vertex;
+    auto change = makeShared<AddMeshVertexChange>(sharedFromThis());
+    _changeHandler(change);
+    change->vertex->setPosition(position);
+    return change->vertex;
 }
 
 SP<MeshEdge> Mesh::addEdge(const std::array<SP<MeshVertex>, 2> &vertices) {
@@ -363,6 +366,17 @@ std::vector<SP<MeshFace>> MeshMaterial::faces() const {
         faces.push_back(f->sharedFromThis());
     }
     return faces;
+}
+
+AddMeshVertexChange::AddMeshVertexChange(const SP<Mesh> &mesh) : mesh(mesh), vertex(makeShared<MeshVertex>()) {
+}
+
+void AddMeshVertexChange::redo() {
+    mesh->_vertices.insert(vertex);
+}
+
+void AddMeshVertexChange::undo() {
+    mesh->_vertices.erase(vertex);
 }
 
 } // namespace Lattice
