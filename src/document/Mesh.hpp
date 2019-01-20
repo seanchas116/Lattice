@@ -169,6 +169,7 @@ public:
 
     void removeFace(const SP<MeshFace>& face);
     void removeEdge(const SP<MeshEdge>& edge);
+    void removeVertex(const SP<MeshVertex>& vertex);
 
     const auto& vertices() const { return _vertices; }
     const auto& edges() const { return _edges; }

@@ -219,6 +219,13 @@ void Mesh::removeEdge(const SP<MeshEdge> &edge) {
     _edges.erase(it);
 }
 
+void Mesh::removeVertex(const SP<MeshVertex> &vertex) {
+    for (auto& edge : vertex->edges()) {
+        removeEdge(edge);
+    }
+    _vertices.erase(vertex);
+}
+
 void Mesh::removeUVEdge(const SP<MeshUVEdge> &uvEdge) {
     auto it = _uvEdges.find(uvEdge->points());
     if (it == _uvEdges.end()) {
