@@ -184,6 +184,22 @@ public:
 
     Box<float> boundingBox() const;
 
+signals:
+    void vertexAdded(const SP<MeshVertex>& vertex);
+    void vertexRemoved(const SP<MeshVertex>& vertex);
+
+    void uvPointAdded(const SP<MeshUVPoint>& uvPoint);
+    void uvPointRemoved(const SP<MeshUVPoint>& uvPoint);
+
+    void edgeAdded(const SP<MeshEdge>& edge);
+    void edgeRemoved(const SP<MeshEdge>& edge);
+
+    void faceAdded(const SP<MeshFace>& face);
+    void faceRemoved(const SP<MeshFace>& face);
+
+    void verticesChanged(const std::vector<SP<MeshVertex>>& vertices);
+    void uvPointsChanged(const std::vector<SP<MeshUVPoint>>& uvPoint);
+
 private:
     class AddVertexChange;
     class RemoveVertexChange;

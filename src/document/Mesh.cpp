@@ -79,6 +79,7 @@ public:
     }
     void apply() override {
         mesh->_vertices.insert(vertex);
+        emit mesh->vertexAdded(vertex);
     }
     SP<Change> invert() const override;
 
@@ -92,6 +93,7 @@ public:
     }
     void apply() override {
         mesh->_vertices.erase(vertex);
+        emit mesh->vertexRemoved(vertex);
     }
     SP<Change> invert() const override;
 
@@ -114,6 +116,7 @@ public:
 
     void apply() override {
         uvPoint->vertex()->_uvPoints.insert(uvPoint.get());
+        emit mesh->uvPointAdded(uvPoint);
     }
     SP<Change> invert() const override;
 
@@ -128,6 +131,7 @@ public:
 
     void apply() override {
         uvPoint->vertex()->_uvPoints.erase(uvPoint.get());
+        emit mesh->uvPointRemoved(uvPoint);
     }
     SP<Change> invert() const override;
 
@@ -155,6 +159,7 @@ public:
         edge->_vertices[0]->_edges.insert(edge.get());
         edge->_vertices[1]->_edges.insert(edge.get());
         mesh->_edges.insert({edge->_vertices, edge});
+        emit mesh->edgeAdded(edge);
     }
     SP<Change> invert() const override;
 
@@ -174,6 +179,7 @@ public:
         edge->_vertices[0]->_edges.erase(edge.get());
         edge->_vertices[1]->_edges.erase(edge.get());
         mesh->_edges.erase(edge->_vertices);
+        emit mesh->edgeRemoved(edge);
     }
     SP<Change> invert() const override;
 
@@ -212,6 +218,7 @@ public:
 
         std::set<SP<MeshVertex>> vertexSet(face->vertices().begin(), face->vertices().end());
         mesh->_faces.insert({vertexSet, face});
+        emit mesh->faceAdded(face);
     }
     SP<Change> invert() const override;
 
@@ -238,6 +245,7 @@ public:
             uv->_faces.erase(face.get());
         }
         face->_material->_faces.erase(face.get());
+        emit mesh->faceRemoved(face);
     }
     SP<Change> invert() const override;
 
@@ -260,10 +268,15 @@ public:
     {
     }
     void apply() override {
+        std::vector<SP<MeshVertex>> vertices;
+        vertices.reserve(newPositions.size());
+
         for (auto& [v, pos] : newPositions) {
             oldPositions[v] = v->position();
             v->_position = pos;
+            vertices.push_back(v);
         }
+        emit mesh->verticesChanged(vertices);
     }
 
     SP<Change> invert() const override {
@@ -294,10 +307,15 @@ public:
     {
     }
     void apply() override {
+        std::vector<SP<MeshUVPoint>> uvPoints;
+        uvPoints.reserve(newPositions.size());
+
         for (auto& [v, pos] : newPositions) {
             oldPositions[v] = v->position();
             v->_position = pos;
+            uvPoints.push_back(v);
         }
+        emit mesh->uvPointsChanged(uvPoints);
     }
     SP<Change> invert() const override {
         return makeShared<SetUVPositionChange>(mesh, oldPositions);
