@@ -137,9 +137,11 @@ void EditedMeshRenderer::mouseMove(const Render::MouseEvent &event) {
     }
 
     auto& mesh = _item->mesh();
+    std::unordered_map<SP<Document::MeshVertex>, vec3> positions;
     for (auto& [v, initialPos] : _initialPositions) {
-        mesh->setPosition(v, initialPos + offset);
+        positions[v] = initialPos + offset;
     }
+    mesh->setPositions(positions);
 }
 
 void EditedMeshRenderer::mouseRelease(const Render::MouseEvent &event) {

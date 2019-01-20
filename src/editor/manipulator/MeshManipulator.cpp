@@ -43,18 +43,22 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
     case ValueType::Translate: {
         dvec3 offset(0);
         offset[axis] = value - _initialValue;
+        std::unordered_map<SP<Document::MeshVertex>, vec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
-            mesh->setPosition(vertex, initialPos + offset);
+            positions[vertex] = initialPos + offset;
         }
+        mesh->setPositions(positions);
         break;
     }
     case ValueType::Scale: {
         dvec3 ratio(1);
         ratio[axis] = value / _initialValue;
+        std::unordered_map<SP<Document::MeshVertex>, vec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
             dvec3 initialOffset = initialPos - _initialMedianPos;
-            mesh->setPosition(vertex, _initialMedianPos + initialOffset * ratio);
+            positions[vertex] = _initialMedianPos + initialOffset * ratio;
         }
+        mesh->setPositions(positions);
         break;
     }
     case ValueType::Rotate: {
@@ -62,11 +66,13 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
         eulerAngles[axis] = value - _initialValue;
         auto matrix = mat4_cast(dquat(eulerAngles));
 
+        std::unordered_map<SP<Document::MeshVertex>, vec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
             dvec3 initialOffset = initialPos - _initialMedianPos;
             dvec3 offset = (matrix * dvec4(initialOffset, 0)).xyz;
-            mesh->setPosition(vertex, _initialMedianPos + offset);
+            positions[vertex] = _initialMedianPos + offset;
         }
+        mesh->setPositions(positions);
         break;
     }
     default:

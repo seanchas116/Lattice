@@ -151,8 +151,8 @@ public:
     SP<MeshFace> addFace(const std::vector<SP<MeshUVPoint>>& uvPoints, const SP<MeshMaterial>& material);
     SP<MeshMaterial> addMaterial();
 
-    void setPosition(const SP<MeshVertex>& vertex, glm::vec3 pos);
-    void setPosition(const SP<MeshUVPoint>& uvPoint, glm::vec2 pos);
+    void setPositions(const std::unordered_map<SP<MeshVertex>, glm::vec3>& positions);
+    void setPositions(const std::unordered_map<SP<MeshUVPoint>, glm::vec2>& positions);
 
     void removeFace(const SP<MeshFace>& face);
     void removeEdge(const SP<MeshEdge>& edge);
