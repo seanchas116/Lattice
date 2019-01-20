@@ -342,6 +342,7 @@ Mesh::Mesh() {
     _changeHandler = [](const auto& change) {
         change->apply();
     };
+
     connect(this, &Mesh::vertexAdded, this, &Mesh::topologyChanged);
     connect(this, &Mesh::vertexRemoved, this, &Mesh::topologyChanged);
     connect(this, &Mesh::uvPointAdded, this, &Mesh::topologyChanged);
@@ -350,6 +351,10 @@ Mesh::Mesh() {
     connect(this, &Mesh::edgeRemoved, this, &Mesh::topologyChanged);
     connect(this, &Mesh::faceAdded, this, &Mesh::topologyChanged);
     connect(this, &Mesh::faceRemoved, this, &Mesh::topologyChanged);
+
+    connect(this, &Mesh::topologyChanged, this, &Mesh::changed);
+    connect(this, &Mesh::verticesChanged, this, &Mesh::changed);
+    connect(this, &Mesh::uvPointsChanged, this, &Mesh::changed);
 }
 
 SP<MeshVertex> Mesh::addVertex(glm::vec3 position) {
