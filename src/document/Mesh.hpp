@@ -40,6 +40,7 @@ private:
     glm::vec3 _position;
     glm::vec2 _texCoord;
     std::unordered_set<MeshEdge*> _edges;
+    std::unordered_set<MeshFace*> _faces;
     std::unordered_set<SP<MeshUVPoint>> _uvPoints;
 };
 
@@ -97,11 +98,11 @@ private:
 
 class MeshFace final : public EnableSharedFromThis<MeshFace> {
 public:
-    MeshFace(const std::vector<SP<MeshEdge>>& edges,
+    MeshFace(const std::vector<SP<MeshVertex>>& vertices, const std::vector<SP<MeshEdge>>& edges,
              const std::vector<SP<MeshUVPoint>>& uvPoints, const std::vector<SP<MeshUVEdge>>& uvEdges,
              const SP<MeshMaterial>& material);
 
-    std::vector<SP<MeshVertex>> vertices() const;
+    auto& vertices() const { return _vertices; }
     auto& edges() const { return _edges; }
     auto& uvPoints() const { return _uvPoints; }
     auto& uvEdges() const { return _uvEdges; }
@@ -113,6 +114,7 @@ public:
 
 private:
     friend class Mesh;
+    std::vector<SP<MeshVertex>> _vertices;
     std::vector<SP<MeshEdge>> _edges;
     std::vector<SP<MeshUVPoint>> _uvPoints;
     std::vector<SP<MeshUVEdge>> _uvEdges;

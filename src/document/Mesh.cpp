@@ -15,20 +15,18 @@ std::vector<SP<MeshEdge> > MeshVertex::edges() const {
 
 std::vector<SP<MeshFace> > MeshVertex::faces() const {
     std::vector<SP<MeshFace>> faces;
-    for (auto& uv : _uvPoints) {
-        auto uvFaces = uv->faces();
-        faces.insert(faces.end(), uvFaces.begin(), uvFaces.end());
+    for (auto& f : _faces) {
+        faces.push_back(f->sharedFromThis());
     }
     return faces;
 }
 
 glm::vec3 MeshVertex::normal() const {
     glm::vec3 normalSum(0);
-    auto faces = this->faces();
-    for (auto& face : faces) {
+    for (auto& face : _faces) {
         normalSum += face->normal();
     }
-    return normalize(normalSum / float(faces.size()));
+    return normalize(normalSum / float(_faces.size()));
 }
 
 SP<MeshUVPoint> MeshVertex::addUVPoint() {
@@ -94,9 +92,10 @@ std::vector<SP<MeshFace> > MeshEdge::faces() const {
     return faces;
 }
 
-MeshFace::MeshFace(const std::vector<SP<MeshEdge> > &edges,
+MeshFace::MeshFace(const std::vector<SP<MeshVertex> > &vertices, const std::vector<SP<MeshEdge> > &edges,
                    const std::vector<SP<MeshUVPoint> > &uvPoints, const std::vector<SP<MeshUVEdge> > &uvEdges,
                    const SP<MeshMaterial> &material) :
+    _vertices(vertices),
     _edges(edges),
     _uvPoints(uvPoints),
     _uvEdges(uvEdges),
@@ -104,28 +103,19 @@ MeshFace::MeshFace(const std::vector<SP<MeshEdge> > &edges,
 {
 }
 
-std::vector<SP<MeshVertex> > MeshFace::vertices() const {
-    std::vector<SP<MeshVertex>> result;
-    result.reserve(_uvPoints.size());
-    for (auto& uv : _uvPoints) {
-        result.push_back(uv->vertex());
-    }
-    return result;
-}
-
 glm::vec3 MeshFace::normal() const {
-    if (_uvPoints.size() == 3) {
-        return normalize(cross(_uvPoints[1]->vertex()->position() - _uvPoints[0]->vertex()->position(), _uvPoints[2]->vertex()->position() - _uvPoints[0]->vertex()->position()));
+    if (_vertices.size() == 3) {
+        return normalize(cross(_vertices[1]->position() - _vertices[0]->position(), _vertices[2]->position() - _vertices[0]->position()));
     }
 
     // find average vertex normal
     glm::vec3 normalSum(0);
-    size_t count = _uvPoints.size();
+    size_t count = _vertices.size();
 
     for (size_t i = 0; i < count; ++i) {
-        auto prev = _uvPoints[mod(i - 1, count)]->vertex()->position();
-        auto curr = _uvPoints[i]->vertex()->position();
-        auto next = _uvPoints[mod(i + 1, count)]->vertex()->position();
+        auto prev = _vertices[mod(i - 1, count)]->position();
+        auto curr = _vertices[i]->position();
+        auto next = _vertices[mod(i + 1, count)]->position();
         auto normal = normalize(cross(next - curr, prev - curr));
         normalSum += normal;
     }
@@ -193,8 +183,11 @@ SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshUVPoint> > &uvPoints, const 
         uvEdges.push_back(addUVEdge({uvPoints[i], uvPoints[(i + 1) % vertices.size()]}));
     }
 
-    auto face = makeShared<MeshFace>(edges, uvPoints, uvEdges, material);
+    auto face = makeShared<MeshFace>(vertices, edges, uvPoints, uvEdges, material);
 
+    for (auto& v : vertices) {
+        v->_faces.insert(face.get());
+    }
     for (auto& e : edges) {
         e->_faces.insert(face.get());
     }
@@ -222,6 +215,9 @@ void Mesh::removeFace(const SP<MeshFace> &face) {
     if (it == _faces.end()) {
         return;
     }
+    for (auto& v : face->_vertices) {
+        v->_faces.erase(face.get());
+    }
     for (auto& e : face->_edges) {
         e->_faces.erase(face.get());
     }
@@ -233,6 +229,7 @@ void Mesh::removeFace(const SP<MeshFace> &face) {
     }
     face->_material->_faces.erase(face.get());
 
+    face->_vertices.clear();
     face->_edges.clear();
     face->_uvPoints.clear();
     face->_uvEdges.clear();
