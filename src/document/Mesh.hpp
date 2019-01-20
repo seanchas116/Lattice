@@ -31,11 +31,7 @@ public:
 
     glm::vec3 normal() const;
 
-    SP<MeshUVPoint> addUVPoint();
-
 private:
-    friend class MeshEdge;
-    friend class MeshFace;
     friend class Mesh;
     glm::vec3 _position;
     glm::vec2 _texCoord;
@@ -53,7 +49,6 @@ public:
 
 private:
     friend class Mesh;
-    friend class MeshFace;
     std::array<SP<MeshVertex>, 2> _vertices;
     std::unordered_set<MeshFace*> _faces;
 };
@@ -69,9 +64,6 @@ public:
 
 private:
     friend class Mesh;
-    friend class MeshVertex;
-    friend class MeshFace;
-    friend class MeshUVEdge;
     glm::vec2 _position;
     MeshVertex* _vertex;
     std::unordered_set<MeshUVEdge*> _uvEdges;
@@ -89,7 +81,6 @@ public:
 
 private:
     friend class Mesh;
-    friend class MeshFace;
     std::array<SP<MeshUVPoint>, 2> _points;
     std::unordered_set<MeshFace*> _faces;
 };

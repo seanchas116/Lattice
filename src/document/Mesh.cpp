@@ -29,15 +29,6 @@ glm::vec3 MeshVertex::normal() const {
     return normalize(normalSum / float(_faces.size()));
 }
 
-SP<MeshUVPoint> MeshVertex::addUVPoint() {
-    auto uv = makeShared<MeshUVPoint>();
-    _uvPoints.insert(uv);
-    uv->_vertex = this;
-    return uv;
-}
-
-
-
 SP<MeshVertex> MeshUVPoint::vertex() const {
     return _vertex->sharedFromThis();
 }
@@ -123,7 +114,9 @@ SP<MeshEdge> Mesh::addEdge(const std::array<SP<MeshVertex>, 2> &vertices) {
 }
 
 SP<MeshUVPoint> Mesh::addUVPoint(const SP<MeshVertex> &vertex, vec2 position) {
-    auto uv = vertex->addUVPoint();
+    auto uv = makeShared<MeshUVPoint>();
+    vertex->_uvPoints.insert(uv);
+    uv->_vertex = vertex.get();
     uv->setPosition(position);
     return uv;
 }
