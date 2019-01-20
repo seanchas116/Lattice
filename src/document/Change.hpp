@@ -11,7 +11,7 @@ public:
     Change() = default;
     virtual ~Change();
     virtual void redo() = 0;
-    virtual void undo() = 0;
+    virtual SP<Change> reverse() const = 0;
     virtual bool mergeWith(const SP<const Change>& other);
 };
 

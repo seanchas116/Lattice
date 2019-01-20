@@ -28,7 +28,7 @@ public:
 
     std::vector<SP<MeshEdge>> edges() const;
     std::vector<SP<MeshFace>> faces() const;
-    auto& uvPoints() const { return _uvPoints; }
+    std::vector<SP<MeshUVPoint>> uvPoints() const;
 
     glm::vec3 normal() const;
 
@@ -37,7 +37,7 @@ private:
     glm::vec3 _position;
     std::unordered_set<MeshEdge*> _edges;
     std::unordered_set<MeshFace*> _faces;
-    std::unordered_set<SP<MeshUVPoint>> _uvPoints;
+    std::unordered_set<MeshUVPoint*> _uvPoints;
 };
 
 class MeshEdge final : public EnableSharedFromThis<MeshEdge> {
@@ -55,15 +55,17 @@ private:
 
 class MeshUVPoint final : public EnableSharedFromThis<MeshUVPoint> {
 public:
+    MeshUVPoint(const SP<MeshVertex>& vertex) : _vertex(vertex) {}
+
     glm::vec2 position() const { return _position; }
 
-    SP<MeshVertex> vertex() const;
+    auto& vertex() const { return _vertex; }
     std::vector<SP<MeshFace>> faces() const;
 
 private:
     friend class Mesh;
     glm::vec2 _position;
-    MeshVertex* _vertex;
+    SP<MeshVertex> _vertex;
     std::unordered_set<MeshFace*> _faces;
 };
 
@@ -183,9 +185,13 @@ public:
 
 private:
     class AddVertexChange;
+    class RemoveVertexChange;
     class AddUVPointChange;
+    class RemoveUVPointChange;
     class AddEdgeChange;
+    class RemoveEdgeChange;
     class AddFaceChange;
+    class RemoveFaceChange;
     class SetVertexPositionChange;
     class SetUVPositionChange;
 

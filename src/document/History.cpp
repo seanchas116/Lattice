@@ -21,7 +21,7 @@ public:
 
     void undo() override {
         for (int i = _changes.size() - 1; i >= 0; --i) {
-            _changes[i]->undo();
+            _changes[i]->reverse()->redo();
         }
     }
 

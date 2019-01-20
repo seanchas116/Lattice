@@ -23,9 +23,7 @@ public:
         _parent->insertItemBeforeInternal(_item, _reference);
     }
 
-    void undo() override {
-        _parent->removeChildItemInternal(_item);
-    }
+    SP<Change> reverse() const override;
 
 private:
 
@@ -37,16 +35,14 @@ private:
 class Item::ChildRemoveChange : public Change {
 public:
     ChildRemoveChange(const SP<Item>& parent, const SP<Item>& item) : _parent(parent), _item(item) {
-        _reference = _item->nextItem();
     }
 
     void redo() override {
+        _reference = _item->nextItem();
         _parent->removeChildItemInternal(_item);
     }
 
-    void undo() override {
-        _parent->insertItemBeforeInternal(_item, _reference);
-    }
+    SP<Change> reverse() const override;
 
 private:
 
@@ -54,6 +50,14 @@ private:
     SP<Item> _item;
     std::optional<SP<Item>> _reference;
 };
+
+SP<Change> Item::ChildInsertChange::reverse() const {
+    return makeShared<ChildRemoveChange>(_parent, _item);
+}
+
+SP<Change> Item::ChildRemoveChange::reverse() const {
+    return makeShared<ChildInsertChange>(_parent, _item, _reference);
+}
 
 std::optional<SP<Item> > Item::parentItem() const {
     auto ptr = _parentItem.lock();
@@ -168,15 +172,15 @@ void Item::addChange(const SP<Change> &change) {
 class Item::NameChange : public Change {
 public:
     NameChange(const SP<Item>& item, const std::string& name) : _item(item), _name(name) {
-        _oldName = _item->name();
     }
 
     void redo() override {
+        _oldName = _item->name();
         _item->setNameInternal(_name);
     }
 
-    void undo() override {
-        _item->setNameInternal(_oldName);
+    SP<Change> reverse() const override {
+        return makeShared<NameChange>(_item, _oldName);
     }
 
     bool mergeWith(const SP<const Change>& other) override {
@@ -195,15 +199,15 @@ private:
 class Item::LocationChange : public Change {
 public:
     LocationChange(const SP<Item>& item, const Location& location) : _item(item), _location(location) {
-        _oldLocation = item->location();
     }
 
     void redo() override {
+        _oldLocation = _item->location();
         _item->setLocationInternal(_location);
     }
 
-    void undo() override {
-        _item->setLocationInternal(_oldLocation);
+    SP<Change> reverse() const override {
+        return makeShared<LocationChange>(_item, _oldLocation);
     }
 
     bool mergeWith(const SP<const Change>& other) override {

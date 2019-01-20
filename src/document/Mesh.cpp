@@ -21,16 +21,20 @@ std::vector<SP<MeshFace> > MeshVertex::faces() const {
     return faces;
 }
 
+std::vector<SP<MeshUVPoint> > MeshVertex::uvPoints() const {
+    std::vector<SP<MeshUVPoint>> uvPoints;
+    for (auto& uv : _uvPoints) {
+        uvPoints.push_back(uv->sharedFromThis());
+    }
+    return uvPoints;
+}
+
 glm::vec3 MeshVertex::normal() const {
     glm::vec3 normalSum(0);
     for (auto& face : _faces) {
         normalSum += face->normal();
     }
     return normalize(normalSum / float(_faces.size()));
-}
-
-SP<MeshVertex> MeshUVPoint::vertex() const {
-    return _vertex->sharedFromThis();
 }
 
 std::vector<SP<MeshFace> > MeshUVPoint::faces() const {
@@ -71,78 +75,137 @@ glm::vec3 MeshFace::normal() const {
 
 class Mesh::AddVertexChange : public Change {
 public:
-    AddVertexChange(const SP<Mesh>& mesh) : mesh(mesh), vertex(makeShared<MeshVertex>()) {
+    AddVertexChange(const SP<Mesh>& mesh, const SP<MeshVertex>& vertex) : mesh(mesh), vertex(vertex) {
     }
     void redo() override {
         mesh->_vertices.insert(vertex);
     }
-    void undo() override {
-        mesh->_vertices.erase(vertex);
-    }
+    SP<Change> reverse() const override;
+
     SP<Mesh> mesh;
     SP<MeshVertex> vertex;
 };
+
+class Mesh::RemoveVertexChange : public Change {
+public:
+    RemoveVertexChange(const SP<Mesh>& mesh, const SP<MeshVertex>& vertex) : mesh(mesh), vertex(vertex) {
+    }
+    void redo() override {
+        mesh->_vertices.erase(vertex);
+    }
+    SP<Change> reverse() const override;
+
+    SP<Mesh> mesh;
+    SP<MeshVertex> vertex;
+};
+
+SP<Change> Mesh::AddVertexChange::reverse() const {
+    return makeShared<RemoveVertexChange>(mesh, vertex);
+}
+
+SP<Change> Mesh::RemoveVertexChange::reverse() const {
+    return makeShared<AddVertexChange>(mesh, vertex);
+}
 
 class Mesh::AddUVPointChange : public Change {
 public:
-    AddUVPointChange(const SP<Mesh>& mesh, const SP<MeshVertex>& vertex) : mesh(mesh), vertex(vertex), uvPoint(makeShared<MeshUVPoint>()) {
+    AddUVPointChange(const SP<Mesh>& mesh, const SP<MeshUVPoint>& uvPoint) : mesh(mesh), uvPoint(uvPoint) {
     }
 
     void redo() override {
-        vertex->_uvPoints.insert(uvPoint);
-        uvPoint->_vertex = vertex.get();
+        uvPoint->vertex()->_uvPoints.insert(uvPoint.get());
     }
-    void undo() override {
-        vertex->_uvPoints.erase(uvPoint);
-        uvPoint->_vertex = nullptr;
-    }
+    SP<Change> reverse() const override;
+
     SP<Mesh> mesh;
-    SP<MeshVertex> vertex;
     SP<MeshUVPoint> uvPoint;
 };
 
+class Mesh::RemoveUVPointChange : public Change {
+public:
+    RemoveUVPointChange(const SP<Mesh>& mesh, const SP<MeshUVPoint>& uvPoint) : mesh(mesh), uvPoint(uvPoint) {
+    }
+
+    void redo() override {
+        uvPoint->vertex()->_uvPoints.erase(uvPoint.get());
+    }
+    SP<Change> reverse() const override;
+
+    SP<Mesh> mesh;
+    SP<MeshUVPoint> uvPoint;
+};
+
+SP<Change> Mesh::AddUVPointChange::reverse() const {
+    return makeShared<RemoveUVPointChange>(mesh, uvPoint);
+}
+
+SP<Change> Mesh::RemoveUVPointChange::reverse() const {
+    return makeShared<AddUVPointChange>(mesh, uvPoint);
+}
+
 class Mesh::AddEdgeChange : public Change {
-    AddEdgeChange(const SP<Mesh>& mesh, const std::array<SP<MeshVertex>, 2>& vertices) :
+public:
+    AddEdgeChange(const SP<Mesh>& mesh, const SP<MeshEdge>& edge) :
         mesh(mesh),
-        vertices(vertices),
-        edge(makeShared<MeshEdge>(vertices))
+        edge(edge)
     {
     }
 
     void redo() override {
-        vertices[0]->_edges.insert(edge.get());
-        vertices[1]->_edges.insert(edge.get());
-        mesh->_edges.insert({vertices, edge});
+        edge->_vertices[0]->_edges.insert(edge.get());
+        edge->_vertices[1]->_edges.insert(edge.get());
+        mesh->_edges.insert({edge->_vertices, edge});
     }
-    void undo() override {
-        vertices[0]->_edges.erase(edge.get());
-        vertices[1]->_edges.erase(edge.get());
-        mesh->_edges.erase(vertices);
-    }
+    SP<Change> reverse() const override;
+
     SP<Mesh> mesh;
-    std::array<SP<MeshVertex>, 2> vertices;
     SP<MeshEdge> edge;
 };
+
+class Mesh::RemoveEdgeChange : public Change {
+public:
+    RemoveEdgeChange(const SP<Mesh>& mesh, const SP<MeshEdge>& edge) :
+        mesh(mesh),
+        edge(edge)
+    {
+    }
+
+    void redo() override {
+        edge->_vertices[0]->_edges.erase(edge.get());
+        edge->_vertices[1]->_edges.erase(edge.get());
+        mesh->_edges.erase(edge->_vertices);
+    }
+    SP<Change> reverse() const override;
+
+    SP<Mesh> mesh;
+    SP<MeshEdge> edge;
+};
+
+SP<Change> Mesh::AddEdgeChange::reverse() const {
+    return makeShared<RemoveEdgeChange>(mesh, edge);
+}
+
+SP<Change> Mesh::RemoveEdgeChange::reverse() const {
+    return makeShared<AddEdgeChange>(mesh, edge);
+}
 
 class Mesh::SetVertexPositionChange : public Change {
 public:
     SetVertexPositionChange(const SP<Mesh>& mesh, const std::unordered_map<SP<MeshVertex>, glm::vec3>& positions) :
         mesh(mesh), newPositions(positions)
     {
-        for (auto& [v, _] : positions) {
-            oldPositions[v] = v->position();
-        }
     }
     void redo() override {
         for (auto& [v, pos] : newPositions) {
+            oldPositions[v] = v->position();
             v->_position = pos;
         }
     }
-    void undo() override {
-        for (auto& [v, pos] : oldPositions) {
-            v->_position = pos;
-        }
+
+    SP<Change> reverse() const override {
+        return makeShared<SetVertexPositionChange>(mesh, oldPositions);
     }
+
     bool mergeWith(const SP<const Change>& other) override {
         LATTICE_OPTIONAL_GUARD(change, dynamicPointerCast<const SetVertexPositionChange>(other), return false;)
         if (change->mesh != mesh) { return false; }
@@ -160,25 +223,20 @@ public:
     std::unordered_map<SP<MeshVertex>, glm::vec3> newPositions;
 };
 
-
 class Mesh::SetUVPositionChange : public Change {
 public:
     SetUVPositionChange(const SP<Mesh>& mesh, const std::unordered_map<SP<MeshUVPoint>, glm::vec2>& positions) :
         mesh(mesh), newPositions(positions)
     {
-        for (auto& [v, _] : positions) {
-            oldPositions[v] = v->position();
-        }
     }
     void redo() override {
         for (auto& [v, pos] : newPositions) {
+            oldPositions[v] = v->position();
             v->_position = pos;
         }
     }
-    void undo() override {
-        for (auto& [v, pos] : oldPositions) {
-            v->_position = pos;
-        }
+    SP<Change> reverse() const override {
+        return makeShared<SetUVPositionChange>(mesh, oldPositions);
     }
     bool mergeWith(const SP<const Change>& other) override {
         LATTICE_OPTIONAL_GUARD(change, dynamicPointerCast<const SetUVPositionChange>(other), return false;)
@@ -205,7 +263,7 @@ Mesh::Mesh() {
 }
 
 SP<MeshVertex> Mesh::addVertex(glm::vec3 position) {
-    auto change = makeShared<AddVertexChange>(sharedFromThis());
+    auto change = makeShared<AddVertexChange>(sharedFromThis(), makeShared<MeshVertex>());
     _changeHandler(change);
     setPosition(change->vertex, position);
     return change->vertex;
@@ -225,7 +283,7 @@ SP<MeshEdge> Mesh::addEdge(const std::array<SP<MeshVertex>, 2> &vertices) {
 }
 
 SP<MeshUVPoint> Mesh::addUVPoint(const SP<MeshVertex> &vertex, vec2 position) {
-    auto change = makeShared<AddUVPointChange>(sharedFromThis(), vertex);
+    auto change = makeShared<AddUVPointChange>(sharedFromThis(), makeShared<MeshUVPoint>(vertex));
     _changeHandler(change);
     setPosition(change->uvPoint, position);
     return change->uvPoint;
