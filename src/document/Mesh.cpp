@@ -341,10 +341,6 @@ SP<MeshEdge> Mesh::addEdge(const std::array<SP<MeshVertex>, 2> &vertices) {
     auto edge = makeShared<MeshEdge>(vertices);
     auto change = makeShared<AddEdgeChange>(sharedFromThis(), edge);
     _changeHandler(change);
-
-    vertices[0]->_edges.insert(edge.get());
-    vertices[1]->_edges.insert(edge.get());
-    _edges.insert({vertices, edge});
     return edge;
 }
 
@@ -417,17 +413,16 @@ void Mesh::removeEdge(const SP<MeshEdge> &edge) {
     for (auto& face : edge->faces()) {
         removeFace(face);
     }
-    edge->vertices()[0]->_edges.erase(edge.get());
-    edge->vertices()[1]->_edges.erase(edge.get());
-
-    _edges.erase(it);
+    auto change = makeShared<RemoveEdgeChange>(sharedFromThis(), edge);
+    _changeHandler(change);
 }
 
 void Mesh::removeVertex(const SP<MeshVertex> &vertex) {
     for (auto& edge : vertex->edges()) {
         removeEdge(edge);
     }
-    _vertices.erase(vertex);
+    auto change = makeShared<RemoveVertexChange>(sharedFromThis(), vertex);
+    _changeHandler(change);
 }
 
 void Mesh::addPlane(dvec3 center, dvec2 size, int normalAxis, const SP<MeshMaterial> &material) {
