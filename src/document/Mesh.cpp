@@ -101,6 +101,29 @@ public:
     SP<MeshUVPoint> uvPoint;
 };
 
+class Mesh::AddEdgeChange : public Change {
+    AddEdgeChange(const SP<Mesh>& mesh, const std::array<SP<MeshVertex>, 2>& vertices) :
+        mesh(mesh),
+        vertices(vertices),
+        edge(makeShared<MeshEdge>(vertices))
+    {
+    }
+
+    void redo() override {
+        vertices[0]->_edges.insert(edge.get());
+        vertices[1]->_edges.insert(edge.get());
+        mesh->_edges.insert({vertices, edge});
+    }
+    void undo() override {
+        vertices[0]->_edges.erase(edge.get());
+        vertices[1]->_edges.erase(edge.get());
+        mesh->_edges.erase(vertices);
+    }
+    SP<Mesh> mesh;
+    std::array<SP<MeshVertex>, 2> vertices;
+    SP<MeshEdge> edge;
+};
+
 class Mesh::SetVertexPositionChange : public Change {
 public:
     SetVertexPositionChange(const SP<Mesh>& mesh, const std::unordered_map<SP<MeshVertex>, glm::vec3>& positions) :
