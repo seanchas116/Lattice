@@ -24,6 +24,8 @@ void MeshManipulator::handleOnBegin(ValueType type, double value) {
     Q_UNUSED(type) // TODO
     LATTICE_OPTIONAL_GUARD(item, _item, return;)
 
+    _appState->document()->history()->beginChange(tr("Move Vertex"));
+
     _initialValue = value;
 
     for (auto& v : _appState->document()->meshSelection().vertices) {
