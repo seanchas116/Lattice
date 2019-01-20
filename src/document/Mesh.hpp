@@ -23,7 +23,9 @@ class Mesh;
 class MeshMaterial;
 
 class MeshVertex final : public EnableSharedFromThis<MeshVertex> {
+    Q_DISABLE_COPY(MeshVertex)
 public:
+    MeshVertex() {}
     glm::vec3 position() const { return _position; }
 
     std::vector<SP<MeshEdge>> edges() const;
@@ -34,13 +36,14 @@ public:
 
 private:
     friend class Mesh;
-    glm::vec3 _position;
+    glm::vec3 _position {0};
     std::unordered_set<MeshEdge*> _edges;
     std::unordered_set<MeshFace*> _faces;
     std::unordered_set<MeshUVPoint*> _uvPoints;
 };
 
 class MeshEdge final : public EnableSharedFromThis<MeshEdge> {
+    Q_DISABLE_COPY(MeshEdge)
 public:
     MeshEdge(const std::array<SP<MeshVertex>, 2>& vertices) : _vertices(vertices) {}
 
@@ -54,6 +57,7 @@ private:
 };
 
 class MeshUVPoint final : public EnableSharedFromThis<MeshUVPoint> {
+    Q_DISABLE_COPY(MeshUVPoint)
 public:
     MeshUVPoint(const SP<MeshVertex>& vertex) : _vertex(vertex) {}
 
@@ -64,12 +68,13 @@ public:
 
 private:
     friend class Mesh;
-    glm::vec2 _position;
+    glm::vec2 _position {0};
     SP<MeshVertex> _vertex;
     std::unordered_set<MeshFace*> _faces;
 };
 
 class MeshFace final : public EnableSharedFromThis<MeshFace> {
+    Q_DISABLE_COPY(MeshFace)
 public:
     MeshFace(const std::vector<SP<MeshVertex>>& vertices, const std::vector<SP<MeshEdge>>& edges,
              const std::vector<SP<MeshUVPoint>>& uvPoints,
@@ -98,7 +103,10 @@ private:
 };
 
 class MeshMaterial final {
+    Q_DISABLE_COPY(MeshMaterial)
 public:
+    MeshMaterial() {}
+
     glm::vec3 baseColor() const { return _baseColor; }
     void setBaseColor(const glm::vec3 &baseColor) { _baseColor = baseColor; }
 
