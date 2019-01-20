@@ -83,6 +83,24 @@ public:
     SP<MeshVertex> vertex;
 };
 
+class Mesh::AddUVPointChange : public Change {
+public:
+    AddUVPointChange(const SP<Mesh>& mesh, const SP<MeshVertex>& vertex) : mesh(mesh), vertex(vertex), uvPoint(makeShared<MeshUVPoint>()) {
+    }
+
+    void redo() override {
+        vertex->_uvPoints.insert(uvPoint);
+        uvPoint->_vertex = vertex.get();
+    }
+    void undo() override {
+        vertex->_uvPoints.erase(uvPoint);
+        uvPoint->_vertex = nullptr;
+    }
+    SP<Mesh> mesh;
+    SP<MeshVertex> vertex;
+    SP<MeshUVPoint> uvPoint;
+};
+
 class Mesh::SetVertexPositionChange : public Change {
 public:
     SetVertexPositionChange(const SP<Mesh>& mesh, const std::unordered_map<SP<MeshVertex>, glm::vec3>& positions) :
@@ -184,11 +202,10 @@ SP<MeshEdge> Mesh::addEdge(const std::array<SP<MeshVertex>, 2> &vertices) {
 }
 
 SP<MeshUVPoint> Mesh::addUVPoint(const SP<MeshVertex> &vertex, vec2 position) {
-    auto uv = makeShared<MeshUVPoint>();
-    vertex->_uvPoints.insert(uv);
-    uv->_vertex = vertex.get();
-    setPosition(uv, position);
-    return uv;
+    auto change = makeShared<AddUVPointChange>(sharedFromThis(), vertex);
+    _changeHandler(change);
+    setPosition(change->uvPoint, position);
+    return change->uvPoint;
 }
 
 SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshUVPoint> > &uvPoints, const SP<MeshMaterial> &material) {

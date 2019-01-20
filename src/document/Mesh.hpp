@@ -183,6 +183,9 @@ public:
 
 private:
     class AddVertexChange;
+    class AddUVPointChange;
+    class AddEdgeChange;
+    class AddFaceChange;
     class SetVertexPositionChange;
     class SetUVPositionChange;
 
