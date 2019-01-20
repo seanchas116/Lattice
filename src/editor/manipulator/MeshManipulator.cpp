@@ -73,8 +73,6 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
         // TODO
         break;
     }
-
-    item->emitMeshChanged();
 }
 
 void MeshManipulator::handleOnEnd(ValueType type) {
@@ -87,7 +85,7 @@ void MeshManipulator::connectToItem(const std::optional<SP<Document::MeshItem> >
     _item = maybeItem;
     LATTICE_OPTIONAL_GUARD(item, maybeItem, return;)
     auto itemPtr = item.get();
-    _connection = connect(itemPtr, &Document::MeshItem::meshChanged, this, [this] {
+    _connection = connect(item->mesh().get(), &Document::Mesh::changed, this, [this] {
         updatePosition();
     });
     updatePosition();

@@ -8,7 +8,7 @@ using namespace glm;
 namespace Lattice::Document {
 
 MeshItem::MeshItem() : _mesh(makeShared<Mesh>()) {
-    connect(this, &MeshItem::meshChanged, this, &Item::changed);
+    connect(_mesh.get(), &Mesh::changed, this, &Item::changed);
     _mesh->setChangeHandler([this](const auto& change) {
         addChange(change);
     });
@@ -33,10 +33,6 @@ void MeshItem::fromJSON(const nlohmann::json &json) {
     throw std::runtime_error("TODO");
     // TODO
     //_shape->fromJSON(json["shape"]);
-}
-
-void MeshItem::emitMeshChanged() {
-    emit meshChanged(_mesh);
 }
 
 } // namespace Lattice

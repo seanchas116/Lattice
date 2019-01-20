@@ -32,7 +32,7 @@ EditedMeshRenderer::EditedMeshRenderer(const SP<UI::AppState>& appState, const S
     _edgeVAO(generateEdgeVAO()),
     _vertexVAO(generateVertexVAO())
 {
-    connect(_item.get(), &Document::MeshItem::meshChanged, this, &EditedMeshRenderer::updateVAOs);
+    connect(_item->mesh().get(), &Document::Mesh::changed, this, &EditedMeshRenderer::updateVAOs);
     connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, &EditedMeshRenderer::updateVAOs);
 }
 
@@ -140,7 +140,6 @@ void EditedMeshRenderer::mouseMove(const Render::MouseEvent &event) {
     for (auto& [v, initialPos] : _initialPositions) {
         mesh->setPosition(v, initialPos + offset);
     }
-    _item->emitMeshChanged();
 }
 
 void EditedMeshRenderer::mouseRelease(const Render::MouseEvent &event) {

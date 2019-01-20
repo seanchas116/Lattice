@@ -12,14 +12,12 @@ public:
     MeshItem();
 
     const SP<Mesh>& mesh() const { return _mesh; }
-    void emitMeshChanged(); // TODO: better way to notify
 
     SP<Item> clone() const override;
     void toJSON(nlohmann::json& json) const override;
     void fromJSON(const nlohmann::json& json) override;
 
 signals:
-    void meshChanged(const SP<Mesh> &mesh);
 
 private:
     SP<Mesh> _mesh;
