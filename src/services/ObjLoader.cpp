@@ -81,6 +81,10 @@ std::vector<SP<Document::MeshItem>> ObjLoader::load(const QString &filePathStrin
                     //tinyobj::real_t nx = attrib.normals[3*idx.normal_index+0];
                     //tinyobj::real_t ny = attrib.normals[3*idx.normal_index+1];
                     //tinyobj::real_t nz = attrib.normals[3*idx.normal_index+2];
+                    // Optional: vertex colors
+                    // tinyobj::real_t red = attrib.colors[3*idx.vertex_index+0];
+                    // tinyobj::real_t green = attrib.colors[3*idx.vertex_index+1];
+                    // tinyobj::real_t blue = attrib.colors[3*idx.vertex_index+2];
                     glm::vec3 pos(vx, vy, vz);
                     auto vertex = item->mesh()->addVertex(pos);
                     vertexForIndices.insert({idx.vertex_index, vertex});
@@ -89,10 +93,6 @@ std::vector<SP<Document::MeshItem>> ObjLoader::load(const QString &filePathStrin
                 if (uvPointForIndices.find({idx.vertex_index, idx.texcoord_index}) == uvPointForIndices.end()) {
                     tinyobj::real_t tx = attrib.texcoords[2*idx.texcoord_index+0];
                     tinyobj::real_t ty = attrib.texcoords[2*idx.texcoord_index+1];
-                    // Optional: vertex colors
-                    // tinyobj::real_t red = attrib.colors[3*idx.vertex_index+0];
-                    // tinyobj::real_t green = attrib.colors[3*idx.vertex_index+1];
-                    // tinyobj::real_t blue = attrib.colors[3*idx.vertex_index+2];
                     glm::vec2 uv(tx, ty);
                     auto vertex = vertexForIndices.at(idx.vertex_index);
 
