@@ -9,6 +9,9 @@ namespace Lattice::Document {
 
 MeshItem::MeshItem() : _mesh(makeShared<Mesh>()) {
     connect(this, &MeshItem::meshChanged, this, &Item::changed);
+    _mesh->setChangeHandler([this](const auto& change) {
+        addChange(change);
+    });
 }
 
 SP<Item> MeshItem::clone() const {
