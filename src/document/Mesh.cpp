@@ -229,12 +229,6 @@ void Mesh::removeFace(const SP<MeshFace> &face) {
     }
     face->_material->_faces.erase(face.get());
 
-    face->_vertices.clear();
-    face->_edges.clear();
-    face->_uvPoints.clear();
-    face->_uvEdges.clear();
-    // TODO: clear material
-
     _faces.erase(it);
 }
 
