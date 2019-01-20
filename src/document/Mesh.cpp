@@ -92,7 +92,7 @@ Mesh::Mesh() {
 SP<MeshVertex> Mesh::addVertex(glm::vec3 position) {
     auto change = makeShared<AddVertexChange>(sharedFromThis());
     _changeHandler(change);
-    change->vertex->setPosition(position);
+    setPosition(change->vertex, position);
     return change->vertex;
 }
 
@@ -157,6 +157,10 @@ SP<MeshMaterial> Mesh::addMaterial() {
     auto material = makeShared<MeshMaterial>();
     _materials.push_back(material);
     return material;
+}
+
+void Mesh::setPosition(const SP<MeshVertex> &vertex, vec3 pos) {
+    vertex->_position = pos;
 }
 
 void Mesh::removeFace(const SP<MeshFace> &face) {

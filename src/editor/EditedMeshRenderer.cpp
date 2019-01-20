@@ -131,8 +131,9 @@ void EditedMeshRenderer::mouseMove(const Render::MouseEvent &event) {
     dvec3 worldPos = event.camera.mapScreenToWorld(glm::vec3(event.screenPos, event.hitResult.depth));
     dvec3 offset = worldPos - _dragStartWorldPos;
 
+    auto& mesh = _item->mesh();
     for (auto& [v, initialPos] : _initialPositions) {
-        v->setPosition(initialPos + offset);
+        mesh->setPosition(v, initialPos + offset);
     }
     _item->emitMeshChanged();
 }

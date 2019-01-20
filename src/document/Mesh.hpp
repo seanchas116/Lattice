@@ -25,7 +25,6 @@ class MeshMaterial;
 class MeshVertex final : public EnableSharedFromThis<MeshVertex> {
 public:
     glm::vec3 position() const { return _position; }
-    void setPosition(glm::vec3 position) { _position = position; }
 
     std::vector<SP<MeshEdge>> edges() const;
     std::vector<SP<MeshFace>> faces() const;
@@ -149,6 +148,8 @@ public:
 
     SP<MeshFace> addFace(const std::vector<SP<MeshUVPoint>>& uvPoints, const SP<MeshMaterial>& material);
     SP<MeshMaterial> addMaterial();
+
+    void setPosition(const SP<MeshVertex>& vertex, glm::vec3 pos);
 
     void removeFace(const SP<MeshFace>& face);
     void removeEdge(const SP<MeshEdge>& edge);

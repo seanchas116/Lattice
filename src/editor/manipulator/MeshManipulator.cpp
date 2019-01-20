@@ -35,13 +35,14 @@ void MeshManipulator::handleOnBegin(ValueType type, double value) {
 void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
     // TODO
     LATTICE_OPTIONAL_GUARD(item, _item, return;)
+    auto& mesh = item->mesh();
 
     switch (type) {
     case ValueType::Translate: {
         dvec3 offset(0);
         offset[axis] = value - _initialValue;
         for (auto& [vertex, initialPos] : _initialPositions) {
-            vertex->setPosition(initialPos + offset);
+            mesh->setPosition(vertex, initialPos + offset);
         }
         break;
     }
@@ -50,7 +51,7 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
         ratio[axis] = value / _initialValue;
         for (auto& [vertex, initialPos] : _initialPositions) {
             dvec3 initialOffset = initialPos - _initialMedianPos;
-            vertex->setPosition(_initialMedianPos + initialOffset * ratio);
+            mesh->setPosition(vertex, _initialMedianPos + initialOffset * ratio);
         }
         break;
     }
@@ -62,7 +63,7 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
         for (auto& [vertex, initialPos] : _initialPositions) {
             dvec3 initialOffset = initialPos - _initialMedianPos;
             dvec3 offset = (matrix * dvec4(initialOffset, 0)).xyz;
-            vertex->setPosition(_initialMedianPos + offset);
+            mesh->setPosition(vertex, _initialMedianPos + offset);
         }
         break;
     }
