@@ -44,6 +44,7 @@ std::vector<SP<Document::MeshItem>> ObjLoader::load(const QString &filePathStrin
         item->setName(objShape.name);
 
         // TODO: use index_t as key
+        std::unordered_map<int, SP<Document::MeshVertex>> vertexForIndices;
         std::unordered_map<std::pair<int, int>, SP<Document::MeshUVPoint>> uvPointForIndices;
 
         std::vector<SP<Document::MeshMaterial>> materials;
@@ -73,23 +74,29 @@ std::vector<SP<Document::MeshItem>> ObjLoader::load(const QString &filePathStrin
                 // access to vertex
                 tinyobj::index_t idx = objShape.mesh.indices[index_offset + v];
 
-                if (uvPointForIndices.find({idx.vertex_index, idx.texcoord_index}) == uvPointForIndices.end()) {
+                if (vertexForIndices.find(idx.vertex_index) == vertexForIndices.end()) {
                     tinyobj::real_t vx = attrib.vertices[3*idx.vertex_index+0];
                     tinyobj::real_t vy = attrib.vertices[3*idx.vertex_index+1];
                     tinyobj::real_t vz = attrib.vertices[3*idx.vertex_index+2];
                     //tinyobj::real_t nx = attrib.normals[3*idx.normal_index+0];
                     //tinyobj::real_t ny = attrib.normals[3*idx.normal_index+1];
                     //tinyobj::real_t nz = attrib.normals[3*idx.normal_index+2];
+                    glm::vec3 pos(vx, vy, vz);
+                    auto vertex = item->mesh()->addVertex(pos);
+                    vertexForIndices.insert({idx.vertex_index, vertex});
+                }
+
+                if (uvPointForIndices.find({idx.vertex_index, idx.texcoord_index}) == uvPointForIndices.end()) {
                     tinyobj::real_t tx = attrib.texcoords[2*idx.texcoord_index+0];
                     tinyobj::real_t ty = attrib.texcoords[2*idx.texcoord_index+1];
                     // Optional: vertex colors
                     // tinyobj::real_t red = attrib.colors[3*idx.vertex_index+0];
                     // tinyobj::real_t green = attrib.colors[3*idx.vertex_index+1];
                     // tinyobj::real_t blue = attrib.colors[3*idx.vertex_index+2];
-                    glm::vec3 pos(vx, vy, vz);
                     glm::vec2 uv(tx, ty);
+                    auto vertex = vertexForIndices.at(idx.vertex_index);
 
-                    uvPointForIndices.insert({{idx.vertex_index, idx.texcoord_index}, item->mesh()->addUVPoint(item->mesh()->addVertex(pos), uv)});
+                    uvPointForIndices.insert({{idx.vertex_index, idx.texcoord_index}, item->mesh()->addUVPoint(vertex, uv)});
                 }
                 uvPoints.push_back(uvPointForIndices.at({idx.vertex_index, idx.texcoord_index}));
             }
