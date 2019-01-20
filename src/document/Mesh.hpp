@@ -46,8 +46,7 @@ private:
 
 class MeshEdge final : public EnableSharedFromThis<MeshEdge> {
 public:
-    MeshEdge(const std::array<SP<MeshVertex>, 2>& vertices);
-    ~MeshEdge();
+    MeshEdge(const std::array<SP<MeshVertex>, 2>& vertices) : _vertices(vertices) {}
 
     auto& vertices() const { return _vertices; }
     std::vector<SP<MeshFace>> faces() const;
@@ -174,6 +173,7 @@ public:
     SP<MeshMaterial> addMaterial();
 
     void removeFace(const SP<MeshFace>& face);
+    void removeEdge(const SP<MeshEdge>& edge);
 
     const auto& vertices() const { return _vertices; }
     const auto& edges() const { return _edges; }

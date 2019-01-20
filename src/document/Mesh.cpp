@@ -36,15 +36,7 @@ SP<MeshUVPoint> MeshVertex::addUVPoint() {
     return uv;
 }
 
-MeshEdge::MeshEdge(const std::array<SP<MeshVertex>, 2> &vertices) : _vertices(vertices) {
-    vertices[0]->_edges.insert(this);
-    vertices[1]->_edges.insert(this);
-}
 
-MeshEdge::~MeshEdge() {
-    _vertices[0]->_edges.erase(this);
-    _vertices[1]->_edges.erase(this);
-}
 
 SP<MeshVertex> MeshUVPoint::vertex() const {
     return _vertex->sharedFromThis();
@@ -141,6 +133,8 @@ SP<MeshEdge> Mesh::addEdge(const std::array<SP<MeshVertex>, 2> &vertices) {
     }
 
     auto edge = makeShared<MeshEdge>(vertices);
+    vertices[0]->_edges.insert(edge.get());
+    vertices[1]->_edges.insert(edge.get());
     _edges.insert({vertices, edge});
     return edge;
 }
@@ -230,6 +224,16 @@ void Mesh::removeFace(const SP<MeshFace> &face) {
     face->_material->_faces.erase(face.get());
 
     _faces.erase(it);
+}
+
+void Mesh::removeEdge(const SP<MeshEdge> &edge) {
+    for (auto& face : edge->faces()) {
+        removeFace(face);
+    }
+    edge->vertices()[0]->_edges.erase(edge.get());
+    edge->vertices()[1]->_edges.erase(edge.get());
+
+    _edges.erase(edge->vertices());
 }
 
 void Mesh::addPlane(dvec3 center, dvec2 size, int normalAxis, const SP<MeshMaterial> &material) {
