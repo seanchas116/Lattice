@@ -102,7 +102,7 @@ public:
             v->_position = pos;
         }
     }
-    bool mergeWith(const SP<const Change>& other) {
+    bool mergeWith(const SP<const Change>& other) override {
         LATTICE_OPTIONAL_GUARD(change, dynamicPointerCast<const SetVertexPositionChange>(other), return false;)
         if (change->mesh != mesh) { return false; }
         for (auto& [v, p] : change->oldPositions) {
