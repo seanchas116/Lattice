@@ -204,8 +204,8 @@ SP<MeshMaterial> Mesh::addMaterial() {
 }
 
 void Mesh::removeFace(const SP<MeshFace> &face) {
-    // TODO: erase face with O(1) way
-    auto it = std::find_if(_faces.begin(), _faces.end(), [&](const auto& pair) { return pair.second == face; });
+    std::set vertexSet(face->_vertices.begin(), face->_vertices.end());
+    auto it = _faces.find(vertexSet);
     if (it == _faces.end()) {
         return;
     }
@@ -227,13 +227,18 @@ void Mesh::removeFace(const SP<MeshFace> &face) {
 }
 
 void Mesh::removeEdge(const SP<MeshEdge> &edge) {
+    auto it = _edges.find(edge->vertices());
+    if (it == _edges.end()) {
+        return;
+    }
+
     for (auto& face : edge->faces()) {
         removeFace(face);
     }
     edge->vertices()[0]->_edges.erase(edge.get());
     edge->vertices()[1]->_edges.erase(edge.get());
 
-    _edges.erase(edge->vertices());
+    _edges.erase(it);
 }
 
 void Mesh::addPlane(dvec3 center, dvec2 size, int normalAxis, const SP<MeshMaterial> &material) {
