@@ -197,6 +197,8 @@ signals:
     void faceAdded(const SP<MeshFace>& face);
     void faceRemoved(const SP<MeshFace>& face);
 
+    void topologyChanged();
+
     void verticesChanged(const std::vector<SP<MeshVertex>>& vertices);
     void uvPointsChanged(const std::vector<SP<MeshUVPoint>>& uvPoint);
 
