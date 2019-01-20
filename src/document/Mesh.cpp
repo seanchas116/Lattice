@@ -76,16 +76,7 @@ std::vector<SP<MeshFace> > MeshEdge::faces() const {
     return faces;
 }
 
-MeshFace::MeshFace(const std::vector<SP<MeshVertex> > &vertices, const std::vector<SP<MeshEdge> > &edges,
-                   const std::vector<SP<MeshUVPoint> > &uvPoints, const std::vector<SP<MeshUVEdge> > &uvEdges,
-                   const SP<MeshMaterial> &material) :
-    _vertices(vertices),
-    _edges(edges),
-    _uvPoints(uvPoints),
-    _uvEdges(uvEdges),
-    _material(material)
-{
-}
+
 
 glm::vec3 MeshFace::normal() const {
     if (_vertices.size() == 3) {

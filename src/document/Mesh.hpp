@@ -98,7 +98,13 @@ class MeshFace final : public EnableSharedFromThis<MeshFace> {
 public:
     MeshFace(const std::vector<SP<MeshVertex>>& vertices, const std::vector<SP<MeshEdge>>& edges,
              const std::vector<SP<MeshUVPoint>>& uvPoints, const std::vector<SP<MeshUVEdge>>& uvEdges,
-             const SP<MeshMaterial>& material);
+             const SP<MeshMaterial>& material) :
+        _vertices(vertices),
+        _edges(edges),
+        _uvPoints(uvPoints),
+        _uvEdges(uvEdges),
+        _material(material)
+    {}
 
     auto& vertices() const { return _vertices; }
     auto& edges() const { return _edges; }
