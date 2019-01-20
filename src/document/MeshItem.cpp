@@ -32,11 +32,6 @@ void MeshItem::fromJSON(const nlohmann::json &json) {
     //_shape->fromJSON(json["shape"]);
 }
 
-void MeshItem::setMesh(const SP<Mesh> &mesh) {
-    _mesh = mesh;
-    emit meshChanged(mesh);
-}
-
 void MeshItem::emitMeshChanged() {
     emit meshChanged(_mesh);
 }

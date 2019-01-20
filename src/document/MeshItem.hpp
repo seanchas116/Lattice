@@ -12,7 +12,6 @@ public:
     MeshItem();
 
     const SP<Mesh>& mesh() const { return _mesh; }
-    void setMesh(const SP<Mesh> &mesh);
     void emitMeshChanged(); // TODO: better way to notify
 
     SP<Item> clone() const override;
