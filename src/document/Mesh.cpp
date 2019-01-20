@@ -286,9 +286,13 @@ public:
     bool mergeWith(const SP<const Change>& other) override {
         LATTICE_OPTIONAL_GUARD(change, dynamicPointerCast<const SetVertexPositionChange>(other), return false;)
         if (change->mesh != mesh) { return false; }
-        for (auto& [v, p] : change->oldPositions) {
-            oldPositions[v] = p;
+
+        auto oldPositionsMerged = change->oldPositions;
+        for (auto& [v, p] : oldPositions) {
+            oldPositionsMerged[v] = p;
         }
+        oldPositions = oldPositionsMerged;
+
         for (auto& [v, p] : change->newPositions) {
             newPositions[v] = p;
         }
@@ -323,9 +327,12 @@ public:
     bool mergeWith(const SP<const Change>& other) override {
         LATTICE_OPTIONAL_GUARD(change, dynamicPointerCast<const SetUVPositionChange>(other), return false;)
         if (change->mesh != mesh) { return false; }
-        for (auto& [v, p] : change->oldPositions) {
-            oldPositions[v] = p;
+
+        auto oldPositionsMerged = change->oldPositions;
+        for (auto& [v, p] : oldPositions) {
+            oldPositionsMerged[v] = p;
         }
+
         for (auto& [v, p] : change->newPositions) {
             newPositions[v] = p;
         }
