@@ -33,25 +33,7 @@ SP<MeshVertex> MeshUVPoint::vertex() const {
     return _vertex->sharedFromThis();
 }
 
-std::vector<SP<MeshUVEdge> > MeshUVPoint::uvEdges() const {
-    std::vector<SP<MeshUVEdge>> uvEdges;
-    for (auto& e : _uvEdges) {
-        uvEdges.push_back(e->sharedFromThis());
-    }
-    return uvEdges;
-}
-
 std::vector<SP<MeshFace> > MeshUVPoint::faces() const {
-    std::vector<SP<MeshFace>> faces;
-    for (auto& f : _faces) {
-        faces.push_back(f->sharedFromThis());
-    }
-    return faces;
-}
-
-
-
-std::vector<SP<MeshFace> > MeshUVEdge::faces() const {
     std::vector<SP<MeshFace>> faces;
     for (auto& f : _faces) {
         faces.push_back(f->sharedFromThis());
@@ -66,8 +48,6 @@ std::vector<SP<MeshFace> > MeshEdge::faces() const {
     }
     return faces;
 }
-
-
 
 glm::vec3 MeshFace::normal() const {
     if (_vertices.size() == 3) {
@@ -121,19 +101,6 @@ SP<MeshUVPoint> Mesh::addUVPoint(const SP<MeshVertex> &vertex, vec2 position) {
     return uv;
 }
 
-SP<MeshUVEdge> Mesh::addUVEdge(const std::array<SP<MeshUVPoint>, 2> &uvPoints) {
-    auto it = _uvEdges.find(uvPoints);
-    if (it != _uvEdges.end()) {
-        return it->second;
-    }
-
-    auto uvEdge = makeShared<MeshUVEdge>(uvPoints);
-    uvPoints[0]->_uvEdges.insert(uvEdge.get());
-    uvPoints[1]->_uvEdges.insert(uvEdge.get());
-    _uvEdges.insert({uvPoints, uvEdge});
-    return uvEdge;
-}
-
 SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshUVPoint> > &uvPoints, const SP<MeshMaterial> &material) {
     Q_ASSERT(3 <= uvPoints.size());
 
@@ -149,13 +116,11 @@ SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshUVPoint> > &uvPoints, const 
     }
 
     std::vector<SP<MeshEdge>> edges;
-    std::vector<SP<MeshUVEdge>> uvEdges;
     for (size_t i = 0; i < vertices.size(); ++i) {
         edges.push_back(addEdge({vertices[i], vertices[(i + 1) % vertices.size()]}));
-        uvEdges.push_back(addUVEdge({uvPoints[i], uvPoints[(i + 1) % vertices.size()]}));
     }
 
-    auto face = makeShared<MeshFace>(vertices, edges, uvPoints, uvEdges, material);
+    auto face = makeShared<MeshFace>(vertices, edges, uvPoints, material);
 
     for (auto& v : vertices) {
         v->_faces.insert(face.get());
@@ -165,9 +130,6 @@ SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshUVPoint> > &uvPoints, const 
     }
     for (auto& uv : uvPoints) {
         uv->_faces.insert(face.get());
-    }
-    for (auto& uvEdge : uvEdges) {
-        uvEdge->_faces.insert(face.get());
     }
     material->_faces.insert(face.get());
 
@@ -196,9 +158,6 @@ void Mesh::removeFace(const SP<MeshFace> &face) {
     for (auto& uv : face->_uvPoints) {
         uv->_faces.erase(face.get());
     }
-    for (auto& uvEdge : face->_uvEdges) {
-        uvEdge->_faces.erase(face.get());
-    }
     face->_material->_faces.erase(face.get());
 
     _faces.erase(it);
@@ -224,21 +183,6 @@ void Mesh::removeVertex(const SP<MeshVertex> &vertex) {
         removeEdge(edge);
     }
     _vertices.erase(vertex);
-}
-
-void Mesh::removeUVEdge(const SP<MeshUVEdge> &uvEdge) {
-    auto it = _uvEdges.find(uvEdge->points());
-    if (it == _uvEdges.end()) {
-        return;
-    }
-
-    for (auto& face : uvEdge->faces()) {
-        removeFace(face);
-    }
-    uvEdge->points()[0]->_uvEdges.erase(uvEdge.get());
-    uvEdge->points()[1]->_uvEdges.erase(uvEdge.get());
-
-    _uvEdges.erase(it);
 }
 
 void Mesh::addPlane(dvec3 center, dvec2 size, int normalAxis, const SP<MeshMaterial> &material) {
@@ -384,10 +328,6 @@ void Mesh::merge(const SP<const Mesh> &other) {
     for (auto& [_, otherEdge] : other->edges()) {
         Q_UNUSED(_)
         addEdge({otherToNewVertices.at(otherEdge->vertices()[0]), otherToNewVertices.at(otherEdge->vertices()[1])});
-    }
-    for (auto& [_, otherUVEdge] : other->uvEdges()) {
-        Q_UNUSED(_)
-        addUVEdge({otherToNewUVPoints.at(otherUVEdge->points()[0]), otherToNewUVPoints.at(otherUVEdge->points()[1])});
     }
     for (auto& [_, otherFace] : other->faces()) {
         Q_UNUSED(_)

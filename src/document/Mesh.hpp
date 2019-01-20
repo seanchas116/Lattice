@@ -15,7 +15,6 @@ namespace Lattice::Document {
 class MeshVertex;
 class MeshEdge;
 class MeshUVPoint;
-class MeshUVEdge;
 class MeshFace;
 class Mesh;
 class MeshMaterial;
@@ -59,48 +58,29 @@ public:
     void setPosition(glm::vec2 position) { _position = position; }
 
     SP<MeshVertex> vertex() const;
-    std::vector<SP<MeshUVEdge>> uvEdges() const;
     std::vector<SP<MeshFace>> faces() const;
 
 private:
     friend class Mesh;
     glm::vec2 _position;
     MeshVertex* _vertex;
-    std::unordered_set<MeshUVEdge*> _uvEdges;
-    std::unordered_set<MeshFace*> _faces;
-};
-
-class MeshUVEdge final : public EnableSharedFromThis<MeshUVEdge> {
-public:
-    MeshUVEdge(const std::array<SP<MeshUVPoint>, 2>& points) : _points(points) {}
-
-    auto& points() const { return _points; }
-
-    SP<MeshEdge> edge() const;
-    std::vector<SP<MeshFace>> faces() const;
-
-private:
-    friend class Mesh;
-    std::array<SP<MeshUVPoint>, 2> _points;
     std::unordered_set<MeshFace*> _faces;
 };
 
 class MeshFace final : public EnableSharedFromThis<MeshFace> {
 public:
     MeshFace(const std::vector<SP<MeshVertex>>& vertices, const std::vector<SP<MeshEdge>>& edges,
-             const std::vector<SP<MeshUVPoint>>& uvPoints, const std::vector<SP<MeshUVEdge>>& uvEdges,
+             const std::vector<SP<MeshUVPoint>>& uvPoints,
              const SP<MeshMaterial>& material) :
         _vertices(vertices),
         _edges(edges),
         _uvPoints(uvPoints),
-        _uvEdges(uvEdges),
         _material(material)
     {}
 
     auto& vertices() const { return _vertices; }
     auto& edges() const { return _edges; }
     auto& uvPoints() const { return _uvPoints; }
-    auto& uvEdges() const { return _uvEdges; }
 
     glm::vec3 normal() const;
 
@@ -112,7 +92,6 @@ private:
     std::vector<SP<MeshVertex>> _vertices;
     std::vector<SP<MeshEdge>> _edges;
     std::vector<SP<MeshUVPoint>> _uvPoints;
-    std::vector<SP<MeshUVEdge>> _uvEdges;
     SP<MeshMaterial> _material;
 };
 
@@ -173,7 +152,6 @@ public:
 
     const auto& vertices() const { return _vertices; }
     const auto& edges() const { return _edges; }
-    const auto& uvEdges() const { return _uvEdges; }
     const auto& faces() const { return _faces; }
     const auto& materials() const { return _materials; }
 
@@ -199,12 +177,9 @@ public:
     Box<float> boundingBox() const;
 
 private:
-    SP<MeshUVEdge> addUVEdge(const std::array<SP<MeshUVPoint>, 2>& uvPoints);
-    void removeUVEdge(const SP<MeshUVEdge>& uvEdge);
 
     std::unordered_set<SP<MeshVertex>> _vertices;
     std::unordered_map<SortedArray<SP<MeshVertex>, 2>, SP<MeshEdge>> _edges;
-    std::unordered_map<SortedArray<SP<MeshUVPoint>, 2>, SP<MeshUVEdge>> _uvEdges;
     std::unordered_map<std::set<SP<MeshVertex>>, SP<MeshFace>> _faces;
     std::vector<SP<MeshMaterial>> _materials;
 };
