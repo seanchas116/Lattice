@@ -136,7 +136,8 @@ private:
     std::unordered_set<MeshFace*> _faces;
 };
 
-class Mesh final : public EnableSharedFromThis<Mesh> {
+class Mesh final : public QObject, public EnableSharedFromThis<Mesh> {
+    Q_OBJECT
 public:
     Mesh();
 
