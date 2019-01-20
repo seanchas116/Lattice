@@ -136,15 +136,6 @@ private:
     std::unordered_set<MeshFace*> _faces;
 };
 
-class AddMeshVertexChange : public Change {
-public:
-    AddMeshVertexChange(const SP<Mesh>& mesh);
-    void redo() override;
-    void undo() override;
-    const SP<Mesh> mesh;
-    const SP<MeshVertex> vertex;
-};
-
 class Mesh final : public EnableSharedFromThis<Mesh> {
 public:
     Mesh();
@@ -190,7 +181,7 @@ public:
     Box<float> boundingBox() const;
 
 private:
-    friend class AddMeshVertexChange;
+    class AddVertexChange;
 
     void handleChange(const SP<Change>& change);
 
