@@ -80,8 +80,7 @@ private:
 
 class MeshUVEdge final : public EnableSharedFromThis<MeshUVEdge> {
 public:
-    MeshUVEdge(const std::array<SP<MeshUVPoint>, 2>& points);
-    ~MeshUVEdge();
+    MeshUVEdge(const std::array<SP<MeshUVPoint>, 2>& points) : _points(points) {}
 
     auto& points() const { return _points; }
 
@@ -174,6 +173,7 @@ public:
 
     void removeFace(const SP<MeshFace>& face);
     void removeEdge(const SP<MeshEdge>& edge);
+    void removeUVEdge(const SP<MeshUVEdge>& uvEdge);
 
     const auto& vertices() const { return _vertices; }
     const auto& edges() const { return _edges; }
