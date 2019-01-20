@@ -75,7 +75,6 @@ Mesh::Mesh() {
 SP<MeshVertex> Mesh::addVertex(glm::vec3 position) {
     auto vertex = makeShared<MeshVertex>();
     vertex->setPosition(position);
-    //vertex->setTexCoord(texCoord);
     _vertices.insert(vertex);
     return vertex;
 }
