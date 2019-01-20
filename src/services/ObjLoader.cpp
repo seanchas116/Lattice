@@ -74,7 +74,11 @@ std::vector<SP<Document::MeshItem>> ObjLoader::load(const QString &filePathStrin
                 // access to vertex
                 tinyobj::index_t idx = objShape.mesh.indices[index_offset + v];
 
-                if (vertexForIndices.find(idx.vertex_index) == vertexForIndices.end()) {
+                auto vertex = [&] {
+                    auto vertexIt = vertexForIndices.find(idx.vertex_index);
+                    if (vertexIt != vertexForIndices.end()) {
+                        return vertexIt->second;
+                    }
                     tinyobj::real_t vx = attrib.vertices[3*idx.vertex_index+0];
                     tinyobj::real_t vy = attrib.vertices[3*idx.vertex_index+1];
                     tinyobj::real_t vz = attrib.vertices[3*idx.vertex_index+2];
@@ -88,17 +92,24 @@ std::vector<SP<Document::MeshItem>> ObjLoader::load(const QString &filePathStrin
                     glm::vec3 pos(vx, vy, vz);
                     auto vertex = item->mesh()->addVertex(pos);
                     vertexForIndices.insert({idx.vertex_index, vertex});
-                }
+                    return vertex;
+                }();
 
-                if (uvPointForIndices.find({idx.vertex_index, idx.texcoord_index}) == uvPointForIndices.end()) {
+                auto uvPoint = [&] {
+                    auto uvPointIt = uvPointForIndices.find({idx.vertex_index, idx.texcoord_index});
+                    if (uvPointIt != uvPointForIndices.end()) {
+                        return uvPointIt->second;
+                    }
                     tinyobj::real_t tx = attrib.texcoords[2*idx.texcoord_index+0];
                     tinyobj::real_t ty = attrib.texcoords[2*idx.texcoord_index+1];
                     glm::vec2 uv(tx, ty);
-                    auto vertex = vertexForIndices.at(idx.vertex_index);
+                    auto uvPoint = item->mesh()->addUVPoint(vertex, uv);
 
-                    uvPointForIndices.insert({{idx.vertex_index, idx.texcoord_index}, item->mesh()->addUVPoint(vertex, uv)});
-                }
-                uvPoints.push_back(uvPointForIndices.at({idx.vertex_index, idx.texcoord_index}));
+                    uvPointForIndices.insert({{idx.vertex_index, idx.texcoord_index}, uvPoint});
+                    return uvPoint;
+                }();
+
+                uvPoints.push_back(uvPoint);
             }
             index_offset += fv;
 
