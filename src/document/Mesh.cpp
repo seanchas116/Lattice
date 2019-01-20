@@ -79,8 +79,44 @@ public:
     void undo() override {
         mesh->_vertices.erase(vertex);
     }
-    const SP<Mesh> mesh;
-    const SP<MeshVertex> vertex;
+    SP<Mesh> mesh;
+    SP<MeshVertex> vertex;
+};
+
+class Mesh::SetVertexPositionChange : public Change {
+public:
+    SetVertexPositionChange(const SP<Mesh>& mesh, const std::unordered_map<SP<MeshVertex>, glm::vec3>& positions) :
+        mesh(mesh), newPositions(positions)
+    {
+        for (auto& [v, _] : positions) {
+            oldPositions[v] = v->position();
+        }
+    }
+    void redo() override {
+        for (auto& [v, pos] : newPositions) {
+            v->_position = pos;
+        }
+    }
+    void undo() override {
+        for (auto& [v, pos] : oldPositions) {
+            v->_position = pos;
+        }
+    }
+    bool mergeWith(const SP<const Change>& other) {
+        LATTICE_OPTIONAL_GUARD(change, dynamicPointerCast<const SetVertexPositionChange>(other), return false;)
+        if (change->mesh != mesh) { return false; }
+        for (auto& [v, p] : change->oldPositions) {
+            oldPositions[v] = p;
+        }
+        for (auto& [v, p] : change->newPositions) {
+            newPositions[v] = p;
+        }
+        return true;
+    }
+
+    SP<Mesh> mesh;
+    std::unordered_map<SP<MeshVertex>, glm::vec3> oldPositions;
+    std::unordered_map<SP<MeshVertex>, glm::vec3> newPositions;
 };
 
 Mesh::Mesh() {
@@ -160,7 +196,9 @@ SP<MeshMaterial> Mesh::addMaterial() {
 }
 
 void Mesh::setPosition(const SP<MeshVertex> &vertex, vec3 pos) {
-    vertex->_position = pos;
+    std::unordered_map<SP<MeshVertex>, vec3> positons = {{vertex, pos}};
+    auto change = makeShared<SetVertexPositionChange>(sharedFromThis(), positons);
+    _changeHandler(change);
 }
 
 void Mesh::setPosition(const SP<MeshUVPoint> &uvPoint, vec2 pos) {
