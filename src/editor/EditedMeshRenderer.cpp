@@ -125,7 +125,6 @@ void EditedMeshRenderer::mousePress(const Render::MouseEvent &event) {
     _dragStarted = false;
 
     _appState->document()->setMeshSelection(selection);
-
 }
 
 void EditedMeshRenderer::mouseMove(const Render::MouseEvent &event) {
