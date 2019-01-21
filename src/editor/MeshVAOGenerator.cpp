@@ -13,19 +13,18 @@ MeshVAOGenerator::MeshVAOGenerator(const SP<Document::Mesh> &mesh) :
     _mesh(mesh),
     _vertexBuffer(makeShared<GL::VertexBuffer>())
 {
-    std::vector<GL::VertexBuffer::Vertex> vertices;
     for (auto& vertex : mesh->vertices()) {
         for (auto& uvPos : vertex->uvPoints()) {
-            _indices[uvPos] = uint32_t(vertices.size());
+            _indices[uvPos] = uint32_t(_vertexBuffer->vertices.size());
             GL::VertexBuffer::Vertex vertexData = {
                 vertex->position(),
                 uvPos->position(),
                 vertex->normal(),
             };
-            vertices.push_back(vertexData);
+            _vertexBuffer->vertices.push_back(vertexData);
         }
     }
-    _vertexBuffer->setVertices(vertices);
+    _vertexBuffer->update();
 }
 
 SP<GL::PointVAO> MeshVAOGenerator::generateVertexVAO() const {
