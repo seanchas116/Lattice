@@ -16,7 +16,7 @@ VertexBuffer::~VertexBuffer() {
 }
 
 void VertexBuffer::setVertices(const std::vector<Vertex> &vertices) {
-    _vertices = vertices;
+    _size = vertices.size();
     glBindBuffer(GL_ARRAY_BUFFER, _buffer);
     glBufferData(GL_ARRAY_BUFFER, GLsizeiptr(vertices.size() * sizeof(Vertex)), vertices.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);

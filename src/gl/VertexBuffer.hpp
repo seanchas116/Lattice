@@ -22,17 +22,16 @@ public:
     VertexBuffer(const std::vector<Vertex>& vertices);
     ~VertexBuffer();
 
-    const std::vector<Vertex>& vertices() const { return _vertices; }
     void setVertices(const std::vector<Vertex>& vertices);
 
-    size_t size() const { return _vertices.size(); }
+    size_t size() const { return _size; }
 
     void bind();
     void unbind();
 
 private:
     friend class VAO;
-    std::vector<Vertex> _vertices;
+    size_t _size = 0;
     GLuint _buffer;
 };
 
