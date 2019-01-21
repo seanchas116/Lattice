@@ -32,9 +32,9 @@ EditedMeshRenderer::EditedMeshRenderer(const SP<UI::AppState>& appState, const S
     _edgeVAO(makeShared<GL::LineVAO>()),
     _vertexVAO(makeShared<GL::PointVAO>())
 {
-    updateVAOs();
-    connect(_item->mesh().get(), &Document::Mesh::changed, this, &EditedMeshRenderer::updateVAOs);
-    connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, &EditedMeshRenderer::updateVAOs);
+    updateWholeVAOs();
+    connect(_item->mesh().get(), &Document::Mesh::changed, this, &EditedMeshRenderer::updateWholeVAOs);
+    connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, &EditedMeshRenderer::updateWholeVAOs);
 }
 
 void EditedMeshRenderer::draw(const SP<Render::Operations> &operations, const Camera &camera) {
@@ -149,7 +149,7 @@ void EditedMeshRenderer::mouseRelease(const Render::MouseEvent &event) {
     Q_UNUSED(event);
 }
 
-void EditedMeshRenderer::updateVAOs() {
+void EditedMeshRenderer::updateWholeVAOs() {
     recallContext();
 
     auto& selectedVertices = _appState->document()->meshSelection().vertices;

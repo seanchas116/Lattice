@@ -50,7 +50,7 @@ public:
     void mouseRelease(const Render::MouseEvent &event) override;
 
 private:
-    void updateVAOs();
+    void updateWholeVAOs();
 
     SP<UI::AppState> _appState;
     SP<Document::MeshItem> _item;
