@@ -5,6 +5,7 @@
 #include "../support/Location.hpp"
 #include "../render/Renderable.hpp"
 #include "../gl/ContextRecallable.hpp"
+#include "../gl/VertexBuffer.hpp"
 #include <glm/glm.hpp>
 #include <unordered_map>
 
@@ -50,9 +51,6 @@ public:
 
 private:
     void updateVAOs();
-    SP<GL::PointVAO> generateVertexVAO() const;
-    SP<GL::LineVAO> generateEdgeVAO() const;
-    std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> generateFaceVAOs() const;
 
     SP<UI::AppState> _appState;
     SP<Document::MeshItem> _item;
@@ -60,6 +58,7 @@ private:
     std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> _faceVAOs;
     SP<GL::LineVAO> _edgeVAO;
     SP<GL::PointVAO> _vertexVAO;
+    std::vector<GL::VertexBuffer::Vertex> _vertexAttributes;
 
     std::unordered_map<SP<Document::MeshVertex>, glm::dvec3> _initialPositions;
     glm::dvec3 _dragStartWorldPos;
