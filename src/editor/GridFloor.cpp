@@ -17,7 +17,7 @@ GridFloor::GridFloor() :
     constexpr int count = 200;
     constexpr double unit = 1;
 
-    auto& vertices = _vbo->vertices;;
+    std::vector<GL::VertexBuffer::Vertex> vertices;
     std::vector<std::vector<uint32_t>> lineStrips;
     std::vector<uint32_t> xLineStrip;
     std::vector<uint32_t> zLineStrip;
@@ -51,7 +51,7 @@ GridFloor::GridFloor() :
         }
     }
 
-    _vbo->update();
+    _vbo->setVertices(vertices);
     _vao->setLineStrips(lineStrips);
     _xAxisVAO->setLineStrips({xLineStrip});
     _zAxisVAO->setLineStrips({zLineStrip});

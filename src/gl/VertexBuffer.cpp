@@ -7,11 +7,16 @@ VertexBuffer::VertexBuffer() {
     glGenBuffers(1, &_buffer);
 }
 
+VertexBuffer::VertexBuffer(const std::vector<Vertex> &vertices) : VertexBuffer() {
+    setVertices(vertices);
+}
+
 VertexBuffer::~VertexBuffer() {
     glDeleteBuffers(1, &_buffer);
 }
 
-void VertexBuffer::update() {
+void VertexBuffer::setVertices(const std::vector<Vertex> &vertices) {
+    _vertices = vertices;
     glBindBuffer(GL_ARRAY_BUFFER, _buffer);
     glBufferData(GL_ARRAY_BUFFER, GLsizeiptr(vertices.size() * sizeof(Vertex)), vertices.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);

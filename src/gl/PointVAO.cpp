@@ -23,7 +23,7 @@ PointVAO::~PointVAO() {
 
 void PointVAO::draw() {
     glBindVertexArray(_vertexArray);
-    glDrawArrays(GL_POINTS, 0, _vertexBuffer->vertices.size());
+    glDrawArrays(GL_POINTS, 0, _vertexBuffer->size());
     glBindVertexArray(0);
 }
 

@@ -161,7 +161,7 @@ SP<GL::PointVAO> EditedMeshRenderer::generateVertexVAO() const {
     auto& selectedVertices = _appState->document()->meshSelection().vertices;
 
     auto vao = makeShared<GL::PointVAO>();
-    auto& vbo = vao->vertexBuffer();
+    std::vector<GL::VertexBuffer::Vertex> attribs;
     for (auto& v : _item->mesh()->vertices()) {
         bool selected = selectedVertices.find(v) != selectedVertices.end();
 
@@ -169,9 +169,10 @@ SP<GL::PointVAO> EditedMeshRenderer::generateVertexVAO() const {
         attrib.position = v->position();
         attrib.color = selected ? selectedColor : unselectedColor;
 
-        vbo->vertices.push_back(attrib);
+        attribs.push_back(attrib);
     }
-    vbo->update();
+
+    vao->vertexBuffer()->setVertices(attribs);
     return vao;
 }
 
@@ -179,22 +180,22 @@ SP<GL::LineVAO> EditedMeshRenderer::generateEdgeVAO() const {
     auto& selectedVertices = _appState->document()->meshSelection().vertices;
 
     auto vao = makeShared<GL::LineVAO>();
-    auto& vbo = vao->vertexBuffer();
+    std::vector<GL::VertexBuffer::Vertex> attribs;
     std::vector<GL::LineVAO::Line> indices;
     for (auto& [_, e] : _item->mesh()->edges()) {
-        auto offset = uint32_t(vbo->vertices.size());
+        auto offset = uint32_t(attribs.size());
         for (auto& v : e->vertices()) {
             bool selected = selectedVertices.find(v) != selectedVertices.end();
 
             GL::VertexBuffer::Vertex attrib;
             attrib.position = v->position();
             attrib.color = selected ? selectedColor : unselectedColor;
-            vbo->vertices.push_back(attrib);
+            attribs.push_back(attrib);
         }
         indices.push_back({offset, offset+1});
     }
 
-    vbo->update();
+    vao->vertexBuffer()->setVertices(attribs);
     vao->setLines(indices);
     return vao;
 }
@@ -202,6 +203,7 @@ SP<GL::LineVAO> EditedMeshRenderer::generateEdgeVAO() const {
 std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO> > EditedMeshRenderer::generateFaceVAOs() const {
     auto vbo = makeShared<GL::VertexBuffer>();
     std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO> > faceVAOs;
+    std::vector<GL::VertexBuffer::Vertex> attribs;
 
     auto addPoint = [&](const SP<Document::MeshUVPoint>& p) {
         GL::VertexBuffer::Vertex attrib;
@@ -209,8 +211,8 @@ std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO> > EditedMeshRenderer:
         attrib.texCoord = p->position();
         attrib.normal = p->vertex()->normal();
 
-        auto index = uint32_t(vbo->vertices.size());
-        vbo->vertices.push_back(attrib);
+        auto index = uint32_t(attribs.size());
+        attribs.push_back(attrib);
         return index;
     };
 
@@ -228,7 +230,7 @@ std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO> > EditedMeshRenderer:
         vao->setTriangles(triangles);
         faceVAOs.insert({material, vao});
     }
-    vbo->update();
+    vbo->setVertices(attribs);
 
     return faceVAOs;
 }
