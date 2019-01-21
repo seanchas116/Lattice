@@ -56,7 +56,10 @@ private:
     SP<Document::MeshItem> _item;
     SP<MeshPicker> _meshPicker;
     std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> _faceVAOs;
+    SP<GL::VertexBuffer> _faceVBO;
+    std::vector<GL::VertexBuffer::Vertex> _faceAttributes;
     SP<GL::LineVAO> _edgeVAO;
+    std::vector<GL::VertexBuffer::Vertex> _edgeAttributes;
     SP<GL::PointVAO> _vertexVAO;
     std::vector<GL::VertexBuffer::Vertex> _vertexAttributes;
 

@@ -28,6 +28,7 @@ EditedMeshRenderer::EditedMeshRenderer(const SP<UI::AppState>& appState, const S
     _appState(appState),
     _item(item),
     _meshPicker(makeShared<MeshPicker>(item->mesh())),
+    _faceVBO(makeShared<GL::VertexBuffer>()),
     _edgeVAO(makeShared<GL::LineVAO>()),
     _vertexVAO(makeShared<GL::PointVAO>())
 {
@@ -155,8 +156,8 @@ void EditedMeshRenderer::updateVAOs() {
 
     {
         _vertexVAO = makeShared<GL::PointVAO>();
+        _vertexAttributes.clear();
 
-        std::vector<GL::VertexBuffer::Vertex> attribs;
         for (auto& v : _item->mesh()->vertices()) {
             bool selected = selectedVertices.find(v) != selectedVertices.end();
 
@@ -164,59 +165,39 @@ void EditedMeshRenderer::updateVAOs() {
             attrib.position = v->position();
             attrib.color = selected ? selectedColor : unselectedColor;
 
-            attribs.push_back(attrib);
+            _vertexAttributes.push_back(attrib);
         }
 
-        _vertexVAO->vertexBuffer()->setVertices(attribs);
+        _vertexVAO->vertexBuffer()->setVertices(_vertexAttributes);
     }
 
     {
         _edgeVAO = makeShared<GL::LineVAO>();
-        std::vector<GL::VertexBuffer::Vertex> attribs;
+        _edgeAttributes.clear();
+
         std::vector<GL::LineVAO::Line> indices;
         for (auto& [_, e] : _item->mesh()->edges()) {
-            auto offset = uint32_t(attribs.size());
+            auto offset = uint32_t(_edgeAttributes.size());
             for (auto& v : e->vertices()) {
                 bool selected = selectedVertices.find(v) != selectedVertices.end();
 
                 GL::VertexBuffer::Vertex attrib;
                 attrib.position = v->position();
                 attrib.color = selected ? selectedColor : unselectedColor;
-                attribs.push_back(attrib);
+                _edgeAttributes.push_back(attrib);
             }
             indices.push_back({offset, offset+1});
         }
 
-        _edgeVAO->vertexBuffer()->setVertices(attribs);
+        _edgeVAO->vertexBuffer()->setVertices(_edgeAttributes);
         _edgeVAO->setLines(indices);
     }
 
     {
-        _edgeVAO = makeShared<GL::LineVAO>();
-        std::vector<GL::VertexBuffer::Vertex> attribs;
-        std::vector<GL::LineVAO::Line> indices;
-        for (auto& [_, e] : _item->mesh()->edges()) {
-            auto offset = uint32_t(attribs.size());
-            for (auto& v : e->vertices()) {
-                bool selected = selectedVertices.find(v) != selectedVertices.end();
-
-                GL::VertexBuffer::Vertex attrib;
-                attrib.position = v->position();
-                attrib.color = selected ? selectedColor : unselectedColor;
-                attribs.push_back(attrib);
-            }
-            indices.push_back({offset, offset+1});
-        }
-
-        _edgeVAO->vertexBuffer()->setVertices(attribs);
-        _edgeVAO->setLines(indices);
-    }
-
-    {
-        auto vbo = makeShared<GL::VertexBuffer>();
-        std::vector<GL::VertexBuffer::Vertex> attribs;
+        _faceVBO = makeShared<GL::VertexBuffer>();
 
         _faceVAOs.clear();
+        _faceAttributes.clear();
 
         auto addPoint = [&](const SP<Document::MeshUVPoint>& p) {
             GL::VertexBuffer::Vertex attrib;
@@ -224,13 +205,13 @@ void EditedMeshRenderer::updateVAOs() {
             attrib.texCoord = p->position();
             attrib.normal = p->vertex()->normal();
 
-            auto index = uint32_t(attribs.size());
-            attribs.push_back(attrib);
+            auto index = uint32_t(_faceAttributes.size());
+            _faceAttributes.push_back(attrib);
             return index;
         };
 
         for (auto& material : _item->mesh()->materials()) {
-            auto vao = makeShared<GL::VAO>(vbo);
+            auto vao = makeShared<GL::VAO>(_faceVBO);
             std::vector<GL::VAO::Triangle> triangles;
             for (auto& face : material->faces()) {
                 auto i0 = addPoint(face->uvPoints()[0]);
@@ -243,7 +224,7 @@ void EditedMeshRenderer::updateVAOs() {
             vao->setTriangles(triangles);
             _faceVAOs.insert({material, vao});
         }
-        vbo->setVertices(attribs);
+        _faceVBO->setVertices(_faceAttributes);
     }
 
     updateRequested();
