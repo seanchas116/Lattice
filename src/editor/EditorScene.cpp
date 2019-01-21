@@ -50,6 +50,9 @@ std::vector<SP<Render::Renderable> > EditorScene::updateRenderables() {
     _appState->document()->rootItem()->forEachDescendant([&] (auto& item) {
         LATTICE_OPTIONAL_GUARD(meshItem, dynamicPointerCast<Document::MeshItem>(item), return;)
         connect(meshItem.get(), &Document::MeshItem::locationChanged, this, &EditorScene::updateRequested);
+        if (item == _appState->document()->editedItem()) {
+            return;
+        }
 
         auto it = _meshRenderers.find(meshItem);
         if (it != _meshRenderers.end()) {
@@ -68,11 +71,10 @@ std::vector<SP<Render::Renderable> > EditorScene::updateRenderables() {
 
     renderables.push_back(_gridFloor);
     for (auto& [item, renderer] : _meshRenderers) {
-        if (_editedMeshRenderers && (*_editedMeshRenderers)->item() == item) {
-            renderables.push_back(*_editedMeshRenderers);
-        } else {
-            renderables.push_back(renderer);
-        }
+        renderables.push_back(renderer);
+    }
+    if (_editedMeshRenderers) {
+        renderables.push_back(*_editedMeshRenderers);
     }
 
     if (_appState->document()->currentItem() && !_appState->document()->isEditing()) {
