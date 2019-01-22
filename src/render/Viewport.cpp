@@ -82,5 +82,9 @@ double Viewport::widgetPixelRatio() const {
 #endif
 }
 
+void Viewport::setCameraLocation(const Location &location) {
+    _camera.setLocation(location);
+}
+
 } // namespace Render
 } // namespace Lattice

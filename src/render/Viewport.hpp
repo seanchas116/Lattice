@@ -23,6 +23,8 @@ public:
     glm::dvec2 mapQtToGL(const QPoint& p) const;
     double widgetPixelRatio() const;
 
+    void setCameraLocation(const Location& location);
+
 protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
