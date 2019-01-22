@@ -47,8 +47,8 @@ void ViewportContainer::paintGL() {
         auto viewport = qobject_cast<Viewport*>(child);
         if (!viewport) { continue; }
 
-        glm::dvec2 minPos = mapQtToGL(viewport->rect().bottomLeft());
-        glm::dvec2 maxPos = mapQtToGL(viewport->rect().topRight());
+        glm::dvec2 minPos = mapQtToGL(viewport->pos() + viewport->rect().bottomLeft());
+        glm::dvec2 maxPos = mapQtToGL(viewport->pos() + viewport->rect().topRight());
         glm::ivec2 minPosViewport = round(minPos * (widgetPixelRatio() * devicePixelRatioF()));
         glm::ivec2 maxPosViewport = round(maxPos * (widgetPixelRatio() * devicePixelRatioF()));
         glm::ivec2 sizeViewport = maxPosViewport - minPosViewport;
