@@ -12,6 +12,7 @@ class RenderWidget;
 
 class Viewport : public QWidget, protected QOpenGLExtraFunctions {
     Q_OBJECT
+    using super = QWidget;
 public:
     Viewport(QWidget* parent = nullptr);
 
@@ -30,6 +31,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseDoubleClickEvent(QMouseEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 
 private:
     std::optional<std::pair<SP<Renderable>, HitResult>> hitTest(glm::dvec2 pos, const Camera& camera);

@@ -4,6 +4,7 @@
 #include "../support/Debug.hpp"
 #include <QMouseEvent>
 #include <QOpenGLDebugLogger>
+#include <QResizeEvent>
 
 namespace Lattice {
 namespace Render {
@@ -40,6 +41,11 @@ void Viewport::mouseDoubleClickEvent(QMouseEvent *event) {
 
     MouseEvent renderMouseEvent(event, pos, _camera, hitResult);
     renderable->mouseDoubleClick(renderMouseEvent);
+}
+
+void Viewport::resizeEvent(QResizeEvent *event) {
+    super::resizeEvent(event);
+    _camera.setViewSize(mapQtToGL(QPoint(event->size().width(), 0)));
 }
 
 void Viewport::mouseReleaseEvent(QMouseEvent *event) {
