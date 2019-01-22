@@ -4,7 +4,7 @@
 #include "ItemPropertyView.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
-#include "../editor/EditorWidget.hpp"
+#include "../editor/EditorViewportContainer.hpp"
 #include <QAction>
 #include <QMenuBar>
 #include <QUndoStack>
@@ -17,7 +17,7 @@ namespace Lattice::UI {
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), _appState(makeShared<AppState>()) {
     resize(1000, 1000);
-    auto editorWidget = new Editor::EditorWidget(_appState);
+    auto editorWidget = new Editor::EditorViewportContainer(_appState);
     setCentralWidget(editorWidget);
     setupMenu();
     setupPanes();
