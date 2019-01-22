@@ -157,6 +157,7 @@ void EditedMeshRenderer::updateWholeVAOs() {
     {
         _vertexVAO = makeShared<GL::PointVAO>();
         _vertexAttributes.clear();
+        _vertexAttributes.reserve(_item->mesh()->vertices().size());
 
         for (auto& v : _item->mesh()->vertices()) {
             bool selected = selectedVertices.find(v) != selectedVertices.end();
@@ -174,6 +175,7 @@ void EditedMeshRenderer::updateWholeVAOs() {
     {
         _edgeVAO = makeShared<GL::LineVAO>();
         _edgeAttributes.clear();
+        _edgeAttributes.reserve(_item->mesh()->edges().size() * 2);
 
         std::vector<GL::LineVAO::Line> indices;
         for (auto& [_, e] : _item->mesh()->edges()) {
