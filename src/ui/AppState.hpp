@@ -3,19 +3,13 @@
 #include <QObject>
 #include "../support/Pointer.hpp"
 #include "../support/Property.hpp"
+#include "ViewportSplit.hpp"
 
 namespace Lattice::Document {
 class Document;
 }
 
 namespace Lattice::UI {
-
-enum class ViewportSplit {
-    Single,
-    LeftRight,
-    TopBottom,
-    Four,
-};
 
 class AppState final : public QObject {
     Q_OBJECT
