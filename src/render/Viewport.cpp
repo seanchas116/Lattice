@@ -1,6 +1,5 @@
 #include "Viewport.hpp"
 #include "Renderable.hpp"
-#include "RenderWidget.hpp"
 #include "../support/Debug.hpp"
 #include <QMouseEvent>
 #include <QOpenGLDebugLogger>
