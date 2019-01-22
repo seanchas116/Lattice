@@ -199,6 +199,38 @@ void MainWindow::setupMenu() {
 
     {
         auto windowMenu = menuBar->addMenu(tr("&Window"));
+
+        {
+            auto viewportsMenu = windowMenu->addMenu(tr("Viewports"));
+            std::vector<std::pair<UI::ViewportSplit, QString>> entries = {
+                {UI::ViewportSplit::Single, tr("Single")},
+                {UI::ViewportSplit::LeftRight, tr("Left / Right")},
+                {UI::ViewportSplit::TopBottom, tr("Top / Bottom")},
+                {UI::ViewportSplit::Four, tr("Four")},
+            };
+            std::unordered_map<UI::ViewportSplit, QAction*> actions;
+
+            auto group = new QActionGroup(this);
+            group->setExclusive(true);
+
+            for (auto [mode, text] : entries) {
+                auto action = viewportsMenu->addAction(text);
+                group->addAction(action);
+                connect(action, &QAction::triggered, this, [this, mode] {
+                    _appState->setViewportSplit(mode);
+                });
+                actions[mode] = action;
+            }
+
+            auto onChange = [actions](UI::ViewportSplit mode) {
+                actions.at(mode)->setChecked(true);
+            };
+            onChange(_appState->viewportSplit());
+            connect(_appState.get(), &UI::AppState::viewportSplitChanged, this, onChange);
+        }
+
+        windowMenu->addSeparator();
+
         windowMenu->addAction(tr("Minimize"), this, &QWidget::showMinimized, QKeySequence("Ctrl+M"));
         windowMenu->addAction(tr("Zoom"), this, &QWidget::showMaximized);
     }
