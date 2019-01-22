@@ -43,7 +43,10 @@ void ViewportContainer::paintGL() {
 
     LATTICE_OPTIONAL_GUARD(operations, _operations, return;)
 
-    for (auto& viewport : _viewports) {
+    for (auto child : children()) {
+        auto viewport = qobject_cast<Viewport*>(child);
+        if (!viewport) { continue; }
+
         glm::dvec2 minPos = mapQtToGL(viewport->rect().bottomLeft());
         glm::dvec2 maxPos = mapQtToGL(viewport->rect().topRight());
         glm::ivec2 minPosViewport = round(minPos * (widgetPixelRatio() * devicePixelRatioF()));
