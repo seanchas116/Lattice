@@ -82,19 +82,19 @@ void MainWindow::setupToolBar() {
     isTranslateHandleVisible->setCheckable(true);
     isTranslateHandleVisible->setChecked(_appState->isTranslateHandleVisible());
     connect(_appState.get(), &AppState::isTranslateHandleVisibleChanged, isTranslateHandleVisible, &QAction::setChecked);
-    connect(isTranslateHandleVisible, &QAction::toggled, _appState.get(), &AppState::setIsTranslateHandleVisible);
+    connect(isTranslateHandleVisible, &QAction::toggled, _appState.get(), &AppState::setTranslateHandleVisible);
 
     auto isRotateHandleVisible = toolBar->addAction(tr("Rotate"));
     isRotateHandleVisible->setCheckable(true);
     isRotateHandleVisible->setChecked(_appState->isRotateHandleVisible());
     connect(_appState.get(), &AppState::isRotateHandleVisibleChanged, isRotateHandleVisible, &QAction::setChecked);
-    connect(isRotateHandleVisible, &QAction::toggled, _appState.get(), &AppState::setIsRotateHandleVisible);
+    connect(isRotateHandleVisible, &QAction::toggled, _appState.get(), &AppState::setRotateHandleVisible);
 
     auto isScaleHandleVisibleAction = toolBar->addAction(tr("Scale"));
     isScaleHandleVisibleAction->setCheckable(true);
     isScaleHandleVisibleAction->setChecked(_appState->isScaleHandleVisible());
     connect(_appState.get(), &AppState::isScaleHandleVisibleChanged, isScaleHandleVisibleAction, &QAction::setChecked);
-    connect(isScaleHandleVisibleAction, &QAction::toggled, _appState.get(), &AppState::setIsScaleHandleVisible);
+    connect(isScaleHandleVisibleAction, &QAction::toggled, _appState.get(), &AppState::setScaleHandleVisible);
 
     toolBar->addSeparator();
 
@@ -104,19 +104,19 @@ void MainWindow::setupToolBar() {
     isVertexVisibleAction->setCheckable(true);
     isVertexVisibleAction->setChecked(_appState->isVertexVisible());
     connect(_appState.get(), &AppState::isVertexVisibleChanged, isVertexVisibleAction, &QAction::setChecked);
-    connect(isVertexVisibleAction, &QAction::toggled, _appState.get(), &AppState::setIsVertexVisible);
+    connect(isVertexVisibleAction, &QAction::toggled, _appState.get(), &AppState::setVertexVisible);
 
     auto isEdgeVisibleAction = toolBar->addAction(tr("Edge"));
     isEdgeVisibleAction->setCheckable(true);
     isEdgeVisibleAction->setChecked(_appState->isEdgeVisible());
     connect(_appState.get(), &AppState::isEdgeVisibleChanged, isEdgeVisibleAction, &QAction::setChecked);
-    connect(isEdgeVisibleAction, &QAction::toggled, _appState.get(), &AppState::setIsEdgeVisible);
+    connect(isEdgeVisibleAction, &QAction::toggled, _appState.get(), &AppState::setEdgeVisible);
 
     auto isFaceVisibleAction = toolBar->addAction(tr("Face"));
     isFaceVisibleAction->setCheckable(true);
     isFaceVisibleAction->setChecked(_appState->isFaceVisible());
     connect(_appState.get(), &AppState::isFaceVisibleChanged, isFaceVisibleAction, &QAction::setChecked);
-    connect(isFaceVisibleAction, &QAction::toggled, _appState.get(), &AppState::setIsFaceVisible);
+    connect(isFaceVisibleAction, &QAction::toggled, _appState.get(), &AppState::setFaceVisible);
 }
 
 void MainWindow::setupMenu() {
