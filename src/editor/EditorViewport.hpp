@@ -1,10 +1,8 @@
 #pragma once
 #include <QOpenGLWidget>
-#include <memory>
 #include "CameraController.hpp"
-#include "KeyObserver.hpp"
 #include "../support/Pointer.hpp"
-#include "../render/RenderWidget.hpp"
+#include "../render/Viewport.hpp"
 
 namespace Lattice::UI {
 class AppState;
@@ -13,11 +11,13 @@ class AppState;
 namespace Lattice::Editor {
 
 class EditorScene;
+class KeyObserver;
 
-class EditorWidget final : public Render::RenderWidget {
+class EditorViewport final : public Render::Viewport {
     Q_OBJECT
+    using super = Render::Viewport;
 public:
-    explicit EditorWidget(const SP<UI::AppState>& appState, QWidget *parent = nullptr);
+    explicit EditorViewport(const SP<UI::AppState>& appState, const SP<KeyObserver>& keyObserver, QWidget *parent = nullptr);
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
@@ -26,17 +26,9 @@ protected:
 
     void wheelEvent(QWheelEvent *event) override;
 
-    void keyPressEvent(QKeyEvent *event) override;
-    void keyReleaseEvent(QKeyEvent *event) override;
-
 private:
-    void updateCamera();
-
     CameraController _cameraController;
-    KeyObserver _keyObserver;
-    Camera _camera;
     SP<UI::AppState> _appState;
-    std::optional<SP<EditorScene>> _scene;
 };
 
 } // namespace Lattice

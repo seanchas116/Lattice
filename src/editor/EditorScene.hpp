@@ -1,6 +1,6 @@
 #pragma once
 #include <QObject>
-#include "../render/RenderWidget.hpp"
+#include "../render/Renderable.hpp"
 
 namespace Lattice {
 

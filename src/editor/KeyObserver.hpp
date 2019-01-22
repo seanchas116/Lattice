@@ -19,7 +19,7 @@ public:
     const auto& pressedKeys() const { return _pressedKeys; }
 
 signals:
-    void selectedKeysChanged(const std::unordered_set<int>& keys);
+    void pressedKeysChanged(const std::unordered_set<int>& keys);
 
 private:
     std::unordered_set<int> _pressedKeys;
