@@ -11,12 +11,13 @@ class AppState;
 namespace Lattice::Editor {
 
 class EditorScene;
+class KeyObserver;
 
 class EditorViewport final : public Render::Viewport {
     Q_OBJECT
     using super = Render::Viewport;
 public:
-    explicit EditorViewport(const SP<UI::AppState>& appState, QWidget *parent = nullptr);
+    explicit EditorViewport(const SP<UI::AppState>& appState, const SP<KeyObserver>& keyObserver, QWidget *parent = nullptr);
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;

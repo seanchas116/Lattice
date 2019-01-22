@@ -11,7 +11,7 @@ EditorWidget::EditorWidget(const SP<UI::AppState> &appState, QWidget *parent) :
     _appState(appState)
 {
     setFocusPolicy(Qt::ClickFocus);
-    connect(&_keyObserver, &KeyObserver::selectedKeysChanged, &_cameraController, &CameraController::setPressedKeys);
+    connect(&_keyObserver, &KeyObserver::pressedKeysChanged, &_cameraController, &CameraController::setPressedKeys);
 
     connect(this, &RenderWidget::initialized, this, [this] {
         _scene = makeShared<EditorScene>(_appState);

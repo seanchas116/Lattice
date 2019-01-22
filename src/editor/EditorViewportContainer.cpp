@@ -1,18 +1,20 @@
 #include "EditorViewportContainer.hpp"
 #include "EditorViewport.hpp"
 #include "EditorScene.hpp"
+#include "KeyObserver.hpp"
 #include <QVBoxLayout>
 
 namespace Lattice::Editor {
 
 EditorViewportContainer::EditorViewportContainer(const SP<UI::AppState> &appState, QWidget *parent) :
     Render::ViewportContainer(parent),
-    _appState(appState)
+    _appState(appState),
+    _keyObserver(makeShared<KeyObserver>())
 {
     setFocusPolicy(Qt::ClickFocus);
 
     std::vector<EditorViewport*> viewports = {
-        new EditorViewport(appState), new EditorViewport(appState)
+        new EditorViewport(appState, _keyObserver), new EditorViewport(appState, _keyObserver)
     };
     auto layout = new QVBoxLayout();
     layout->setMargin(0);

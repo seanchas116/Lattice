@@ -9,6 +9,7 @@ class AppState;
 
 namespace Lattice::Editor {
 
+class KeyObserver;
 class EditorScene;
 
 class EditorViewportContainer final : public Render::ViewportContainer {
@@ -18,6 +19,7 @@ public:
 
 private:
     SP<UI::AppState> _appState;
+    SP<KeyObserver> _keyObserver;
     std::optional<SP<EditorScene>> _scene;
 };
 

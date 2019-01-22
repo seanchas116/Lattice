@@ -1,12 +1,13 @@
 #include "EditorViewport.hpp"
+#include "KeyObserver.hpp"
 
 namespace Lattice::Editor {
 
-EditorViewport::EditorViewport(const SP<UI::AppState> &appState, QWidget *parent) :
+EditorViewport::EditorViewport(const SP<UI::AppState> &appState, const SP<KeyObserver> &keyObserver, QWidget *parent) :
     Render::Viewport(parent),
     _appState(appState)
 {
-    // TODO: call setPressedKeys
+    connect(keyObserver.get(), &KeyObserver::pressedKeysChanged, &_cameraController, &CameraController::setPressedKeys);
     setCameraLocation(_cameraController.location());
     connect(&_cameraController, &CameraController::locationChanged, this, &Render::Viewport::setCameraLocation);
 }
