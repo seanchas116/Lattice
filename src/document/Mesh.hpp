@@ -28,9 +28,9 @@ public:
     MeshVertex() {}
     glm::vec3 position() const { return _position; }
 
-    std::vector<SP<MeshEdge>> edges() const;
-    std::vector<SP<MeshFace>> faces() const;
-    std::vector<SP<MeshUVPoint>> uvPoints() const;
+    auto& edges() const { return _edges; }
+    auto& faces() const { return _faces; }
+    auto& uvPoints() const { return _uvPoints; }
 
     glm::vec3 normal() const;
 
@@ -126,7 +126,8 @@ public:
     QImage roughnessImage() const { return _roughnessImage; }
     void setRoughnessImage(const QImage &roughnessImage) { _roughnessImage = roughnessImage; }
 
-    std::vector<SP<MeshFace> > faces() const;
+    // returning container of raw pointers for performance
+    auto& faces() const { return _faces; }
 
 private:
     friend class Mesh;

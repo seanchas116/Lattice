@@ -5,30 +5,6 @@ using namespace glm;
 
 namespace Lattice::Document {
 
-std::vector<SP<MeshEdge> > MeshVertex::edges() const {
-    std::vector<SP<MeshEdge>> edges;
-    for (auto& e : _edges) {
-        edges.push_back(e->sharedFromThis());
-    }
-    return edges;
-}
-
-std::vector<SP<MeshFace> > MeshVertex::faces() const {
-    std::vector<SP<MeshFace>> faces;
-    for (auto& f : _faces) {
-        faces.push_back(f->sharedFromThis());
-    }
-    return faces;
-}
-
-std::vector<SP<MeshUVPoint> > MeshVertex::uvPoints() const {
-    std::vector<SP<MeshUVPoint>> uvPoints;
-    for (auto& uv : _uvPoints) {
-        uvPoints.push_back(uv->sharedFromThis());
-    }
-    return uvPoints;
-}
-
 glm::vec3 MeshVertex::normal() const {
     glm::vec3 normalSum(0);
     for (auto& face : _faces) {
@@ -455,7 +431,7 @@ void Mesh::removeEdge(const SP<MeshEdge> &edge) {
 
 void Mesh::removeVertex(const SP<MeshVertex> &vertex) {
     for (auto& edge : vertex->edges()) {
-        removeEdge(edge);
+        removeEdge(edge->sharedFromThis());
     }
     auto change = makeShared<RemoveVertexChange>(sharedFromThis(), vertex);
     _changeHandler(change);
@@ -597,7 +573,7 @@ void Mesh::merge(const SP<const Mesh> &other) {
         otherToNewVertices.insert({otherV, v});
         for (auto& otherUV : otherV->uvPoints()) {
             auto uv = addUVPoint(v, otherUV->position());
-            otherToNewUVPoints.insert({otherUV, uv});
+            otherToNewUVPoints.insert({otherUV->sharedFromThis(), uv});
         }
     }
 
@@ -631,15 +607,6 @@ Box<float> Mesh::boundingBox() const {
     }
 
     return {minPos, maxPos};
-}
-
-std::vector<SP<MeshFace>> MeshMaterial::faces() const {
-    std::vector<SP<MeshFace>> faces;
-    faces.reserve(_faces.size());
-    for (auto& f : _faces) {
-        faces.push_back(f->sharedFromThis());
-    }
-    return faces;
 }
 
 } // namespace Lattice

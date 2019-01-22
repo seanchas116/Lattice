@@ -52,12 +52,12 @@ std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO> > MeshVAOGenerator::g
         std::vector<GL::VAO::Triangle> triangles;
         for (auto& face : material->faces()) {
             auto v0 = face->uvPoints()[0];
-            auto i0 = _indices.at(v0);
+            auto i0 = _indices.at(v0.get());
             for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
                 auto v1 = face->uvPoints()[i - 1];
                 auto v2 = face->uvPoints()[i];
-                auto i1 = _indices.at(v1);
-                auto i2 = _indices.at(v2);
+                auto i1 = _indices.at(v1.get());
+                auto i2 = _indices.at(v2.get());
                 triangles.push_back({i0, i1, i2});
             }
         }
