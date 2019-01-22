@@ -13,6 +13,13 @@ ViewportContainer::ViewportContainer(QWidget *parent) :
 {
 }
 
+void ViewportContainer::setViewports(const std::vector<Viewport *> &viewports) {
+    _viewports = viewports;
+    for (auto v : viewports) {
+        connect(v, &Viewport::updateRequested, this, [this] { update(); });
+    }
+}
+
 glm::dvec2 ViewportContainer::mapQtToGL(const QPoint &p) const {
     return glm::dvec2(p.x(), height() - p.y()) / widgetPixelRatio();
 }
@@ -43,10 +50,7 @@ void ViewportContainer::paintGL() {
 
     LATTICE_OPTIONAL_GUARD(operations, _operations, return;)
 
-    for (auto child : children()) {
-        auto viewport = qobject_cast<Viewport*>(child);
-        if (!viewport) { continue; }
-
+    for (auto viewport : _viewports) {
         glm::dvec2 minPos = mapQtToGL(viewport->pos() + viewport->rect().bottomLeft());
         glm::dvec2 maxPos = mapQtToGL(viewport->pos() + viewport->rect().topRight());
         glm::ivec2 minPosViewport = round(minPos * (widgetPixelRatio() * devicePixelRatioF()));
