@@ -216,7 +216,7 @@ void MainWindow::setupMenu() {
             for (auto [mode, text] : entries) {
                 auto action = viewportsMenu->addAction(text);
                 group->addAction(action);
-                connect(action, &QAction::triggered, this, [this, mode] {
+                connect(action, &QAction::triggered, this, [this, mode = mode] { // ← clang bug?
                     _appState->setViewportSplit(mode);
                 });
                 actions[mode] = action;
