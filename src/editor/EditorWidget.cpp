@@ -53,14 +53,6 @@ void EditorWidget::wheelEvent(QWheelEvent *event) {
     RenderWidget::wheelEvent(event);
 }
 
-void EditorWidget::keyPressEvent(QKeyEvent *event) {
-    RenderWidget::keyPressEvent(event);
-}
-
-void EditorWidget::keyReleaseEvent(QKeyEvent *event) {
-    RenderWidget::keyReleaseEvent(event);
-}
-
 void EditorWidget::updateCamera() {
     _camera.setLocation(_cameraController.location());
     _camera.setViewSize(logicalSize());
