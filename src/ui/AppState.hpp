@@ -10,6 +10,13 @@ class Document;
 
 namespace Lattice::UI {
 
+enum class ViewportSplit {
+    Single,
+    LeftRight,
+    TopBottom,
+    Four,
+};
+
 class AppState final : public QObject {
     Q_OBJECT
 
@@ -20,6 +27,8 @@ class AppState final : public QObject {
     LATTICE_AUTO_PROPERTY(bool, isVertexVisible, setVertexVisible, true)
     LATTICE_AUTO_PROPERTY(bool, isEdgeVisible, setEdgeVisible, true)
     LATTICE_AUTO_PROPERTY(bool, isFaceVisible, setFaceVisible, true)
+
+    LATTICE_AUTO_PROPERTY(ViewportSplit, viewportSplit, setViewportSplit, ViewportSplit::Single)
 public:
     AppState();
 
