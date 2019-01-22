@@ -89,6 +89,12 @@ void EditorViewportContainer::setSplitMode(UI::ViewportSplit split) {
         auto splitter1 = new QSplitter();
         splitter1->addWidget(viewports[2]);
         splitter1->addWidget(viewports[3]);
+        connect(splitter0, &QSplitter::splitterMoved, [splitter0, splitter1] {
+            splitter1->setSizes(splitter0->sizes());
+        });
+        connect(splitter1, &QSplitter::splitterMoved, [splitter0, splitter1] {
+            splitter0->setSizes(splitter1->sizes());
+        });
 
         splitter->addWidget(splitter0);
         splitter->addWidget(splitter1);
