@@ -2,6 +2,7 @@
 #include "EditorViewport.hpp"
 #include "EditorScene.hpp"
 #include "KeyObserver.hpp"
+#include "../ui/AppState.hpp"
 #include <QVBoxLayout>
 #include <QSplitter>
 
@@ -14,34 +15,97 @@ EditorViewportContainer::EditorViewportContainer(const SP<UI::AppState> &appStat
 {
     setFocusPolicy(Qt::ClickFocus);
 
-    std::vector<Render::Viewport*> viewports = {
-        new EditorViewport(appState, _keyObserver), new EditorViewport(appState, _keyObserver)
-    };
-    auto splitter = new QSplitter();
+    setSplitMode(appState->viewportSplit());
+    connect(appState.get(), &UI::AppState::viewportSplitChanged, this, &EditorViewportContainer::setSplitMode);
 
-    for (auto&& v : viewports) {
-        splitter->addWidget(v);
+    connect(this, &ViewportContainer::initialized, this, [this] {
+        auto scene = makeShared<EditorScene>(_appState);
+        _scene = scene;
+        connect(scene.get(), &EditorScene::updateRequested, this, [this] { update(); });
+        connect(this, &ViewportContainer::aboutToBePainted, this, [this, scene] {
+            setRenderables(scene->updateRenderables());
+        });
+    });
+}
+
+void EditorViewportContainer::setSplitMode(UI::ViewportSplit split) {
+    if (layout()) {
+        layout()->deleteLater();
+    }
+    for (auto child : children()) {
+        child->deleteLater();
     }
 
     auto layout = new QVBoxLayout();
     layout->setMargin(0);
     layout->setSpacing(0);
-    layout->addWidget(splitter);
+
+    std::vector<Render::Viewport*> viewports;
+
+    switch (split) {
+    case UI::ViewportSplit::Single: {
+        auto viewport = new EditorViewport(_appState, _keyObserver);
+        viewports = {viewport};
+        layout->addWidget(viewport);
+        break;
+    }
+    case UI::ViewportSplit::LeftRight: {
+        viewports = {
+            new EditorViewport(_appState, _keyObserver), new EditorViewport(_appState, _keyObserver)
+        };
+        auto splitter = new QSplitter();
+        for (auto&& v : viewports) {
+            splitter->addWidget(v);
+        }
+
+        layout->addWidget(splitter);
+        break;
+    }
+    case UI::ViewportSplit::TopBottom: {
+        viewports = {
+            new EditorViewport(_appState, _keyObserver), new EditorViewport(_appState, _keyObserver)
+        };
+        auto splitter = new QSplitter();
+        splitter->setOrientation(Qt::Vertical);
+        for (auto&& v : viewports) {
+            splitter->addWidget(v);
+        }
+
+        layout->addWidget(splitter);
+        break;
+    }
+    case UI::ViewportSplit::Four: {
+        for (int i = 0; i < 4; ++i) {
+            viewports.push_back(new EditorViewport(_appState, _keyObserver));
+        }
+        auto splitter = new QSplitter();
+        splitter->setOrientation(Qt::Vertical);
+
+        auto splitter0 = new QSplitter();
+        splitter0->addWidget(viewports[0]);
+        splitter0->addWidget(viewports[1]);
+        auto splitter1 = new QSplitter();
+        splitter1->addWidget(viewports[2]);
+        splitter1->addWidget(viewports[3]);
+
+        splitter->addWidget(splitter0);
+        splitter->addWidget(splitter1);
+
+        layout->addWidget(splitter);
+        break;
+    }
+    }
 
     setLayout(layout);
-
     setViewports(viewports);
 
-    connect(this, &ViewportContainer::initialized, this, [this, viewports] {
-        auto scene = makeShared<EditorScene>(_appState);
-        _scene = scene;
-        connect(scene.get(), &EditorScene::updateRequested, this, [this] { update(); });
-        for (auto&& v : viewports) {
-            connect(this, &ViewportContainer::aboutToBePainted, v, [scene, v] {
-                v->setRenderables(scene->updateRenderables());
-            });
-        }
-    });
+    update();
+}
+
+void EditorViewportContainer::setRenderables(const std::vector<SP<Render::Renderable> > &renderables) {
+    for (auto& v : viewports()) {
+        v->setRenderables(renderables);
+    }
 }
 
 } // namespace Lattice
