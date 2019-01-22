@@ -3,6 +3,7 @@
 #include "EditorScene.hpp"
 #include "KeyObserver.hpp"
 #include <QVBoxLayout>
+#include <QSplitter>
 
 namespace Lattice::Editor {
 
@@ -16,12 +17,17 @@ EditorViewportContainer::EditorViewportContainer(const SP<UI::AppState> &appStat
     std::vector<Render::Viewport*> viewports = {
         new EditorViewport(appState, _keyObserver), new EditorViewport(appState, _keyObserver)
     };
+    auto splitter = new QSplitter();
+
+    for (auto&& v : viewports) {
+        splitter->addWidget(v);
+    }
+
     auto layout = new QVBoxLayout();
     layout->setMargin(0);
     layout->setSpacing(0);
-    for (auto&& v : viewports) {
-        layout->addWidget(v);
-    }
+    layout->addWidget(splitter);
+
     setLayout(layout);
 
     setViewports(viewports);
