@@ -16,6 +16,7 @@ EditorViewportContainer::EditorViewportContainer(const SP<UI::AppState> &appStat
     };
     auto layout = new QVBoxLayout();
     layout->setMargin(0);
+    layout->setSpacing(0);
     for (auto&& v : viewports) {
         layout->addWidget(v);
     }
