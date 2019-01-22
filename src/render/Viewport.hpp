@@ -26,6 +26,9 @@ public:
 
     void setCameraLocation(const Location& location);
 
+signals:
+    void updateRequested();
+
 protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;

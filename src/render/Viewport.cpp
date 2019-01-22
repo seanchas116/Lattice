@@ -45,6 +45,7 @@ void Viewport::mouseDoubleClickEvent(QMouseEvent *event) {
 void Viewport::resizeEvent(QResizeEvent *event) {
     super::resizeEvent(event);
     _camera.setViewSize(mapQtToGL(QPoint(event->size().width(), 0)));
+    emit updateRequested();
 }
 
 void Viewport::mouseReleaseEvent(QMouseEvent *event) {
@@ -89,9 +90,7 @@ double Viewport::widgetPixelRatio() const {
 
 void Viewport::setCameraLocation(const Location &location) {
     _camera.setLocation(location);
-    if (parentWidget()) {
-        parentWidget()->update();
-    }
+    emit updateRequested();
 }
 
 } // namespace Render

@@ -13,7 +13,7 @@ EditorViewportContainer::EditorViewportContainer(const SP<UI::AppState> &appStat
 {
     setFocusPolicy(Qt::ClickFocus);
 
-    std::vector<EditorViewport*> viewports = {
+    std::vector<Render::Viewport*> viewports = {
         new EditorViewport(appState, _keyObserver), new EditorViewport(appState, _keyObserver)
     };
     auto layout = new QVBoxLayout();
@@ -23,6 +23,8 @@ EditorViewportContainer::EditorViewportContainer(const SP<UI::AppState> &appStat
         layout->addWidget(v);
     }
     setLayout(layout);
+
+    setViewports(viewports);
 
     connect(this, &ViewportContainer::initialized, this, [this, viewports] {
         auto scene = makeShared<EditorScene>(_appState);

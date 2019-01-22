@@ -15,6 +15,9 @@ class ViewportContainer : public QOpenGLWidget, protected QOpenGLExtraFunctions 
 public:
     ViewportContainer(QWidget* parent = nullptr);
 
+    auto& viewports() const { return _viewports; }
+    void setViewports(const std::vector<Viewport*>& viewports);
+
     glm::dvec2 mapQtToGL(const QPoint& p) const;
 
 signals:
@@ -30,6 +33,7 @@ protected:
 private:
     double widgetPixelRatio() const;
 
+    std::vector<Viewport*> _viewports;
     std::optional<SP<Operations>> _operations;
 };
 
