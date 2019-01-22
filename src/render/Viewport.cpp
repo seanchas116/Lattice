@@ -90,6 +90,9 @@ double Viewport::widgetPixelRatio() const {
 
 void Viewport::setCameraLocation(const Location &location) {
     _camera.setLocation(location);
+    if (parentWidget()) {
+        parentWidget()->update();
+    }
 }
 
 } // namespace Render
