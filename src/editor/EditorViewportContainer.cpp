@@ -29,8 +29,14 @@ EditorViewportContainer::EditorViewportContainer(const SP<UI::AppState> &appStat
 }
 
 void EditorViewportContainer::setSplitMode(UI::ViewportSplit split) {
-    qDeleteAll(children());
-    delete layout();
+    auto oldLayout = layout();
+    if (oldLayout) {
+        for (int i = 0; i < oldLayout->count(); ++i) {
+            auto item = oldLayout->itemAt(i);
+            delete item->widget();
+        }
+        delete layout();
+    }
 
     auto layout = new QVBoxLayout();
     layout->setMargin(0);
