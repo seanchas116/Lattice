@@ -1,7 +1,7 @@
 #pragma once
 #include <QOpenGLWidget>
 #include "../support/Pointer.hpp"
-#include "Viewport.hpp"
+#include "OldViewport.hpp"
 #include "Operations.hpp"
 #include "MouseEvent.hpp"
 
@@ -16,7 +16,7 @@ public:
     RenderWidget(QWidget* parent = nullptr);
 
     auto& viewports() const { return _viewports; }
-    void setViewports(const std::vector<Viewport>& viewports) { _viewports = viewports; }
+    void setViewports(const std::vector<OldViewport>& viewports) { _viewports = viewports; }
 
     auto& renderables() const { return _renderables; }
     void setRenderables(const std::vector<SP<Renderable>> &renderables) { _renderables = renderables; }
@@ -51,7 +51,7 @@ private:
     HitResult _hitResult;
     int _draggedViewportIndex = 0;
     std::vector<SP<Renderable>> _renderables;
-    std::vector<Viewport> _viewports;
+    std::vector<OldViewport> _viewports;
 };
 
 } // namespace Renderer

@@ -5,7 +5,7 @@
 namespace Lattice {
 namespace Render {
 
-struct Viewport {
+struct OldViewport {
     glm::ivec2 offset;
     Camera camera;
 };
