@@ -6,6 +6,7 @@ EditorViewport::EditorViewport(const SP<UI::AppState> &appState, QWidget *parent
     Render::Viewport(parent),
     _appState(appState)
 {
+    // TODO: call setPressedKeys
     setCameraLocation(_cameraController.location());
     connect(&_cameraController, &CameraController::locationChanged, this, &Render::Viewport::setCameraLocation);
 }
