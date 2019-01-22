@@ -51,8 +51,8 @@ void ViewportContainer::paintGL() {
     LATTICE_OPTIONAL_GUARD(operations, _operations, return;)
 
     for (auto viewport : _viewports) {
-        glm::dvec2 minPos = mapQtToGL(viewport->pos() + viewport->rect().bottomLeft());
-        glm::dvec2 maxPos = mapQtToGL(viewport->pos() + viewport->rect().topRight());
+        glm::dvec2 minPos = mapQtToGL(viewport->mapTo(this, viewport->rect().bottomLeft()));
+        glm::dvec2 maxPos = mapQtToGL(viewport->mapTo(this, viewport->rect().topRight()));
         glm::ivec2 minPosViewport = round(minPos * (widgetPixelRatio() * devicePixelRatioF()));
         glm::ivec2 maxPosViewport = round(maxPos * (widgetPixelRatio() * devicePixelRatioF()));
         glm::ivec2 sizeViewport = maxPosViewport - minPosViewport;

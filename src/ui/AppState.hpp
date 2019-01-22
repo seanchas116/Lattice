@@ -3,6 +3,7 @@
 #include <QObject>
 #include "../support/Pointer.hpp"
 #include "../support/Property.hpp"
+#include "ViewportSplit.hpp"
 
 namespace Lattice::Document {
 class Document;
@@ -20,6 +21,8 @@ class AppState final : public QObject {
     LATTICE_AUTO_PROPERTY(bool, isVertexVisible, setVertexVisible, true)
     LATTICE_AUTO_PROPERTY(bool, isEdgeVisible, setEdgeVisible, true)
     LATTICE_AUTO_PROPERTY(bool, isFaceVisible, setFaceVisible, true)
+
+    LATTICE_AUTO_PROPERTY(ViewportSplit, viewportSplit, setViewportSplit, ViewportSplit::Single)
 public:
     AppState();
 
