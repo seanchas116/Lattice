@@ -43,7 +43,6 @@ void ViewportContainer::paintGL() {
 
     LATTICE_OPTIONAL_GUARD(operations, _operations, return;)
 
-
     for (auto child : children()) {
         auto viewport = qobject_cast<Viewport*>(child);
         if (!viewport) { continue; }
