@@ -34,6 +34,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseDoubleClickEvent(QMouseEvent *event) override;
+    void moveEvent(QMoveEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
 
 private:

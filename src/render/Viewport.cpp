@@ -42,6 +42,11 @@ void Viewport::mouseDoubleClickEvent(QMouseEvent *event) {
     renderable->mouseDoubleClick(renderMouseEvent);
 }
 
+void Viewport::moveEvent(QMoveEvent *event) {
+    super::moveEvent(event);
+    emit updateRequested();
+}
+
 void Viewport::resizeEvent(QResizeEvent *event) {
     super::resizeEvent(event);
     _camera.setViewSize(mapQtToGL(QPoint(event->size().width(), 0)));
