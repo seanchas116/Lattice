@@ -43,6 +43,7 @@ void ViewportContainer::paintGL() {
 
     LATTICE_OPTIONAL_GUARD(operations, _operations, return;)
 
+
     for (auto child : children()) {
         auto viewport = qobject_cast<Viewport*>(child);
         if (!viewport) { continue; }
@@ -53,9 +54,12 @@ void ViewportContainer::paintGL() {
         glm::ivec2 maxPosViewport = round(maxPos * (widgetPixelRatio() * devicePixelRatioF()));
         glm::ivec2 sizeViewport = maxPosViewport - minPosViewport;
 
+        glEnable(GL_SCISSOR_TEST);
+        glScissor(minPosViewport.x, minPosViewport.y, sizeViewport.x, sizeViewport.y);
         glViewport(minPosViewport.x, minPosViewport.y, sizeViewport.x, sizeViewport.y);
 
         viewport->render(operations);
+        glDisable(GL_SCISSOR_TEST);
     }
 }
 
