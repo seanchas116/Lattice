@@ -11,19 +11,25 @@ EditorViewportContainer::EditorViewportContainer(const SP<UI::AppState> &appStat
 {
     setFocusPolicy(Qt::ClickFocus);
 
-    auto viewport = new EditorViewport(appState);
+    std::vector<EditorViewport*> viewports = {
+        new EditorViewport(appState), new EditorViewport(appState)
+    };
     auto layout = new QVBoxLayout();
     layout->setMargin(0);
-    layout->addWidget(viewport);
+    for (auto&& v : viewports) {
+        layout->addWidget(v);
+    }
     setLayout(layout);
 
-    connect(this, &ViewportContainer::initialized, this, [this, viewport] {
+    connect(this, &ViewportContainer::initialized, this, [this, viewports] {
         auto scene = makeShared<EditorScene>(_appState);
         _scene = scene;
         connect(scene.get(), &EditorScene::updateRequested, this, [this] { update(); });
-        connect(this, &ViewportContainer::aboutToBePainted, viewport, [scene, viewport] {
-            viewport->setRenderables(scene->updateRenderables());
-        });
+        for (auto&& v : viewports) {
+            connect(this, &ViewportContainer::aboutToBePainted, v, [scene, v] {
+                v->setRenderables(scene->updateRenderables());
+            });
+        }
     });
 }
 
