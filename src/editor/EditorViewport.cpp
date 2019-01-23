@@ -1,5 +1,6 @@
 #include "EditorViewport.hpp"
 #include "KeyObserver.hpp"
+#include "ViewportControlView.hpp"
 
 namespace Lattice::Editor {
 
@@ -10,6 +11,8 @@ EditorViewport::EditorViewport(const SP<UI::AppState> &appState, const SP<KeyObs
     connect(keyObserver.get(), &KeyObserver::pressedKeysChanged, &_cameraController, &CameraController::setPressedKeys);
     setCameraLocation(_cameraController.location());
     connect(&_cameraController, &CameraController::locationChanged, this, &Render::Viewport::setCameraLocation);
+
+    auto controlView = new ViewportControlView(this);
 }
 
 void EditorViewport::mousePressEvent(QMouseEvent *event) {
