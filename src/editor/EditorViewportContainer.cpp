@@ -28,7 +28,7 @@ EditorViewportContainer::EditorViewportContainer(const SP<UI::AppState> &appStat
     });
 }
 
-void EditorViewportContainer::setSplitMode(UI::ViewportSplit split) {
+void EditorViewportContainer::setSplitMode(UI::ViewportSplitMode split) {
     auto oldLayout = layout();
     if (oldLayout) {
         for (int i = 0; i < oldLayout->count(); ++i) {
@@ -45,13 +45,13 @@ void EditorViewportContainer::setSplitMode(UI::ViewportSplit split) {
     std::vector<Render::Viewport*> viewports;
 
     switch (split) {
-    case UI::ViewportSplit::Single: {
+    case UI::ViewportSplitMode::Single: {
         auto viewport = new EditorViewport(_appState, _keyObserver);
         viewports = {viewport};
         layout->addWidget(viewport);
         break;
     }
-    case UI::ViewportSplit::LeftRight: {
+    case UI::ViewportSplitMode::LeftRight: {
         viewports = {
             new EditorViewport(_appState, _keyObserver), new EditorViewport(_appState, _keyObserver)
         };
@@ -63,7 +63,7 @@ void EditorViewportContainer::setSplitMode(UI::ViewportSplit split) {
         layout->addWidget(splitter);
         break;
     }
-    case UI::ViewportSplit::TopBottom: {
+    case UI::ViewportSplitMode::TopBottom: {
         viewports = {
             new EditorViewport(_appState, _keyObserver), new EditorViewport(_appState, _keyObserver)
         };
@@ -76,7 +76,7 @@ void EditorViewportContainer::setSplitMode(UI::ViewportSplit split) {
         layout->addWidget(splitter);
         break;
     }
-    case UI::ViewportSplit::Four: {
+    case UI::ViewportSplitMode::Four: {
         for (int i = 0; i < 4; ++i) {
             viewports.push_back(new EditorViewport(_appState, _keyObserver));
         }

@@ -2,7 +2,7 @@
 
 namespace Lattice::UI {
 
-enum class ViewportSplit {
+enum class ViewportSplitMode {
     Single,
     LeftRight,
     TopBottom,

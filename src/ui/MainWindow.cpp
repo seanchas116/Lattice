@@ -202,13 +202,13 @@ void MainWindow::setupMenu() {
 
         {
             auto viewportsMenu = windowMenu->addMenu(tr("Viewports"));
-            std::vector<std::pair<UI::ViewportSplit, QString>> entries = {
-                {UI::ViewportSplit::Single, tr("Single")},
-                {UI::ViewportSplit::LeftRight, tr("Left / Right")},
-                {UI::ViewportSplit::TopBottom, tr("Top / Bottom")},
-                {UI::ViewportSplit::Four, tr("Four")},
+            std::vector<std::pair<UI::ViewportSplitMode, QString>> entries = {
+                {UI::ViewportSplitMode::Single, tr("Single")},
+                {UI::ViewportSplitMode::LeftRight, tr("Left / Right")},
+                {UI::ViewportSplitMode::TopBottom, tr("Top / Bottom")},
+                {UI::ViewportSplitMode::Four, tr("Four")},
             };
-            std::unordered_map<UI::ViewportSplit, QAction*> actions;
+            std::unordered_map<UI::ViewportSplitMode, QAction*> actions;
 
             auto group = new QActionGroup(this);
             group->setExclusive(true);
@@ -222,7 +222,7 @@ void MainWindow::setupMenu() {
                 actions[mode] = action;
             }
 
-            auto onChange = [actions](UI::ViewportSplit mode) {
+            auto onChange = [actions](UI::ViewportSplitMode mode) {
                 actions.at(mode)->setChecked(true);
             };
             onChange(_appState->viewportSplit());
