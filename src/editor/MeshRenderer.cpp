@@ -27,7 +27,7 @@ MeshRenderer::MeshRenderer(const SP<UI::AppState>& appState, const SP<Document::
     connect(item->mesh().get(), &Document::Mesh::changed, this, &MeshRenderer::updateVAOs);
 }
 
-void MeshRenderer::draw(const SP<Render::Operations> &operations, const Camera &camera) {
+void MeshRenderer::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
     if (_appState->isFaceVisible()) {
         for (auto& [material, vao] : _faceVAOs) {
             operations->drawMaterial.draw(vao, _item->location().matrixToWorld(), camera, material);
@@ -43,7 +43,7 @@ void MeshRenderer::draw(const SP<Render::Operations> &operations, const Camera &
     */
 }
 
-std::optional<Render::HitResult> MeshRenderer::hitTest(dvec2 pos, const Camera &camera) const {
+std::optional<Render::HitResult> MeshRenderer::hitTest(dvec2 pos, const SP<Camera> &camera) const {
     LATTICE_OPTIONAL_GUARD(pickResult, _meshPicker->pickFace(_item->location().matrixToWorld(), camera, pos), return {};)
     auto [face, depth] = pickResult;
     Render::HitResult result;
@@ -52,8 +52,8 @@ std::optional<Render::HitResult> MeshRenderer::hitTest(dvec2 pos, const Camera &
 }
 
 void MeshRenderer::mousePress(const Render::MouseEvent &event) {
-    glm::dvec3 worldDragPos = event.camera.worldMouseRay(event.screenPos).at(event.hitResult.depth);
-    auto [screenDragPos, isInScreen] = event.camera.mapWorldToScreen(worldDragPos);
+    glm::dvec3 worldDragPos = event.camera->worldMouseRay(event.screenPos).at(event.hitResult.depth);
+    auto [screenDragPos, isInScreen] = event.camera->mapWorldToScreen(worldDragPos);
     if (!isInScreen) {
         return;
     }
@@ -67,7 +67,7 @@ void MeshRenderer::mousePress(const Render::MouseEvent &event) {
 }
 
 void MeshRenderer::mouseMove(const Render::MouseEvent &event) {
-    auto newWorldPos = event.camera.mapScreenToWorld(glm::dvec3(event.screenPos, _dragInitDepth));
+    auto newWorldPos = event.camera->mapScreenToWorld(glm::dvec3(event.screenPos, _dragInitDepth));
     auto newLocation = _dragInitLocation;
     newLocation.position += newWorldPos - _dragInitWorldPos;
 

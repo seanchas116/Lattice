@@ -39,12 +39,12 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private:
-    std::optional<std::pair<SP<Renderable>, HitResult>> hitTest(glm::dvec2 pos, const Camera& camera);
+    std::optional<std::pair<SP<Renderable>, HitResult>> hitTest(glm::dvec2 pos, const SP<Camera>& camera);
 
     std::vector<SP<Renderable>> _renderables;
     std::optional<SP<Renderable>> _draggedRenderable;
     HitResult _hitResult;
-    Camera _camera;
+    SP<Camera> _camera;
 };
 
 } // namespace Renderer

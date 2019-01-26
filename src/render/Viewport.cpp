@@ -8,7 +8,7 @@
 namespace Lattice {
 namespace Render {
 
-Viewport::Viewport(QWidget *parent) : QWidget(parent) {}
+Viewport::Viewport(QWidget *parent) : QWidget(parent), _camera(makeShared<Camera>()) {}
 
 void Viewport::mousePressEvent(QMouseEvent *event) {
     auto pos = mapQtToGL(event->pos());
@@ -49,7 +49,7 @@ void Viewport::moveEvent(QMoveEvent *event) {
 
 void Viewport::resizeEvent(QResizeEvent *event) {
     super::resizeEvent(event);
-    _camera.setViewSize(mapQtToGL(QPoint(event->size().width(), 0)));
+    _camera->setViewSize(mapQtToGL(QPoint(event->size().width(), 0)));
     emit updateRequested();
 }
 
@@ -60,7 +60,7 @@ void Viewport::mouseReleaseEvent(QMouseEvent *event) {
     _draggedRenderable = {};
 }
 
-std::optional<std::pair<SP<Renderable>, HitResult> > Viewport::hitTest(glm::dvec2 pos, const Camera &camera) {
+std::optional<std::pair<SP<Renderable>, HitResult> > Viewport::hitTest(glm::dvec2 pos, const SP<Camera> &camera) {
     std::map<double, std::pair<SP<Renderable>, HitResult>> hitRenderables;
     for (auto it = _renderables.rbegin(); it != _renderables.rend(); ++it) {
         auto& renderable = *it;
@@ -94,7 +94,7 @@ double Viewport::widgetPixelRatio() const {
 }
 
 void Viewport::setCameraLocation(const Location &location) {
-    _camera.setLocation(location);
+    _camera->setLocation(location);
     emit updateRequested();
 }
 

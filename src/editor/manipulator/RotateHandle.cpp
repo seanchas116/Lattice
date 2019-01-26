@@ -28,7 +28,7 @@ RotateHandle::RotateHandle(int axis) :
     initializeOpenGLFunctions();
 }
 
-void RotateHandle::draw(const SP<Render::Operations> &operations, const Camera &camera) {
+void RotateHandle::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInScreen){
         return;
@@ -41,7 +41,7 @@ void RotateHandle::draw(const SP<Render::Operations> &operations, const Camera &
     glClear(GL_DEPTH_BUFFER_BIT);
 }
 
-std::optional<Render::HitResult> RotateHandle::hitTest(dvec2 pos, const Camera &camera) const {
+std::optional<Render::HitResult> RotateHandle::hitTest(dvec2 pos, const SP<Camera> &camera) const {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInScreen) {
         return {};
@@ -68,7 +68,7 @@ void RotateHandle::mousePress(const Render::MouseEvent &event) {
 
     dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * Constants::swizzleTransforms[_axis];
     dmat4 rotateHandleMatrixInverse = inverse(rotateHandleMatrix);
-    auto rotateHandleRay = rotateHandleMatrixInverse * event.camera.cameraMouseRay(event.screenPos);
+    auto rotateHandleRay = rotateHandleMatrixInverse * event.camera->cameraMouseRay(event.screenPos);
 
     dvec3 intersection = rotateHandleRay.whereXIsZero();
     double angle = atan2(intersection.z, intersection.y);
@@ -87,7 +87,7 @@ void RotateHandle::mouseMove(const Render::MouseEvent &event) {
 
     dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * Constants::swizzleTransforms[_axis];
     dmat4 rotateHandleMatrixInverse = inverse(rotateHandleMatrix);
-    auto rotateHandleRay = rotateHandleMatrixInverse * event.camera.cameraMouseRay(event.screenPos);
+    auto rotateHandleRay = rotateHandleMatrixInverse * event.camera->cameraMouseRay(event.screenPos);
     dvec3 intersection = rotateHandleRay.whereXIsZero();
     double angle = atan2(intersection.z, intersection.y);
 

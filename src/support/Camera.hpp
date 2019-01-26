@@ -3,10 +3,13 @@
 #include <glm/glm.hpp>
 #include "Location.hpp"
 #include "Ray.hpp"
+#include "Pointer.hpp"
+#include <QtGlobal>
 
 namespace Lattice {
 
 class Camera final {
+    Q_DISABLE_COPY(Camera)
 public:
     enum class Projection {
         Perspective,

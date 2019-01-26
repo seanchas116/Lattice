@@ -10,12 +10,12 @@ DrawSolid::DrawSolid() :
 {
 }
 
-void DrawSolid::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const Camera &camera, glm::dvec3 diffuse, glm::dvec3 ambient) {
+void DrawSolid::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<Camera> &camera, glm::dvec3 diffuse, glm::dvec3 ambient) {
     _shader.bind();
     _shader.setUniform("diffuse", diffuse);
     _shader.setUniform("ambient", ambient);
-    _shader.setUniform("MV", camera.worldToCameraMatrix() * matrix);
-    _shader.setUniform("MVP", camera.worldToScreenMatrix() * matrix);
+    _shader.setUniform("MV", camera->worldToCameraMatrix() * matrix);
+    _shader.setUniform("MVP", camera->worldToScreenMatrix() * matrix);
     vao->draw();
 }
 

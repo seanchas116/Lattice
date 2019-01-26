@@ -26,7 +26,7 @@ ArrowHandle::ArrowHandle(int axis, HandleType handleType) :
 {
 }
 
-void ArrowHandle::draw(const SP<Render::Operations> &operations, const Camera &camera) {
+void ArrowHandle::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInScreen){
         return;
@@ -39,13 +39,13 @@ void ArrowHandle::draw(const SP<Render::Operations> &operations, const Camera &c
     operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, Constants::colors[_axis]);
 }
 
-std::optional<Render::HitResult> ArrowHandle::hitTest(dvec2 pos, const Camera &camera) const {
+std::optional<Render::HitResult> ArrowHandle::hitTest(dvec2 pos, const SP<Camera> &camera) const {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInScreen) {
         return {};
     }
 
-    Ray mouseRay = camera.cameraMouseRay(pos);
+    Ray mouseRay = camera->cameraMouseRay(pos);
 
     RayRayDistance mouseToArrowDistance(mouseRay, coordinates.arrowRaysInManipulatorSpace[_axis]);
     double distance = mouseToArrowDistance.distance / coordinates.scale;
@@ -68,7 +68,7 @@ void ArrowHandle::mousePress(const Render::MouseEvent &event) {
         return;
     }
 
-    RayRayDistance mouseToAxisDistance(event.camera.cameraMouseRay(event.screenPos), coordinates.axisRaysInCameraSpace[_axis]);
+    RayRayDistance mouseToAxisDistance(event.camera->cameraMouseRay(event.screenPos), coordinates.axisRaysInCameraSpace[_axis]);
     double tAxis = mouseToAxisDistance.t1;
 
     _initialTargetPosition = _targetPosition;
@@ -81,7 +81,7 @@ void ArrowHandle::mouseMove(const Render::MouseEvent &event) {
         return;
     }
 
-    RayRayDistance mouseToAxisDistance(event.camera.cameraMouseRay(event.screenPos), coordinates.axisRaysInCameraSpace[_axis]);
+    RayRayDistance mouseToAxisDistance(event.camera->cameraMouseRay(event.screenPos), coordinates.axisRaysInCameraSpace[_axis]);
     double tAxis = mouseToAxisDistance.t1;
 
     emit onChange(tAxis);
