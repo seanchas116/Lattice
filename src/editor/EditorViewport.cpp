@@ -1,6 +1,7 @@
 #include "EditorViewport.hpp"
 #include "KeyObserver.hpp"
 #include "ViewportControlView.hpp"
+#include <QVBoxLayout>
 
 namespace Lattice::Editor {
 
@@ -12,7 +13,12 @@ EditorViewport::EditorViewport(const SP<UI::AppState> &appState, const SP<KeyObs
     setCameraLocation(_cameraController.location());
     connect(&_cameraController, &CameraController::locationChanged, this, &Render::Viewport::setCameraLocation);
 
-    new ViewportControlView(this);
+    auto layout = new QVBoxLayout();
+    auto controlView = new ViewportControlView(this);
+    layout->addWidget(controlView);
+    layout->setAlignment(Qt::AlignTop | Qt::AlignRight);
+
+    setLayout(layout);
 }
 
 void EditorViewport::mousePressEvent(QMouseEvent *event) {
