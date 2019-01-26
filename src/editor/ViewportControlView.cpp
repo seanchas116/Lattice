@@ -12,17 +12,17 @@ ViewportControlView::ViewportControlView(QWidget *parent) : QWidget(parent) {
     auto menu = new QMenu(this);
 
     {
-        auto actionPerspective = menu->addAction(tr("Perspective"));
-        actionPerspective->setCheckable(true);
-        actionPerspective->setChecked(true);
+        auto actionPersp = menu->addAction(tr("Perspective"));
+        actionPersp->setCheckable(true);
+        actionPersp->setChecked(true);
 
-        auto actionOrthogonal= menu->addAction(tr("Orthogonal"));
-        actionOrthogonal->setCheckable(true);
+        auto actionOrtho = menu->addAction(tr("Orthographic"));
+        actionOrtho->setCheckable(true);
 
         auto actionGroup = new QActionGroup(this);
         actionGroup->setExclusive(true);
-        actionGroup->addAction(actionPerspective);
-        actionGroup->addAction(actionOrthogonal);
+        actionGroup->addAction(actionPersp);
+        actionGroup->addAction(actionOrtho);
     }
 
     menu->addSeparator();
