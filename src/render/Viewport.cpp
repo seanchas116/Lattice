@@ -98,5 +98,10 @@ void Viewport::setCameraLocation(const Location &location) {
     emit updateRequested();
 }
 
+void Viewport::setCameraProjection(const Camera::Projection &projection) {
+    _camera.setProjection(projection);
+    emit updateRequested();
+}
+
 } // namespace Render
 } // namespace Lattice

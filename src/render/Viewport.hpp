@@ -25,6 +25,7 @@ public:
     double widgetPixelRatio() const;
 
     void setCameraLocation(const Location& location);
+    void setCameraProjection(const Camera::Projection& projection);
 
 signals:
     void updateRequested();
