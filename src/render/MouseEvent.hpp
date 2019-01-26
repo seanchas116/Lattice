@@ -22,7 +22,7 @@ struct HitResult {
 
 struct MouseEvent {
 public:
-    MouseEvent(QMouseEvent* originalEvent, glm::dvec2 screenPos, const Camera& camera, const HitResult& hitResult) :
+    MouseEvent(QMouseEvent* originalEvent, glm::dvec2 screenPos, const SP<Camera>& camera, const HitResult& hitResult) :
         originalEvent(originalEvent),
         screenPos(screenPos),
         camera(camera),
@@ -31,7 +31,7 @@ public:
 
     QMouseEvent* originalEvent;
     glm::dvec2 screenPos;
-    const Camera& camera;
+    const SP<Camera>& camera;
     HitResult hitResult;
 };
 

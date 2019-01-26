@@ -21,9 +21,9 @@ public:
 
     ArrowHandle(int axis, HandleType handleType);
 
-    void draw(const SP<Render::Operations> &operations, const Camera &camera) override;
+    void draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) override;
 
-    std::optional<Render::HitResult> hitTest(glm::dvec2 pos, const Camera &camera) const override;
+    std::optional<Render::HitResult> hitTest(glm::dvec2 pos, const SP<Camera> &camera) const override;
     void mousePress(const Render::MouseEvent &event) override;
     void mouseMove(const Render::MouseEvent &event) override;
     void mouseRelease(const Render::MouseEvent &event) override;

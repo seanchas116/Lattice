@@ -6,11 +6,11 @@ namespace Render {
 Renderable::Renderable() {
 }
 
-void Renderable::draw(const SP<Operations> &operations, const Camera &camera) {
+void Renderable::draw(const SP<Operations> &operations, const SP<Camera> &camera) {
     Q_UNUSED(operations); Q_UNUSED(camera);
 }
 
-std::optional<HitResult> Renderable::hitTest(glm::dvec2 pos, const Camera &camera) const {
+std::optional<HitResult> Renderable::hitTest(glm::dvec2 pos, const SP<Camera> &camera) const {
     Q_UNUSED(pos); Q_UNUSED(camera);
     return {};
 }

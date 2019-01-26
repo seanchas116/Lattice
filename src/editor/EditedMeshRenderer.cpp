@@ -37,7 +37,7 @@ EditedMeshRenderer::EditedMeshRenderer(const SP<UI::AppState>& appState, const S
     connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, &EditedMeshRenderer::updateWholeVAOs);
 }
 
-void EditedMeshRenderer::draw(const SP<Render::Operations> &operations, const Camera &camera) {
+void EditedMeshRenderer::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
     if (_appState->isFaceVisible()) {
         for (auto& [material, vao] : _faceVAOs) {
             operations->drawMaterial.draw(vao, _item->location().matrixToWorld(), camera, material);
@@ -51,7 +51,7 @@ void EditedMeshRenderer::draw(const SP<Render::Operations> &operations, const Ca
     }
 }
 
-std::optional<Render::HitResult> EditedMeshRenderer::hitTest(dvec2 pos, const Camera &camera) const {
+std::optional<Render::HitResult> EditedMeshRenderer::hitTest(dvec2 pos, const SP<Camera> &camera) const {
     auto vertexPickResult = _meshPicker->pickVertex(_item->location().matrixToWorld(), camera, pos, 12);
     if (vertexPickResult) {
         auto [vertex, depth] = *vertexPickResult;
@@ -122,14 +122,14 @@ void EditedMeshRenderer::mousePress(const Render::MouseEvent &event) {
     for (auto& v : selection.vertices) {
         _initialPositions[v] = v->position();
     }
-    _dragStartWorldPos = event.camera.mapScreenToWorld(glm::vec3(event.screenPos, event.hitResult.depth));
+    _dragStartWorldPos = event.camera->mapScreenToWorld(glm::vec3(event.screenPos, event.hitResult.depth));
     _dragStarted = false;
 
     _appState->document()->setMeshSelection(selection);
 }
 
 void EditedMeshRenderer::mouseMove(const Render::MouseEvent &event) {
-    dvec3 worldPos = event.camera.mapScreenToWorld(glm::vec3(event.screenPos, event.hitResult.depth));
+    dvec3 worldPos = event.camera->mapScreenToWorld(glm::vec3(event.screenPos, event.hitResult.depth));
     dvec3 offset = worldPos - _dragStartWorldPos;
 
     if (!_dragStarted) {

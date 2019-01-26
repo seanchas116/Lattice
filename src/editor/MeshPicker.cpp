@@ -48,8 +48,8 @@ bool mapLineToScreen(const mat4& P, vec2 viewportSize, float zNear, vec4 p0_came
 MeshPicker::MeshPicker(const SP<Document::Mesh> &mesh) : _mesh(mesh) {
 }
 
-std::optional<std::pair<SP<Document::MeshFace>, double> > MeshPicker::pickFace(const dmat4 &modelToWorld, const Camera &camera, dvec2 screenPos) const {
-    Ray<float> ray = inverse(modelToWorld) * camera.worldMouseRay(screenPos);
+std::optional<std::pair<SP<Document::MeshFace>, double> > MeshPicker::pickFace(const dmat4 &modelToWorld, const SP<Camera> &camera, dvec2 screenPos) const {
+    Ray<float> ray = inverse(modelToWorld) * camera->worldMouseRay(screenPos);
     // TODO: Use Bounding Volume Hierarchy to do faster
     ScopedTimer timer("MeshPicker::pickFace");
     std::map<double, SP<Document::MeshFace>> intersectings;
@@ -62,7 +62,7 @@ std::optional<std::pair<SP<Document::MeshFace>, double> > MeshPicker::pickFace(c
             auto [intersects, t] = ray.intersectsTriangle({v0, v1, v2});
             if (intersects) {
                 dvec3 intersectingPos = ray.at(t);
-                auto [intersectingPosScreen, isInScreen] = camera.mapWorldToScreen((modelToWorld * dvec4(intersectingPos, 1)).xyz);
+                auto [intersectingPosScreen, isInScreen] = camera->mapWorldToScreen((modelToWorld * dvec4(intersectingPos, 1)).xyz);
                 intersectings.insert({intersectingPosScreen.z, f});
             }
         }
@@ -74,11 +74,11 @@ std::optional<std::pair<SP<Document::MeshFace>, double> > MeshPicker::pickFace(c
     return {{nearest->second, nearest->first}};
 }
 
-std::optional<std::pair<SP<Document::MeshVertex>, double> > MeshPicker::pickVertex(const dmat4 &modelToWorld, const Camera &camera, dvec2 screenPos, double distance) const {
+std::optional<std::pair<SP<Document::MeshVertex>, double> > MeshPicker::pickVertex(const dmat4 &modelToWorld, const SP<Camera> &camera, dvec2 screenPos, double distance) const {
     std::map<double, SP<Document::MeshVertex>> intersectings;
 
     for (auto& v : _mesh->vertices()) {
-        auto [screenVertexPos, isInScreen] = camera.mapWorldToScreen((modelToWorld * vec4(v->position(), 1)).xyz);
+        auto [screenVertexPos, isInScreen] = camera->mapWorldToScreen((modelToWorld * vec4(v->position(), 1)).xyz);
         if (!isInScreen) { continue; }
 
         if (glm::distance(dvec2(screenVertexPos.xy), screenPos) <= distance) {
@@ -93,17 +93,17 @@ std::optional<std::pair<SP<Document::MeshVertex>, double> > MeshPicker::pickVert
     return {{nearest->second, nearest->first}};
 }
 
-std::optional<std::pair<SP<Document::MeshEdge>, double> > MeshPicker::pickEdge(const dmat4 &modelToWorld, const Camera &camera, dvec2 screenPos, double distance) const {
+std::optional<std::pair<SP<Document::MeshEdge>, double> > MeshPicker::pickEdge(const dmat4 &modelToWorld, const SP<Camera> &camera, dvec2 screenPos, double distance) const {
     std::map<double, SP<Document::MeshEdge>> intersectings;
 
     for (auto& [_, e] : _mesh->edges()) {
         vec4 p0_modelSpace = vec4(e->vertices()[0]->position(), 1);
         vec4 p1_modelSpace = vec4(e->vertices()[1]->position(), 1);
-        vec4 p0_cameraSpace = camera.worldToCameraMatrix() * modelToWorld * p0_modelSpace;
-        vec4 p1_cameraSpace = camera.worldToCameraMatrix() * modelToWorld * p1_modelSpace;
+        vec4 p0_cameraSpace = camera->worldToCameraMatrix() * modelToWorld * p0_modelSpace;
+        vec4 p1_cameraSpace = camera->worldToCameraMatrix() * modelToWorld * p1_modelSpace;
         vec3 p0_screenSpace;
         vec3 p1_screenSpace;
-        bool ok = mapLineToScreen(camera.cameraToScreenMatrix(), camera.viewSize(), camera.zNear(), p0_cameraSpace, p1_cameraSpace, p0_screenSpace, p1_screenSpace);
+        bool ok = mapLineToScreen(camera->cameraToScreenMatrix(), camera->viewSize(), camera->zNear(), p0_cameraSpace, p1_cameraSpace, p0_screenSpace, p1_screenSpace);
         if (!ok) {
             continue;
         }

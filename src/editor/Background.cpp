@@ -9,7 +9,7 @@ Background::Background(const SP<UI::AppState> &appState) : _appState(appState) {
     initializeOpenGLFunctions();
 }
 
-void Background::draw(const SP<Render::Operations> &operations, const Camera &camera) {
+void Background::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
     Q_UNUSED(operations); Q_UNUSED(camera);
 
     // TODO: manage depth test in better way
@@ -21,7 +21,7 @@ void Background::draw(const SP<Render::Operations> &operations, const Camera &ca
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-std::optional<Render::HitResult> Background::hitTest(glm::dvec2 pos, const Camera &camera) const {
+std::optional<Render::HitResult> Background::hitTest(glm::dvec2 pos, const SP<Camera> &camera) const {
     Q_UNUSED(pos); Q_UNUSED(camera);
     Render::HitResult result;
     result.depth = 1;

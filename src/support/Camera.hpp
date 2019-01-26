@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include "Location.hpp"
 #include "Ray.hpp"
+#include "Pointer.hpp"
 
 namespace Lattice {
 

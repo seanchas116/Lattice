@@ -12,12 +12,12 @@ DrawMaterial::DrawMaterial() :
     initializeOpenGLFunctions();
 }
 
-void DrawMaterial::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const Camera &camera, const SP<Document::MeshMaterial> &material) {
+void DrawMaterial::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<Camera> &camera, const SP<Document::MeshMaterial> &material) {
     _shader.bind();
     _shader.setUniform("diffuse", material->baseColor());
     _shader.setUniform("ambient", glm::vec3(0));
-    _shader.setUniform("MV", camera.worldToCameraMatrix() * matrix);
-    _shader.setUniform("MVP", camera.worldToScreenMatrix() * matrix);
+    _shader.setUniform("MV", camera->worldToCameraMatrix() * matrix);
+    _shader.setUniform("MVP", camera->worldToScreenMatrix() * matrix);
 
     if (!material->baseColorImage().isNull()) {
         auto texture = getTexture(material->baseColorImage());

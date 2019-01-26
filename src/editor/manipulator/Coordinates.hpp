@@ -9,21 +9,21 @@ namespace Manipulator {
 
 class Coordinates final {
 public:
-    Coordinates(const Camera& camera, glm::dvec3 targetPos) : targetPos(targetPos) {
+    Coordinates(const SP<Camera>& camera, glm::dvec3 targetPos) : targetPos(targetPos) {
         using namespace glm;
 
-        auto [screenPos, isInScreen] = camera.mapWorldToScreen(targetPos);
+        auto [screenPos, isInScreen] = camera->mapWorldToScreen(targetPos);
         this->isInScreen = isInScreen;
         if (!isInScreen) {
             return;
         }
 
         dvec3 screenPosFixedDepth(screenPos.xy, Constants::fixedDepth);
-        dvec3 positionFixedDepth_worldSpace = camera.mapScreenToWorld(screenPosFixedDepth);
+        dvec3 positionFixedDepth_worldSpace = camera->mapScreenToWorld(screenPosFixedDepth);
 
-        scale = 1.0 / double(camera.viewSize().y) * 20.0;
+        scale = 1.0 / double(camera->viewSize().y) * 20.0;
 
-        dmat4 worldToCamera = camera.worldToCameraMatrix();
+        dmat4 worldToCamera = camera->worldToCameraMatrix();
         manipulatorToWorld = glm::scale(glm::translate(glm::dmat4(1), positionFixedDepth_worldSpace), dvec3(scale));
         manipulatorToCamera = worldToCamera * manipulatorToWorld;
 
