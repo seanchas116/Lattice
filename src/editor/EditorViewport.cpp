@@ -14,9 +14,11 @@ EditorViewport::EditorViewport(const SP<UI::AppState> &appState, const SP<KeyObs
     connect(&_cameraController, &CameraController::locationChanged, this, &Render::Viewport::setCameraLocation);
 
     auto layout = new QVBoxLayout();
-    auto controlView = new ViewportControlView(this);
-    layout->addWidget(controlView);
     layout->setAlignment(Qt::AlignTop | Qt::AlignRight);
+
+    auto controlView = new ViewportControlView(this);
+    connect(controlView, &ViewportControlView::cameraProjectionChanged, this, &Render::Viewport::setCameraProjection);
+    layout->addWidget(controlView);
 
     setLayout(layout);
 }

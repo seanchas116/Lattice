@@ -12,17 +12,27 @@ ViewportControlView::ViewportControlView(QWidget *parent) : QWidget(parent) {
     auto menu = new QMenu(this);
 
     {
-        auto actionPersp = menu->addAction(tr("Perspective"));
-        actionPersp->setCheckable(true);
-        actionPersp->setChecked(true);
-
-        auto actionOrtho = menu->addAction(tr("Orthographic"));
-        actionOrtho->setCheckable(true);
-
         auto actionGroup = new QActionGroup(this);
         actionGroup->setExclusive(true);
-        actionGroup->addAction(actionPersp);
-        actionGroup->addAction(actionOrtho);
+
+        std::vector<std::pair<Camera::Projection, QString>> projections = {
+            {Camera::Projection::Perspective, tr("Perspective")},
+            {Camera::Projection::Orthographic, tr("Orthographic")},
+        };
+        for (auto&& [projection, text] : projections) {
+            auto action= menu->addAction(text);
+            action->setCheckable(true);
+            action->setChecked(projection == _projection);
+            connect(action, &QAction::triggered, this, [this, projection = projection] (bool checked) {
+                if (checked) {
+                    setCameraProjection(projection);
+                }
+            });
+            connect(this, &ViewportControlView::cameraProjectionChanged, action, [action, projection = projection] (auto newProjection) {
+                action->setChecked(projection == newProjection);
+            });
+            actionGroup->addAction(action);
+        }
     }
 
     menu->addSeparator();
@@ -49,6 +59,14 @@ ViewportControlView::ViewportControlView(QWidget *parent) : QWidget(parent) {
     auto layout = new QVBoxLayout();
     layout->addWidget(toolButton);
     setLayout(layout);
+}
+
+void ViewportControlView::setCameraProjection(Camera::Projection projection) {
+    if (_projection == projection) {
+        return;
+    }
+    _projection = projection;
+    emit cameraProjectionChanged(projection);
 }
 
 } // namespace Editor
