@@ -22,7 +22,7 @@ class AppState final : public QObject {
     LATTICE_AUTO_PROPERTY(bool, isEdgeVisible, setEdgeVisible, true)
     LATTICE_AUTO_PROPERTY(bool, isFaceVisible, setFaceVisible, true)
 
-    LATTICE_AUTO_PROPERTY(ViewportSplitMode, viewportSplit, setViewportSplit, ViewportSplitMode::Single)
+    LATTICE_AUTO_PROPERTY(ViewportSplitMode, viewportSplitMode, setViewportSplit, ViewportSplitMode::Single)
 public:
     AppState();
 

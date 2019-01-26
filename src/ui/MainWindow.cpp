@@ -225,8 +225,8 @@ void MainWindow::setupMenu() {
             auto onChange = [actions](UI::ViewportSplitMode mode) {
                 actions.at(mode)->setChecked(true);
             };
-            onChange(_appState->viewportSplit());
-            connect(_appState.get(), &UI::AppState::viewportSplitChanged, this, onChange);
+            onChange(_appState->viewportSplitMode());
+            connect(_appState.get(), &UI::AppState::viewportSplitModeChanged, this, onChange);
         }
 
         windowMenu->addSeparator();

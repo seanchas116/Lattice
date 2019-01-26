@@ -15,8 +15,8 @@ EditorViewportContainer::EditorViewportContainer(const SP<UI::AppState> &appStat
 {
     setFocusPolicy(Qt::ClickFocus);
 
-    setSplitMode(appState->viewportSplit());
-    connect(appState.get(), &UI::AppState::viewportSplitChanged, this, &EditorViewportContainer::setSplitMode);
+    setSplitMode(appState->viewportSplitMode());
+    connect(appState.get(), &UI::AppState::viewportSplitModeChanged, this, &EditorViewportContainer::setSplitMode);
 
     connect(this, &ViewportContainer::initialized, this, [this] {
         auto scene = makeShared<EditorScene>(_appState);
