@@ -13,6 +13,11 @@ Camera::Camera() :
 {
 }
 
+void Camera::setProjection(Camera::Projection projection) {
+    _projection = projection;
+    updateMatrix();
+}
+
 void Camera::setLocation(const Location &location) {
     _location = location;
     updateMatrix();
@@ -76,7 +81,13 @@ Ray<double> Camera::worldMouseRay(dvec2 screenPos) const {
 
 void Camera::updateMatrix() {
     _worldToCameraMatrix = inverse(_location.matrixToWorld());
-    _cameraToScreenMatrix = glm::perspective(_fieldOfView, double(_viewSize.x) / double(_viewSize.y), _zNear, _zFar);
+    if (_projection == Projection::Perspective) {
+        _cameraToScreenMatrix = glm::perspective(_fieldOfView, double(_viewSize.x) / double(_viewSize.y), _zNear, _zFar);
+    } else {
+        double scale = 100.0; // TODO
+        dvec2 topRight = _viewSize / scale * 0.5;
+        _cameraToScreenMatrix = glm::ortho(-topRight.x, topRight.x, -topRight.y, topRight.y, _zNear, _zFar);
+    }
     _worldToScreenMatrix = _cameraToScreenMatrix * _worldToCameraMatrix;
 }
 

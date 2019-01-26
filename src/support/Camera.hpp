@@ -8,7 +8,15 @@ namespace Lattice {
 
 class Camera final {
 public:
+    enum class Projection {
+        Perspective,
+        Orthographic,
+    };
+
     Camera();
+
+    Projection projection() const { return _projection; }
+    void setProjection(Projection projection);
 
     Location location() const { return _location; }
     void setLocation(const Location &location);
@@ -45,12 +53,15 @@ public:
 private:
     void updateMatrix();
 
+    Projection _projection = Projection::Perspective;
+
     Location _location;
 
     glm::dvec2 _viewSize;
     double _fieldOfView;
     double _zNear;
     double _zFar;
+
     glm::dmat4 _cameraToScreenMatrix;
     glm::dmat4 _worldToCameraMatrix;
     glm::dmat4 _worldToScreenMatrix;
