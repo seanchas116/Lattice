@@ -1,30 +1,35 @@
 #include "ViewportControlView.hpp"
 #include <QRadioButton>
+#include <QToolButton>
 #include <QVBoxLayout>
+#include <QMenu>
+#include <QActionGroup>
 
 namespace Lattice {
 namespace Editor {
 
 ViewportControlView::ViewportControlView(QWidget *parent) : QWidget(parent) {
+    auto menu = new QMenu(this);
+
+    auto actionPerspective = menu->addAction(tr("Perspective"));
+    actionPerspective->setCheckable(true);
+    actionPerspective->setChecked(true);
+
+    auto actionOrthogonal= menu->addAction(tr("Orthogonal"));
+    actionOrthogonal->setCheckable(true);
+
+    auto actionGroup = new QActionGroup(this);
+    actionGroup->setExclusive(true);
+    actionGroup->addAction(actionPerspective);
+    actionGroup->addAction(actionOrthogonal);
+
+    auto toolButton = new QToolButton();
+    toolButton->setText(tr("Menu"));
+    toolButton->setMenu(menu);
+    toolButton->setPopupMode(QToolButton::InstantPopup);
+
     auto layout = new QVBoxLayout();
-
-    {
-
-        auto buttonPerspective = new QRadioButton(tr("Perspective"));
-        buttonPerspective->setAutoExclusive(true);
-
-        auto buttonOrthogonal = new QRadioButton(tr("Orthogonal"));
-        buttonOrthogonal->setAutoExclusive(true);
-
-        auto radioButtonsLayout = new QVBoxLayout();
-        radioButtonsLayout->addWidget(buttonPerspective);
-        radioButtonsLayout->addWidget(buttonOrthogonal);
-
-        auto radioButtons = new QWidget();
-        radioButtons->setLayout(radioButtonsLayout);
-        layout->addWidget(radioButtons);
-    }
-
+    layout->addWidget(toolButton);
     setLayout(layout);
 }
 

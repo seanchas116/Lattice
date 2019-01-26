@@ -12,7 +12,7 @@ EditorViewport::EditorViewport(const SP<UI::AppState> &appState, const SP<KeyObs
     setCameraLocation(_cameraController.location());
     connect(&_cameraController, &CameraController::locationChanged, this, &Render::Viewport::setCameraLocation);
 
-    auto controlView = new ViewportControlView(this);
+    new ViewportControlView(this);
 }
 
 void EditorViewport::mousePressEvent(QMouseEvent *event) {
