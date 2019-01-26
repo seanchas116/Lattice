@@ -99,7 +99,7 @@ void Viewport::setCameraLocation(const Location &location) {
 }
 
 void Viewport::setCameraProjection(const Camera::Projection &projection) {
-    _camera.setProjection(projection);
+    _camera->setProjection(projection);
     emit updateRequested();
 }
 
