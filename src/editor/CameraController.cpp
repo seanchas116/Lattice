@@ -63,8 +63,12 @@ bool CameraController::mouseRelease(QMouseEvent *) {
 }
 
 bool CameraController::wheel(QWheelEvent *event) {
-    _location.position = _location.position + -_location.backward() * (0.01 * event->delta());
-    _camera->setLocation(_location);
+    if (_camera->projection() == Camera::Projection::Perspective) {
+        _location.position = _location.position + -_location.backward() * (0.01 * event->delta());
+        _camera->setLocation(_location);
+    } else {
+        _camera->setOrthoScale(_camera->orthoScale() * pow(2.0, 0.001 * event->delta()));
+    }
     emit cameraChanged();
     return false;
 }
