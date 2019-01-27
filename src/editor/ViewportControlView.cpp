@@ -23,10 +23,13 @@ ViewportControlView::ViewportControlView(const SP<Camera> &camera, QWidget *pare
             auto action= menu->addAction(text);
             action->setCheckable(true);
             action->setChecked(projection == _camera->projection());
-            connect(action, &QAction::triggered, this, [this, projection = projection] (bool checked) {
+            connect(action, &QAction::triggered, camera.get(), [camera, projection = projection] (bool checked) {
                 if (checked) {
-                    _camera->setProjection(projection);
+                    camera->setProjection(projection);
                 }
+            });
+            connect(camera.get(), &Camera::projectionChanged, action, [action, projection = projection](auto newProjection) {
+                action->setChecked(projection == newProjection);
             });
             actionGroup->addAction(action);
         }
