@@ -9,6 +9,15 @@
 
 namespace Lattice {
 
+struct OrientationAngles {
+    inline static const glm::dvec3 front {0, 0, 0};
+    inline static const glm::dvec3 back {0, M_PI, 0};
+    inline static const glm::dvec3 right {0, M_PI * 0.5, 0};
+    inline static const glm::dvec3 left {0, M_PI * 1.5, 0};
+    inline static const glm::dvec3 top {M_PI * -0.5, 0, 0};
+    inline static const glm::dvec3 bottom {M_PI * 0.5, 0, 0};
+};
+
 class Camera final : public QObject {
     Q_OBJECT
 

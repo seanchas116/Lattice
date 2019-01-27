@@ -39,12 +39,12 @@ ViewportControlView::ViewportControlView(const SP<Camera> &camera, QWidget *pare
 
     {
         std::vector<std::pair<QString, glm::dvec3>> orientations = {
-            {tr("Front"), glm::vec3(0, 0, 0)},
-            {tr("Back"), glm::vec3(0, M_PI, 0)},
-            {tr("Right"), glm::vec3(0, M_PI * 0.5, 0)},
-            {tr("Left"), glm::vec3(0, M_PI * 1.5, 0)},
-            {tr("Top"), glm::vec3(M_PI * -0.5, 0, 0)},
-            {tr("Bottom"), glm::vec3(M_PI * 0.5, 0, 0)},
+            {tr("Front"), OrientationAngles::front},
+            {tr("Back"), OrientationAngles::back},
+            {tr("Right"), OrientationAngles::right},
+            {tr("Left"), OrientationAngles::left},
+            {tr("Top"), OrientationAngles::top},
+            {tr("Bottom"), OrientationAngles::bottom},
         };
 
         for (auto&& [text, eulerAngles] : orientations) {

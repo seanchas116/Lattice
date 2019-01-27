@@ -82,19 +82,19 @@ void EditorViewportContainer::setSplitMode(UI::ViewportSplitMode split) {
         }
         {
             Location location;
-            location.rotation = glm::dquat(glm::dvec3(M_PI * -0.5, 0, 0)); // top
+            location.rotation = glm::dquat(OrientationAngles::top);
             viewports[0]->camera()->setProjection(Camera::Projection::Orthographic);
             viewports[0]->camera()->setLocation(location);
         }
         {
             Location location;
-            location.rotation = glm::dquat(glm::dvec3(0, 0, 0)); // front
+            location.rotation = glm::dquat(OrientationAngles::front);
             viewports[2]->camera()->setProjection(Camera::Projection::Orthographic);
             viewports[2]->camera()->setLocation(location);
         }
         {
             Location location;
-            location.rotation = glm::dquat(glm::dvec3(0, M_PI * 0.5, 0)); // right
+            location.rotation = glm::dquat(OrientationAngles::right);
             viewports[3]->camera()->setProjection(Camera::Projection::Orthographic);
             viewports[3]->camera()->setLocation(location);
         }
