@@ -23,6 +23,11 @@ void Camera::setLocation(const Location &location) {
     updateMatrix();
 }
 
+void Camera::lookFront() {
+    _location.rotation = glm::dquat(glm::vec3(0, 0, 0));
+    updateMatrix();
+}
+
 void Camera::setViewSize(const dvec2 &viewSize) {
     _viewSize = viewSize;
     updateMatrix();

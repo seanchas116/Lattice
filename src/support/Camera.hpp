@@ -24,6 +24,8 @@ public:
     Location location() const { return _location; }
     void setLocation(const Location &location);
 
+    void lookFront();
+
     glm::dvec2 viewSize() const { return _viewSize; }
     void setViewSize(const glm::dvec2 &viewSize);
 

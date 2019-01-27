@@ -35,7 +35,9 @@ ViewportControlView::ViewportControlView(const SP<Camera> &camera, QWidget *pare
     menu->addSeparator();
 
     {
-        menu->addAction(tr("Front"));
+        menu->addAction(tr("Front"), this, [this] {
+            _camera->lookFront();
+        });
         menu->addAction(tr("Back"));
         menu->addAction(tr("Right"));
         menu->addAction(tr("Left"));
