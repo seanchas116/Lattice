@@ -35,14 +35,23 @@ ViewportControlView::ViewportControlView(const SP<Camera> &camera, QWidget *pare
     menu->addSeparator();
 
     {
-        menu->addAction(tr("Front"), this, [this] {
-            _camera->lookFront();
-        });
-        menu->addAction(tr("Back"));
-        menu->addAction(tr("Right"));
-        menu->addAction(tr("Left"));
-        menu->addAction(tr("Top"));
-        menu->addAction(tr("Bottom"));
+        std::vector<std::pair<QString, glm::dvec3>> orientations = {
+            {tr("Front"), glm::vec3(0, 0, 0)},
+            {tr("Back"), glm::vec3(0, M_PI, 0)},
+            {tr("Right"), glm::vec3(0, M_PI * 0.5, 0)},
+            {tr("Left"), glm::vec3(0, M_PI * 1.5, 0)},
+            {tr("Top"), glm::vec3(M_PI * -0.5, 0, 0)},
+            {tr("Bottom"), glm::vec3(M_PI * 0.5, 0, 0)},
+        };
+
+        for (auto&& [text, eulerAngles] : orientations) {
+            menu->addAction(text, this, [this, eulerAngles = eulerAngles] {
+                Location location;
+                location.rotation = glm::dquat(eulerAngles);
+                _camera->setProjection(Camera::Projection::Orthographic);
+                _camera->setLocation(location);
+            });
+        }
 
         menu->addSeparator();
 
