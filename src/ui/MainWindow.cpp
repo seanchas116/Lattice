@@ -35,7 +35,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
 }
 
 void MainWindow::setupToolBar() {
-    auto toolBar = addToolBar(tr("Tools"));
+    auto toolBar = new QToolBar(tr("Tools"));
+    addToolBar(Qt::LeftToolBarArea, toolBar);
 
     auto addMenu = new QMenu();
     addMenu->addAction(tr("Plane"), _appState.get(), &AppState::addPlane);
