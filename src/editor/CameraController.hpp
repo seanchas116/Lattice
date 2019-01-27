@@ -22,9 +22,6 @@ public:
 
     void setPressedKeys(const std::unordered_set<int>& keys);
 
-signals:
-    void cameraChanged();
-
 private:
     enum Mode {
         None,

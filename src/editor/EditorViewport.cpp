@@ -11,7 +11,6 @@ EditorViewport::EditorViewport(const SP<UI::AppState> &appState, const SP<KeyObs
     _appState(appState)
 {
     connect(keyObserver.get(), &KeyObserver::pressedKeysChanged, &_cameraController, &CameraController::setPressedKeys);
-    connect(&_cameraController, &CameraController::cameraChanged, this, &Render::Viewport::updateRequested);
 
     auto layout = new QVBoxLayout();
     layout->setAlignment(Qt::AlignTop | Qt::AlignRight);

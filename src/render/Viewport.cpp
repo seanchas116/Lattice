@@ -8,7 +8,9 @@
 namespace Lattice {
 namespace Render {
 
-Viewport::Viewport(QWidget *parent) : QWidget(parent), _camera(makeShared<Camera>()) {}
+Viewport::Viewport(QWidget *parent) : QWidget(parent), _camera(makeShared<Camera>()) {
+    connect(_camera.get(), &Camera::changed, this, &Viewport::updateRequested);
+}
 
 void Viewport::mousePressEvent(QMouseEvent *event) {
     auto pos = mapQtToGL(event->pos());

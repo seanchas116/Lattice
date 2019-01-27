@@ -34,7 +34,6 @@ bool CameraController::mouseMove(QMouseEvent *event) {
     case Mode::Move: {
         _location.position = _location.position + _location.up() * double(offset.y()) * 0.02 + _location.right() * double(-offset.x()) * 0.02;
         _camera->setLocation(_location);
-        emit cameraChanged();
         break;
     }
     case Mode::Rotate: {
@@ -45,7 +44,6 @@ bool CameraController::mouseMove(QMouseEvent *event) {
         _location.rotation = glm::dquat(_eulerAngles);
 
         _camera->setLocation(_location);
-        emit cameraChanged();
         break;
     }
     default: {
@@ -69,7 +67,6 @@ bool CameraController::wheel(QWheelEvent *event) {
     } else {
         _camera->setOrthoScale(_camera->orthoScale() * pow(2.0, 0.001 * event->delta()));
     }
-    emit cameraChanged();
     return false;
 }
 
