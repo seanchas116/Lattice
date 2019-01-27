@@ -90,7 +90,7 @@ void Camera::updateMatrix() {
         _cameraToScreenMatrix = glm::perspective(_fieldOfView, double(_viewSize.x) / double(_viewSize.y), _zNear, _zFar);
     } else {
         dvec2 topRight = _viewSize / _orthoScale * 0.5;
-        _cameraToScreenMatrix = glm::ortho(-topRight.x, topRight.x, -topRight.y, topRight.y, _zNear, _zFar);
+        _cameraToScreenMatrix = glm::ortho(-topRight.x, topRight.x, -topRight.y, topRight.y, -10000.0, 10000.0);
     }
     _worldToScreenMatrix = _cameraToScreenMatrix * _worldToCameraMatrix;
 }
