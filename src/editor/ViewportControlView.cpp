@@ -8,7 +8,7 @@
 namespace Lattice {
 namespace Editor {
 
-ViewportControlView::ViewportControlView(QWidget *parent) : QWidget(parent) {
+ViewportControlView::ViewportControlView(const SP<Camera> &camera, QWidget *parent) : QWidget(parent), _camera(camera) {
     auto menu = new QMenu(this);
 
     {
@@ -22,14 +22,11 @@ ViewportControlView::ViewportControlView(QWidget *parent) : QWidget(parent) {
         for (auto&& [projection, text] : projections) {
             auto action= menu->addAction(text);
             action->setCheckable(true);
-            action->setChecked(projection == _projection);
+            action->setChecked(projection == _camera->projection());
             connect(action, &QAction::triggered, this, [this, projection = projection] (bool checked) {
                 if (checked) {
-                    setCameraProjection(projection);
+                    _camera->setProjection(projection);
                 }
-            });
-            connect(this, &ViewportControlView::cameraProjectionChanged, action, [action, projection = projection] (auto newProjection) {
-                action->setChecked(projection == newProjection);
             });
             actionGroup->addAction(action);
         }
@@ -59,14 +56,6 @@ ViewportControlView::ViewportControlView(QWidget *parent) : QWidget(parent) {
     auto layout = new QVBoxLayout();
     layout->addWidget(toolButton);
     setLayout(layout);
-}
-
-void ViewportControlView::setCameraProjection(Camera::Projection projection) {
-    if (_projection == projection) {
-        return;
-    }
-    _projection = projection;
-    emit cameraProjectionChanged(projection);
 }
 
 } // namespace Editor
