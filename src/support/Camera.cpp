@@ -43,6 +43,11 @@ void Camera::setZFar(double zFar) {
     updateMatrix();
 }
 
+void Camera::setOrthoScale(double orthoScale) {
+    _orthoScale = orthoScale;
+    updateMatrix();
+}
+
 std::pair<glm::dvec3, bool> Camera::mapWorldToScreen(dvec3 worldPos) const {
     dvec3 pos_cameraSpace = (_worldToCameraMatrix * dvec4(worldPos, 1)).xyz;
     return mapCameraToScreen(pos_cameraSpace);
@@ -84,8 +89,7 @@ void Camera::updateMatrix() {
     if (_projection == Projection::Perspective) {
         _cameraToScreenMatrix = glm::perspective(_fieldOfView, double(_viewSize.x) / double(_viewSize.y), _zNear, _zFar);
     } else {
-        double scale = 100.0; // TODO
-        dvec2 topRight = _viewSize / scale * 0.5;
+        dvec2 topRight = _viewSize / _orthoScale * 0.5;
         _cameraToScreenMatrix = glm::ortho(-topRight.x, topRight.x, -topRight.y, topRight.y, _zNear, _zFar);
     }
     _worldToScreenMatrix = _cameraToScreenMatrix * _worldToCameraMatrix;

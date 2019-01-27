@@ -36,6 +36,9 @@ public:
     double zFar() const { return _zFar; }
     void setZFar(double zFar);
 
+    double orthoScale() const { return _orthoScale; }
+    void setOrthoScale(double orthoScale);
+
     glm::dmat4 worldToCameraMatrix() const { return _worldToCameraMatrix; }
     glm::dmat4 cameraToScreenMatrix() const { return _cameraToScreenMatrix; }
     glm::dmat4 worldToScreenMatrix() const { return _worldToScreenMatrix; }
@@ -64,6 +67,8 @@ private:
     double _fieldOfView;
     double _zNear;
     double _zFar;
+
+    double _orthoScale = 100;
 
     glm::dmat4 _cameraToScreenMatrix;
     glm::dmat4 _worldToCameraMatrix;
