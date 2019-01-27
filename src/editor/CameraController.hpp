@@ -30,8 +30,6 @@ private:
     };
 
     SP<Camera> _camera;
-    Location _location;
-    glm::dvec3 _eulerAngles {0};
 
     Mode _mode;
     QPoint _lastMousePos;
