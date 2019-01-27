@@ -27,6 +27,8 @@ public:
     void setCameraLocation(const Location& location);
     void setCameraProjection(const Camera::Projection& projection);
 
+    auto& camera() const { return _camera; }
+
 signals:
     void updateRequested();
 

@@ -7,11 +7,11 @@ namespace Lattice::Editor {
 
 EditorViewport::EditorViewport(const SP<UI::AppState> &appState, const SP<KeyObserver> &keyObserver, QWidget *parent) :
     Render::Viewport(parent),
+    _cameraController(camera()),
     _appState(appState)
 {
     connect(keyObserver.get(), &KeyObserver::pressedKeysChanged, &_cameraController, &CameraController::setPressedKeys);
-    setCameraLocation(_cameraController.location());
-    connect(&_cameraController, &CameraController::locationChanged, this, &Render::Viewport::setCameraLocation);
+    connect(&_cameraController, &CameraController::cameraChanged, this, &Render::Viewport::updateRequested);
 
     auto layout = new QVBoxLayout();
     layout->setAlignment(Qt::AlignTop | Qt::AlignRight);

@@ -4,6 +4,7 @@
 #include <QPoint>
 #include <unordered_set>
 #include "../support/Location.hpp"
+#include "../support/Camera.hpp"
 
 class QMouseEvent;
 class QWheelEvent;
@@ -13,7 +14,7 @@ namespace Lattice::Editor {
 class CameraController final : public QObject {
     Q_OBJECT
 public:
-    CameraController();
+    CameraController(const SP<Camera>& camera);
     bool mousePress(QMouseEvent* event);
     bool mouseMove(QMouseEvent* event);
     bool mouseRelease(QMouseEvent* event);
@@ -21,10 +22,8 @@ public:
 
     void setPressedKeys(const std::unordered_set<int>& keys);
 
-    Location location() const { return _location; }
-
 signals:
-    void locationChanged(const Location& location);
+    void cameraChanged();
 
 private:
     enum Mode {
@@ -33,6 +32,7 @@ private:
         Rotate,
     };
 
+    SP<Camera> _camera;
     Location _location;
     glm::dvec3 _eulerAngles {0};
 

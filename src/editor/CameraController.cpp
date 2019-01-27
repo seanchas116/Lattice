@@ -6,8 +6,9 @@ using namespace glm;
 
 namespace Lattice::Editor {
 
-CameraController::CameraController() {
+CameraController::CameraController(const SP<Camera> &camera) : _camera(camera) {
     _location.position = dvec3(0, 10, 10);
+    _camera->setLocation(_location);
 }
 
 bool CameraController::mousePress(QMouseEvent *event) {
@@ -32,7 +33,8 @@ bool CameraController::mouseMove(QMouseEvent *event) {
     switch (_mode) {
     case Mode::Move: {
         _location.position = _location.position + _location.up() * double(offset.y()) * 0.02 + _location.right() * double(-offset.x()) * 0.02;
-        emit locationChanged(_location);
+        _camera->setLocation(_location);
+        emit cameraChanged();
         break;
     }
     case Mode::Rotate: {
@@ -42,7 +44,8 @@ bool CameraController::mouseMove(QMouseEvent *event) {
 
         _location.rotation = glm::dquat(_eulerAngles);
 
-        emit locationChanged(_location);
+        _camera->setLocation(_location);
+        emit cameraChanged();
         break;
     }
     default: {
@@ -61,7 +64,8 @@ bool CameraController::mouseRelease(QMouseEvent *) {
 
 bool CameraController::wheel(QWheelEvent *event) {
     _location.position = _location.position + -_location.backward() * (0.01 * event->delta());
-    emit locationChanged(_location);
+    _camera->setLocation(_location);
+    emit cameraChanged();
     return false;
 }
 
