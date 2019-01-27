@@ -4,12 +4,14 @@
 #include "Location.hpp"
 #include "Ray.hpp"
 #include "Pointer.hpp"
-#include <QtGlobal>
+#include <QObject>
+#include "Property.hpp"
 
 namespace Lattice {
 
-class Camera final {
-    Q_DISABLE_COPY(Camera)
+class Camera final : public QObject {
+    Q_OBJECT
+
 public:
     enum class Projection {
         Perspective,
@@ -18,28 +20,7 @@ public:
 
     Camera();
 
-    Projection projection() const { return _projection; }
-    void setProjection(Projection projection);
-
-    Location location() const { return _location; }
-    void setLocation(const Location &location);
-
     void lookFront();
-
-    glm::dvec2 viewSize() const { return _viewSize; }
-    void setViewSize(const glm::dvec2 &viewSize);
-
-    double fieldOfView() const { return _fieldOfView; }
-    void setFieldOfView(double fieldOfView);
-
-    double zNear() const { return _zNear; }
-    void setZNear(double zNear);
-
-    double zFar() const { return _zFar; }
-    void setZFar(double zFar);
-
-    double orthoScale() const { return _orthoScale; }
-    void setOrthoScale(double orthoScale);
 
     glm::dmat4 worldToCameraMatrix() const { return _worldToCameraMatrix; }
     glm::dmat4 cameraToScreenMatrix() const { return _cameraToScreenMatrix; }
@@ -58,19 +39,19 @@ public:
     Ray<double> cameraMouseRay(glm::dvec2 screenPos) const;
     Ray<double> worldMouseRay(glm::dvec2 screenPos) const;
 
+signals:
+    void changed();
+
 private:
+    LATTICE_AUTO_PROPERTY(Projection, projection, setProjection, Projection::Perspective)
+    LATTICE_AUTO_PROPERTY(Location, location, setLocation, {})
+    LATTICE_AUTO_PROPERTY(glm::dvec2, viewSize, setViewSize, glm::dvec2(100, 100))
+    LATTICE_AUTO_PROPERTY(double, fieldOfView, setFieldOfView, glm::radians(60.0))
+    LATTICE_AUTO_PROPERTY(double, zNear, setZNear, 0.1)
+    LATTICE_AUTO_PROPERTY(double, zFar, setZFar, 100.0)
+    LATTICE_AUTO_PROPERTY(double, orthoScale, setOrthoScale, 100.0)
+
     void updateMatrix();
-
-    Projection _projection = Projection::Perspective;
-
-    Location _location;
-
-    glm::dvec2 _viewSize;
-    double _fieldOfView;
-    double _zNear;
-    double _zFar;
-
-    double _orthoScale = 100;
 
     glm::dmat4 _cameraToScreenMatrix;
     glm::dmat4 _worldToCameraMatrix;

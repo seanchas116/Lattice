@@ -5,52 +5,21 @@ using namespace glm;
 
 namespace Lattice {
 
-Camera::Camera() :
-    _viewSize(100, 100),
-    _fieldOfView(glm::radians(60.0)),
-    _zNear(0.1),
-    _zFar(100.0)
-{
-}
-
-void Camera::setProjection(Camera::Projection projection) {
-    _projection = projection;
-    updateMatrix();
-}
-
-void Camera::setLocation(const Location &location) {
-    _location = location;
-    updateMatrix();
+Camera::Camera() {
+    connect(this, &Camera::projectionChanged, this, &Camera::changed);
+    connect(this, &Camera::locationChanged, this, &Camera::changed);
+    connect(this, &Camera::viewSizeChanged, this, &Camera::changed);
+    connect(this, &Camera::fieldOfViewChanged, this, &Camera::changed);
+    connect(this, &Camera::zNearChanged, this, &Camera::changed);
+    connect(this, &Camera::zFarChanged, this, &Camera::changed);
+    connect(this, &Camera::orthoScaleChanged, this, &Camera::changed);
+    connect(this, &Camera::changed, this, &Camera::updateMatrix);
 }
 
 void Camera::lookFront() {
-    _location.rotation = glm::dquat(glm::vec3(0, 0, 0));
-    updateMatrix();
-}
-
-void Camera::setViewSize(const dvec2 &viewSize) {
-    _viewSize = viewSize;
-    updateMatrix();
-}
-
-void Camera::setFieldOfView(double fieldOfView) {
-    _fieldOfView = fieldOfView;
-    updateMatrix();
-}
-
-void Camera::setZNear(double zNear) {
-    _zNear = zNear;
-    updateMatrix();
-}
-
-void Camera::setZFar(double zFar) {
-    _zFar = zFar;
-    updateMatrix();
-}
-
-void Camera::setOrthoScale(double orthoScale) {
-    _orthoScale = orthoScale;
-    updateMatrix();
+    auto location = this->location();
+    location.rotation = glm::dquat(glm::vec3(0, 0, 0));
+    setLocation(location);
 }
 
 std::pair<glm::dvec3, bool> Camera::mapWorldToScreen(dvec3 worldPos) const {
