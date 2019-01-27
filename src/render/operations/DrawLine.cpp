@@ -15,7 +15,7 @@ void DrawLine::draw(const SP<GL::LineVAO> &vao, const glm::dmat4 &matrix, const 
     _shader.setUniform("MV", camera->worldToCameraMatrix() * matrix);
     _shader.setUniform("P", camera->cameraToScreenMatrix());
     _shader.setUniform("viewportSize", camera->viewSize());
-    _shader.setUniform("zNear", camera->projection() == Camera::Projection::Perspective ? camera->zNear() : -10000.0);
+    _shader.setUniform("zNear", camera->projection() == Camera::Projection::Perspective ? camera->zNear() : -10000.0); // TODO: specify depth in better way
     _shader.setUniform("width", width);
     _shader.setUniform("color", color);
     _shader.setUniform("useVertexColor", useVertexColor);
