@@ -61,11 +61,42 @@ ViewportControlView::ViewportControlView(const SP<Camera> &camera, QWidget *pare
         menu->addAction(tr("Reset"));
     }
 
-
     auto toolButton = new QToolButton();
     toolButton->setText(tr("Menu"));
     toolButton->setMenu(menu);
     toolButton->setPopupMode(QToolButton::InstantPopup);
+
+    auto updateMenuTitle = [camera, toolButton] {
+        auto title = [&] {
+            if (camera->projection() == Camera::Projection::Orthographic) {
+                auto rotation = camera->location().rotation;
+                if (rotation == glm::dquat(OrientationAngles::front)) {
+                    return tr("Front");
+                }
+                if (rotation == glm::dquat(OrientationAngles::back)) {
+                    return tr("Back");
+                }
+                if (rotation == glm::dquat(OrientationAngles::right)) {
+                    return tr("Right");
+                }
+                if (rotation == glm::dquat(OrientationAngles::left)) {
+                    return tr("Left");
+                }
+                if (rotation == glm::dquat(OrientationAngles::top)) {
+                    return tr("Top");
+                }
+                if (rotation == glm::dquat(OrientationAngles::bottom)) {
+                    return tr("Bottom");
+                }
+                return tr("Orthographic");
+            }
+            return tr("Perspective");
+        }();
+        toolButton->setText(title);
+    };
+
+    connect(camera.get(), &Camera::changed, toolButton, updateMenuTitle);
+    updateMenuTitle();
 
     auto layout = new QVBoxLayout();
     layout->addWidget(toolButton);
