@@ -34,7 +34,8 @@ bool CameraController::mouseMove(QMouseEvent *event) {
     Location location = _camera->location();
     switch (_mode) {
     case Mode::Move: {
-        location.position += location.up() * double(offset.y()) * 0.02 + location.right() * double(-offset.x()) * 0.02;
+        glm::dmat2x3 upRight(location.up(), location.right());
+        location.position += upRight * (glm::dvec2(offset.y(), -offset.x()) * 0.02);
         _camera->setLocation(location);
         break;
     }
