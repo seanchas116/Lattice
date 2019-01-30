@@ -1,4 +1,5 @@
 #include "CameraController.hpp"
+#include "../render/Util.hpp"
 #include <QMouseEvent>
 #include <QtDebug>
 
@@ -6,7 +7,7 @@ using namespace glm;
 
 namespace Lattice::Editor {
 
-CameraController::CameraController(const SP<Camera> &camera) : _camera(camera) {
+CameraController::CameraController(const SP<Camera> &camera, QWidget *widget) : _camera(camera), _widget(widget) {
     Location location;
     location.position = dvec3(0, 10, 10);
     _camera->setLocation(location);
@@ -35,7 +36,8 @@ bool CameraController::mouseMove(QMouseEvent *event) {
     switch (_mode) {
     case Mode::Move: {
         glm::dmat2x3 upRight(location.up(), location.right());
-        location.position += upRight * (glm::dvec2(offset.y(), -offset.x()) * 0.02);
+        double ratio = 0.02 / Render::widgetPixelRatio(_widget);
+        location.position += upRight * (glm::dvec2(offset.y(), -offset.x()) * ratio);
         _camera->setLocation(location);
         break;
     }

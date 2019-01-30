@@ -14,7 +14,7 @@ namespace Lattice::Editor {
 class CameraController final : public QObject {
     Q_OBJECT
 public:
-    CameraController(const SP<Camera>& camera);
+    CameraController(const SP<Camera>& camera, QWidget* widget);
     bool mousePress(QMouseEvent* event);
     bool mouseMove(QMouseEvent* event);
     bool mouseRelease(QMouseEvent* event);
@@ -30,6 +30,7 @@ private:
     };
 
     SP<Camera> _camera;
+    QWidget *_widget;
 
     Mode _mode;
     QPoint _lastMousePos;
