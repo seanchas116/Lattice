@@ -36,7 +36,12 @@ bool CameraController::mouseMove(QMouseEvent *event) {
     switch (_mode) {
     case Mode::Move: {
         glm::dmat2x3 upRight(location.up(), location.right());
-        double ratio = 0.02 / Render::widgetPixelRatio(_widget);
+        double ratio;
+        if (_camera->projection() == Camera::Projection::Perspective) {
+            ratio = 0.02 / Render::widgetPixelRatio(_widget);
+        } else {
+            ratio = 1 / (_camera->orthoScale() * Render::widgetPixelRatio(_widget));
+        }
         location.position += upRight * (glm::dvec2(offset.y(), -offset.x()) * ratio);
         _camera->setLocation(location);
         break;
