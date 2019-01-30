@@ -1,5 +1,6 @@
 #include "Viewport.hpp"
 #include "Renderable.hpp"
+#include "Util.hpp"
 #include "../support/Debug.hpp"
 #include <QMouseEvent>
 #include <QOpenGLDebugLogger>
@@ -13,7 +14,7 @@ Viewport::Viewport(QWidget *parent) : QWidget(parent), _camera(makeShared<Camera
 }
 
 void Viewport::mousePressEvent(QMouseEvent *event) {
-    auto pos = mapQtToGL(event->pos());
+    auto pos = mapQtToGL(this, event->pos());
 
     auto maybeHitResult = hitTest(pos, _camera);
     if (!maybeHitResult) { return; }
@@ -28,12 +29,12 @@ void Viewport::mousePressEvent(QMouseEvent *event) {
 
 void Viewport::mouseMoveEvent(QMouseEvent *event) {
     LATTICE_OPTIONAL_GUARD(renderable, _draggedRenderable, return;)
-    MouseEvent renderMouseEvent(event, mapQtToGL(event->pos()), _camera, _hitResult);
+    MouseEvent renderMouseEvent(event, mapQtToGL(this, event->pos()), _camera, _hitResult);
     renderable->mouseMove(renderMouseEvent);
 }
 
 void Viewport::mouseDoubleClickEvent(QMouseEvent *event) {
-    auto pos = mapQtToGL(event->pos());
+    auto pos = mapQtToGL(this, event->pos());
 
     auto maybeHitResult = hitTest(pos, _camera);
     if (!maybeHitResult) { return; }
@@ -51,13 +52,13 @@ void Viewport::moveEvent(QMoveEvent *event) {
 
 void Viewport::resizeEvent(QResizeEvent *event) {
     super::resizeEvent(event);
-    _camera->setViewSize(mapQtToGL(QPoint(event->size().width(), 0)));
+    _camera->setViewSize(mapQtToGL(this, QPoint(event->size().width(), 0)));
     emit updateRequested();
 }
 
 void Viewport::mouseReleaseEvent(QMouseEvent *event) {
     LATTICE_OPTIONAL_GUARD(renderable, _draggedRenderable, return;)
-    MouseEvent renderMouseEvent(event, mapQtToGL(event->pos()), _camera, _hitResult);
+    MouseEvent renderMouseEvent(event, mapQtToGL(this, event->pos()), _camera, _hitResult);
     renderable->mouseRelease(renderMouseEvent);
     _draggedRenderable = {};
 }
@@ -81,18 +82,6 @@ void Viewport::render(const SP<Operations> &operations) {
     for (auto& renderable : _renderables) {
         renderable->draw(operations, _camera);
     }
-}
-
-glm::dvec2 Viewport::mapQtToGL(const QPoint &p) const {
-    return glm::dvec2(p.x(), height() - p.y()) / widgetPixelRatio();
-}
-
-double Viewport::widgetPixelRatio() const {
-#ifdef Q_OS_WIN
-    return logicalDpiX() / 96.0;
-#else
-    return 1.0;
-#endif
 }
 
 void Viewport::setCameraLocation(const Location &location) {

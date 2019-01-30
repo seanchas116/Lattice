@@ -21,9 +21,6 @@ public:
 
     void render(const SP<Operations>& operations);
 
-    glm::dvec2 mapQtToGL(const QPoint& p) const;
-    double widgetPixelRatio() const;
-
     void setCameraLocation(const Location& location);
     void setCameraProjection(const Camera::Projection& projection);
 

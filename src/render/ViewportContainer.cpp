@@ -1,6 +1,7 @@
 #include "ViewportContainer.hpp"
 #include "Viewport.hpp"
 #include "Renderable.hpp"
+#include "Util.hpp"
 #include "../support/Debug.hpp"
 #include <QMouseEvent>
 #include <QOpenGLDebugLogger>
@@ -18,10 +19,6 @@ void ViewportContainer::setViewports(const std::vector<Viewport *> &viewports) {
     for (auto v : viewports) {
         connect(v, &Viewport::updateRequested, this, [this] { update(); });
     }
-}
-
-glm::dvec2 ViewportContainer::mapQtToGL(const QPoint &p) const {
-    return glm::dvec2(p.x(), height() - p.y()) / widgetPixelRatio();
 }
 
 void ViewportContainer::initializeGL() {
@@ -51,10 +48,10 @@ void ViewportContainer::paintGL() {
     LATTICE_OPTIONAL_GUARD(operations, _operations, return;)
 
     for (auto viewport : _viewports) {
-        glm::dvec2 minPos = mapQtToGL(viewport->mapTo(this, viewport->rect().bottomLeft()));
-        glm::dvec2 maxPos = mapQtToGL(viewport->mapTo(this, viewport->rect().topRight()));
-        glm::ivec2 minPosViewport = round(minPos * (widgetPixelRatio() * devicePixelRatioF()));
-        glm::ivec2 maxPosViewport = round(maxPos * (widgetPixelRatio() * devicePixelRatioF()));
+        glm::dvec2 minPos = mapQtToGL(this, viewport->mapTo(this, viewport->rect().bottomLeft()));
+        glm::dvec2 maxPos = mapQtToGL(this, viewport->mapTo(this, viewport->rect().topRight()));
+        glm::ivec2 minPosViewport = round(minPos * (widgetPixelRatio(this) * devicePixelRatioF()));
+        glm::ivec2 maxPosViewport = round(maxPos * (widgetPixelRatio(this) * devicePixelRatioF()));
         glm::ivec2 sizeViewport = maxPosViewport - minPosViewport;
 
         glEnable(GL_SCISSOR_TEST);
@@ -64,14 +61,6 @@ void ViewportContainer::paintGL() {
         viewport->render(operations);
         glDisable(GL_SCISSOR_TEST);
     }
-}
-
-double ViewportContainer::widgetPixelRatio() const {
-#ifdef Q_OS_WIN
-    return logicalDpiX() / 96.0;
-#else
-    return 1.0;
-#endif
 }
 
 } // namespace Renderer
