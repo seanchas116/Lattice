@@ -7,6 +7,7 @@ double widgetPixelRatio(const QWidget *widget) {
 #ifdef Q_OS_WIN
     return widget->logicalDpiX() / 96.0;
 #else
+    Q_UNUSED(widget)
     return 1.0;
 #endif
 }
