@@ -12,7 +12,7 @@ DrawMaterial::DrawMaterial() :
     initializeOpenGLFunctions();
 }
 
-void DrawMaterial::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<Camera> &camera, const SP<Document::MeshMaterial> &material) {
+void DrawMaterial::draw(const SP<OldGL::VAO> &vao, const glm::dmat4 &matrix, const SP<Camera> &camera, const SP<Document::MeshMaterial> &material) {
     _shader.bind();
     _shader.setUniform("diffuse", material->baseColor());
     _shader.setUniform("ambient", glm::vec3(0));
@@ -32,7 +32,7 @@ void DrawMaterial::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const 
     vao->draw();
 }
 
-SP<GL::Texture> DrawMaterial::getTexture(const QImage &image) {
+SP<OldGL::Texture> DrawMaterial::getTexture(const QImage &image) {
     if (auto it = _textures.find(image.cacheKey()); it != _textures.end()) {
         return it->second;
     }
@@ -41,7 +41,7 @@ SP<GL::Texture> DrawMaterial::getTexture(const QImage &image) {
     rgbaTexture = rgbaTexture.mirrored();
     glm::ivec2 size(rgbaTexture.width(), rgbaTexture.height());
 
-    auto texture = makeShared<GL::Texture>(size, rgbaTexture.bits());
+    auto texture = makeShared<OldGL::Texture>(size, rgbaTexture.bits());
     _textures.insert({image.cacheKey(), texture});
     return texture;
 }

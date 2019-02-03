@@ -6,7 +6,7 @@
 #include <array>
 #include <vector>
 
-namespace Lattice::GL {
+namespace Lattice::OldGL {
 
 class VertexBuffer;
 

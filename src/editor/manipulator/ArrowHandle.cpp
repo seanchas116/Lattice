@@ -92,7 +92,7 @@ void ArrowHandle::mouseRelease(const Render::MouseEvent &event) {
     emit onEnd();
 }
 
-SP<GL::VAO> ArrowHandle::createHandleVAO() {
+SP<OldGL::VAO> ArrowHandle::createHandleVAO() {
     auto mesh = makeShared<Document::Mesh>();
     auto material = mesh->addMaterial();
     if (_handleType == HandleType::Translate) {
@@ -104,8 +104,8 @@ SP<GL::VAO> ArrowHandle::createHandleVAO() {
     return MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
 }
 
-SP<GL::LineVAO> ArrowHandle::createBodyVAO() {
-    auto bodyVAO = makeShared<GL::LineVAO>();
+SP<OldGL::LineVAO> ArrowHandle::createBodyVAO() {
+    auto bodyVAO = makeShared<OldGL::LineVAO>();
     bodyVAO->vertexBuffer()->setVertices({{}, {}});
     bodyVAO->setLineStrips({{0, 1}});
     return bodyVAO;

@@ -1,7 +1,7 @@
 #include "Shader.hpp"
 #include <QtDebug>
 
-namespace Lattice::GL {
+namespace Lattice::OldGL {
 
 Shader::Shader(const std::string &vertexShader, const std::string &geometryShader, const std::string &fragmentShader) {
     initializeOpenGLFunctions();

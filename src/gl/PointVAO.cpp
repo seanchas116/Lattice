@@ -1,7 +1,7 @@
 #include "PointVAO.hpp"
 #include "VertexBuffer.hpp"
 
-namespace Lattice::GL {
+namespace Lattice::OldGL {
 
 PointVAO::PointVAO() : PointVAO(makeShared<VertexBuffer>()) {
 }

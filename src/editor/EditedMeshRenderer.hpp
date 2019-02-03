@@ -25,7 +25,7 @@ class Mesh;
 class MeshMaterial;
 }
 
-namespace GL {
+namespace OldGL {
 class VAO;
 class LineVAO;
 class PointVAO;
@@ -35,7 +35,7 @@ namespace Editor {
 
 class MeshPicker;
 
-class EditedMeshRenderer final : public Render::Renderable, public GL::ContextRecallable {
+class EditedMeshRenderer final : public Render::Renderable, public OldGL::ContextRecallable {
     Q_OBJECT
 public:
     EditedMeshRenderer(const SP<UI::AppState>& appState, const SP<Document::MeshItem>& item);
@@ -55,13 +55,13 @@ private:
     SP<UI::AppState> _appState;
     SP<Document::MeshItem> _item;
     SP<MeshPicker> _meshPicker;
-    std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> _faceVAOs;
-    SP<GL::VertexBuffer> _faceVBO;
-    std::vector<GL::VertexBuffer::Vertex> _faceAttributes;
-    SP<GL::LineVAO> _edgeVAO;
-    std::vector<GL::VertexBuffer::Vertex> _edgeAttributes;
-    SP<GL::PointVAO> _vertexVAO;
-    std::vector<GL::VertexBuffer::Vertex> _vertexAttributes;
+    std::unordered_map<SP<Document::MeshMaterial>, SP<OldGL::VAO>> _faceVAOs;
+    SP<OldGL::VertexBuffer> _faceVBO;
+    std::vector<OldGL::VertexBuffer::Vertex> _faceAttributes;
+    SP<OldGL::LineVAO> _edgeVAO;
+    std::vector<OldGL::VertexBuffer::Vertex> _edgeAttributes;
+    SP<OldGL::PointVAO> _vertexVAO;
+    std::vector<OldGL::VertexBuffer::Vertex> _vertexAttributes;
 
     std::unordered_map<SP<Document::MeshVertex>, glm::dvec3> _initialPositions;
     glm::dvec3 _dragStartWorldPos;

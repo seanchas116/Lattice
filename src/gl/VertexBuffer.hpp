@@ -3,7 +3,7 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
-namespace Lattice::GL {
+namespace Lattice::OldGL {
 
 class VertexBuffer final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(VertexBuffer)

@@ -2,7 +2,7 @@
 #include "Texture.hpp"
 #include <QOpenGLContext>
 
-namespace Lattice::GL {
+namespace Lattice::OldGL {
 
 Framebuffer::Framebuffer(glm::ivec2 size) :
     _isDefault(true),

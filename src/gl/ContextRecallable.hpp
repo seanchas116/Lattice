@@ -3,7 +3,7 @@
 class QOpenGLContext;
 class QSurface;
 
-namespace Lattice::GL {
+namespace Lattice::OldGL {
 
 class ContextRecallable {
 public:

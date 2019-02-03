@@ -1,7 +1,7 @@
 #pragma once
 #include <QtGlobal>
 
-namespace Lattice::GL {
+namespace Lattice::OldGL {
 
 template <typename T>
 class Binder final {

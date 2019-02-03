@@ -3,7 +3,7 @@
 #include <array>
 #include <glm/glm.hpp>
 
-namespace Lattice::GL {
+namespace Lattice::OldGL {
 
 VAO::VAO() : VAO(makeShared<VertexBuffer>()) {
 }

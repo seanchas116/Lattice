@@ -5,7 +5,7 @@
 #include <array>
 #include "../support/Pointer.hpp"
 
-namespace Lattice::GL {
+namespace Lattice::OldGL {
 
 class VertexBuffer;
 

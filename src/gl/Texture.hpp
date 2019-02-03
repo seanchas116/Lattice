@@ -3,7 +3,7 @@
 #include <glm/vec2.hpp>
 #include <QOpenGLExtraFunctions>
 
-namespace Lattice::GL {
+namespace Lattice::OldGL {
 
 class Texture final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(Texture)

@@ -20,8 +20,8 @@ MeshRenderer::MeshRenderer(const SP<UI::AppState>& appState, const SP<Document::
     _appState(appState),
     _item(item),
     _meshPicker(makeShared<MeshPicker>(item->mesh())),
-    _edgeVAO(makeShared<GL::LineVAO>()),
-    _vertexVAO(makeShared<GL::PointVAO>())
+    _edgeVAO(makeShared<OldGL::LineVAO>()),
+    _vertexVAO(makeShared<OldGL::PointVAO>())
 {
     updateVAOs();
     connect(item->mesh().get(), &Document::Mesh::changed, this, &MeshRenderer::updateVAOs);

@@ -24,7 +24,7 @@ class Mesh;
 class MeshMaterial;
 }
 
-namespace GL {
+namespace OldGL {
 class VAO;
 class LineVAO;
 class PointVAO;
@@ -34,7 +34,7 @@ namespace Editor {
 
 class MeshPicker;
 
-class MeshRenderer final : public Render::Renderable, public GL::ContextRecallable {
+class MeshRenderer final : public Render::Renderable, public OldGL::ContextRecallable {
     Q_OBJECT
 public:
     MeshRenderer(const SP<UI::AppState>& appState, const SP<Document::MeshItem>& item);
@@ -53,9 +53,9 @@ private:
     SP<UI::AppState> _appState;
     SP<Document::MeshItem> _item;
     SP<MeshPicker> _meshPicker;
-    std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> _faceVAOs;
-    SP<GL::LineVAO> _edgeVAO;
-    SP<GL::PointVAO> _vertexVAO;
+    std::unordered_map<SP<Document::MeshMaterial>, SP<OldGL::VAO>> _faceVAOs;
+    SP<OldGL::LineVAO> _edgeVAO;
+    SP<OldGL::PointVAO> _vertexVAO;
 
     Location _dragInitLocation;
     glm::dvec3 _dragInitWorldPos;

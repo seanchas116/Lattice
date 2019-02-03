@@ -11,13 +11,13 @@ namespace Editor {
 
 MeshVAOGenerator::MeshVAOGenerator(const SP<Document::Mesh> &mesh) :
     _mesh(mesh),
-    _vertexBuffer(makeShared<GL::VertexBuffer>())
+    _vertexBuffer(makeShared<OldGL::VertexBuffer>())
 {
-    std::vector<GL::VertexBuffer::Vertex> vertices;
+    std::vector<OldGL::VertexBuffer::Vertex> vertices;
     for (auto& vertex : mesh->vertices()) {
         for (auto& uvPos : vertex->uvPoints()) {
             _indices[uvPos] = uint32_t(vertices.size());
-            GL::VertexBuffer::Vertex vertexData = {
+            OldGL::VertexBuffer::Vertex vertexData = {
                 vertex->position(),
                 uvPos->position(),
                 vertex->normal(),
@@ -28,13 +28,13 @@ MeshVAOGenerator::MeshVAOGenerator(const SP<Document::Mesh> &mesh) :
     _vertexBuffer->setVertices(vertices);
 }
 
-SP<GL::PointVAO> MeshVAOGenerator::generateVertexVAO() const {
-    return makeShared<GL::PointVAO>(_vertexBuffer);
+SP<OldGL::PointVAO> MeshVAOGenerator::generateVertexVAO() const {
+    return makeShared<OldGL::PointVAO>(_vertexBuffer);
 }
 
-SP<GL::LineVAO> MeshVAOGenerator::generateEdgeVAO() const {
-    auto edgeVAO = makeShared<GL::LineVAO>(_vertexBuffer);
-    std::vector<GL::LineVAO::Line> lines;
+SP<OldGL::LineVAO> MeshVAOGenerator::generateEdgeVAO() const {
+    auto edgeVAO = makeShared<OldGL::LineVAO>(_vertexBuffer);
+    std::vector<OldGL::LineVAO::Line> lines;
     for (auto& [_, edge] : _mesh->edges()) {
         auto i0 = _indices.at(*edge->vertices()[0]->uvPoints().begin());
         auto i1 = _indices.at(*edge->vertices()[1]->uvPoints().begin());
@@ -44,12 +44,12 @@ SP<GL::LineVAO> MeshVAOGenerator::generateEdgeVAO() const {
     return edgeVAO;
 }
 
-std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO> > MeshVAOGenerator::generateFaceVAOs() const {
-    std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO> > faceVAOs;
+std::unordered_map<SP<Document::MeshMaterial>, SP<OldGL::VAO> > MeshVAOGenerator::generateFaceVAOs() const {
+    std::unordered_map<SP<Document::MeshMaterial>, SP<OldGL::VAO> > faceVAOs;
 
     for (auto& material : _mesh->materials()) {
-        auto vao = makeShared<GL::VAO>(_vertexBuffer);
-        std::vector<GL::VAO::Triangle> triangles;
+        auto vao = makeShared<OldGL::VAO>(_vertexBuffer);
+        std::vector<OldGL::VAO::Triangle> triangles;
         for (auto& face : material->faces()) {
             auto v0 = face->uvPoints()[0];
             auto i0 = _indices.at(v0.get());

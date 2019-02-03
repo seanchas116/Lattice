@@ -1,7 +1,7 @@
 #include "ContextRecallable.hpp"
 #include <QOpenGLContext>
 
-namespace Lattice::GL {
+namespace Lattice::OldGL {
 
 ContextRecallable::ContextRecallable() {
     _context = QOpenGLContext::currentContext();

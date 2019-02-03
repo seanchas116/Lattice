@@ -8,7 +8,7 @@ namespace Lattice {
 class Camera;
 }
 
-namespace Lattice::GL {
+namespace Lattice::OldGL {
 class VertexBuffer;
 class LineVAO;
 }
@@ -23,10 +23,10 @@ public:
     void draw(const SP<Render::Operations>& operations, const SP<Camera>& camera) override;
 
 private:
-    SP<GL::VertexBuffer> _vbo;
-    SP<GL::LineVAO> _vao;
-    SP<GL::LineVAO> _xAxisVAO;
-    SP<GL::LineVAO> _zAxisVAO;
+    SP<OldGL::VertexBuffer> _vbo;
+    SP<OldGL::LineVAO> _vao;
+    SP<OldGL::LineVAO> _xAxisVAO;
+    SP<OldGL::LineVAO> _zAxisVAO;
 };
 
 } // namespace Lattice

@@ -8,16 +8,16 @@ using namespace glm;
 namespace Lattice::Editor {
 
 GridFloor::GridFloor() :
-    _vbo(makeShared<GL::VertexBuffer>()),
-    _vao(makeShared<GL::LineVAO>(_vbo)),
-    _xAxisVAO(makeShared<GL::LineVAO>(_vbo)),
-    _zAxisVAO(makeShared<GL::LineVAO>(_vbo))
+    _vbo(makeShared<OldGL::VertexBuffer>()),
+    _vao(makeShared<OldGL::LineVAO>(_vbo)),
+    _xAxisVAO(makeShared<OldGL::LineVAO>(_vbo)),
+    _zAxisVAO(makeShared<OldGL::LineVAO>(_vbo))
 {
     // build grid
     constexpr int count = 200;
     constexpr double unit = 1;
 
-    std::vector<GL::VertexBuffer::Vertex> vertices;
+    std::vector<OldGL::VertexBuffer::Vertex> vertices;
     std::vector<std::vector<uint32_t>> lineStrips;
     std::vector<uint32_t> xLineStrip;
     std::vector<uint32_t> zLineStrip;
