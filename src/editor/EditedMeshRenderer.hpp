@@ -4,8 +4,8 @@
 #include "../support/Box.hpp"
 #include "../support/Location.hpp"
 #include "../render/Renderable.hpp"
-#include "../gl/ContextRecallable.hpp"
-#include "../gl/VertexBuffer.hpp"
+#include "../oldgl/ContextRecallable.hpp"
+#include "../oldgl/VertexBuffer.hpp"
 #include <glm/glm.hpp>
 #include <unordered_map>
 

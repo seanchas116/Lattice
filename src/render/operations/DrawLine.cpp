@@ -1,6 +1,6 @@
 #include "DrawLine.hpp"
 #include "../../support/Camera.hpp"
-#include "../../gl/LineVAO.hpp"
+#include "../../oldgl/LineVAO.hpp"
 #include "../../resource/Resource.hpp"
 
 namespace Lattice::Render {

@@ -1,5 +1,5 @@
 #include "DrawSolid.hpp"
-#include "../../gl/VAO.hpp"
+#include "../../oldgl/VAO.hpp"
 #include "../../resource/Resource.hpp"
 #include "../../support/Camera.hpp"
 

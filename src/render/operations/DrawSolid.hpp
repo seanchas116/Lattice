@@ -1,5 +1,5 @@
 #pragma once
-#include "../../gl/Shader.hpp"
+#include "../../oldgl/Shader.hpp"
 
 namespace Lattice {
 class Camera;

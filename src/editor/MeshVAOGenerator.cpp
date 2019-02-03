@@ -1,10 +1,10 @@
 #include "MeshVAOGenerator.hpp"
 #include "../document/Mesh.hpp"
 #include "../document/MeshItem.hpp"
-#include "../gl/VAO.hpp"
-#include "../gl/LineVAO.hpp"
-#include "../gl/PointVAO.hpp"
-#include "../gl/VertexBuffer.hpp"
+#include "../oldgl/VAO.hpp"
+#include "../oldgl/LineVAO.hpp"
+#include "../oldgl/PointVAO.hpp"
+#include "../oldgl/VertexBuffer.hpp"
 
 namespace Lattice {
 namespace Editor {

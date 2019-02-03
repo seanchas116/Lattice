@@ -1,6 +1,6 @@
 #include "GridFloor.hpp"
-#include "../gl/LineVAO.hpp"
-#include "../gl/VertexBuffer.hpp"
+#include "../oldgl/LineVAO.hpp"
+#include "../oldgl/VertexBuffer.hpp"
 #include "../support/Camera.hpp"
 
 using namespace glm;

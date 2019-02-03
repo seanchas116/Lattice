@@ -1,5 +1,5 @@
 #include "DrawCircle.hpp"
-#include "../../gl/PointVAO.hpp"
+#include "../../oldgl/PointVAO.hpp"
 #include "../../resource/Resource.hpp"
 #include "../../support/Location.hpp"
 #include "../../support/Camera.hpp"

@@ -1,6 +1,6 @@
 #include "DrawMaterial.hpp"
-#include "../../gl/VAO.hpp"
-#include "../../gl/Texture.hpp"
+#include "../../oldgl/VAO.hpp"
+#include "../../oldgl/Texture.hpp"
 #include "../../resource/Resource.hpp"
 #include "../../support/Camera.hpp"
 

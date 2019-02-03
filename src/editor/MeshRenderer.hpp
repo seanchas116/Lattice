@@ -4,7 +4,7 @@
 #include "../support/Box.hpp"
 #include "../support/Location.hpp"
 #include "../render/Renderable.hpp"
-#include "../gl/ContextRecallable.hpp"
+#include "../oldgl/ContextRecallable.hpp"
 #include <glm/glm.hpp>
 #include <unordered_map>
 
