@@ -39,4 +39,7 @@ void VertexBuffer::unbind() {
 
 }
 
+AnyVertexBuffer::~AnyVertexBuffer() {
+}
+
 } // namespace Lattice
