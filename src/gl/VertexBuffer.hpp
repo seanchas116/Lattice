@@ -5,6 +5,17 @@
 
 namespace Lattice::GL {
 
+struct AttributeInfo {
+    GLenum type;
+    int size;
+};
+
+class AnyVertexBuffer {
+public:
+    virtual ~AnyVertexBuffer();
+    virtual std::vector<AttributeInfo> attributes() = 0;
+};
+
 class VertexBuffer final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(VertexBuffer)
 public:
