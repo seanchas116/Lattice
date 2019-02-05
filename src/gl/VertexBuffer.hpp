@@ -16,6 +16,34 @@ public:
     virtual std::vector<AttributeInfo> attributes() = 0;
 };
 
+template <typename T>
+class VertexBuffer final : public AnyVertexBuffer, protected QOpenGLExtraFunctions {
+public:
+    VertexBuffer() {
+        initializeOpenGLFunctions();
+        glGenBuffers(1, &_buffer);
+    }
+    ~VertexBuffer() override {
+        glDeleteBuffers(1, &_buffer);
+    }
+    void setVertices(const std::vector<T>& vertices) {
+        _size = vertices.size();
+        glBindBuffer(GL_ARRAY_BUFFER, _buffer);
+        glBufferData(GL_ARRAY_BUFFER, GLsizeiptr(vertices.size() * sizeof(T)), vertices.data(), GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+    void bind() {
+        glBindBuffer(GL_ARRAY_BUFFER, _buffer);
+    }
+    void unbind() {
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+
+private:
+    size_t _size = 0;
+    GLuint _buffer;
+};
+
 class OldVertexBuffer final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(OldVertexBuffer)
 public:
