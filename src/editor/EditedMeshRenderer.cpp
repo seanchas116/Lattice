@@ -28,7 +28,7 @@ EditedMeshRenderer::EditedMeshRenderer(const SP<UI::AppState>& appState, const S
     _appState(appState),
     _item(item),
     _meshPicker(makeShared<MeshPicker>(item->mesh())),
-    _faceVBO(makeShared<GL::VertexBuffer>()),
+    _faceVBO(makeShared<GL::OldVertexBuffer>()),
     _edgeVAO(makeShared<GL::LineVAO>()),
     _vertexVAO(makeShared<GL::PointVAO>())
 {
@@ -162,7 +162,7 @@ void EditedMeshRenderer::updateWholeVAOs() {
         for (auto& v : _item->mesh()->vertices()) {
             bool selected = selectedVertices.find(v) != selectedVertices.end();
 
-            GL::VertexBuffer::Vertex attrib;
+            GL::OldVertexBuffer::Vertex attrib;
             attrib.position = v->position();
             attrib.color = selected ? selectedColor : unselectedColor;
 
@@ -183,7 +183,7 @@ void EditedMeshRenderer::updateWholeVAOs() {
             for (auto& v : e->vertices()) {
                 bool selected = selectedVertices.find(v) != selectedVertices.end();
 
-                GL::VertexBuffer::Vertex attrib;
+                GL::OldVertexBuffer::Vertex attrib;
                 attrib.position = v->position();
                 attrib.color = selected ? selectedColor : unselectedColor;
                 _edgeAttributes.push_back(attrib);
@@ -196,13 +196,13 @@ void EditedMeshRenderer::updateWholeVAOs() {
     }
 
     {
-        _faceVBO = makeShared<GL::VertexBuffer>();
+        _faceVBO = makeShared<GL::OldVertexBuffer>();
 
         _faceVAOs.clear();
         _faceAttributes.clear();
 
         auto addPoint = [&](const SP<Document::MeshUVPoint>& p) {
-            GL::VertexBuffer::Vertex attrib;
+            GL::OldVertexBuffer::Vertex attrib;
             attrib.position = p->vertex()->position();
             attrib.texCoord = p->position();
             attrib.normal = p->vertex()->normal();

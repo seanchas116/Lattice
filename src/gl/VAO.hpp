@@ -8,7 +8,7 @@
 
 namespace Lattice::GL {
 
-class VertexBuffer;
+class OldVertexBuffer;
 
 class VAO final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(VAO)
@@ -16,18 +16,18 @@ public:
     using Triangle = std::array<uint32_t, 3>;
 
     VAO();
-    VAO(const SP<VertexBuffer>& vertexBuffer);
-    VAO(const SP<VertexBuffer>& vertexBuffer, const std::vector<Triangle>& triangles);
+    VAO(const SP<OldVertexBuffer>& vertexBuffer);
+    VAO(const SP<OldVertexBuffer>& vertexBuffer, const std::vector<Triangle>& triangles);
     ~VAO();
 
-    const SP<VertexBuffer>& vertexBuffer() const { return _vertexBuffer; }
+    const SP<OldVertexBuffer>& vertexBuffer() const { return _vertexBuffer; }
 
     void draw();
     const std::vector<Triangle>& triangles() const { return _triangles; }
     void setTriangles(const std::vector<Triangle>& triangles);
 
 private:
-    SP<VertexBuffer> _vertexBuffer;
+    SP<OldVertexBuffer> _vertexBuffer;
     GLuint _vertexArray = 0;
     GLuint _indexBuffer = 0;
     std::vector<Triangle> _triangles;

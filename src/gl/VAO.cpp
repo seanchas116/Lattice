@@ -5,10 +5,10 @@
 
 namespace Lattice::GL {
 
-VAO::VAO() : VAO(makeShared<VertexBuffer>()) {
+VAO::VAO() : VAO(makeShared<OldVertexBuffer>()) {
 }
 
-VAO::VAO(const SP<VertexBuffer> &vertexBuffer) : _vertexBuffer(vertexBuffer) {
+VAO::VAO(const SP<OldVertexBuffer> &vertexBuffer) : _vertexBuffer(vertexBuffer) {
     initializeOpenGLFunctions();
 
     glGenBuffers(1, &_indexBuffer);
@@ -23,7 +23,7 @@ VAO::VAO(const SP<VertexBuffer> &vertexBuffer) : _vertexBuffer(vertexBuffer) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-VAO::VAO(const SP<VertexBuffer> &vertexBuffer, const std::vector<VAO::Triangle> &triangles) : VAO(vertexBuffer) {
+VAO::VAO(const SP<OldVertexBuffer> &vertexBuffer, const std::vector<VAO::Triangle> &triangles) : VAO(vertexBuffer) {
     setTriangles(triangles);
 }
 

@@ -10,7 +10,7 @@ class MeshUVPoint;
 class MeshMaterial;
 }
 namespace GL {
-class VertexBuffer;
+class OldVertexBuffer;
 class LineVAO;
 class PointVAO;
 class VAO;
@@ -28,7 +28,7 @@ public:
 
 private:
     SP<Document::Mesh> _mesh;
-    SP<GL::VertexBuffer> _vertexBuffer;
+    SP<GL::OldVertexBuffer> _vertexBuffer;
     std::unordered_map<Document::MeshUVPoint*, uint32_t> _indices;
 };
 

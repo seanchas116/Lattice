@@ -4,10 +4,10 @@
 
 namespace Lattice::GL {
 
-LineVAO::LineVAO() : LineVAO(makeShared<VertexBuffer>()) {
+LineVAO::LineVAO() : LineVAO(makeShared<OldVertexBuffer>()) {
 }
 
-LineVAO::LineVAO(const SP<VertexBuffer> &vertexBuffer) : _vertexBuffer(vertexBuffer) {
+LineVAO::LineVAO(const SP<OldVertexBuffer> &vertexBuffer) : _vertexBuffer(vertexBuffer) {
     initializeOpenGLFunctions();
 
     glGenBuffers(1, &_indexBuffer);

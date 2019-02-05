@@ -16,8 +16,8 @@ public:
     virtual std::vector<AttributeInfo> attributes() = 0;
 };
 
-class VertexBuffer final : protected QOpenGLExtraFunctions {
-    Q_DISABLE_COPY(VertexBuffer)
+class OldVertexBuffer final : protected QOpenGLExtraFunctions {
+    Q_DISABLE_COPY(OldVertexBuffer)
 public:
     struct Vertex {
         glm::vec3 position {0};
@@ -29,9 +29,9 @@ public:
         VertexSelected = 1,
     };
 
-    VertexBuffer();
-    VertexBuffer(const std::vector<Vertex>& vertices);
-    ~VertexBuffer();
+    OldVertexBuffer();
+    OldVertexBuffer(const std::vector<Vertex>& vertices);
+    ~OldVertexBuffer();
 
     void setVertices(const std::vector<Vertex>& vertices);
 

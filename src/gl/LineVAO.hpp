@@ -7,7 +7,7 @@
 
 namespace Lattice::GL {
 
-class VertexBuffer;
+class OldVertexBuffer;
 
 class LineVAO final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(LineVAO)
@@ -16,17 +16,17 @@ public:
     using Line = std::array<uint32_t, 2>;
 
     LineVAO();
-    LineVAO(const SP<VertexBuffer>& vertexBuffer);
+    LineVAO(const SP<OldVertexBuffer>& vertexBuffer);
     ~LineVAO();
 
-    const SP<VertexBuffer>& vertexBuffer() const { return _vertexBuffer; }
+    const SP<OldVertexBuffer>& vertexBuffer() const { return _vertexBuffer; }
 
     void draw();
     void setLines(const std::vector<Line>& lines);
     void setLineStrips(const std::vector<LineStrip> &strips);
 
 private:
-    SP<VertexBuffer> _vertexBuffer;
+    SP<OldVertexBuffer> _vertexBuffer;
     GLuint _vertexArray = 0;
     GLuint _indexBuffer = 0;
     int _lineCount = 0;

@@ -8,21 +8,21 @@
 
 namespace Lattice::GL {
 
-class VertexBuffer;
+class OldVertexBuffer;
 
 class PointVAO final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(PointVAO)
 public:
     PointVAO();
-    PointVAO(const SP<VertexBuffer>& vertexBuffer);
+    PointVAO(const SP<OldVertexBuffer>& vertexBuffer);
     ~PointVAO();
 
-    const SP<VertexBuffer>& vertexBuffer() const { return _vertexBuffer; }
+    const SP<OldVertexBuffer>& vertexBuffer() const { return _vertexBuffer; }
 
     void draw();
 
 private:
-    SP<VertexBuffer> _vertexBuffer;
+    SP<OldVertexBuffer> _vertexBuffer;
     GLuint _vertexArray = 0;
 };
 
