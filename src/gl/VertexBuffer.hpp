@@ -13,7 +13,7 @@ struct AttributeInfo {
 class AnyVertexBuffer {
 public:
     virtual ~AnyVertexBuffer();
-    virtual std::vector<AttributeInfo> attributes() = 0;
+    virtual std::vector<AttributeInfo> attributes() const = 0;
 };
 
 template <typename T>
@@ -37,6 +37,10 @@ public:
     }
     void unbind() {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+    std::vector<AttributeInfo> attributes() const override {
+        // TODO
+        return {};
     }
 
 private:
