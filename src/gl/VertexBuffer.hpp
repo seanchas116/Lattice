@@ -8,7 +8,8 @@ namespace Lattice::GL {
 
 struct AttributeInfo {
     GLenum type;
-    int size;
+    int sizePerComponent;
+    int count;
 };
 
 namespace detail {
@@ -16,17 +17,16 @@ namespace detail {
 template <typename T> struct GetAttributeInfo;
 
 template <> struct GetAttributeInfo<float> {
-    static constexpr AttributeInfo value = {GL_FLOAT, 1};
+    static constexpr AttributeInfo value = {GL_FLOAT, 4, 1};
 };
 template <glm::length_t N> struct GetAttributeInfo<glm::vec<N, float, glm::defaultp>> {
-    static constexpr AttributeInfo value = {GL_FLOAT, N};
+    static constexpr AttributeInfo value = {GL_FLOAT, 4, N};
 };
 
 template <typename T, size_t I>
 AttributeInfo getAttributeInfoForMember() {
     using MemberType = decltype(AggregateUtil::get<I>(T()));
-    using MemberTypeRaw = std::remove_cv_t<std::remove_reference_t<MemberType>>;
-    return GetAttributeInfo<MemberTypeRaw>::value;
+    return GetAttributeInfo<MemberType>::value;
 }
 
 template <typename T, size_t... Is>
@@ -36,34 +36,29 @@ std::vector<AttributeInfo> getAttributeInfos(std::index_sequence<Is...>) {
 
 }
 
-class AnyVertexBuffer {
+class AnyVertexBuffer : protected QOpenGLExtraFunctions {
 public:
+    AnyVertexBuffer();
     virtual ~AnyVertexBuffer();
     virtual std::vector<AttributeInfo> attributes() const = 0;
+    void bind();
+    void unbind();
+protected:
+    void setVertices(void* data, size_t size);
+private:
+    GLuint _buffer;
 };
 
 template <typename T>
-class VertexBuffer final : public AnyVertexBuffer, protected QOpenGLExtraFunctions {
+class VertexBuffer final : public AnyVertexBuffer {
 public:
-    VertexBuffer() {
-        initializeOpenGLFunctions();
-        glGenBuffers(1, &_buffer);
-    }
-    ~VertexBuffer() override {
-        glDeleteBuffers(1, &_buffer);
-    }
     void setVertices(const std::vector<T>& vertices) {
         _size = vertices.size();
-        glBindBuffer(GL_ARRAY_BUFFER, _buffer);
-        glBufferData(GL_ARRAY_BUFFER, GLsizeiptr(vertices.size() * sizeof(T)), vertices.data(), GL_STATIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        setVertices(vertices.data(), vertices.size() * sizeof(T));
     }
-    void bind() {
-        glBindBuffer(GL_ARRAY_BUFFER, _buffer);
-    }
-    void unbind() {
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-    }
+
+    size_t size() const { return _size; }
+
     std::vector<AttributeInfo> attributes() const override {
         constexpr auto arity = AggregateUtil::aggregate_arity<T>::size();
         return detail::getAttributeInfos<T>(std::make_index_sequence<arity>());
@@ -71,7 +66,6 @@ public:
 
 private:
     size_t _size = 0;
-    GLuint _buffer;
 };
 
 class OldVertexBuffer final : protected QOpenGLExtraFunctions {

@@ -22,7 +22,7 @@ struct aggregate_arity< aggregate, std::index_sequence< indices... >, std::void_
 {};
 
 template< std::size_t index, typename type >
-constexpr decltype(auto) get(const type & value) noexcept {
+constexpr auto get(const type & value) noexcept {
     constexpr std::size_t arity = aggregate_arity< std::remove_reference_t< std::remove_cv_t< type > > >::size();
     if constexpr (arity == 1) {
         auto & [p1] = value;
