@@ -11,13 +11,13 @@ namespace Editor {
 
 MeshVAOGenerator::MeshVAOGenerator(const SP<Document::Mesh> &mesh) :
     _mesh(mesh),
-    _vertexBuffer(makeShared<GL::OldVertexBuffer>())
+    _vertexBuffer(makeShared<GL::VertexBuffer<GL::Vertex>>())
 {
-    std::vector<GL::OldVertexBuffer::Vertex> vertices;
+    std::vector<GL::Vertex> vertices;
     for (auto& vertex : mesh->vertices()) {
         for (auto& uvPos : vertex->uvPoints()) {
             _indices[uvPos] = uint32_t(vertices.size());
-            GL::OldVertexBuffer::Vertex vertexData = {
+            GL::Vertex vertexData = {
                 vertex->position(),
                 uvPos->position(),
                 vertex->normal(),

@@ -56,12 +56,12 @@ private:
     SP<Document::MeshItem> _item;
     SP<MeshPicker> _meshPicker;
     std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> _faceVAOs;
-    SP<GL::OldVertexBuffer> _faceVBO;
-    std::vector<GL::OldVertexBuffer::Vertex> _faceAttributes;
+    SP<GL::VertexBuffer<GL::Vertex>> _faceVBO;
+    std::vector<GL::Vertex> _faceAttributes;
     SP<GL::LineVAO> _edgeVAO;
-    std::vector<GL::OldVertexBuffer::Vertex> _edgeAttributes;
+    std::vector<GL::Vertex> _edgeAttributes;
     SP<GL::PointVAO> _vertexVAO;
-    std::vector<GL::OldVertexBuffer::Vertex> _vertexAttributes;
+    std::vector<GL::Vertex> _vertexAttributes;
 
     std::unordered_map<SP<Document::MeshVertex>, glm::dvec3> _initialPositions;
     glm::dvec3 _dragStartWorldPos;

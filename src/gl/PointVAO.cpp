@@ -3,10 +3,10 @@
 
 namespace Lattice::GL {
 
-PointVAO::PointVAO() : PointVAO(makeShared<OldVertexBuffer>()) {
+PointVAO::PointVAO() : PointVAO(makeShared<VertexBuffer<Vertex>>()) {
 }
 
-PointVAO::PointVAO(const SP<OldVertexBuffer> &vertexBuffer) : _vertexBuffer(vertexBuffer) {
+PointVAO::PointVAO(const SP<VertexBuffer<Vertex>> &vertexBuffer) : _vertexBuffer(vertexBuffer) {
     initializeOpenGLFunctions();
 
     glGenVertexArrays(1, &_vertexArray);

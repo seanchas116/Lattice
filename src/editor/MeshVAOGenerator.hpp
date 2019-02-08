@@ -1,5 +1,6 @@
 #pragma once
 #include "../support/Pointer.hpp"
+#include "../gl/VertexBuffer.hpp"
 #include <unordered_map>
 
 namespace Lattice {
@@ -28,7 +29,7 @@ public:
 
 private:
     SP<Document::Mesh> _mesh;
-    SP<GL::OldVertexBuffer> _vertexBuffer;
+    SP<GL::VertexBuffer<GL::Vertex>> _vertexBuffer;
     std::unordered_map<Document::MeshUVPoint*, uint32_t> _indices;
 };
 

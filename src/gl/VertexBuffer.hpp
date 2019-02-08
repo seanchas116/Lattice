@@ -44,7 +44,7 @@ public:
     void bind();
     void unbind();
 protected:
-    void setVertices(void* data, size_t size);
+    void setVertexData(const void* data, size_t size);
 private:
     GLuint _buffer;
 };
@@ -54,7 +54,7 @@ class VertexBuffer final : public AnyVertexBuffer {
 public:
     void setVertices(const std::vector<T>& vertices) {
         _size = vertices.size();
-        setVertices(vertices.data(), vertices.size() * sizeof(T));
+        setVertexData(vertices.data(), vertices.size() * sizeof(T));
     }
 
     size_t size() const { return _size; }
@@ -68,36 +68,11 @@ private:
     size_t _size = 0;
 };
 
-class OldVertexBuffer final : protected QOpenGLExtraFunctions {
-    Q_DISABLE_COPY(OldVertexBuffer)
-public:
-    struct Vertex {
-        glm::vec3 position {0};
-        glm::vec2 texCoord {0};
-        glm::vec3 normal {0};
-        glm::vec3 color {0};
-    };
-    enum VertexFlags {
-        VertexSelected = 1,
-    };
-
-    OldVertexBuffer();
-    OldVertexBuffer(const std::vector<Vertex>& vertices);
-    ~OldVertexBuffer();
-
-    void setVertices(const std::vector<Vertex>& vertices);
-
-    size_t size() const { return _size; }
-
-    void bind();
-    void unbind();
-
-private:
-    friend class VAO;
-    size_t _size = 0;
-    GLuint _buffer;
+struct Vertex {
+    glm::vec3 position {0};
+    glm::vec2 texCoord {0};
+    glm::vec3 normal {0};
+    glm::vec3 color {0};
 };
-
-using StandardVertexBuffer = VertexBuffer<OldVertexBuffer::Vertex>;
 
 } // namespace Lattice

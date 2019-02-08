@@ -5,24 +5,23 @@
 #include <glm/vec3.hpp>
 #include <array>
 #include <vector>
+#include "../gl/VertexBuffer.hpp"
 
 namespace Lattice::GL {
-
-class OldVertexBuffer;
 
 class PointVAO final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(PointVAO)
 public:
     PointVAO();
-    PointVAO(const SP<OldVertexBuffer>& vertexBuffer);
+    PointVAO(const SP<VertexBuffer<Vertex>>& vertexBuffer);
     ~PointVAO();
 
-    const SP<OldVertexBuffer>& vertexBuffer() const { return _vertexBuffer; }
+    auto& vertexBuffer() const { return _vertexBuffer; }
 
     void draw();
 
 private:
-    SP<OldVertexBuffer> _vertexBuffer;
+    SP<VertexBuffer<Vertex>> _vertexBuffer;
     GLuint _vertexArray = 0;
 };
 
