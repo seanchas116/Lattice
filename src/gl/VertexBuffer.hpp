@@ -24,16 +24,14 @@ template <glm::length_t N> struct GetAttributeInfo<glm::vec<N, float, glm::defau
 
 template <typename T, size_t I>
 AttributeInfo getAttributeInfoForMember() {
-    return AttributeInfo{};
-    //using MemberType = decltype(AggregateUtil::get<I>(T()));
-    //return GetAttributeInfo<MemberType>::value;
+    using MemberType = decltype(AggregateUtil::get<I>(T()));
+    using MemberTypeRaw = std::remove_cv_t<std::remove_reference_t<MemberType>>;
+    return GetAttributeInfo<MemberTypeRaw>::value;
 }
 
 template <typename T, size_t... Is>
 std::vector<AttributeInfo> getAttributeInfos(std::index_sequence<Is...>) {
-    std::vector<AttributeInfo> infos { getAttributeInfoForMember<T, Is>... };
-    return infos;
-    //return {};
+    return { getAttributeInfoForMember<T, Is>()... };
 }
 
 }
