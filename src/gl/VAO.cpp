@@ -6,6 +6,8 @@
 namespace Lattice::GL {
 
 VAO::VAO() : VAO(makeShared<OldVertexBuffer>()) {
+    StandardVertexBuffer vbo;
+    auto attributes = vbo.attributes();
 }
 
 VAO::VAO(const SP<OldVertexBuffer> &vertexBuffer) : _vertexBuffer(vertexBuffer) {

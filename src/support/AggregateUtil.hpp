@@ -51,6 +51,19 @@ constexpr decltype(auto) get(type & value) noexcept {
         } else {
             return;
         }
+    } else if constexpr (arity == 4) {
+        auto & [p1, p2, p3, p4] = value;
+        if constexpr (index == 0) {
+            return (p1);
+        } else if constexpr (index == 1) {
+            return (p2);
+        } else if constexpr (index == 2) {
+            return (p3);
+        } else if constexpr (index == 3) {
+            return (p4);
+        } else {
+            return;
+        }
     } else {
         return;
     }

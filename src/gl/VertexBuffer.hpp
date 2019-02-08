@@ -2,6 +2,7 @@
 #include <QOpenGLExtraFunctions>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
+#include "../support/AggregateUtil.hpp"
 
 namespace Lattice::GL {
 
@@ -9,6 +10,8 @@ struct AttributeInfo {
     GLenum type;
     int size;
 };
+
+namespace detail {
 
 template <typename T> struct GetAttributeInfo;
 
@@ -18,6 +21,22 @@ template <> struct GetAttributeInfo<float> {
 template <glm::length_t N> struct GetAttributeInfo<glm::vec<N, float, glm::defaultp>> {
     static constexpr AttributeInfo value = {GL_FLOAT, N};
 };
+
+template <typename T, size_t I>
+AttributeInfo getAttributeInfoForMember() {
+    return AttributeInfo{};
+    //using MemberType = decltype(AggregateUtil::get<I>(T()));
+    //return GetAttributeInfo<MemberType>::value;
+}
+
+template <typename T, size_t... Is>
+std::vector<AttributeInfo> getAttributeInfos(std::index_sequence<Is...>) {
+    std::vector<AttributeInfo> infos { getAttributeInfoForMember<T, Is>... };
+    return infos;
+    //return {};
+}
+
+}
 
 class AnyVertexBuffer {
 public:
@@ -48,8 +67,8 @@ public:
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
     std::vector<AttributeInfo> attributes() const override {
-        // TODO
-        return {};
+        constexpr auto arity = AggregateUtil::aggregate_arity<T>::size();
+        return detail::getAttributeInfos<T>(std::make_index_sequence<arity>());
     }
 
 private:
@@ -86,5 +105,7 @@ private:
     size_t _size = 0;
     GLuint _buffer;
 };
+
+using StandardVertexBuffer = VertexBuffer<OldVertexBuffer::Vertex>;
 
 } // namespace Lattice
