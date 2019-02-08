@@ -10,6 +10,15 @@ struct AttributeInfo {
     int size;
 };
 
+template <typename T> struct GetAttributeInfo;
+
+template <> struct GetAttributeInfo<float> {
+    static constexpr AttributeInfo value = {GL_FLOAT, 1};
+};
+template <glm::length_t N> struct GetAttributeInfo<glm::vec<N, float, glm::defaultp>> {
+    static constexpr AttributeInfo value = {GL_FLOAT, N};
+};
+
 class AnyVertexBuffer {
 public:
     virtual ~AnyVertexBuffer();
