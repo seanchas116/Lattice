@@ -74,35 +74,34 @@ VAO::~VAO() {
 }
 
 void VAO::draw(VAO::Primitive primitive) {
-    auto bufferSize = GLsizei(_buffers[0].first->size());
+    if (_indexBuffer) {
+        auto indexCount = GLsizei(_indexBuffer->get()->size());
 
-    switch (primitive) {
-    case Primitive::Point:
-        glDrawArrays(GL_POINTS, 0, bufferSize);
-        break;
-    case Primitive::Line:
-        glDrawArrays(GL_LINES, 0, bufferSize);
-        break;
-    case Primitive::Triangle:
-        glDrawArrays(GL_TRIANGLES, 0, bufferSize);
-        break;
-    }
-}
+        switch (primitive) {
+        case Primitive::Point:
+            glDrawElements(GL_POINTS, indexCount, GL_UNSIGNED_INT, nullptr);
+            break;
+        case Primitive::Line:
+            glDrawElements(GL_LINES, indexCount, GL_UNSIGNED_INT, nullptr);
+            break;
+        case Primitive::Triangle:
+            glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+            break;
+        }
+    } else {
+        auto bufferSize = GLsizei(_buffers[0].first->size());
 
-void VAO::drawIndexed(VAO::Primitive primitive) {
-    Q_ASSERT(_indexBuffer);
-    auto indexCount = GLsizei(_indexBuffer->get()->size());
-
-    switch (primitive) {
-    case Primitive::Point:
-        glDrawElements(GL_POINTS, indexCount, GL_UNSIGNED_INT, nullptr);
-        break;
-    case Primitive::Line:
-        glDrawElements(GL_LINES, indexCount, GL_UNSIGNED_INT, nullptr);
-        break;
-    case Primitive::Triangle:
-        glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
-        break;
+        switch (primitive) {
+        case Primitive::Point:
+            glDrawArrays(GL_POINTS, 0, bufferSize);
+            break;
+        case Primitive::Line:
+            glDrawArrays(GL_LINES, 0, bufferSize);
+            break;
+        case Primitive::Triangle:
+            glDrawArrays(GL_TRIANGLES, 0, bufferSize);
+            break;
+        }
     }
 }
 

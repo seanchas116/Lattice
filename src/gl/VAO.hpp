@@ -35,25 +35,25 @@ private:
     std::vector<Triangle> _triangles;
 };
 
+enum class Primitive {
+    Point,
+    Line,
+    Triangle,
+};
+
+enum class BufferType {
+    PerVertex,
+    PerInstance,
+};
+
 class VAO final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(VAO)
 public:
-    enum class Primitive {
-        Point,
-        Line,
-        Triangle,
-    };
-    enum class BufferType {
-        PerVertex,
-        PerInstance,
-    };
-
     VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>>& buffers,
         const std::optional<SP<IndexBuffer>>& indexBuffer = std::nullopt);
     ~VAO();
 
     void draw(Primitive primitive);
-    void drawIndexed(Primitive primitive);
 
 private:
     std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>> _buffers;
