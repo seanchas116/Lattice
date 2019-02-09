@@ -29,5 +29,18 @@ private:
     size_t _size;
 };
 
+class LineIndexBuffer : public IndexBuffer {
+public:
+    using LineStrip = std::vector<uint32_t>;
+    using Line = std::array<uint32_t, 2>;
+
+    size_t size() const { return _size; }
+    void setLines(const std::vector<Line>& lines);
+    void setLineStrips(const std::vector<LineStrip> &strips);
+
+private:
+    size_t _size;
+};
+
 } // namespace GL
 } // namespace Lattice
