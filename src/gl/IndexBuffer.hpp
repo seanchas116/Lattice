@@ -1,12 +1,11 @@
 #pragma once
 #include <QOpenGLExtraFunctions>
 #include <array>
-#include "DrawMethod.hpp"
 
 namespace Lattice {
 namespace GL {
 
-class IndexBuffer final : protected DrawMethod {
+class IndexBuffer final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(IndexBuffer)
 public:
     using Triangle = std::array<uint32_t, 3>;
@@ -14,10 +13,10 @@ public:
     using Line = std::array<uint32_t, 2>;
 
     IndexBuffer();
-    ~IndexBuffer() override;
+    ~IndexBuffer();
 
-    void bind() override;
-    void unbind() override;
+    void bind();
+    void unbind();
 
     void setTriangles(const std::vector<Triangle>& triangles);
     void setLines(const std::vector<Line>& lines);
