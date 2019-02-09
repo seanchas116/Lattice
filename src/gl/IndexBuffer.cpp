@@ -20,5 +20,12 @@ void IndexBuffer::unbind() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
+void TriangleIndexBuffer::setTriangles(const std::vector<Triangle> &triangles) {
+    _size = triangles.size();
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _buffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, GLsizeiptr(triangles.size() * sizeof(Triangle)), triangles.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
 } // namespace GL
 } // namespace Lattice

@@ -1,5 +1,6 @@
 #pragma once
 #include <QOpenGLExtraFunctions>
+#include <array>
 
 namespace Lattice {
 namespace GL {
@@ -15,6 +16,17 @@ public:
     virtual void draw() = 0;
 protected:
     GLuint _buffer = 0;
+};
+
+class TriangleIndexBuffer : public IndexBuffer {
+public:
+    using Triangle = std::array<uint32_t, 3>;
+
+    size_t size() const { return _size; }
+    void setTriangles(const std::vector<Triangle>& triangles);
+
+private:
+    size_t _size;
 };
 
 } // namespace GL
