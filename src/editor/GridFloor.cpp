@@ -8,7 +8,7 @@ using namespace glm;
 namespace Lattice::Editor {
 
 GridFloor::GridFloor() :
-    _vbo(makeShared<GL::VertexBuffer>()),
+    _vbo(makeShared<GL::VertexBuffer<GL::Vertex>>()),
     _vao(makeShared<GL::LineVAO>(_vbo)),
     _xAxisVAO(makeShared<GL::LineVAO>(_vbo)),
     _zAxisVAO(makeShared<GL::LineVAO>(_vbo))
@@ -17,7 +17,7 @@ GridFloor::GridFloor() :
     constexpr int count = 200;
     constexpr double unit = 1;
 
-    std::vector<GL::VertexBuffer::Vertex> vertices;
+    std::vector<GL::Vertex> vertices;
     std::vector<std::vector<uint32_t>> lineStrips;
     std::vector<uint32_t> xLineStrip;
     std::vector<uint32_t> zLineStrip;
