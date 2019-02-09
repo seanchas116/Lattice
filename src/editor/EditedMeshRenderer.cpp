@@ -1,8 +1,6 @@
 #include "EditedMeshRenderer.hpp"
 #include "MeshPicker.hpp"
 #include "../ui/AppState.hpp"
-#include "../gl/LineVAO.hpp"
-#include "../gl/PointVAO.hpp"
 #include "../gl/VAO.hpp"
 #include "../gl/VertexBuffer.hpp"
 #include "../document/Document.hpp"
@@ -177,7 +175,7 @@ void EditedMeshRenderer::updateWholeVAOs() {
         _edgeAttributes.clear();
         _edgeAttributes.reserve(_item->mesh()->edges().size() * 2);
 
-        std::vector<GL::LineVAO::Line> indices;
+        std::vector<GL::IndexBuffer::Line> indices;
         for (auto& [_, e] : _item->mesh()->edges()) {
             auto offset = uint32_t(_edgeAttributes.size());
             for (auto& v : e->vertices()) {

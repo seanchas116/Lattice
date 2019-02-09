@@ -5,8 +5,6 @@
 #include "../../render/Operations.hpp"
 #include "../../document/Mesh.hpp"
 #include "../../gl/VAO.hpp"
-#include "../../gl/LineVAO.hpp"
-#include "../../gl/PointVAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
 #include "../../support/Debug.hpp"
 #include "../../support/Ray.hpp"
