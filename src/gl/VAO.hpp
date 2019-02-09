@@ -7,7 +7,10 @@
 #include <vector>
 #include "VertexBuffer.hpp"
 
-namespace Lattice::GL {
+namespace Lattice {
+namespace GL {
+
+class IndexBuffer;
 
 class OldVAO final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(OldVAO)
@@ -32,4 +35,34 @@ private:
     std::vector<Triangle> _triangles;
 };
 
+class VAO final : protected QOpenGLExtraFunctions {
+    Q_DISABLE_COPY(VAO)
+public:
+    enum class Primitive {
+        Point,
+        Line,
+        Triangle,
+    };
+    enum class BufferType {
+        PerVertex,
+        PerInstance,
+    };
+
+    VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>>& buffers,
+        const SP<IndexBuffer>& indexBuffer);
+    VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>>& buffers);
+    ~VAO();
+
+    void addVertexBuffer(const SP<AnyVertexBuffer>& vertexBuffer);
+    void addPerInstanceBuffer(const SP<AnyVertexBuffer>& vertexBuffer);
+    void setIndexBuffer(const SP<IndexBuffer>& indexBuffer);
+
+    void draw(Primitive primitive);
+    void drawIndexed(Primitive primitive);
+
+private:
+    GLuint _vertexArray = 0;
+};
+
+}
 }
