@@ -25,7 +25,7 @@ class MeshMaterial;
 }
 
 namespace GL {
-class VAO;
+class OldVAO;
 class LineVAO;
 class PointVAO;
 }
@@ -53,7 +53,7 @@ private:
     SP<UI::AppState> _appState;
     SP<Document::MeshItem> _item;
     SP<MeshPicker> _meshPicker;
-    std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> _faceVAOs;
+    std::unordered_map<SP<Document::MeshMaterial>, SP<GL::OldVAO>> _faceVAOs;
     SP<GL::LineVAO> _edgeVAO;
     SP<GL::PointVAO> _vertexVAO;
 

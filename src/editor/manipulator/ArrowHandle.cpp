@@ -92,7 +92,7 @@ void ArrowHandle::mouseRelease(const Render::MouseEvent &event) {
     emit onEnd();
 }
 
-SP<GL::VAO> ArrowHandle::createHandleVAO() {
+SP<GL::OldVAO> ArrowHandle::createHandleVAO() {
     auto mesh = makeShared<Document::Mesh>();
     auto material = mesh->addMaterial();
     if (_handleType == HandleType::Translate) {

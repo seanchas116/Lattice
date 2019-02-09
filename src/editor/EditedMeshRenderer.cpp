@@ -213,8 +213,8 @@ void EditedMeshRenderer::updateWholeVAOs() {
         };
 
         for (auto& material : _item->mesh()->materials()) {
-            auto vao = makeShared<GL::VAO>(_faceVBO);
-            std::vector<GL::VAO::Triangle> triangles;
+            auto vao = makeShared<GL::OldVAO>(_faceVBO);
+            std::vector<GL::OldVAO::Triangle> triangles;
             for (auto& face : material->faces()) {
                 auto i0 = addPoint(face->uvPoints()[0]);
                 for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {

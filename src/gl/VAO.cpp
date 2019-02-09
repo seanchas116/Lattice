@@ -5,10 +5,10 @@
 
 namespace Lattice::GL {
 
-VAO::VAO() : VAO(makeShared<VertexBuffer<Vertex>>()) {
+OldVAO::OldVAO() : OldVAO(makeShared<VertexBuffer<Vertex>>()) {
 }
 
-VAO::VAO(const SP<VertexBuffer<Vertex> > &vertexBuffer) : _vertexBuffer(vertexBuffer) {
+OldVAO::OldVAO(const SP<VertexBuffer<Vertex> > &vertexBuffer) : _vertexBuffer(vertexBuffer) {
     initializeOpenGLFunctions();
 
     glGenBuffers(1, &_indexBuffer);
@@ -23,22 +23,22 @@ VAO::VAO(const SP<VertexBuffer<Vertex> > &vertexBuffer) : _vertexBuffer(vertexBu
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-VAO::VAO(const SP<VertexBuffer<Vertex> > &vertexBuffer, const std::vector<VAO::Triangle> &triangles) : VAO(vertexBuffer) {
+OldVAO::OldVAO(const SP<VertexBuffer<Vertex> > &vertexBuffer, const std::vector<OldVAO::Triangle> &triangles) : OldVAO(vertexBuffer) {
     setTriangles(triangles);
 }
 
-VAO::~VAO() {
+OldVAO::~OldVAO() {
     glDeleteVertexArrays(1, &_vertexArray);
     glDeleteBuffers(1, &_indexBuffer);
 }
 
-void VAO::draw() {
+void OldVAO::draw() {
     glBindVertexArray(_vertexArray);
     glDrawElements(GL_TRIANGLES, int(_triangles.size() * 3), GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);
 }
 
-void VAO::setTriangles(const std::vector<Triangle> &triangles) {
+void OldVAO::setTriangles(const std::vector<Triangle> &triangles) {
     _triangles = triangles;
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, GLsizeiptr(triangles.size() * sizeof(Triangle)), triangles.data(), GL_STATIC_DRAW);

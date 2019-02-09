@@ -14,7 +14,7 @@ namespace GL {
 class OldVertexBuffer;
 class LineVAO;
 class PointVAO;
-class VAO;
+class OldVAO;
 }
 
 namespace Editor {
@@ -25,7 +25,7 @@ public:
 
     SP<GL::PointVAO> generateVertexVAO() const;
     SP<GL::LineVAO> generateEdgeVAO() const;
-    std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> generateFaceVAOs() const;
+    std::unordered_map<SP<Document::MeshMaterial>, SP<GL::OldVAO>> generateFaceVAOs() const;
 
 private:
     SP<Document::Mesh> _mesh;

@@ -4,7 +4,7 @@
 namespace Lattice {
 
 namespace GL {
-class VAO;
+class OldVAO;
 class LineVAO;
 }
 
@@ -37,14 +37,14 @@ signals:
     void onEnd();
 
 private:
-    SP<GL::VAO> createHandleVAO();
+    SP<GL::OldVAO> createHandleVAO();
     SP<GL::LineVAO> createBodyVAO();
 
     int _axis;
     HandleType _handleType;
     glm::dvec3 _targetPosition {0};
     double _length {2.0};
-    SP<GL::VAO> _handleVAO;
+    SP<GL::OldVAO> _handleVAO;
     SP<GL::LineVAO> _bodyVAO;
     glm::dvec3 _initialTargetPosition {0};
 };

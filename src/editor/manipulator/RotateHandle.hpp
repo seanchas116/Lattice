@@ -8,7 +8,7 @@ class Mesh;
 }
 
 namespace GL {
-class VAO;
+class OldVAO;
 class LineVAO;
 }
 
