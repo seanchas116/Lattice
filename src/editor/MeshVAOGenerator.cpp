@@ -2,8 +2,6 @@
 #include "../document/Mesh.hpp"
 #include "../document/MeshItem.hpp"
 #include "../gl/VAO.hpp"
-#include "../gl/LineVAO.hpp"
-#include "../gl/PointVAO.hpp"
 #include "../gl/VertexBuffer.hpp"
 
 namespace Lattice {
@@ -28,28 +26,28 @@ MeshVAOGenerator::MeshVAOGenerator(const SP<Document::Mesh> &mesh) :
     _vertexBuffer->setVertices(vertices);
 }
 
-SP<GL::PointVAO> MeshVAOGenerator::generateVertexVAO() const {
-    return makeShared<GL::PointVAO>(_vertexBuffer);
+SP<GL::VAO> MeshVAOGenerator::generateVertexVAO() const {
+    return makeShared<GL::VAO>(_vertexBuffer, GL::Primitive::Point);
 }
 
-SP<GL::LineVAO> MeshVAOGenerator::generateEdgeVAO() const {
-    auto edgeVAO = makeShared<GL::LineVAO>(_vertexBuffer);
-    std::vector<GL::LineVAO::Line> lines;
+SP<GL::VAO> MeshVAOGenerator::generateEdgeVAO() const {
+    std::vector<GL::IndexBuffer::Line> lines;
     for (auto& [_, edge] : _mesh->edges()) {
         auto i0 = _indices.at(*edge->vertices()[0]->uvPoints().begin());
         auto i1 = _indices.at(*edge->vertices()[1]->uvPoints().begin());
         lines.push_back({i0, i1});
     }
-    edgeVAO->setLines(lines);
+    auto edgeIndexBuffer = makeShared<GL::IndexBuffer>();
+    edgeIndexBuffer->setLines(lines);
+    auto edgeVAO = makeShared<GL::VAO>(_vertexBuffer, edgeIndexBuffer);
     return edgeVAO;
 }
 
-std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO> > MeshVAOGenerator::generateFaceVAOs() const {
-    std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO> > faceVAOs;
+std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() const {
+    std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> faceVAOs;
 
     for (auto& material : _mesh->materials()) {
-        auto vao = makeShared<GL::VAO>(_vertexBuffer);
-        std::vector<GL::VAO::Triangle> triangles;
+        std::vector<GL::IndexBuffer::Triangle> triangles;
         for (auto& face : material->faces()) {
             auto v0 = face->uvPoints()[0];
             auto i0 = _indices.at(v0.get());
@@ -61,7 +59,9 @@ std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO> > MeshVAOGenerator::g
                 triangles.push_back({i0, i1, i2});
             }
         }
-        vao->setTriangles(triangles);
+        auto indexBuffer = makeShared<GL::IndexBuffer>();
+        indexBuffer->setTriangles(triangles);
+        auto vao = makeShared<GL::VAO>(_vertexBuffer, indexBuffer);
         faceVAOs.insert({material, vao});
     }
 

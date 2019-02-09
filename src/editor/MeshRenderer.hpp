@@ -26,8 +26,6 @@ class MeshMaterial;
 
 namespace GL {
 class VAO;
-class LineVAO;
-class PointVAO;
 }
 
 namespace Editor {
@@ -54,8 +52,8 @@ private:
     SP<Document::MeshItem> _item;
     SP<MeshPicker> _meshPicker;
     std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> _faceVAOs;
-    SP<GL::LineVAO> _edgeVAO;
-    SP<GL::PointVAO> _vertexVAO;
+    SP<GL::VAO> _edgeVAO;
+    SP<GL::VAO> _vertexVAO;
 
     Location _dragInitLocation;
     glm::dvec3 _dragInitWorldPos;

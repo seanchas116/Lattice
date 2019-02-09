@@ -7,7 +7,7 @@ class Camera;
 }
 
 namespace Lattice::GL {
-class LineVAO;
+class VAO;
 }
 
 namespace Lattice::Render {
@@ -16,7 +16,7 @@ class DrawLine final {
 public:
     DrawLine();
 
-    void draw(const SP<GL::LineVAO>& vao, const glm::dmat4 &matrix, const SP<Camera>& camera,
+    void draw(const SP<GL::VAO>& vao, const glm::dmat4 &matrix, const SP<Camera>& camera,
               double width, glm::dvec3 color, bool useVertexColor = false, double zOffset = -0.00001);
 
 private:

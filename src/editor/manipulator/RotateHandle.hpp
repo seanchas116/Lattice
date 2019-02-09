@@ -9,7 +9,6 @@ class Mesh;
 
 namespace GL {
 class VAO;
-class LineVAO;
 }
 
 namespace Editor {
@@ -38,13 +37,12 @@ signals:
 
 private:
     SP<Document::Mesh> createMesh();
-    SP<GL::LineVAO> createHandleVAO();
 
     int _axis;
     glm::dvec3 _targetPosition {0};
     SP<Document::Mesh> _handleMesh;
     SP<MeshPicker> _handleMeshPicker;
-    SP<GL::LineVAO> _handleVAO;
+    SP<GL::VAO> _handleVAO;
     glm::dvec3 _initialTargetPosition {0};
 };
 

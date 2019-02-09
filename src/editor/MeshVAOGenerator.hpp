@@ -11,9 +11,6 @@ class MeshUVPoint;
 class MeshMaterial;
 }
 namespace GL {
-class OldVertexBuffer;
-class LineVAO;
-class PointVAO;
 class VAO;
 }
 
@@ -23,8 +20,8 @@ class MeshVAOGenerator {
 public:
     MeshVAOGenerator(const SP<Document::Mesh>& mesh);
 
-    SP<GL::PointVAO> generateVertexVAO() const;
-    SP<GL::LineVAO> generateEdgeVAO() const;
+    SP<GL::VAO> generateVertexVAO() const;
+    SP<GL::VAO> generateEdgeVAO() const;
     std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> generateFaceVAOs() const;
 
 private:

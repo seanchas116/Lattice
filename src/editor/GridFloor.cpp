@@ -1,5 +1,5 @@
 #include "GridFloor.hpp"
-#include "../gl/LineVAO.hpp"
+#include "../gl/VAO.hpp"
 #include "../gl/VertexBuffer.hpp"
 #include "../support/Camera.hpp"
 
@@ -9,9 +9,12 @@ namespace Lattice::Editor {
 
 GridFloor::GridFloor() :
     _vbo(makeShared<GL::VertexBuffer<GL::Vertex>>()),
-    _vao(makeShared<GL::LineVAO>(_vbo)),
-    _xAxisVAO(makeShared<GL::LineVAO>(_vbo)),
-    _zAxisVAO(makeShared<GL::LineVAO>(_vbo))
+    _indexBuffer(makeShared<GL::IndexBuffer>()),
+    _vao(makeShared<GL::VAO>(_vbo, _indexBuffer)),
+    _xAxisIndexBuffer(makeShared<GL::IndexBuffer>()),
+    _zAxisIndexBuffer(makeShared<GL::IndexBuffer>()),
+    _xAxisVAO(makeShared<GL::VAO>(_vbo, _xAxisIndexBuffer)),
+    _zAxisVAO(makeShared<GL::VAO>(_vbo, _zAxisIndexBuffer))
 {
     // build grid
     constexpr int count = 200;
@@ -52,9 +55,9 @@ GridFloor::GridFloor() :
     }
 
     _vbo->setVertices(vertices);
-    _vao->setLineStrips(lineStrips);
-    _xAxisVAO->setLineStrips({xLineStrip});
-    _zAxisVAO->setLineStrips({zLineStrip});
+    _indexBuffer->setLineStrips(lineStrips);
+    _xAxisIndexBuffer->setLineStrips({xLineStrip});
+    _zAxisIndexBuffer->setLineStrips({zLineStrip});
 }
 
 void GridFloor::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
