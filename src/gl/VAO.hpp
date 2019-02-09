@@ -9,8 +9,6 @@
 
 namespace Lattice::GL {
 
-class OldVertexBuffer;
-
 class VAO final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(VAO)
 public:
