@@ -40,6 +40,7 @@ class AnyVertexBuffer : protected QOpenGLExtraFunctions {
 public:
     AnyVertexBuffer();
     virtual ~AnyVertexBuffer();
+    virtual size_t size() const = 0;
     virtual std::vector<AttributeInfo> attributes() const = 0;
     void bind();
     void unbind();
@@ -57,7 +58,7 @@ public:
         setVertexData(vertices.data(), vertices.size() * sizeof(T));
     }
 
-    size_t size() const { return _size; }
+    size_t size() const override { return _size; }
 
     std::vector<AttributeInfo> attributes() const override {
         constexpr auto arity = AggregateUtil::aggregate_arity<T>::size();

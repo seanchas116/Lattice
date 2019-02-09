@@ -49,18 +49,15 @@ public:
     };
 
     VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>>& buffers,
-        const SP<IndexBuffer>& indexBuffer);
-    VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>>& buffers);
+        const std::optional<SP<IndexBuffer>>& indexBuffer = std::nullopt);
     ~VAO();
-
-    void addVertexBuffer(const SP<AnyVertexBuffer>& vertexBuffer);
-    void addPerInstanceBuffer(const SP<AnyVertexBuffer>& vertexBuffer);
-    void setIndexBuffer(const SP<IndexBuffer>& indexBuffer);
 
     void draw(Primitive primitive);
     void drawIndexed(Primitive primitive);
 
 private:
+    std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>> _buffers;
+    std::optional<SP<IndexBuffer>> _indexBuffer;
     GLuint _vertexArray = 0;
 };
 
