@@ -22,7 +22,8 @@ ArrowHandle::ArrowHandle(int axis, HandleType handleType) :
     _axis(axis),
     _handleType(handleType),
     _handleVAO(createHandleVAO()),
-    _bodyVAO(createBodyVAO())
+    _bodyVertexBuffer(makeShared<GL::VertexBuffer<GL::Vertex>>()),
+    _bodyVAO(createBodyVAO(_bodyVertexBuffer))
 {
 }
 
@@ -35,7 +36,7 @@ void ArrowHandle::draw(const SP<Render::Operations> &operations, const SP<Camera
     dmat4 translate = glm::translate(dvec3(_length, 0, 0));
     operations->drawSolid.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis] * translate, camera, vec3(0), Constants::colors[_axis]);
 
-    _bodyVAO->vertexBuffer()->setVertices({{vec3(Constants::bodyBegin, 0, 0), {}, {}}, {vec3(_length, 0, 0), {}, {}}});
+    _bodyVertexBuffer->setVertices({{vec3(Constants::bodyBegin, 0, 0), {}, {}}, {vec3(_length, 0, 0), {}, {}}});
     operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, Constants::colors[_axis]);
 }
 
@@ -92,7 +93,7 @@ void ArrowHandle::mouseRelease(const Render::MouseEvent &event) {
     emit onEnd();
 }
 
-SP<GL::OldVAO> ArrowHandle::createHandleVAO() {
+SP<GL::VAO> ArrowHandle::createHandleVAO() {
     auto mesh = makeShared<Document::Mesh>();
     auto material = mesh->addMaterial();
     if (_handleType == HandleType::Translate) {
@@ -104,10 +105,11 @@ SP<GL::OldVAO> ArrowHandle::createHandleVAO() {
     return MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
 }
 
-SP<GL::LineVAO> ArrowHandle::createBodyVAO() {
-    auto bodyVAO = makeShared<GL::LineVAO>();
-    bodyVAO->vertexBuffer()->setVertices({{}, {}});
-    bodyVAO->setLineStrips({{0, 1}});
+SP<GL::VAO> ArrowHandle::createBodyVAO(const SP<GL::VertexBuffer<GL::Vertex> > &vertexBuffer) {
+    auto indexBuffer = makeShared<GL::IndexBuffer>();
+    indexBuffer->setLineStrips({{0, 1}});
+    vertexBuffer->setVertices({{}, {}});
+    auto bodyVAO = makeShared<GL::VAO>(vertexBuffer, indexBuffer);
     return bodyVAO;
 }
 

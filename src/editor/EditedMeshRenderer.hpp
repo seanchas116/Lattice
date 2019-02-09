@@ -26,9 +26,7 @@ class MeshMaterial;
 }
 
 namespace GL {
-class OldVAO;
-class LineVAO;
-class PointVAO;
+class VAO;
 }
 
 namespace Editor {
@@ -55,12 +53,12 @@ private:
     SP<UI::AppState> _appState;
     SP<Document::MeshItem> _item;
     SP<MeshPicker> _meshPicker;
-    std::unordered_map<SP<Document::MeshMaterial>, SP<GL::OldVAO>> _faceVAOs;
+    std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> _faceVAOs;
     SP<GL::VertexBuffer<GL::Vertex>> _faceVBO;
     std::vector<GL::Vertex> _faceAttributes;
-    SP<GL::LineVAO> _edgeVAO;
+    SP<GL::VAO> _edgeVAO;
     std::vector<GL::Vertex> _edgeAttributes;
-    SP<GL::PointVAO> _vertexVAO;
+    SP<GL::VAO> _vertexVAO;
     std::vector<GL::Vertex> _vertexAttributes;
 
     std::unordered_map<SP<Document::MeshVertex>, glm::dvec3> _initialPositions;

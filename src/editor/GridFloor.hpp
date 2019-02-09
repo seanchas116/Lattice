@@ -10,7 +10,8 @@ class Camera;
 }
 
 namespace Lattice::GL {
-class LineVAO;
+class VAO;
+class IndexBuffer;
 }
 
 namespace Lattice::Editor {
@@ -24,9 +25,12 @@ public:
 
 private:
     SP<GL::VertexBuffer<GL::Vertex>> _vbo;
-    SP<GL::LineVAO> _vao;
-    SP<GL::LineVAO> _xAxisVAO;
-    SP<GL::LineVAO> _zAxisVAO;
+    SP<GL::IndexBuffer> _indexBuffer;
+    SP<GL::VAO> _vao;
+    SP<GL::IndexBuffer> _xAxisIndexBuffer;
+    SP<GL::IndexBuffer> _zAxisIndexBuffer;
+    SP<GL::VAO> _xAxisVAO;
+    SP<GL::VAO> _zAxisVAO;
 };
 
 } // namespace Lattice

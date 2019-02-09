@@ -53,6 +53,12 @@ private:
 template <typename T>
 class VertexBuffer final : public AnyVertexBuffer {
 public:
+    VertexBuffer() {}
+
+    VertexBuffer(const std::vector<T>& vertices) {
+        setVertices(vertices);
+    }
+
     void setVertices(const std::vector<T>& vertices) {
         _size = vertices.size();
         setVertexData(vertices.data(), vertices.size() * sizeof(T));

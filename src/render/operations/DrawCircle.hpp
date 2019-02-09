@@ -6,7 +6,7 @@ class Camera;
 }
 
 namespace Lattice::GL {
-class PointVAO;
+class VAO;
 }
 
 namespace Lattice::Render {
@@ -14,7 +14,7 @@ namespace Lattice::Render {
 class DrawCircle final {
 public:
     DrawCircle();
-    void draw(const SP<GL::PointVAO>& vao, const glm::dmat4 &matrix, const SP<Camera>& camera,
+    void draw(const SP<GL::VAO>& vao, const glm::dmat4 &matrix, const SP<Camera>& camera,
               double width, glm::dvec3 color, bool useVertexColor = false, double zOffset = -0.00002);
 
 private:

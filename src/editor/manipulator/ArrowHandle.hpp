@@ -1,4 +1,5 @@
 #pragma once
+#include "../../gl/VertexBuffer.hpp"
 #include "../../render/Renderable.hpp"
 
 namespace Lattice {
@@ -37,15 +38,16 @@ signals:
     void onEnd();
 
 private:
-    SP<GL::OldVAO> createHandleVAO();
-    SP<GL::LineVAO> createBodyVAO();
+    SP<GL::VAO> createHandleVAO();
+    SP<GL::VAO> createBodyVAO(const SP<GL::VertexBuffer<GL::Vertex>>& vertexBuffer);
 
     int _axis;
     HandleType _handleType;
     glm::dvec3 _targetPosition {0};
     double _length {2.0};
-    SP<GL::OldVAO> _handleVAO;
-    SP<GL::LineVAO> _bodyVAO;
+    SP<GL::VAO> _handleVAO;
+    SP<GL::VertexBuffer<GL::Vertex>> _bodyVertexBuffer;
+    SP<GL::VAO> _bodyVAO;
     glm::dvec3 _initialTargetPosition {0};
 };
 

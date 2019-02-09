@@ -1,5 +1,5 @@
 #include "DrawCircle.hpp"
-#include "../../gl/PointVAO.hpp"
+#include "../../gl/VAO.hpp"
 #include "../../resource/Resource.hpp"
 #include "../../support/Location.hpp"
 #include "../../support/Camera.hpp"
@@ -11,7 +11,7 @@ DrawCircle::DrawCircle() :
 {
 }
 
-void DrawCircle::draw(const SP<GL::PointVAO> &vao, const glm::dmat4 &matrix, const SP<Camera> &camera, double width, glm::dvec3 color, bool useVertexColor, double zOffset) {
+void DrawCircle::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<Camera> &camera, double width, glm::dvec3 color, bool useVertexColor, double zOffset) {
     _shader.bind();
     _shader.setUniform("MVP", camera->worldToScreenMatrix() * matrix);
     _shader.setUniform("viewportSize", camera->viewSize());

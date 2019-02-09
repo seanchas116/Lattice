@@ -1,6 +1,6 @@
 #include "DrawLine.hpp"
 #include "../../support/Camera.hpp"
-#include "../../gl/LineVAO.hpp"
+#include "../../gl/VAO.hpp"
 #include "../../resource/Resource.hpp"
 
 namespace Lattice::Render {
@@ -10,7 +10,7 @@ DrawLine::DrawLine() :
 {
 }
 
-void DrawLine::draw(const SP<GL::LineVAO> &vao, const glm::dmat4 &matrix, const SP<Camera> &camera, double width, glm::dvec3 color, bool useVertexColor, double zOffset) {
+void DrawLine::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<Camera> &camera, double width, glm::dvec3 color, bool useVertexColor, double zOffset) {
     _shader.bind();
     _shader.setUniform("MV", camera->worldToCameraMatrix() * matrix);
     _shader.setUniform("P", camera->cameraToScreenMatrix());

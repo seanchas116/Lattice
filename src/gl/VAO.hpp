@@ -44,9 +44,14 @@ enum class BufferType {
 class VAO final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(VAO)
 public:
+    VAO();
+    VAO(const SP<AnyVertexBuffer>& buffer, const SP<IndexBuffer>& indexBuffer);
+    VAO(const SP<AnyVertexBuffer>& buffer, Primitive primitive);
     VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>>& buffers, const SP<IndexBuffer>& indexBuffer);
     VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>>& buffers, Primitive primitive);
     ~VAO();
+
+    auto& buffers() const { return _buffers; }
 
     void draw();
 

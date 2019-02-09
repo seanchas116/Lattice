@@ -29,8 +29,8 @@ EditedMeshRenderer::EditedMeshRenderer(const SP<UI::AppState>& appState, const S
     _item(item),
     _meshPicker(makeShared<MeshPicker>(item->mesh())),
     _faceVBO(makeShared<GL::VertexBuffer<GL::Vertex>>()),
-    _edgeVAO(makeShared<GL::LineVAO>()),
-    _vertexVAO(makeShared<GL::PointVAO>())
+    _edgeVAO(makeShared<GL::VAO>()),
+    _vertexVAO(makeShared<GL::VAO>())
 {
     updateWholeVAOs();
     connect(_item->mesh().get(), &Document::Mesh::changed, this, &EditedMeshRenderer::updateWholeVAOs);
@@ -155,7 +155,6 @@ void EditedMeshRenderer::updateWholeVAOs() {
     auto& selectedVertices = _appState->document()->meshSelection().vertices;
 
     {
-        _vertexVAO = makeShared<GL::PointVAO>();
         _vertexAttributes.clear();
         _vertexAttributes.reserve(_item->mesh()->vertices().size());
 
@@ -169,11 +168,12 @@ void EditedMeshRenderer::updateWholeVAOs() {
             _vertexAttributes.push_back(attrib);
         }
 
-        _vertexVAO->vertexBuffer()->setVertices(_vertexAttributes);
+        auto vertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
+        _vertexVAO = makeShared<GL::VAO>(vertexBuffer, GL::Primitive::Point);
+        vertexBuffer->setVertices(_vertexAttributes);
     }
 
     {
-        _edgeVAO = makeShared<GL::LineVAO>();
         _edgeAttributes.clear();
         _edgeAttributes.reserve(_item->mesh()->edges().size() * 2);
 
@@ -191,8 +191,11 @@ void EditedMeshRenderer::updateWholeVAOs() {
             indices.push_back({offset, offset+1});
         }
 
-        _edgeVAO->vertexBuffer()->setVertices(_edgeAttributes);
-        _edgeVAO->setLines(indices);
+        auto vertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
+        auto indexBuffer = makeShared<GL::IndexBuffer>();
+        vertexBuffer->setVertices(_edgeAttributes);
+        indexBuffer->setLines(indices);
+        _edgeVAO = makeShared<GL::VAO>(vertexBuffer, indexBuffer);
     }
 
     {
@@ -213,7 +216,6 @@ void EditedMeshRenderer::updateWholeVAOs() {
         };
 
         for (auto& material : _item->mesh()->materials()) {
-            auto vao = makeShared<GL::OldVAO>(_faceVBO);
             std::vector<GL::OldVAO::Triangle> triangles;
             for (auto& face : material->faces()) {
                 auto i0 = addPoint(face->uvPoints()[0]);
@@ -223,7 +225,9 @@ void EditedMeshRenderer::updateWholeVAOs() {
                     triangles.push_back({i0, i1, i2});
                 }
             }
-            vao->setTriangles(triangles);
+            auto indexBuffer = makeShared<GL::IndexBuffer>();
+            indexBuffer->setTriangles(triangles);
+            auto vao = makeShared<GL::VAO>(_faceVBO, indexBuffer);
             _faceVAOs.insert({material, vao});
         }
         _faceVBO->setVertices(_faceAttributes);

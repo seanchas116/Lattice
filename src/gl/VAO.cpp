@@ -73,6 +73,15 @@ VAO::VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>> &buffers,
     }
 }
 
+VAO::VAO() : VAO(makeShared<VertexBuffer<Vertex>>(), Primitive::Triangle) {
+}
+
+VAO::VAO(const SP<AnyVertexBuffer> &buffer, const SP<IndexBuffer> &indexBuffer) : VAO({{buffer, BufferType::PerVertex}}, indexBuffer) {
+}
+
+VAO::VAO(const SP<AnyVertexBuffer> &buffer, Primitive primitive) : VAO({{buffer, BufferType::PerVertex}}, primitive) {
+}
+
 VAO::VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>> &buffers, const SP<IndexBuffer> &indexBuffer) : VAO(buffers, indexBuffer, Primitive::Triangle) {
 }
 
@@ -84,6 +93,8 @@ VAO::~VAO() {
 }
 
 void VAO::draw() {
+    glBindVertexArray(_vertexArray);
+
     if (_indexBuffer) {
         auto indexCount = GLsizei(_indexBuffer->get()->size());
 
@@ -113,6 +124,8 @@ void VAO::draw() {
             break;
         }
     }
+
+    glBindVertexArray(0);
 }
 
 }
