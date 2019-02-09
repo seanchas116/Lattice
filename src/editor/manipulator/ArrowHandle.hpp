@@ -4,11 +4,6 @@
 
 namespace Lattice {
 
-namespace GL {
-class OldVAO;
-class LineVAO;
-}
-
 namespace Editor {
 namespace Manipulator {
 
