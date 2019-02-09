@@ -46,7 +46,11 @@ void OldVAO::setTriangles(const std::vector<Triangle> &triangles) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-VAO::VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>> &buffers, const std::optional<SP<IndexBuffer>> &indexBuffer) {
+VAO::VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>> &buffers, const std::optional<SP<IndexBuffer>> &indexBuffer, Primitive primitive) :
+    _buffers(buffers),
+    _indexBuffer(indexBuffer),
+    _primitive(primitive)
+{
     initializeOpenGLFunctions();
 
     glGenVertexArrays(1, &_vertexArray);
@@ -69,15 +73,21 @@ VAO::VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>> &buffers,
     }
 }
 
+VAO::VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>> &buffers, const SP<IndexBuffer> &indexBuffer) : VAO(buffers, indexBuffer, Primitive::Triangle) {
+}
+
+VAO::VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType> > &buffers, Primitive primitive) : VAO(buffers, std::nullopt, primitive) {
+}
+
 VAO::~VAO() {
     glDeleteVertexArrays(1, &_vertexArray);
 }
 
-void VAO::draw(Primitive primitive) {
+void VAO::draw() {
     if (_indexBuffer) {
         auto indexCount = GLsizei(_indexBuffer->get()->size());
 
-        switch (primitive) {
+        switch (_indexBuffer->get()->primitive()) {
         case Primitive::Point:
             glDrawElements(GL_POINTS, indexCount, GL_UNSIGNED_INT, nullptr);
             break;
@@ -91,7 +101,7 @@ void VAO::draw(Primitive primitive) {
     } else {
         auto bufferSize = GLsizei(_buffers[0].first->size());
 
-        switch (primitive) {
+        switch (_primitive) {
         case Primitive::Point:
             glDrawArrays(GL_POINTS, 0, bufferSize);
             break;

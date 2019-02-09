@@ -6,6 +6,7 @@
 #include <array>
 #include <vector>
 #include "VertexBuffer.hpp"
+#include "IndexBuffer.hpp"
 
 namespace Lattice {
 namespace GL {
@@ -35,12 +36,6 @@ private:
     std::vector<Triangle> _triangles;
 };
 
-enum class Primitive {
-    Point,
-    Line,
-    Triangle,
-};
-
 enum class BufferType {
     PerVertex,
     PerInstance,
@@ -49,15 +44,18 @@ enum class BufferType {
 class VAO final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(VAO)
 public:
-    VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>>& buffers,
-        const std::optional<SP<IndexBuffer>>& indexBuffer = std::nullopt);
+    VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>>& buffers, const SP<IndexBuffer>& indexBuffer);
+    VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>>& buffers, Primitive primitive);
     ~VAO();
 
-    void draw(Primitive primitive);
+    void draw();
 
 private:
+    VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>>& buffers, const std::optional<SP<IndexBuffer>>& indexBuffer, Primitive primitive);
+
     std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>> _buffers;
     std::optional<SP<IndexBuffer>> _indexBuffer;
+    Primitive _primitive;
     GLuint _vertexArray = 0;
 };
 

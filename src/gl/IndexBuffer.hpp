@@ -5,7 +5,13 @@
 namespace Lattice {
 namespace GL {
 
-class IndexBuffer final : protected QOpenGLExtraFunctions {
+enum class Primitive {
+    Point,
+    Line,
+    Triangle,
+};
+
+class IndexBuffer : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(IndexBuffer)
 public:
     using Triangle = std::array<uint32_t, 3>;
@@ -13,7 +19,7 @@ public:
     using Line = std::array<uint32_t, 2>;
 
     IndexBuffer();
-    ~IndexBuffer();
+    virtual ~IndexBuffer();
 
     void bind();
     void unbind();
@@ -23,8 +29,13 @@ public:
     void setLineStrips(const std::vector<LineStrip> &strips);
 
     size_t size() const { return _size; }
+    Primitive primitive() const { return _primitive; }
+
+protected:
+    void setData(const void* data, size_t indexCount);
 
 private:
+    Primitive _primitive = Primitive::Triangle;
     GLuint _buffer = 0;
     size_t _size = 0;
 };

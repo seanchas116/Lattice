@@ -25,6 +25,7 @@ void IndexBuffer::setTriangles(const std::vector<IndexBuffer::Triangle> &triangl
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, GLsizeiptr(triangles.size() * sizeof(Triangle)), triangles.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     _size = triangles.size() * 3;
+    _primitive = Primitive::Triangle;
 }
 
 void IndexBuffer::setLines(const std::vector<IndexBuffer::Line> &lines) {
@@ -32,6 +33,7 @@ void IndexBuffer::setLines(const std::vector<IndexBuffer::Line> &lines) {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, GLsizeiptr(lines.size() * sizeof(Line)), lines.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     _size = lines.size() * 2;
+    _primitive = Primitive::Line;
 }
 
 void IndexBuffer::setLineStrips(const std::vector<IndexBuffer::LineStrip> &strips) {
