@@ -20,21 +20,21 @@ void IndexBuffer::unbind() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void TriangleIndexBuffer::setTriangles(const std::vector<Triangle> &triangles) {
-    _size = triangles.size();
+void IndexBuffer::setTriangles(const std::vector<IndexBuffer::Triangle> &triangles) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _buffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, GLsizeiptr(triangles.size() * sizeof(Triangle)), triangles.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    _size = triangles.size() * 3;
 }
 
-void LineIndexBuffer::setLines(const std::vector<LineIndexBuffer::Line> &lines) {
+void IndexBuffer::setLines(const std::vector<IndexBuffer::Line> &lines) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _buffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, GLsizeiptr(lines.size() * sizeof(Line)), lines.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    _size = lines.size();
+    _size = lines.size() * 2;
 }
 
-void LineIndexBuffer::setLineStrips(const std::vector<LineIndexBuffer::LineStrip> &strips) {
+void IndexBuffer::setLineStrips(const std::vector<IndexBuffer::LineStrip> &strips) {
     std::vector<Line> lines;
     for (auto& strip : strips) {
         for (size_t i = 0; i < strip.size() - 1; ++i) {
