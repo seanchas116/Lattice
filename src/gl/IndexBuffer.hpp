@@ -1,19 +1,19 @@
 #pragma once
 #include <QOpenGLExtraFunctions>
 #include <array>
+#include "DrawMethod.hpp"
 
 namespace Lattice {
 namespace GL {
 
-class IndexBuffer : protected QOpenGLExtraFunctions {
+class IndexBuffer : protected DrawMethod {
     Q_DISABLE_COPY(IndexBuffer)
 public:
     IndexBuffer();
-    virtual ~IndexBuffer();
+    ~IndexBuffer() override;
 
-    void bind();
-    void unbind();
-    virtual void draw() = 0;
+    void bind() override;
+    void unbind() override;
 protected:
     GLuint _buffer = 0;
 };
