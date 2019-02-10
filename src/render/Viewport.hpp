@@ -39,6 +39,7 @@ private:
 
     std::vector<SP<Renderable>> _renderables;
     std::optional<SP<Renderable>> _draggedRenderable;
+    std::optional<SP<Renderable>> _hoveredRenderable;
     HitResult _hitResult;
     SP<Camera> _camera;
 };

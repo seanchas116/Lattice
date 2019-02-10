@@ -29,9 +29,32 @@ void Viewport::mousePressEvent(QMouseEvent *event) {
 }
 
 void Viewport::mouseMoveEvent(QMouseEvent *event) {
-    LATTICE_OPTIONAL_GUARD(renderable, _draggedRenderable, return;)
-    MouseEvent renderMouseEvent(event, mapQtToGL(this, event->pos()), _camera, _hitResult);
-    renderable->mouseMove(renderMouseEvent);
+    auto pos = mapQtToGL(this, event->pos());
+
+    if (_draggedRenderable) {
+        // drag
+        auto renderable = *_draggedRenderable;
+        MouseEvent renderMouseEvent(event, pos, _camera, _hitResult);
+        renderable->mouseMove(renderMouseEvent);
+        return;
+    } else {
+        // hover
+        auto maybeHitResult = hitTest(pos, _camera);
+        if (!maybeHitResult) {
+            if (_hoveredRenderable) {
+                (*_hoveredRenderable)->hoverLeave();
+            }
+            return;
+        }
+        auto [renderable, _] = *maybeHitResult;
+        if (_hoveredRenderable != renderable) {
+            if (_hoveredRenderable) {
+                (*_hoveredRenderable)->hoverLeave();
+            }
+            renderable->hoverEnter();
+            _hoveredRenderable = renderable;
+        }
+    }
 }
 
 void Viewport::mouseDoubleClickEvent(QMouseEvent *event) {
