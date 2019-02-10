@@ -46,6 +46,7 @@ private:
     SP<GL::VertexBuffer<GL::Vertex>> _bodyVertexBuffer;
     SP<GL::VAO> _bodyVAO;
     glm::dvec3 _initialTargetPosition {0};
+    bool _hovered = false;
 };
 
 }

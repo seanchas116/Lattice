@@ -32,10 +32,10 @@ void ArrowHandle::draw(const SP<Render::Operations> &operations, const SP<Camera
     }
 
     dmat4 translate = glm::translate(dvec3(_length, 0, 0));
-    operations->drawSolid.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis] * translate, camera, vec3(0), Constants::colors[_axis]);
+    operations->drawSolid.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis] * translate, camera, vec3(0), _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
 
     _bodyVertexBuffer->setVertices({{vec3(Constants::bodyBegin, 0, 0), {}, {}}, {vec3(_length, 0, 0), {}, {}}});
-    operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, Constants::colors[_axis]);
+    operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
 }
 
 std::optional<Render::HitResult> ArrowHandle::hitTest(dvec2 pos, const SP<Camera> &camera) const {
@@ -92,12 +92,13 @@ void ArrowHandle::mouseRelease(const Render::MouseEvent &event) {
 }
 
 void ArrowHandle::hoverEnter() {
-    // TODO: tint on hover
-    qDebug() << "hoverEnter";
+    _hovered = true;
+    emit updateRequested();
 }
 
 void ArrowHandle::hoverLeave() {
-    qDebug() << "hoverLeave";
+    _hovered = false;
+    emit updateRequested();
 }
 
 SP<GL::VAO> ArrowHandle::createHandleVAO() {
