@@ -91,6 +91,15 @@ void ArrowHandle::mouseRelease(const Render::MouseEvent &event) {
     emit onEnd();
 }
 
+void ArrowHandle::hoverEnter() {
+    // TODO: tint on hover
+    qDebug() << "hoverEnter";
+}
+
+void ArrowHandle::hoverLeave() {
+    qDebug() << "hoverLeave";
+}
+
 SP<GL::VAO> ArrowHandle::createHandleVAO() {
     auto mesh = makeShared<Document::Mesh>();
     auto material = mesh->addMaterial();
