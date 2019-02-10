@@ -14,8 +14,8 @@ class Renderable : public QObject {
 public:
     Renderable();
 
-    bool isHoverEnabled() const { return _isHoverEnabled; }
-    void setHoverEnabled(bool enabled) { _isHoverEnabled = enabled; }
+    //bool isHoverEnabled() const { return _isHoverEnabled; }
+    //void setHoverEnabled(bool enabled) { _isHoverEnabled = enabled; }
 
     virtual void draw(const SP<Operations>& operations, const SP<Camera>& camera);
 
@@ -31,7 +31,7 @@ signals:
     void updateRequested();
 
 private:
-    bool _isHoverEnabled = false;
+    //bool _isHoverEnabled = false;
 };
 
 } // namespace Renderer
