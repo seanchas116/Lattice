@@ -51,7 +51,7 @@ MeshPicker::MeshPicker(const SP<Document::Mesh> &mesh) : _mesh(mesh) {
 std::optional<std::pair<SP<Document::MeshFace>, double> > MeshPicker::pickFace(const dmat4 &modelToWorld, const SP<Camera> &camera, dvec2 screenPos) const {
     Ray<float> ray = inverse(modelToWorld) * camera->worldMouseRay(screenPos);
     // TODO: Use Bounding Volume Hierarchy to do faster
-    ScopedTimer timer("MeshPicker::pickFace");
+    //ScopedTimer timer("MeshPicker::pickFace");
     std::map<double, SP<Document::MeshFace>> intersectings;
     for (auto& [_, f] : _mesh->faces()) {
         auto v0 = f->vertices()[0]->position();
