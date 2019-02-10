@@ -5,6 +5,7 @@ namespace Editor {
 namespace Manipulator {
 namespace Constants {
 
+    // TODO: specify better colors with HSV
     const std::array<glm::dvec3, 3> colors {
         glm::dvec3(0.9, 0, 0),
         glm::dvec3(0, 0.9, 0),
