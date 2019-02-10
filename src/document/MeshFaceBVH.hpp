@@ -13,8 +13,10 @@ public:
 private:
     struct Node {
         Box<float> boundingBox;
-        std::array<int, 2> childIndices;
+        int splitAxis;
+        std::array<Node*, 2> children;
         std::vector<SP<MeshFace>> faces;
+        std::optional<std::pair<SP<MeshFace>, float>> pick(const Ray<float> &ray) const;
     };
     std::vector<Node> nodes;
 };
