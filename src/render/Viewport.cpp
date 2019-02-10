@@ -11,6 +11,7 @@ namespace Render {
 
 Viewport::Viewport(QWidget *parent) : QWidget(parent), _camera(makeShared<Camera>()) {
     connect(_camera.get(), &Camera::changed, this, &Viewport::updateRequested);
+    setMouseTracking(true);
 }
 
 void Viewport::mousePressEvent(QMouseEvent *event) {
