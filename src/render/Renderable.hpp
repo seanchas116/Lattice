@@ -14,6 +14,9 @@ class Renderable : public QObject {
 public:
     Renderable();
 
+    bool isHoverEnabled() const { return _isHoverEnabled; }
+    void setHoverEnabled(bool enabled) { _isHoverEnabled = enabled; }
+
     virtual void draw(const SP<Operations>& operations, const SP<Camera>& camera);
 
     virtual std::optional<HitResult> hitTest(glm::dvec2 pos, const SP<Camera>& camera) const;
@@ -24,6 +27,9 @@ public:
 
 signals:
     void updateRequested();
+
+private:
+    bool _isHoverEnabled = false;
 };
 
 } // namespace Renderer
