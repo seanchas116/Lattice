@@ -35,6 +35,9 @@ private:
     Mode _mode;
     QPoint _lastMousePos;
     std::unordered_set<int> _pressedKeys;
+    bool _rotateKey = false;
+    bool _moveKey = false;
+    bool _isOverridingCursor = false;
 };
 
 } // namespace Lattice

@@ -2,6 +2,7 @@
 #include "../render/Util.hpp"
 #include <QMouseEvent>
 #include <QtDebug>
+#include <QApplication>
 
 using namespace glm;
 
@@ -14,12 +15,9 @@ CameraController::CameraController(const SP<Camera> &camera, QWidget *widget) : 
 }
 
 bool CameraController::mousePress(QMouseEvent *event) {
-    bool rotateKey = _pressedKeys.find(Qt::Key_Space) != _pressedKeys.end() && event->modifiers() & Qt::ShiftModifier;
-    bool moveKey = _pressedKeys.find(Qt::Key_Space) != _pressedKeys.end() && !(event->modifiers() & Qt::ShiftModifier);
-
-    if (moveKey || event->button() == Qt::MiddleButton) {
+    if (_moveKey || event->button() == Qt::MiddleButton) {
         _mode = Mode::Move;
-    } else if (rotateKey || event->button() == Qt::RightButton) {
+    } else if (_rotateKey || event->button() == Qt::RightButton) {
         _mode = Mode::Rotate;
     } else {
         _mode = Mode::None;
@@ -83,6 +81,19 @@ bool CameraController::wheel(QWheelEvent *event) {
 
 void CameraController::setPressedKeys(const std::unordered_set<int> &keys) {
     _pressedKeys = keys;
+
+    _rotateKey = _pressedKeys.find(Qt::Key_Space) != _pressedKeys.end() && _pressedKeys.find(Qt::Key_Shift) != _pressedKeys.end();
+    _moveKey = _pressedKeys.find(Qt::Key_Space) != _pressedKeys.end() && _pressedKeys.find(Qt::Key_Shift) == _pressedKeys.end();
+
+    if (_rotateKey || _moveKey) {
+        if (!_isOverridingCursor) {
+            QApplication::setOverrideCursor(Qt::OpenHandCursor);
+            _isOverridingCursor = true;
+        }
+    } else if (_isOverridingCursor) {
+        QApplication::restoreOverrideCursor();
+        _isOverridingCursor = false;
+    }
 }
 
 } // namespace Lattice
