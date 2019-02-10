@@ -31,5 +31,11 @@ void Renderable::mouseDoubleClick(const MouseEvent &event) {
     Q_UNUSED(event);
 }
 
+void Renderable::hoverEnter() {
+}
+
+void Renderable::hoverLeave() {
+}
+
 } // namespace Renderer
 } // namespace Lattice

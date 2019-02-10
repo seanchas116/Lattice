@@ -24,6 +24,8 @@ public:
     virtual void mouseMove(const MouseEvent& event);
     virtual void mouseRelease(const MouseEvent& event);
     virtual void mouseDoubleClick(const MouseEvent& event);
+    virtual void hoverEnter();
+    virtual void hoverLeave();
 
 signals:
     void updateRequested();
