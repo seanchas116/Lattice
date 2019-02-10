@@ -24,8 +24,8 @@ std::optional<std::pair<SP<MeshFace>, float>> MeshFaceBVH::Node::pick(const Ray<
         }
         return {};
     } else {
-        // leaf node
-        std::map<float, SP<Document::MeshFace>> intersectings;
+        float currentT = INFINITY;
+        std::optional<SP<Document::MeshFace>> currentFace;
         for (auto& f : faces) {
             auto v0 = f->vertices()[0]->position();
             for (uint32_t i = 2; i < uint32_t(f->vertices().size()); ++i) {
@@ -33,16 +33,16 @@ std::optional<std::pair<SP<MeshFace>, float>> MeshFaceBVH::Node::pick(const Ray<
                 auto v2 = f->vertices()[i]->position();
 
                 auto [intersects, t] = ray.intersectsTriangle({v0, v1, v2});
-                if (intersects) {
-                    intersectings.insert({t, f});
+                if (intersects && t < currentT) {
+                    currentT = t;
+                    currentFace = f;
                 }
             }
         }
-        if (intersectings.empty()) {
+        if (!currentFace) {
             return {};
         }
-        auto nearest = intersectings.begin();
-        return {{nearest->second, nearest->first}};
+        return {{*currentFace, currentT}};
     }
 }
 
