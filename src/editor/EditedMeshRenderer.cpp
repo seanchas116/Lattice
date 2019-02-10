@@ -50,21 +50,23 @@ void EditedMeshRenderer::draw(const SP<Render::Operations> &operations, const SP
 }
 
 std::optional<Render::HitResult> EditedMeshRenderer::hitTest(dvec2 pos, const SP<Camera> &camera) const {
+    std::map<double, Render::HitResult> results;
+
     auto vertexPickResult = _meshPicker->pickVertex(_item->location().matrixToWorld(), camera, pos, 12);
     if (vertexPickResult) {
         auto [vertex, depth] = *vertexPickResult;
         Render::HitResult result;
-        result.depth = depth;
+        result.depth = depth + Render::DrawCircle::defaultZOffset;
         result.vertex = vertex;
-        return result;
+        results[result.depth] = result;
     }
     auto edgePickResult = _meshPicker->pickEdge(_item->location().matrixToWorld(), camera, pos, 6);
     if (edgePickResult) {
         auto [edge, depth] = *edgePickResult;
         Render::HitResult result;
-        result.depth = depth;
+        result.depth = depth + Render::DrawLine::defaultZOffset;
         result.edge = edge;
-        return result;
+        results[result.depth] = result;
     }
     auto facePickResult = _meshPicker->pickFace(_item->location().matrixToWorld(), camera, pos);
     if (facePickResult) {
@@ -72,10 +74,15 @@ std::optional<Render::HitResult> EditedMeshRenderer::hitTest(dvec2 pos, const SP
         Render::HitResult result;
         result.depth = depth;
         result.face = face;
-        return result;
+        results[result.depth] = result;
     }
 
-    return std::nullopt;
+    if (results.empty()) {
+        return std::nullopt;
+    }
+
+    return results.begin()->second;
+
 }
 
 void EditedMeshRenderer::mousePress(const Render::MouseEvent &event) {

@@ -13,9 +13,12 @@ namespace Lattice::Render {
 
 class DrawCircle final {
 public:
+    inline static constexpr double defaultZOffset = -0.00002;
+
     DrawCircle();
+
     void draw(const SP<GL::VAO>& vao, const glm::dmat4 &matrix, const SP<Camera>& camera,
-              double width, glm::dvec3 color, bool useVertexColor = false, double zOffset = -0.00002);
+              double width, glm::dvec3 color, bool useVertexColor = false, double zOffset = defaultZOffset);
 
 private:
     GL::Shader _shader;
