@@ -11,6 +11,12 @@ class Document;
 
 namespace Lattice::UI {
 
+enum class Tool {
+    None,
+    Draw,
+    Extrude,
+};
+
 class AppState final : public QObject {
     Q_OBJECT
 
@@ -21,6 +27,8 @@ class AppState final : public QObject {
     LATTICE_AUTO_PROPERTY(bool, isVertexVisible, setVertexVisible, true)
     LATTICE_AUTO_PROPERTY(bool, isEdgeVisible, setEdgeVisible, true)
     LATTICE_AUTO_PROPERTY(bool, isFaceVisible, setFaceVisible, true)
+
+    LATTICE_AUTO_PROPERTY(Tool, tool, setTool, Tool::None)
 
     LATTICE_AUTO_PROPERTY(ViewportSplitMode, viewportSplitMode, setViewportSplit, ViewportSplitMode::Single)
 public:
