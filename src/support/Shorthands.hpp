@@ -12,4 +12,7 @@ using SP = SharedPointer<T>;
 template <class T>
 using WP = WeakPointer<T>;
 
+template <class T>
+using Opt = std::optional<T>;
+
 } // namespace Lattice
