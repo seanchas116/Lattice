@@ -1,6 +1,6 @@
 #pragma once
 #include <QtGlobal>
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 
 namespace Lattice {
 namespace Document {

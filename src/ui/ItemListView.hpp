@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QWidget>
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 
 namespace Lattice::UI {
 

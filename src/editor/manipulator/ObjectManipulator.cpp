@@ -61,7 +61,7 @@ void ObjectManipulator::handleOnEnd(ValueType type) {
     Q_UNUSED(type);
 }
 
-void ObjectManipulator::connectToItem(const std::optional<SP<Document::Item> > &maybeItem) {
+void ObjectManipulator::connectToItem(const Opt<SP<Document::Item> > &maybeItem) {
     disconnect(_connection);
     _item = maybeItem;
     LATTICE_OPTIONAL_GUARD(item, maybeItem, return;)

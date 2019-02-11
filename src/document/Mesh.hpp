@@ -1,6 +1,6 @@
 #pragma once
 #include "../support/Hash.hpp"
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 #include "../support/Box.hpp"
 #include "../support/SortedArray.hpp"
 #include "Change.hpp"
@@ -150,7 +150,7 @@ class Mesh final : public QObject, public EnableSharedFromThis<Mesh> {
 public:
     Mesh();
 
-    void setChangeHandler(const std::function<void(const SP<Change>& change)> &changeHandler) { _changeHandler = changeHandler; }
+    void setChangeHandler(const Fn<void(const SP<Change>& change)> &changeHandler) { _changeHandler = changeHandler; }
 
     SP<MeshVertex> addVertex(glm::vec3 position);
     SP<MeshEdge> addEdge(const std::array<SP<MeshVertex>, 2>& vertices);
@@ -230,7 +230,7 @@ private:
     std::unordered_map<SortedArray<SP<MeshVertex>, 2>, SP<MeshEdge>> _edges;
     std::unordered_map<std::set<SP<MeshVertex>>, SP<MeshFace>> _faces;
     std::vector<SP<MeshMaterial>> _materials;
-    std::function<void(const SP<Change>& change)> _changeHandler;
+    Fn<void(const SP<Change>& change)> _changeHandler;
 };
 
 } // namespace Lattice

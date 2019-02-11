@@ -3,7 +3,7 @@
 #include <QObject>
 #include <unordered_set>
 #include <optional>
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 #include "MeshSelection.hpp"
 
 namespace Lattice::Document {
@@ -20,10 +20,10 @@ public:
     const SP<Item>& rootItem() const { return _rootItem; }
 
     auto& currentItem() const { return _currentItem; }
-    void setCurrentItem(const std::optional<SP<Item>>& item);
+    void setCurrentItem(const Opt<SP<Item>>& item);
 
     auto& editedItem() const { return _editedItem; }
-    void setEditedItem(const std::optional<SP<MeshItem>>& item);
+    void setEditedItem(const Opt<SP<MeshItem>>& item);
 
     bool isEditing() const { return bool(_editedItem); }
     void setIsEditing(bool isEditing);
@@ -42,8 +42,8 @@ public:
     void setMeshSelection(const MeshSelection &meshSelection);
 
 signals:
-    void currentItemChanged(const std::optional<SP<Item>>& item);
-    void editedItemChanged(const std::optional<SP<MeshItem>>& item);
+    void currentItemChanged(const Opt<SP<Item>>& item);
+    void editedItemChanged(const Opt<SP<MeshItem>>& item);
     void isEditingChanged(bool isEditing);
     void selectedItemsChanged(const std::unordered_set<SP<Item>>& items);
     void meshSelectionChanged(const MeshSelection &meshSelection);
@@ -56,8 +56,8 @@ private:
 
     SP<Item> _rootItem;
 
-    std::optional<SP<Item>> _currentItem;
-    std::optional<SP<MeshItem>> _editedItem;
+    Opt<SP<Item>> _currentItem;
+    Opt<SP<MeshItem>> _editedItem;
     std::unordered_set<SP<Item>> _selectedItems;
     MeshSelection _meshSelection;
 

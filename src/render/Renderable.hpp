@@ -19,7 +19,7 @@ public:
 
     virtual void draw(const SP<Operations>& operations, const SP<Camera>& camera);
 
-    virtual std::optional<HitResult> hitTest(glm::dvec2 pos, const SP<Camera>& camera) const;
+    virtual Opt<HitResult> hitTest(glm::dvec2 pos, const SP<Camera>& camera) const;
     virtual void mousePress(const MouseEvent& event);
     virtual void mouseMove(const MouseEvent& event);
     virtual void mouseRelease(const MouseEvent& event);

@@ -127,7 +127,7 @@ bool ItemModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int r
             items.push_back(item);
         }
 
-        std::optional<SP<Document::Item>> ref;
+        Opt<SP<Document::Item>> ref;
         if (row != -1 && row != int(parentItem->childItems().size())) {
             ref = parentItem->childItems()[row];
         }

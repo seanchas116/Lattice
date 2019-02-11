@@ -1,7 +1,7 @@
 #pragma once
 #include <QMouseEvent>
 #include "../support/Camera.hpp"
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 
 namespace Lattice {
 
@@ -15,9 +15,9 @@ namespace Render {
 
 struct HitResult {
     double depth;
-    std::optional<SP<Document::MeshVertex>> vertex;
-    std::optional<SP<Document::MeshEdge>> edge;
-    std::optional<SP<Document::MeshFace>> face;
+    Opt<SP<Document::MeshVertex>> vertex;
+    Opt<SP<Document::MeshEdge>> edge;
+    Opt<SP<Document::MeshFace>> face;
 };
 
 struct MouseEvent {

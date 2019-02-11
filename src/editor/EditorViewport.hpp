@@ -1,7 +1,7 @@
 #pragma once
 #include <QOpenGLWidget>
 #include "CameraController.hpp"
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 #include "../render/Viewport.hpp"
 
 namespace Lattice::UI {

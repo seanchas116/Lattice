@@ -1,6 +1,6 @@
 #pragma once
 #include <QOpenGLWidget>
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 #include "Operations.hpp"
 #include "MouseEvent.hpp"
 
@@ -31,7 +31,7 @@ protected:
 private:
 
     std::vector<Viewport*> _viewports;
-    std::optional<SP<Operations>> _operations;
+    Opt<SP<Operations>> _operations;
 };
 
 } // namespace Renderer

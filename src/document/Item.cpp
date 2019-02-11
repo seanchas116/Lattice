@@ -12,7 +12,7 @@ namespace Lattice::Document {
 
 class Item::ChildInsertChange : public Change {
 public:
-    ChildInsertChange(const SP<Item>& parent, const SP<Item>& item, const std::optional<SP<const Item>>& reference) :
+    ChildInsertChange(const SP<Item>& parent, const SP<Item>& item, const Opt<SP<const Item>>& reference) :
         _parent(parent),
         _item(item),
         _reference(reference)
@@ -29,7 +29,7 @@ private:
 
     SP<Item> _parent;
     SP<Item> _item;
-    std::optional<SP<const Item>> _reference;
+    Opt<SP<const Item>> _reference;
 };
 
 class Item::ChildRemoveChange : public Change {
@@ -48,7 +48,7 @@ private:
 
     SP<Item> _parent;
     SP<Item> _item;
-    std::optional<SP<Item>> _reference;
+    Opt<SP<Item>> _reference;
 };
 
 SP<Change> Item::ChildInsertChange::invert() const {
@@ -59,7 +59,7 @@ SP<Change> Item::ChildRemoveChange::invert() const {
     return makeShared<ChildInsertChange>(_parent, _item, _reference);
 }
 
-std::optional<SP<Item> > Item::parentItem() const {
+Opt<SP<Item> > Item::parentItem() const {
     auto ptr = _parentItem.lock();
     if (ptr) {
         return {ptr};
@@ -68,7 +68,7 @@ std::optional<SP<Item> > Item::parentItem() const {
     }
 }
 
-std::optional<SP<Item>> Item::nextItem() const {
+Opt<SP<Item>> Item::nextItem() const {
     LATTICE_OPTIONAL_GUARD(parent, parentItem(), return {};)
 
     auto it = std::find(parent->_childItems.begin(), parent->_childItems.end(), sharedFromThis());
@@ -82,11 +82,11 @@ void Item::appendChildItem(const SP<Item> &item) {
     insertItemBefore(item, {});
 }
 
-void Item::insertItemBefore(const SP<Item> &item, const std::optional<SP<const Item>> &reference) {
+void Item::insertItemBefore(const SP<Item> &item, const Opt<SP<const Item>> &reference) {
     addChange(makeShared<Item::ChildInsertChange>(sharedFromThis(), item, reference));
 }
 
-void Item::insertItemBeforeInternal(const SP<Item> &item, const std::optional<SP<const Item>> &reference) {
+void Item::insertItemBeforeInternal(const SP<Item> &item, const Opt<SP<const Item>> &reference) {
     if (!canInsertItem(item)) {
         throw std::runtime_error("cannot insert item");
     }
@@ -159,7 +159,7 @@ void Item::fromJSON(const nlohmann::json &json) {
     setLocation(json["location"]);
 }
 
-std::optional<SP<Document>> Item::document() const {
+Opt<SP<Document>> Item::document() const {
     LATTICE_OPTIONAL_GUARD(parent, _parentItem.lock(), return {};)
     return parent->document();
 }
@@ -242,7 +242,7 @@ void Item::setLocation(const Location &location) {
     }
 }
 
-void Item::forEachDescendant(const std::function<void(const SP<Item>&)> &callback) {
+void Item::forEachDescendant(const Fn<void(const SP<Item>&)> &callback) {
     callback(sharedFromThis());
     for (auto& child : _childItems) {
         child->forEachDescendant(callback);

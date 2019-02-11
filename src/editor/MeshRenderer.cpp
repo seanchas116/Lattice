@@ -42,7 +42,7 @@ void MeshRenderer::draw(const SP<Render::Operations> &operations, const SP<Camer
     */
 }
 
-std::optional<Render::HitResult> MeshRenderer::hitTest(dvec2 pos, const SP<Camera> &camera) const {
+Opt<Render::HitResult> MeshRenderer::hitTest(dvec2 pos, const SP<Camera> &camera) const {
     LATTICE_OPTIONAL_GUARD(pickResult, _meshPicker->pickFace(_item->location().matrixToWorld(), camera, pos), return {};)
     auto [face, depth] = pickResult;
     Render::HitResult result;

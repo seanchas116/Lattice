@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 #include "../render/Renderable.hpp"
 #include "../gl/VertexBuffer.hpp"
 #include <glm/glm.hpp>

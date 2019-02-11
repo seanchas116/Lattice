@@ -1,6 +1,6 @@
 #pragma once
 #include <QOpenGLWidget>
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 #include "../render/ViewportContainer.hpp"
 #include "../ui/ViewportSplitMode.hpp"
 
@@ -24,7 +24,7 @@ private:
 
     SP<UI::AppState> _appState;
     SP<KeyObserver> _keyObserver;
-    std::optional<SP<EditorScene>> _scene;
+    Opt<SP<EditorScene>> _scene;
     std::vector<SP<Render::Renderable>> _renderables;
 };
 

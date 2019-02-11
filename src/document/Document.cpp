@@ -21,7 +21,7 @@ public:
         return true;
     }
 
-    std::optional<SP<Document>> document() const override {
+    Opt<SP<Document>> document() const override {
         return _document->sharedFromThis();
     }
 
@@ -41,14 +41,14 @@ Document::Document() :
     });
 }
 
-void Document::setCurrentItem(const std::optional<SP<Item> > &item) {
+void Document::setCurrentItem(const Opt<SP<Item> > &item) {
     if (item != _currentItem) {
         _currentItem = item;
         emit currentItemChanged(item);
     }
 }
 
-void Document::setEditedItem(const std::optional<SP<MeshItem> > &item) {
+void Document::setEditedItem(const Opt<SP<MeshItem> > &item) {
     if (item != _editedItem) {
         _editedItem = item;
         emit editedItemChanged(item);

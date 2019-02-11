@@ -1,6 +1,6 @@
 #pragma once
 #include <QOpenGLWidget>
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 #include "Operations.hpp"
 #include "MouseEvent.hpp"
 
@@ -35,11 +35,11 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private:
-    std::optional<std::pair<SP<Renderable>, HitResult>> hitTest(glm::dvec2 pos, const SP<Camera>& camera);
+    Opt<std::pair<SP<Renderable>, HitResult>> hitTest(glm::dvec2 pos, const SP<Camera>& camera);
 
     std::vector<SP<Renderable>> _renderables;
-    std::optional<SP<Renderable>> _draggedRenderable;
-    std::optional<SP<Renderable>> _hoveredRenderable;
+    Opt<SP<Renderable>> _draggedRenderable;
+    Opt<SP<Renderable>> _hoveredRenderable;
     HitResult _hitResult;
     SP<Camera> _camera;
 };

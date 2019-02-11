@@ -1,6 +1,6 @@
 #pragma once
 #include <QMainWindow>
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 
 namespace Lattice::UI {
 

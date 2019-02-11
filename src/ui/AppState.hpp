@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 #include "../support/Property.hpp"
 #include "ViewportSplitMode.hpp"
 
