@@ -57,7 +57,6 @@ private:
 
     Location _dragInitLocation;
     glm::dvec3 _dragInitWorldPos;
-    double _dragInitDepth;
     bool _dragStarted;
 };
 

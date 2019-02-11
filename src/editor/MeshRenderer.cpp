@@ -51,7 +51,7 @@ std::optional<Render::HitResult> MeshRenderer::hitTest(dvec2 pos, const SP<Camer
 }
 
 void MeshRenderer::mousePress(const Render::MouseEvent &event) {
-    glm::dvec3 worldDragPos = event.camera->worldMouseRay(event.screenPos).at(event.hitResult.depth);
+    glm::dvec3 worldDragPos = event.camera->mapScreenToWorld(glm::dvec3(event.screenPos, event.hitResult.depth));
     auto [screenDragPos, isInScreen] = event.camera->mapWorldToScreen(worldDragPos);
     if (!isInScreen) {
         return;
@@ -59,14 +59,13 @@ void MeshRenderer::mousePress(const Render::MouseEvent &event) {
 
     _dragInitLocation = _item->location();
     _dragInitWorldPos = worldDragPos;
-    _dragInitDepth = screenDragPos.z;
     _dragStarted = false;
 
     _appState->document()->selectItem(_item, event.originalEvent->modifiers() & Qt::ShiftModifier);
 }
 
 void MeshRenderer::mouseMove(const Render::MouseEvent &event) {
-    auto newWorldPos = event.camera->mapScreenToWorld(glm::dvec3(event.screenPos, _dragInitDepth));
+    auto newWorldPos = event.camera->mapScreenToWorld(glm::dvec3(event.screenPos, event.hitResult.depth));
     auto newLocation = _dragInitLocation;
     newLocation.position += newWorldPos - _dragInitWorldPos;
 
