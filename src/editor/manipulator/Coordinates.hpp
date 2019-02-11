@@ -18,6 +18,7 @@ public:
             return;
         }
 
+        // TODO: calculate scale from desired arrow length in screen space
         if (camera->projection() == Camera::Projection::Perspective) {
             dvec3 screenPosFixedDepth(screenPos.xy, Constants::fixedDepth);
             dvec3 positionFixedDepth_worldSpace = camera->mapScreenToWorld(screenPosFixedDepth);
