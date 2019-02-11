@@ -16,9 +16,29 @@ VAO::VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>> &buffers,
     glGenVertexArrays(1, &_vertexArray);
     glBindVertexArray(_vertexArray);
 
+    size_t indexOffset = 0;
     for (auto& [buffer, type] : buffers) {
         buffer->bind();
+        auto attributes = buffer->attributes();
+        GLsizei stride = 0;
+        for (auto& a : attributes) {
+            stride += a.sizePerComponent * a.count;
+        }
+        GLsizei offset = 0;
+
+        for (size_t i = 0; i < attributes.size(); ++i) {
+            auto& attribute = attributes[i];
+            auto attribIndex = GLuint(indexOffset + i);
+            glVertexAttribPointer(attribIndex, attribute.count, attribute.type, GL_FALSE, stride, reinterpret_cast<void*>(offset));
+            offset += attribute.sizePerComponent * attribute.count;
+            glEnableVertexAttribArray(attribIndex);
+            if (type == BufferType::PerInstance) {
+                glVertexAttribDivisor(attribIndex, 1);
+            }
+        }
+        indexOffset += attributes.size();
     }
+
     if (indexBuffer) {
         indexBuffer->get()->bind();
     }
