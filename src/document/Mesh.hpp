@@ -1,6 +1,6 @@
 #pragma once
 #include "../support/Hash.hpp"
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 #include "../support/Box.hpp"
 #include "../support/SortedArray.hpp"
 #include "Change.hpp"

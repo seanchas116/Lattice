@@ -1,6 +1,6 @@
 #pragma once
 #include <QOpenGLWidget>
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 #include "Operations.hpp"
 #include "MouseEvent.hpp"
 

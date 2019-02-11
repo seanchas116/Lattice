@@ -1,5 +1,5 @@
 #pragma once
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 #include <QOpenGLExtraFunctions>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>

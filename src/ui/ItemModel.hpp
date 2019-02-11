@@ -2,7 +2,7 @@
 
 #include <QAbstractItemModel>
 #include <QUuid>
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 
 namespace Lattice::Document {
 class Document;

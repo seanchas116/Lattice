@@ -3,7 +3,7 @@
 #include <QObject>
 #include <unordered_set>
 #include <optional>
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 #include "MeshSelection.hpp"
 
 namespace Lattice::Document {

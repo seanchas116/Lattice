@@ -1,7 +1,7 @@
 #pragma once
 #include <QMouseEvent>
 #include "../support/Camera.hpp"
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 
 namespace Lattice {
 

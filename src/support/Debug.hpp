@@ -5,7 +5,7 @@
 #include <QtDebug>
 #include <array>
 #include <optional>
-#include "Pointer.hpp"
+#include "Shorthands.hpp"
 
 namespace Lattice {
 

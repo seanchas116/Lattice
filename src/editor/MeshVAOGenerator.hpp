@@ -1,5 +1,5 @@
 #pragma once
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 #include "../gl/VertexBuffer.hpp"
 #include <unordered_map>
 

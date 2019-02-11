@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include "Location.hpp"
 #include "Ray.hpp"
-#include "Pointer.hpp"
+#include "Shorthands.hpp"
 #include <QObject>
 #include "Property.hpp"
 

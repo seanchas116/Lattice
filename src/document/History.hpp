@@ -1,7 +1,7 @@
 #pragma once
 #include <QObject>
 #include <vector>
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 
 class QUndoCommand;
 class QUndoStack;

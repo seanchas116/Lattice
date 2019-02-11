@@ -1,7 +1,7 @@
 #pragma once
 #include <QOpenGLExtraFunctions>
 #include <glm/glm.hpp>
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 
 namespace Lattice::GL {
 

@@ -1,6 +1,6 @@
 #pragma once
 #include <QItemSelectionModel>
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 
 namespace Lattice::UI {
 

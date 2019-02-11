@@ -1,5 +1,5 @@
 #pragma once
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 #include "../support/Location.hpp"
 #include <QObject>
 #include <nlohmann/json_fwd.hpp>

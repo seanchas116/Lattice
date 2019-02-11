@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 #include "../support/Box.hpp"
 #include "../support/Location.hpp"
 #include "../render/Renderable.hpp"

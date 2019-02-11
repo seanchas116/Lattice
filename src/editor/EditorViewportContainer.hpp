@@ -1,6 +1,6 @@
 #pragma once
 #include <QOpenGLWidget>
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 #include "../render/ViewportContainer.hpp"
 #include "../ui/ViewportSplitMode.hpp"
 

@@ -2,7 +2,7 @@
 
 #include <glm/vec2.hpp>
 #include <QOpenGLExtraFunctions>
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 #include "../support/PixelData.hpp"
 
 namespace Lattice::GL {

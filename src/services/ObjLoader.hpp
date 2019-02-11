@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "../support/Pointer.hpp"
+#include "../support/Shorthands.hpp"
 
 class QString;
 
