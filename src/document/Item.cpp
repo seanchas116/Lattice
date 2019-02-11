@@ -242,7 +242,7 @@ void Item::setLocation(const Location &location) {
     }
 }
 
-void Item::forEachDescendant(const std::function<void(const SP<Item>&)> &callback) {
+void Item::forEachDescendant(const Fn<void(const SP<Item>&)> &callback) {
     callback(sharedFromThis());
     for (auto& child : _childItems) {
         child->forEachDescendant(callback);
