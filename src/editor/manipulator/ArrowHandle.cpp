@@ -91,7 +91,7 @@ void ArrowHandle::mouseRelease(const Render::MouseEvent &event) {
     emit onEnd();
 }
 
-void ArrowHandle::hoverEnter() {
+void ArrowHandle::hoverEnter(const Render::MouseEvent &event) {
     _hovered = true;
     emit updateRequested();
 }

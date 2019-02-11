@@ -46,12 +46,13 @@ void Viewport::mouseMoveEvent(QMouseEvent *event) {
             }
             return;
         }
-        auto [renderable, _] = *maybeHitResult;
+        auto [renderable, hitResult] = *maybeHitResult;
+        MouseEvent renderMouseEvent(event, pos, _camera, hitResult);
         if (_hoveredRenderable != renderable) {
             if (_hoveredRenderable) {
                 (*_hoveredRenderable)->hoverLeave();
             }
-            renderable->hoverEnter();
+            renderable->hoverEnter(renderMouseEvent);
             _hoveredRenderable = renderable;
         }
     }

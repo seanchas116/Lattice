@@ -23,7 +23,7 @@ public:
     void mousePress(const Render::MouseEvent &event) override;
     void mouseMove(const Render::MouseEvent &event) override;
     void mouseRelease(const Render::MouseEvent &event) override;
-    void hoverEnter() override;
+    void hoverEnter(const Render::MouseEvent& event) override;
     void hoverLeave() override;
 
     void setTargetPosition(const glm::dvec3 &targetPosition) { _targetPosition = targetPosition; }
