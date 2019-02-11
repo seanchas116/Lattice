@@ -29,6 +29,8 @@ public:
         hitResult(hitResult)
     {}
 
+    glm::dvec3 worldPos() const;
+
     QMouseEvent* originalEvent;
     glm::dvec2 screenPos;
     const SP<Camera>& camera;

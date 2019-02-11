@@ -61,9 +61,8 @@ private:
     SP<GL::VAO> _vertexVAO;
     std::vector<GL::Vertex> _vertexAttributes;
 
-    std::unordered_map<SP<Document::MeshVertex>, glm::dvec3> _initialPositions;
-    glm::dvec3 _dragStartWorldPos;
-    double _dragDepth;
+    std::unordered_map<SP<Document::MeshVertex>, glm::dvec3> _dragInitPositions;
+    glm::dvec3 _dragInitWorldPos;
     bool _dragStarted;
 };
 

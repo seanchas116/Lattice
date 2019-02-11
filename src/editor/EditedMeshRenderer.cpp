@@ -123,19 +123,19 @@ void EditedMeshRenderer::mousePress(const Render::MouseEvent &event) {
         selection.vertices = newVertices;
     }
 
-    _initialPositions.clear();
+    _dragInitPositions.clear();
     for (auto& v : selection.vertices) {
-        _initialPositions[v] = v->position();
+        _dragInitPositions[v] = v->position();
     }
-    _dragStartWorldPos = event.camera->mapScreenToWorld(glm::vec3(event.screenPos, event.hitResult.depth));
+    _dragInitWorldPos = event.worldPos();
     _dragStarted = false;
 
     _appState->document()->setMeshSelection(selection);
 }
 
 void EditedMeshRenderer::mouseMove(const Render::MouseEvent &event) {
-    dvec3 worldPos = event.camera->mapScreenToWorld(glm::vec3(event.screenPos, event.hitResult.depth));
-    dvec3 offset = worldPos - _dragStartWorldPos;
+    dvec3 worldPos = event.worldPos();
+    dvec3 offset = worldPos - _dragInitWorldPos;
 
     if (!_dragStarted) {
         _appState->document()->history()->beginChange(tr("Move Vertex"));
@@ -144,7 +144,7 @@ void EditedMeshRenderer::mouseMove(const Render::MouseEvent &event) {
 
     auto& mesh = _item->mesh();
     std::unordered_map<SP<Document::MeshVertex>, vec3> positions;
-    for (auto& [v, initialPos] : _initialPositions) {
+    for (auto& [v, initialPos] : _dragInitPositions) {
         positions[v] = initialPos + offset;
     }
     mesh->setPositions(positions);
