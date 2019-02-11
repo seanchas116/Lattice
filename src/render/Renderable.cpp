@@ -32,6 +32,11 @@ void Renderable::mouseDoubleClick(const MouseEvent &event) {
 }
 
 void Renderable::hoverEnter(const MouseEvent &event) {
+    Q_UNUSED(event);
+}
+
+void Renderable::hoverMove(const MouseEvent &event) {
+    Q_UNUSED(event);
 }
 
 void Renderable::hoverLeave() {
