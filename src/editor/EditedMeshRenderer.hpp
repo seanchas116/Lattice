@@ -69,6 +69,8 @@ private:
     bool _dragStarted;
 
     Opt<SP<Document::MeshVertex>> _hoveredVertex;
+    Opt<SP<Document::MeshEdge>> _hoveredEdge;
+    // TODO: hovered face
 };
 
 }

@@ -157,23 +157,26 @@ void EditedMeshRenderer::mouseRelease(const Render::MouseEvent &event) {
 
 void EditedMeshRenderer::hoverEnter(const Render::MouseEvent &event) {
     _hoveredVertex = event.hitResult.vertex;
-    if (_hoveredVertex) {
+    _hoveredEdge = event.hitResult.edge;
+    if (_hoveredVertex || _hoveredEdge) {
         updateWholeVAOs();
         emit updateRequested();
     }
 }
 
 void EditedMeshRenderer::hoverMove(const Render::MouseEvent &event) {
-    if (_hoveredVertex != event.hitResult.vertex) {
+    if (_hoveredVertex != event.hitResult.vertex || _hoveredEdge != event.hitResult.edge) {
         _hoveredVertex = event.hitResult.vertex;
+        _hoveredEdge = event.hitResult.edge;
         updateWholeVAOs();
         emit updateRequested();
     }
 }
 
 void EditedMeshRenderer::hoverLeave() {
-    if (_hoveredVertex) {
+    if (_hoveredVertex || _hoveredEdge) {
         _hoveredVertex = {};
+        _hoveredEdge = {};
         updateWholeVAOs();
         emit updateRequested();
     }
@@ -210,13 +213,15 @@ void EditedMeshRenderer::updateWholeVAOs() {
 
         std::vector<GL::IndexBuffer::Line> indices;
         for (auto& [_, e] : _item->mesh()->edges()) {
+            bool hovered = e == _hoveredEdge;
+
             auto offset = uint32_t(_edgeAttributes.size());
             for (auto& v : e->vertices()) {
                 bool selected = selectedVertices.find(v) != selectedVertices.end();
 
                 GL::Vertex attrib;
                 attrib.position = v->position();
-                attrib.color = selected ? selectedColor : unselectedColor;
+                attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
                 _edgeAttributes.push_back(attrib);
             }
             indices.push_back({offset, offset+1});
