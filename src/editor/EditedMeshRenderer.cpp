@@ -19,6 +19,7 @@ namespace {
 
 const vec3 unselectedColor = vec3(0);
 const vec3 selectedColor = vec3(1);
+const vec3 hoveredColor = vec3(1, 1, 0);
 
 }
 
@@ -154,6 +155,30 @@ void EditedMeshRenderer::mouseRelease(const Render::MouseEvent &event) {
     Q_UNUSED(event);
 }
 
+void EditedMeshRenderer::hoverEnter(const Render::MouseEvent &event) {
+    _hoveredVertex = event.hitResult.vertex;
+    if (_hoveredVertex) {
+        updateWholeVAOs();
+        emit updateRequested();
+    }
+}
+
+void EditedMeshRenderer::hoverMove(const Render::MouseEvent &event) {
+    if (_hoveredVertex != event.hitResult.vertex) {
+        _hoveredVertex = event.hitResult.vertex;
+        updateWholeVAOs();
+        emit updateRequested();
+    }
+}
+
+void EditedMeshRenderer::hoverLeave() {
+    if (_hoveredVertex) {
+        _hoveredVertex = {};
+        updateWholeVAOs();
+        emit updateRequested();
+    }
+}
+
 void EditedMeshRenderer::updateWholeVAOs() {
     recallContext();
 
@@ -165,10 +190,11 @@ void EditedMeshRenderer::updateWholeVAOs() {
 
         for (auto& v : _item->mesh()->vertices()) {
             bool selected = selectedVertices.find(v) != selectedVertices.end();
+            bool hovered = v == _hoveredVertex;
 
             GL::Vertex attrib;
             attrib.position = v->position();
-            attrib.color = selected ? selectedColor : unselectedColor;
+            attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
 
             _vertexAttributes.push_back(attrib);
         }

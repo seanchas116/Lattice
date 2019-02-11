@@ -46,6 +46,9 @@ public:
     void mousePress(const Render::MouseEvent &event) override;
     void mouseMove(const Render::MouseEvent &event) override;
     void mouseRelease(const Render::MouseEvent &event) override;
+    void hoverEnter(const Render::MouseEvent &event) override;
+    void hoverMove(const Render::MouseEvent &event) override;
+    void hoverLeave() override;
 
 private:
     void updateWholeVAOs();
@@ -64,6 +67,8 @@ private:
     std::unordered_map<SP<Document::MeshVertex>, glm::dvec3> _dragInitPositions;
     glm::dvec3 _dragInitWorldPos;
     bool _dragStarted;
+
+    Opt<SP<Document::MeshVertex>> _hoveredVertex;
 };
 
 }
