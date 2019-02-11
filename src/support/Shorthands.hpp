@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include "SharedPointer.hpp"
 #include "OptionalGuard.hpp"
 
