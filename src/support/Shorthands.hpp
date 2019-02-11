@@ -2,6 +2,7 @@
 
 #include "SharedPointer.hpp"
 #include "OptionalGuard.hpp"
+#include <functional>
 
 namespace Lattice {
 
