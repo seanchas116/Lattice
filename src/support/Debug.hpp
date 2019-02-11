@@ -39,7 +39,7 @@ QDebug operator<<(QDebug debug, const std::array<T, N>& array) {
 }
 
 template <typename T>
-QDebug operator<<(QDebug debug, const std::optional<T>& optional) {
+QDebug operator<<(QDebug debug, const Opt<T>& optional) {
     if (optional) {
         return debug << *optional;
     } else {

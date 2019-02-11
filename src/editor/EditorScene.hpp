@@ -42,7 +42,7 @@ private:
     SP<Manipulator::ObjectManipulator> _objectManipulator;
     SP<Manipulator::MeshManipulator> _meshManipulator;
     std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> _meshRenderers;
-    std::optional<SP<EditedMeshRenderer>> _editedMeshRenderers;
+    Opt<SP<EditedMeshRenderer>> _editedMeshRenderers;
 };
 
 } // namespace Editor

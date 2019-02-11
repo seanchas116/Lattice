@@ -15,11 +15,11 @@ class Change;
 class Item : public QObject, public EnableSharedFromThis<Item> {
     Q_OBJECT
 public:
-    std::optional<SP<Item>> parentItem() const;
+    Opt<SP<Item>> parentItem() const;
     const std::vector<SP<Item>>& childItems() const { return _childItems; }
-    std::optional<SP<Item>> nextItem() const;
+    Opt<SP<Item>> nextItem() const;
     void appendChildItem(const SP<Item>& item);
-    void insertItemBefore(const SP<Item>& item, const std::optional<SP<const Item> > &reference);
+    void insertItemBefore(const SP<Item>& item, const Opt<SP<const Item> > &reference);
     void removeChildItem(const SP<Item>& item);
     int index() const;
     std::vector<int> indexPath() const;
@@ -40,7 +40,7 @@ public:
     virtual SP<Item> clone() const = 0;
     virtual void toJSON(nlohmann::json& json) const;
     virtual void fromJSON(const nlohmann::json& json);
-    virtual std::optional<SP<Document>> document() const;
+    virtual Opt<SP<Document>> document() const;
 
 protected:
     void addChange(const SP<Change>& change);
@@ -66,7 +66,7 @@ private:
     void setNameInternal(const std::string& name);
     void setLocationInternal(const Location& location);
 
-    void insertItemBeforeInternal(const SP<Item>& item, const std::optional<SP<const Item> > &reference);
+    void insertItemBeforeInternal(const SP<Item>& item, const Opt<SP<const Item> > &reference);
     void removeChildItemInternal(const SP<Item>& item);
 
     std::string _name;

@@ -24,12 +24,12 @@ private:
     void handleOnChange(ValueType type, int axis, double value);
     void handleOnEnd(ValueType type);
 
-    void connectToItem(const std::optional<SP<Document::Item>> &maybeItem);
+    void connectToItem(const Opt<SP<Document::Item>> &maybeItem);
 
     void updatePosition();
 
     SP<UI::AppState> _appState;
-    std::optional<SP<Document::Item>> _item;
+    Opt<SP<Document::Item>> _item;
     double _initialValue;
     Location _initialLocation;
     QMetaObject::Connection _connection;

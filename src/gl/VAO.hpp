@@ -31,10 +31,10 @@ public:
     void draw();
 
 private:
-    VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>>& buffers, const std::optional<SP<IndexBuffer>>& indexBuffer, Primitive primitive);
+    VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>>& buffers, const Opt<SP<IndexBuffer>>& indexBuffer, Primitive primitive);
 
     std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>> _buffers;
-    std::optional<SP<IndexBuffer>> _indexBuffer;
+    Opt<SP<IndexBuffer>> _indexBuffer;
     Primitive _primitive;
     GLuint _vertexArray = 0;
 };

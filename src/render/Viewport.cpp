@@ -90,7 +90,7 @@ void Viewport::mouseReleaseEvent(QMouseEvent *event) {
     _draggedRenderable = {};
 }
 
-std::optional<std::pair<SP<Renderable>, HitResult> > Viewport::hitTest(glm::dvec2 pos, const SP<Camera> &camera) {
+Opt<std::pair<SP<Renderable>, HitResult> > Viewport::hitTest(glm::dvec2 pos, const SP<Camera> &camera) {
     std::map<double, std::pair<SP<Renderable>, HitResult>> hitRenderables;
     for (auto it = _renderables.rbegin(); it != _renderables.rend(); ++it) {
         auto& renderable = *it;

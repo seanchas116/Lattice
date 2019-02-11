@@ -25,12 +25,12 @@ private:
     void handleOnChange(ValueType type, int axis, double value);
     void handleOnEnd(ValueType type);
 
-    void connectToItem(const std::optional<SP<Document::MeshItem>> &maybeItem);
+    void connectToItem(const Opt<SP<Document::MeshItem>> &maybeItem);
 
     void updatePosition();
 
     SP<UI::AppState> _appState;
-    std::optional<SP<Document::MeshItem>> _item;
+    Opt<SP<Document::MeshItem>> _item;
     std::unordered_map<SP<Document::MeshVertex>, glm::dvec3> _initialPositions;
     glm::dvec3 _initialMedianPos;
     double _initialValue;

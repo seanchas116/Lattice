@@ -49,7 +49,7 @@ void EditedMeshRenderer::draw(const SP<Render::Operations> &operations, const SP
     }
 }
 
-std::optional<Render::HitResult> EditedMeshRenderer::hitTest(dvec2 pos, const SP<Camera> &camera) const {
+Opt<Render::HitResult> EditedMeshRenderer::hitTest(dvec2 pos, const SP<Camera> &camera) const {
     std::map<double, Render::HitResult> results;
 
     auto vertexPickResult = _meshPicker->pickVertex(_item->location().matrixToWorld(), camera, pos, 12);

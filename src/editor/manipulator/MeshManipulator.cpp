@@ -86,7 +86,7 @@ void MeshManipulator::handleOnEnd(ValueType type) {
     _initialPositions.clear();
 }
 
-void MeshManipulator::connectToItem(const std::optional<SP<Document::MeshItem> > &maybeItem) {
+void MeshManipulator::connectToItem(const Opt<SP<Document::MeshItem> > &maybeItem) {
     disconnect(_connection);
     _item = maybeItem;
     LATTICE_OPTIONAL_GUARD(item, maybeItem, return;)

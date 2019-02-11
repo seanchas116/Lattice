@@ -38,7 +38,7 @@ void ArrowHandle::draw(const SP<Render::Operations> &operations, const SP<Camera
     operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
 }
 
-std::optional<Render::HitResult> ArrowHandle::hitTest(dvec2 pos, const SP<Camera> &camera) const {
+Opt<Render::HitResult> ArrowHandle::hitTest(dvec2 pos, const SP<Camera> &camera) const {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInScreen) {
         return {};

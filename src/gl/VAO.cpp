@@ -6,7 +6,7 @@
 
 namespace Lattice::GL {
 
-VAO::VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>> &buffers, const std::optional<SP<IndexBuffer>> &indexBuffer, Primitive primitive) :
+VAO::VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>> &buffers, const Opt<SP<IndexBuffer>> &indexBuffer, Primitive primitive) :
     _buffers(buffers),
     _indexBuffer(indexBuffer),
     _primitive(primitive)

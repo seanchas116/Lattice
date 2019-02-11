@@ -39,7 +39,7 @@ void RotateHandle::draw(const SP<Render::Operations> &operations, const SP<Camer
     glClear(GL_DEPTH_BUFFER_BIT);
 }
 
-std::optional<Render::HitResult> RotateHandle::hitTest(dvec2 pos, const SP<Camera> &camera) const {
+Opt<Render::HitResult> RotateHandle::hitTest(dvec2 pos, const SP<Camera> &camera) const {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInScreen) {
         return {};
