@@ -18,13 +18,19 @@ public:
             return;
         }
 
-        dvec3 screenPosFixedDepth(screenPos.xy, Constants::fixedDepth);
-        dvec3 positionFixedDepth_worldSpace = camera->mapScreenToWorld(screenPosFixedDepth);
+        // TODO: calculate scale from desired arrow length in screen space
+        if (camera->projection() == Camera::Projection::Perspective) {
+            dvec3 screenPosFixedDepth(screenPos.xy, Constants::fixedDepth);
+            dvec3 positionFixedDepth_worldSpace = camera->mapScreenToWorld(screenPosFixedDepth);
 
-        scale = 1.0 / double(camera->viewSize().y) * 20.0;
+            scale = 1.0 / double(camera->viewSize().y) * 20.0;
 
+            manipulatorToWorld = glm::scale(glm::translate(glm::dmat4(1), positionFixedDepth_worldSpace), dvec3(scale));
+        } else {
+            double scale = 1.0 / camera->orthoScale() * 50;
+            manipulatorToWorld = glm::scale(glm::translate(targetPos), dvec3(scale));
+        }
         dmat4 worldToCamera = camera->worldToCameraMatrix();
-        manipulatorToWorld = glm::scale(glm::translate(glm::dmat4(1), positionFixedDepth_worldSpace), dvec3(scale));
         manipulatorToCamera = worldToCamera * manipulatorToWorld;
 
         dmat4 targetToCamera = worldToCamera * glm::translate(targetPos);
