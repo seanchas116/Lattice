@@ -58,7 +58,7 @@ void ViewportContainer::paintGL() {
         glScissor(minPosViewport.x, minPosViewport.y, sizeViewport.x, sizeViewport.y);
         glViewport(minPosViewport.x, minPosViewport.y, sizeViewport.x, sizeViewport.y);
 
-        viewport->render(operations);
+        viewport->drawRenderables(operations);
         glDisable(GL_SCISSOR_TEST);
     }
 }

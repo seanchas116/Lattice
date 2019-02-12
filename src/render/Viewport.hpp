@@ -19,7 +19,7 @@ public:
     auto& renderables() const { return _renderables; }
     void setRenderables(const std::vector<SP<Renderable>> &renderables) { _renderables = renderables; }
 
-    void render(const SP<Operations>& operations);
+    void drawRenderables(const SP<Operations>& operations);
 
     auto& camera() const { return _camera; }
 
