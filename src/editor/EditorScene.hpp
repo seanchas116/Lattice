@@ -17,7 +17,7 @@ namespace Editor {
 class Background;
 class GridFloor;
 class MeshRenderer;
-class EditedMeshRenderer;
+class MeshEditor;
 
 namespace Manipulator {
 class ObjectManipulator;
@@ -42,7 +42,7 @@ private:
     SP<Manipulator::ObjectManipulator> _objectManipulator;
     SP<Manipulator::MeshManipulator> _meshManipulator;
     std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> _meshRenderers;
-    Opt<SP<EditedMeshRenderer>> _editedMeshRenderers;
+    Opt<SP<MeshEditor>> _editedMeshRenderers;
 };
 
 } // namespace Editor

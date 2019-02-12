@@ -33,10 +33,10 @@ namespace Editor {
 
 class MeshPicker;
 
-class EditedMeshRenderer final : public Render::Renderable, public GL::ContextRecallable {
+class MeshEditor final : public Render::Renderable, public GL::ContextRecallable {
     Q_OBJECT
 public:
-    EditedMeshRenderer(const SP<UI::AppState>& appState, const SP<Document::MeshItem>& item);
+    MeshEditor(const SP<UI::AppState>& appState, const SP<Document::MeshItem>& item);
 
     auto& item() const { return _item; }
 

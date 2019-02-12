@@ -1,4 +1,4 @@
-#include "EditedMeshRenderer.hpp"
+#include "MeshEditor.hpp"
 #include "MeshPicker.hpp"
 #include "../ui/AppState.hpp"
 #include "../gl/VAO.hpp"
@@ -23,7 +23,7 @@ const vec3 hoveredColor = vec3(1, 1, 0);
 
 }
 
-EditedMeshRenderer::EditedMeshRenderer(const SP<UI::AppState>& appState, const SP<Document::MeshItem> &item) :
+MeshEditor::MeshEditor(const SP<UI::AppState>& appState, const SP<Document::MeshItem> &item) :
     _appState(appState),
     _item(item),
     _meshPicker(makeShared<MeshPicker>(item->mesh())),
@@ -32,11 +32,11 @@ EditedMeshRenderer::EditedMeshRenderer(const SP<UI::AppState>& appState, const S
     _vertexVAO(makeShared<GL::VAO>())
 {
     updateWholeVAOs();
-    connect(_item->mesh().get(), &Document::Mesh::changed, this, &EditedMeshRenderer::updateWholeVAOs);
-    connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, &EditedMeshRenderer::updateWholeVAOs);
+    connect(_item->mesh().get(), &Document::Mesh::changed, this, &MeshEditor::updateWholeVAOs);
+    connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::updateWholeVAOs);
 }
 
-void EditedMeshRenderer::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+void MeshEditor::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
     if (_appState->isFaceVisible()) {
         for (auto& [material, vao] : _faceVAOs) {
             operations->drawMaterial.draw(vao, _item->location().matrixToWorld(), camera, material);
@@ -50,7 +50,7 @@ void EditedMeshRenderer::draw(const SP<Render::Operations> &operations, const SP
     }
 }
 
-Opt<Render::HitResult> EditedMeshRenderer::hitTest(dvec2 pos, const SP<Camera> &camera) const {
+Opt<Render::HitResult> MeshEditor::hitTest(dvec2 pos, const SP<Camera> &camera) const {
     std::map<double, Render::HitResult> results;
 
     auto vertexPickResult = _meshPicker->pickVertex(_item->location().matrixToWorld(), camera, pos, 12);
@@ -86,7 +86,7 @@ Opt<Render::HitResult> EditedMeshRenderer::hitTest(dvec2 pos, const SP<Camera> &
 
 }
 
-void EditedMeshRenderer::mousePress(const Render::MouseEvent &event) {
+void MeshEditor::mousePress(const Render::MouseEvent &event) {
     std::unordered_set<SP<Document::MeshVertex>> newVertices;
     if (event.hitResult.vertex) {
         newVertices.insert(*event.hitResult.vertex);
@@ -134,7 +134,7 @@ void EditedMeshRenderer::mousePress(const Render::MouseEvent &event) {
     _appState->document()->setMeshSelection(selection);
 }
 
-void EditedMeshRenderer::mouseMove(const Render::MouseEvent &event) {
+void MeshEditor::mouseMove(const Render::MouseEvent &event) {
     dvec3 worldPos = event.worldPos();
     dvec3 offset = worldPos - _dragInitWorldPos;
 
@@ -151,11 +151,11 @@ void EditedMeshRenderer::mouseMove(const Render::MouseEvent &event) {
     mesh->setPositions(positions);
 }
 
-void EditedMeshRenderer::mouseRelease(const Render::MouseEvent &event) {
+void MeshEditor::mouseRelease(const Render::MouseEvent &event) {
     Q_UNUSED(event);
 }
 
-void EditedMeshRenderer::hoverEnter(const Render::MouseEvent &event) {
+void MeshEditor::hoverEnter(const Render::MouseEvent &event) {
     _hoveredVertex = event.hitResult.vertex;
     _hoveredEdge = event.hitResult.edge;
     if (_hoveredVertex || _hoveredEdge) {
@@ -164,7 +164,7 @@ void EditedMeshRenderer::hoverEnter(const Render::MouseEvent &event) {
     }
 }
 
-void EditedMeshRenderer::hoverMove(const Render::MouseEvent &event) {
+void MeshEditor::hoverMove(const Render::MouseEvent &event) {
     if (_hoveredVertex != event.hitResult.vertex || _hoveredEdge != event.hitResult.edge) {
         _hoveredVertex = event.hitResult.vertex;
         _hoveredEdge = event.hitResult.edge;
@@ -173,7 +173,7 @@ void EditedMeshRenderer::hoverMove(const Render::MouseEvent &event) {
     }
 }
 
-void EditedMeshRenderer::hoverLeave() {
+void MeshEditor::hoverLeave() {
     if (_hoveredVertex || _hoveredEdge) {
         _hoveredVertex = {};
         _hoveredEdge = {};
@@ -182,7 +182,7 @@ void EditedMeshRenderer::hoverLeave() {
     }
 }
 
-void EditedMeshRenderer::updateWholeVAOs() {
+void MeshEditor::updateWholeVAOs() {
     recallContext();
 
     auto& selectedVertices = _appState->document()->meshSelection().vertices;
