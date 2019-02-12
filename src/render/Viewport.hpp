@@ -10,7 +10,7 @@ namespace Render {
 class Renderable;
 class RenderWidget;
 
-class Viewport : public QWidget, protected QOpenGLExtraFunctions {
+class Viewport : public QWidget {
     Q_OBJECT
     using super = QWidget;
 public:
@@ -18,8 +18,6 @@ public:
 
     auto& renderables() const { return _renderables; }
     void setRenderables(const std::vector<SP<Renderable>> &renderables) { _renderables = renderables; }
-
-    void drawRenderables(const SP<Operations>& operations);
 
     auto& camera() const { return _camera; }
 

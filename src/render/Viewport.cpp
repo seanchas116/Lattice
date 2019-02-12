@@ -105,11 +105,5 @@ Opt<std::pair<SP<Renderable>, HitResult> > Viewport::hitTest(glm::dvec2 pos, con
     return hitRenderables.begin()->second;
 }
 
-void Viewport::drawRenderables(const SP<Operations> &operations) {
-    for (auto& renderable : _renderables) {
-        renderable->draw(operations, _camera);
-    }
-}
-
 } // namespace Render
 } // namespace Lattice
