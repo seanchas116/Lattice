@@ -1,7 +1,10 @@
 #include "PickableMap.hpp"
+#include "Renderable.hpp"
 #include "../gl/Framebuffer.hpp"
 #include "../gl/Texture.hpp"
+#include "../gl/Binder.hpp"
 #include "../support/Debug.hpp"
+#include "../support/Camera.hpp"
 #include <glm/gtc/type_precision.hpp>
 
 using namespace glm;
@@ -71,11 +74,13 @@ void PickableMap::resize(glm::ivec2 size) {
     _framebufferSize = size;
 }
 
-void PickableMap::draw(const std::vector<Renderable> &renderables, const SP<Operations> &operations, const SP<Camera> &camera) {
-    Q_UNUSED(renderables);
-    Q_UNUSED(operations);
-    Q_UNUSED(camera);
-    // TODO
+void PickableMap::draw(const std::vector<SP<Renderable>> &renderables, const SP<Operations> &operations, const SP<Camera> &camera) {
+    resize(camera->viewSize());
+
+    GL::Binder binder(*_framebuffer);
+    for (auto& renderable : renderables) {
+        auto pickablesToRetain = renderable->drawPickables(operations, camera);
+    }
 }
 
 /*
