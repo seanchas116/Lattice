@@ -35,12 +35,21 @@ void Pickable::hoverLeave() {
 
 glm::vec4 Pickable::idColor() const {
     union {
-        uint64_t id;
+        const Pickable* ptr;
         glm::u16vec4 color;
     } idColor;
-    idColor.id = reinterpret_cast<uint64_t>(this);
+    idColor.ptr = this;
 
     return glm::vec4(idColor.color) / float(0xFFFF);
+}
+
+Pickable *Pickable::fromIDColor(glm::i16vec4 color) {
+    union {
+        Pickable* ptr;
+        glm::u16vec4 color;
+    } idColor;
+    idColor.color = color;
+    return idColor.ptr;
 }
 
 } // namespace Render
