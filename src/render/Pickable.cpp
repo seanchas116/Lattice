@@ -43,13 +43,13 @@ glm::u16vec4 Pickable::toIDColor() const {
     return idColor.color;
 }
 
-Pickable *Pickable::fromIDColor(glm::u16vec4 color) {
+SP<Pickable> Pickable::fromIDColor(glm::u16vec4 color) {
     union {
         Pickable* ptr;
         glm::u16vec4 color;
     } idColor;
     idColor.color = color;
-    return idColor.ptr;
+    return idColor.ptr->sharedFromThis();
 }
 
 } // namespace Render

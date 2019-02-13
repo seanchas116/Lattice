@@ -74,6 +74,12 @@ void PickableMap::resize(glm::ivec2 size) {
     _framebufferSize = size;
 }
 
+SP<Pickable> PickableMap::pick(vec2 physicalPos) {
+    PixelData<u16vec4> pixels(glm::ivec2(1));
+    _framebuffer->readPixels(physicalPos + 0.5f, pixels);
+    return Pickable::fromIDColor(pixels.data()[0]);
+}
+
 void PickableMap::draw(const std::vector<SP<Renderable>> &renderables, const SP<Operations> &operations, const SP<Camera> &camera) {
     resize(camera->viewSize());
 

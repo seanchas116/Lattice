@@ -26,7 +26,7 @@ public:
     PickableMap();
 
     void resize(glm::ivec2 size);
-    SP<Pickable> pick(glm::vec2 screenPos);
+    SP<Pickable> pick(glm::vec2 physicalPos);
     void draw(const std::vector<SP<Renderable> > &renderables, const SP<Operations>& operations, const SP<Camera>& camera);
 
 private:

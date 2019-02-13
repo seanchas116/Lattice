@@ -1,11 +1,12 @@
 #pragma once
 
 #include "MouseEvent.hpp"
+#include "../support/SharedPointer.hpp"
 
 namespace Lattice {
 namespace Render {
 
-class Pickable {
+class Pickable : public EnableSharedFromThis<Pickable> {
     Q_DISABLE_COPY(Pickable)
 public:
     Pickable() {}
@@ -20,7 +21,7 @@ public:
     virtual void hoverLeave();
 
     glm::u16vec4 toIDColor() const;
-    static Pickable* fromIDColor(glm::u16vec4 color);
+    static SP<Pickable> fromIDColor(glm::u16vec4 color);
 };
 
 } // namespace Render
