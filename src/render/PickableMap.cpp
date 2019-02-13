@@ -68,8 +68,8 @@ void PickableMap::resize(glm::ivec2 size) {
     if (size == _framebufferSize) {
         return;
     }
-    auto texture = makeShared<GL::Texture>(size);
-    auto depthTexture = makeShared<GL::DepthStencilTexture>(size);
+    auto texture = makeShared<GL::Texture>(size, GL::Texture::Format::RGBA16UI);
+    auto depthTexture = makeShared<GL::Texture>(size, GL::Texture::Format::Depth24Stencil8);
     _framebuffer = makeShared<GL::Framebuffer>(size, std::vector{texture}, depthTexture);
     _framebufferSize = size;
 }

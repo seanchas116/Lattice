@@ -2,15 +2,38 @@
 
 namespace Lattice::GL {
 
-Texture::Texture(glm::ivec2 size, const void *pixels, GLint internalFormat, GLenum format, GLenum type) : _size(size) {
+Texture::Texture(glm::ivec2 size, Texture::Format format, const void *pixels) {
     initializeOpenGLFunctions();
+
+    GLint internalFormat;
+    GLenum format_;
+    GLenum type;
+
+    switch (format) {
+    case Format::RGBA8:
+        internalFormat = GL_RGBA8;
+        format_ = GL_RGBA;
+        type = GL_UNSIGNED_BYTE;
+        break;
+    case Format::RGBA16UI:
+        internalFormat = GL_RGBA16UI;
+        format_ = GL_RGBA;
+        type = GL_UNSIGNED_SHORT;
+        break;
+    case Format::Depth24Stencil8:
+        internalFormat = GL_DEPTH24_STENCIL8;
+        format_ = GL_DEPTH_STENCIL;
+        type = GL_UNSIGNED_INT_24_8;
+        break;
+    }
+
     glGenTextures(1, &_name);
     glBindTexture(GL_TEXTURE_2D, _name);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, size.x, size.y, 0, format, type, pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, size.x, size.y, 0, format_, type, pixels);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
@@ -23,30 +46,6 @@ void Texture::bind() {
 }
 
 void Texture::unbind() {
-    glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-DepthStencilTexture::DepthStencilTexture(glm::ivec2 size, const void *pixels) {
-    initializeOpenGLFunctions();
-    glGenTextures(1, &_name);
-    glBindTexture(GL_TEXTURE_2D, _name);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, size.x, size.y, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, pixels);
-    glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-DepthStencilTexture::~DepthStencilTexture() {
-    glDeleteTextures(1, &_name);
-}
-
-void DepthStencilTexture::bind() {
-    glBindTexture(GL_TEXTURE_2D, _name);
-}
-
-void DepthStencilTexture::unbind() {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 

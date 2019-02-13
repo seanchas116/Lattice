@@ -12,7 +12,7 @@ Framebuffer::Framebuffer(glm::ivec2 size) :
     _name = QOpenGLContext::currentContext()->defaultFramebufferObject();
 }
 
-Framebuffer::Framebuffer(glm::ivec2 size, const std::vector<SP<Texture> > &colorBuffers, const Opt<SP<DepthStencilTexture> > &depthStencilBuffer) :
+Framebuffer::Framebuffer(glm::ivec2 size, const std::vector<SP<Texture> > &colorBuffers, const Opt<SP<Texture> > &depthStencilBuffer) :
     _size(size),
     _colorBuffers(colorBuffers),
     _depthStencilBuffer(depthStencilBuffer)
