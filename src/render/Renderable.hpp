@@ -19,7 +19,7 @@ public:
     //void setHoverEnabled(bool enabled) { _isHoverEnabled = enabled; }
 
     virtual void draw(const SP<Operations>& operations, const SP<Camera>& camera);
-    virtual std::vector<SP<Pickable>> drawPickables(const SP<Operations>& operations, const SP<Camera>& camera);
+    virtual void drawPickables(const SP<Operations>& operations, const SP<Camera>& camera);
 
     virtual Opt<HitResult> hitTest(glm::dvec2 pos, const SP<Camera>& camera) const;
 
