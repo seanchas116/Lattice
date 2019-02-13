@@ -32,7 +32,6 @@ public:
 private:
     SP<GL::Framebuffer> _framebuffer;
     glm::ivec2 _framebufferSize = {0, 0};
-    glm::vec2 _devicePixelRatio;
     std::vector<SP<Pickable>> _pickables;
 };
 
