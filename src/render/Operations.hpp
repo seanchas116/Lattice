@@ -4,6 +4,7 @@
 #include "./operations/DrawLine.hpp"
 #include "./operations/DrawSolid.hpp"
 #include "./operations/DrawMaterial.hpp"
+#include "./operations/DrawPickableID.hpp"
 
 namespace Lattice {
 namespace Render {
@@ -16,6 +17,8 @@ public:
     DrawLine drawLine;
     DrawSolid drawSolid;
     DrawMaterial drawMaterial;
+
+    DrawPickableID drawPickableID;
 };
 
 }
