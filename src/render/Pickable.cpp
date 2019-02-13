@@ -33,5 +33,15 @@ void Pickable::hoverMove(const MouseEvent &event) {
 void Pickable::hoverLeave() {
 }
 
+glm::vec4 Pickable::idColor() const {
+    union {
+        uint64_t id;
+        glm::u16vec4 color;
+    } idColor;
+    idColor.id = reinterpret_cast<uint64_t>(this);
+
+    return glm::vec4(idColor.color) / float(0xFFFF);
+}
+
 } // namespace Render
 } // namespace Lattice

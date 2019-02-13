@@ -18,6 +18,8 @@ public:
     virtual void hoverEnter(const MouseEvent& event);
     virtual void hoverMove(const MouseEvent& event);
     virtual void hoverLeave();
+
+    glm::vec4 idColor() const;
 };
 
 } // namespace Render
