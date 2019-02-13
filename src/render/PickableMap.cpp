@@ -85,7 +85,7 @@ void PickableMap::draw(const std::vector<SP<Renderable>> &renderables, const SP<
 
     GL::Binder binder(*_framebuffer);
     for (auto& renderable : renderables) {
-        auto pickablesToRetain = renderable->drawPickables(operations, camera);
+        renderable->drawPickables(operations, camera);
     }
 }
 
