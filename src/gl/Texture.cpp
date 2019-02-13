@@ -2,7 +2,7 @@
 
 namespace Lattice::GL {
 
-Texture::Texture(glm::ivec2 size, const void *pixels) : _size(size) {
+Texture::Texture(glm::ivec2 size, const void *pixels, GLint internalFormat, GLenum format, GLenum type) : _size(size) {
     initializeOpenGLFunctions();
     glGenTextures(1, &_name);
     glBindTexture(GL_TEXTURE_2D, _name);
@@ -10,7 +10,7 @@ Texture::Texture(glm::ivec2 size, const void *pixels) : _size(size) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, size.x, size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, size.x, size.y, 0, format, type, pixels);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
