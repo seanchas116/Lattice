@@ -67,10 +67,11 @@ void Framebuffer::readPixels(glm::ivec2 pos, PixelData<glm::u8vec4> &imageData) 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-glm::u8vec4 Framebuffer::readPixel(glm::ivec2 pos) {
-    PixelData<glm::u8vec4> data({1, 1});
-    readPixels(pos, data);
-    return data.data()[0];
+void Framebuffer::readPixels(glm::ivec2 pos, PixelData<glm::u16vec4> &imageData) {
+    glBindFramebuffer(GL_FRAMEBUFFER, _name);
+    glReadPixels(pos.x, pos.y, imageData.size().x, imageData.size().y,
+                 GL_RGBA, GL_UNSIGNED_SHORT, imageData.data().data());
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void Framebuffer::readDepths(glm::ivec2 pos, PixelData<float> &imageData) {
