@@ -71,6 +71,13 @@ void PickableMap::resize(glm::ivec2 size) {
     _framebufferSize = size;
 }
 
+void PickableMap::draw(const std::vector<Renderable> &renderables, const SP<Operations> &operations, const SP<Camera> &camera) {
+    Q_UNUSED(renderables);
+    Q_UNUSED(operations);
+    Q_UNUSED(camera);
+    // TODO
+}
+
 /*
 void PickableMap::renderEntity(const MVP& mvp, const SP<Entity> &entity) {
     // TODO: apply entity transform to context
