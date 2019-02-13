@@ -33,7 +33,7 @@ void Pickable::hoverMove(const MouseEvent &event) {
 void Pickable::hoverLeave() {
 }
 
-glm::vec4 Pickable::idColor() const {
+glm::vec4 Pickable::toIDColor() const {
     union {
         const Pickable* ptr;
         glm::u16vec4 color;
