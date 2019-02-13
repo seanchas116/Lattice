@@ -19,8 +19,8 @@ public:
     virtual void hoverMove(const MouseEvent& event);
     virtual void hoverLeave();
 
-    glm::vec4 toIDColor() const;
-    static Pickable* fromIDColor(glm::i16vec4 color);
+    glm::u16vec4 toIDColor() const;
+    static Pickable* fromIDColor(glm::u16vec4 color);
 };
 
 } // namespace Render
