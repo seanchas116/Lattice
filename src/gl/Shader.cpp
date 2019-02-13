@@ -43,14 +43,29 @@ void Shader::unbind() {
     glUseProgram(0);
 }
 
+void Shader::setUniform(const char *name, bool value) {
+    glUseProgram(_program);
+    glUniform1i(glGetUniformLocation(_program, name), value);
+}
+
 void Shader::setUniform(const char *name, int value) {
     glUseProgram(_program);
     glUniform1i(glGetUniformLocation(_program, name), value);
 }
 
-void Shader::setUniform(const char *name, bool value) {
+void Shader::setUniform(const char *name, glm::ivec2 value) {
     glUseProgram(_program);
-    glUniform1i(glGetUniformLocation(_program, name), value);
+    glUniform2i(glGetUniformLocation(_program, name), value.x, value.y);
+}
+
+void Shader::setUniform(const char *name, glm::ivec3 value) {
+    glUseProgram(_program);
+    glUniform3i(glGetUniformLocation(_program, name), value.x, value.y, value.z);
+}
+
+void Shader::setUniform(const char *name, glm::ivec4 value) {
+    glUseProgram(_program);
+    glUniform4i(glGetUniformLocation(_program, name), value.x, value.y, value.z, value.w);
 }
 
 void Shader::setUniform(const char *name, float value) {

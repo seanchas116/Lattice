@@ -14,8 +14,12 @@ public:
     void bind();
     void unbind();
 
-    void setUniform(const char* name, int value);
     void setUniform(const char* name, bool value);
+
+    void setUniform(const char* name, int value);
+    void setUniform(const char* name, glm::ivec2 value);
+    void setUniform(const char* name, glm::ivec3 value);
+    void setUniform(const char* name, glm::ivec4 value);
 
     void setUniform(const char* name, float value);
     void setUniform(const char* name, glm::vec2 value);
