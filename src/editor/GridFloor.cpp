@@ -61,9 +61,9 @@ GridFloor::GridFloor() :
 }
 
 void GridFloor::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
-    operations->drawLine.draw(_vao, dmat4(1), camera, 1, dvec3(0.5));
-    operations->drawLine.draw(_xAxisVAO, dmat4(1), camera, 1, dvec3(0.8, 0.5, 0.5));
-    operations->drawLine.draw(_zAxisVAO, dmat4(1), camera, 1, dvec3(0.5, 0.5, 0.8));
+    operations->drawLine.draw(_vao, dmat4(1), camera, 1, vec4(0.5, 0.5, 0.5, 1));
+    operations->drawLine.draw(_xAxisVAO, dmat4(1), camera, 1, vec4(0.8, 0.5, 0.5, 1));
+    operations->drawLine.draw(_zAxisVAO, dmat4(1), camera, 1, vec4(0.5, 0.5, 0.8, 1));
 }
 
 } // namespace Lattice

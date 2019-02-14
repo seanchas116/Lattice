@@ -13,11 +13,11 @@ namespace Lattice::Render {
 
 class Pickable;
 
-class DrawPickableID final {
+class DrawUnicolor final {
 public:
-    DrawPickableID();
+    DrawUnicolor();
 
-    void draw(const SP<GL::VAO>& vao, const glm::dmat4 &matrix, const SP<Camera>& camera, const SP<Pickable>& pickable);
+    void draw(const SP<GL::VAO>& vao, const glm::dmat4 &matrix, const SP<Camera>& camera, glm::vec4 color);
 
 private:
     GL::Shader _shader;

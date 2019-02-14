@@ -16,8 +16,8 @@ namespace Constants {
     constexpr double hitRadius = 0.2;
     constexpr double fixedDepth = 0.75;
 
-    extern const std::array<glm::dvec3, 3> colors;
-    extern const std::array<glm::dvec3, 3> hoverColors;
+    extern const std::array<glm::vec4, 3> colors;
+    extern const std::array<glm::vec4, 3> hoverColors;
 
     inline const std::array<glm::dmat4, 3> swizzleTransforms {
         glm::dmat4(1), // x

@@ -45,8 +45,8 @@ uniform float zOffset;
 layout(lines) in;
 layout(triangle_strip, max_vertices = 4) out;
 
-in vec3 vertexColor_vert[];
-out vec3 vertexColor_geom;
+in vec4 vertexColor_vert[];
+out vec4 vertexColor_geom;
 
 void main(void) {
     vec4 p0_modelSpace = gl_in[0].gl_Position;
@@ -61,8 +61,8 @@ void main(void) {
         return;
     }
 
-    vec3 color0;
-    vec3 color1;
+    vec4 color0;
+    vec4 color1;
     if (swapped) {
         color0 = vertexColor_vert[1];
         color1 = vertexColor_vert[0];

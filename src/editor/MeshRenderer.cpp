@@ -45,7 +45,7 @@ void MeshRenderer::draw(const SP<Render::Operations> &operations, const SP<Camer
 void MeshRenderer::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
     if (_appState->isFaceVisible()) {
         for (auto& [material, vao] : _faceVAOs) {
-            operations->drawPickableID.draw(vao, _item->location().matrixToWorld(), camera, sharedFromThis());
+            operations->drawUnicolor.draw(vao, _item->location().matrixToWorld(), camera, toIDColor());
         }
     }
 }

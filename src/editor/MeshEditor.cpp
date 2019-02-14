@@ -17,9 +17,9 @@ namespace Lattice::Editor {
 
 namespace {
 
-const vec3 unselectedColor = vec3(0);
-const vec3 selectedColor = vec3(1);
-const vec3 hoveredColor = vec3(1, 1, 0);
+const vec4 unselectedColor = vec4(0, 0, 0, 1);
+const vec4 selectedColor = vec4(1, 1, 1, 1);
+const vec4 hoveredColor = vec4(1, 1, 0, 1);
 
 }
 
@@ -43,7 +43,7 @@ void MeshEditor::draw(const SP<Render::Operations> &operations, const SP<Camera>
         }
     }
     if (_appState->isEdgeVisible()) {
-        operations->drawLine.draw(_edgeVAO, _item->location().matrixToWorld(), camera, 1.0, dvec3(0), true);
+        operations->drawLine.draw(_edgeVAO, _item->location().matrixToWorld(), camera, 1.0, vec4(0, 0, 0, 1), true);
     }
     if (_appState->isVertexVisible()) {
         operations->drawCircle.draw(_vertexVAO, _item->location().matrixToWorld(), camera, 6.0, dvec3(0), true);
