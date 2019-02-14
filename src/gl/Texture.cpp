@@ -17,7 +17,7 @@ Texture::Texture(glm::ivec2 size, Texture::Format format, const void *pixels) {
         break;
     case Format::RGBA16UI:
         internalFormat = GL_RGBA16UI;
-        format_ = GL_RGBA;
+        format_ = GL_RGBA_INTEGER;
         type = GL_UNSIGNED_SHORT;
         break;
     case Format::Depth24Stencil8:
