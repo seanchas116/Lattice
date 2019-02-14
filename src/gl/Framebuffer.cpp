@@ -70,7 +70,7 @@ void Framebuffer::readPixels(glm::ivec2 pos, PixelData<glm::u8vec4> &imageData) 
 void Framebuffer::readPixels(glm::ivec2 pos, PixelData<glm::u16vec4> &imageData) {
     glBindFramebuffer(GL_FRAMEBUFFER, _name);
     glReadPixels(pos.x, pos.y, imageData.size().x, imageData.size().y,
-                 GL_RGBA, GL_UNSIGNED_SHORT, imageData.data().data());
+                 GL_RGBA_INTEGER, GL_UNSIGNED_SHORT, imageData.data().data());
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
