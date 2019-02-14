@@ -68,14 +68,16 @@ void PickableMap::resize(glm::ivec2 size) {
     if (size == _framebufferSize) {
         return;
     }
-    auto texture = makeShared<GL::Texture>(size, GL::Texture::Format::RGBA16UI);
+    auto texture = makeShared<GL::Texture>(size, GL::Texture::Format::RGBA32F);
     auto depthTexture = makeShared<GL::Texture>(size, GL::Texture::Format::Depth24Stencil8);
     _framebuffer = makeShared<GL::Framebuffer>(size, std::vector{texture}, depthTexture);
     _framebufferSize = size;
 }
 
 Opt<SP<Pickable>> PickableMap::pick(vec2 physicalPos) {
-    PixelData<u16vec4> pixels(glm::ivec2(1));
+    recallContext();
+
+    PixelData<vec4> pixels(glm::ivec2(1));
     _framebuffer->readPixels(physicalPos + 0.5f, pixels);
     return Pickable::fromIDColor(pixels.data()[0]);
 }

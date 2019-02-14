@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../support/Shorthands.hpp"
+#include "../gl/ContextRecallable.hpp"
 #include <QtGlobal>
 #include <QVector>
 #include <QOpenGLExtraFunctions>
@@ -20,7 +21,7 @@ class Pickable;
 class Renderable;
 class Operations;
 
-class PickableMap final : protected QOpenGLExtraFunctions {
+class PickableMap final : protected QOpenGLExtraFunctions, protected GL::ContextRecallable {
     Q_DISABLE_COPY(PickableMap)
 public:
     PickableMap();

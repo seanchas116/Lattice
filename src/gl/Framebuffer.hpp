@@ -20,7 +20,7 @@ public:
     void unbind();
 
     void readPixels(glm::ivec2 pos, PixelData<glm::u8vec4>& imageData);
-    void readPixels(glm::ivec2 pos, PixelData<glm::u16vec4>& imageData);
+    void readPixels(glm::ivec2 pos, PixelData<glm::vec4>& imageData);
 
     void readDepths(glm::ivec2 pos, PixelData<float>& imageData);
     float readDepth(glm::ivec2 pos);

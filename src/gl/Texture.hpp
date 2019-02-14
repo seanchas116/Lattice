@@ -10,7 +10,7 @@ class Texture final : protected QOpenGLExtraFunctions {
 public:
     enum class Format {
         RGBA8,
-        RGBA16UI,
+        RGBA32F,
         Depth24Stencil8
     };
 

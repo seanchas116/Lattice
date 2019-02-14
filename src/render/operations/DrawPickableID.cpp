@@ -13,7 +13,7 @@ DrawPickableID::DrawPickableID() :
 
 void DrawPickableID::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<Camera> &camera, const SP<Pickable> &pickable) {
     _shader.bind();
-    _shader.setUniform("pickableID", glm::ivec4(pickable->toIDColor()));
+    _shader.setUniform("pickableID", pickable->toIDColor());
     _shader.setUniform("MVP", camera->worldToScreenMatrix() * matrix);
     vao->draw();
 }

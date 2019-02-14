@@ -15,10 +15,10 @@ Texture::Texture(glm::ivec2 size, Texture::Format format, const void *pixels) {
         format_ = GL_RGBA;
         type = GL_UNSIGNED_BYTE;
         break;
-    case Format::RGBA16UI:
-        internalFormat = GL_RGBA16UI;
-        format_ = GL_RGBA_INTEGER;
-        type = GL_UNSIGNED_SHORT;
+    case Format::RGBA32F:
+        internalFormat = GL_RGBA32F;
+        format_ = GL_RGBA;
+        type = GL_FLOAT;
         break;
     case Format::Depth24Stencil8:
         internalFormat = GL_DEPTH24_STENCIL8;

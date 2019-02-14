@@ -1,7 +1,7 @@
 #version 330
 
-out ivec4 fragColor;
-uniform ivec4 pickableID;
+out vec4 fragColor;
+uniform vec4 pickableID;
 
 void main(void) {
     fragColor = pickableID;
