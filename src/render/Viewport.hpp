@@ -9,6 +9,7 @@ namespace Render {
 
 class Renderable;
 class RenderWidget;
+class PickableMap;
 
 class Viewport : public QWidget {
     Q_OBJECT
@@ -20,6 +21,8 @@ public:
     void setRenderables(const std::vector<SP<Renderable>> &renderables) { _renderables = renderables; }
 
     auto& camera() const { return _camera; }
+
+    const SP<PickableMap>& pickableMap();
 
 signals:
     void updateRequested();
@@ -38,6 +41,7 @@ private:
     std::vector<SP<Renderable>> _renderables;
     Opt<SP<Renderable>> _draggedRenderable;
     Opt<SP<Renderable>> _hoveredRenderable;
+    Opt<SP<PickableMap>> _pickableMap;
     HitResult _hitResult;
     SP<Camera> _camera;
 };

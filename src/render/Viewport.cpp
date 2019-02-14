@@ -1,6 +1,7 @@
 #include "Viewport.hpp"
 #include "Renderable.hpp"
 #include "Util.hpp"
+#include "PickableMap.hpp"
 #include "../support/Debug.hpp"
 #include <QMouseEvent>
 #include <QOpenGLDebugLogger>
@@ -12,6 +13,13 @@ namespace Render {
 Viewport::Viewport(QWidget *parent) : QWidget(parent), _camera(makeShared<Camera>()) {
     connect(_camera.get(), &Camera::changed, this, &Viewport::updateRequested);
     setMouseTracking(true);
+}
+
+const SP<PickableMap> &Viewport::pickableMap() {
+    if (!_pickableMap) {
+        _pickableMap = makeShared<PickableMap>();
+    }
+    return *_pickableMap;
 }
 
 void Viewport::mousePressEvent(QMouseEvent *event) {

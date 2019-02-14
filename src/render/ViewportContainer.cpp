@@ -2,6 +2,7 @@
 #include "Viewport.hpp"
 #include "Renderable.hpp"
 #include "Util.hpp"
+#include "PickableMap.hpp"
 #include "../support/Debug.hpp"
 #include <QMouseEvent>
 #include <QOpenGLDebugLogger>
@@ -57,11 +58,16 @@ void ViewportContainer::paintGL() {
         glEnable(GL_SCISSOR_TEST);
         glScissor(minPosViewport.x, minPosViewport.y, sizeViewport.x, sizeViewport.y);
         glViewport(minPosViewport.x, minPosViewport.y, sizeViewport.x, sizeViewport.y);
+        glBindFramebuffer(GL_FRAMEBUFFER, QOpenGLContext::currentContext()->defaultFramebufferObject());
 
         for (auto& renderable : viewport->renderables()) {
             renderable->draw(operations, viewport->camera());
         }
+
         glDisable(GL_SCISSOR_TEST);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        viewport->pickableMap()->draw(viewport->renderables(), operations, viewport->camera());
     }
 }
 
