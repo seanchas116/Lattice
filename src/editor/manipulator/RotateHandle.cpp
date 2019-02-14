@@ -39,6 +39,19 @@ void RotateHandle::draw(const SP<Render::Operations> &operations, const SP<Camer
     glClear(GL_DEPTH_BUFFER_BIT);
 }
 
+void RotateHandle::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+    Coordinates coordinates(camera, _targetPosition);
+    if (!coordinates.isInScreen){
+        return;
+    }
+
+    glClearDepthf(Constants::fixedDepth);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    operations->drawLine.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, toIDColor());
+    glClearDepthf(1);
+    glClear(GL_DEPTH_BUFFER_BIT);
+}
+
 Opt<Render::HitResult> RotateHandle::hitTest(dvec2 pos, const SP<Camera> &camera) const {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInScreen) {
