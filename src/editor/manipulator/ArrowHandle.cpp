@@ -38,6 +38,19 @@ void ArrowHandle::draw(const SP<Render::Operations> &operations, const SP<Camera
     operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
 }
 
+void ArrowHandle::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+    Coordinates coordinates(camera, _targetPosition);
+    if (!coordinates.isInScreen){
+        return;
+    }
+
+    dmat4 translate = glm::translate(dvec3(_length, 0, 0));
+    operations->drawUnicolor.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis] * translate, camera, toIDColor());
+
+    _bodyVertexBuffer->setVertices({{vec3(Constants::bodyBegin, 0, 0), {}, {}}, {vec3(_length, 0, 0), {}, {}}});
+    operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, toIDColor());
+}
+
 Opt<Render::HitResult> ArrowHandle::hitTest(dvec2 pos, const SP<Camera> &camera) const {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInScreen) {
