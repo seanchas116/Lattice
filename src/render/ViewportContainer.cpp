@@ -27,8 +27,11 @@ void ViewportContainer::initializeGL() {
 
     auto logger = new QOpenGLDebugLogger(this);
     if (logger->initialize()) {
-        connect(logger, &QOpenGLDebugLogger::messageLogged, [](const auto& message) {
-            qWarning() << message;
+        connect(logger, &QOpenGLDebugLogger::messageLogged, [](const QOpenGLDebugMessage& message) {
+            if (message.severity() == QOpenGLDebugMessage::NotificationSeverity) {
+                return;
+            }
+            qWarning() << message.message();
         });
         logger->startLogging();
         qDebug() << "OpenGL debug enabled";
