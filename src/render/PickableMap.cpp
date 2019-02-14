@@ -85,6 +85,7 @@ void PickableMap::draw(const std::vector<SP<Renderable>> &renderables, const SP<
 
     GL::Binder binder(*_framebuffer);
     glClearColor(0, 0, 0, 0);
+    glClearDepthf(1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     for (auto& renderable : renderables) {
