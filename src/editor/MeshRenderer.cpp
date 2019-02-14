@@ -42,6 +42,14 @@ void MeshRenderer::draw(const SP<Render::Operations> &operations, const SP<Camer
     */
 }
 
+void MeshRenderer::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+    if (_appState->isFaceVisible()) {
+        for (auto& [material, vao] : _faceVAOs) {
+            operations->drawPickableID.draw(vao, _item->location().matrixToWorld(), camera, sharedFromThis());
+        }
+    }
+}
+
 Opt<Render::HitResult> MeshRenderer::hitTest(dvec2 pos, const SP<Camera> &camera) const {
     LATTICE_OPTIONAL_GUARD(pickResult, _meshPicker->pickFace(_item->location().matrixToWorld(), camera, pos), return {};)
     auto [face, depth] = pickResult;
