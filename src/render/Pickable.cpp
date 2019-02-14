@@ -43,12 +43,15 @@ glm::u16vec4 Pickable::toIDColor() const {
     return idColor.color;
 }
 
-SP<Pickable> Pickable::fromIDColor(glm::u16vec4 color) {
+Opt<SP<Pickable> > Pickable::fromIDColor(glm::u16vec4 color) {
     union {
         Pickable* ptr;
         glm::u16vec4 color;
     } idColor;
     idColor.color = color;
+    if (!idColor.ptr) {
+        return {};
+    }
     return idColor.ptr->sharedFromThis();
 }
 

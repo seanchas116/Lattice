@@ -21,7 +21,7 @@ public:
     virtual void hoverLeave();
 
     glm::u16vec4 toIDColor() const;
-    static SP<Pickable> fromIDColor(glm::u16vec4 color);
+    static Opt<SP<Pickable>> fromIDColor(glm::u16vec4 color);
 };
 
 } // namespace Render
