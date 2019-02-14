@@ -39,6 +39,11 @@ void Viewport::mousePressEvent(QMouseEvent *event) {
 void Viewport::mouseMoveEvent(QMouseEvent *event) {
     auto pos = mapQtToGL(this, event->pos());
 
+    if (_pickableMap) {
+        auto pickable = _pickableMap->get()->pick(pos);
+        qDebug() << pickable;
+    }
+
     if (_draggedRenderable) {
         // drag
         auto renderable = *_draggedRenderable;
