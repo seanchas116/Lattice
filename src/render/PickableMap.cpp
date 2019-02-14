@@ -74,7 +74,7 @@ void PickableMap::resize(glm::ivec2 size) {
     _framebufferSize = size;
 }
 
-SP<Pickable> PickableMap::pick(vec2 physicalPos) {
+Opt<SP<Pickable>> PickableMap::pick(vec2 physicalPos) {
     PixelData<u16vec4> pixels(glm::ivec2(1));
     _framebuffer->readPixels(physicalPos + 0.5f, pixels);
     return Pickable::fromIDColor(pixels.data()[0]);
@@ -84,6 +84,9 @@ void PickableMap::draw(const std::vector<SP<Renderable>> &renderables, const SP<
     resize(camera->viewSize());
 
     GL::Binder binder(*_framebuffer);
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     for (auto& renderable : renderables) {
         renderable->drawPickables(operations, camera);
     }
