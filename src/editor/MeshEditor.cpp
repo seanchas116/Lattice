@@ -43,10 +43,10 @@ void MeshEditor::draw(const SP<Render::Operations> &operations, const SP<Camera>
         }
     }
     if (_appState->isEdgeVisible()) {
-        operations->drawLine.draw(_edgeVAO, _item->location().matrixToWorld(), camera, 1.0, vec4(0, 0, 0, 1), true);
+        operations->drawLine.draw(_edgeVAO, _item->location().matrixToWorld(), camera, 1.0, vec4(0), true);
     }
     if (_appState->isVertexVisible()) {
-        operations->drawCircle.draw(_vertexVAO, _item->location().matrixToWorld(), camera, 6.0, dvec3(0), true);
+        operations->drawCircle.draw(_vertexVAO, _item->location().matrixToWorld(), camera, 6.0, vec4(0), true);
     }
 }
 

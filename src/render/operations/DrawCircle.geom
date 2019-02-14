@@ -9,8 +9,8 @@ uniform float zOffset;
 layout(points) in;
 layout(triangle_strip, max_vertices = 16) out;
 
-in vec3 vertexColor_vert[];
-out vec3 vertexColor_geom;
+in vec4 vertexColor_vert[];
+out vec4 vertexColor_geom;
 
 void emitForAngle(vec2 center, float depth, float angle) {
     vec2 direction = vec2(cos(angle), sin(angle));
