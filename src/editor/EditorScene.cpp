@@ -35,7 +35,7 @@ EditorScene::EditorScene(const SP<UI::AppState> &appState) :
     connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &EditorScene::updateRequested);
 }
 
-std::vector<SP<Render::RenderableObject> > EditorScene::updateRenderables() {
+std::vector<SP<Render::Renderable> > EditorScene::updateRenderables() {
     std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> newMeshRenderers;
 
     auto editedItem = _appState->document()->editedItem();
@@ -66,7 +66,7 @@ std::vector<SP<Render::RenderableObject> > EditorScene::updateRenderables() {
 
     _meshRenderers = newMeshRenderers;
 
-    std::vector<SP<Render::RenderableObject>> renderables;
+    std::vector<SP<Render::Renderable>> renderables;
     renderables.push_back(_background);
 
     renderables.push_back(_gridFloor);
@@ -89,7 +89,10 @@ std::vector<SP<Render::RenderableObject> > EditorScene::updateRenderables() {
     }
 
     for (auto& r : renderables) {
-        connect(r.get(), &Render::RenderableObject::updateRequested, this, &EditorScene::updateRequested);
+        auto renderableObject = dynamicPointerCast<Render::RenderableObject>(r);
+        if (renderableObject) {
+            connect(renderableObject->get(), &Render::RenderableObject::updateRequested, this, &EditorScene::updateRequested);
+        }
     }
 
     return renderables;

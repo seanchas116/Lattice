@@ -33,7 +33,7 @@ Opt<SP<Renderable>> PickableMap::pick(vec2 physicalPos) {
     return Renderable::fromIDColor(pixels.data()[0]);
 }
 
-void PickableMap::draw(const std::vector<SP<RenderableObject>> &renderables, const SP<Operations> &operations, const SP<Camera> &camera) {
+void PickableMap::draw(const std::vector<SP<Renderable> > &renderables, const SP<Operations> &operations, const SP<Camera> &camera) {
     resize(camera->viewSize());
 
     GL::Binder binder(*_framebuffer);

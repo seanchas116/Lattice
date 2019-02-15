@@ -29,7 +29,7 @@ class EditorScene : public QObject {
 public:
     EditorScene(const SP<UI::AppState>& appState);
 
-    std::vector<SP<Render::RenderableObject>> updateRenderables();
+    std::vector<SP<Render::Renderable>> updateRenderables();
 
 signals:
     void updateRequested();

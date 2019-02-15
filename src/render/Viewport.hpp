@@ -18,7 +18,7 @@ public:
     Viewport(QWidget* parent = nullptr);
 
     auto& renderables() const { return _renderables; }
-    void setRenderables(const std::vector<SP<RenderableObject>> &renderables) { _renderables = renderables; }
+    void setRenderables(const std::vector<SP<Renderable>> &renderables) { _renderables = renderables; }
 
     auto& camera() const { return _camera; }
 
@@ -36,11 +36,11 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private:
-    Opt<std::pair<SP<RenderableObject>, HitResult>> hitTest(glm::dvec2 pos, const SP<Camera>& camera);
+    Opt<std::pair<SP<Renderable>, HitResult>> hitTest(glm::dvec2 pos, const SP<Camera>& camera);
 
-    std::vector<SP<RenderableObject>> _renderables;
-    Opt<SP<RenderableObject>> _draggedRenderable;
-    Opt<SP<RenderableObject>> _hoveredRenderable;
+    std::vector<SP<Renderable>> _renderables;
+    Opt<SP<Renderable>> _draggedRenderable;
+    Opt<SP<Renderable>> _hoveredRenderable;
     Opt<SP<PickableMap>> _pickableMap;
     HitResult _hitResult;
     SP<Camera> _camera;
