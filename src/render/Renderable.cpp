@@ -68,5 +68,19 @@ Opt<SP<Renderable> > Renderable::fromIDColor(glm::vec4 color) {
     return idColor.ptr->sharedFromThis();
 }
 
+void Renderable::setChildren(const std::vector<SP<Renderable> > &children) {
+    for (auto& child : _children) {
+        child->_parent = {};
+    }
+    _children = children;
+    for (auto& child : children) {
+        child->_parent = sharedFromThis();
+    }
+}
+
+Opt<SP<Renderable> > Renderable::parent() const {
+    return _parent.lock();
+}
+
 } // namespace Render
 } // namespace Lattice
