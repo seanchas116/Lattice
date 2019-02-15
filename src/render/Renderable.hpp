@@ -6,11 +6,18 @@
 namespace Lattice {
 namespace Render {
 
+class Operations;
+
 class Renderable : public EnableSharedFromThis<Renderable> {
     Q_DISABLE_COPY(Renderable)
 public:
     Renderable() {}
     virtual ~Renderable();
+
+    virtual void draw(const SP<Operations>& operations, const SP<Camera>& camera);
+    virtual void drawPickables(const SP<Operations>& operations, const SP<Camera>& camera);
+
+    virtual Opt<HitResult> hitTest(glm::dvec2 pos, const SP<Camera>& camera) const;
 
     virtual void mousePress(const MouseEvent& event);
     virtual void mouseMove(const MouseEvent& event);
