@@ -1,5 +1,5 @@
 #include "PickableMap.hpp"
-#include "Renderable.hpp"
+#include "RenderableObject.hpp"
 #include "../gl/Framebuffer.hpp"
 #include "../gl/Texture.hpp"
 #include "../gl/Binder.hpp"
@@ -25,15 +25,15 @@ void PickableMap::resize(glm::ivec2 size) {
     _framebufferSize = size;
 }
 
-Opt<SP<Pickable>> PickableMap::pick(vec2 physicalPos) {
+Opt<SP<Renderable>> PickableMap::pick(vec2 physicalPos) {
     recallContext();
 
     PixelData<vec4> pixels(glm::ivec2(1));
     _framebuffer->readPixels(physicalPos + 0.5f, pixels);
-    return Pickable::fromIDColor(pixels.data()[0]);
+    return Renderable::fromIDColor(pixels.data()[0]);
 }
 
-void PickableMap::draw(const std::vector<SP<Renderable>> &renderables, const SP<Operations> &operations, const SP<Camera> &camera) {
+void PickableMap::draw(const std::vector<SP<RenderableObject>> &renderables, const SP<Operations> &operations, const SP<Camera> &camera) {
     resize(camera->viewSize());
 
     GL::Binder binder(*_framebuffer);

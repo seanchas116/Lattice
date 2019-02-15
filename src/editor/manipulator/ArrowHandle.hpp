@@ -1,13 +1,13 @@
 #pragma once
 #include "../../gl/VertexBuffer.hpp"
-#include "../../render/Renderable.hpp"
+#include "../../render/RenderableObject.hpp"
 
 namespace Lattice {
 
 namespace Editor {
 namespace Manipulator {
 
-class ArrowHandle : public Render::Renderable {
+class ArrowHandle : public Render::RenderableObject {
     Q_OBJECT
 public:
     enum class HandleType {

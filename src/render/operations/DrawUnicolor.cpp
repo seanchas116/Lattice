@@ -1,5 +1,5 @@
 #include "DrawUnicolor.hpp"
-#include "../Pickable.hpp"
+#include "../Renderable.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../resource/Resource.hpp"
 #include "../../support/Camera.hpp"

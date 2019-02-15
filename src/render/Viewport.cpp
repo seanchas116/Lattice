@@ -1,5 +1,5 @@
 #include "Viewport.hpp"
-#include "Renderable.hpp"
+#include "RenderableObject.hpp"
 #include "Util.hpp"
 #include "PickableMap.hpp"
 #include "../support/Debug.hpp"
@@ -103,8 +103,8 @@ void Viewport::mouseReleaseEvent(QMouseEvent *event) {
     _draggedRenderable = {};
 }
 
-Opt<std::pair<SP<Renderable>, HitResult> > Viewport::hitTest(glm::dvec2 pos, const SP<Camera> &camera) {
-    std::map<double, std::pair<SP<Renderable>, HitResult>> hitRenderables;
+Opt<std::pair<SP<RenderableObject>, HitResult> > Viewport::hitTest(glm::dvec2 pos, const SP<Camera> &camera) {
+    std::map<double, std::pair<SP<RenderableObject>, HitResult>> hitRenderables;
     for (auto it = _renderables.rbegin(); it != _renderables.rend(); ++it) {
         auto& renderable = *it;
         auto maybeHitResult = renderable->hitTest(pos, camera);

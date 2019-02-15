@@ -3,7 +3,7 @@
 #include "../support/Shorthands.hpp"
 #include "../support/Box.hpp"
 #include "../support/Location.hpp"
-#include "../render/Renderable.hpp"
+#include "../render/RenderableObject.hpp"
 #include "../gl/ContextRecallable.hpp"
 #include <glm/glm.hpp>
 #include <unordered_map>
@@ -32,7 +32,7 @@ namespace Editor {
 
 class MeshPicker;
 
-class MeshRenderer final : public Render::Renderable, public GL::ContextRecallable {
+class MeshRenderer final : public Render::RenderableObject, public GL::ContextRecallable {
     Q_OBJECT
 public:
     MeshRenderer(const SP<UI::AppState>& appState, const SP<Document::MeshItem>& item);

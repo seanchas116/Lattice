@@ -49,8 +49,8 @@ void Manipulator::setTargetPosition(glm::dvec3 position) {
     emit targetPositionChanged(position);
 }
 
-std::vector<SP<Render::Renderable> > Manipulator::handles(bool withTranslate, bool withRotate, bool withScale) const {
-    std::vector<SP<Render::Renderable>> handles;
+std::vector<SP<Render::RenderableObject> > Manipulator::handles(bool withTranslate, bool withRotate, bool withScale) const {
+    std::vector<SP<Render::RenderableObject>> handles;
     if (withTranslate) {
         for (auto& h : _translateHandles) {
             handles.push_back(h);

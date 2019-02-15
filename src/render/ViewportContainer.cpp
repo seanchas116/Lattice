@@ -1,6 +1,6 @@
 #include "ViewportContainer.hpp"
 #include "Viewport.hpp"
-#include "Renderable.hpp"
+#include "RenderableObject.hpp"
 #include "Util.hpp"
 #include "PickableMap.hpp"
 #include "../support/Debug.hpp"

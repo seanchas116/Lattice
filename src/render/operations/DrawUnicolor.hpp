@@ -11,7 +11,7 @@ class VAO;
 
 namespace Lattice::Render {
 
-class Pickable;
+class Renderable;
 
 class DrawUnicolor final {
 public:

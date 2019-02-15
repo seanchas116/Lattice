@@ -1,34 +1,28 @@
 #pragma once
-#include <QtGlobal>
-#include <QObject>
-#include "Operations.hpp"
-#include "MouseEvent.hpp"
-#include "Pickable.hpp"
 
-class QMouseEvent;
+#include "MouseEvent.hpp"
+#include "../support/SharedPointer.hpp"
 
 namespace Lattice {
 namespace Render {
 
-class Renderable : public QObject, public Pickable {
-    Q_OBJECT
+class Renderable : public EnableSharedFromThis<Renderable> {
+    Q_DISABLE_COPY(Renderable)
 public:
     Renderable() {}
+    virtual ~Renderable();
 
-    //bool isHoverEnabled() const { return _isHoverEnabled; }
-    //void setHoverEnabled(bool enabled) { _isHoverEnabled = enabled; }
+    virtual void mousePress(const MouseEvent& event);
+    virtual void mouseMove(const MouseEvent& event);
+    virtual void mouseRelease(const MouseEvent& event);
+    virtual void mouseDoubleClick(const MouseEvent& event);
+    virtual void hoverEnter(const MouseEvent& event);
+    virtual void hoverMove(const MouseEvent& event);
+    virtual void hoverLeave();
 
-    virtual void draw(const SP<Operations>& operations, const SP<Camera>& camera);
-    virtual void drawPickables(const SP<Operations>& operations, const SP<Camera>& camera);
-
-    virtual Opt<HitResult> hitTest(glm::dvec2 pos, const SP<Camera>& camera) const;
-
-signals:
-    void updateRequested();
-
-private:
-    //bool _isHoverEnabled = false;
+    glm::vec4 toIDColor() const;
+    static Opt<SP<Renderable>> fromIDColor(glm::vec4 color);
 };
 
-} // namespace Renderer
+} // namespace Render
 } // namespace Lattice

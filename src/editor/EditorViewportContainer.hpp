@@ -20,12 +20,12 @@ public:
 
 private:
     void setSplitMode(UI::ViewportSplitMode split);
-    void setRenderables(const std::vector<SP<Render::Renderable>>& renderables);
+    void setRenderables(const std::vector<SP<Render::RenderableObject>>& renderables);
 
     SP<UI::AppState> _appState;
     SP<KeyObserver> _keyObserver;
     Opt<SP<EditorScene>> _scene;
-    std::vector<SP<Render::Renderable>> _renderables;
+    std::vector<SP<Render::RenderableObject>> _renderables;
 };
 
 } // namespace Lattice

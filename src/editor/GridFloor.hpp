@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../support/Shorthands.hpp"
-#include "../render/Renderable.hpp"
+#include "../render/RenderableObject.hpp"
 #include "../gl/VertexBuffer.hpp"
 #include <glm/glm.hpp>
 
@@ -16,7 +16,7 @@ class IndexBuffer;
 
 namespace Lattice::Editor {
 
-class GridFloor final : public Render::Renderable {
+class GridFloor final : public Render::RenderableObject {
     Q_OBJECT
 public:
     GridFloor();

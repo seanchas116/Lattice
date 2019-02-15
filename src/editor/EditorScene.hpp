@@ -1,6 +1,6 @@
 #pragma once
 #include <QObject>
-#include "../render/Renderable.hpp"
+#include "../render/RenderableObject.hpp"
 
 namespace Lattice {
 
@@ -29,7 +29,7 @@ class EditorScene : public QObject {
 public:
     EditorScene(const SP<UI::AppState>& appState);
 
-    std::vector<SP<Render::Renderable>> updateRenderables();
+    std::vector<SP<Render::RenderableObject>> updateRenderables();
 
 signals:
     void updateRequested();
