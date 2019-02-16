@@ -36,7 +36,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
 
 void MainWindow::setupToolBar() {
     auto toolBar = new QToolBar(tr("Tools"));
-    addToolBar(Qt::LeftToolBarArea, toolBar);
+    addToolBar(Qt::TopToolBarArea, toolBar);
 
     auto addMenu = new QMenu();
     addMenu->addAction(tr("Plane"), _appState.get(), &AppState::addPlane);
@@ -57,16 +57,10 @@ void MainWindow::setupToolBar() {
     addMenuToolButton->setPopupMode(QToolButton::InstantPopup);
     toolBar->addWidget(addMenuToolButton);
 
-    auto modifyMenu = new QMenu();
-    modifyMenu->addAction(tr("Extrude"));
-    modifyMenu->addAction(tr("Inset Faces"));
-    modifyMenu->addAction(tr("Loop Cut"));
-
-    auto modifyMenuToolButton = new QToolButton();
-    modifyMenuToolButton->setText(tr("Modify"));
-    modifyMenuToolButton->setMenu(modifyMenu);
-    modifyMenuToolButton->setPopupMode(QToolButton::InstantPopup);
-    toolBar->addWidget(modifyMenuToolButton);
+    toolBar->addAction(tr("Draw"));
+    toolBar->addAction(tr("Extrude"));
+    toolBar->addAction(tr("Inset Faces"));
+    toolBar->addAction(tr("Loop Cut"));
 
     auto spacer = new QWidget();
     spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);

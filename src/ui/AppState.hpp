@@ -15,6 +15,8 @@ enum class Tool {
     None,
     Draw,
     Extrude,
+    InsetFaces,
+    LoopCut,
 };
 
 class AppState final : public QObject {
