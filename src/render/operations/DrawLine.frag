@@ -6,5 +6,5 @@ uniform vec4 color;
 uniform bool useVertexColor;
 
 void main(void) {
-    fragColor = useVertexColor ? vertexColor_geom : color, 1;
+    fragColor = useVertexColor ? vertexColor_geom : color;
 }
