@@ -36,13 +36,13 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private:
-    Opt<std::pair<SP<Renderable>, HitResult>> hitTest(glm::dvec2 pos, const SP<Camera>& camera);
+    Opt<std::pair<SP<Renderable>, double>> hitTest(glm::dvec2 pos, const SP<Camera>& camera);
 
     std::vector<SP<Renderable>> _renderables;
     Opt<SP<Renderable>> _draggedRenderable;
     Opt<SP<Renderable>> _hoveredRenderable;
     Opt<SP<PickableMap>> _pickableMap;
-    HitResult _hitResult;
+    double _hitDepth;
     SP<Camera> _camera;
 };
 

@@ -28,12 +28,12 @@ void Viewport::mousePressEvent(QMouseEvent *event) {
     auto maybeHitResult = hitTest(pos, _camera);
     if (!maybeHitResult) { return; }
 
-    auto [renderable, hitResult] = *maybeHitResult;
+    auto [renderable, hitDepth] = *maybeHitResult;
 
-    MouseEvent renderMouseEvent(event, pos, _camera, hitResult);
+    MouseEvent renderMouseEvent(event, pos, _camera, hitDepth);
     renderable->mousePress(renderMouseEvent);
     _draggedRenderable = renderable;
-    _hitResult = hitResult;
+    _hitDepth = hitDepth;
 }
 
 void Viewport::mouseMoveEvent(QMouseEvent *event) {
@@ -42,7 +42,7 @@ void Viewport::mouseMoveEvent(QMouseEvent *event) {
     if (_draggedRenderable) {
         // drag
         auto renderable = *_draggedRenderable;
-        MouseEvent renderMouseEvent(event, pos, _camera, _hitResult);
+        MouseEvent renderMouseEvent(event, pos, _camera, _hitDepth);
         renderable->mouseMove(renderMouseEvent);
         return;
     } else {
@@ -93,25 +93,18 @@ void Viewport::resizeEvent(QResizeEvent *event) {
 
 void Viewport::mouseReleaseEvent(QMouseEvent *event) {
     LATTICE_OPTIONAL_GUARD(renderable, _draggedRenderable, return;)
-    MouseEvent renderMouseEvent(event, mapQtToGL(this, event->pos()), _camera, _hitResult);
+    MouseEvent renderMouseEvent(event, mapQtToGL(this, event->pos()), _camera, _hitDepth);
     renderable->mouseRelease(renderMouseEvent);
     _draggedRenderable = {};
 }
 
-Opt<std::pair<SP<Renderable>, HitResult> > Viewport::hitTest(glm::dvec2 pos, const SP<Camera> &camera) {
+Opt<std::pair<SP<Renderable>, double> > Viewport::hitTest(glm::dvec2 pos, const SP<Camera> &camera) {
     Q_UNUSED(camera);
 
     if (!_pickableMap) {
         return {};
     }
-    auto maybeResult = _pickableMap->get()->pick(pos);
-    if (!maybeResult) {
-        return {};
-    }
-    auto [renderable, depth] = *maybeResult;
-    HitResult result;
-    result.depth = depth;
-    return {{renderable, result}};
+    return _pickableMap->get()->pick(pos);
 }
 
 } // namespace Render
