@@ -66,8 +66,6 @@ void MainWindow::setupToolBar() {
         {Tool::LoopCut, tr("Loop Cut")},
     };
 
-    auto toolActionGroup = new QActionGroup(this);
-    toolActionGroup->setExclusive(true);
     for (auto [tool, text] : tools) {
         auto action = toolBar->addAction(text);
         action->setCheckable(true);
@@ -76,7 +74,9 @@ void MainWindow::setupToolBar() {
                 appState->setTool(tool);
             }
         });
-        toolActionGroup->addAction(action);
+        connect(appState, &AppState::toolChanged, action, [action, tool] (Tool newTool) {
+            action->setChecked(newTool == tool);
+        });
     }
 
     auto spacer = new QWidget();
