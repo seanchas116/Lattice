@@ -296,7 +296,7 @@ void MeshEditor::updateWholeVAOs() {
             pickAttrib.color = pickable->toIDColor();
 
             _vertexAttributes.push_back(attrib);
-            _vertexPickAttributes.push_back(attrib);
+            _vertexPickAttributes.push_back(pickAttrib);
         }
 
         auto vertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
@@ -305,7 +305,7 @@ void MeshEditor::updateWholeVAOs() {
 
         auto pickVertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
         pickVertexBuffer->setVertices(_vertexPickAttributes);
-        _vertexVAO = makeShared<GL::VAO>(pickVertexBuffer, GL::Primitive::Point);
+        _vertexPickVAO = makeShared<GL::VAO>(pickVertexBuffer, GL::Primitive::Point);
     }
 
     {
