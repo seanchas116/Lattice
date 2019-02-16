@@ -23,6 +23,24 @@ const vec4 hoveredColor = vec4(1, 1, 0, 1);
 
 }
 
+class MeshEditor::VertexPickable : public Render::Renderable {
+public:
+    VertexPickable(const SP<Document::MeshVertex>& vertex) : vertex(vertex) {}
+    SP<Document::MeshVertex> vertex;
+};
+
+class MeshEditor::EdgePickable : public Render::Renderable {
+public:
+    EdgePickable(const SP<Document::MeshEdge>& edge) : edge(edge) {}
+    SP<Document::MeshEdge> edge;
+};
+
+class MeshEditor::FacePickable : public Render::Renderable {
+public:
+    FacePickable(const SP<Document::MeshFace>& face) : face(face) {}
+    SP<Document::MeshFace> face;
+};
+
 MeshEditor::MeshEditor(const SP<UI::AppState>& appState, const SP<Document::MeshItem> &item) :
     _appState(appState),
     _item(item),

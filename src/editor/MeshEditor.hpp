@@ -53,6 +53,10 @@ public:
 private:
     void updateWholeVAOs();
 
+    class VertexPickable;
+    class EdgePickable;
+    class FacePickable;
+
     SP<UI::AppState> _appState;
     SP<Document::MeshItem> _item;
     SP<MeshPicker> _meshPicker;
