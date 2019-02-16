@@ -155,17 +155,6 @@ void MeshEditor::mouseRelease(const Render::MouseEvent &event) {
     Q_UNUSED(event);
 }
 
-void MeshEditor::hoverEnter(const Render::MouseEvent &event) {
-    Q_UNUSED(event);
-}
-
-void MeshEditor::hoverMove(const Render::MouseEvent &event) {
-    Q_UNUSED(event);
-}
-
-void MeshEditor::hoverLeave() {
-}
-
 void MeshEditor::updateWholeVAOs() {
     recallContext();
 
