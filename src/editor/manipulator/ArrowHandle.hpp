@@ -27,7 +27,7 @@ public:
     void hoverLeave() override;
 
     void setTargetPosition(const glm::dvec3 &targetPosition) { _targetPosition = targetPosition; }
-    void setLength(double length) { _length = length; }
+    void setLength(double length);
 
 signals:
     void onBegin(double value);
@@ -36,14 +36,13 @@ signals:
 
 private:
     SP<GL::VAO> createHandleVAO();
-    SP<GL::VAO> createBodyVAO(const SP<GL::VertexBuffer<GL::Vertex>>& vertexBuffer);
+    SP<GL::VAO> createBodyVAO(double length);
 
     int _axis;
     HandleType _handleType;
     glm::dvec3 _targetPosition {0};
     double _length {2.0};
     SP<GL::VAO> _handleVAO;
-    SP<GL::VertexBuffer<GL::Vertex>> _bodyVertexBuffer;
     SP<GL::VAO> _bodyVAO;
     glm::dvec3 _initialTargetPosition {0};
     bool _hovered = false;

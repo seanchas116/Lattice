@@ -20,8 +20,7 @@ ArrowHandle::ArrowHandle(int axis, HandleType handleType) :
     _axis(axis),
     _handleType(handleType),
     _handleVAO(createHandleVAO()),
-    _bodyVertexBuffer(makeShared<GL::VertexBuffer<GL::Vertex>>()),
-    _bodyVAO(createBodyVAO(_bodyVertexBuffer))
+    _bodyVAO(createBodyVAO(_length))
 {
 }
 
@@ -34,7 +33,6 @@ void ArrowHandle::draw(const SP<Render::Operations> &operations, const SP<Camera
     dmat4 translate = glm::translate(dvec3(_length, 0, 0));
     operations->drawSolid.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis] * translate, camera, vec3(0), _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
 
-    _bodyVertexBuffer->setVertices({{vec3(Constants::bodyBegin, 0, 0), {}, {}}, {vec3(_length, 0, 0), {}, {}}});
     operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
 }
 
@@ -46,8 +44,6 @@ void ArrowHandle::drawPickables(const SP<Render::Operations> &operations, const 
 
     dmat4 translate = glm::translate(dvec3(_length, 0, 0));
     operations->drawUnicolor.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis] * translate, camera, toIDColor());
-
-    _bodyVertexBuffer->setVertices({{vec3(Constants::bodyBegin, 0, 0), {}, {}}, {vec3(_length, 0, 0), {}, {}}});
     operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, toIDColor());
 }
 
@@ -92,6 +88,14 @@ void ArrowHandle::hoverLeave() {
     emit updateRequested();
 }
 
+void ArrowHandle::setLength(double length) {
+    if (_length == length) {
+        return;
+    }
+    _length = length;
+    _bodyVAO = createBodyVAO(length);
+}
+
 SP<GL::VAO> ArrowHandle::createHandleVAO() {
     auto mesh = makeShared<Document::Mesh>();
     auto material = mesh->addMaterial();
@@ -104,10 +108,11 @@ SP<GL::VAO> ArrowHandle::createHandleVAO() {
     return MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
 }
 
-SP<GL::VAO> ArrowHandle::createBodyVAO(const SP<GL::VertexBuffer<GL::Vertex> > &vertexBuffer) {
+SP<GL::VAO> ArrowHandle::createBodyVAO(double length) {
     auto indexBuffer = makeShared<GL::IndexBuffer>();
     indexBuffer->setLineStrips({{0, 1}});
-    vertexBuffer->setVertices({{}, {}});
+    auto vertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
+    vertexBuffer->setVertices({{vec3(Constants::bodyBegin, 0, 0), {}, {}}, {vec3(length, 0, 0), {}, {}}});
     auto bodyVAO = makeShared<GL::VAO>(vertexBuffer, indexBuffer);
     return bodyVAO;
 }
