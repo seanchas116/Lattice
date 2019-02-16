@@ -38,7 +38,7 @@ Opt<std::pair<SP<Renderable>, double>> PickableMap::pick(vec2 physicalPos) {
     return {{*renderable, depth}};
 }
 
-void PickableMap::draw(const std::vector<SP<Renderable> > &renderables, const SP<Operations> &operations, const SP<Camera> &camera) {
+void PickableMap::draw(const SP<Renderable> &renderable, const SP<Operations> &operations, const SP<Camera> &camera) {
     resize(camera->viewSize());
 
     GL::Binder binder(*_framebuffer);
@@ -46,9 +46,8 @@ void PickableMap::draw(const std::vector<SP<Renderable> > &renderables, const SP
     glClearDepthf(1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    for (auto& renderable : renderables) {
-        renderable->drawPickables(operations, camera);
-    }
+    _lastRenderables.clear();
+    renderable->drawPickablesRecursive(operations, camera, _lastRenderables);
 }
 
 }

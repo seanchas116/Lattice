@@ -1,5 +1,6 @@
 #pragma once
 #include <QObject>
+#include "../gl/ContextRecallable.hpp"
 #include "../render/RenderableObject.hpp"
 
 namespace Lattice {
@@ -24,15 +25,12 @@ class ObjectManipulator;
 class MeshManipulator;
 }
 
-class EditorScene : public QObject {
+class EditorScene : public Render::RenderableObject, protected GL::ContextRecallable {
     Q_OBJECT
 public:
     EditorScene(const SP<UI::AppState>& appState);
 
-    std::vector<SP<Render::Renderable>> updateRenderables();
-
-signals:
-    void updateRequested();
+    void updateRenderables();
 
 private:
     SP<UI::AppState> _appState;

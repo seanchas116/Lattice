@@ -25,6 +25,9 @@ public:
     virtual void hoverMove(const MouseEvent& event);
     virtual void hoverLeave();
 
+    void drawRecursive(const SP<Operations>& operations, const SP<Camera>& camera);
+    void drawPickablesRecursive(const SP<Operations>& operations, const SP<Camera>& camera, std::vector<SP<Renderable>>& renderedChildren);
+
     glm::vec4 toIDColor() const;
     static Opt<SP<Renderable>> fromIDColor(glm::vec4 color);
 

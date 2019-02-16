@@ -17,12 +17,9 @@ class Viewport : public QWidget {
 public:
     Viewport(QWidget* parent = nullptr);
 
-    auto& renderables() const { return _renderables; }
-    void setRenderables(const std::vector<SP<Renderable>> &renderables) { _renderables = renderables; }
+    void setRootRenderable(const Opt<SP<Renderable>>& renderable) { _rootRenderable = renderable; }
 
     auto& camera() const { return _camera; }
-
-    const SP<PickableMap>& pickableMap();
 
 signals:
     void updateRequested();
@@ -36,9 +33,13 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private:
+    friend class ViewportContainer;
+
+    const SP<PickableMap>& pickableMap();
+
     Opt<std::pair<SP<Renderable>, double>> hitTest(glm::dvec2 pos, const SP<Camera>& camera);
 
-    std::vector<SP<Renderable>> _renderables;
+    Opt<SP<Renderable>> _rootRenderable;
     Opt<SP<Renderable>> _draggedRenderable;
     Opt<SP<Renderable>> _hoveredRenderable;
     Opt<SP<PickableMap>> _pickableMap;

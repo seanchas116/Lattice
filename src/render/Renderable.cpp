@@ -41,6 +41,21 @@ void Renderable::hoverMove(const MouseEvent &event) {
 void Renderable::hoverLeave() {
 }
 
+void Renderable::drawRecursive(const SP<Operations> &operations, const SP<Camera> &camera) {
+    draw(operations, camera);
+    for (auto& c : children()) {
+        c->drawRecursive(operations, camera);
+    }
+}
+
+void Renderable::drawPickablesRecursive(const SP<Operations> &operations, const SP<Camera> &camera, std::vector<SP<Renderable> > &renderedChildren) {
+    drawPickables(operations, camera);
+    for (auto& c : children()) {
+        c->drawPickablesRecursive(operations, camera, renderedChildren);
+    }
+    renderedChildren.insert(renderedChildren.end(), _children.begin(), _children.end());
+}
+
 glm::vec4 Renderable::toIDColor() const {
     union {
         const Renderable* ptr;

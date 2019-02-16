@@ -27,14 +27,14 @@ public:
     PickableMap();
 
     Opt<std::pair<SP<Renderable>, double>> pick(glm::vec2 physicalPos);
-    void draw(const std::vector<SP<Renderable> > &renderables, const SP<Operations>& operations, const SP<Camera>& camera);
+    void draw(const SP<Renderable> &renderables, const SP<Operations>& operations, const SP<Camera>& camera);
 
 private:
     void resize(glm::ivec2 size);
 
     SP<GL::Framebuffer> _framebuffer;
     glm::ivec2 _framebufferSize = {0, 0};
-    std::vector<SP<Renderable>> _pickables;
+    std::vector<SP<Renderable>> _lastRenderables;
 };
 
 }

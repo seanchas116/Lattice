@@ -21,10 +21,8 @@ EditorViewportContainer::EditorViewportContainer(const SP<UI::AppState> &appStat
     connect(this, &ViewportContainer::initialized, this, [this] {
         auto scene = makeShared<EditorScene>(_appState);
         _scene = scene;
+        setRenderable(scene);
         connect(scene.get(), &EditorScene::updateRequested, this, [this] { update(); });
-        connect(this, &ViewportContainer::aboutToBePainted, this, [this, scene] {
-            setRenderables(scene->updateRenderables());
-        });
     });
 }
 
@@ -127,16 +125,16 @@ void EditorViewportContainer::setSplitMode(UI::ViewportSplitMode split) {
     setViewports(viewports);
 
     for (auto& v : viewports) {
-        v->setRenderables(_renderables);
+        v->setRootRenderable(_renderable);
     }
 
     update();
 }
 
-void EditorViewportContainer::setRenderables(const std::vector<SP<Render::Renderable> > &renderables) {
-    _renderables = renderables;
+void EditorViewportContainer::setRenderable(const Opt<SP<Render::Renderable>> &renderable) {
+    _renderable = renderable;
     for (auto& v : viewports()) {
-        v->setRenderables(renderables);
+        v->setRootRenderable(renderable);
     }
 }
 

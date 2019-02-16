@@ -52,6 +52,9 @@ void ViewportContainer::paintGL() {
     LATTICE_OPTIONAL_GUARD(operations, _operations, return;)
 
     for (auto viewport : _viewports) {
+        if (!viewport->_rootRenderable) {
+            continue;
+        }
         glm::dvec2 minPos = mapQtToGL(this, viewport->mapTo(this, viewport->rect().bottomLeft()));
         glm::dvec2 maxPos = mapQtToGL(this, viewport->mapTo(this, viewport->rect().topRight()));
         glm::ivec2 minPosViewport = round(minPos * (widgetPixelRatio(this) * devicePixelRatioF()));
@@ -63,14 +66,12 @@ void ViewportContainer::paintGL() {
         glViewport(minPosViewport.x, minPosViewport.y, sizeViewport.x, sizeViewport.y);
         glBindFramebuffer(GL_FRAMEBUFFER, QOpenGLContext::currentContext()->defaultFramebufferObject());
 
-        for (auto& renderable : viewport->renderables()) {
-            renderable->draw(operations, viewport->camera());
-        }
+        (*viewport->_rootRenderable)->drawRecursive(operations, viewport->_camera);
 
         glDisable(GL_SCISSOR_TEST);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-        viewport->pickableMap()->draw(viewport->renderables(), operations, viewport->camera());
+        viewport->pickableMap()->draw(*viewport->_rootRenderable, operations, viewport->camera());
     }
 }
 
