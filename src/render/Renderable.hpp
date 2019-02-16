@@ -31,13 +31,10 @@ public:
     static Opt<SP<Renderable>> fromIDColor(glm::vec4 color);
 
     auto& children() const { return _children; }
-    void setChildren(const std::vector<SP<Renderable>>& children);
-
-    Opt<SP<Renderable>> parent() const;
+    void setChildren(const std::vector<SP<Renderable>>& children) { _children = children; }
 
 private:
     std::vector<SP<Renderable>> _children;
-    WP<Renderable> _parent;
 };
 
 } // namespace Render
