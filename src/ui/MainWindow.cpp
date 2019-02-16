@@ -69,12 +69,12 @@ void MainWindow::setupToolBar() {
     for (auto [tool, text] : tools) {
         auto action = toolBar->addAction(text);
         action->setCheckable(true);
-        connect(action, &QAction::toggled, appState, [appState, tool] (bool checked) {
+        connect(action, &QAction::toggled, appState, [appState, tool = tool] (bool checked) {
             if (checked) {
                 appState->setTool(tool);
             }
         });
-        connect(appState, &AppState::toolChanged, action, [action, tool] (Tool newTool) {
+        connect(appState, &AppState::toolChanged, action, [action, tool = tool] (Tool newTool) {
             action->setChecked(newTool == tool);
         });
     }
