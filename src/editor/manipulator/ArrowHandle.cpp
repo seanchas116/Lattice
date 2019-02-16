@@ -20,7 +20,8 @@ ArrowHandle::ArrowHandle(int axis, HandleType handleType) :
     _axis(axis),
     _handleType(handleType),
     _handleVAO(createHandleVAO()),
-    _bodyVAO(createBodyVAO(_length))
+    _bodyVAO(createBodyVAO(_length)),
+    _bodyPickVAO(createBodyPickVAO(_length))
 {
 }
 
@@ -41,9 +42,7 @@ void ArrowHandle::drawPickables(const SP<Render::Operations> &operations, const 
         return;
     }
 
-    dmat4 translate = glm::translate(dvec3(_length, 0, 0));
-    operations->drawUnicolor.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis] * translate, camera, toIDColor());
-    operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, toIDColor());
+    operations->drawUnicolor.draw(_bodyPickVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, toIDColor());
 }
 
 void ArrowHandle::mousePress(const Render::MouseEvent &event) {
@@ -93,6 +92,7 @@ void ArrowHandle::setLength(double length) {
     }
     _length = length;
     _bodyVAO = createBodyVAO(length);
+    _bodyPickVAO = createBodyPickVAO(length);
 }
 
 SP<GL::VAO> ArrowHandle::createHandleVAO() {
@@ -114,6 +114,13 @@ SP<GL::VAO> ArrowHandle::createBodyVAO(double length) {
     vertexBuffer->setVertices({{vec3(Constants::bodyBegin, 0, 0), {}, {}}, {vec3(length, 0, 0), {}, {}}});
     auto bodyVAO = makeShared<GL::VAO>(vertexBuffer, indexBuffer);
     return bodyVAO;
+}
+
+SP<GL::VAO> ArrowHandle::createBodyPickVAO(double length) {
+    auto mesh = makeShared<Document::Mesh>();
+    auto material = mesh->addMaterial();
+    mesh->addCylinder(dvec3(Constants::bodyBegin, 0, 0), Constants::hitRadius, length - Constants::bodyBegin + Constants::translateHandleLength, 8, 0, material);
+    return MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
 }
 
 }

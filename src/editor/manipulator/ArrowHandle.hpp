@@ -37,6 +37,7 @@ signals:
 private:
     SP<GL::VAO> createHandleVAO();
     SP<GL::VAO> createBodyVAO(double length);
+    SP<GL::VAO> createBodyPickVAO(double length);
 
     int _axis;
     HandleType _handleType;
@@ -44,6 +45,7 @@ private:
     double _length {2.0};
     SP<GL::VAO> _handleVAO;
     SP<GL::VAO> _bodyVAO;
+    SP<GL::VAO> _bodyPickVAO;
     glm::dvec3 _initialTargetPosition {0};
     bool _hovered = false;
 };
