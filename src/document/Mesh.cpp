@@ -567,9 +567,9 @@ void Mesh::addCylinder(dvec3 center, double radius, double height, int segmentCo
     for (int i = 0 ; i < segmentCount; ++i) {
         double angle = angleStep * i;
         dvec3 offset(0);
-        offset[(axis + 1) % 3] = cos(angle);
-        offset[(axis + 2) % 3] = sin(angle);
-        dvec3 pos = center + offset * radius;
+        offset[(axis + 1) % 3] = cos(angle) * radius;
+        offset[(axis + 2) % 3] = sin(angle) * radius;
+        dvec3 pos = center + offset;
         auto v = addUVPoint(addVertex(pos), vec2(0));
         bottomUVPoints.push_back(v);
     }
@@ -583,10 +583,10 @@ void Mesh::addCylinder(dvec3 center, double radius, double height, int segmentCo
     for (int i = 0 ; i < segmentCount; ++i) {
         double angle = angleStep * i;
         dvec3 offset(0);
-        offset[(axis + 1) % 3] = cos(angle);
-        offset[(axis + 2) % 3] = sin(angle);
+        offset[(axis + 1) % 3] = cos(angle) * radius;
+        offset[(axis + 2) % 3] = sin(angle) * radius;
         offset[axis] = height;
-        dvec3 pos = center + offset * radius;
+        dvec3 pos = center + offset;
         auto v = addUVPoint(addVertex(pos), vec2(0));
         topUVPoints.push_back(v);
     }
