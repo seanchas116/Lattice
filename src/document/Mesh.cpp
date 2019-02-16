@@ -558,6 +558,50 @@ void Mesh::addCone(dvec3 center, double radius, double height, int segmentCount,
     }
 }
 
+void Mesh::addCylinder(dvec3 center, double radius, double height, int segmentCount, int axis, const SP<MeshMaterial> &material) {
+    double angleStep = M_PI * 2 / segmentCount;
+
+    std::vector<SP<MeshUVPoint>> bottomUVPoints;
+    bottomUVPoints.reserve(segmentCount);
+
+    for (int i = 0 ; i < segmentCount; ++i) {
+        double angle = angleStep * i;
+        dvec3 offset(0);
+        offset[(axis + 1) % 3] = cos(angle);
+        offset[(axis + 2) % 3] = sin(angle);
+        dvec3 pos = center + offset * radius;
+        auto v = addUVPoint(addVertex(pos), vec2(0));
+        bottomUVPoints.push_back(v);
+    }
+
+    std::vector<SP<MeshUVPoint>> reverseBottomUVPoints(bottomUVPoints.rbegin(), bottomUVPoints.rend());
+    addFace(reverseBottomUVPoints, material);
+
+    std::vector<SP<MeshUVPoint>> topUVPoints;
+    topUVPoints.reserve(segmentCount);
+
+    for (int i = 0 ; i < segmentCount; ++i) {
+        double angle = angleStep * i;
+        dvec3 offset(0);
+        offset[(axis + 1) % 3] = cos(angle);
+        offset[(axis + 2) % 3] = sin(angle);
+        offset[axis] = height;
+        dvec3 pos = center + offset * radius;
+        auto v = addUVPoint(addVertex(pos), vec2(0));
+        topUVPoints.push_back(v);
+    }
+
+    addFace(topUVPoints, material);
+
+    for (int i = 0; i < segmentCount; ++i) {
+        auto v0 = bottomUVPoints[i];
+        auto v1 = bottomUVPoints[(i + 1) % segmentCount];
+        auto v2 = topUVPoints[(i + 1) % segmentCount];
+        auto v3 = topUVPoints[i];
+        addFace({v0, v1, v2, v3}, material);
+    }
+}
+
 void Mesh::merge(const SP<const Mesh> &other) {
     std::unordered_map<SP<MeshMaterial>, SP<MeshMaterial>> otherToNewMaterials;
     std::unordered_map<SP<MeshVertex>, SP<MeshVertex>> otherToNewVertices;

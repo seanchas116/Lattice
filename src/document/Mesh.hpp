@@ -187,6 +187,8 @@ public:
 
     void addCone(glm::dvec3 center, double radius, double height, int segmentCount, int axis, const SP<MeshMaterial>& material);
 
+    void addCylinder(glm::dvec3 center, double radius, double height, int segmentCount, int axis, const SP<MeshMaterial>& material);
+
     void merge(const SP<const Mesh> &other);
 
     SP<Mesh> clone() const;
