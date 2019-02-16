@@ -66,7 +66,11 @@ void AppState::addCone() {
 }
 
 void AppState::addCylinder() {
-
+    _document->history()->beginChange(tr("Add Cylinder"));
+    auto item = makeShared<Document::MeshItem>();
+    item->setName(tr("Cylinder").toStdString());
+    item->mesh()->addCylinder(glm::vec3(0), 1.0, 1.0, 16, 1, item->mesh()->addMaterial());
+    _document->insertItemToCurrentPosition(item);
 }
 
 void AppState::addText() {
