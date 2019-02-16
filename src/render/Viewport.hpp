@@ -17,7 +17,7 @@ class Viewport : public QWidget {
 public:
     Viewport(QWidget* parent = nullptr);
 
-    void setRootRenderable(const Opt<SP<Renderable>>& renderable) { _rootRenderable = renderable; }
+    void setRenderable(const Opt<SP<Renderable>>& renderable) { _rootRenderable = renderable; }
 
     auto& camera() const { return _camera; }
 

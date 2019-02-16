@@ -125,7 +125,7 @@ void EditorViewportContainer::setSplitMode(UI::ViewportSplitMode split) {
     setViewports(viewports);
 
     for (auto& v : viewports) {
-        v->setRootRenderable(_renderable);
+        v->setRenderable(_renderable);
     }
 
     update();
