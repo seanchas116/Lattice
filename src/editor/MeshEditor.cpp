@@ -36,9 +36,13 @@ public:
     }
 
     void hoverEnter(const Render::MouseEvent &) override {
+        _editor->_hoveredVertex = _vertex;
+        _editor->updateWholeVAOs();
     }
 
     void hoverLeave() override {
+        _editor->_hoveredVertex = {};
+        _editor->updateWholeVAOs();
     }
 
     MeshEditor* _editor;
@@ -58,9 +62,13 @@ public:
     }
 
     void hoverEnter(const Render::MouseEvent &) override {
+        _editor->_hoveredEdge = _edge;
+        _editor->updateWholeVAOs();
     }
 
     void hoverLeave() override {
+        _editor->_hoveredEdge = {};
+        _editor->updateWholeVAOs();
     }
 
     MeshEditor* _editor;
