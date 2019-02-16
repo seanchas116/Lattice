@@ -543,7 +543,8 @@ void Mesh::addCone(dvec3 center, double radius, double height, int segmentCount,
         uvPoints.push_back(v);
     }
 
-    addFace(uvPoints, material);
+    std::vector<SP<MeshUVPoint>> reverseUVPoints(uvPoints.rbegin(), uvPoints.rend());
+    addFace(reverseUVPoints, material);
 
     dvec3 topPosition = center;
     topPosition[axis] += height;
