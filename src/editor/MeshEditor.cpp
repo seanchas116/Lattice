@@ -124,6 +124,18 @@ void MeshEditor::draw(const SP<Render::Operations> &operations, const SP<Camera>
     }
 }
 
+void MeshEditor::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+    if (_appState->isFaceVisible()) {
+        operations->drawUnicolor.draw(_facePickVAO, _item->location().matrixToWorld(), camera, vec4(0), true);
+    }
+    if (_appState->isEdgeVisible()) {
+        operations->drawLine.draw(_edgePickVAO, _item->location().matrixToWorld(), camera, 12.0, vec4(0), true);
+    }
+    if (_appState->isVertexVisible()) {
+        operations->drawCircle.draw(_vertexPickVAO, _item->location().matrixToWorld(), camera, 24.0, vec4(0), true);
+    }
+}
+
 Opt<Render::HitResult> MeshEditor::hitTest(dvec2 pos, const SP<Camera> &camera) const {
     std::map<double, Render::HitResult> results;
 
