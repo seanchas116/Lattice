@@ -53,6 +53,9 @@ public:
 private:
     void updateWholeVAOs();
 
+    void vertexDragStart(const std::unordered_set<SP<Document::MeshVertex>>& vertices, const Render::MouseEvent& event);
+    void vertexDragMove(const Render::MouseEvent& event);
+
     class VertexPickable;
     class EdgePickable;
     class FacePickable;

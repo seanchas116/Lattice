@@ -25,20 +25,71 @@ const vec4 hoveredColor = vec4(1, 1, 0, 1);
 
 class MeshEditor::VertexPickable : public Render::Renderable {
 public:
-    VertexPickable(const SP<Document::MeshVertex>& vertex) : vertex(vertex) {}
-    SP<Document::MeshVertex> vertex;
+    VertexPickable(MeshEditor* editor, const SP<Document::MeshVertex>& vertex) : _editor(editor), _vertex(vertex) {}
+
+    void mousePress(const Render::MouseEvent &event) override {
+        _editor->vertexDragStart({_vertex}, event);
+    }
+
+    void mouseMove(const Render::MouseEvent &event) override {
+        _editor->vertexDragMove(event);
+    }
+
+    void hoverEnter(const Render::MouseEvent &) override {
+    }
+
+    void hoverLeave() override {
+    }
+
+    MeshEditor* _editor;
+    SP<Document::MeshVertex> _vertex;
 };
 
 class MeshEditor::EdgePickable : public Render::Renderable {
 public:
-    EdgePickable(const SP<Document::MeshEdge>& edge) : edge(edge) {}
-    SP<Document::MeshEdge> edge;
+    EdgePickable(MeshEditor* editor, const SP<Document::MeshEdge>& edge) : _editor(editor), _edge(edge) {}
+
+    void mousePress(const Render::MouseEvent &event) override {
+        _editor->vertexDragStart({_edge->vertices()[0], _edge->vertices()[1]}, event);
+    }
+
+    void mouseMove(const Render::MouseEvent &event) override {
+        _editor->vertexDragMove(event);
+    }
+
+    void hoverEnter(const Render::MouseEvent &) override;
+
+    void hoverLeave() override;
+
+    MeshEditor* _editor;
+    SP<Document::MeshEdge> _edge;
 };
 
 class MeshEditor::FacePickable : public Render::Renderable {
 public:
-    FacePickable(const SP<Document::MeshFace>& face) : face(face) {}
-    SP<Document::MeshFace> face;
+    FacePickable(MeshEditor* editor, const SP<Document::MeshFace>& face) : _editor(editor), _face(face) {}
+
+    void mousePress(const Render::MouseEvent &event) override {
+        std::unordered_set<SP<Document::MeshVertex>> vertices;
+        for (auto& v : _face->vertices()) {
+            vertices.insert(v);
+        }
+        _editor->vertexDragStart(vertices, event);
+    }
+
+    void mouseMove(const Render::MouseEvent &event) override {
+        _editor->vertexDragMove(event);
+    }
+
+    void hoverEnter(const Render::MouseEvent &) override {
+    }
+
+    void hoverLeave() override {
+
+    }
+
+    MeshEditor* _editor;
+    SP<Document::MeshFace> _face;
 };
 
 MeshEditor::MeshEditor(const SP<UI::AppState>& appState, const SP<Document::MeshItem> &item) :
@@ -288,6 +339,57 @@ void MeshEditor::updateWholeVAOs() {
     }
 
     updateRequested();
+}
+
+void MeshEditor::vertexDragStart(const std::unordered_set<SP<Document::MeshVertex> > &vertices, const Render::MouseEvent &event) {
+    Document::MeshSelection selection;
+    if (event.originalEvent->modifiers() & Qt::ShiftModifier) {
+        selection = _appState->document()->meshSelection();
+
+        bool alreadyAdded = true;
+        for (auto& v : vertices) {
+            if (selection.vertices.find(v) == selection.vertices.end()) {
+                alreadyAdded = false;
+            }
+        }
+        if (alreadyAdded) {
+            for (auto& v : vertices) {
+                selection.vertices.erase(v);
+            }
+        } else {
+            for (auto& v: vertices) {
+                selection.vertices.insert(v);
+            }
+        }
+    } else {
+        selection.vertices = vertices;
+    }
+
+    _dragInitPositions.clear();
+    for (auto& v : selection.vertices) {
+        _dragInitPositions[v] = v->position();
+    }
+    _dragInitWorldPos = event.worldPos();
+    _dragStarted = false;
+
+    _appState->document()->setMeshSelection(selection);
+}
+
+void MeshEditor::vertexDragMove(const Render::MouseEvent &event) {
+    dvec3 worldPos = event.worldPos();
+    dvec3 offset = worldPos - _dragInitWorldPos;
+
+    if (!_dragStarted) {
+        _appState->document()->history()->beginChange(tr("Move Vertex"));
+        _dragStarted = true;
+    }
+
+    auto& mesh = _item->mesh();
+    std::unordered_map<SP<Document::MeshVertex>, vec3> positions;
+    for (auto& [v, initialPos] : _dragInitPositions) {
+        positions[v] = initialPos + offset;
+    }
+    mesh->setPositions(positions);
 }
 
 }
