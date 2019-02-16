@@ -1,6 +1,5 @@
 #include "MeshRenderer.hpp"
 #include "MeshVAOGenerator.hpp"
-#include "MeshPicker.hpp"
 #include "../ui/AppState.hpp"
 #include "../gl/VAO.hpp"
 #include "../document/Document.hpp"

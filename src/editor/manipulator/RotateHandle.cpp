@@ -1,7 +1,6 @@
 #include "RotateHandle.hpp"
 #include "Constants.hpp"
 #include "Coordinates.hpp"
-#include "../MeshPicker.hpp"
 #include "../MeshVAOGenerator.hpp"
 #include "../../render/Operations.hpp"
 #include "../../document/Mesh.hpp"

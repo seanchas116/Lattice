@@ -1,5 +1,4 @@
 #include "MeshEditor.hpp"
-#include "MeshPicker.hpp"
 #include "../ui/AppState.hpp"
 #include "../gl/VAO.hpp"
 #include "../gl/VertexBuffer.hpp"
