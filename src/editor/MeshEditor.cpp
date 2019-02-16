@@ -99,6 +99,7 @@ MeshEditor::MeshEditor(const SP<UI::AppState>& appState, const SP<Document::Mesh
     _item(item),
     _meshPicker(makeShared<MeshPicker>(item->mesh())),
     _faceVBO(makeShared<GL::VertexBuffer<GL::Vertex>>()),
+    _facePickVAO(makeShared<GL::VAO>()),
     _edgeVAO(makeShared<GL::VAO>()),
     _edgePickVAO(makeShared<GL::VAO>()),
     _vertexVAO(makeShared<GL::VAO>()),
@@ -341,26 +342,38 @@ void MeshEditor::updateWholeVAOs() {
 
         _faceVAOs.clear();
         _faceAttributes.clear();
+        _facePickAttributes.clear();
 
-        auto addPoint = [&](const SP<Document::MeshUVPoint>& p) {
+        auto addPoint = [&](const SP<FacePickable>& pickable, const SP<Document::MeshUVPoint>& p) {
             GL::Vertex attrib;
             attrib.position = p->vertex()->position();
             attrib.texCoord = p->position();
             attrib.normal = p->vertex()->normal();
 
+            GL::Vertex pickAttrib;
+            pickAttrib.position = p->vertex()->position();
+            pickAttrib.color = pickable->toIDColor();
+
             auto index = uint32_t(_faceAttributes.size());
             _faceAttributes.push_back(attrib);
+            _facePickAttributes.push_back(pickAttrib);
             return index;
         };
+
+        std::vector<GL::IndexBuffer::Triangle> pickTriangles;
 
         for (auto& material : _item->mesh()->materials()) {
             std::vector<GL::IndexBuffer::Triangle> triangles;
             for (auto& face : material->faces()) {
-                auto i0 = addPoint(face->uvPoints()[0]);
+                auto pickable = makeShared<FacePickable>(this, face->sharedFromThis());
+                childPickables.push_back(pickable);
+
+                auto i0 = addPoint(pickable, face->uvPoints()[0]);
                 for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
-                    auto i1 = addPoint(face->uvPoints()[i - 1]);
-                    auto i2 = addPoint(face->uvPoints()[i]);
+                    auto i1 = addPoint(pickable, face->uvPoints()[i - 1]);
+                    auto i2 = addPoint(pickable, face->uvPoints()[i]);
                     triangles.push_back({i0, i1, i2});
+                    pickTriangles.push_back({i0, i1, i2});
                 }
             }
             auto indexBuffer = makeShared<GL::IndexBuffer>();
@@ -369,6 +382,12 @@ void MeshEditor::updateWholeVAOs() {
             _faceVAOs.insert({material, vao});
         }
         _faceVBO->setVertices(_faceAttributes);
+
+        auto pickIndexBuffer = makeShared<GL::IndexBuffer>();
+        pickIndexBuffer->setTriangles(pickTriangles);
+        auto pickVertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
+        pickVertexBuffer->setVertices(_facePickAttributes);
+        _facePickVAO = makeShared<GL::VAO>(pickVertexBuffer, pickIndexBuffer);
     }
 
     setChildren(childPickables);

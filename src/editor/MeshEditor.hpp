@@ -67,6 +67,8 @@ private:
     std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> _faceVAOs;
     SP<GL::VertexBuffer<GL::Vertex>> _faceVBO;
     std::vector<GL::Vertex> _faceAttributes;
+    SP<GL::VAO> _facePickVAO;
+    std::vector<GL::Vertex> _facePickAttributes;
 
     SP<GL::VAO> _edgeVAO;
     std::vector<GL::Vertex> _edgeAttributes;
