@@ -77,6 +77,10 @@ void MainWindow::setupToolBar() {
         connect(appState, &AppState::toolChanged, action, [action, tool = tool] (Tool newTool) {
             action->setChecked(newTool == tool);
         });
+        action->setVisible(appState->document()->isEditing());
+        connect(appState->document().get(), &Document::Document::isEditingChanged, action, [action] (bool isEditing) {
+            action->setVisible(isEditing);
+        });
     }
 
     auto spacer = new QWidget();
