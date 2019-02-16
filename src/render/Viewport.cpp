@@ -112,21 +112,6 @@ Opt<std::pair<SP<Renderable>, HitResult> > Viewport::hitTest(glm::dvec2 pos, con
     HitResult result;
     result.depth = depth;
     return {{renderable, result}};
-
-    /*
-    std::map<double, std::pair<SP<Renderable>, HitResult>> hitRenderables;
-    for (auto it = _renderables.rbegin(); it != _renderables.rend(); ++it) {
-        auto& renderable = *it;
-        auto maybeHitResult = renderable->hitTest(pos, camera);
-        if (maybeHitResult) {
-            hitRenderables.insert({maybeHitResult->depth, {renderable, *maybeHitResult}});
-        }
-    }
-    if (hitRenderables.empty()) {
-        return std::nullopt;
-    }
-    return hitRenderables.begin()->second;
-    */
 }
 
 } // namespace Render

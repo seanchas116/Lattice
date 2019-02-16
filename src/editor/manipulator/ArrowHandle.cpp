@@ -51,29 +51,6 @@ void ArrowHandle::drawPickables(const SP<Render::Operations> &operations, const 
     operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, toIDColor());
 }
 
-Opt<Render::HitResult> ArrowHandle::hitTest(dvec2 pos, const SP<Camera> &camera) const {
-    Coordinates coordinates(camera, _targetPosition);
-    if (!coordinates.isInScreen) {
-        return {};
-    }
-
-    Ray mouseRay = camera->cameraMouseRay(pos);
-
-    RayRayDistance mouseToArrowDistance(mouseRay, coordinates.arrowRaysInManipulatorSpace[_axis]);
-    double distance = mouseToArrowDistance.distance / coordinates.scale;
-    double tArrow = mouseToArrowDistance.t1;
-
-    if (distance <= Constants::hitRadius) {
-        if (Constants::bodyBegin <= tArrow && tArrow <= _length + Constants::translateHandleLength) {
-            Render::HitResult result;
-            result.depth = mouseToArrowDistance.t0;
-            return result;
-        }
-    }
-
-    return {};
-}
-
 void ArrowHandle::mousePress(const Render::MouseEvent &event) {
     Coordinates coordinates(event.camera, _targetPosition);
     if (!coordinates.isInScreen) {

@@ -21,11 +21,12 @@ void Background::draw(const SP<Render::Operations> &operations, const SP<Camera>
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-Opt<Render::HitResult> Background::hitTest(glm::dvec2 pos, const SP<Camera> &camera) const {
-    Q_UNUSED(pos); Q_UNUSED(camera);
-    Render::HitResult result;
-    result.depth = 1;
-    return result;
+void Background::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+    Q_UNUSED(operations); Q_UNUSED(camera);
+
+    auto color = toIDColor();
+    glClearColor(color.r, color.g, color.b, color.a);
+    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void Background::mousePress(const Render::MouseEvent &event) {

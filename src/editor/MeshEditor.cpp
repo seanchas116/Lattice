@@ -136,42 +136,6 @@ void MeshEditor::drawPickables(const SP<Render::Operations> &operations, const S
     }
 }
 
-Opt<Render::HitResult> MeshEditor::hitTest(dvec2 pos, const SP<Camera> &camera) const {
-    std::map<double, Render::HitResult> results;
-
-    auto vertexPickResult = _meshPicker->pickVertex(_item->location().matrixToWorld(), camera, pos, 12);
-    if (vertexPickResult) {
-        auto [vertex, depth] = *vertexPickResult;
-        Render::HitResult result;
-        result.depth = depth + Render::DrawCircle::defaultZOffset;
-        result.vertex = vertex;
-        results[result.depth] = result;
-    }
-    auto edgePickResult = _meshPicker->pickEdge(_item->location().matrixToWorld(), camera, pos, 6);
-    if (edgePickResult) {
-        auto [edge, depth] = *edgePickResult;
-        Render::HitResult result;
-        result.depth = depth + Render::DrawLine::defaultZOffset;
-        result.edge = edge;
-        results[result.depth] = result;
-    }
-    auto facePickResult = _meshPicker->pickFace(_item->location().matrixToWorld(), camera, pos);
-    if (facePickResult) {
-        auto [face, depth] = *facePickResult;
-        Render::HitResult result;
-        result.depth = depth;
-        result.face = face;
-        results[result.depth] = result;
-    }
-
-    if (results.empty()) {
-        return std::nullopt;
-    }
-
-    return results.begin()->second;
-
-}
-
 void MeshEditor::mousePress(const Render::MouseEvent &event) {
     std::unordered_set<SP<Document::MeshVertex>> newVertices;
     if (event.hitResult.vertex) {

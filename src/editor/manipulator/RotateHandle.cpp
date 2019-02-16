@@ -52,25 +52,6 @@ void RotateHandle::drawPickables(const SP<Render::Operations> &operations, const
     glClear(GL_DEPTH_BUFFER_BIT);
 }
 
-Opt<Render::HitResult> RotateHandle::hitTest(dvec2 pos, const SP<Camera> &camera) const {
-    Coordinates coordinates(camera, _targetPosition);
-    if (!coordinates.isInScreen) {
-        return {};
-    }
-
-    auto pickResult = _handleMeshPicker->pickEdge(coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, pos, 6);
-    if (!pickResult) {
-        return {};
-    }
-    auto [edge, depth] = *pickResult;
-    if (depth > Constants::fixedDepth) {
-        return {};
-    }
-    Render::HitResult result;
-    result.depth = depth;
-    return result;
-}
-
 void RotateHandle::mousePress(const Render::MouseEvent &event) {
     Coordinates coordinates(event.camera, _targetPosition);
     if (!coordinates.isInScreen) {
