@@ -57,9 +57,11 @@ public:
         _editor->vertexDragMove(event);
     }
 
-    void hoverEnter(const Render::MouseEvent &) override;
+    void hoverEnter(const Render::MouseEvent &) override {
+    }
 
-    void hoverLeave() override;
+    void hoverLeave() override {
+    }
 
     MeshEditor* _editor;
     SP<Document::MeshEdge> _edge;
@@ -98,7 +100,9 @@ MeshEditor::MeshEditor(const SP<UI::AppState>& appState, const SP<Document::Mesh
     _meshPicker(makeShared<MeshPicker>(item->mesh())),
     _faceVBO(makeShared<GL::VertexBuffer<GL::Vertex>>()),
     _edgeVAO(makeShared<GL::VAO>()),
-    _vertexVAO(makeShared<GL::VAO>())
+    _edgePickVAO(makeShared<GL::VAO>()),
+    _vertexVAO(makeShared<GL::VAO>()),
+    _vertexPickVAO(makeShared<GL::VAO>())
 {
     updateWholeVAOs();
     connect(_item->mesh().get(), &Document::Mesh::changed, this, &MeshEditor::updateWholeVAOs);
@@ -256,9 +260,13 @@ void MeshEditor::updateWholeVAOs() {
 
     auto& selectedVertices = _appState->document()->meshSelection().vertices;
 
+    std::vector<SP<Render::Renderable>> childPickables;
+
     {
         _vertexAttributes.clear();
         _vertexAttributes.reserve(_item->mesh()->vertices().size());
+        _vertexPickAttributes.clear();
+        _vertexPickAttributes.reserve(_item->mesh()->vertices().size());
 
         for (auto& v : _item->mesh()->vertices()) {
             bool selected = selectedVertices.find(v) != selectedVertices.end();
@@ -268,21 +276,37 @@ void MeshEditor::updateWholeVAOs() {
             attrib.position = v->position();
             attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
 
+            auto pickable = makeShared<VertexPickable>(this, v);
+            childPickables.push_back(pickable);
+            GL::Vertex pickAttrib;
+            pickAttrib.position = v->position();
+            pickAttrib.color = pickable->toIDColor();
+
             _vertexAttributes.push_back(attrib);
+            _vertexPickAttributes.push_back(attrib);
         }
 
         auto vertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
-        _vertexVAO = makeShared<GL::VAO>(vertexBuffer, GL::Primitive::Point);
         vertexBuffer->setVertices(_vertexAttributes);
+        _vertexVAO = makeShared<GL::VAO>(vertexBuffer, GL::Primitive::Point);
+
+        auto pickVertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
+        pickVertexBuffer->setVertices(_vertexPickAttributes);
+        _vertexVAO = makeShared<GL::VAO>(pickVertexBuffer, GL::Primitive::Point);
     }
 
     {
         _edgeAttributes.clear();
         _edgeAttributes.reserve(_item->mesh()->edges().size() * 2);
+        _edgePickAttributes.clear();
+        _edgePickAttributes.reserve(_item->mesh()->edges().size() * 2);
 
         std::vector<GL::IndexBuffer::Line> indices;
         for (auto& [_, e] : _item->mesh()->edges()) {
             bool hovered = e == _hoveredEdge;
+
+            auto pickable = makeShared<EdgePickable>(this, e);
+            childPickables.push_back(pickable);
 
             auto offset = uint32_t(_edgeAttributes.size());
             for (auto& v : e->vertices()) {
@@ -292,6 +316,11 @@ void MeshEditor::updateWholeVAOs() {
                 attrib.position = v->position();
                 attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
                 _edgeAttributes.push_back(attrib);
+
+                GL::Vertex pickAttrib;
+                pickAttrib.position = v->position();
+                pickAttrib.color = pickable->toIDColor();
+                _edgePickAttributes.push_back(pickAttrib);
             }
             indices.push_back({offset, offset+1});
         }
@@ -301,6 +330,10 @@ void MeshEditor::updateWholeVAOs() {
         vertexBuffer->setVertices(_edgeAttributes);
         indexBuffer->setLines(indices);
         _edgeVAO = makeShared<GL::VAO>(vertexBuffer, indexBuffer);
+
+        auto pickVertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
+        pickVertexBuffer->setVertices(_edgePickAttributes);
+        _edgePickVAO = makeShared<GL::VAO>(pickVertexBuffer, indexBuffer);
     }
 
     {
@@ -338,6 +371,7 @@ void MeshEditor::updateWholeVAOs() {
         _faceVBO->setVertices(_faceAttributes);
     }
 
+    setChildren(childPickables);
     updateRequested();
 }
 

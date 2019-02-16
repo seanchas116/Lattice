@@ -63,13 +63,20 @@ private:
     SP<UI::AppState> _appState;
     SP<Document::MeshItem> _item;
     SP<MeshPicker> _meshPicker;
+
     std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> _faceVAOs;
     SP<GL::VertexBuffer<GL::Vertex>> _faceVBO;
     std::vector<GL::Vertex> _faceAttributes;
+
     SP<GL::VAO> _edgeVAO;
     std::vector<GL::Vertex> _edgeAttributes;
+    SP<GL::VAO> _edgePickVAO;
+    std::vector<GL::Vertex> _edgePickAttributes;
+
     SP<GL::VAO> _vertexVAO;
     std::vector<GL::Vertex> _vertexAttributes;
+    SP<GL::VAO> _vertexPickVAO;
+    std::vector<GL::Vertex> _vertexPickAttributes;
 
     std::unordered_map<SP<Document::MeshVertex>, glm::dvec3> _dragInitPositions;
     glm::dvec3 _dragInitWorldPos;
