@@ -39,11 +39,6 @@ void Viewport::mousePressEvent(QMouseEvent *event) {
 void Viewport::mouseMoveEvent(QMouseEvent *event) {
     auto pos = mapQtToGL(this, event->pos());
 
-    if (_pickableMap) {
-        auto pickable = _pickableMap->get()->pick(pos);
-        qDebug() << pickable;
-    }
-
     if (_draggedRenderable) {
         // drag
         auto renderable = *_draggedRenderable;
@@ -104,6 +99,21 @@ void Viewport::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 Opt<std::pair<SP<Renderable>, HitResult> > Viewport::hitTest(glm::dvec2 pos, const SP<Camera> &camera) {
+    Q_UNUSED(camera);
+
+    if (!_pickableMap) {
+        return {};
+    }
+    auto maybeResult = _pickableMap->get()->pick(pos);
+    if (!maybeResult) {
+        return {};
+    }
+    auto [renderable, depth] = *maybeResult;
+    HitResult result;
+    result.depth = depth;
+    return {{renderable, result}};
+
+    /*
     std::map<double, std::pair<SP<Renderable>, HitResult>> hitRenderables;
     for (auto it = _renderables.rbegin(); it != _renderables.rend(); ++it) {
         auto& renderable = *it;
@@ -116,6 +126,7 @@ Opt<std::pair<SP<Renderable>, HitResult> > Viewport::hitTest(glm::dvec2 pos, con
         return std::nullopt;
     }
     return hitRenderables.begin()->second;
+    */
 }
 
 } // namespace Render
