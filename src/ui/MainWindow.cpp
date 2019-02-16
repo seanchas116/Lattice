@@ -35,6 +35,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
 }
 
 void MainWindow::setupToolBar() {
+    auto appState = _appState.get();
+
     auto toolBar = new QToolBar(tr("Tools"));
     addToolBar(Qt::TopToolBarArea, toolBar);
 
@@ -57,10 +59,25 @@ void MainWindow::setupToolBar() {
     addMenuToolButton->setPopupMode(QToolButton::InstantPopup);
     toolBar->addWidget(addMenuToolButton);
 
-    toolBar->addAction(tr("Draw"));
-    toolBar->addAction(tr("Extrude"));
-    toolBar->addAction(tr("Inset Faces"));
-    toolBar->addAction(tr("Loop Cut"));
+    std::vector<std::pair<Tool, QString>> tools = {
+        {Tool::Draw, tr("Draw")},
+        {Tool::Extrude, tr("Extrude")},
+        {Tool::InsetFaces, tr("Inset Faces")},
+        {Tool::LoopCut, tr("Loop Cut")},
+    };
+
+    auto toolActionGroup = new QActionGroup(this);
+    toolActionGroup->setExclusive(true);
+    for (auto [tool, text] : tools) {
+        auto action = toolBar->addAction(text);
+        action->setCheckable(true);
+        connect(action, &QAction::toggled, appState, [appState, tool] (bool checked) {
+            if (checked) {
+                appState->setTool(tool);
+            }
+        });
+        toolActionGroup->addAction(action);
+    }
 
     auto spacer = new QWidget();
     spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
