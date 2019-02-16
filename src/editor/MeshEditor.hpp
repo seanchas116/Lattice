@@ -62,7 +62,6 @@ private:
 
     SP<UI::AppState> _appState;
     SP<Document::MeshItem> _item;
-    SP<MeshPicker> _meshPicker;
 
     std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> _faceVAOs;
     SP<GL::VertexBuffer<GL::Vertex>> _faceVBO;
