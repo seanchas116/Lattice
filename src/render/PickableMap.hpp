@@ -26,7 +26,7 @@ class PickableMap final : protected QOpenGLExtraFunctions, protected GL::Context
 public:
     PickableMap();
 
-    Opt<SP<Renderable>> pick(glm::vec2 physicalPos);
+    Opt<std::pair<SP<Renderable>, double>> pick(glm::vec2 physicalPos);
     void draw(const std::vector<SP<Renderable> > &renderables, const SP<Operations>& operations, const SP<Camera>& camera);
 
 private:

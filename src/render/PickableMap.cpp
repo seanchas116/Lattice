@@ -25,12 +25,17 @@ void PickableMap::resize(glm::ivec2 size) {
     _framebufferSize = size;
 }
 
-Opt<SP<Renderable>> PickableMap::pick(vec2 physicalPos) {
+Opt<std::pair<SP<Renderable>, double>> PickableMap::pick(vec2 physicalPos) {
     recallContext();
-
     PixelData<vec4> pixels(glm::ivec2(1));
-    _framebuffer->readPixels(physicalPos + 0.5f, pixels);
-    return Renderable::fromIDColor(pixels.data()[0]);
+    _framebuffer->readPixels(physicalPos, pixels);
+    auto renderable = Renderable::fromIDColor(pixels.data()[0]);
+
+    if (!renderable) {
+        return {};
+    }
+    float depth = _framebuffer->readDepth(physicalPos);
+    return {{*renderable, depth}};
 }
 
 void PickableMap::draw(const std::vector<SP<Renderable> > &renderables, const SP<Operations> &operations, const SP<Camera> &camera) {
