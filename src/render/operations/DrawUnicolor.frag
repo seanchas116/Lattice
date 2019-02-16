@@ -1,8 +1,12 @@
 #version 330
 
-out vec4 fragColor;
 uniform vec4 color;
+uniform bool useVertexColor;
+
+in vec4 vertexColor;
+
+out vec4 fragColor;
 
 void main(void) {
-    fragColor = color;
+    fragColor = useVertexColor ? vertexColor : color;
 }

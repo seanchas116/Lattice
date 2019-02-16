@@ -11,9 +11,10 @@ DrawUnicolor::DrawUnicolor() :
 {
 }
 
-void DrawUnicolor::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<Camera> &camera, glm::vec4 color) {
+void DrawUnicolor::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<Camera> &camera, glm::vec4 color, bool useVertexColor) {
     _shader.bind();
     _shader.setUniform("color", color);
+    _shader.setUniform("useVertexColor", useVertexColor);
     _shader.setUniform("MVP", camera->worldToScreenMatrix() * matrix);
     vao->draw();
 }
