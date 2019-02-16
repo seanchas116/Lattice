@@ -144,68 +144,11 @@ void MeshEditor::drawPickables(const SP<Render::Operations> &operations, const S
 }
 
 void MeshEditor::mousePress(const Render::MouseEvent &event) {
-    std::unordered_set<SP<Document::MeshVertex>> newVertices;
-    if (event.hitResult.vertex) {
-        newVertices.insert(*event.hitResult.vertex);
-    } else if (event.hitResult.edge) {
-        auto& edge = *event.hitResult.edge;
-        newVertices.insert(edge->vertices()[0]);
-        newVertices.insert(edge->vertices()[1]);
-    } else if (event.hitResult.face) {
-        auto& face = *event.hitResult.face;
-        for (auto& v : face->vertices()) {
-            newVertices.insert(v);
-        }
-    }
-
-    Document::MeshSelection selection;
-    if (event.originalEvent->modifiers() & Qt::ShiftModifier) {
-        selection = _appState->document()->meshSelection();
-
-        bool alreadyAdded = true;
-        for (auto& v : newVertices) {
-            if (selection.vertices.find(v) == selection.vertices.end()) {
-                alreadyAdded = false;
-            }
-        }
-        if (alreadyAdded) {
-            for (auto& v : newVertices) {
-                selection.vertices.erase(v);
-            }
-        } else {
-            for (auto& v: newVertices) {
-                selection.vertices.insert(v);
-            }
-        }
-    } else {
-        selection.vertices = newVertices;
-    }
-
-    _dragInitPositions.clear();
-    for (auto& v : selection.vertices) {
-        _dragInitPositions[v] = v->position();
-    }
-    _dragInitWorldPos = event.worldPos();
-    _dragStarted = false;
-
-    _appState->document()->setMeshSelection(selection);
+    Q_UNUSED(event);
 }
 
 void MeshEditor::mouseMove(const Render::MouseEvent &event) {
-    dvec3 worldPos = event.worldPos();
-    dvec3 offset = worldPos - _dragInitWorldPos;
-
-    if (!_dragStarted) {
-        _appState->document()->history()->beginChange(tr("Move Vertex"));
-        _dragStarted = true;
-    }
-
-    auto& mesh = _item->mesh();
-    std::unordered_map<SP<Document::MeshVertex>, vec3> positions;
-    for (auto& [v, initialPos] : _dragInitPositions) {
-        positions[v] = initialPos + offset;
-    }
-    mesh->setPositions(positions);
+    Q_UNUSED(event);
 }
 
 void MeshEditor::mouseRelease(const Render::MouseEvent &event) {
@@ -213,30 +156,14 @@ void MeshEditor::mouseRelease(const Render::MouseEvent &event) {
 }
 
 void MeshEditor::hoverEnter(const Render::MouseEvent &event) {
-    _hoveredVertex = event.hitResult.vertex;
-    _hoveredEdge = event.hitResult.edge;
-    if (_hoveredVertex || _hoveredEdge) {
-        updateWholeVAOs();
-        emit updateRequested();
-    }
+    Q_UNUSED(event);
 }
 
 void MeshEditor::hoverMove(const Render::MouseEvent &event) {
-    if (_hoveredVertex != event.hitResult.vertex || _hoveredEdge != event.hitResult.edge) {
-        _hoveredVertex = event.hitResult.vertex;
-        _hoveredEdge = event.hitResult.edge;
-        updateWholeVAOs();
-        emit updateRequested();
-    }
+    Q_UNUSED(event);
 }
 
 void MeshEditor::hoverLeave() {
-    if (_hoveredVertex || _hoveredEdge) {
-        _hoveredVertex = {};
-        _hoveredEdge = {};
-        updateWholeVAOs();
-        emit updateRequested();
-    }
 }
 
 void MeshEditor::updateWholeVAOs() {
