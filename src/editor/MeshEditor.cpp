@@ -289,7 +289,7 @@ void MeshEditor::updateWholeVAOs() {
     }
 
     setChildren(childPickables);
-    updateRequested();
+    update();
 }
 
 void MeshEditor::vertexDragStart(const std::unordered_set<SP<Document::MeshVertex> > &vertices, const Render::MouseEvent &event) {

@@ -15,8 +15,11 @@ class RenderableObject : public QObject, public Renderable {
 public:
     RenderableObject() {}
 
+protected:
+    void onUpdate() override;
+
 signals:
-    void updateRequested();
+    void updated();
 };
 
 } // namespace Renderer

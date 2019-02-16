@@ -79,12 +79,12 @@ void ArrowHandle::mouseRelease(const Render::MouseEvent &event) {
 void ArrowHandle::hoverEnter(const Render::MouseEvent &event) {
     Q_UNUSED(event);
     _hovered = true;
-    emit updateRequested();
+    update();
 }
 
 void ArrowHandle::hoverLeave() {
     _hovered = false;
-    emit updateRequested();
+    update();
 }
 
 void ArrowHandle::setLength(double length) {

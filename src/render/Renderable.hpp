@@ -32,9 +32,15 @@ public:
     static Opt<SP<Renderable>> fromIDColor(glm::vec4 color);
 
     auto& children() const { return _children; }
-    void setChildren(const std::vector<SP<Renderable>>& children) { _children = children; }
+    void setChildren(const std::vector<SP<Renderable>>& children);
+
+    void update();
+
+protected:
+    virtual void onUpdate();
 
 private:
+    Renderable* _parent = nullptr;
     std::vector<SP<Renderable>> _children;
 };
 

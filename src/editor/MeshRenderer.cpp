@@ -91,7 +91,7 @@ void MeshRenderer::updateVAOs() {
     _edgeVAO = generator.generateEdgeVAO();
     _faceVAOs= generator.generateFaceVAOs();
 
-    emit updateRequested();
+    update();
 }
 
 }

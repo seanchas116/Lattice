@@ -53,7 +53,7 @@ void EditorScene::updateRenderables() {
 
     _appState->document()->rootItem()->forEachDescendant([&] (auto& item) {
         LATTICE_OPTIONAL_GUARD(meshItem, dynamicPointerCast<Document::MeshItem>(item), return;)
-        connect(meshItem.get(), &Document::MeshItem::locationChanged, this, &EditorScene::updateRequested);
+                connect(meshItem.get(), &Document::MeshItem::locationChanged, this, [this] { update(); });
         if (item == _appState->document()->editedItem()) {
             return;
         }
@@ -92,15 +92,8 @@ void EditorScene::updateRenderables() {
         }
     }
 
-    for (auto& r : renderables) {
-        auto renderableObject = dynamicPointerCast<Render::RenderableObject>(r);
-        if (renderableObject) {
-            connect(renderableObject->get(), &Render::RenderableObject::updateRequested, this, &EditorScene::updateRequested);
-        }
-    }
-
     setChildren(renderables);
-    emit updateRequested();
+    update();
 }
 
 } // namespace Editor
