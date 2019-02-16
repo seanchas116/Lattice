@@ -15,6 +15,14 @@ Viewport::Viewport(QWidget *parent) : QWidget(parent), _camera(makeShared<Camera
     setMouseTracking(true);
 }
 
+void Viewport::setRenderable(const Opt<SP<Renderable> > &renderable) {
+    auto renderableObject = dynamicPointerCast<RenderableObject>(renderable);
+    if (renderableObject) {
+        connect(renderableObject->get(), &RenderableObject::updated, this, &Viewport::updateRequested);
+    }
+    _renderable = renderable;
+}
+
 const SP<PickableMap> &Viewport::pickableMap() {
     if (!_pickableMap) {
         _pickableMap = makeShared<PickableMap>();

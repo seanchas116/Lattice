@@ -52,7 +52,7 @@ void ViewportContainer::paintGL() {
     LATTICE_OPTIONAL_GUARD(operations, _operations, return;)
 
     for (auto viewport : _viewports) {
-        if (!viewport->_rootRenderable) {
+        if (!viewport->_renderable) {
             continue;
         }
         glm::dvec2 minPos = mapQtToGL(this, viewport->mapTo(this, viewport->rect().bottomLeft()));
@@ -66,12 +66,12 @@ void ViewportContainer::paintGL() {
         glViewport(minPosViewport.x, minPosViewport.y, sizeViewport.x, sizeViewport.y);
         glBindFramebuffer(GL_FRAMEBUFFER, QOpenGLContext::currentContext()->defaultFramebufferObject());
 
-        (*viewport->_rootRenderable)->drawRecursive(operations, viewport->_camera);
+        (*viewport->_renderable)->drawRecursive(operations, viewport->_camera);
 
         glDisable(GL_SCISSOR_TEST);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-        viewport->pickableMap()->draw(*viewport->_rootRenderable, operations, viewport->camera());
+        viewport->pickableMap()->draw(*viewport->_renderable, operations, viewport->camera());
     }
 }
 

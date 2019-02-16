@@ -22,7 +22,6 @@ EditorViewportContainer::EditorViewportContainer(const SP<UI::AppState> &appStat
         auto scene = makeShared<EditorScene>(_appState);
         _scene = scene;
         setRenderable(scene);
-        connect(scene.get(), &EditorScene::updated, this, [this] { update(); });
     });
 }
 
