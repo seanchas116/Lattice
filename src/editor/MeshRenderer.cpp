@@ -1,6 +1,5 @@
 #include "MeshRenderer.hpp"
 #include "MeshVAOGenerator.hpp"
-#include "MeshPicker.hpp"
 #include "../ui/AppState.hpp"
 #include "../gl/VAO.hpp"
 #include "../document/Document.hpp"
@@ -18,7 +17,6 @@ namespace Lattice::Editor {
 MeshRenderer::MeshRenderer(const SP<UI::AppState>& appState, const SP<Document::MeshItem> &item) :
     _appState(appState),
     _item(item),
-    _meshPicker(makeShared<MeshPicker>(item->mesh())),
     _edgeVAO(makeShared<GL::VAO>()),
     _vertexVAO(makeShared<GL::VAO>())
 {
@@ -42,12 +40,12 @@ void MeshRenderer::draw(const SP<Render::Operations> &operations, const SP<Camer
     */
 }
 
-Opt<Render::HitResult> MeshRenderer::hitTest(dvec2 pos, const SP<Camera> &camera) const {
-    LATTICE_OPTIONAL_GUARD(pickResult, _meshPicker->pickFace(_item->location().matrixToWorld(), camera, pos), return {};)
-    auto [face, depth] = pickResult;
-    Render::HitResult result;
-    result.depth = depth;
-    return result;
+void MeshRenderer::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+    if (_appState->isFaceVisible()) {
+        for (auto& [material, vao] : _faceVAOs) {
+            operations->drawUnicolor.draw(vao, _item->location().matrixToWorld(), camera, toIDColor());
+        }
+    }
 }
 
 void MeshRenderer::mousePress(const Render::MouseEvent &event) {
@@ -93,7 +91,7 @@ void MeshRenderer::updateVAOs() {
     _edgeVAO = generator.generateEdgeVAO();
     _faceVAOs= generator.generateFaceVAOs();
 
-    emit updateRequested();
+    update();
 }
 
 }

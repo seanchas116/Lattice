@@ -1,25 +1,22 @@
 #pragma once
-#include <QtGlobal>
-#include <QObject>
-#include "Operations.hpp"
-#include "MouseEvent.hpp"
 
-class QMouseEvent;
+#include "MouseEvent.hpp"
+#include "../support/SharedPointer.hpp"
 
 namespace Lattice {
 namespace Render {
 
-class Renderable : public QObject {
-    Q_OBJECT
-public:
-    Renderable();
+class Operations;
 
-    //bool isHoverEnabled() const { return _isHoverEnabled; }
-    //void setHoverEnabled(bool enabled) { _isHoverEnabled = enabled; }
+class Renderable : public EnableSharedFromThis<Renderable> {
+    Q_DISABLE_COPY(Renderable)
+public:
+    Renderable() {}
+    virtual ~Renderable();
 
     virtual void draw(const SP<Operations>& operations, const SP<Camera>& camera);
+    virtual void drawPickables(const SP<Operations>& operations, const SP<Camera>& camera);
 
-    virtual Opt<HitResult> hitTest(glm::dvec2 pos, const SP<Camera>& camera) const;
     virtual void mousePress(const MouseEvent& event);
     virtual void mouseMove(const MouseEvent& event);
     virtual void mouseRelease(const MouseEvent& event);
@@ -28,12 +25,24 @@ public:
     virtual void hoverMove(const MouseEvent& event);
     virtual void hoverLeave();
 
-signals:
-    void updateRequested();
+    void drawRecursive(const SP<Operations>& operations, const SP<Camera>& camera);
+    void drawPickablesRecursive(const SP<Operations>& operations, const SP<Camera>& camera, std::vector<SP<Renderable>>& renderedChildren);
+
+    glm::vec4 toIDColor() const;
+    static Opt<SP<Renderable>> fromIDColor(glm::vec4 color);
+
+    auto& children() const { return _children; }
+    void setChildren(const std::vector<SP<Renderable>>& children);
+
+    void update();
+
+protected:
+    virtual void onUpdate();
 
 private:
-    //bool _isHoverEnabled = false;
+    Renderable* _parent = nullptr;
+    std::vector<SP<Renderable>> _children;
 };
 
-} // namespace Renderer
+} // namespace Render
 } // namespace Lattice

@@ -1,6 +1,7 @@
 #include "Viewport.hpp"
-#include "Renderable.hpp"
+#include "RenderableObject.hpp"
 #include "Util.hpp"
+#include "PickableMap.hpp"
 #include "../support/Debug.hpp"
 #include <QMouseEvent>
 #include <QOpenGLDebugLogger>
@@ -14,18 +15,33 @@ Viewport::Viewport(QWidget *parent) : QWidget(parent), _camera(makeShared<Camera
     setMouseTracking(true);
 }
 
+void Viewport::setRenderable(const Opt<SP<Renderable> > &renderable) {
+    auto renderableObject = dynamicPointerCast<RenderableObject>(renderable);
+    if (renderableObject) {
+        connect(renderableObject->get(), &RenderableObject::updated, this, &Viewport::updateRequested);
+    }
+    _renderable = renderable;
+}
+
+const SP<PickableMap> &Viewport::pickableMap() {
+    if (!_pickableMap) {
+        _pickableMap = makeShared<PickableMap>();
+    }
+    return *_pickableMap;
+}
+
 void Viewport::mousePressEvent(QMouseEvent *event) {
     auto pos = mapQtToGL(this, event->pos());
 
     auto maybeHitResult = hitTest(pos, _camera);
     if (!maybeHitResult) { return; }
 
-    auto [renderable, hitResult] = *maybeHitResult;
+    auto [renderable, hitDepth] = *maybeHitResult;
 
-    MouseEvent renderMouseEvent(event, pos, _camera, hitResult);
+    MouseEvent renderMouseEvent(event, pos, _camera, hitDepth);
     renderable->mousePress(renderMouseEvent);
     _draggedRenderable = renderable;
-    _hitResult = hitResult;
+    _hitDepth = hitDepth;
 }
 
 void Viewport::mouseMoveEvent(QMouseEvent *event) {
@@ -34,7 +50,7 @@ void Viewport::mouseMoveEvent(QMouseEvent *event) {
     if (_draggedRenderable) {
         // drag
         auto renderable = *_draggedRenderable;
-        MouseEvent renderMouseEvent(event, pos, _camera, _hitResult);
+        MouseEvent renderMouseEvent(event, pos, _camera, _hitDepth);
         renderable->mouseMove(renderMouseEvent);
         return;
     } else {
@@ -85,30 +101,18 @@ void Viewport::resizeEvent(QResizeEvent *event) {
 
 void Viewport::mouseReleaseEvent(QMouseEvent *event) {
     LATTICE_OPTIONAL_GUARD(renderable, _draggedRenderable, return;)
-    MouseEvent renderMouseEvent(event, mapQtToGL(this, event->pos()), _camera, _hitResult);
+    MouseEvent renderMouseEvent(event, mapQtToGL(this, event->pos()), _camera, _hitDepth);
     renderable->mouseRelease(renderMouseEvent);
     _draggedRenderable = {};
 }
 
-Opt<std::pair<SP<Renderable>, HitResult> > Viewport::hitTest(glm::dvec2 pos, const SP<Camera> &camera) {
-    std::map<double, std::pair<SP<Renderable>, HitResult>> hitRenderables;
-    for (auto it = _renderables.rbegin(); it != _renderables.rend(); ++it) {
-        auto& renderable = *it;
-        auto maybeHitResult = renderable->hitTest(pos, camera);
-        if (maybeHitResult) {
-            hitRenderables.insert({maybeHitResult->depth, {renderable, *maybeHitResult}});
-        }
-    }
-    if (hitRenderables.empty()) {
-        return std::nullopt;
-    }
-    return hitRenderables.begin()->second;
-}
+Opt<std::pair<SP<Renderable>, double> > Viewport::hitTest(glm::dvec2 pos, const SP<Camera> &camera) {
+    Q_UNUSED(camera);
 
-void Viewport::render(const SP<Operations> &operations) {
-    for (auto& renderable : _renderables) {
-        renderable->draw(operations, _camera);
+    if (!_pickableMap) {
+        return {};
     }
+    return _pickableMap->get()->pick(pos);
 }
 
 } // namespace Render

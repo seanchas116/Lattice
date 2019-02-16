@@ -1,7 +1,6 @@
 #include "RotateHandle.hpp"
 #include "Constants.hpp"
 #include "Coordinates.hpp"
-#include "../MeshPicker.hpp"
 #include "../MeshVAOGenerator.hpp"
 #include "../../render/Operations.hpp"
 #include "../../document/Mesh.hpp"
@@ -20,7 +19,6 @@ namespace Manipulator {
 RotateHandle::RotateHandle(int axis) :
     _axis(axis),
     _handleMesh(createMesh()),
-    _handleMeshPicker(makeShared<MeshPicker>(_handleMesh)),
     _handleVAO(MeshVAOGenerator(_handleMesh).generateEdgeVAO())
 {
     initializeOpenGLFunctions();
@@ -39,23 +37,17 @@ void RotateHandle::draw(const SP<Render::Operations> &operations, const SP<Camer
     glClear(GL_DEPTH_BUFFER_BIT);
 }
 
-Opt<Render::HitResult> RotateHandle::hitTest(dvec2 pos, const SP<Camera> &camera) const {
+void RotateHandle::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
     Coordinates coordinates(camera, _targetPosition);
-    if (!coordinates.isInScreen) {
-        return {};
+    if (!coordinates.isInScreen){
+        return;
     }
 
-    auto pickResult = _handleMeshPicker->pickEdge(coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, pos, 6);
-    if (!pickResult) {
-        return {};
-    }
-    auto [edge, depth] = *pickResult;
-    if (depth > Constants::fixedDepth) {
-        return {};
-    }
-    Render::HitResult result;
-    result.depth = depth;
-    return result;
+    glClearDepthf(Constants::fixedDepth);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    operations->drawLine.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, toIDColor());
+    glClearDepthf(1);
+    glClear(GL_DEPTH_BUFFER_BIT);
 }
 
 void RotateHandle::mousePress(const Render::MouseEvent &event) {

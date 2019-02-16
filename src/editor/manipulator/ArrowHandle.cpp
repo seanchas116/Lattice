@@ -20,8 +20,7 @@ ArrowHandle::ArrowHandle(int axis, HandleType handleType) :
     _axis(axis),
     _handleType(handleType),
     _handleVAO(createHandleVAO()),
-    _bodyVertexBuffer(makeShared<GL::VertexBuffer<GL::Vertex>>()),
-    _bodyVAO(createBodyVAO(_bodyVertexBuffer))
+    _bodyVAO(createBodyVAO(_length))
 {
 }
 
@@ -33,32 +32,18 @@ void ArrowHandle::draw(const SP<Render::Operations> &operations, const SP<Camera
 
     dmat4 translate = glm::translate(dvec3(_length, 0, 0));
     operations->drawSolid.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis] * translate, camera, vec3(0), _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
-
-    _bodyVertexBuffer->setVertices({{vec3(Constants::bodyBegin, 0, 0), {}, {}}, {vec3(_length, 0, 0), {}, {}}});
     operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
 }
 
-Opt<Render::HitResult> ArrowHandle::hitTest(dvec2 pos, const SP<Camera> &camera) const {
+void ArrowHandle::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
     Coordinates coordinates(camera, _targetPosition);
-    if (!coordinates.isInScreen) {
-        return {};
+    if (!coordinates.isInScreen){
+        return;
     }
 
-    Ray mouseRay = camera->cameraMouseRay(pos);
-
-    RayRayDistance mouseToArrowDistance(mouseRay, coordinates.arrowRaysInManipulatorSpace[_axis]);
-    double distance = mouseToArrowDistance.distance / coordinates.scale;
-    double tArrow = mouseToArrowDistance.t1;
-
-    if (distance <= Constants::hitRadius) {
-        if (Constants::bodyBegin <= tArrow && tArrow <= _length + Constants::translateHandleLength) {
-            Render::HitResult result;
-            result.depth = mouseToArrowDistance.t0;
-            return result;
-        }
-    }
-
-    return {};
+    dmat4 translate = glm::translate(dvec3(_length, 0, 0));
+    operations->drawUnicolor.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis] * translate, camera, toIDColor());
+    operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, toIDColor());
 }
 
 void ArrowHandle::mousePress(const Render::MouseEvent &event) {
@@ -94,12 +79,20 @@ void ArrowHandle::mouseRelease(const Render::MouseEvent &event) {
 void ArrowHandle::hoverEnter(const Render::MouseEvent &event) {
     Q_UNUSED(event);
     _hovered = true;
-    emit updateRequested();
+    update();
 }
 
 void ArrowHandle::hoverLeave() {
     _hovered = false;
-    emit updateRequested();
+    update();
+}
+
+void ArrowHandle::setLength(double length) {
+    if (_length == length) {
+        return;
+    }
+    _length = length;
+    _bodyVAO = createBodyVAO(length);
 }
 
 SP<GL::VAO> ArrowHandle::createHandleVAO() {
@@ -114,10 +107,11 @@ SP<GL::VAO> ArrowHandle::createHandleVAO() {
     return MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
 }
 
-SP<GL::VAO> ArrowHandle::createBodyVAO(const SP<GL::VertexBuffer<GL::Vertex> > &vertexBuffer) {
+SP<GL::VAO> ArrowHandle::createBodyVAO(double length) {
     auto indexBuffer = makeShared<GL::IndexBuffer>();
     indexBuffer->setLineStrips({{0, 1}});
-    vertexBuffer->setVertices({{}, {}});
+    auto vertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
+    vertexBuffer->setVertices({{vec3(Constants::bodyBegin, 0, 0), {}, {}}, {vec3(length, 0, 0), {}, {}}});
     auto bodyVAO = makeShared<GL::VAO>(vertexBuffer, indexBuffer);
     return bodyVAO;
 }

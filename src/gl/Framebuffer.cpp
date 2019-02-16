@@ -12,7 +12,7 @@ Framebuffer::Framebuffer(glm::ivec2 size) :
     _name = QOpenGLContext::currentContext()->defaultFramebufferObject();
 }
 
-Framebuffer::Framebuffer(glm::ivec2 size, const std::vector<SP<Texture> > &colorBuffers, const Opt<SP<DepthStencilTexture> > &depthStencilBuffer) :
+Framebuffer::Framebuffer(glm::ivec2 size, const std::vector<SP<Texture> > &colorBuffers, const Opt<SP<Texture> > &depthStencilBuffer) :
     _size(size),
     _colorBuffers(colorBuffers),
     _depthStencilBuffer(depthStencilBuffer)
@@ -67,10 +67,11 @@ void Framebuffer::readPixels(glm::ivec2 pos, PixelData<glm::u8vec4> &imageData) 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-glm::u8vec4 Framebuffer::readPixel(glm::ivec2 pos) {
-    PixelData<glm::u8vec4> data({1, 1});
-    readPixels(pos, data);
-    return data.data()[0];
+void Framebuffer::readPixels(glm::ivec2 pos, PixelData<glm::vec4> &imageData) {
+    glBindFramebuffer(GL_FRAMEBUFFER, _name);
+    glReadPixels(pos.x, pos.y, imageData.size().x, imageData.size().y,
+                 GL_RGBA, GL_FLOAT, imageData.data().data());
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void Framebuffer::readDepths(glm::ivec2 pos, PixelData<float> &imageData) {

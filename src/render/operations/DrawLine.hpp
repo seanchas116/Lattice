@@ -19,7 +19,7 @@ public:
     DrawLine();
 
     void draw(const SP<GL::VAO>& vao, const glm::dmat4 &matrix, const SP<Camera>& camera,
-              double width, glm::dvec3 color, bool useVertexColor = false, double zOffset = defaultZOffset);
+              double width, glm::vec4 color, bool useVertexColor = false, double zOffset = defaultZOffset);
 
 private:
     GL::Shader _shader;

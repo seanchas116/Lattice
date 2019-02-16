@@ -1,13 +1,13 @@
 #pragma once
 #include "../../gl/VertexBuffer.hpp"
-#include "../../render/Renderable.hpp"
+#include "../../render/RenderableObject.hpp"
 
 namespace Lattice {
 
 namespace Editor {
 namespace Manipulator {
 
-class ArrowHandle : public Render::Renderable {
+class ArrowHandle : public Render::RenderableObject {
     Q_OBJECT
 public:
     enum class HandleType {
@@ -18,8 +18,8 @@ public:
     ArrowHandle(int axis, HandleType handleType);
 
     void draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) override;
+    void drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) override;
 
-    Opt<Render::HitResult> hitTest(glm::dvec2 pos, const SP<Camera> &camera) const override;
     void mousePress(const Render::MouseEvent &event) override;
     void mouseMove(const Render::MouseEvent &event) override;
     void mouseRelease(const Render::MouseEvent &event) override;
@@ -27,7 +27,7 @@ public:
     void hoverLeave() override;
 
     void setTargetPosition(const glm::dvec3 &targetPosition) { _targetPosition = targetPosition; }
-    void setLength(double length) { _length = length; }
+    void setLength(double length);
 
 signals:
     void onBegin(double value);
@@ -36,14 +36,13 @@ signals:
 
 private:
     SP<GL::VAO> createHandleVAO();
-    SP<GL::VAO> createBodyVAO(const SP<GL::VertexBuffer<GL::Vertex>>& vertexBuffer);
+    SP<GL::VAO> createBodyVAO(double length);
 
     int _axis;
     HandleType _handleType;
     glm::dvec3 _targetPosition {0};
     double _length {2.0};
     SP<GL::VAO> _handleVAO;
-    SP<GL::VertexBuffer<GL::Vertex>> _bodyVertexBuffer;
     SP<GL::VAO> _bodyVAO;
     glm::dvec3 _initialTargetPosition {0};
     bool _hovered = false;

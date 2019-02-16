@@ -1,7 +1,8 @@
 #include "ViewportContainer.hpp"
 #include "Viewport.hpp"
-#include "Renderable.hpp"
+#include "RenderableObject.hpp"
 #include "Util.hpp"
+#include "PickableMap.hpp"
 #include "../support/Debug.hpp"
 #include <QMouseEvent>
 #include <QOpenGLDebugLogger>
@@ -26,8 +27,11 @@ void ViewportContainer::initializeGL() {
 
     auto logger = new QOpenGLDebugLogger(this);
     if (logger->initialize()) {
-        connect(logger, &QOpenGLDebugLogger::messageLogged, [](const auto& message) {
-            qWarning() << message;
+        connect(logger, &QOpenGLDebugLogger::messageLogged, [](const QOpenGLDebugMessage& message) {
+            if (message.severity() == QOpenGLDebugMessage::NotificationSeverity) {
+                return;
+            }
+            qWarning() << message.message();
         });
         logger->startLogging();
         qDebug() << "OpenGL debug enabled";
@@ -48,6 +52,9 @@ void ViewportContainer::paintGL() {
     LATTICE_OPTIONAL_GUARD(operations, _operations, return;)
 
     for (auto viewport : _viewports) {
+        if (!viewport->_renderable) {
+            continue;
+        }
         glm::dvec2 minPos = mapQtToGL(this, viewport->mapTo(this, viewport->rect().bottomLeft()));
         glm::dvec2 maxPos = mapQtToGL(this, viewport->mapTo(this, viewport->rect().topRight()));
         glm::ivec2 minPosViewport = round(minPos * (widgetPixelRatio(this) * devicePixelRatioF()));
@@ -57,9 +64,14 @@ void ViewportContainer::paintGL() {
         glEnable(GL_SCISSOR_TEST);
         glScissor(minPosViewport.x, minPosViewport.y, sizeViewport.x, sizeViewport.y);
         glViewport(minPosViewport.x, minPosViewport.y, sizeViewport.x, sizeViewport.y);
+        glBindFramebuffer(GL_FRAMEBUFFER, QOpenGLContext::currentContext()->defaultFramebufferObject());
 
-        viewport->render(operations);
+        (*viewport->_renderable)->drawRecursive(operations, viewport->_camera);
+
         glDisable(GL_SCISSOR_TEST);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        viewport->pickableMap()->draw(*viewport->_renderable, operations, viewport->camera());
     }
 }
 

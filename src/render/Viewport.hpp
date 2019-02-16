@@ -7,19 +7,17 @@
 namespace Lattice {
 namespace Render {
 
-class Renderable;
+class RenderableObject;
 class RenderWidget;
+class PickableMap;
 
-class Viewport : public QWidget, protected QOpenGLExtraFunctions {
+class Viewport : public QWidget {
     Q_OBJECT
     using super = QWidget;
 public:
     Viewport(QWidget* parent = nullptr);
 
-    auto& renderables() const { return _renderables; }
-    void setRenderables(const std::vector<SP<Renderable>> &renderables) { _renderables = renderables; }
-
-    void render(const SP<Operations>& operations);
+    void setRenderable(const Opt<SP<Renderable>>& renderable);
 
     auto& camera() const { return _camera; }
 
@@ -35,12 +33,17 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private:
-    Opt<std::pair<SP<Renderable>, HitResult>> hitTest(glm::dvec2 pos, const SP<Camera>& camera);
+    friend class ViewportContainer;
 
-    std::vector<SP<Renderable>> _renderables;
+    const SP<PickableMap>& pickableMap();
+
+    Opt<std::pair<SP<Renderable>, double>> hitTest(glm::dvec2 pos, const SP<Camera>& camera);
+
+    Opt<SP<Renderable>> _renderable;
     Opt<SP<Renderable>> _draggedRenderable;
     Opt<SP<Renderable>> _hoveredRenderable;
-    HitResult _hitResult;
+    Opt<SP<PickableMap>> _pickableMap;
+    double _hitDepth;
     SP<Camera> _camera;
 };
 

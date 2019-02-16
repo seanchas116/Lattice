@@ -1,6 +1,6 @@
 #pragma once
 #include <QObject>
-#include "../../render/Renderable.hpp"
+#include "../../render/RenderableObject.hpp"
 
 namespace Lattice {
 
@@ -18,7 +18,7 @@ public:
     auto& translateHandles() const { return _translateHandles; }
     auto& rotateHandles() const { return _rotateHandles; }
     auto& scaleHandles() const { return _scaleHandles; }
-    std::vector<SP<Render::Renderable>> handles(bool withTranslate, bool withRotate, bool withScale) const;
+    std::vector<SP<Render::RenderableObject>> handles(bool withTranslate, bool withRotate, bool withScale) const;
 
     enum class ValueType {
         Translate, Scale, Rotate
@@ -31,9 +31,9 @@ signals:
     void onEnd(ValueType type);
 
 private:
-    std::vector<SP<Render::Renderable>> _translateHandles;
-    std::vector<SP<Render::Renderable>> _rotateHandles;
-    std::vector<SP<Render::Renderable>> _scaleHandles;
+    std::vector<SP<Render::RenderableObject>> _translateHandles;
+    std::vector<SP<Render::RenderableObject>> _rotateHandles;
+    std::vector<SP<Render::RenderableObject>> _scaleHandles;
     glm::dvec3 _targetPosition;
 };
 

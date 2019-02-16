@@ -1,5 +1,5 @@
 #pragma once
-#include "../../render/Renderable.hpp"
+#include "../../render/RenderableObject.hpp"
 
 namespace Lattice {
 
@@ -15,14 +15,13 @@ namespace Editor {
 class MeshPicker;
 namespace Manipulator {
 
-class RotateHandle : public Render::Renderable, protected QOpenGLExtraFunctions {
+class RotateHandle : public Render::RenderableObject, protected QOpenGLExtraFunctions {
     Q_OBJECT
 public:
     RotateHandle(int axis);
 
     void draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) override;
-
-    Opt<Render::HitResult> hitTest(glm::dvec2 pos, const SP<Camera> &camera) const override;
+    void drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) override;
 
     void mousePress(const Render::MouseEvent &event) override;
     void mouseMove(const Render::MouseEvent &event) override;
@@ -41,7 +40,6 @@ private:
     int _axis;
     glm::dvec3 _targetPosition {0};
     SP<Document::Mesh> _handleMesh;
-    SP<MeshPicker> _handleMeshPicker;
     SP<GL::VAO> _handleVAO;
     glm::dvec3 _initialTargetPosition {0};
 };
