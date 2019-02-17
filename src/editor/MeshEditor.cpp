@@ -167,8 +167,10 @@ void MeshEditor::mousePress(const Render::MouseEvent &event) {
 
     switch (_appState->tool()) {
     case UI::Tool::Draw: {
-        // TODO: find better depth
-        auto [centerInScreen, isCenterInScreen] = event.camera->mapWorldToScreen(_item->location().position);
+        // TODO: better default prevPos
+        auto prevPos = _drawnVertices.empty() ? vec3(0) : _drawnVertices[_drawnVertices.size() - 1]->position();
+
+        auto [centerInScreen, isCenterInScreen] = event.camera->mapWorldToScreen(prevPos);
         if (!isCenterInScreen) {
             break;
         }
