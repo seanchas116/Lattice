@@ -31,6 +31,10 @@ public:
         case UI::Tool::Draw: {
             if (!_editor->_drawnVertices.empty()) {
                 auto& lastVertex = _editor->_drawnVertices[_editor->_drawnVertices.size() - 1];
+                if (lastVertex == _vertex) {
+                    _editor->mousePress(event);
+                    return;
+                }
                 _editor->_item->mesh()->addEdge({lastVertex, _vertex});
             }
             _editor->_drawnVertices.push_back(_vertex);
@@ -50,6 +54,24 @@ public:
     void hoverEnter(const Render::MouseEvent &) override {
         _editor->_hoveredVertex = _vertex;
         _editor->updateWholeVAOs();
+    }
+
+    void hoverMove(const Render::MouseEvent &event) override {
+        switch (_editor->_appState->tool()) {
+        case UI::Tool::Draw: {
+            if (!_editor->_drawnVertices.empty()) {
+                auto& lastVertex = _editor->_drawnVertices[_editor->_drawnVertices.size() - 1];
+                if (lastVertex == _vertex) {
+                    _editor->hoverMove(event);
+                    return;
+                }
+            }
+            break;
+        }
+        default: {
+            break;
+        }
+        }
     }
 
     void hoverLeave() override {
