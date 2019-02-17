@@ -32,9 +32,8 @@ public:
             if (!_editor->_drawnVertices.empty()) {
                 auto& lastVertex = _editor->_drawnVertices[_editor->_drawnVertices.size() - 1];
                 _editor->_item->mesh()->addEdge({lastVertex, _vertex});
-            } else {
-                _editor->_drawnVertices = {_vertex};
             }
+            _editor->_drawnVertices.push_back(_vertex);
             break;
         }
         default: {
