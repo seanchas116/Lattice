@@ -27,7 +27,21 @@ public:
     VertexPickable(MeshEditor* editor, const SP<Document::MeshVertex>& vertex) : _editor(editor), _vertex(vertex) {}
 
     void mousePress(const Render::MouseEvent &event) override {
-        _editor->vertexDragStart({_vertex}, event);
+        switch (_editor->_appState->tool()) {
+        case UI::Tool::Draw: {
+            if (!_editor->_drawnVertices.empty()) {
+                auto& lastVertex = _editor->_drawnVertices[_editor->_drawnVertices.size() - 1];
+                _editor->_item->mesh()->addEdge({lastVertex, _vertex});
+            } else {
+                _editor->_drawnVertices = {_vertex};
+            }
+            break;
+        }
+        default: {
+            _editor->vertexDragStart({_vertex}, event);
+            break;
+        }
+        }
     }
 
     void mouseMove(const Render::MouseEvent &event) override {
@@ -161,10 +175,10 @@ void MeshEditor::mousePress(const Render::MouseEvent &event) {
         auto pos = event.camera->mapScreenToWorld(dvec3(event.screenPos, centerInScreen.z));
         auto uvPoint = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
         if (!_drawnVertices.empty()) {
-            auto prevUVPoint = _drawnVertices[_drawnVertices.size() - 1];
-            mesh->addEdge({prevUVPoint->vertex(), uvPoint->vertex()});
+            auto prevVertex = _drawnVertices[_drawnVertices.size() - 1];
+            mesh->addEdge({prevVertex, uvPoint->vertex()});
         }
-        _drawnVertices.push_back(uvPoint);
+        _drawnVertices.push_back(uvPoint->vertex());
         break;
     }
     default:
