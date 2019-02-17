@@ -111,6 +111,7 @@ MeshEditor::MeshEditor(const SP<UI::AppState>& appState, const SP<Document::Mesh
     _vertexVAO(makeShared<GL::VAO>()),
     _vertexPickVAO(makeShared<GL::VAO>())
 {
+    initializeOpenGLFunctions();
     updateWholeVAOs();
     connect(_item->mesh().get(), &Document::Mesh::changed, this, &MeshEditor::updateWholeVAOs);
     connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::updateWholeVAOs);
@@ -131,6 +132,11 @@ void MeshEditor::draw(const SP<Render::Operations> &operations, const SP<Camera>
 }
 
 void MeshEditor::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+    auto idColor = toIDColor();
+    glClearColor(idColor.r, idColor.g, idColor.b, idColor.a);
+    glClearDepthf(1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     if (_appState->isFaceVisible()) {
         operations->drawUnicolor.draw(_facePickVAO, _item->location().matrixToWorld(), camera, vec4(0), true);
     }

@@ -33,7 +33,7 @@ namespace Editor {
 
 class MeshPicker;
 
-class MeshEditor final : public Render::RenderableObject, public GL::ContextRecallable {
+class MeshEditor final : public Render::RenderableObject, protected GL::ContextRecallable, protected QOpenGLExtraFunctions {
     Q_OBJECT
 public:
     MeshEditor(const SP<UI::AppState>& appState, const SP<Document::MeshItem>& item);
