@@ -162,24 +162,37 @@ void MeshEditor::drawPickables(const SP<Render::Operations> &operations, const S
 }
 
 void MeshEditor::mousePress(const Render::MouseEvent &event) {
-    auto mesh = _item->mesh();
-
     switch (_appState->tool()) {
     case UI::Tool::Draw: {
-        // TODO: better default prevPos
-        auto prevPos = _drawnVertices.empty() ? vec3(0) : _drawnVertices[_drawnVertices.size() - 1]->position();
+        auto mesh = _item->mesh();
+        if (_drawnVertices.empty()) {
+            // TODO: better depth
+            auto [centerInScreen, isCenterInScreen] = event.camera->mapWorldToScreen(vec3(0));
+            if (!isCenterInScreen) {
+                break;
+            }
+            auto pos = event.camera->mapScreenToWorld(dvec3(event.screenPos, centerInScreen.z));
+            auto point1 = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
+            auto point2 = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
+            _drawnVertices.push_back(point1->vertex());
+            _drawnVertices.push_back(point2->vertex());
+            mesh->addEdge({point1->vertex(), point2->vertex()});
+        } else {
+            auto prevVert = _drawnVertices[_drawnVertices.size() - 1];
 
-        auto [centerInScreen, isCenterInScreen] = event.camera->mapWorldToScreen(prevPos);
-        if (!isCenterInScreen) {
-            break;
+            auto [prevPosInScreen, isInScreen] = event.camera->mapWorldToScreen(prevVert->position());
+            if (!isInScreen) {
+                break;
+            }
+            auto pos = event.camera->mapScreenToWorld(dvec3(event.screenPos, prevPosInScreen.z));
+
+            mesh->setPositions({{prevVert, pos}});
+
+            auto uvPoint = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
+            _drawnVertices.push_back(uvPoint->vertex());
+            mesh->addEdge({prevVert, uvPoint->vertex()});
         }
-        auto pos = event.camera->mapScreenToWorld(dvec3(event.screenPos, centerInScreen.z));
-        auto uvPoint = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
-        if (!_drawnVertices.empty()) {
-            auto prevVertex = _drawnVertices[_drawnVertices.size() - 1];
-            mesh->addEdge({prevVertex, uvPoint->vertex()});
-        }
-        _drawnVertices.push_back(uvPoint->vertex());
+
         break;
     }
     default:
@@ -193,6 +206,30 @@ void MeshEditor::mouseMove(const Render::MouseEvent &event) {
 
 void MeshEditor::mouseRelease(const Render::MouseEvent &event) {
     Q_UNUSED(event);
+}
+
+void MeshEditor::hoverMove(const Render::MouseEvent &event) {
+    switch (_appState->tool()) {
+    case UI::Tool::Draw: {
+        auto mesh = _item->mesh();
+        if (_drawnVertices.empty()) {
+            break;
+        } else {
+            auto prevVert = _drawnVertices[_drawnVertices.size() - 1];
+
+            auto [prevPosInScreen, isInScreen] = event.camera->mapWorldToScreen(prevVert->position());
+            if (!isInScreen) {
+                break;
+            }
+            auto pos = event.camera->mapScreenToWorld(dvec3(event.screenPos, prevPosInScreen.z));
+
+            mesh->setPositions({{prevVert, pos}});
+        }
+        break;
+    }
+    default:
+        break;
+    }
 }
 
 void MeshEditor::updateWholeVAOs() {

@@ -46,6 +46,7 @@ public:
     void mousePress(const Render::MouseEvent &event) override;
     void mouseMove(const Render::MouseEvent &event) override;
     void mouseRelease(const Render::MouseEvent &event) override;
+    void hoverMove(const Render::MouseEvent &event) override;
 
 private:
     void updateWholeVAOs();
