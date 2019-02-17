@@ -150,6 +150,7 @@ void MeshEditor::drawPickables(const SP<Render::Operations> &operations, const S
 
 void MeshEditor::mousePress(const Render::MouseEvent &event) {
     auto mesh = _item->mesh();
+
     switch (_appState->tool()) {
     case UI::Tool::Draw: {
         auto pos = event.camera->mapScreenToWorld(dvec3(event.screenPos, 0.5));

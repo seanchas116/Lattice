@@ -76,10 +76,12 @@ private:
     SP<GL::VAO> _vertexPickVAO;
     std::vector<GL::Vertex> _vertexPickAttributes;
 
+    // vertex drag
     std::unordered_map<SP<Document::MeshVertex>, glm::dvec3> _dragInitPositions;
     glm::dvec3 _dragInitWorldPos;
     bool _dragStarted;
 
+    // vertex hover
     Opt<SP<Document::MeshVertex>> _hoveredVertex;
     Opt<SP<Document::MeshEdge>> _hoveredEdge;
     // TODO: hovered face
