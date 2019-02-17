@@ -85,6 +85,9 @@ private:
     Opt<SP<Document::MeshVertex>> _hoveredVertex;
     Opt<SP<Document::MeshEdge>> _hoveredEdge;
     // TODO: hovered face
+
+    // draw
+    std::vector<SP<Document::MeshUVPoint>> _drawnVertices;
 };
 
 }

@@ -159,7 +159,12 @@ void MeshEditor::mousePress(const Render::MouseEvent &event) {
             break;
         }
         auto pos = event.camera->mapScreenToWorld(dvec3(event.screenPos, centerInScreen.z));
-        mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
+        auto uvPoint = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
+        if (!_drawnVertices.empty()) {
+            auto prevUVPoint = _drawnVertices[_drawnVertices.size() - 1];
+            mesh->addEdge({prevUVPoint->vertex(), uvPoint->vertex()});
+        }
+        _drawnVertices.push_back(uvPoint);
         break;
     }
     default:
