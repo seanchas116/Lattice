@@ -153,7 +153,12 @@ void MeshEditor::mousePress(const Render::MouseEvent &event) {
 
     switch (_appState->tool()) {
     case UI::Tool::Draw: {
-        auto pos = event.camera->mapScreenToWorld(dvec3(event.screenPos, 0.5));
+        // TODO: find better depth
+        auto [centerInScreen, isCenterInScreen] = event.camera->mapWorldToScreen(dvec3(0));
+        if (!isCenterInScreen) {
+            break;
+        }
+        auto pos = event.camera->mapScreenToWorld(dvec3(event.screenPos, centerInScreen.z));
         mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
         break;
     }
