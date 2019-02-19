@@ -87,7 +87,7 @@ public:
     EdgePickable(MeshEditor* editor, const SP<Document::MeshEdge>& edge) : _editor(editor), _edge(edge) {}
 
     void mousePress(const Render::MouseEvent &event) override {
-        _editor->vertexDragStart({_edge->vertices()[0], _edge->vertices()[1]}, event);
+        _editor->mousePressTarget({.edge = _edge}, event);
     }
 
     void mouseMove(const Render::MouseEvent &event) override {
@@ -113,11 +113,7 @@ public:
     FacePickable(MeshEditor* editor, const SP<Document::MeshFace>& face) : _editor(editor), _face(face) {}
 
     void mousePress(const Render::MouseEvent &event) override {
-        std::unordered_set<SP<Document::MeshVertex>> vertices;
-        for (auto& v : _face->vertices()) {
-            vertices.insert(v);
-        }
-        _editor->vertexDragStart(vertices, event);
+        _editor->mousePressTarget({.face = _face}, event);
     }
 
     void mouseMove(const Render::MouseEvent &event) override {
