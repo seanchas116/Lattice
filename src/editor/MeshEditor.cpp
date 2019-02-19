@@ -31,7 +31,7 @@ public:
     }
 
     void mouseMove(const Render::MouseEvent &event) override {
-        _editor->vertexDragMove(event);
+        _editor->mouseMoveTarget({_vertex, {}, {}}, event);
     }
 
     void hoverEnter(const Render::MouseEvent &) override {
@@ -61,7 +61,7 @@ public:
     }
 
     void mouseMove(const Render::MouseEvent &event) override {
-        _editor->vertexDragMove(event);
+        _editor->mouseMoveTarget({{}, _edge, {}}, event);
     }
 
     void hoverEnter(const Render::MouseEvent &) override {
@@ -87,7 +87,7 @@ public:
     }
 
     void mouseMove(const Render::MouseEvent &event) override {
-        _editor->vertexDragMove(event);
+        _editor->mouseMoveTarget({{}, {}, _face}, event);
     }
 
     void hoverEnter(const Render::MouseEvent &) override {
@@ -362,7 +362,9 @@ void MeshEditor::mousePressTarget(const MeshEditor::EventTarget &target, const R
 }
 
 void MeshEditor::mouseMoveTarget(const MeshEditor::EventTarget &target, const Render::MouseEvent &event) {
-    Q_UNUSED(target); Q_UNUSED(event);
+    if (target.vertex || target.edge || target.face) {
+        vertexDragMove(event);
+    }
 }
 
 void MeshEditor::mouseReleaseTarget(const MeshEditor::EventTarget &target, const Render::MouseEvent &event) {
