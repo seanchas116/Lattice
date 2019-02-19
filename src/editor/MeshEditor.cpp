@@ -329,10 +329,12 @@ void MeshEditor::mousePressTarget(const MeshEditor::EventTarget &target, const R
             return;
         }
         auto prevUVPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];
-        if (target.vertex && target.vertex != prevUVPoint->vertex()) {
+        if (target.vertex) {
             if (target.vertex == _drawnUVPoints[0]->vertex()) {
                 // create face
                 mesh->addFace(_drawnUVPoints, mesh->materials()[0]);
+                _drawnUVPoints.clear();
+                return;
             }
             mesh->addEdge({prevUVPoint->vertex(), *target.vertex});
             return;
