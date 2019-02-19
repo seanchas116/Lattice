@@ -51,6 +51,19 @@ public:
 private:
     void updateWholeVAOs();
 
+    struct EventTarget {
+        Opt<SP<Document::MeshVertex>> vertex;
+        Opt<SP<Document::MeshEdge>> edge;
+        Opt<SP<Document::MeshFace>> face;
+    };
+
+    void mousePressTarget(const EventTarget& target, const Render::MouseEvent &event);
+    void mouseMoveTarget(const EventTarget& target, const Render::MouseEvent &event);
+    void mouseReleaseTarget(const EventTarget& target, const Render::MouseEvent &event);
+    void hoverEnterTarget(const EventTarget& target, const Render::MouseEvent &event);
+    void hoverMoveTarget(const EventTarget& target, const Render::MouseEvent &event);
+    void hoverLeaveTarget(const EventTarget& target);
+
     void vertexDragStart(const std::unordered_set<SP<Document::MeshVertex>>& vertices, const Render::MouseEvent& event);
     void vertexDragMove(const Render::MouseEvent& event);
 

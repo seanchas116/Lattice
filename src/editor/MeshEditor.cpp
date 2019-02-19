@@ -408,6 +408,50 @@ void MeshEditor::updateWholeVAOs() {
     update();
 }
 
+void MeshEditor::mousePressTarget(const MeshEditor::EventTarget &target, const Render::MouseEvent &event) {
+    switch (_appState->tool()) {
+    case UI::Tool::Draw: {
+        break;
+    }
+    default: {
+        LATTICE_OPTIONAL_LET(vertex, target.vertex, {
+            vertexDragStart({vertex}, event);
+        });
+        LATTICE_OPTIONAL_LET(edge, target.edge, {
+            vertexDragStart({edge->vertices()[0], edge->vertices()[1]}, event);
+        });
+        LATTICE_OPTIONAL_LET(face, target.face, {
+            std::unordered_set<SP<Document::MeshVertex>> vertices;
+            for (auto& v : face->vertices()) {
+                vertices.insert(v);
+            }
+            vertexDragStart(vertices, event);
+        });
+        break;
+    }
+    }
+}
+
+void MeshEditor::mouseMoveTarget(const MeshEditor::EventTarget &target, const Render::MouseEvent &event) {
+    Q_UNUSED(target); Q_UNUSED(event);
+}
+
+void MeshEditor::mouseReleaseTarget(const MeshEditor::EventTarget &target, const Render::MouseEvent &event) {
+    Q_UNUSED(target); Q_UNUSED(event);
+}
+
+void MeshEditor::hoverEnterTarget(const MeshEditor::EventTarget &target, const Render::MouseEvent &event) {
+    Q_UNUSED(target); Q_UNUSED(event);
+}
+
+void MeshEditor::hoverMoveTarget(const MeshEditor::EventTarget &target, const Render::MouseEvent &event) {
+    Q_UNUSED(target); Q_UNUSED(event);
+}
+
+void MeshEditor::hoverLeaveTarget(const MeshEditor::EventTarget &target) {
+    Q_UNUSED(target);
+}
+
 void MeshEditor::vertexDragStart(const std::unordered_set<SP<Document::MeshVertex> > &vertices, const Render::MouseEvent &event) {
     Document::MeshSelection selection;
     if (event.originalEvent->modifiers() & Qt::ShiftModifier) {
