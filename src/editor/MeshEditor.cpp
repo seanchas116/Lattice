@@ -397,6 +397,8 @@ void MeshEditor::hoverEnterTarget(const MeshEditor::EventTarget &target, const R
 }
 
 void MeshEditor::hoverMoveTarget(const MeshEditor::EventTarget &target, const Render::MouseEvent &event) {
+    Q_UNUSED(target)
+
     switch (_appState->tool()) {
     case UI::Tool::Draw: {
         auto mesh = _item->mesh();
