@@ -71,6 +71,7 @@ void Viewport::mouseMoveEvent(QMouseEvent *event) {
                 (*_hoveredRenderable)->hoverLeave();
             }
             renderable->hoverEnter(renderMouseEvent);
+            renderable->hoverMove(renderMouseEvent);
             _hoveredRenderable = renderable;
         }
     }

@@ -34,25 +34,9 @@ public:
         _editor->vertexDragMove(event);
     }
 
-    void hoverEnter(const Render::MouseEvent &event) override {
+    void hoverEnter(const Render::MouseEvent &) override {
         _editor->_hoveredVertex = _vertex;
         _editor->updateWholeVAOs();
-
-        switch (_editor->_appState->tool()) {
-        case UI::Tool::Draw: {
-            if (!_editor->_drawnVertices.empty()) {
-                auto& lastVertex = _editor->_drawnVertices[_editor->_drawnVertices.size() - 1];
-                if (lastVertex == _vertex) {
-                    _editor->hoverMove(event);
-                    return;
-                }
-            }
-            break;
-        }
-        default: {
-            break;
-        }
-        }
     }
 
     void hoverMove(const Render::MouseEvent &event) override {
