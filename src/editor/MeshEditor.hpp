@@ -101,7 +101,7 @@ private:
     // TODO: hovered face
 
     // draw
-    std::vector<SP<Document::MeshVertex>> _drawnVertices;
+    std::vector<SP<Document::MeshUVPoint>> _drawnUVPoints;
 };
 
 }
