@@ -34,9 +34,8 @@ public:
         _editor->mouseMoveTarget({_vertex, {}, {}}, event);
     }
 
-    void hoverEnter(const Render::MouseEvent &) override {
-        _editor->_hoveredVertex = _vertex;
-        _editor->updateWholeVAOs();
+    void hoverEnter(const Render::MouseEvent &event) override {
+        _editor->hoverEnterTarget({_vertex, {}, {}}, event);
     }
 
     void hoverMove(const Render::MouseEvent &event) override {
@@ -44,8 +43,7 @@ public:
     }
 
     void hoverLeave() override {
-        _editor->_hoveredVertex = {};
-        _editor->updateWholeVAOs();
+        _editor->hoverLeaveTarget({_vertex, {}, {}});
     }
 
     MeshEditor* _editor;
@@ -64,14 +62,16 @@ public:
         _editor->mouseMoveTarget({{}, _edge, {}}, event);
     }
 
-    void hoverEnter(const Render::MouseEvent &) override {
-        _editor->_hoveredEdge = _edge;
-        _editor->updateWholeVAOs();
+    void hoverEnter(const Render::MouseEvent &event) override {
+        _editor->hoverEnterTarget({{}, _edge, {}}, event);
+    }
+
+    void hoverMove(const Render::MouseEvent &event) override {
+        _editor->hoverMoveTarget({{}, _edge, {}}, event);
     }
 
     void hoverLeave() override {
-        _editor->_hoveredEdge = {};
-        _editor->updateWholeVAOs();
+        _editor->hoverLeaveTarget({{}, _edge, {}});
     }
 
     MeshEditor* _editor;
@@ -90,11 +90,16 @@ public:
         _editor->mouseMoveTarget({{}, {}, _face}, event);
     }
 
-    void hoverEnter(const Render::MouseEvent &) override {
+    void hoverEnter(const Render::MouseEvent &event) override {
+        _editor->hoverEnterTarget({{}, {}, _face}, event);
+    }
+
+    void hoverMove(const Render::MouseEvent &event) override {
+        _editor->hoverMoveTarget({{}, {}, _face}, event);
     }
 
     void hoverLeave() override {
-
+        _editor->hoverLeaveTarget({{}, {}, _face});
     }
 
     MeshEditor* _editor;
@@ -372,7 +377,14 @@ void MeshEditor::mouseReleaseTarget(const MeshEditor::EventTarget &target, const
 }
 
 void MeshEditor::hoverEnterTarget(const MeshEditor::EventTarget &target, const Render::MouseEvent &event) {
-    Q_UNUSED(target); Q_UNUSED(event);
+    Q_UNUSED(event);
+    if (target.vertex) {
+        _hoveredVertex = target.vertex;
+        updateWholeVAOs(); // TODO: update partially
+    } else if (target.edge) {
+        _hoveredEdge = target.edge;
+        updateWholeVAOs(); // TODO: update partially
+    }
 }
 
 void MeshEditor::hoverMoveTarget(const MeshEditor::EventTarget &target, const Render::MouseEvent &event) {
@@ -400,7 +412,13 @@ void MeshEditor::hoverMoveTarget(const MeshEditor::EventTarget &target, const Re
 }
 
 void MeshEditor::hoverLeaveTarget(const MeshEditor::EventTarget &target) {
-    Q_UNUSED(target);
+    if (target.vertex) {
+        _hoveredVertex = {};
+        updateWholeVAOs(); // TODO: update partially
+    } else if (target.edge) {
+        _hoveredEdge = {};
+        updateWholeVAOs(); // TODO: update partially
+    }
 }
 
 void MeshEditor::vertexDragStart(const std::unordered_set<SP<Document::MeshVertex> > &vertices, const Render::MouseEvent &event) {
