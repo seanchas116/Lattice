@@ -367,8 +367,17 @@ void MeshEditor::mousePressTarget(const MeshEditor::EventTarget &target, const R
 }
 
 void MeshEditor::mouseMoveTarget(const MeshEditor::EventTarget &target, const Render::MouseEvent &event) {
-    if (target.vertex || target.edge || target.face) {
-        vertexDragMove(event);
+    switch (_appState->tool()) {
+    case UI::Tool::Draw: {
+        // TODO
+        return;
+    }
+    default: {
+        if (target.vertex || target.edge || target.face) {
+            vertexDragMove(event);
+        }
+        return;
+    }
     }
 }
 
