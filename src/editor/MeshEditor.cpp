@@ -40,21 +40,7 @@ public:
     }
 
     void hoverMove(const Render::MouseEvent &event) override {
-        switch (_editor->_appState->tool()) {
-        case UI::Tool::Draw: {
-            if (!_editor->_drawnVertices.empty()) {
-                auto& lastVertex = _editor->_drawnVertices[_editor->_drawnVertices.size() - 1];
-                if (lastVertex == _vertex) {
-                    _editor->hoverMove(event);
-                    return;
-                }
-            }
-            break;
-        }
-        default: {
-            break;
-        }
-        }
+        _editor->hoverMoveTarget({_vertex, {}, {}}, event);
     }
 
     void hoverLeave() override {
@@ -175,27 +161,7 @@ void MeshEditor::mouseRelease(const Render::MouseEvent &event) {
 }
 
 void MeshEditor::hoverMove(const Render::MouseEvent &event) {
-    switch (_appState->tool()) {
-    case UI::Tool::Draw: {
-        auto mesh = _item->mesh();
-        if (_drawnVertices.empty()) {
-            break;
-        } else {
-            auto prevVert = _drawnVertices[_drawnVertices.size() - 1];
-
-            auto [prevPosInScreen, isInScreen] = event.camera->mapWorldToScreen(prevVert->position());
-            if (!isInScreen) {
-                break;
-            }
-            auto pos = event.camera->mapScreenToWorld(dvec3(event.screenPos, prevPosInScreen.z));
-
-            mesh->setPositions({{prevVert, pos}});
-        }
-        break;
-    }
-    default:
-        break;
-    }
+    hoverMoveTarget({}, event);
 }
 
 void MeshEditor::updateWholeVAOs() {
@@ -408,7 +374,27 @@ void MeshEditor::hoverEnterTarget(const MeshEditor::EventTarget &target, const R
 }
 
 void MeshEditor::hoverMoveTarget(const MeshEditor::EventTarget &target, const Render::MouseEvent &event) {
-    Q_UNUSED(target); Q_UNUSED(event);
+    switch (_appState->tool()) {
+    case UI::Tool::Draw: {
+        auto mesh = _item->mesh();
+        if (_drawnVertices.empty()) {
+            return;
+        }
+        auto prevVert = _drawnVertices[_drawnVertices.size() - 1];
+
+        auto [prevPosInScreen, isInScreen] = event.camera->mapWorldToScreen(prevVert->position());
+        if (!isInScreen) {
+            break;
+        }
+        auto pos = event.camera->mapScreenToWorld(dvec3(event.screenPos, prevPosInScreen.z));
+        mesh->setPositions({{prevVert, pos}});
+
+        return;
+    }
+    default: {
+        return;
+    }
+    }
 }
 
 void MeshEditor::hoverLeaveTarget(const MeshEditor::EventTarget &target) {
