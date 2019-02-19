@@ -27,7 +27,7 @@ public:
     VertexPickable(MeshEditor* editor, const SP<Document::MeshVertex>& vertex) : _editor(editor), _vertex(vertex) {}
 
     void mousePress(const Render::MouseEvent &event) override {
-        _editor->mousePressTarget({.vertex = _vertex}, event);
+        _editor->mousePressTarget({_vertex, {}, {}}, event);
     }
 
     void mouseMove(const Render::MouseEvent &event) override {
@@ -87,7 +87,7 @@ public:
     EdgePickable(MeshEditor* editor, const SP<Document::MeshEdge>& edge) : _editor(editor), _edge(edge) {}
 
     void mousePress(const Render::MouseEvent &event) override {
-        _editor->mousePressTarget({.edge = _edge}, event);
+        _editor->mousePressTarget({{}, _edge, {}}, event);
     }
 
     void mouseMove(const Render::MouseEvent &event) override {
@@ -113,7 +113,7 @@ public:
     FacePickable(MeshEditor* editor, const SP<Document::MeshFace>& face) : _editor(editor), _face(face) {}
 
     void mousePress(const Render::MouseEvent &event) override {
-        _editor->mousePressTarget({.face = _face}, event);
+        _editor->mousePressTarget({{}, {}, _face}, event);
     }
 
     void mouseMove(const Render::MouseEvent &event) override {
@@ -392,20 +392,21 @@ void MeshEditor::mousePressTarget(const MeshEditor::EventTarget &target, const R
         return;
     }
     default: {
-        LATTICE_OPTIONAL_LET(vertex, target.vertex, {
+        if (target.vertex) {
+            auto& vertex = *target.vertex;
             vertexDragStart({vertex}, event);
-        });
-        LATTICE_OPTIONAL_LET(edge, target.edge, {
+        } else if (target.edge) {
+            auto& edge = *target.edge;
             vertexDragStart({edge->vertices()[0], edge->vertices()[1]}, event);
-        });
-        LATTICE_OPTIONAL_LET(face, target.face, {
+        } else if (target.face) {
+            auto& face = *target.face;
             std::unordered_set<SP<Document::MeshVertex>> vertices;
             for (auto& v : face->vertices()) {
                 vertices.insert(v);
             }
             vertexDragStart(vertices, event);
-        });
-        break;
+        }
+        return;
     }
     }
 }
