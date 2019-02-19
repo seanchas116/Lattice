@@ -190,14 +190,16 @@ void MeshEditor::updateWholeVAOs() {
             attrib.position = v->position();
             attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
 
-            auto pickable = makeShared<VertexPickable>(this, v);
-            childPickables.push_back(pickable);
-            GL::Vertex pickAttrib;
-            pickAttrib.position = v->position();
-            pickAttrib.color = pickable->toIDColor();
+            if (_drawnUVPoints.empty() || _drawnUVPoints[_drawnUVPoints.size() - 1]->vertex() != v) {
+                auto pickable = makeShared<VertexPickable>(this, v);
+                childPickables.push_back(pickable);
+                GL::Vertex pickAttrib;
+                pickAttrib.position = v->position();
+                pickAttrib.color = pickable->toIDColor();
 
-            _vertexAttributes.push_back(attrib);
-            _vertexPickAttributes.push_back(pickAttrib);
+                _vertexAttributes.push_back(attrib);
+                _vertexPickAttributes.push_back(pickAttrib);
+            }
         }
 
         auto vertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
