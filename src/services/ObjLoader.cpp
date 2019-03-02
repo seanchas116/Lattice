@@ -19,9 +19,13 @@ std::vector<SP<Document::MeshItem>> ObjLoader::load(const QString &filePathStrin
     QFileInfo fileInfo(filePathString);
     auto parentPathString = fileInfo.dir().path() + "/";
 
+    std::string warn;
     std::string err;
-    bool ret = tinyobj::LoadObj(&attrib, &objShapes, &objMaterials, &err, filePathString.toUtf8().data(), parentPathString.toUtf8().data());
+    bool ret = tinyobj::LoadObj(&attrib, &objShapes, &objMaterials, &warn, &err, filePathString.toUtf8().data(), parentPathString.toUtf8().data());
 
+    if (!warn.empty()) {
+        qWarning() << warn.c_str();
+    }
     if (!err.empty()) {
         qWarning() << err.c_str();
     }
