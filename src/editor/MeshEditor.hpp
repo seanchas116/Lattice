@@ -102,6 +102,8 @@ private:
 
     // draw
     std::vector<SP<Document::MeshUVPoint>> _drawnUVPoints;
+    Opt<SP<Document::MeshUVPoint>> lastDrawnPoint() const;
+    Opt<SP<Document::MeshVertex>> lastDrawnVertex() const;
 };
 
 }

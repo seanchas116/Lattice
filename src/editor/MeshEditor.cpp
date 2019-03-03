@@ -190,7 +190,9 @@ void MeshEditor::updateWholeVAOs() {
             attrib.position = v->position();
             attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
 
-            if (_drawnUVPoints.empty() || _drawnUVPoints[_drawnUVPoints.size() - 1]->vertex() != v) {
+            bool isDrawing = v == lastDrawnVertex();
+
+            if (!isDrawing) {
                 auto pickable = makeShared<VertexPickable>(this, v);
                 childPickables.push_back(pickable);
                 GL::Vertex pickAttrib;
@@ -225,6 +227,9 @@ void MeshEditor::updateWholeVAOs() {
             childPickables.push_back(pickable);
 
             auto offset = uint32_t(_edgeAttributes.size());
+
+            bool isDrawing = e->vertices()[0] == lastDrawnVertex() || e->vertices()[1] == lastDrawnVertex();
+
             for (auto& v : e->vertices()) {
                 bool selected = selectedVertices.find(v) != selectedVertices.end();
 
@@ -233,10 +238,12 @@ void MeshEditor::updateWholeVAOs() {
                 attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
                 _edgeAttributes.push_back(attrib);
 
-                GL::Vertex pickAttrib;
-                pickAttrib.position = v->position();
-                pickAttrib.color = pickable->toIDColor();
-                _edgePickAttributes.push_back(pickAttrib);
+                if (!isDrawing) {
+                    GL::Vertex pickAttrib;
+                    pickAttrib.position = v->position();
+                    pickAttrib.color = pickable->toIDColor();
+                    _edgePickAttributes.push_back(pickAttrib);
+                }
             }
             indices.push_back({offset, offset+1});
         }
@@ -313,7 +320,7 @@ void MeshEditor::mousePressTarget(const MeshEditor::EventTarget &target, const R
     switch (_appState->tool()) {
     case UI::Tool::Draw: {
         auto mesh = _item->mesh();
-        if (_drawnUVPoints.empty()) {
+        LATTICE_OPTIONAL_GUARD(prevUVPoint, lastDrawnPoint(), {
             // TODO: better depth
             auto [centerInScreen, isCenterInScreen] = event.camera->mapWorldToScreen(vec3(0));
             if (!isCenterInScreen) {
@@ -327,8 +334,7 @@ void MeshEditor::mousePressTarget(const MeshEditor::EventTarget &target, const R
             mesh->addEdge({point1->vertex(), point2->vertex()});
 
             return;
-        }
-        auto prevUVPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];
+        });
         if (target.vertex) {
             if (target.vertex == _drawnUVPoints[0]->vertex()) {
                 // create face
@@ -410,10 +416,7 @@ void MeshEditor::hoverMoveTarget(const MeshEditor::EventTarget &target, const Re
     switch (_appState->tool()) {
     case UI::Tool::Draw: {
         auto mesh = _item->mesh();
-        if (_drawnUVPoints.empty()) {
-            return;
-        }
-        auto prevVert = _drawnUVPoints[_drawnUVPoints.size() - 1]->vertex();
+        LATTICE_OPTIONAL_GUARD(prevVert, lastDrawnVertex(), return;);
 
         auto [prevPosInScreen, isInScreen] = event.camera->mapWorldToScreen(prevVert->position());
         if (!isInScreen) {
@@ -489,6 +492,21 @@ void MeshEditor::vertexDragMove(const Render::MouseEvent &event) {
         positions[v] = initialPos + offset;
     }
     mesh->setPositions(positions);
+}
+
+Opt<SP<Document::MeshUVPoint> > MeshEditor::lastDrawnPoint() const {
+    if (_drawnUVPoints.empty()) {
+        return {};
+    }
+    return _drawnUVPoints[_drawnUVPoints.size() - 1];
+}
+
+Opt<SP<Document::MeshVertex> > MeshEditor::lastDrawnVertex() const {
+    auto uvPoint = lastDrawnPoint();
+    if (!uvPoint) {
+        return {};
+    }
+    return (*uvPoint)->vertex();
 }
 
 }
