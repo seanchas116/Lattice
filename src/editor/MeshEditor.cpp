@@ -320,7 +320,19 @@ void MeshEditor::mousePressTarget(const MeshEditor::EventTarget &target, const R
     switch (_appState->tool()) {
     case UI::Tool::Draw: {
         auto mesh = _item->mesh();
-        LATTICE_OPTIONAL_GUARD(prevUVPoint, lastDrawnPoint(), {
+        if (_drawnUVPoints.empty()) {
+            if (target.vertex) {
+                // start from vertex
+                auto& vertex = *target.vertex;
+                auto point1 = (*vertex->uvPoints().begin())->sharedFromThis();
+                auto point2 = mesh->addUVPoint(mesh->addVertex(vertex->position()), vec2(0));
+                _drawnUVPoints.push_back(point1);
+                _drawnUVPoints.push_back(point2);
+                mesh->addEdge({point1->vertex(), point2->vertex()});
+
+                return;
+            }
+
             // TODO: better depth
             auto [centerInScreen, isCenterInScreen] = event.camera->mapWorldToScreen(vec3(0));
             if (!isCenterInScreen) {
@@ -334,7 +346,8 @@ void MeshEditor::mousePressTarget(const MeshEditor::EventTarget &target, const R
             mesh->addEdge({point1->vertex(), point2->vertex()});
 
             return;
-        });
+        }
+        auto prevUVPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];
         if (target.vertex) {
             if (target.vertex == _drawnUVPoints[0]->vertex()) {
                 // create face
