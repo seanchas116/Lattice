@@ -39,5 +39,12 @@ list(APPEND SOURCES "vendor/tinyobjloader/tiny_obj_loader.cc")
 file(GLOB_RECURSE SHADERS "src/*.vert" "src/*.geom" "src/*.frag")
 cmrc_add_resource_library(LatticeResources ${SHADERS})
 
-add_executable(Lattice ${SOURCES} ${SHADERS})
+if(WIN32)
+    set(BUNDLE_TYPE WIN32)
+elseif(APPLE)
+    set(BUNDLE_TYPE MACOSX_BUNDLE)
+endif()
+
+add_executable(Lattice ${BUNDLE_TYPE} ${SOURCES} ${SHADERS})
 target_link_libraries(Lattice ${LIBRARIES} LatticeResources)
+set_target_properties(Lattice PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)
