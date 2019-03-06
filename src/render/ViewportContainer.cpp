@@ -57,8 +57,8 @@ void ViewportContainer::paintGL() {
         }
         glm::dvec2 minPos = mapQtToGL(this, viewport->mapTo(this, viewport->rect().bottomLeft()));
         glm::dvec2 maxPos = mapQtToGL(this, viewport->mapTo(this, viewport->rect().topRight()));
-        glm::ivec2 minPosViewport = round(minPos * (widgetPixelRatio(this) * devicePixelRatioF()));
-        glm::ivec2 maxPosViewport = round(maxPos * (widgetPixelRatio(this) * devicePixelRatioF()));
+        glm::ivec2 minPosViewport = round(minPos * devicePixelRatioF());
+        glm::ivec2 maxPosViewport = round(maxPos * devicePixelRatioF());
         glm::ivec2 sizeViewport = maxPosViewport - minPosViewport;
 
         glEnable(GL_SCISSOR_TEST);
