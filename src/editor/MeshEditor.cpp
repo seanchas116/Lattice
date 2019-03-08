@@ -320,9 +320,34 @@ void MeshEditor::mousePressTarget(const MeshEditor::EventTarget &target, const R
     switch (_appState->tool()) {
     case UI::Tool::Draw: {
         auto mesh = _item->mesh();
-        if (_drawnUVPoints.empty()) {
+        if (!_drawnUVPoints.empty()) {
+            auto prevUVPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];
             if (target.vertex) {
-                // start from vertex
+                // connect to existing vertex
+                if (target.vertex == _drawnUVPoints[0]->vertex()) {
+                    // create face
+                    mesh->addFace(_drawnUVPoints, mesh->materials()[0]);
+                    _drawnUVPoints.clear();
+                    return;
+                }
+                mesh->addEdge({prevUVPoint->vertex(), *target.vertex});
+            } else {
+                // add new vertex
+                auto [prevPosInScreen, isInScreen] = event.camera->mapWorldToScreen(prevUVPoint->vertex()->position());
+                if (!isInScreen) {
+                    return;
+                }
+                auto pos = event.camera->mapScreenToWorld(dvec3(event.screenPos, prevPosInScreen.z));
+
+                mesh->setPositions({{prevUVPoint->vertex(), pos}});
+
+                auto uvPoint = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
+                _drawnUVPoints.push_back(uvPoint);
+                mesh->addEdge({prevUVPoint->vertex(), uvPoint->vertex()});
+            }
+        } else {
+            if (target.vertex) {
+                // start from existing vertex
                 auto& vertex = *target.vertex;
                 auto point1 = (*vertex->uvPoints().begin())->sharedFromThis();
                 auto point2 = mesh->addUVPoint(mesh->addVertex(vertex->position()), vec2(0));
@@ -330,47 +355,21 @@ void MeshEditor::mousePressTarget(const MeshEditor::EventTarget &target, const R
                 _drawnUVPoints.push_back(point2);
                 mesh->addEdge({point1->vertex(), point2->vertex()});
 
-                return;
+            } else {
+                // start from new vertex
+                // TODO: better depth
+                auto [centerInScreen, isCenterInScreen] = event.camera->mapWorldToScreen(vec3(0));
+                if (!isCenterInScreen) {
+                    return;
+                }
+                auto pos = event.camera->mapScreenToWorld(dvec3(event.screenPos, centerInScreen.z));
+                auto point1 = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
+                auto point2 = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
+                _drawnUVPoints.push_back(point1);
+                _drawnUVPoints.push_back(point2);
+                mesh->addEdge({point1->vertex(), point2->vertex()});
             }
-
-            // TODO: better depth
-            auto [centerInScreen, isCenterInScreen] = event.camera->mapWorldToScreen(vec3(0));
-            if (!isCenterInScreen) {
-                return;
-            }
-            auto pos = event.camera->mapScreenToWorld(dvec3(event.screenPos, centerInScreen.z));
-            auto point1 = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
-            auto point2 = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
-            _drawnUVPoints.push_back(point1);
-            _drawnUVPoints.push_back(point2);
-            mesh->addEdge({point1->vertex(), point2->vertex()});
-
-            return;
         }
-        auto prevUVPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];
-        if (target.vertex) {
-            if (target.vertex == _drawnUVPoints[0]->vertex()) {
-                // create face
-                mesh->addFace(_drawnUVPoints, mesh->materials()[0]);
-                _drawnUVPoints.clear();
-                return;
-            }
-            mesh->addEdge({prevUVPoint->vertex(), *target.vertex});
-            return;
-        }
-
-        auto [prevPosInScreen, isInScreen] = event.camera->mapWorldToScreen(prevUVPoint->vertex()->position());
-        if (!isInScreen) {
-            return;
-        }
-        auto pos = event.camera->mapScreenToWorld(dvec3(event.screenPos, prevPosInScreen.z));
-
-        mesh->setPositions({{prevUVPoint->vertex(), pos}});
-
-        auto uvPoint = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
-        _drawnUVPoints.push_back(uvPoint);
-        mesh->addEdge({prevUVPoint->vertex(), uvPoint->vertex()});
-
         return;
     }
     default: {
@@ -429,14 +428,17 @@ void MeshEditor::hoverMoveTarget(const MeshEditor::EventTarget &target, const Re
     switch (_appState->tool()) {
     case UI::Tool::Draw: {
         auto mesh = _item->mesh();
-        LATTICE_OPTIONAL_GUARD(prevVert, lastDrawnVertex(), return;);
+        auto maybePrevVertex = lastDrawnVertex();
+        if (maybePrevVertex) {
+            auto prevVertex = *maybePrevVertex;
 
-        auto [prevPosInScreen, isInScreen] = event.camera->mapWorldToScreen(prevVert->position());
-        if (!isInScreen) {
-            break;
+            auto [prevPosInScreen, isInScreen] = event.camera->mapWorldToScreen(prevVertex->position());
+            if (!isInScreen) {
+                break;
+            }
+            auto pos = event.camera->mapScreenToWorld(dvec3(event.screenPos, prevPosInScreen.z));
+            mesh->setPositions({{prevVertex, pos}});
         }
-        auto pos = event.camera->mapScreenToWorld(dvec3(event.screenPos, prevPosInScreen.z));
-        mesh->setPositions({{prevVert, pos}});
 
         return;
     }
