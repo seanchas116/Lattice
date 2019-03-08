@@ -1,12 +1,15 @@
 #include <QApplication>
 #include <QSurfaceFormat>
 #include <QOpenGLContext>
+#include <QStyleFactory>
 #include "MainWindow.hpp"
 
 int main(int argc, char *argv[]) {
     QApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
+    QApplication::setStyle(QStyleFactory::create("fusion"));
 
     QApplication a(argc, argv);
 
