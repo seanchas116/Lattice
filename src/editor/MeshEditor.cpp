@@ -324,19 +324,18 @@ void MeshEditor::mousePressTarget(const MeshEditor::EventTarget &target, const R
             if (target.vertex) {
                 auto targetVertex = *target.vertex;
 
+                mesh->removeVertex(_drawnUVPoints[_drawnUVPoints.size() - 1]->vertex());
+                _drawnUVPoints.pop_back();
+
                 // connect to existing vertex
                 auto closingPointIt = std::find(_drawnUVPoints.begin(), _drawnUVPoints.end(), targetVertex->firstUVPoint());
                 if (closingPointIt != _drawnUVPoints.end()) {
-                    auto lastVertex = _drawnUVPoints[_drawnUVPoints.size() - 1]->vertex();
-                    mesh->removeVertex(lastVertex);
-
-                    std::vector<SP<Document::MeshUVPoint>> points(closingPointIt, _drawnUVPoints.end() - 1);
                     // create face
+                    std::vector<SP<Document::MeshUVPoint>> points(closingPointIt, _drawnUVPoints.end());
                     mesh->addFace(points, mesh->materials()[0]);
                     _drawnUVPoints.clear();
                     return;
                 }
-                _drawnUVPoints.pop_back();
                 auto prevUVPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];
                 mesh->addEdge({prevUVPoint->vertex(), targetVertex});
                 _drawnUVPoints.push_back(targetVertex->firstUVPoint());
