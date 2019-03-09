@@ -72,6 +72,8 @@ void MainWindow::setupToolBar() {
         connect(action, &QAction::toggled, appState, [appState, tool = tool] (bool checked) {
             if (checked) {
                 appState->setTool(tool);
+            } else if (appState->tool() == tool) {
+                appState->setTool(Tool::None);
             }
         });
         connect(appState, &AppState::toolChanged, action, [action, tool = tool] (Tool newTool) {
