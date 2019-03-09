@@ -23,6 +23,7 @@ EditorScene::EditorScene(const SP<UI::AppState> &appState) :
     connect(appState.get(), &UI::AppState::isVertexVisibleChanged, this, &EditorScene::updateRenderables);
     connect(appState.get(), &UI::AppState::isEdgeVisibleChanged, this, &EditorScene::updateRenderables);
     connect(appState.get(), &UI::AppState::isFaceVisibleChanged, this, &EditorScene::updateRenderables);
+    connect(appState.get(), &UI::AppState::toolChanged, this, &EditorScene::updateRenderables);
 
     connect(appState.get(), &UI::AppState::isTranslateHandleVisibleChanged, this, &EditorScene::updateRenderables);
     connect(appState.get(), &UI::AppState::isRotateHandleVisibleChanged, this, &EditorScene::updateRenderables);
@@ -86,7 +87,7 @@ void EditorScene::updateRenderables() {
             renderables.push_back(h);
         }
     }
-    if (_appState->document()->isEditing() && !_appState->document()->meshSelection().vertices.empty()) {
+    if (_appState->document()->isEditing() && !_appState->document()->meshSelection().vertices.empty() && _appState->tool() == UI::Tool::None) {
         for (auto& h : _meshManipulator->handles(_appState->isTranslateHandleVisible(), _appState->isRotateHandleVisible(), _appState->isScaleHandleVisible())) {
             renderables.push_back(h);
         }
