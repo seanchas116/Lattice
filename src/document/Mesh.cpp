@@ -426,7 +426,8 @@ void Mesh::removeEdge(const SP<MeshEdge> &edge) {
         return;
     }
 
-    for (auto& face : edge->faces()) {
+    auto faces = edge->faces();
+    for (auto& face : faces) {
         removeFace(face);
     }
     auto change = makeShared<RemoveEdgeChange>(sharedFromThis(), edge);
@@ -434,7 +435,8 @@ void Mesh::removeEdge(const SP<MeshEdge> &edge) {
 }
 
 void Mesh::removeVertex(const SP<MeshVertex> &vertex) {
-    for (auto& edge : vertex->edges()) {
+    auto edges = vertex->edges();
+    for (auto& edge : edges) {
         removeEdge(edge->sharedFromThis());
     }
     auto change = makeShared<RemoveVertexChange>(sharedFromThis(), vertex);

@@ -328,7 +328,7 @@ void MeshEditor::mousePressTarget(const MeshEditor::EventTarget &target, const R
                 auto closingPointIt = std::find(_drawnUVPoints.begin(), _drawnUVPoints.end(), targetVertex->firstUVPoint());
                 if (closingPointIt != _drawnUVPoints.end()) {
                     auto lastVertex = _drawnUVPoints[_drawnUVPoints.size() - 1]->vertex();
-                    //mesh->removeVertex(lastVertex);
+                    mesh->removeVertex(lastVertex);
 
                     std::vector<SP<Document::MeshUVPoint>> points(closingPointIt, _drawnUVPoints.end() - 1);
                     // create face
