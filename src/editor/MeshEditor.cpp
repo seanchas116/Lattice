@@ -321,18 +321,33 @@ void MeshEditor::mousePressTarget(const MeshEditor::EventTarget &target, const R
     case UI::Tool::Draw: {
         auto mesh = _item->mesh();
         if (!_drawnUVPoints.empty()) {
-            auto prevUVPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];
             if (target.vertex) {
+                auto targetVertex = *target.vertex;
+
                 // connect to existing vertex
-                if (target.vertex == _drawnUVPoints[0]->vertex()) {
+                auto closingPointIt = std::find(_drawnUVPoints.begin(), _drawnUVPoints.end(), targetVertex->firstUVPoint());
+                if (closingPointIt != _drawnUVPoints.end()) {
+                    auto lastVertex = _drawnUVPoints[_drawnUVPoints.size() - 1]->vertex();
+                    //mesh->removeVertex(lastVertex);
+
+                    std::vector<SP<Document::MeshUVPoint>> points(closingPointIt, _drawnUVPoints.end() - 1);
                     // create face
-                    mesh->addFace(_drawnUVPoints, mesh->materials()[0]);
+                    mesh->addFace(points, mesh->materials()[0]);
                     _drawnUVPoints.clear();
                     return;
                 }
-                mesh->addEdge({prevUVPoint->vertex(), *target.vertex});
+                _drawnUVPoints.pop_back();
+                auto prevUVPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];
+                mesh->addEdge({prevUVPoint->vertex(), targetVertex});
+                _drawnUVPoints.push_back(targetVertex->firstUVPoint());
+
+                auto uvPoint = mesh->addUVPoint(mesh->addVertex(targetVertex->position()), vec2(0));
+                _drawnUVPoints.push_back(uvPoint);
+                mesh->addEdge({targetVertex, uvPoint->vertex()});
+
             } else {
                 // add new vertex
+                auto prevUVPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];
                 auto [prevPosInScreen, isInScreen] = event.camera->mapWorldToScreen(prevUVPoint->vertex()->position());
                 if (!isInScreen) {
                     return;

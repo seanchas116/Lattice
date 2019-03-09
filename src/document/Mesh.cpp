@@ -5,6 +5,10 @@ using namespace glm;
 
 namespace Lattice::Document {
 
+SP<MeshUVPoint> MeshVertex::firstUVPoint() const {
+    return (*_uvPoints.begin())->sharedFromThis();
+}
+
 glm::vec3 MeshVertex::normal() const {
     glm::vec3 normalSum(0);
     for (auto& face : _faces) {

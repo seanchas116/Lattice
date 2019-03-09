@@ -32,6 +32,8 @@ public:
     auto& faces() const { return _faces; }
     auto& uvPoints() const { return _uvPoints; }
 
+    SP<MeshUVPoint> firstUVPoint() const;
+
     glm::vec3 normal() const;
 
 private:
