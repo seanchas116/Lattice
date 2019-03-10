@@ -3,7 +3,7 @@
 #include "../support/Shorthands.hpp"
 #include "../support/Box.hpp"
 #include "../support/SortedArray.hpp"
-#include "Change.hpp"
+#include "../support/Change.hpp"
 #include <QObject>
 #include <QImage>
 #include <glm/glm.hpp>

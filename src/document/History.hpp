@@ -6,9 +6,11 @@
 class QUndoCommand;
 class QUndoStack;
 
-namespace Lattice::Document {
+namespace Lattice  {
 
 class Change;
+
+namespace Document {
 
 class History final : public QObject {
     Q_OBJECT
@@ -27,4 +29,5 @@ private:
     QString _currentTitle;
 };
 
-} // namespace Lattice
+}
+}

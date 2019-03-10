@@ -1,9 +1,8 @@
 #pragma once
 #include <QtGlobal>
-#include "../support/Shorthands.hpp"
+#include "Shorthands.hpp"
 
 namespace Lattice {
-namespace Document {
 
 class Change {
     Q_DISABLE_COPY(Change)
@@ -15,5 +14,4 @@ public:
     virtual bool mergeWith(const SP<const Change>& other);
 };
 
-} // namespace Document
 } // namespace Lattice

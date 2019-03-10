@@ -1,14 +1,15 @@
 #include "Item.hpp"
-#include "Change.hpp"
 #include "Document.hpp"
 #include "History.hpp"
 #include "../support/JSON.hpp"
 #include "../support/OptionalGuard.hpp"
+#include "../support/Change.hpp"
 #include <QtDebug>
 #include <nlohmann/json.hpp>
 #include <algorithm>
 
-namespace Lattice::Document {
+namespace Lattice {
+namespace Document {
 
 class Item::ChildInsertChange : public Change {
 public:
@@ -256,4 +257,5 @@ void Item::setLocationInternal(const Location &location) {
     }
 }
 
+}
 } // namespace Lattice

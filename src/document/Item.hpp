@@ -7,10 +7,13 @@
 #include <functional>
 #include <optional>
 
-namespace Lattice::Document {
+namespace Lattice {
+
+class Change;
+
+namespace Document {
 
 class Document;
-class Change;
 
 class Item : public QObject, public EnableSharedFromThis<Item> {
     Q_OBJECT
@@ -75,4 +78,5 @@ private:
     std::vector<SP<Item>> _childItems;
 };
 
-} // namespace Lattice
+}
+}

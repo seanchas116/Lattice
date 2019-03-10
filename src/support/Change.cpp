@@ -1,7 +1,6 @@
 #include "Change.hpp"
 
 namespace Lattice {
-namespace Document {
 
 Change::~Change() = default;
 
@@ -10,5 +9,4 @@ bool Change::mergeWith(const SP<const Change> &other) {
     return false;
 }
 
-} // namespace Document
 } // namespace Lattice

@@ -1,5 +1,5 @@
 #include "History.hpp"
-#include "Change.hpp"
+#include "../support/Change.hpp"
 #include <QUndoStack>
 #include <QUndoCommand>
 
