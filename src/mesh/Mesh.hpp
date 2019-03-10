@@ -13,7 +13,7 @@
 #include <set>
 #include <functional>
 
-namespace Lattice::Document {
+namespace Lattice::Mesh {
 
 class MeshVertex;
 class MeshEdge;

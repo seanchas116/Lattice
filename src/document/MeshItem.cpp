@@ -5,10 +5,11 @@
 
 using namespace glm;
 
-namespace Lattice::Document {
+namespace Lattice {
+namespace Document {
 
-MeshItem::MeshItem() : _mesh(makeShared<Mesh>()) {
-    connect(_mesh.get(), &Mesh::changed, this, &Item::changed);
+MeshItem::MeshItem() : _mesh(makeShared<Mesh::Mesh>()) {
+    connect(_mesh.get(), &Mesh::Mesh::changed, this, &Item::changed);
     _mesh->setChangeHandler([this](const auto& change) {
         addChange(change);
     });
@@ -35,4 +36,5 @@ void MeshItem::fromJSON(const nlohmann::json &json) {
     //_shape->fromJSON(json["shape"]);
 }
 
+}
 } // namespace Lattice

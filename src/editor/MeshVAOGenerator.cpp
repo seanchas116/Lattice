@@ -7,7 +7,7 @@
 namespace Lattice {
 namespace Editor {
 
-MeshVAOGenerator::MeshVAOGenerator(const SP<Document::Mesh> &mesh) :
+MeshVAOGenerator::MeshVAOGenerator(const SP<Mesh::Mesh> &mesh) :
     _mesh(mesh),
     _vertexBuffer(makeShared<GL::VertexBuffer<GL::Vertex>>())
 {
@@ -43,8 +43,8 @@ SP<GL::VAO> MeshVAOGenerator::generateEdgeVAO() const {
     return edgeVAO;
 }
 
-std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() const {
-    std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> faceVAOs;
+std::unordered_map<SP<Mesh::MeshMaterial>, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() const {
+    std::unordered_map<SP<Mesh::MeshMaterial>, SP<GL::VAO>> faceVAOs;
 
     for (auto& material : _mesh->materials()) {
         std::vector<GL::IndexBuffer::Triangle> triangles;

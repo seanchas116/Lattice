@@ -2,16 +2,20 @@
 #include "Item.hpp"
 #include <glm/glm.hpp>
 
-namespace Lattice::Document {
+namespace Lattice {
 
+namespace Mesh {
 class Mesh;
+}
+
+namespace Document {
 
 class MeshItem final : public Item {
     Q_OBJECT
 public:
     MeshItem();
 
-    const SP<Mesh>& mesh() const { return _mesh; }
+    const SP<Mesh::Mesh>& mesh() const { return _mesh; }
 
     SP<Item> clone() const override;
     void toJSON(nlohmann::json& json) const override;
@@ -20,7 +24,8 @@ public:
 signals:
 
 private:
-    SP<Mesh> _mesh;
+    SP<Mesh::Mesh> _mesh;
 };
 
-} // namespace Lattice
+}
+}

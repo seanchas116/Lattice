@@ -89,10 +89,10 @@ void RotateHandle::mouseRelease(const Render::MouseEvent &event) {
     emit onEnd();
 }
 
-SP<Document::Mesh> RotateHandle::createMesh() {
-    auto mesh = makeShared<Document::Mesh>();
+SP<Mesh::Mesh> RotateHandle::createMesh() {
+    auto mesh = makeShared<Mesh::Mesh>();
     auto material = mesh->addMaterial();
-    mesh->addCircle(dvec3(0), 2.0, 64, Document::Mesh::CircleFill::None, 0, material);
+    mesh->addCircle(dvec3(0), 2.0, 64, Mesh::Mesh::CircleFill::None, 0, material);
     return mesh;
 }
 

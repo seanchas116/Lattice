@@ -96,7 +96,7 @@ void ArrowHandle::setLength(double length) {
 }
 
 SP<GL::VAO> ArrowHandle::createHandleVAO() {
-    auto mesh = makeShared<Document::Mesh>();
+    auto mesh = makeShared<Mesh::Mesh>();
     auto material = mesh->addMaterial();
     if (_handleType == HandleType::Translate) {
         mesh->addCone(dvec3(0), Constants::translateHandleWidth * 0.5, Constants::translateHandleLength, 8, 0, material);
@@ -117,7 +117,7 @@ SP<GL::VAO> ArrowHandle::createBodyVAO(double length) {
 }
 
 SP<GL::VAO> ArrowHandle::createBodyPickVAO(double length) {
-    auto mesh = makeShared<Document::Mesh>();
+    auto mesh = makeShared<Mesh::Mesh>();
     auto material = mesh->addMaterial();
     mesh->addCylinder(dvec3(Constants::bodyBegin, 0, 0), Constants::hitRadius, length - Constants::bodyBegin + Constants::translateHandleLength, 8, 0, material);
     return MeshVAOGenerator(mesh).generateFaceVAOs().at(material);

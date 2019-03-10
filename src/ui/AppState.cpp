@@ -45,7 +45,7 @@ void AppState::addCircle() {
     _document->history()->beginChange(tr("Add Circle"));
     auto item = makeShared<Document::MeshItem>();
     item->setName(tr("Circle").toStdString());
-    item->mesh()->addCircle(glm::vec3(0), 1.0, 16, Document::Mesh::CircleFill::Ngon, 1, item->mesh()->addMaterial());
+    item->mesh()->addCircle(glm::vec3(0), 1.0, 16, Mesh::Mesh::CircleFill::Ngon, 1, item->mesh()->addMaterial());
     _document->insertItemToCurrentPosition(item);
 }
 

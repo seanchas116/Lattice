@@ -24,7 +24,7 @@ const vec4 hoveredColor = vec4(1, 1, 0, 1);
 
 class MeshEditor::VertexPickable : public Render::Renderable {
 public:
-    VertexPickable(MeshEditor* editor, const SP<Document::MeshVertex>& vertex) : _editor(editor), _vertex(vertex) {}
+    VertexPickable(MeshEditor* editor, const SP<Mesh::MeshVertex>& vertex) : _editor(editor), _vertex(vertex) {}
 
     void mousePress(const Render::MouseEvent &event) override {
         _editor->mousePressTarget({_vertex, {}, {}}, event);
@@ -47,12 +47,12 @@ public:
     }
 
     MeshEditor* _editor;
-    SP<Document::MeshVertex> _vertex;
+    SP<Mesh::MeshVertex> _vertex;
 };
 
 class MeshEditor::EdgePickable : public Render::Renderable {
 public:
-    EdgePickable(MeshEditor* editor, const SP<Document::MeshEdge>& edge) : _editor(editor), _edge(edge) {}
+    EdgePickable(MeshEditor* editor, const SP<Mesh::MeshEdge>& edge) : _editor(editor), _edge(edge) {}
 
     void mousePress(const Render::MouseEvent &event) override {
         _editor->mousePressTarget({{}, _edge, {}}, event);
@@ -75,12 +75,12 @@ public:
     }
 
     MeshEditor* _editor;
-    SP<Document::MeshEdge> _edge;
+    SP<Mesh::MeshEdge> _edge;
 };
 
 class MeshEditor::FacePickable : public Render::Renderable {
 public:
-    FacePickable(MeshEditor* editor, const SP<Document::MeshFace>& face) : _editor(editor), _face(face) {}
+    FacePickable(MeshEditor* editor, const SP<Mesh::MeshFace>& face) : _editor(editor), _face(face) {}
 
     void mousePress(const Render::MouseEvent &event) override {
         _editor->mousePressTarget({{}, {}, _face}, event);
@@ -103,7 +103,7 @@ public:
     }
 
     MeshEditor* _editor;
-    SP<Document::MeshFace> _face;
+    SP<Mesh::MeshFace> _face;
 };
 
 MeshEditor::MeshEditor(const SP<UI::AppState>& appState, const SP<Document::MeshItem> &item) :
@@ -118,7 +118,7 @@ MeshEditor::MeshEditor(const SP<UI::AppState>& appState, const SP<Document::Mesh
 {
     initializeOpenGLFunctions();
     updateWholeVAOs();
-    connect(_item->mesh().get(), &Document::Mesh::changed, this, &MeshEditor::updateWholeVAOs);
+    connect(_item->mesh().get(), &Mesh::Mesh::changed, this, &MeshEditor::updateWholeVAOs);
     connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::updateWholeVAOs);
 }
 
@@ -266,7 +266,7 @@ void MeshEditor::updateWholeVAOs() {
         _faceAttributes.clear();
         _facePickAttributes.clear();
 
-        auto addPoint = [&](const SP<FacePickable>& pickable, const SP<Document::MeshUVPoint>& p) {
+        auto addPoint = [&](const SP<FacePickable>& pickable, const SP<Mesh::MeshUVPoint>& p) {
             GL::Vertex attrib;
             attrib.position = p->vertex()->position();
             attrib.texCoord = p->position();
@@ -331,7 +331,7 @@ void MeshEditor::mousePressTarget(const MeshEditor::EventTarget &target, const R
                 auto closingPointIt = std::find(_drawnUVPoints.begin(), _drawnUVPoints.end(), targetVertex->firstUVPoint());
                 if (closingPointIt != _drawnUVPoints.end()) {
                     // create face
-                    std::vector<SP<Document::MeshUVPoint>> points(closingPointIt, _drawnUVPoints.end());
+                    std::vector<SP<Mesh::MeshUVPoint>> points(closingPointIt, _drawnUVPoints.end());
                     mesh->addFace(points, mesh->materials()[0]);
                     _drawnUVPoints.clear();
                     return;
@@ -395,7 +395,7 @@ void MeshEditor::mousePressTarget(const MeshEditor::EventTarget &target, const R
             vertexDragStart({edge->vertices()[0], edge->vertices()[1]}, event);
         } else if (target.face) {
             auto& face = *target.face;
-            std::unordered_set<SP<Document::MeshVertex>> vertices;
+            std::unordered_set<SP<Mesh::MeshVertex>> vertices;
             for (auto& v : face->vertices()) {
                 vertices.insert(v);
             }
@@ -472,7 +472,7 @@ void MeshEditor::hoverLeaveTarget(const MeshEditor::EventTarget &target) {
     }
 }
 
-void MeshEditor::vertexDragStart(const std::unordered_set<SP<Document::MeshVertex> > &vertices, const Render::MouseEvent &event) {
+void MeshEditor::vertexDragStart(const std::unordered_set<SP<Mesh::MeshVertex> > &vertices, const Render::MouseEvent &event) {
     Document::MeshSelection selection;
     if (event.originalEvent->modifiers() & Qt::ShiftModifier) {
         selection = _appState->document()->meshSelection();
@@ -516,21 +516,21 @@ void MeshEditor::vertexDragMove(const Render::MouseEvent &event) {
     }
 
     auto& mesh = _item->mesh();
-    std::unordered_map<SP<Document::MeshVertex>, vec3> positions;
+    std::unordered_map<SP<Mesh::MeshVertex>, vec3> positions;
     for (auto& [v, initialPos] : _dragInitPositions) {
         positions[v] = initialPos + offset;
     }
     mesh->setPositions(positions);
 }
 
-Opt<SP<Document::MeshUVPoint> > MeshEditor::lastDrawnPoint() const {
+Opt<SP<Mesh::MeshUVPoint> > MeshEditor::lastDrawnPoint() const {
     if (_drawnUVPoints.empty()) {
         return {};
     }
     return _drawnUVPoints[_drawnUVPoints.size() - 1];
 }
 
-Opt<SP<Document::MeshVertex> > MeshEditor::lastDrawnVertex() const {
+Opt<SP<Mesh::MeshVertex> > MeshEditor::lastDrawnVertex() const {
     auto uvPoint = lastDrawnPoint();
     if (!uvPoint) {
         return {};

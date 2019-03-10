@@ -12,7 +12,7 @@ DrawMaterial::DrawMaterial() :
     initializeOpenGLFunctions();
 }
 
-void DrawMaterial::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<Camera> &camera, const SP<Document::MeshMaterial> &material) {
+void DrawMaterial::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<Camera> &camera, const SP<Mesh::MeshMaterial> &material) {
     _shader.bind();
     _shader.setUniform("diffuse", material->baseColor());
     _shader.setUniform("ambient", glm::vec3(0));

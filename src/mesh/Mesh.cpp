@@ -3,7 +3,7 @@
 
 using namespace glm;
 
-namespace Lattice::Document {
+namespace Lattice::Mesh {
 
 SP<MeshUVPoint> MeshVertex::firstUVPoint() const {
     return (*_uvPoints.begin())->sharedFromThis();

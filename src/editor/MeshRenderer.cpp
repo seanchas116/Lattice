@@ -21,7 +21,7 @@ MeshRenderer::MeshRenderer(const SP<UI::AppState>& appState, const SP<Document::
     _vertexVAO(makeShared<GL::VAO>())
 {
     updateVAOs();
-    connect(item->mesh().get(), &Document::Mesh::changed, this, &MeshRenderer::updateVAOs);
+    connect(item->mesh().get(), &Mesh::Mesh::changed, this, &MeshRenderer::updateVAOs);
 }
 
 void MeshRenderer::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {

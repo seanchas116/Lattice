@@ -3,7 +3,7 @@
 
 namespace Lattice {
 
-namespace Document {
+namespace Mesh {
 class Mesh;
 }
 
@@ -35,11 +35,11 @@ signals:
     void onEnd();
 
 private:
-    SP<Document::Mesh> createMesh();
+    SP<Mesh::Mesh> createMesh();
 
     int _axis;
     glm::dvec3 _targetPosition {0};
-    SP<Document::Mesh> _handleMesh;
+    SP<Mesh::Mesh> _handleMesh;
     SP<GL::VAO> _handleVAO;
     glm::dvec3 _initialTargetPosition {0};
 };

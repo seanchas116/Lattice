@@ -43,7 +43,7 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
     case ValueType::Translate: {
         dvec3 offset(0);
         offset[axis] = value - _initialValue;
-        std::unordered_map<SP<Document::MeshVertex>, vec3> positions;
+        std::unordered_map<SP<Mesh::MeshVertex>, vec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
             positions[vertex] = initialPos + offset;
         }
@@ -53,7 +53,7 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
     case ValueType::Scale: {
         dvec3 ratio(1);
         ratio[axis] = value / _initialValue;
-        std::unordered_map<SP<Document::MeshVertex>, vec3> positions;
+        std::unordered_map<SP<Mesh::MeshVertex>, vec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
             dvec3 initialOffset = initialPos - _initialMedianPos;
             positions[vertex] = _initialMedianPos + initialOffset * ratio;
@@ -66,7 +66,7 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
         eulerAngles[axis] = value - _initialValue;
         auto matrix = mat4_cast(dquat(eulerAngles));
 
-        std::unordered_map<SP<Document::MeshVertex>, vec3> positions;
+        std::unordered_map<SP<Mesh::MeshVertex>, vec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
             dvec3 initialOffset = initialPos - _initialMedianPos;
             dvec3 offset = (matrix * dvec4(initialOffset, 0)).xyz;
@@ -86,11 +86,11 @@ void MeshManipulator::handleOnEnd(ValueType type) {
     _initialPositions.clear();
 }
 
-void MeshManipulator::connectToItem(const Opt<SP<Document::MeshItem> > &maybeItem) {
+void MeshManipulator::connectToItem(const Opt<SP<Document::MeshItem>> &maybeItem) {
     disconnect(_connection);
     _item = maybeItem;
     LATTICE_OPTIONAL_GUARD(item, maybeItem, return;)
-    _connection = connect(item->mesh().get(), &Document::Mesh::changed, this, [this] {
+    _connection = connect(item->mesh().get(), &Mesh::Mesh::changed, this, [this] {
         updatePosition();
     });
     updatePosition();

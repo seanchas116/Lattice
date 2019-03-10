@@ -8,14 +8,14 @@ namespace Editor {
 
 class MeshPicker {
 public:
-    MeshPicker(const SP<Document::Mesh>& mesh);
+    MeshPicker(const SP<Mesh::Mesh>& mesh);
 
-    Opt<std::pair<SP<Document::MeshFace>, double>> pickFace(const glm::dmat4 &modelToWorld, const SP<Camera>& camera, glm::dvec2 screenPos) const;
-    Opt<std::pair<SP<Document::MeshVertex>, double>> pickVertex(const glm::dmat4 &modelToWorld, const SP<Camera> &camera, glm::dvec2 screenPos, double distance) const;
-    Opt<std::pair<SP<Document::MeshEdge>, double>> pickEdge(const glm::dmat4 &modelToWorld, const SP<Camera> &camera, glm::dvec2 screenPos, double distance) const;
+    Opt<std::pair<SP<Mesh::MeshFace>, double>> pickFace(const glm::dmat4 &modelToWorld, const SP<Camera>& camera, glm::dvec2 screenPos) const;
+    Opt<std::pair<SP<Mesh::MeshVertex>, double>> pickVertex(const glm::dmat4 &modelToWorld, const SP<Camera> &camera, glm::dvec2 screenPos, double distance) const;
+    Opt<std::pair<SP<Mesh::MeshEdge>, double>> pickEdge(const glm::dmat4 &modelToWorld, const SP<Camera> &camera, glm::dvec2 screenPos, double distance) const;
 
 private:
-    SP<Document::Mesh> _mesh;
+    SP<Mesh::Mesh> _mesh;
 };
 
 } // namespace Viewport

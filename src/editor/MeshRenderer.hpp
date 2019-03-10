@@ -20,6 +20,9 @@ class AppState;
 
 namespace Document {
 class MeshItem;
+}
+
+namespace Mesh {
 class Mesh;
 class MeshMaterial;
 }
@@ -50,7 +53,7 @@ private:
 
     SP<UI::AppState> _appState;
     SP<Document::MeshItem> _item;
-    std::unordered_map<SP<Document::MeshMaterial>, SP<GL::VAO>> _faceVAOs;
+    std::unordered_map<SP<Mesh::MeshMaterial>, SP<GL::VAO>> _faceVAOs;
     SP<GL::VAO> _edgeVAO;
     SP<GL::VAO> _vertexVAO;
 
