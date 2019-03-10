@@ -193,6 +193,8 @@ public:
 
     void merge(const SP<const Mesh> &other);
 
+    SP<Face> flipFace(const SP<Face>& face);
+
     SP<Mesh> clone() const;
 
     Box<float> boundingBox() const;

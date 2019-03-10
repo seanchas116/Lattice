@@ -332,7 +332,13 @@ void MeshEditor::mousePressTarget(const MeshEditor::EventTarget &target, const R
                 if (closingPointIt != _drawnUVPoints.end()) {
                     // create face
                     std::vector<SP<Mesh::UVPoint>> points(closingPointIt, _drawnUVPoints.end());
-                    mesh->addFace(points, mesh->materials()[0]);
+                    auto face = mesh->addFace(points, mesh->materials()[0]);
+
+                    bool isFaceFore = dot(face->normal(), vec3(event.camera->location().backward())) > 0;
+                    if (!isFaceFore) {
+                        mesh->flipFace(face);
+                    }
+
                     _drawnUVPoints.clear();
                     return;
                 }

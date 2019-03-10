@@ -642,6 +642,15 @@ void Mesh::merge(const SP<const Mesh> &other) {
     }
 }
 
+SP<Face> Mesh::flipFace(const SP<Face> &face) {
+    auto uvPoints = face->uvPoints();
+    auto material = face->material();
+    std::vector<SP<UVPoint>> reverseUVPoints(uvPoints.rbegin(), uvPoints.rend());
+
+    removeFace(face);
+    return addFace(reverseUVPoints, material);
+}
+
 SP<Mesh> Mesh::clone() const {
     auto newMesh = makeShared<Mesh>();
     newMesh->merge(sharedFromThis());

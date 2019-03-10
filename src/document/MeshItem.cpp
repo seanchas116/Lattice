@@ -33,7 +33,7 @@ void MeshItem::fromJSON(const nlohmann::json &json) {
     Item::fromJSON(json);
     throw std::runtime_error("TODO");
     // TODO
-    //_shape->fromJSON(json["shape"]);
+    //_shape->fomJSON(json["shape"]);
 }
 
 }
