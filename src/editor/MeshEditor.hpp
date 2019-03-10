@@ -25,7 +25,7 @@ class MeshItem;
 
 namespace Mesh {
 class Mesh;
-class MeshMaterial;
+class Material;
 }
 
 namespace GL {
@@ -55,9 +55,9 @@ private:
     void updateWholeVAOs();
 
     struct EventTarget {
-        Opt<SP<Mesh::MeshVertex>> vertex;
-        Opt<SP<Mesh::MeshEdge>> edge;
-        Opt<SP<Mesh::MeshFace>> face;
+        Opt<SP<Mesh::Vertex>> vertex;
+        Opt<SP<Mesh::Edge>> edge;
+        Opt<SP<Mesh::Face>> face;
     };
 
     void mousePressTarget(const EventTarget& target, const Render::MouseEvent &event);
@@ -67,7 +67,7 @@ private:
     void hoverMoveTarget(const EventTarget& target, const Render::MouseEvent &event);
     void hoverLeaveTarget(const EventTarget& target);
 
-    void vertexDragStart(const std::unordered_set<SP<Mesh::MeshVertex>>& vertices, const Render::MouseEvent& event);
+    void vertexDragStart(const std::unordered_set<SP<Mesh::Vertex>>& vertices, const Render::MouseEvent& event);
     void vertexDragMove(const Render::MouseEvent& event);
 
     class VertexPickable;
@@ -77,7 +77,7 @@ private:
     SP<UI::AppState> _appState;
     SP<Document::MeshItem> _item;
 
-    std::unordered_map<SP<Mesh::MeshMaterial>, SP<GL::VAO>> _faceVAOs;
+    std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> _faceVAOs;
     SP<GL::VertexBuffer<GL::Vertex>> _faceVBO;
     std::vector<GL::Vertex> _faceAttributes;
     SP<GL::VAO> _facePickVAO;
@@ -94,19 +94,19 @@ private:
     std::vector<GL::Vertex> _vertexPickAttributes;
 
     // vertex drag
-    std::unordered_map<SP<Mesh::MeshVertex>, glm::dvec3> _dragInitPositions;
+    std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _dragInitPositions;
     glm::dvec3 _dragInitWorldPos;
     bool _dragStarted;
 
     // vertex hover
-    Opt<SP<Mesh::MeshVertex>> _hoveredVertex;
-    Opt<SP<Mesh::MeshEdge>> _hoveredEdge;
+    Opt<SP<Mesh::Vertex>> _hoveredVertex;
+    Opt<SP<Mesh::Edge>> _hoveredEdge;
     // TODO: hovered face
 
     // draw
-    std::vector<SP<Mesh::MeshUVPoint>> _drawnUVPoints;
-    Opt<SP<Mesh::MeshUVPoint>> lastDrawnPoint() const;
-    Opt<SP<Mesh::MeshVertex>> lastDrawnVertex() const;
+    std::vector<SP<Mesh::UVPoint>> _drawnUVPoints;
+    Opt<SP<Mesh::UVPoint>> lastDrawnPoint() const;
+    Opt<SP<Mesh::Vertex>> lastDrawnVertex() const;
 };
 
 }

@@ -11,7 +11,7 @@ namespace Document {
 class MeshItem;
 }
 namespace Mesh {
-class MeshVertex;
+class Vertex;
 }
 
 namespace Editor {
@@ -33,7 +33,7 @@ private:
 
     SP<UI::AppState> _appState;
     Opt<SP<Document::MeshItem>> _item;
-    std::unordered_map<SP<Mesh::MeshVertex>, glm::dvec3> _initialPositions;
+    std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _initialPositions;
     glm::dvec3 _initialMedianPos;
     double _initialValue;
     QMetaObject::Connection _connection;

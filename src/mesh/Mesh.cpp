@@ -5,11 +5,11 @@ using namespace glm;
 
 namespace Lattice::Mesh {
 
-SP<MeshUVPoint> MeshVertex::firstUVPoint() const {
+SP<UVPoint> Vertex::firstUVPoint() const {
     return (*_uvPoints.begin())->sharedFromThis();
 }
 
-glm::vec3 MeshVertex::normal() const {
+glm::vec3 Vertex::normal() const {
     glm::vec3 normalSum(0);
     for (auto& face : _faces) {
         normalSum += face->normal();
@@ -17,23 +17,23 @@ glm::vec3 MeshVertex::normal() const {
     return normalize(normalSum / float(_faces.size()));
 }
 
-std::vector<SP<MeshFace> > MeshUVPoint::faces() const {
-    std::vector<SP<MeshFace>> faces;
+std::vector<SP<Face> > UVPoint::faces() const {
+    std::vector<SP<Face>> faces;
     for (auto& f : _faces) {
         faces.push_back(f->sharedFromThis());
     }
     return faces;
 }
 
-std::vector<SP<MeshFace> > MeshEdge::faces() const {
-    std::vector<SP<MeshFace>> faces;
+std::vector<SP<Face> > Edge::faces() const {
+    std::vector<SP<Face>> faces;
     for (auto& f : _faces) {
         faces.push_back(f->sharedFromThis());
     }
     return faces;
 }
 
-glm::vec3 MeshFace::normal() const {
+glm::vec3 Face::normal() const {
     if (_vertices.size() == 3) {
         return normalize(cross(_vertices[1]->position() - _vertices[0]->position(), _vertices[2]->position() - _vertices[0]->position()));
     }
@@ -55,7 +55,7 @@ glm::vec3 MeshFace::normal() const {
 
 class Mesh::AddVertexChange : public Change {
 public:
-    AddVertexChange(const SP<Mesh>& mesh, const SP<MeshVertex>& vertex) : mesh(mesh), vertex(vertex) {
+    AddVertexChange(const SP<Mesh>& mesh, const SP<Vertex>& vertex) : mesh(mesh), vertex(vertex) {
     }
     void apply() override {
         mesh->_vertices.insert(vertex);
@@ -64,12 +64,12 @@ public:
     SP<Change> invert() const override;
 
     SP<Mesh> mesh;
-    SP<MeshVertex> vertex;
+    SP<Vertex> vertex;
 };
 
 class Mesh::RemoveVertexChange : public Change {
 public:
-    RemoveVertexChange(const SP<Mesh>& mesh, const SP<MeshVertex>& vertex) : mesh(mesh), vertex(vertex) {
+    RemoveVertexChange(const SP<Mesh>& mesh, const SP<Vertex>& vertex) : mesh(mesh), vertex(vertex) {
     }
     void apply() override {
         mesh->_vertices.erase(vertex);
@@ -78,7 +78,7 @@ public:
     SP<Change> invert() const override;
 
     SP<Mesh> mesh;
-    SP<MeshVertex> vertex;
+    SP<Vertex> vertex;
 };
 
 SP<Change> Mesh::AddVertexChange::invert() const {
@@ -91,7 +91,7 @@ SP<Change> Mesh::RemoveVertexChange::invert() const {
 
 class Mesh::AddUVPointChange : public Change {
 public:
-    AddUVPointChange(const SP<Mesh>& mesh, const SP<MeshUVPoint>& uvPoint) : mesh(mesh), uvPoint(uvPoint) {
+    AddUVPointChange(const SP<Mesh>& mesh, const SP<UVPoint>& uvPoint) : mesh(mesh), uvPoint(uvPoint) {
     }
 
     void apply() override {
@@ -101,12 +101,12 @@ public:
     SP<Change> invert() const override;
 
     SP<Mesh> mesh;
-    SP<MeshUVPoint> uvPoint;
+    SP<UVPoint> uvPoint;
 };
 
 class Mesh::RemoveUVPointChange : public Change {
 public:
-    RemoveUVPointChange(const SP<Mesh>& mesh, const SP<MeshUVPoint>& uvPoint) : mesh(mesh), uvPoint(uvPoint) {
+    RemoveUVPointChange(const SP<Mesh>& mesh, const SP<UVPoint>& uvPoint) : mesh(mesh), uvPoint(uvPoint) {
     }
 
     void apply() override {
@@ -116,7 +116,7 @@ public:
     SP<Change> invert() const override;
 
     SP<Mesh> mesh;
-    SP<MeshUVPoint> uvPoint;
+    SP<UVPoint> uvPoint;
 };
 
 SP<Change> Mesh::AddUVPointChange::invert() const {
@@ -129,7 +129,7 @@ SP<Change> Mesh::RemoveUVPointChange::invert() const {
 
 class Mesh::AddEdgeChange : public Change {
 public:
-    AddEdgeChange(const SP<Mesh>& mesh, const SP<MeshEdge>& edge) :
+    AddEdgeChange(const SP<Mesh>& mesh, const SP<Edge>& edge) :
         mesh(mesh),
         edge(edge)
     {
@@ -144,12 +144,12 @@ public:
     SP<Change> invert() const override;
 
     SP<Mesh> mesh;
-    SP<MeshEdge> edge;
+    SP<Edge> edge;
 };
 
 class Mesh::RemoveEdgeChange : public Change {
 public:
-    RemoveEdgeChange(const SP<Mesh>& mesh, const SP<MeshEdge>& edge) :
+    RemoveEdgeChange(const SP<Mesh>& mesh, const SP<Edge>& edge) :
         mesh(mesh),
         edge(edge)
     {
@@ -164,7 +164,7 @@ public:
     SP<Change> invert() const override;
 
     SP<Mesh> mesh;
-    SP<MeshEdge> edge;
+    SP<Edge> edge;
 };
 
 SP<Change> Mesh::AddEdgeChange::invert() const {
@@ -178,7 +178,7 @@ SP<Change> Mesh::RemoveEdgeChange::invert() const {
 
 class Mesh::AddFaceChange : public Change {
 public:
-    AddFaceChange(const SP<Mesh>& mesh, const SP<MeshFace>& face) :
+    AddFaceChange(const SP<Mesh>& mesh, const SP<Face>& face) :
         mesh(mesh),
         face(face)
     {
@@ -196,19 +196,19 @@ public:
         }
         face->material()->_faces.insert(face.get());
 
-        std::set<SP<MeshVertex>> vertexSet(face->vertices().begin(), face->vertices().end());
+        std::set<SP<Vertex>> vertexSet(face->vertices().begin(), face->vertices().end());
         mesh->_faces.insert({vertexSet, face});
         emit mesh->faceAdded(face);
     }
     SP<Change> invert() const override;
 
     SP<Mesh> mesh;
-    SP<MeshFace> face;
+    SP<Face> face;
 };
 
 class Mesh::RemoveFaceChange : public Change {
 public:
-    RemoveFaceChange(const SP<Mesh>& mesh, const SP<MeshFace>& face) :
+    RemoveFaceChange(const SP<Mesh>& mesh, const SP<Face>& face) :
         mesh(mesh),
         face(face)
     {
@@ -230,7 +230,7 @@ public:
     SP<Change> invert() const override;
 
     SP<Mesh> mesh;
-    SP<MeshFace> face;
+    SP<Face> face;
 };
 
 SP<Change> Mesh::AddFaceChange::invert() const {
@@ -243,12 +243,12 @@ SP<Change> Mesh::RemoveFaceChange::invert() const {
 
 class Mesh::SetVertexPositionChange : public Change {
 public:
-    SetVertexPositionChange(const SP<Mesh>& mesh, const std::unordered_map<SP<MeshVertex>, glm::vec3>& positions) :
+    SetVertexPositionChange(const SP<Mesh>& mesh, const std::unordered_map<SP<Vertex>, glm::vec3>& positions) :
         mesh(mesh), newPositions(positions)
     {
     }
     void apply() override {
-        std::vector<SP<MeshVertex>> vertices;
+        std::vector<SP<Vertex>> vertices;
         vertices.reserve(newPositions.size());
 
         for (auto& [v, pos] : newPositions) {
@@ -280,18 +280,18 @@ public:
     }
 
     SP<Mesh> mesh;
-    std::unordered_map<SP<MeshVertex>, glm::vec3> oldPositions;
-    std::unordered_map<SP<MeshVertex>, glm::vec3> newPositions;
+    std::unordered_map<SP<Vertex>, glm::vec3> oldPositions;
+    std::unordered_map<SP<Vertex>, glm::vec3> newPositions;
 };
 
 class Mesh::SetUVPositionChange : public Change {
 public:
-    SetUVPositionChange(const SP<Mesh>& mesh, const std::unordered_map<SP<MeshUVPoint>, glm::vec2>& positions) :
+    SetUVPositionChange(const SP<Mesh>& mesh, const std::unordered_map<SP<UVPoint>, glm::vec2>& positions) :
         mesh(mesh), newPositions(positions)
     {
     }
     void apply() override {
-        std::vector<SP<MeshUVPoint>> uvPoints;
+        std::vector<SP<UVPoint>> uvPoints;
         uvPoints.reserve(newPositions.size());
 
         for (auto& [v, pos] : newPositions) {
@@ -320,8 +320,8 @@ public:
     }
 
     SP<Mesh> mesh;
-    std::unordered_map<SP<MeshUVPoint>, glm::vec2> oldPositions;
-    std::unordered_map<SP<MeshUVPoint>, glm::vec2> newPositions;
+    std::unordered_map<SP<UVPoint>, glm::vec2> oldPositions;
+    std::unordered_map<SP<UVPoint>, glm::vec2> newPositions;
 };
 
 
@@ -344,74 +344,74 @@ Mesh::Mesh() {
     connect(this, &Mesh::uvPointsChanged, this, &Mesh::changed);
 }
 
-SP<MeshVertex> Mesh::addVertex(glm::vec3 position) {
-    auto change = makeShared<AddVertexChange>(sharedFromThis(), makeShared<MeshVertex>());
+SP<Vertex> Mesh::addVertex(glm::vec3 position) {
+    auto change = makeShared<AddVertexChange>(sharedFromThis(), makeShared<Vertex>());
     _changeHandler(change);
     setPositions({{change->vertex, position}});
     return change->vertex;
 }
 
-SP<MeshEdge> Mesh::addEdge(const std::array<SP<MeshVertex>, 2> &vertices) {
+SP<Edge> Mesh::addEdge(const std::array<SP<Vertex>, 2> &vertices) {
     auto it = _edges.find(vertices);
     if (it != _edges.end()) {
         return it->second;
     }
-    auto edge = makeShared<MeshEdge>(vertices);
+    auto edge = makeShared<Edge>(vertices);
     auto change = makeShared<AddEdgeChange>(sharedFromThis(), edge);
     _changeHandler(change);
     return edge;
 }
 
-SP<MeshUVPoint> Mesh::addUVPoint(const SP<MeshVertex> &vertex, vec2 position) {
-    auto change = makeShared<AddUVPointChange>(sharedFromThis(), makeShared<MeshUVPoint>(vertex));
+SP<UVPoint> Mesh::addUVPoint(const SP<Vertex> &vertex, vec2 position) {
+    auto change = makeShared<AddUVPointChange>(sharedFromThis(), makeShared<UVPoint>(vertex));
     _changeHandler(change);
     setPositions({{change->uvPoint, position}});
     return change->uvPoint;
 }
 
-SP<MeshFace> Mesh::addFace(const std::vector<SP<MeshUVPoint> > &uvPoints, const SP<MeshMaterial> &material) {
+SP<Face> Mesh::addFace(const std::vector<SP<UVPoint> > &uvPoints, const SP<Material> &material) {
     Q_ASSERT(3 <= uvPoints.size());
 
-    std::vector<SP<MeshVertex>> vertices;
+    std::vector<SP<Vertex>> vertices;
     for (auto& uv : uvPoints) {
         vertices.push_back((uv->vertex()));
     }
 
-    std::set<SP<MeshVertex>> vertexSet(vertices.begin(), vertices.end());
+    std::set<SP<Vertex>> vertexSet(vertices.begin(), vertices.end());
     auto it = _faces.find(vertexSet);
     if (it != _faces.end()) {
         return it->second;
     }
 
-    std::vector<SP<MeshEdge>> edges;
+    std::vector<SP<Edge>> edges;
     for (size_t i = 0; i < vertices.size(); ++i) {
         edges.push_back(addEdge({vertices[i], vertices[(i + 1) % vertices.size()]}));
     }
 
-    auto face = makeShared<MeshFace>(vertices, edges, uvPoints, material);
+    auto face = makeShared<Face>(vertices, edges, uvPoints, material);
     auto change = makeShared<AddFaceChange>(sharedFromThis(), face);
     _changeHandler(change);
     return face;
 }
 
-SP<MeshMaterial> Mesh::addMaterial() {
-    auto material = makeShared<MeshMaterial>();
+SP<Material> Mesh::addMaterial() {
+    auto material = makeShared<Material>();
     _materials.push_back(material);
     return material;
 }
 
-void Mesh::setPositions(const std::unordered_map<SP<MeshVertex>, vec3> &positions) {
+void Mesh::setPositions(const std::unordered_map<SP<Vertex>, vec3> &positions) {
     auto change = makeShared<SetVertexPositionChange>(sharedFromThis(), positions);
     _changeHandler(change);
 }
 
-void Mesh::setPositions(const std::unordered_map<SP<MeshUVPoint>, vec2> &positions) {
+void Mesh::setPositions(const std::unordered_map<SP<UVPoint>, vec2> &positions) {
     auto change = makeShared<SetUVPositionChange>(sharedFromThis(), positions);
     _changeHandler(change);
 }
 
-void Mesh::removeFace(const SP<MeshFace> &face) {
-    std::set<SP<MeshVertex>> vertexSet(face->_vertices.begin(), face->_vertices.end());
+void Mesh::removeFace(const SP<Face> &face) {
+    std::set<SP<Vertex>> vertexSet(face->_vertices.begin(), face->_vertices.end());
     auto it = _faces.find(vertexSet);
     if (it == _faces.end()) {
         return;
@@ -420,7 +420,7 @@ void Mesh::removeFace(const SP<MeshFace> &face) {
     _changeHandler(change);
 }
 
-void Mesh::removeEdge(const SP<MeshEdge> &edge) {
+void Mesh::removeEdge(const SP<Edge> &edge) {
     auto it = _edges.find(edge->vertices());
     if (it == _edges.end()) {
         return;
@@ -434,7 +434,7 @@ void Mesh::removeEdge(const SP<MeshEdge> &edge) {
     _changeHandler(change);
 }
 
-void Mesh::removeVertex(const SP<MeshVertex> &vertex) {
+void Mesh::removeVertex(const SP<Vertex> &vertex) {
     auto edges = vertex->edges();
     for (auto& edge : edges) {
         removeEdge(edge->sharedFromThis());
@@ -443,8 +443,8 @@ void Mesh::removeVertex(const SP<MeshVertex> &vertex) {
     _changeHandler(change);
 }
 
-void Mesh::addPlane(dvec3 center, dvec2 size, int normalAxis, const SP<MeshMaterial> &material) {
-    std::vector<SP<MeshUVPoint>> uvPoints;
+void Mesh::addPlane(dvec3 center, dvec2 size, int normalAxis, const SP<Material> &material) {
+    std::vector<SP<UVPoint>> uvPoints;
     std::array<dvec2, 4> uvs = {dvec2(0, 0), dvec2(1, 0), dvec2(1, 1), dvec2(0, 1)};
 
     for (dvec2 uv : uvs) {
@@ -458,7 +458,7 @@ void Mesh::addPlane(dvec3 center, dvec2 size, int normalAxis, const SP<MeshMater
     addFace(uvPoints, material);
 }
 
-void Mesh::addCube(glm::dvec3 minPos, glm::dvec3 maxPos, const SP<MeshMaterial> &material) {
+void Mesh::addCube(glm::dvec3 minPos, glm::dvec3 maxPos, const SP<Material> &material) {
     //   2    3
     // 6    7
     //   0    1
@@ -481,10 +481,10 @@ void Mesh::addCube(glm::dvec3 minPos, glm::dvec3 maxPos, const SP<MeshMaterial> 
     auto f5 = addFace({v4, v5, v7, v6}, material);
 }
 
-void Mesh::addCircle(glm::dvec3 center, double radius, int segmentCount, Mesh::CircleFill fill, int normalAxis, const SP<MeshMaterial> &material) {
+void Mesh::addCircle(glm::dvec3 center, double radius, int segmentCount, Mesh::CircleFill fill, int normalAxis, const SP<Material> &material) {
     Q_UNUSED(fill);
     // TODO: use CircleFill
-    std::vector<SP<MeshUVPoint>> uvPoints;
+    std::vector<SP<UVPoint>> uvPoints;
 
     double angleStep = M_PI * 2 / segmentCount;
     for (int i = 0 ; i < segmentCount; ++i) {
@@ -499,11 +499,11 @@ void Mesh::addCircle(glm::dvec3 center, double radius, int segmentCount, Mesh::C
     addFace(uvPoints, material);
 }
 
-void Mesh::addSphere(dvec3 center, double radius, int segmentCount, int ringCount, int axis, const SP<MeshMaterial> &material) {
-    std::vector<std::vector<SP<MeshUVPoint>>> uvPointMatrix;
+void Mesh::addSphere(dvec3 center, double radius, int segmentCount, int ringCount, int axis, const SP<Material> &material) {
+    std::vector<std::vector<SP<UVPoint>>> uvPointMatrix;
 
     for (int ring = 0; ring < ringCount - 1; ++ring) {
-        std::vector<SP<MeshUVPoint>> uvPoints;
+        std::vector<SP<UVPoint>> uvPoints;
 
         double longitude = M_PI * (ring + 1 - ringCount * 0.5) / ringCount;
 
@@ -535,8 +535,8 @@ void Mesh::addSphere(dvec3 center, double radius, int segmentCount, int ringCoun
     }
 }
 
-void Mesh::addCone(dvec3 center, double radius, double height, int segmentCount, int axis, const SP<MeshMaterial> &material) {
-    std::vector<SP<MeshUVPoint>> uvPoints;
+void Mesh::addCone(dvec3 center, double radius, double height, int segmentCount, int axis, const SP<Material> &material) {
+    std::vector<SP<UVPoint>> uvPoints;
 
     double angleStep = M_PI * 2 / segmentCount;
     for (int i = 0 ; i < segmentCount; ++i) {
@@ -549,7 +549,7 @@ void Mesh::addCone(dvec3 center, double radius, double height, int segmentCount,
         uvPoints.push_back(v);
     }
 
-    std::vector<SP<MeshUVPoint>> reverseUVPoints(uvPoints.rbegin(), uvPoints.rend());
+    std::vector<SP<UVPoint>> reverseUVPoints(uvPoints.rbegin(), uvPoints.rend());
     addFace(reverseUVPoints, material);
 
     dvec3 topPosition = center;
@@ -564,10 +564,10 @@ void Mesh::addCone(dvec3 center, double radius, double height, int segmentCount,
     }
 }
 
-void Mesh::addCylinder(dvec3 center, double radius, double height, int segmentCount, int axis, const SP<MeshMaterial> &material) {
+void Mesh::addCylinder(dvec3 center, double radius, double height, int segmentCount, int axis, const SP<Material> &material) {
     double angleStep = M_PI * 2 / segmentCount;
 
-    std::vector<SP<MeshUVPoint>> bottomUVPoints;
+    std::vector<SP<UVPoint>> bottomUVPoints;
     bottomUVPoints.reserve(segmentCount);
 
     for (int i = 0 ; i < segmentCount; ++i) {
@@ -580,10 +580,10 @@ void Mesh::addCylinder(dvec3 center, double radius, double height, int segmentCo
         bottomUVPoints.push_back(v);
     }
 
-    std::vector<SP<MeshUVPoint>> reverseBottomUVPoints(bottomUVPoints.rbegin(), bottomUVPoints.rend());
+    std::vector<SP<UVPoint>> reverseBottomUVPoints(bottomUVPoints.rbegin(), bottomUVPoints.rend());
     addFace(reverseBottomUVPoints, material);
 
-    std::vector<SP<MeshUVPoint>> topUVPoints;
+    std::vector<SP<UVPoint>> topUVPoints;
     topUVPoints.reserve(segmentCount);
 
     for (int i = 0 ; i < segmentCount; ++i) {
@@ -609,9 +609,9 @@ void Mesh::addCylinder(dvec3 center, double radius, double height, int segmentCo
 }
 
 void Mesh::merge(const SP<const Mesh> &other) {
-    std::unordered_map<SP<MeshMaterial>, SP<MeshMaterial>> otherToNewMaterials;
-    std::unordered_map<SP<MeshVertex>, SP<MeshVertex>> otherToNewVertices;
-    std::unordered_map<SP<MeshUVPoint>, SP<MeshUVPoint>> otherToNewUVPoints;
+    std::unordered_map<SP<Material>, SP<Material>> otherToNewMaterials;
+    std::unordered_map<SP<Vertex>, SP<Vertex>> otherToNewVertices;
+    std::unordered_map<SP<UVPoint>, SP<UVPoint>> otherToNewUVPoints;
 
     for (auto& otherMaterial : other->materials()) {
         auto m = addMaterial();
@@ -634,7 +634,7 @@ void Mesh::merge(const SP<const Mesh> &other) {
     }
     for (auto& [_, otherFace] : other->faces()) {
         Q_UNUSED(_)
-        std::vector<SP<MeshUVPoint>> uvPoints;
+        std::vector<SP<UVPoint>> uvPoints;
         for (auto& otherUV : otherFace->uvPoints()) {
             uvPoints.push_back(otherToNewUVPoints.at(otherUV));
         }

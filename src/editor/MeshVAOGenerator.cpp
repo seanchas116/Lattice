@@ -43,8 +43,8 @@ SP<GL::VAO> MeshVAOGenerator::generateEdgeVAO() const {
     return edgeVAO;
 }
 
-std::unordered_map<SP<Mesh::MeshMaterial>, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() const {
-    std::unordered_map<SP<Mesh::MeshMaterial>, SP<GL::VAO>> faceVAOs;
+std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() const {
+    std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> faceVAOs;
 
     for (auto& material : _mesh->materials()) {
         std::vector<GL::IndexBuffer::Triangle> triangles;

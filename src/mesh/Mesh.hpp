@@ -15,72 +15,72 @@
 
 namespace Lattice::Mesh {
 
-class MeshVertex;
-class MeshEdge;
-class MeshUVPoint;
-class MeshFace;
+class Vertex;
+class Edge;
+class UVPoint;
+class Face;
 class Mesh;
-class MeshMaterial;
+class Material;
 
-class MeshVertex final : public EnableSharedFromThis<MeshVertex> {
-    Q_DISABLE_COPY(MeshVertex)
+class Vertex final : public EnableSharedFromThis<Vertex> {
+    Q_DISABLE_COPY(Vertex)
 public:
-    MeshVertex() {}
+    Vertex() {}
     glm::vec3 position() const { return _position; }
 
     auto& edges() const { return _edges; }
     auto& faces() const { return _faces; }
     auto& uvPoints() const { return _uvPoints; }
 
-    SP<MeshUVPoint> firstUVPoint() const;
+    SP<UVPoint> firstUVPoint() const;
 
     glm::vec3 normal() const;
 
 private:
     friend class Mesh;
     glm::vec3 _position {0};
-    std::unordered_set<MeshEdge*> _edges;
-    std::unordered_set<MeshFace*> _faces;
-    std::unordered_set<MeshUVPoint*> _uvPoints;
+    std::unordered_set<Edge*> _edges;
+    std::unordered_set<Face*> _faces;
+    std::unordered_set<UVPoint*> _uvPoints;
 };
 
-class MeshEdge final : public EnableSharedFromThis<MeshEdge> {
-    Q_DISABLE_COPY(MeshEdge)
+class Edge final : public EnableSharedFromThis<Edge> {
+    Q_DISABLE_COPY(Edge)
 public:
-    MeshEdge(const std::array<SP<MeshVertex>, 2>& vertices) : _vertices(vertices) {}
+    Edge(const std::array<SP<Vertex>, 2>& vertices) : _vertices(vertices) {}
 
     auto& vertices() const { return _vertices; }
-    std::vector<SP<MeshFace>> faces() const;
+    std::vector<SP<Face>> faces() const;
 
 private:
     friend class Mesh;
-    std::array<SP<MeshVertex>, 2> _vertices;
-    std::unordered_set<MeshFace*> _faces;
+    std::array<SP<Vertex>, 2> _vertices;
+    std::unordered_set<Face*> _faces;
 };
 
-class MeshUVPoint final : public EnableSharedFromThis<MeshUVPoint> {
-    Q_DISABLE_COPY(MeshUVPoint)
+class UVPoint final : public EnableSharedFromThis<UVPoint> {
+    Q_DISABLE_COPY(UVPoint)
 public:
-    MeshUVPoint(const SP<MeshVertex>& vertex) : _vertex(vertex) {}
+    UVPoint(const SP<Vertex>& vertex) : _vertex(vertex) {}
 
     glm::vec2 position() const { return _position; }
 
     auto& vertex() const { return _vertex; }
-    std::vector<SP<MeshFace>> faces() const;
+    std::vector<SP<Face>> faces() const;
 
 private:
     friend class Mesh;
     glm::vec2 _position {0};
-    SP<MeshVertex> _vertex;
-    std::unordered_set<MeshFace*> _faces;
+    SP<Vertex> _vertex;
+    std::unordered_set<Face*> _faces;
 };
 
-class MeshFace final : public EnableSharedFromThis<MeshFace> {
-    Q_DISABLE_COPY(MeshFace)
+class Face final : public EnableSharedFromThis<Face> {
+    Q_DISABLE_COPY(Face)
 public:
-    MeshFace(const std::vector<SP<MeshVertex>>& vertices, const std::vector<SP<MeshEdge>>& edges,
-             const std::vector<SP<MeshUVPoint>>& uvPoints,
-             const SP<MeshMaterial>& material) :
+    Face(const std::vector<SP<Vertex>>& vertices, const std::vector<SP<Edge>>& edges,
+             const std::vector<SP<UVPoint>>& uvPoints,
+             const SP<Material>& material) :
         _vertices(vertices),
         _edges(edges),
         _uvPoints(uvPoints),
@@ -94,20 +94,20 @@ public:
     glm::vec3 normal() const;
 
     auto& material() const { return _material; }
-    void setMaterial(const SP<MeshMaterial>& material);
+    void setMaterial(const SP<Material>& material);
 
 private:
     friend class Mesh;
-    std::vector<SP<MeshVertex>> _vertices;
-    std::vector<SP<MeshEdge>> _edges;
-    std::vector<SP<MeshUVPoint>> _uvPoints;
-    SP<MeshMaterial> _material;
+    std::vector<SP<Vertex>> _vertices;
+    std::vector<SP<Edge>> _edges;
+    std::vector<SP<UVPoint>> _uvPoints;
+    SP<Material> _material;
 };
 
-class MeshMaterial final {
-    Q_DISABLE_COPY(MeshMaterial)
+class Material final {
+    Q_DISABLE_COPY(Material)
 public:
-    MeshMaterial() {}
+    Material() {}
 
     glm::vec3 baseColor() const { return _baseColor; }
     void setBaseColor(const glm::vec3 &baseColor) { _baseColor = baseColor; }
@@ -133,7 +133,7 @@ public:
 
 private:
     friend class Mesh;
-    friend class MeshFace;
+    friend class Face;
 
     glm::vec3 _baseColor {1, 0, 0};
     QImage _baseColorImage;
@@ -144,7 +144,7 @@ private:
     float _roughness {0.5};
     QImage _roughnessImage;
 
-    std::unordered_set<MeshFace*> _faces;
+    std::unordered_set<Face*> _faces;
 };
 
 class Mesh final : public QObject, public EnableSharedFromThis<Mesh> {
@@ -154,42 +154,42 @@ public:
 
     void setChangeHandler(const Fn<void(const SP<Change>& change)> &changeHandler) { _changeHandler = changeHandler; }
 
-    SP<MeshVertex> addVertex(glm::vec3 position);
-    SP<MeshEdge> addEdge(const std::array<SP<MeshVertex>, 2>& vertices);
+    SP<Vertex> addVertex(glm::vec3 position);
+    SP<Edge> addEdge(const std::array<SP<Vertex>, 2>& vertices);
 
-    SP<MeshUVPoint> addUVPoint(const SP<MeshVertex>& vertex, glm::vec2 position);
+    SP<UVPoint> addUVPoint(const SP<Vertex>& vertex, glm::vec2 position);
 
-    SP<MeshFace> addFace(const std::vector<SP<MeshUVPoint>>& uvPoints, const SP<MeshMaterial>& material);
-    SP<MeshMaterial> addMaterial();
+    SP<Face> addFace(const std::vector<SP<UVPoint>>& uvPoints, const SP<Material>& material);
+    SP<Material> addMaterial();
 
-    void setPositions(const std::unordered_map<SP<MeshVertex>, glm::vec3>& positions);
-    void setPositions(const std::unordered_map<SP<MeshUVPoint>, glm::vec2>& positions);
+    void setPositions(const std::unordered_map<SP<Vertex>, glm::vec3>& positions);
+    void setPositions(const std::unordered_map<SP<UVPoint>, glm::vec2>& positions);
 
-    void removeFace(const SP<MeshFace>& face);
-    void removeEdge(const SP<MeshEdge>& edge);
-    void removeVertex(const SP<MeshVertex>& vertex);
+    void removeFace(const SP<Face>& face);
+    void removeEdge(const SP<Edge>& edge);
+    void removeVertex(const SP<Vertex>& vertex);
 
     const auto& vertices() const { return _vertices; }
     const auto& edges() const { return _edges; }
     const auto& faces() const { return _faces; }
     const auto& materials() const { return _materials; }
 
-    void addPlane(glm::dvec3 center, glm::dvec2 size, int normalAxis, const SP<MeshMaterial>& material);
+    void addPlane(glm::dvec3 center, glm::dvec2 size, int normalAxis, const SP<Material>& material);
 
-    void addCube(glm::dvec3 minPos, glm::dvec3 maxPos, const SP<MeshMaterial>& material);
+    void addCube(glm::dvec3 minPos, glm::dvec3 maxPos, const SP<Material>& material);
 
     enum class CircleFill {
         None,
         Ngon,
         TriangleFan,
     };
-    void addCircle(glm::dvec3 center, double radius, int segmentCount, CircleFill fill, int normalAxis, const SP<MeshMaterial>& material);
+    void addCircle(glm::dvec3 center, double radius, int segmentCount, CircleFill fill, int normalAxis, const SP<Material>& material);
 
-    void addSphere(glm::dvec3 center, double radius, int segmentCount, int ringCount, int axis, const SP<MeshMaterial>& material);
+    void addSphere(glm::dvec3 center, double radius, int segmentCount, int ringCount, int axis, const SP<Material>& material);
 
-    void addCone(glm::dvec3 center, double radius, double height, int segmentCount, int axis, const SP<MeshMaterial>& material);
+    void addCone(glm::dvec3 center, double radius, double height, int segmentCount, int axis, const SP<Material>& material);
 
-    void addCylinder(glm::dvec3 center, double radius, double height, int segmentCount, int axis, const SP<MeshMaterial>& material);
+    void addCylinder(glm::dvec3 center, double radius, double height, int segmentCount, int axis, const SP<Material>& material);
 
     void merge(const SP<const Mesh> &other);
 
@@ -198,20 +198,20 @@ public:
     Box<float> boundingBox() const;
 
 signals:
-    void vertexAdded(const SP<MeshVertex>& vertex);
-    void vertexRemoved(const SP<MeshVertex>& vertex);
+    void vertexAdded(const SP<Vertex>& vertex);
+    void vertexRemoved(const SP<Vertex>& vertex);
 
-    void uvPointAdded(const SP<MeshUVPoint>& uvPoint);
-    void uvPointRemoved(const SP<MeshUVPoint>& uvPoint);
+    void uvPointAdded(const SP<UVPoint>& uvPoint);
+    void uvPointRemoved(const SP<UVPoint>& uvPoint);
 
-    void edgeAdded(const SP<MeshEdge>& edge);
-    void edgeRemoved(const SP<MeshEdge>& edge);
+    void edgeAdded(const SP<Edge>& edge);
+    void edgeRemoved(const SP<Edge>& edge);
 
-    void faceAdded(const SP<MeshFace>& face);
-    void faceRemoved(const SP<MeshFace>& face);
+    void faceAdded(const SP<Face>& face);
+    void faceRemoved(const SP<Face>& face);
 
-    void verticesChanged(const std::vector<SP<MeshVertex>>& vertices);
-    void uvPointsChanged(const std::vector<SP<MeshUVPoint>>& uvPoint);
+    void verticesChanged(const std::vector<SP<Vertex>>& vertices);
+    void uvPointsChanged(const std::vector<SP<UVPoint>>& uvPoint);
 
     void topologyChanged();
     void changed();
@@ -230,10 +230,10 @@ private:
 
     void handleChange(const SP<Change>& change);
 
-    std::unordered_set<SP<MeshVertex>> _vertices;
-    std::unordered_map<SortedArray<SP<MeshVertex>, 2>, SP<MeshEdge>> _edges;
-    std::unordered_map<std::set<SP<MeshVertex>>, SP<MeshFace>> _faces;
-    std::vector<SP<MeshMaterial>> _materials;
+    std::unordered_set<SP<Vertex>> _vertices;
+    std::unordered_map<SortedArray<SP<Vertex>, 2>, SP<Edge>> _edges;
+    std::unordered_map<std::set<SP<Vertex>>, SP<Face>> _faces;
+    std::vector<SP<Material>> _materials;
     Fn<void(const SP<Change>& change)> _changeHandler;
 };
 
