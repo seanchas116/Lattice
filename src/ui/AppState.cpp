@@ -3,7 +3,7 @@
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
 #include "../document/MeshItem.hpp"
-#include "../document/Mesh.hpp"
+#include "../mesh/Mesh.hpp"
 #include <QFileDialog>
 #include <QtDebug>
 #include <QFileInfo>

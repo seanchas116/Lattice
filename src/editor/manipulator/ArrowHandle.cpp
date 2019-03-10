@@ -3,7 +3,7 @@
 #include "Coordinates.hpp"
 #include "../MeshVAOGenerator.hpp"
 #include "../../render/Operations.hpp"
-#include "../../document/Mesh.hpp"
+#include "../../mesh/Mesh.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
 #include "../../support/Debug.hpp"

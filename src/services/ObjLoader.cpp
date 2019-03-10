@@ -1,5 +1,5 @@
 #include "ObjLoader.hpp"
-#include "../document/Mesh.hpp"
+#include "../mesh/Mesh.hpp"
 #include "../document/MeshItem.hpp"
 #include <tiny_obj_loader.h>
 #include <QDir>

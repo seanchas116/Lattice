@@ -1,5 +1,5 @@
 #include "MeshItem.hpp"
-#include "Mesh.hpp"
+#include "../mesh/Mesh.hpp"
 #include "../support/Debug.hpp"
 #include <nlohmann/json.hpp>
 

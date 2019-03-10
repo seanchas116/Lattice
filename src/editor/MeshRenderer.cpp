@@ -4,8 +4,8 @@
 #include "../gl/VAO.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
-#include "../document/Mesh.hpp"
 #include "../document/MeshItem.hpp"
+#include "../mesh/Mesh.hpp"
 #include "../support/Debug.hpp"
 #include "../support/Camera.hpp"
 #include <QMouseEvent>

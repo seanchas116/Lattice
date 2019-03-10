@@ -1,5 +1,5 @@
 #pragma once
-#include "Mesh.hpp"
+#include "../mesh/Mesh.hpp"
 
 namespace Lattice {
 namespace Document {

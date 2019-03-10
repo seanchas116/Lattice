@@ -1,5 +1,5 @@
 #pragma once
-#include "../document/Mesh.hpp"
+#include "../mesh/Mesh.hpp"
 #include "../support/Ray.hpp"
 #include "../support/Camera.hpp"
 
