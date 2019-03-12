@@ -159,11 +159,11 @@ void MeshEditor::mousePress(const Render::MouseEvent &event) {
 }
 
 void MeshEditor::mouseMove(const Render::MouseEvent &event) {
-    Q_UNUSED(event);
+    mouseMoveTarget({}, event);
 }
 
 void MeshEditor::mouseRelease(const Render::MouseEvent &event) {
-    Q_UNUSED(event);
+    mouseReleaseTarget({}, event);
 }
 
 void MeshEditor::updateWholeVAOs() {
