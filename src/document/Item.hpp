@@ -55,10 +55,10 @@ signals:
     void nameChanged(const std::string& name);
     void locationChanged(const Location &location);
 
-    void childItemsAboutToBeInserted(int first, int last);
+    void childItemsAboutToBeInserted(int first, int last, const std::vector<SP<Item>>& items);
     void childItemsInserted(int first, int last);
     void childItemsAboutToBeRemoved(int first, int last);
-    void childItemsRemoved(int first, int last);
+    void childItemsRemoved(int first, int last, const std::vector<SP<Item>>& items);
 
 private:
     class NameChange;

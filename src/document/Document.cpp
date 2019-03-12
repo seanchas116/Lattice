@@ -96,10 +96,9 @@ void Document::deleteSelectedItems() {
 
 void Document::watchChildrenInsertRemove(const SP<Item> &item) {
     auto itemPtr = item.get();
-    connect(itemPtr, &Item::childItemsAboutToBeInserted, this, [this, itemPtr] (int first, int last) {
-        for (int i = first; i <= last; ++i) {
-            auto& child = itemPtr->childItems()[i];
-            emit itemAboutToBeRemoved(child);
+    connect(itemPtr, &Item::childItemsAboutToBeInserted, this, [this] (int, int, const auto& items) {
+        for (auto& item : items) {
+            emit itemAboutToBeInserted(item);
         }
     });
     connect(itemPtr, &Item::childItemsInserted, this, [this, itemPtr] (int first, int last) {
@@ -115,10 +114,9 @@ void Document::watchChildrenInsertRemove(const SP<Item> &item) {
             emit itemAboutToBeRemoved(child);
         }
     });
-    connect(itemPtr, &Item::childItemsRemoved, this, [this, itemPtr] (int first, int last) {
-        for (int i = first; i <= last; ++i) {
-            auto& child = itemPtr->childItems()[i];
-            emit itemRemoved(child);
+    connect(itemPtr, &Item::childItemsRemoved, this, [this] (int, int, const auto& items) {
+        for (auto& item : items) {
+            emit itemRemoved(item);
         }
     });
 }

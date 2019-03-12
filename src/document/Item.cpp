@@ -105,7 +105,7 @@ void Item::insertItemBeforeInternal(const SP<Item> &item, const Opt<SP<const Ite
         it = _childItems.end();
     }
     int index = it - _childItems.begin();
-    emit childItemsAboutToBeInserted(index, index);
+    emit childItemsAboutToBeInserted(index, index, {item});
     _childItems.insert(it, item);
     item->_parentItem = sharedFromThis();
     emit childItemsInserted(index, index);
@@ -124,7 +124,7 @@ void Item::removeChildItemInternal(const SP<Item>& item) {
     emit childItemsAboutToBeRemoved(index, index);
     _childItems.erase(it);
     item->_parentItem.reset();
-    emit childItemsRemoved(index, index);
+    emit childItemsRemoved(index, index, {item});
 }
 
 int Item::index() const {
