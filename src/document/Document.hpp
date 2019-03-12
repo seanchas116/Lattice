@@ -48,8 +48,10 @@ signals:
     void selectedItemsChanged(const std::unordered_set<SP<Item>>& items);
     void meshSelectionChanged(const MeshSelection &meshSelection);
 
+    void itemAboutToBeInserted(const SP<Item>& item);
     void itemInserted(const SP<Item>& item);
     void itemAboutToBeRemoved(const SP<Item>& item);
+    void itemRemoved(const SP<Item>& item);
 
 private:
     void watchChildrenInsertRemove(const SP<Item>& item);
