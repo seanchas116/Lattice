@@ -22,5 +22,13 @@ glm::vec3 MeshSelection::medianPosition() const {
     return (minPos + maxPos) / 2.f;
 }
 
+std::unordered_set<SP<Mesh::Edge> > MeshSelection::edges() const {
+    return {}; // TODO
+}
+
+std::unordered_set<SP<Mesh::Face> > MeshSelection::faces() const {
+    return {}; // TODO
+}
+
 } // namespace Document
 } // namespace Lattice

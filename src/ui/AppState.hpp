@@ -51,6 +51,10 @@ public:
     void addImagePlane();
     void import();
 
+    void deleteVertices();
+    void deleteEdges();
+    void deleteFaces();
+
 private:
     SP<Document::Document> _document;
 };

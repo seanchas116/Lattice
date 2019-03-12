@@ -96,4 +96,49 @@ void AppState::import() {
     }
 }
 
+void AppState::deleteVertices() {
+    auto maybeEditedItem = _document->editedItem();
+    if (!maybeEditedItem) {
+        return;
+    }
+    auto editedItem = *maybeEditedItem;
+
+    _document->history()->beginChange(tr("Delete Vertices"));
+
+    auto vertices = _document->meshSelection().vertices;
+    for (auto& v : vertices) {
+        editedItem->mesh()->removeVertex(v);
+    }
+}
+
+void AppState::deleteEdges() {
+    auto maybeEditedItem = _document->editedItem();
+    if (!maybeEditedItem) {
+        return;
+    }
+    auto editedItem = *maybeEditedItem;
+
+    _document->history()->beginChange(tr("Delete Edges"));
+
+    auto edges = _document->meshSelection().edges();
+    for (auto& e : edges) {
+        editedItem->mesh()->removeEdge(e);
+    }
+}
+
+void AppState::deleteFaces() {
+    auto maybeEditedItem = _document->editedItem();
+    if (!maybeEditedItem) {
+        return;
+    }
+    auto editedItem = *maybeEditedItem;
+
+    _document->history()->beginChange(tr("Delete Faces"));
+
+    auto faces = _document->meshSelection().faces();
+    for (auto& f : faces) {
+        editedItem->mesh()->removeFace(f);
+    }
+}
+
 } // namespace Lattice

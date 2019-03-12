@@ -13,6 +13,9 @@ public:
     }
 
     glm::vec3 medianPosition() const;
+
+    std::unordered_set<SP<Mesh::Edge>> edges() const;
+    std::unordered_set<SP<Mesh::Face>> faces() const;
 };
 
 } // namespace Document

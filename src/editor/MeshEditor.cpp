@@ -9,6 +9,7 @@
 #include "../support/Debug.hpp"
 #include "../support/Camera.hpp"
 #include <QMouseEvent>
+#include <QMenu>
 
 using namespace glm;
 
@@ -317,6 +318,17 @@ void MeshEditor::updateWholeVAOs() {
 }
 
 void MeshEditor::mousePressTarget(const MeshEditor::EventTarget &target, const Render::MouseEvent &event) {
+    if (event.originalEvent->button() != Qt::LeftButton) {
+        if (event.originalEvent->button() == Qt::RightButton) {
+            QMenu contextMenu;
+            contextMenu.addAction(tr("Delete Vertices"), _appState.get(), &UI::AppState::deleteVertices);
+            contextMenu.addAction(tr("Delete Edges"), _appState.get(), &UI::AppState::deleteEdges);
+            contextMenu.addAction(tr("Delete Faces"), _appState.get(), &UI::AppState::deleteFaces);
+            contextMenu.exec(event.originalEvent->globalPos());
+        }
+        return;
+    }
+
     switch (_appState->tool()) {
     case UI::Tool::Draw: {
         auto mesh = _item->mesh();
@@ -413,6 +425,10 @@ void MeshEditor::mousePressTarget(const MeshEditor::EventTarget &target, const R
 }
 
 void MeshEditor::mouseMoveTarget(const MeshEditor::EventTarget &target, const Render::MouseEvent &event) {
+    if (event.originalEvent->button() != Qt::LeftButton) {
+        return;
+    }
+
     switch (_appState->tool()) {
     case UI::Tool::Draw: {
         // TODO
