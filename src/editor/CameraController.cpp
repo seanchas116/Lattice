@@ -15,8 +15,8 @@ CameraController::CameraController(const SP<Camera> &camera, QWidget *widget) : 
 }
 
 bool CameraController::mousePress(QMouseEvent *event) {
-    bool move = _moveKey || event->button() == Qt::MiddleButton;
-    bool rotate = _rotateKey || event->button() == Qt::RightButton;
+    bool move = _moveKey || (event->button() == Qt::MiddleButton && event->modifiers() & Qt::ShiftModifier);
+    bool rotate = _rotateKey || event->button() == Qt::MiddleButton;
 
     if (move) {
         _mode = Mode::Move;
