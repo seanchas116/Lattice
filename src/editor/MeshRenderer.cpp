@@ -9,6 +9,7 @@
 #include "../support/Debug.hpp"
 #include "../support/Camera.hpp"
 #include <QMouseEvent>
+#include <QMenu>
 
 using namespace glm;
 
@@ -49,20 +50,37 @@ void MeshRenderer::drawPickables(const SP<Render::Operations> &operations, const
 }
 
 void MeshRenderer::mousePress(const Render::MouseEvent &event) {
-    glm::dvec3 worldPos = event.worldPos();
-    auto [screenDragPos, isInScreen] = event.camera->mapWorldToScreen(worldPos);
-    if (!isInScreen) {
+    switch (event.originalEvent->button()) {
+    case Qt::RightButton: {
+        QMenu contextMenu;
+        contextMenu.addAction(tr("Delete"), _appState.get(), &UI::AppState::deleteItems);
+        contextMenu.exec(event.originalEvent->globalPos());
         return;
     }
+    case Qt::LeftButton: {
+        glm::dvec3 worldPos = event.worldPos();
+        auto [screenDragPos, isInScreen] = event.camera->mapWorldToScreen(worldPos);
+        if (!isInScreen) {
+            return;
+        }
 
-    _dragInitLocation = _item->location();
-    _dragInitWorldPos = worldPos;
-    _dragStarted = false;
+        _dragInitLocation = _item->location();
+        _dragInitWorldPos = worldPos;
+        _dragStarted = false;
 
-    _appState->document()->selectItem(_item, event.originalEvent->modifiers() & Qt::ShiftModifier);
+        _appState->document()->selectItem(_item, event.originalEvent->modifiers() & Qt::ShiftModifier);
+        return;
+    }
+    default:
+        return;
+    }
 }
 
 void MeshRenderer::mouseMove(const Render::MouseEvent &event) {
+    if (event.originalEvent->button() != Qt::LeftButton) {
+        return;
+    }
+
     auto newWorldPos = event.worldPos();
     auto newLocation = _dragInitLocation;
     newLocation.position += newWorldPos - _dragInitWorldPos;
