@@ -1,5 +1,6 @@
 #include "Mesh.hpp"
 #include "../support/Mod.hpp"
+#include "../support/Debug.hpp"
 
 using namespace glm;
 
@@ -225,6 +226,9 @@ public:
             uv->_faces.erase(face.get());
         }
         face->_material->_faces.erase(face.get());
+
+        std::set<SP<Vertex>> vertexSet(face->vertices().begin(), face->vertices().end());
+        mesh->_faces.erase(vertexSet);
         emit mesh->faceRemoved(face);
     }
     SP<Change> invert() const override;
