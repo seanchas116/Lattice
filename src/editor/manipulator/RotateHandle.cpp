@@ -51,6 +51,10 @@ void RotateHandle::drawPickables(const SP<Render::Operations> &operations, const
 }
 
 void RotateHandle::mousePress(const Render::MouseEvent &event) {
+    if (event.originalEvent->button() != Qt::LeftButton) {
+        return;
+    }
+
     Coordinates coordinates(event.camera, _targetPosition);
     if (!coordinates.isInScreen) {
         return;
@@ -64,11 +68,14 @@ void RotateHandle::mousePress(const Render::MouseEvent &event) {
     double angle = atan2(intersection.z, intersection.y);
 
     _initialTargetPosition = _targetPosition;
+    _dragged = true;
     emit onBegin(angle);
 }
 
 void RotateHandle::mouseMove(const Render::MouseEvent &event) {
-    Q_UNUSED(event);
+    if (!_dragged) {
+        return;
+    }
 
     Coordinates coordinates(event.camera, _initialTargetPosition);
     if (!coordinates.isInScreen) {
@@ -86,6 +93,7 @@ void RotateHandle::mouseMove(const Render::MouseEvent &event) {
 
 void RotateHandle::mouseRelease(const Render::MouseEvent &event) {
     Q_UNUSED(event);
+    _dragged = false;
     emit onEnd();
 }
 

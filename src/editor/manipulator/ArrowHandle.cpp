@@ -46,6 +46,10 @@ void ArrowHandle::drawPickables(const SP<Render::Operations> &operations, const 
 }
 
 void ArrowHandle::mousePress(const Render::MouseEvent &event) {
+    if (event.originalEvent->button() != Qt::LeftButton) {
+        return;
+    }
+
     Coordinates coordinates(event.camera, _targetPosition);
     if (!coordinates.isInScreen) {
         return;
@@ -55,10 +59,15 @@ void ArrowHandle::mousePress(const Render::MouseEvent &event) {
     double tAxis = mouseToAxisDistance.t1;
 
     _initialTargetPosition = _targetPosition;
+    _dragged = true;
     emit onBegin(tAxis);
 }
 
 void ArrowHandle::mouseMove(const Render::MouseEvent &event) {
+    if (!_dragged) {
+        return;
+    }
+
     Coordinates coordinates(event.camera, _initialTargetPosition);
     if (!coordinates.isInScreen) {
         return;
@@ -72,6 +81,7 @@ void ArrowHandle::mouseMove(const Render::MouseEvent &event) {
 
 void ArrowHandle::mouseRelease(const Render::MouseEvent &event) {
     Q_UNUSED(event);
+    _dragged = false;
     emit onEnd();
 }
 

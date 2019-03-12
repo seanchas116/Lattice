@@ -49,7 +49,6 @@ public:
     void mousePress(const Render::MouseEvent &event) override;
     void mouseMove(const Render::MouseEvent &event) override;
     void mouseRelease(const Render::MouseEvent &event) override;
-    void hoverMove(const Render::MouseEvent &event) override;
 
 private:
     void updateWholeVAOs();
@@ -64,11 +63,11 @@ private:
     void mouseMoveTarget(const EventTarget& target, const Render::MouseEvent &event);
     void mouseReleaseTarget(const EventTarget& target, const Render::MouseEvent &event);
     void hoverEnterTarget(const EventTarget& target, const Render::MouseEvent &event);
-    void hoverMoveTarget(const EventTarget& target, const Render::MouseEvent &event);
     void hoverLeaveTarget(const EventTarget& target);
 
     void vertexDragStart(const std::unordered_set<SP<Mesh::Vertex>>& vertices, const Render::MouseEvent& event);
     void vertexDragMove(const Render::MouseEvent& event);
+    void vertexDragEnd();
 
     class VertexPickable;
     class EdgePickable;
@@ -94,6 +93,7 @@ private:
     std::vector<GL::Vertex> _vertexPickAttributes;
 
     // vertex drag
+    bool _dragged = false;
     std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _dragInitPositions;
     glm::dvec3 _dragInitWorldPos;
     bool _dragStarted;

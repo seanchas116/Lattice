@@ -48,6 +48,7 @@ private:
     SP<GL::VAO> _bodyPickVAO;
     glm::dvec3 _initialTargetPosition {0};
     bool _hovered = false;
+    bool _dragged = false;
 };
 
 }

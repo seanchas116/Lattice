@@ -22,7 +22,6 @@ public:
     virtual void mouseRelease(const MouseEvent& event);
     virtual void mouseDoubleClick(const MouseEvent& event);
     virtual void hoverEnter(const MouseEvent& event);
-    virtual void hoverMove(const MouseEvent& event);
     virtual void hoverLeave();
 
     void drawRecursive(const SP<Operations>& operations, const SP<Camera>& camera);

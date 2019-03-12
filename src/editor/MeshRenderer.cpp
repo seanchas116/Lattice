@@ -64,6 +64,7 @@ void MeshRenderer::mousePress(const Render::MouseEvent &event) {
             return;
         }
 
+        _dragged = true;
         _dragInitLocation = _item->location();
         _dragInitWorldPos = worldPos;
         _dragStarted = false;
@@ -77,7 +78,7 @@ void MeshRenderer::mousePress(const Render::MouseEvent &event) {
 }
 
 void MeshRenderer::mouseMove(const Render::MouseEvent &event) {
-    if (event.originalEvent->button() != Qt::LeftButton) {
+    if (!_dragged) {
         return;
     }
 
@@ -94,6 +95,7 @@ void MeshRenderer::mouseMove(const Render::MouseEvent &event) {
 
 void MeshRenderer::mouseRelease(const Render::MouseEvent &event) {
     Q_UNUSED(event);
+    _dragged = false;
 }
 
 void MeshRenderer::mouseDoubleClick(const Render::MouseEvent &event) {

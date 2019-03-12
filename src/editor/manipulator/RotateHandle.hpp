@@ -42,6 +42,7 @@ private:
     SP<Mesh::Mesh> _handleMesh;
     SP<GL::VAO> _handleVAO;
     glm::dvec3 _initialTargetPosition {0};
+    bool _dragged = false;
 };
 
 }

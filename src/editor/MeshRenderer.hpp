@@ -57,9 +57,10 @@ private:
     SP<GL::VAO> _edgeVAO;
     SP<GL::VAO> _vertexVAO;
 
+    bool _dragged = false;
     Location _dragInitLocation;
     glm::dvec3 _dragInitWorldPos;
-    bool _dragStarted;
+    bool _dragStarted = false;
 };
 
 }
