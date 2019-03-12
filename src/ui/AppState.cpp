@@ -109,6 +109,8 @@ void AppState::deleteVertices() {
     for (auto& v : vertices) {
         editedItem->mesh()->removeVertex(v);
     }
+
+    _document->setMeshSelection({});
 }
 
 void AppState::deleteEdges() {
