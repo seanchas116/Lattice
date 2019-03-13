@@ -3,17 +3,19 @@
 #include <QWidget>
 #include "../support/Shorthands.hpp"
 
-namespace Lattice::UI {
-
+namespace Lattice::State {
 class AppState;
+}
+
+namespace Lattice::UI {
 
 class MaterialListView final : public QWidget {
     Q_OBJECT
 public:
-    explicit MaterialListView(const SP<AppState>& appState, QWidget *parent = nullptr);
+    explicit MaterialListView(const SP<State::AppState>& appState, QWidget *parent = nullptr);
 
 private:
-    SP<AppState> _appState;
+    SP<State::AppState> _appState;
 };
 
 } // namespace Lattice
