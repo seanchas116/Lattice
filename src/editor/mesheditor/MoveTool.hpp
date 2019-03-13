@@ -16,8 +16,8 @@ public:
     void hoverLeave(const EventTarget &target) override;
 
 private:
-    std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _dragInitPositions;
-    glm::dvec3 _dragInitWorldPos {0};
+    std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _initPositions;
+    glm::dvec3 _initWorldPos {0};
     bool _dragged {false};
     bool _dragStarted {false};
 };

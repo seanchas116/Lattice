@@ -51,11 +51,11 @@ void MoveTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
     }
 
     _dragged = true;
-    _dragInitPositions.clear();
+    _initPositions.clear();
     for (auto& v : selection.vertices) {
-        _dragInitPositions[v] = v->position();
+        _initPositions[v] = v->position();
     }
-    _dragInitWorldPos = event.worldPos();
+    _initWorldPos = event.worldPos();
     _dragStarted = false;
 
     appState()->document()->setMeshSelection(selection);
@@ -69,7 +69,7 @@ void MoveTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEve
     }
 
     dvec3 worldPos = event.worldPos();
-    dvec3 offset = worldPos - _dragInitWorldPos;
+    dvec3 offset = worldPos - _initWorldPos;
 
     if (!_dragStarted) {
         appState()->document()->history()->beginChange(tr("Move Vertex"));
@@ -78,7 +78,7 @@ void MoveTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEve
 
     auto& mesh = item()->mesh();
     std::unordered_map<SP<Mesh::Vertex>, vec3> positions;
-    for (auto& [v, initialPos] : _dragInitPositions) {
+    for (auto& [v, initialPos] : _initPositions) {
         positions[v] = initialPos + offset;
     }
     mesh->setPositions(positions);
