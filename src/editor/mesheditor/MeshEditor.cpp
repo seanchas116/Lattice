@@ -1,13 +1,13 @@
 #include "MeshEditor.hpp"
-#include "../ui/AppState.hpp"
-#include "../gl/VAO.hpp"
-#include "../gl/VertexBuffer.hpp"
-#include "../document/Document.hpp"
-#include "../document/History.hpp"
-#include "../document/MeshItem.hpp"
-#include "../mesh/Mesh.hpp"
-#include "../support/Debug.hpp"
-#include "../support/Camera.hpp"
+#include "../../ui/AppState.hpp"
+#include "../../gl/VAO.hpp"
+#include "../../gl/VertexBuffer.hpp"
+#include "../../document/Document.hpp"
+#include "../../document/History.hpp"
+#include "../../document/MeshItem.hpp"
+#include "../../mesh/Mesh.hpp"
+#include "../../support/Debug.hpp"
+#include "../../support/Camera.hpp"
 #include <QMouseEvent>
 #include <QMenu>
 

@@ -2,7 +2,7 @@
 #include "Background.hpp"
 #include "GridFloor.hpp"
 #include "MeshRenderer.hpp"
-#include "MeshEditor.hpp"
+#include "./mesheditor/MeshEditor.hpp"
 #include "./manipulator/ObjectManipulator.hpp"
 #include "./manipulator/MeshManipulator.hpp"
 #include "../ui/AppState.hpp"

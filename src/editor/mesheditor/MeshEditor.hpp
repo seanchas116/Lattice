@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../support/Shorthands.hpp"
-#include "../support/Box.hpp"
-#include "../support/Location.hpp"
-#include "../render/RenderableObject.hpp"
-#include "../gl/ContextRecallable.hpp"
-#include "../gl/VertexBuffer.hpp"
+#include "../../support/Shorthands.hpp"
+#include "../../support/Box.hpp"
+#include "../../support/Location.hpp"
+#include "../../render/RenderableObject.hpp"
+#include "../../gl/ContextRecallable.hpp"
+#include "../../gl/VertexBuffer.hpp"
 #include <glm/glm.hpp>
 #include <unordered_map>
 
