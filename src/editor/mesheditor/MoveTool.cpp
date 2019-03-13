@@ -87,6 +87,7 @@ void MoveTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEve
 void MoveTool::mouseRelease(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
     _dragged = false;
+    _initPositions.clear();
 }
 
 void MoveTool::hoverEnter(const Tool::EventTarget &target, const Render::MouseEvent &event) {
