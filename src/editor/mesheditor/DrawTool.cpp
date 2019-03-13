@@ -25,7 +25,7 @@ Tool::HitTestExclusion DrawTool::hitTestExclusion() const {
 void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     auto mesh = item()->mesh();
     if (!_drawnUVPoints.empty()) {
-        if (target.vertex && std::find(_drawnUVPoints.begin(), _drawnUVPoints.end(), (*target.vertex)->firstUVPoint()) == _drawnUVPoints.end()) {
+        if (target.vertex) {
             auto targetVertex = *target.vertex;
 
             mesh->removeVertex(_drawnUVPoints[_drawnUVPoints.size() - 1]->vertex());
