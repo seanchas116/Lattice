@@ -23,7 +23,7 @@ glm::vec3 MeshSelection::medianPosition() const {
 }
 
 std::unordered_set<SP<Mesh::Edge> > MeshSelection::edges() const {
-    std::unordered_map<SP<Mesh::Edge>, int> edgeCounts;
+    std::unordered_map<SP<Mesh::Edge>, size_t> edgeCounts;
 
     for (auto& v : vertices) {
         for (auto& e : v->edges()) {
@@ -46,7 +46,7 @@ std::unordered_set<SP<Mesh::Edge> > MeshSelection::edges() const {
 }
 
 std::unordered_set<SP<Mesh::Face> > MeshSelection::faces() const {
-    std::unordered_map<SP<Mesh::Face>, int> faceCounts;
+    std::unordered_map<SP<Mesh::Face>, size_t> faceCounts;
 
     for (auto& v : vertices) {
         for (auto& f : v->faces()) {
