@@ -362,6 +362,7 @@ void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Render:
         _hoveredEdge = target.edge;
         updateWholeVAOs(); // TODO: update partially
     }
+    _tool->hoverEnter(target, event);
 }
 
 void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
@@ -372,6 +373,7 @@ void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
         _hoveredEdge = {};
         updateWholeVAOs(); // TODO: update partially
     }
+    _tool->hoverLeave(target);
 }
 
 }
