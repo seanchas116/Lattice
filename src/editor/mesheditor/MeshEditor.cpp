@@ -51,6 +51,7 @@ public:
         _editor->hoverLeaveTarget({_vertex, {}, {}});
     }
 
+private:
     MeshEditor* _editor;
     SP<Mesh::Vertex> _vertex;
 };
@@ -79,6 +80,7 @@ public:
         _editor->hoverLeaveTarget({{}, _edge, {}});
     }
 
+private:
     MeshEditor* _editor;
     SP<Mesh::Edge> _edge;
 };
@@ -107,6 +109,7 @@ public:
         _editor->hoverLeaveTarget({{}, {}, _face});
     }
 
+private:
     MeshEditor* _editor;
     SP<Mesh::Face> _face;
 };
