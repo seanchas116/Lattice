@@ -49,6 +49,9 @@ void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::Mous
 
 void ExtrudeTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     Q_UNUSED(target);
+    if (_oldToNewVertices.empty()) {
+        return;
+    }
 
     auto offset = event.worldPos() - _initWorldPos;
 
