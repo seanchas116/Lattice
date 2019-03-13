@@ -13,21 +13,21 @@ Tool::HitTestExclusion ExtrudeTool::hitTestExclusion() const {
 }
 
 void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::MouseEvent &event) {
-    // TODO: start extruding when dragg started
+    if (!target.vertex && !target.edge && !target.face) {
+        return;
+    }
 
+    // TODO: start extruding when dragg started
+    appState()->document()->history()->beginChange(tr("Extrude"));
     auto& mesh = item()->mesh();
 
     if (target.vertex) {
-        appState()->document()->history()->beginChange(tr("Extrude"));
-
         // vertex extrude
         auto vertex = *target.vertex;
         auto newUVPoint = mesh->addUVPoint(mesh->addVertex(vertex->position()), vec2(0));
         mesh->addEdge({vertex, newUVPoint->vertex()});
         _oldToNewVertices.insert({vertex, newUVPoint->vertex()});
     } else if (target.edge) {
-        appState()->document()->history()->beginChange(tr("Extrude"));
-
         // edge extrude
         auto edge = *target.edge;
         auto uv0 = edge->vertices()[0]->firstUVPoint();
@@ -39,6 +39,29 @@ void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::Mous
 
         _oldToNewVertices.insert({uv0->vertex(), uv3->vertex()});
         _oldToNewVertices.insert({uv1->vertex(), uv2->vertex()});
+    } else if (target.face) {
+        auto face = *target.face;
+
+        std::vector<SP<Mesh::UVPoint>> newUVPoints;
+        for (auto& uv : face->uvPoints()) {
+            auto newUV = mesh->addUVPoint(mesh->addVertex(uv->vertex()->position()), uv->position());
+            newUVPoints.push_back(newUV);
+        }
+
+        for (size_t i = 0; i < face->uvPoints().size(); ++i) {
+            size_t next = (i + 1) % face->uvPoints().size();
+            auto uv0 = face->uvPoints()[i];
+            auto uv1 = face->uvPoints()[next];
+            auto uv2 = newUVPoints[next];
+            auto uv3 = newUVPoints[i];
+
+            mesh->addFace({uv0, uv1, uv2, uv3}, face->material());
+
+            _oldToNewVertices.insert({face->uvPoints()[i]->vertex(), newUVPoints[i]->vertex()});
+        }
+
+        mesh->addFace(newUVPoints, face->material());
+        mesh->removeFace(face);
     }
 
     for (auto& [oldVertex, newVertex] : _oldToNewVertices) {
