@@ -1,12 +1,61 @@
 #include "MoveTool.hpp"
+#include "../../document/Document.hpp"
 
 namespace Lattice {
 namespace Editor {
 namespace MeshEditor {
 
 void MoveTool::mousePress(const Tool::EventTarget &target, const Render::MouseEvent &event) {
-    Q_UNUSED(target); Q_UNUSED(event);
-    // TOOD
+    if (event.originalEvent->button() != Qt::LeftButton) {
+        return;
+    }
+    std::unordered_set<SP<Mesh::Vertex>> vertices;
+
+    if (target.vertex) {
+        auto& vertex = *target.vertex;
+        vertices = {vertex};
+    } else if (target.edge) {
+        auto& edge = *target.edge;
+        vertices = {edge->vertices()[0], edge->vertices()[1]};
+    } else if (target.face) {
+        auto& face = *target.face;
+        for (auto& v : face->vertices()) {
+            vertices.insert(v);
+        }
+    }
+
+    Document::MeshSelection selection;
+    if (event.originalEvent->modifiers() & Qt::ShiftModifier) {
+        selection = appState()->document()->meshSelection();
+
+        bool alreadyAdded = true;
+        for (auto& v : vertices) {
+            if (selection.vertices.find(v) == selection.vertices.end()) {
+                alreadyAdded = false;
+            }
+        }
+        if (alreadyAdded) {
+            for (auto& v : vertices) {
+                selection.vertices.erase(v);
+            }
+        } else {
+            for (auto& v: vertices) {
+                selection.vertices.insert(v);
+            }
+        }
+    } else {
+        selection.vertices = vertices;
+    }
+
+    _dragged = true;
+    _dragInitPositions.clear();
+    for (auto& v : selection.vertices) {
+        _dragInitPositions[v] = v->position();
+    }
+    _dragInitWorldPos = event.worldPos();
+    _dragStarted = false;
+
+    appState()->document()->setMeshSelection(selection);
 }
 
 void MoveTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEvent &event) {
