@@ -18,6 +18,9 @@ public:
     void hoverLeave(const EventTarget &target) override;
 
 private:
+    std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _initPositions;
+    std::unordered_map<SP<Mesh::Vertex>, SP<Mesh::Vertex>> _oldToNewVertices;
+    glm::dvec3 _initWorldPos {0};
 };
 
 } // namespace MeshEditor
