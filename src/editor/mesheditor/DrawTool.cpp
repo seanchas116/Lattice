@@ -70,6 +70,8 @@ void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
             mesh->addEdge({prevUVPoint->vertex(), uvPoint->vertex()});
         }
     } else {
+        appState()->document()->history()->beginChange(tr("Draw"));
+
         if (target.vertex) {
             // start from existing vertex
             auto& vertex = *target.vertex;
