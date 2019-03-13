@@ -2,6 +2,7 @@
 #include "MoveTool.hpp"
 #include "DrawTool.hpp"
 #include "ExtrudeTool.hpp"
+#include "LoopCutTool.hpp"
 #include "../../ui/AppState.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
@@ -178,6 +179,9 @@ void MeshEditor::handleToolChange(UI::Tool tool) {
         break;
     case UI::Tool::Extrude:
         _tool = makeShared<ExtrudeTool>(_appState, _item);
+        break;
+    case UI::Tool::LoopCut:
+        _tool = makeShared<LoopCutTool>(_appState, _item);
         break;
     default:
         _tool = makeShared<MoveTool>(_appState, _item);
