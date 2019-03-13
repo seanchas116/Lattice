@@ -1,5 +1,8 @@
 #include "MoveTool.hpp"
 #include "../../document/Document.hpp"
+#include "../../document/History.hpp"
+
+using namespace glm;
 
 namespace Lattice {
 namespace Editor {
@@ -59,13 +62,31 @@ void MoveTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
 }
 
 void MoveTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEvent &event) {
-    Q_UNUSED(target); Q_UNUSED(event);
-    // TOOD
+    Q_UNUSED(target);
+
+    if (!_dragged) {
+        return;
+    }
+
+    dvec3 worldPos = event.worldPos();
+    dvec3 offset = worldPos - _dragInitWorldPos;
+
+    if (!_dragStarted) {
+        appState()->document()->history()->beginChange(tr("Move Vertex"));
+        _dragStarted = true;
+    }
+
+    auto& mesh = item()->mesh();
+    std::unordered_map<SP<Mesh::Vertex>, vec3> positions;
+    for (auto& [v, initialPos] : _dragInitPositions) {
+        positions[v] = initialPos + offset;
+    }
+    mesh->setPositions(positions);
 }
 
 void MoveTool::mouseRelease(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
-    // TOOD
+    _dragged = false;
 }
 
 void MoveTool::hoverEnter(const Tool::EventTarget &target, const Render::MouseEvent &event) {
