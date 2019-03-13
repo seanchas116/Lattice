@@ -37,6 +37,7 @@ namespace Editor {
 namespace MeshEditor {
 
 class MoveTool;
+class DrawTool;
 
 class MeshEditor final : public Render::RenderableObject, protected GL::ContextRecallable, protected QOpenGLExtraFunctions {
     Q_OBJECT
@@ -85,16 +86,12 @@ private:
     std::vector<GL::Vertex> _vertexPickAttributes;
 
     SP<MoveTool> _moveTool;
+    SP<DrawTool> _drawTool;
 
     // vertex hover
     Opt<SP<Mesh::Vertex>> _hoveredVertex;
     Opt<SP<Mesh::Edge>> _hoveredEdge;
     // TODO: hovered face
-
-    // draw
-    std::vector<SP<Mesh::UVPoint>> _drawnUVPoints;
-    Opt<SP<Mesh::UVPoint>> lastDrawnPoint() const;
-    Opt<SP<Mesh::Vertex>> lastDrawnVertex() const;
 };
 
 }

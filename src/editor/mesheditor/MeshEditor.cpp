@@ -1,5 +1,6 @@
 #include "MeshEditor.hpp"
 #include "MoveTool.hpp"
+#include "DrawTool.hpp"
 #include "../../ui/AppState.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
@@ -117,7 +118,8 @@ MeshEditor::MeshEditor(const SP<UI::AppState>& appState, const SP<Document::Mesh
     _edgePickVAO(makeShared<GL::VAO>()),
     _vertexVAO(makeShared<GL::VAO>()),
     _vertexPickVAO(makeShared<GL::VAO>()),
-    _moveTool(makeShared<MoveTool>(appState, item))
+    _moveTool(makeShared<MoveTool>(appState, item)),
+    _drawTool(makeShared<DrawTool>(appState, item))
 {
     initializeOpenGLFunctions();
     updateWholeVAOs();
@@ -189,18 +191,14 @@ void MeshEditor::updateWholeVAOs() {
             attrib.position = v->position();
             attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
 
-            bool isDrawing = v == lastDrawnVertex();
+            auto pickable = makeShared<VertexPickable>(this, v);
+            childPickables.push_back(pickable);
+            GL::Vertex pickAttrib;
+            pickAttrib.position = v->position();
+            pickAttrib.color = pickable->toIDColor();
 
-            if (!isDrawing) {
-                auto pickable = makeShared<VertexPickable>(this, v);
-                childPickables.push_back(pickable);
-                GL::Vertex pickAttrib;
-                pickAttrib.position = v->position();
-                pickAttrib.color = pickable->toIDColor();
-
-                _vertexAttributes.push_back(attrib);
-                _vertexPickAttributes.push_back(pickAttrib);
-            }
+            _vertexAttributes.push_back(attrib);
+            _vertexPickAttributes.push_back(pickAttrib);
         }
 
         auto vertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
@@ -227,8 +225,6 @@ void MeshEditor::updateWholeVAOs() {
 
             auto offset = uint32_t(_edgeAttributes.size());
 
-            bool isDrawing = e->vertices()[0] == lastDrawnVertex() || e->vertices()[1] == lastDrawnVertex();
-
             for (auto& v : e->vertices()) {
                 bool selected = selectedVertices.find(v) != selectedVertices.end();
 
@@ -237,12 +233,10 @@ void MeshEditor::updateWholeVAOs() {
                 attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
                 _edgeAttributes.push_back(attrib);
 
-                if (!isDrawing) {
-                    GL::Vertex pickAttrib;
-                    pickAttrib.position = v->position();
-                    pickAttrib.color = pickable->toIDColor();
-                    _edgePickAttributes.push_back(pickAttrib);
-                }
+                GL::Vertex pickAttrib;
+                pickAttrib.position = v->position();
+                 pickAttrib.color = pickable->toIDColor();
+                _edgePickAttributes.push_back(pickAttrib);
             }
             indices.push_back({offset, offset+1});
         }
@@ -328,80 +322,9 @@ void MeshEditor::mousePressTarget(const Tool::EventTarget &target, const Render:
     }
 
     switch (_appState->tool()) {
-    case UI::Tool::Draw: {
-        auto mesh = _item->mesh();
-        if (!_drawnUVPoints.empty()) {
-            if (target.vertex) {
-                auto targetVertex = *target.vertex;
-
-                mesh->removeVertex(_drawnUVPoints[_drawnUVPoints.size() - 1]->vertex());
-                _drawnUVPoints.pop_back();
-
-                // connect to existing vertex
-                auto closingPointIt = std::find(_drawnUVPoints.begin(), _drawnUVPoints.end(), targetVertex->firstUVPoint());
-                if (closingPointIt != _drawnUVPoints.end()) {
-                    // create face
-                    std::vector<SP<Mesh::UVPoint>> points(closingPointIt, _drawnUVPoints.end());
-                    auto face = mesh->addFace(points, mesh->materials()[0]);
-
-                    bool isFaceFore = dot(face->normal(), vec3(event.camera->location().backward())) > 0;
-                    if (!isFaceFore) {
-                        mesh->flipFace(face);
-                    }
-
-                    _drawnUVPoints.clear();
-                    return;
-                }
-                auto prevUVPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];
-                mesh->addEdge({prevUVPoint->vertex(), targetVertex});
-                _drawnUVPoints.push_back(targetVertex->firstUVPoint());
-
-                auto uvPoint = mesh->addUVPoint(mesh->addVertex(targetVertex->position()), vec2(0));
-                _drawnUVPoints.push_back(uvPoint);
-                mesh->addEdge({targetVertex, uvPoint->vertex()});
-
-            } else {
-                // add new vertex
-                auto prevUVPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];
-                auto [prevPosInScreen, isInScreen] = event.camera->mapWorldToScreen(prevUVPoint->vertex()->position());
-                if (!isInScreen) {
-                    return;
-                }
-                auto pos = event.camera->mapScreenToWorld(dvec3(event.screenPos, prevPosInScreen.z));
-
-                mesh->setPositions({{prevUVPoint->vertex(), pos}});
-
-                auto uvPoint = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
-                _drawnUVPoints.push_back(uvPoint);
-                mesh->addEdge({prevUVPoint->vertex(), uvPoint->vertex()});
-            }
-        } else {
-            if (target.vertex) {
-                // start from existing vertex
-                auto& vertex = *target.vertex;
-                auto point1 = (*vertex->uvPoints().begin())->sharedFromThis();
-                auto point2 = mesh->addUVPoint(mesh->addVertex(vertex->position()), vec2(0));
-                _drawnUVPoints.push_back(point1);
-                _drawnUVPoints.push_back(point2);
-                mesh->addEdge({point1->vertex(), point2->vertex()});
-
-            } else {
-                // start from new vertex
-                // TODO: better depth
-                auto [centerInScreen, isCenterInScreen] = event.camera->mapWorldToScreen(vec3(0));
-                if (!isCenterInScreen) {
-                    return;
-                }
-                auto pos = event.camera->mapScreenToWorld(dvec3(event.screenPos, centerInScreen.z));
-                auto point1 = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
-                auto point2 = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
-                _drawnUVPoints.push_back(point1);
-                _drawnUVPoints.push_back(point2);
-                mesh->addEdge({point1->vertex(), point2->vertex()});
-            }
-        }
+    case UI::Tool::Draw:
+        _drawTool->mousePress(target, event);
         return;
-    }
     default: {
         _moveTool->mousePress(target, event);
         return;
@@ -411,38 +334,24 @@ void MeshEditor::mousePressTarget(const Tool::EventTarget &target, const Render:
 
 void MeshEditor::mouseMoveTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     switch (_appState->tool()) {
-    case UI::Tool::Draw: {
-        auto mesh = _item->mesh();
-        auto maybePrevVertex = lastDrawnVertex();
-        if (maybePrevVertex) {
-            auto prevVertex = *maybePrevVertex;
-
-            auto [prevPosInScreen, isInScreen] = event.camera->mapWorldToScreen(prevVertex->position());
-            if (!isInScreen) {
-                break;
-            }
-            auto pos = event.camera->mapScreenToWorld(dvec3(event.screenPos, prevPosInScreen.z));
-            mesh->setPositions({{prevVertex, pos}});
-        }
+    case UI::Tool::Draw:
+        _drawTool->mouseMove(target, event);
         return;
-    }
-    default: {
+    default:
         _moveTool->mouseMove(target, event);
         return;
-    }
     }
 }
 
 void MeshEditor::mouseReleaseTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
     switch (_appState->tool()) {
-    case UI::Tool::Draw: {
+    case UI::Tool::Draw:
+        _drawTool->mouseRelease(target, event);
         return;
-    }
-    default: {
+    default:
         _moveTool->mouseRelease(target, event);
         return;
-    }
     }
 }
 
@@ -465,21 +374,6 @@ void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
         _hoveredEdge = {};
         updateWholeVAOs(); // TODO: update partially
     }
-}
-
-Opt<SP<Mesh::UVPoint> > MeshEditor::lastDrawnPoint() const {
-    if (_drawnUVPoints.empty()) {
-        return {};
-    }
-    return _drawnUVPoints[_drawnUVPoints.size() - 1];
-}
-
-Opt<SP<Mesh::Vertex> > MeshEditor::lastDrawnVertex() const {
-    auto uvPoint = lastDrawnPoint();
-    if (!uvPoint) {
-        return {};
-    }
-    return (*uvPoint)->vertex();
 }
 
 }
