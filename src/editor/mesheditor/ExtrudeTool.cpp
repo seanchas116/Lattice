@@ -35,6 +35,7 @@ void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::Mous
         auto uv2 = mesh->addUVPoint(mesh->addVertex(uv1->vertex()->position()), vec2(0)); // TODO: correct uv position
         auto uv3 = mesh->addUVPoint(mesh->addVertex(uv0->vertex()->position()), vec2(0));
         mesh->addFace({uv0, uv1, uv2, uv3}, mesh->materials()[0]); // TODO: correct material
+        // TODO: correct face orientation
 
         _oldToNewVertices.insert({uv0->vertex(), uv3->vertex()});
         _oldToNewVertices.insert({uv1->vertex(), uv2->vertex()});
