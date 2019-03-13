@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Tool.hpp"
 #include "../../support/Shorthands.hpp"
 #include "../../support/Box.hpp"
 #include "../../support/Location.hpp"
@@ -35,6 +36,8 @@ class VAO;
 namespace Editor {
 namespace MeshEditor {
 
+class MoveTool;
+
 class MeshEditor final : public Render::RenderableObject, protected GL::ContextRecallable, protected QOpenGLExtraFunctions {
     Q_OBJECT
 public:
@@ -52,21 +55,11 @@ public:
 private:
     void updateWholeVAOs();
 
-    struct EventTarget {
-        Opt<SP<Mesh::Vertex>> vertex;
-        Opt<SP<Mesh::Edge>> edge;
-        Opt<SP<Mesh::Face>> face;
-    };
-
-    void mousePressTarget(const EventTarget& target, const Render::MouseEvent &event);
-    void mouseMoveTarget(const EventTarget& target, const Render::MouseEvent &event);
-    void mouseReleaseTarget(const EventTarget& target, const Render::MouseEvent &event);
-    void hoverEnterTarget(const EventTarget& target, const Render::MouseEvent &event);
-    void hoverLeaveTarget(const EventTarget& target);
-
-    void vertexDragStart(const std::unordered_set<SP<Mesh::Vertex>>& vertices, const Render::MouseEvent& event);
-    void vertexDragMove(const Render::MouseEvent& event);
-    void vertexDragEnd();
+    void mousePressTarget(const Tool::EventTarget& target, const Render::MouseEvent &event);
+    void mouseMoveTarget(const Tool::EventTarget& target, const Render::MouseEvent &event);
+    void mouseReleaseTarget(const Tool::EventTarget& target, const Render::MouseEvent &event);
+    void hoverEnterTarget(const Tool::EventTarget& target, const Render::MouseEvent &event);
+    void hoverLeaveTarget(const Tool::EventTarget& target);
 
     class VertexPickable;
     class EdgePickable;
@@ -91,11 +84,7 @@ private:
     SP<GL::VAO> _vertexPickVAO;
     std::vector<GL::Vertex> _vertexPickAttributes;
 
-    // vertex drag
-    bool _dragged = false;
-    std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _dragInitPositions;
-    glm::dvec3 _dragInitWorldPos;
-    bool _dragStarted;
+    SP<MoveTool> _moveTool;
 
     // vertex hover
     Opt<SP<Mesh::Vertex>> _hoveredVertex;

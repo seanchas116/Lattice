@@ -1,4 +1,5 @@
 #include "MeshEditor.hpp"
+#include "MoveTool.hpp"
 #include "../../ui/AppState.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
@@ -115,7 +116,8 @@ MeshEditor::MeshEditor(const SP<UI::AppState>& appState, const SP<Document::Mesh
     _edgeVAO(makeShared<GL::VAO>()),
     _edgePickVAO(makeShared<GL::VAO>()),
     _vertexVAO(makeShared<GL::VAO>()),
-    _vertexPickVAO(makeShared<GL::VAO>())
+    _vertexPickVAO(makeShared<GL::VAO>()),
+    _moveTool(makeShared<MoveTool>(appState, item))
 {
     initializeOpenGLFunctions();
     updateWholeVAOs();
@@ -313,7 +315,7 @@ void MeshEditor::updateWholeVAOs() {
     update();
 }
 
-void MeshEditor::mousePressTarget(const MeshEditor::EventTarget &target, const Render::MouseEvent &event) {
+void MeshEditor::mousePressTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     if (event.originalEvent->button() != Qt::LeftButton) {
         if (event.originalEvent->button() == Qt::RightButton) {
             QMenu contextMenu;
@@ -401,26 +403,13 @@ void MeshEditor::mousePressTarget(const MeshEditor::EventTarget &target, const R
         return;
     }
     default: {
-        if (target.vertex) {
-            auto& vertex = *target.vertex;
-            vertexDragStart({vertex}, event);
-        } else if (target.edge) {
-            auto& edge = *target.edge;
-            vertexDragStart({edge->vertices()[0], edge->vertices()[1]}, event);
-        } else if (target.face) {
-            auto& face = *target.face;
-            std::unordered_set<SP<Mesh::Vertex>> vertices;
-            for (auto& v : face->vertices()) {
-                vertices.insert(v);
-            }
-            vertexDragStart(vertices, event);
-        }
+        _moveTool->mousePress(target, event);
         return;
     }
     }
 }
 
-void MeshEditor::mouseMoveTarget(const MeshEditor::EventTarget &target, const Render::MouseEvent &event) {
+void MeshEditor::mouseMoveTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     switch (_appState->tool()) {
     case UI::Tool::Draw: {
         auto mesh = _item->mesh();
@@ -438,28 +427,26 @@ void MeshEditor::mouseMoveTarget(const MeshEditor::EventTarget &target, const Re
         return;
     }
     default: {
-        if (target.vertex || target.edge || target.face) {
-            vertexDragMove(event);
-        }
+        _moveTool->mouseMove(target, event);
         return;
     }
     }
 }
 
-void MeshEditor::mouseReleaseTarget(const MeshEditor::EventTarget &target, const Render::MouseEvent &event) {
+void MeshEditor::mouseReleaseTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
     switch (_appState->tool()) {
     case UI::Tool::Draw: {
         return;
     }
     default: {
-        vertexDragEnd();
+        _moveTool->mouseRelease(target, event);
         return;
     }
     }
 }
 
-void MeshEditor::hoverEnterTarget(const MeshEditor::EventTarget &target, const Render::MouseEvent &event) {
+void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     Q_UNUSED(event);
     if (target.vertex) {
         _hoveredVertex = target.vertex;
@@ -470,7 +457,7 @@ void MeshEditor::hoverEnterTarget(const MeshEditor::EventTarget &target, const R
     }
 }
 
-void MeshEditor::hoverLeaveTarget(const MeshEditor::EventTarget &target) {
+void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
     if (target.vertex) {
         _hoveredVertex = {};
         updateWholeVAOs(); // TODO: update partially
@@ -478,66 +465,6 @@ void MeshEditor::hoverLeaveTarget(const MeshEditor::EventTarget &target) {
         _hoveredEdge = {};
         updateWholeVAOs(); // TODO: update partially
     }
-}
-
-void MeshEditor::vertexDragStart(const std::unordered_set<SP<Mesh::Vertex> > &vertices, const Render::MouseEvent &event) {
-    Document::MeshSelection selection;
-    if (event.originalEvent->modifiers() & Qt::ShiftModifier) {
-        selection = _appState->document()->meshSelection();
-
-        bool alreadyAdded = true;
-        for (auto& v : vertices) {
-            if (selection.vertices.find(v) == selection.vertices.end()) {
-                alreadyAdded = false;
-            }
-        }
-        if (alreadyAdded) {
-            for (auto& v : vertices) {
-                selection.vertices.erase(v);
-            }
-        } else {
-            for (auto& v: vertices) {
-                selection.vertices.insert(v);
-            }
-        }
-    } else {
-        selection.vertices = vertices;
-    }
-
-    _dragged = true;
-    _dragInitPositions.clear();
-    for (auto& v : selection.vertices) {
-        _dragInitPositions[v] = v->position();
-    }
-    _dragInitWorldPos = event.worldPos();
-    _dragStarted = false;
-
-    _appState->document()->setMeshSelection(selection);
-}
-
-void MeshEditor::vertexDragMove(const Render::MouseEvent &event) {
-    if (!_dragged) {
-        return;
-    }
-
-    dvec3 worldPos = event.worldPos();
-    dvec3 offset = worldPos - _dragInitWorldPos;
-
-    if (!_dragStarted) {
-        _appState->document()->history()->beginChange(tr("Move Vertex"));
-        _dragStarted = true;
-    }
-
-    auto& mesh = _item->mesh();
-    std::unordered_map<SP<Mesh::Vertex>, vec3> positions;
-    for (auto& [v, initialPos] : _dragInitPositions) {
-        positions[v] = initialPos + offset;
-    }
-    mesh->setPositions(positions);
-}
-
-void MeshEditor::vertexDragEnd() {
-    _dragged = false;
 }
 
 Opt<SP<Mesh::UVPoint> > MeshEditor::lastDrawnPoint() const {
