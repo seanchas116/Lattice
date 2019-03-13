@@ -9,6 +9,8 @@ class DrawTool : public Tool {
 public:
     DrawTool(const SP<UI::AppState>& appState, const SP<Document::MeshItem>& item) : Tool(appState, item) {}
 
+    HitTestExclusion hitTestExclusion() const override;
+
     void mousePress(const EventTarget &target, const Render::MouseEvent &event) override;
     void mouseMove(const EventTarget &target, const Render::MouseEvent &event) override;
     void mouseRelease(const EventTarget &target, const Render::MouseEvent &event) override;

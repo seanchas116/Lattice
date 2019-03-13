@@ -8,6 +8,20 @@ namespace Lattice {
 namespace Editor {
 namespace MeshEditor {
 
+Tool::HitTestExclusion DrawTool::hitTestExclusion() const {
+    auto maybeVertex = lastDrawnVertex();
+    if (!maybeVertex) {
+        return {};
+    }
+    auto vertex = *maybeVertex;
+    std::vector<SP<Mesh::Edge>> edges;
+    for (auto& e : vertex->edges()) {
+        edges.push_back(e->sharedFromThis());
+    }
+
+    return {{vertex}, edges, {}};
+}
+
 void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     auto mesh = item()->mesh();
     if (!_drawnUVPoints.empty()) {

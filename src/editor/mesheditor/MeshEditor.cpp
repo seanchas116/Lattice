@@ -186,6 +186,8 @@ void MeshEditor::updateWholeVAOs() {
 
     auto& selectedVertices = _appState->document()->meshSelection().vertices;
 
+    auto hitTestExclusion = _tool->hitTestExclusion();
+
     std::vector<SP<Render::Renderable>> childPickables;
 
     {
@@ -201,15 +203,19 @@ void MeshEditor::updateWholeVAOs() {
             GL::Vertex attrib;
             attrib.position = v->position();
             attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
-
-            auto pickable = makeShared<VertexPickable>(this, v);
-            childPickables.push_back(pickable);
-            GL::Vertex pickAttrib;
-            pickAttrib.position = v->position();
-            pickAttrib.color = pickable->toIDColor();
-
             _vertexAttributes.push_back(attrib);
-            _vertexPickAttributes.push_back(pickAttrib);
+
+            bool hitTestExcluded = std::find(hitTestExclusion.vertices.begin(), hitTestExclusion.vertices.end(), v) != hitTestExclusion.vertices.end();
+
+            if (!hitTestExcluded) {
+                auto pickable = makeShared<VertexPickable>(this, v);
+                childPickables.push_back(pickable);
+                GL::Vertex pickAttrib;
+                pickAttrib.position = v->position();
+                pickAttrib.color = pickable->toIDColor();
+
+                _vertexPickAttributes.push_back(pickAttrib);
+            }
         }
 
         auto vertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
@@ -236,6 +242,8 @@ void MeshEditor::updateWholeVAOs() {
 
             auto offset = uint32_t(_edgeAttributes.size());
 
+            bool hitTestExcluded = std::find(hitTestExclusion.edges.begin(), hitTestExclusion.edges.end(), e) != hitTestExclusion.edges.end();
+
             for (auto& v : e->vertices()) {
                 bool selected = selectedVertices.find(v) != selectedVertices.end();
 
@@ -244,10 +252,12 @@ void MeshEditor::updateWholeVAOs() {
                 attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
                 _edgeAttributes.push_back(attrib);
 
-                GL::Vertex pickAttrib;
-                pickAttrib.position = v->position();
-                 pickAttrib.color = pickable->toIDColor();
-                _edgePickAttributes.push_back(pickAttrib);
+                if (!hitTestExcluded) {
+                    GL::Vertex pickAttrib;
+                    pickAttrib.position = v->position();
+                     pickAttrib.color = pickable->toIDColor();
+                    _edgePickAttributes.push_back(pickAttrib);
+                }
             }
             indices.push_back({offset, offset+1});
         }
