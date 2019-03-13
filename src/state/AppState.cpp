@@ -13,7 +13,10 @@ using namespace glm;
 
 namespace Lattice::State {
 
-AppState::AppState() : _document(makeShared<Document::Document>()) {
+AppState::AppState() :
+    _document(makeShared<Document::Document>()),
+    _preferences(makeShared<Preferences>())
+{
     addCube();
     auto item = _document->rootItem()->childItems()[0];
     _document->setCurrentItem(item);

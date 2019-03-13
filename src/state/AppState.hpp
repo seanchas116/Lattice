@@ -4,6 +4,7 @@
 #include "../support/Shorthands.hpp"
 #include "../support/Property.hpp"
 #include "ViewportSplitMode.hpp"
+#include "Preferences.hpp"
 #include "Tool.hpp"
 
 namespace Lattice::Document {
@@ -30,6 +31,7 @@ public:
     AppState();
 
     const auto& document() const { return _document; }
+    const auto& preferences() const { return _preferences; }
 
     void deleteItems();
 
@@ -50,6 +52,7 @@ public:
 
 private:
     SP<Document::Document> _document;
+    SP<Preferences> _preferences;
 };
 
 } // namespace Lattice

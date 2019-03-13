@@ -7,7 +7,7 @@ namespace State {
 class Preferences : public QObject {
     Q_OBJECT
 public:
-    Preferences();
+    double moveThreshold() const { return 4; }
 };
 
 } // namespace State

@@ -8,10 +8,6 @@ namespace Lattice {
 namespace Editor {
 namespace MeshEditor {
 
-namespace {
-constexpr double moveThreshold = 4;
-}
-
 void MoveTool::mousePress(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     if (event.originalEvent->button() != Qt::LeftButton) {
         return;
@@ -77,7 +73,7 @@ void MoveTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEve
     dvec3 offset = worldPos - _initWorldPos;
 
     if (!_dragStarted) {
-        if (distance(_initScreenPos, event.screenPos) < moveThreshold) {
+        if (distance(_initScreenPos, event.screenPos) < appState()->preferences()->moveThreshold()) {
             return;
         }
         appState()->document()->history()->beginChange(tr("Move Vertex"));
