@@ -24,7 +24,8 @@ void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::Mous
     if (target.vertex) {
         // vertex extrude
         auto vertex = *target.vertex;
-        auto newUVPoint = mesh->addUVPoint(mesh->addVertex(vertex->position()), vec2(0));
+        auto uv = vertex->firstUVPoint();
+        auto newUVPoint = mesh->addUVPoint(mesh->addVertex(vertex->position()), uv->position());
         mesh->addEdge({vertex, newUVPoint->vertex()});
         _oldToNewVertices.insert({vertex, newUVPoint->vertex()});
     } else if (target.edge) {
@@ -32,8 +33,8 @@ void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::Mous
         auto edge = *target.edge;
         auto uv0 = edge->vertices()[0]->firstUVPoint();
         auto uv1 = edge->vertices()[1]->firstUVPoint();
-        auto uv2 = mesh->addUVPoint(mesh->addVertex(uv1->vertex()->position()), vec2(0)); // TODO: correct uv position
-        auto uv3 = mesh->addUVPoint(mesh->addVertex(uv0->vertex()->position()), vec2(0));
+        auto uv2 = mesh->addUVPoint(mesh->addVertex(uv1->vertex()->position()), uv1->position());
+        auto uv3 = mesh->addUVPoint(mesh->addVertex(uv0->vertex()->position()), uv0->position());
         mesh->addFace({uv0, uv1, uv2, uv3}, mesh->materials()[0]); // TODO: correct material
         // TODO: correct face orientation
 
