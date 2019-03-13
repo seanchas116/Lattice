@@ -4,20 +4,13 @@
 #include "../support/Shorthands.hpp"
 #include "../support/Property.hpp"
 #include "ViewportSplitMode.hpp"
+#include "Tool.hpp"
 
 namespace Lattice::Document {
 class Document;
 }
 
 namespace Lattice::State {
-
-enum class Tool {
-    None,
-    Draw,
-    Extrude,
-    InsetFaces,
-    LoopCut,
-};
 
 class AppState final : public QObject {
     Q_OBJECT
