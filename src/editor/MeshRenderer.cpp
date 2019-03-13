@@ -1,6 +1,6 @@
 #include "MeshRenderer.hpp"
 #include "MeshVAOGenerator.hpp"
-#include "../ui/AppState.hpp"
+#include "../state/AppState.hpp"
 #include "../gl/VAO.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
@@ -15,7 +15,7 @@ using namespace glm;
 
 namespace Lattice::Editor {
 
-MeshRenderer::MeshRenderer(const SP<UI::AppState>& appState, const SP<Document::MeshItem> &item) :
+MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Document::MeshItem> &item) :
     _appState(appState),
     _item(item),
     _edgeVAO(makeShared<GL::VAO>()),
@@ -53,7 +53,7 @@ void MeshRenderer::mousePress(const Render::MouseEvent &event) {
     switch (event.originalEvent->button()) {
     case Qt::RightButton: {
         QMenu contextMenu;
-        contextMenu.addAction(tr("Delete"), _appState.get(), &UI::AppState::deleteItems);
+        contextMenu.addAction(tr("Delete"), _appState.get(), &State::AppState::deleteItems);
         contextMenu.exec(event.originalEvent->globalPos());
         return;
     }

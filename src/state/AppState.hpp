@@ -9,7 +9,7 @@ namespace Lattice::Document {
 class Document;
 }
 
-namespace Lattice::UI {
+namespace Lattice::State {
 
 enum class Tool {
     None,

@@ -5,7 +5,7 @@
 #include "./mesheditor/MeshEditor.hpp"
 #include "./manipulator/ObjectManipulator.hpp"
 #include "./manipulator/MeshManipulator.hpp"
-#include "../ui/AppState.hpp"
+#include "../state/AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/Item.hpp"
 #include "../document/MeshItem.hpp"
@@ -13,21 +13,21 @@
 namespace Lattice {
 namespace Editor {
 
-EditorScene::EditorScene(const SP<UI::AppState> &appState) :
+EditorScene::EditorScene(const SP<State::AppState> &appState) :
     _appState(appState),
     _background(makeShared<Background>(appState)),
     _gridFloor(makeShared<GridFloor>()),
     _objectManipulator(makeShared<Manipulator::ObjectManipulator>(appState)),
     _meshManipulator(makeShared<Manipulator::MeshManipulator>(appState))
 {
-    connect(appState.get(), &UI::AppState::isVertexVisibleChanged, this, &EditorScene::updateRenderables);
-    connect(appState.get(), &UI::AppState::isEdgeVisibleChanged, this, &EditorScene::updateRenderables);
-    connect(appState.get(), &UI::AppState::isFaceVisibleChanged, this, &EditorScene::updateRenderables);
-    connect(appState.get(), &UI::AppState::toolChanged, this, &EditorScene::updateRenderables);
+    connect(appState.get(), &State::AppState::isVertexVisibleChanged, this, &EditorScene::updateRenderables);
+    connect(appState.get(), &State::AppState::isEdgeVisibleChanged, this, &EditorScene::updateRenderables);
+    connect(appState.get(), &State::AppState::isFaceVisibleChanged, this, &EditorScene::updateRenderables);
+    connect(appState.get(), &State::AppState::toolChanged, this, &EditorScene::updateRenderables);
 
-    connect(appState.get(), &UI::AppState::isTranslateHandleVisibleChanged, this, &EditorScene::updateRenderables);
-    connect(appState.get(), &UI::AppState::isRotateHandleVisibleChanged, this, &EditorScene::updateRenderables);
-    connect(appState.get(), &UI::AppState::isScaleHandleVisibleChanged, this, &EditorScene::updateRenderables);
+    connect(appState.get(), &State::AppState::isTranslateHandleVisibleChanged, this, &EditorScene::updateRenderables);
+    connect(appState.get(), &State::AppState::isRotateHandleVisibleChanged, this, &EditorScene::updateRenderables);
+    connect(appState.get(), &State::AppState::isScaleHandleVisibleChanged, this, &EditorScene::updateRenderables);
 
     connect(appState->document().get(), &Document::Document::itemInserted, this, &EditorScene::updateRenderables);
     connect(appState->document().get(), &Document::Document::itemRemoved, this, &EditorScene::updateRenderables);
@@ -87,7 +87,7 @@ void EditorScene::updateRenderables() {
             renderables.push_back(h);
         }
     }
-    if (_appState->document()->isEditing() && !_appState->document()->meshSelection().vertices.empty() && _appState->tool() == UI::Tool::None) {
+    if (_appState->document()->isEditing() && !_appState->document()->meshSelection().vertices.empty() && _appState->tool() == State::Tool::None) {
         for (auto& h : _meshManipulator->handles(_appState->isTranslateHandleVisible(), _appState->isRotateHandleVisible(), _appState->isScaleHandleVisible())) {
             renderables.push_back(h);
         }

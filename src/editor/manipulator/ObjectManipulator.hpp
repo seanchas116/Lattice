@@ -4,7 +4,7 @@
 
 namespace Lattice {
 
-namespace UI {
+namespace State {
 class AppState;
 }
 namespace Document {
@@ -17,7 +17,7 @@ namespace Manipulator {
 class ObjectManipulator : public Manipulator {
     Q_OBJECT
 public:
-    ObjectManipulator(const SP<UI::AppState>& appState);
+    ObjectManipulator(const SP<State::AppState>& appState);
 
 private:
     void handleOnBegin(ValueType type, double value);
@@ -28,7 +28,7 @@ private:
 
     void updatePosition();
 
-    SP<UI::AppState> _appState;
+    SP<State::AppState> _appState;
     Opt<SP<Document::Item>> _item;
     double _initialValue;
     Location _initialLocation;

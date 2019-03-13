@@ -1,5 +1,5 @@
 #include "MeshManipulator.hpp"
-#include "../../ui/AppState.hpp"
+#include "../../state/AppState.hpp"
 #include "../../document/Document.hpp"
 #include "../../document/MeshItem.hpp"
 #include "../../document/History.hpp"
@@ -10,7 +10,7 @@ namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
-MeshManipulator::MeshManipulator(const SP<UI::AppState> &appState) : _appState(appState)
+MeshManipulator::MeshManipulator(const SP<State::AppState> &appState) : _appState(appState)
 {
     connectToItem(appState->document()->editedItem());
     connect(appState->document().get(), &Document::Document::editedItemChanged, this, &MeshManipulator::connectToItem);

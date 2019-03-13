@@ -4,7 +4,7 @@
 
 namespace Lattice {
 
-namespace UI {
+namespace State {
 class AppState;
 }
 namespace Document {
@@ -20,7 +20,7 @@ namespace Manipulator {
 class MeshManipulator : public Manipulator {
     Q_OBJECT
 public:
-    MeshManipulator(const SP<UI::AppState>& appState);
+    MeshManipulator(const SP<State::AppState>& appState);
 
 private:
     void handleOnBegin(ValueType type, double value);
@@ -31,7 +31,7 @@ private:
 
     void updatePosition();
 
-    SP<UI::AppState> _appState;
+    SP<State::AppState> _appState;
     Opt<SP<Document::MeshItem>> _item;
     std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _initialPositions;
     glm::dvec3 _initialMedianPos;

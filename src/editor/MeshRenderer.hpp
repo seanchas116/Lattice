@@ -14,7 +14,7 @@ namespace Lattice {
 
 class Camera;
 
-namespace UI {
+namespace State {
 class AppState;
 }
 
@@ -38,7 +38,7 @@ class MeshPicker;
 class MeshRenderer final : public Render::RenderableObject, public GL::ContextRecallable {
     Q_OBJECT
 public:
-    MeshRenderer(const SP<UI::AppState>& appState, const SP<Document::MeshItem>& item);
+    MeshRenderer(const SP<State::AppState>& appState, const SP<Document::MeshItem>& item);
 
     void draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) override;
     void drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) override;
@@ -51,7 +51,7 @@ public:
 private:
     void updateVAOs();
 
-    SP<UI::AppState> _appState;
+    SP<State::AppState> _appState;
     SP<Document::MeshItem> _item;
     std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> _faceVAOs;
     SP<GL::VAO> _edgeVAO;

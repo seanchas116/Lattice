@@ -11,7 +11,7 @@
 
 using namespace glm;
 
-namespace Lattice::UI {
+namespace Lattice::State {
 
 AppState::AppState() : _document(makeShared<Document::Document>()) {
     addCube();

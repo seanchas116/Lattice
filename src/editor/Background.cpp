@@ -5,7 +5,7 @@
 namespace Lattice {
 namespace Editor {
 
-Background::Background(const SP<UI::AppState> &appState) : _appState(appState) {
+Background::Background(const SP<State::AppState> &appState) : _appState(appState) {
     initializeOpenGLFunctions();
 }
 

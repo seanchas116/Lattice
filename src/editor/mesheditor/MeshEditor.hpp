@@ -16,7 +16,7 @@ namespace Lattice {
 
 class Camera;
 
-namespace UI {
+namespace State {
 class AppState;
 }
 
@@ -42,7 +42,7 @@ class DrawTool;
 class MeshEditor final : public Render::RenderableObject, protected GL::ContextRecallable, protected QOpenGLExtraFunctions {
     Q_OBJECT
 public:
-    MeshEditor(const SP<UI::AppState>& appState, const SP<Document::MeshItem>& item);
+    MeshEditor(const SP<State::AppState>& appState, const SP<Document::MeshItem>& item);
 
     auto& item() const { return _item; }
 
@@ -54,7 +54,7 @@ public:
     void mouseRelease(const Render::MouseEvent &event) override;
 
 private:
-    void handleToolChange(UI::Tool tool);
+    void handleToolChange(State::Tool tool);
     void updateWholeVAOs();
 
     void mousePressTarget(const Tool::EventTarget& target, const Render::MouseEvent &event);
@@ -67,7 +67,7 @@ private:
     class EdgePickable;
     class FacePickable;
 
-    SP<UI::AppState> _appState;
+    SP<State::AppState> _appState;
     SP<Document::MeshItem> _item;
 
     std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> _faceVAOs;

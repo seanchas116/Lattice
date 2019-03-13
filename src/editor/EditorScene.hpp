@@ -5,7 +5,7 @@
 
 namespace Lattice {
 
-namespace UI {
+namespace State {
 class AppState;
 }
 
@@ -31,12 +31,12 @@ class MeshManipulator;
 class EditorScene : public Render::RenderableObject, protected GL::ContextRecallable {
     Q_OBJECT
 public:
-    EditorScene(const SP<UI::AppState>& appState);
+    EditorScene(const SP<State::AppState>& appState);
 
     void updateRenderables();
 
 private:
-    SP<UI::AppState> _appState;
+    SP<State::AppState> _appState;
 
     SP<Background> _background;
     SP<GridFloor> _gridFloor;
