@@ -54,6 +54,7 @@ public:
     void mouseRelease(const Render::MouseEvent &event) override;
 
 private:
+    void handleToolChange(UI::Tool tool);
     void updateWholeVAOs();
 
     void mousePressTarget(const Tool::EventTarget& target, const Render::MouseEvent &event);
@@ -85,8 +86,7 @@ private:
     SP<GL::VAO> _vertexPickVAO;
     std::vector<GL::Vertex> _vertexPickAttributes;
 
-    SP<MoveTool> _moveTool;
-    SP<DrawTool> _drawTool;
+    SP<Tool> _tool;
 
     // vertex hover
     Opt<SP<Mesh::Vertex>> _hoveredVertex;

@@ -118,13 +118,13 @@ MeshEditor::MeshEditor(const SP<UI::AppState>& appState, const SP<Document::Mesh
     _edgePickVAO(makeShared<GL::VAO>()),
     _vertexVAO(makeShared<GL::VAO>()),
     _vertexPickVAO(makeShared<GL::VAO>()),
-    _moveTool(makeShared<MoveTool>(appState, item)),
-    _drawTool(makeShared<DrawTool>(appState, item))
+    _tool(makeShared<MoveTool>(appState, item))
 {
     initializeOpenGLFunctions();
     updateWholeVAOs();
     connect(_item->mesh().get(), &Mesh::Mesh::changed, this, &MeshEditor::updateWholeVAOs);
     connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::updateWholeVAOs);
+    connect(_appState.get(), &UI::AppState::toolChanged, this, &MeshEditor::handleToolChange);
 }
 
 void MeshEditor::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
@@ -168,6 +168,17 @@ void MeshEditor::mouseMove(const Render::MouseEvent &event) {
 
 void MeshEditor::mouseRelease(const Render::MouseEvent &event) {
     mouseReleaseTarget({}, event);
+}
+
+void MeshEditor::handleToolChange(UI::Tool tool) {
+    switch (tool) {
+    case UI::Tool::Draw:
+        _tool = makeShared<DrawTool>(_appState, _item);
+        break;
+    default:
+        _tool = makeShared<MoveTool>(_appState, _item);
+        break;
+    }
 }
 
 void MeshEditor::updateWholeVAOs() {
@@ -321,38 +332,15 @@ void MeshEditor::mousePressTarget(const Tool::EventTarget &target, const Render:
         return;
     }
 
-    switch (_appState->tool()) {
-    case UI::Tool::Draw:
-        _drawTool->mousePress(target, event);
-        return;
-    default: {
-        _moveTool->mousePress(target, event);
-        return;
-    }
-    }
+    _tool->mousePress(target, event);
 }
 
 void MeshEditor::mouseMoveTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
-    switch (_appState->tool()) {
-    case UI::Tool::Draw:
-        _drawTool->mouseMove(target, event);
-        return;
-    default:
-        _moveTool->mouseMove(target, event);
-        return;
-    }
+    _tool->mouseMove(target, event);
 }
 
 void MeshEditor::mouseReleaseTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
-    Q_UNUSED(target); Q_UNUSED(event);
-    switch (_appState->tool()) {
-    case UI::Tool::Draw:
-        _drawTool->mouseRelease(target, event);
-        return;
-    default:
-        _moveTool->mouseRelease(target, event);
-        return;
-    }
+    _tool->mouseRelease(target, event);
 }
 
 void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
