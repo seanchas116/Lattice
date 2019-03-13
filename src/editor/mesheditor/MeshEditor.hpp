@@ -33,8 +33,7 @@ class VAO;
 }
 
 namespace Editor {
-
-class MeshPicker;
+namespace MeshEditor {
 
 class MeshEditor final : public Render::RenderableObject, protected GL::ContextRecallable, protected QOpenGLExtraFunctions {
     Q_OBJECT
@@ -109,5 +108,6 @@ private:
     Opt<SP<Mesh::Vertex>> lastDrawnVertex() const;
 };
 
+}
 }
 }

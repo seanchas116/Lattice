@@ -46,7 +46,7 @@ void EditorScene::updateRenderables() {
     auto editedItem = _appState->document()->editedItem();
     if (editedItem) {
         if (!_editedMeshRenderers || (*_editedMeshRenderers)->item() != editedItem) {
-            _editedMeshRenderers = makeShared<MeshEditor>(_appState, *editedItem);
+            _editedMeshRenderers = makeShared<MeshEditor::MeshEditor>(_appState, *editedItem);
         }
     } else {
         _editedMeshRenderers = std::nullopt;

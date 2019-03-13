@@ -13,7 +13,7 @@
 
 using namespace glm;
 
-namespace Lattice::Editor {
+namespace Lattice::Editor::MeshEditor {
 
 namespace {
 
