@@ -3,7 +3,7 @@
 #include "DrawTool.hpp"
 #include "ExtrudeTool.hpp"
 #include "LoopCutTool.hpp"
-#include "../../ui/AppState.hpp"
+#include "../../state/AppState.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
 #include "../../document/Document.hpp"
@@ -111,7 +111,7 @@ public:
     SP<Mesh::Face> _face;
 };
 
-MeshEditor::MeshEditor(const SP<UI::AppState>& appState, const SP<Document::MeshItem> &item) :
+MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::MeshItem> &item) :
     _appState(appState),
     _item(item),
     _faceVBO(makeShared<GL::VertexBuffer<GL::Vertex>>()),
@@ -126,7 +126,7 @@ MeshEditor::MeshEditor(const SP<UI::AppState>& appState, const SP<Document::Mesh
     updateWholeVAOs();
     connect(_item->mesh().get(), &Mesh::Mesh::changed, this, &MeshEditor::updateWholeVAOs);
     connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::updateWholeVAOs);
-    connect(_appState.get(), &UI::AppState::toolChanged, this, &MeshEditor::handleToolChange);
+    connect(_appState.get(), &State::AppState::toolChanged, this, &MeshEditor::handleToolChange);
 }
 
 void MeshEditor::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
@@ -172,15 +172,15 @@ void MeshEditor::mouseRelease(const Render::MouseEvent &event) {
     mouseReleaseTarget({}, event);
 }
 
-void MeshEditor::handleToolChange(UI::Tool tool) {
+void MeshEditor::handleToolChange(State::Tool tool) {
     switch (tool) {
-    case UI::Tool::Draw:
+    case State::Tool::Draw:
         _tool = makeShared<DrawTool>(_appState, _item);
         break;
-    case UI::Tool::Extrude:
+    case State::Tool::Extrude:
         _tool = makeShared<ExtrudeTool>(_appState, _item);
         break;
-    case UI::Tool::LoopCut:
+    case State::Tool::LoopCut:
         _tool = makeShared<LoopCutTool>(_appState, _item);
         break;
     default:
@@ -342,9 +342,9 @@ void MeshEditor::mousePressTarget(const Tool::EventTarget &target, const Render:
     if (event.originalEvent->button() != Qt::LeftButton) {
         if (event.originalEvent->button() == Qt::RightButton) {
             QMenu contextMenu;
-            contextMenu.addAction(tr("Delete Vertices"), _appState.get(), &UI::AppState::deleteVertices);
-            contextMenu.addAction(tr("Delete Edges"), _appState.get(), &UI::AppState::deleteEdges);
-            contextMenu.addAction(tr("Delete Faces"), _appState.get(), &UI::AppState::deleteFaces);
+            contextMenu.addAction(tr("Delete Vertices"), _appState.get(), &State::AppState::deleteVertices);
+            contextMenu.addAction(tr("Delete Edges"), _appState.get(), &State::AppState::deleteEdges);
+            contextMenu.addAction(tr("Delete Faces"), _appState.get(), &State::AppState::deleteFaces);
             contextMenu.exec(event.originalEvent->globalPos());
         }
         return;

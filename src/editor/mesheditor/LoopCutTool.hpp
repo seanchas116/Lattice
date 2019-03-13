@@ -7,7 +7,7 @@ namespace MeshEditor {
 
 class LoopCutTool : public Tool {
 public:
-    LoopCutTool(const SP<UI::AppState>& appState, const SP<Document::MeshItem>& item) : Tool(appState, item) {}
+    LoopCutTool(const SP<State::AppState>& appState, const SP<Document::MeshItem>& item) : Tool(appState, item) {}
 
     void mousePress(const EventTarget &target, const Render::MouseEvent &event) override;
     void mouseMove(const EventTarget &target, const Render::MouseEvent &event) override;

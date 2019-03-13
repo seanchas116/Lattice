@@ -1,7 +1,7 @@
 #include "MainWindow.hpp"
-#include "AppState.hpp"
 #include "ItemListView.hpp"
 #include "ItemPropertyView.hpp"
+#include "../state/AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
 #include "../editor/EditorViewportContainer.hpp"
@@ -15,7 +15,7 @@
 
 namespace Lattice::UI {
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), _appState(makeShared<AppState>()) {
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), _appState(makeShared<State::AppState>()) {
     resize(1000, 1000);
     auto editorWidget = new Editor::EditorViewportContainer(_appState);
     setCentralWidget(editorWidget);
@@ -41,17 +41,17 @@ void MainWindow::setupToolBar() {
     addToolBar(Qt::TopToolBarArea, toolBar);
 
     auto addMenu = new QMenu();
-    addMenu->addAction(tr("Plane"), _appState.get(), &AppState::addPlane);
-    addMenu->addAction(tr("Cube"), _appState.get(), &AppState::addCube);
-    addMenu->addAction(tr("Circle"), _appState.get(), &AppState::addCircle);
-    addMenu->addAction(tr("Sphere"), _appState.get(), &AppState::addSphere);
-    addMenu->addAction(tr("Cone"), _appState.get(), &AppState::addCone);
-    addMenu->addAction(tr("Cylinder"), _appState.get(), &AppState::addCylinder);
+    addMenu->addAction(tr("Plane"), _appState.get(), &State::AppState::addPlane);
+    addMenu->addAction(tr("Cube"), _appState.get(), &State::AppState::addCube);
+    addMenu->addAction(tr("Circle"), _appState.get(), &State::AppState::addCircle);
+    addMenu->addAction(tr("Sphere"), _appState.get(), &State::AppState::addSphere);
+    addMenu->addAction(tr("Cone"), _appState.get(), &State::AppState::addCone);
+    addMenu->addAction(tr("Cylinder"), _appState.get(), &State::AppState::addCylinder);
     addMenu->addSeparator();
-    addMenu->addAction(tr("Text"), _appState.get(), &AppState::addText);
-    addMenu->addAction(tr("Image Plane..."), _appState.get(), &AppState::addImagePlane);
+    addMenu->addAction(tr("Text"), _appState.get(), &State::AppState::addText);
+    addMenu->addAction(tr("Image Plane..."), _appState.get(), &State::AppState::addImagePlane);
     addMenu->addSeparator();
-    addMenu->addAction(tr("Import..."), _appState.get(), &AppState::import);
+    addMenu->addAction(tr("Import..."), _appState.get(), &State::AppState::import);
 
     auto addMenuToolButton = new QToolButton();
     addMenuToolButton->setText(tr("Add"));
@@ -59,11 +59,11 @@ void MainWindow::setupToolBar() {
     addMenuToolButton->setPopupMode(QToolButton::InstantPopup);
     toolBar->addWidget(addMenuToolButton);
 
-    std::vector<std::pair<Tool, QString>> tools = {
-        {Tool::Draw, tr("Draw")},
-        {Tool::Extrude, tr("Extrude")},
-        {Tool::InsetFaces, tr("Inset Faces")},
-        {Tool::LoopCut, tr("Loop Cut")},
+    std::vector<std::pair<State::Tool, QString>> tools = {
+        {State::Tool::Draw, tr("Draw")},
+        {State::Tool::Extrude, tr("Extrude")},
+        {State::Tool::InsetFaces, tr("Inset Faces")},
+        {State::Tool::LoopCut, tr("Loop Cut")},
     };
 
     for (auto [tool, text] : tools) {
@@ -73,10 +73,10 @@ void MainWindow::setupToolBar() {
             if (checked) {
                 appState->setTool(tool);
             } else if (appState->tool() == tool) {
-                appState->setTool(Tool::None);
+                appState->setTool(State::Tool::None);
             }
         });
-        connect(appState, &AppState::toolChanged, action, [action, tool = tool] (Tool newTool) {
+        connect(appState, &State::AppState::toolChanged, action, [action, tool = tool] (State::Tool newTool) {
             action->setChecked(newTool == tool);
         });
         action->setVisible(appState->document()->isEditing());
@@ -99,20 +99,20 @@ void MainWindow::setupToolBar() {
     auto isTranslateHandleVisible = toolBar->addAction(tr("Translate"));
     isTranslateHandleVisible->setCheckable(true);
     isTranslateHandleVisible->setChecked(_appState->isTranslateHandleVisible());
-    connect(_appState.get(), &AppState::isTranslateHandleVisibleChanged, isTranslateHandleVisible, &QAction::setChecked);
-    connect(isTranslateHandleVisible, &QAction::toggled, _appState.get(), &AppState::setTranslateHandleVisible);
+    connect(_appState.get(), &State::AppState::isTranslateHandleVisibleChanged, isTranslateHandleVisible, &QAction::setChecked);
+    connect(isTranslateHandleVisible, &QAction::toggled, _appState.get(), &State::AppState::setTranslateHandleVisible);
 
     auto isRotateHandleVisible = toolBar->addAction(tr("Rotate"));
     isRotateHandleVisible->setCheckable(true);
     isRotateHandleVisible->setChecked(_appState->isRotateHandleVisible());
-    connect(_appState.get(), &AppState::isRotateHandleVisibleChanged, isRotateHandleVisible, &QAction::setChecked);
-    connect(isRotateHandleVisible, &QAction::toggled, _appState.get(), &AppState::setRotateHandleVisible);
+    connect(_appState.get(), &State::AppState::isRotateHandleVisibleChanged, isRotateHandleVisible, &QAction::setChecked);
+    connect(isRotateHandleVisible, &QAction::toggled, _appState.get(), &State::AppState::setRotateHandleVisible);
 
     auto isScaleHandleVisibleAction = toolBar->addAction(tr("Scale"));
     isScaleHandleVisibleAction->setCheckable(true);
     isScaleHandleVisibleAction->setChecked(_appState->isScaleHandleVisible());
-    connect(_appState.get(), &AppState::isScaleHandleVisibleChanged, isScaleHandleVisibleAction, &QAction::setChecked);
-    connect(isScaleHandleVisibleAction, &QAction::toggled, _appState.get(), &AppState::setScaleHandleVisible);
+    connect(_appState.get(), &State::AppState::isScaleHandleVisibleChanged, isScaleHandleVisibleAction, &QAction::setChecked);
+    connect(isScaleHandleVisibleAction, &QAction::toggled, _appState.get(), &State::AppState::setScaleHandleVisible);
 
     toolBar->addSeparator();
 
@@ -121,20 +121,20 @@ void MainWindow::setupToolBar() {
     auto isVertexVisibleAction = toolBar->addAction(tr("Vertex"));
     isVertexVisibleAction->setCheckable(true);
     isVertexVisibleAction->setChecked(_appState->isVertexVisible());
-    connect(_appState.get(), &AppState::isVertexVisibleChanged, isVertexVisibleAction, &QAction::setChecked);
-    connect(isVertexVisibleAction, &QAction::toggled, _appState.get(), &AppState::setVertexVisible);
+    connect(_appState.get(), &State::AppState::isVertexVisibleChanged, isVertexVisibleAction, &QAction::setChecked);
+    connect(isVertexVisibleAction, &QAction::toggled, _appState.get(), &State::AppState::setVertexVisible);
 
     auto isEdgeVisibleAction = toolBar->addAction(tr("Edge"));
     isEdgeVisibleAction->setCheckable(true);
     isEdgeVisibleAction->setChecked(_appState->isEdgeVisible());
-    connect(_appState.get(), &AppState::isEdgeVisibleChanged, isEdgeVisibleAction, &QAction::setChecked);
-    connect(isEdgeVisibleAction, &QAction::toggled, _appState.get(), &AppState::setEdgeVisible);
+    connect(_appState.get(), &State::AppState::isEdgeVisibleChanged, isEdgeVisibleAction, &QAction::setChecked);
+    connect(isEdgeVisibleAction, &QAction::toggled, _appState.get(), &State::AppState::setEdgeVisible);
 
     auto isFaceVisibleAction = toolBar->addAction(tr("Face"));
     isFaceVisibleAction->setCheckable(true);
     isFaceVisibleAction->setChecked(_appState->isFaceVisible());
-    connect(_appState.get(), &AppState::isFaceVisibleChanged, isFaceVisibleAction, &QAction::setChecked);
-    connect(isFaceVisibleAction, &QAction::toggled, _appState.get(), &AppState::setFaceVisible);
+    connect(_appState.get(), &State::AppState::isFaceVisibleChanged, isFaceVisibleAction, &QAction::setChecked);
+    connect(isFaceVisibleAction, &QAction::toggled, _appState.get(), &State::AppState::setFaceVisible);
 }
 
 void MainWindow::setupMenu() {
@@ -171,7 +171,7 @@ void MainWindow::setupMenu() {
 
         auto importAction = new QAction(tr("Import..."), this);
         fileMenu->addAction(importAction);
-        connect(importAction, &QAction::triggered, _appState.get(), &AppState::import);
+        connect(importAction, &QAction::triggered, _appState.get(), &State::AppState::import);
 
         auto exportAction = new QAction(tr("Export..."), this);
         fileMenu->addAction(exportAction);
@@ -220,13 +220,13 @@ void MainWindow::setupMenu() {
 
         {
             auto viewportsMenu = windowMenu->addMenu(tr("Viewports"));
-            std::vector<std::pair<UI::ViewportSplitMode, QString>> entries = {
-                {UI::ViewportSplitMode::Single, tr("Single")},
-                {UI::ViewportSplitMode::LeftRight, tr("Left / Right")},
-                {UI::ViewportSplitMode::TopBottom, tr("Top / Bottom")},
-                {UI::ViewportSplitMode::Four, tr("Four")},
+            std::vector<std::pair<State::ViewportSplitMode, QString>> entries = {
+                {State::ViewportSplitMode::Single, tr("Single")},
+                {State::ViewportSplitMode::LeftRight, tr("Left / Right")},
+                {State::ViewportSplitMode::TopBottom, tr("Top / Bottom")},
+                {State::ViewportSplitMode::Four, tr("Four")},
             };
-            std::unordered_map<UI::ViewportSplitMode, QAction*> actions;
+            std::unordered_map<State::ViewportSplitMode, QAction*> actions;
 
             auto group = new QActionGroup(this);
             group->setExclusive(true);
@@ -240,11 +240,11 @@ void MainWindow::setupMenu() {
                 actions[mode] = action;
             }
 
-            auto onChange = [actions](UI::ViewportSplitMode mode) {
+            auto onChange = [actions](State::ViewportSplitMode mode) {
                 actions.at(mode)->setChecked(true);
             };
             onChange(_appState->viewportSplitMode());
-            connect(_appState.get(), &UI::AppState::viewportSplitModeChanged, this, onChange);
+            connect(_appState.get(), &State::AppState::viewportSplitModeChanged, this, onChange);
         }
 
         windowMenu->addSeparator();

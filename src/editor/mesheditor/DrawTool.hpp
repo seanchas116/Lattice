@@ -7,7 +7,7 @@ namespace MeshEditor {
 
 class DrawTool : public Tool {
 public:
-    DrawTool(const SP<UI::AppState>& appState, const SP<Document::MeshItem>& item) : Tool(appState, item) {}
+    DrawTool(const SP<State::AppState>& appState, const SP<Document::MeshItem>& item) : Tool(appState, item) {}
 
     HitTestExclusion hitTestExclusion() const override;
 

@@ -1,6 +1,6 @@
 #pragma once
 #include <QObject>
-#include "../../ui/AppState.hpp"
+#include "../../state/AppState.hpp"
 #include "../../mesh/Mesh.hpp"
 #include "../../document/MeshItem.hpp"
 #include "../../render/MouseEvent.hpp"
@@ -24,7 +24,7 @@ public:
         std::vector<SP<Mesh::Face>> faces;
     };
 
-    Tool(const SP<UI::AppState>& appState, const SP<Document::MeshItem>& item) : _appState(appState), _item(item) {}
+    Tool(const SP<State::AppState>& appState, const SP<Document::MeshItem>& item) : _appState(appState), _item(item) {}
     ~Tool();
 
     auto& appState() const { return _appState; }
@@ -39,7 +39,7 @@ public:
     virtual void hoverLeave(const EventTarget& target) = 0;
 
 private:
-    SP<UI::AppState> _appState;
+    SP<State::AppState> _appState;
     SP<Document::MeshItem> _item;
 };
 

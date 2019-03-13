@@ -2,13 +2,13 @@
 #include "EditorViewport.hpp"
 #include "EditorScene.hpp"
 #include "KeyObserver.hpp"
-#include "../ui/AppState.hpp"
+#include "../state/AppState.hpp"
 #include <QVBoxLayout>
 #include <QSplitter>
 
 namespace Lattice::Editor {
 
-EditorViewportContainer::EditorViewportContainer(const SP<UI::AppState> &appState, QWidget *parent) :
+EditorViewportContainer::EditorViewportContainer(const SP<State::AppState> &appState, QWidget *parent) :
     Render::ViewportContainer(parent),
     _appState(appState),
     _keyObserver(makeShared<KeyObserver>())
@@ -16,7 +16,7 @@ EditorViewportContainer::EditorViewportContainer(const SP<UI::AppState> &appStat
     setFocusPolicy(Qt::ClickFocus);
 
     setSplitMode(appState->viewportSplitMode());
-    connect(appState.get(), &UI::AppState::viewportSplitModeChanged, this, &EditorViewportContainer::setSplitMode);
+    connect(appState.get(), &State::AppState::viewportSplitModeChanged, this, &EditorViewportContainer::setSplitMode);
 
     connect(this, &ViewportContainer::initialized, this, [this] {
         auto scene = makeShared<EditorScene>(_appState);
@@ -25,7 +25,7 @@ EditorViewportContainer::EditorViewportContainer(const SP<UI::AppState> &appStat
     });
 }
 
-void EditorViewportContainer::setSplitMode(UI::ViewportSplitMode split) {
+void EditorViewportContainer::setSplitMode(State::ViewportSplitMode split) {
     auto oldLayout = layout();
     if (oldLayout) {
         for (int i = 0; i < oldLayout->count(); ++i) {
@@ -42,13 +42,13 @@ void EditorViewportContainer::setSplitMode(UI::ViewportSplitMode split) {
     std::vector<Render::Viewport*> viewports;
 
     switch (split) {
-    case UI::ViewportSplitMode::Single: {
+    case State::ViewportSplitMode::Single: {
         auto viewport = new EditorViewport(_appState, _keyObserver);
         viewports = {viewport};
         layout->addWidget(viewport);
         break;
     }
-    case UI::ViewportSplitMode::LeftRight: {
+    case State::ViewportSplitMode::LeftRight: {
         viewports = {
             new EditorViewport(_appState, _keyObserver), new EditorViewport(_appState, _keyObserver)
         };
@@ -60,7 +60,7 @@ void EditorViewportContainer::setSplitMode(UI::ViewportSplitMode split) {
         layout->addWidget(splitter);
         break;
     }
-    case UI::ViewportSplitMode::TopBottom: {
+    case State::ViewportSplitMode::TopBottom: {
         viewports = {
             new EditorViewport(_appState, _keyObserver), new EditorViewport(_appState, _keyObserver)
         };
@@ -73,7 +73,7 @@ void EditorViewportContainer::setSplitMode(UI::ViewportSplitMode split) {
         layout->addWidget(splitter);
         break;
     }
-    case UI::ViewportSplitMode::Four: {
+    case State::ViewportSplitMode::Four: {
         for (int i = 0; i < 4; ++i) {
             viewports.push_back(new EditorViewport(_appState, _keyObserver));
         }

@@ -1,5 +1,5 @@
 #include "ItemPropertyView.hpp"
-#include "AppState.hpp"
+#include "../state/AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/Item.hpp"
 #include "../document/History.hpp"
@@ -14,7 +14,7 @@
 
 namespace Lattice::UI {
 
-ItemPropertyView::ItemPropertyView(const SP<AppState> &appState, QWidget *parent) :
+ItemPropertyView::ItemPropertyView(const SP<State::AppState> &appState, QWidget *parent) :
     QWidget(parent), _appState(appState)
 {
     auto layout = new QVBoxLayout();

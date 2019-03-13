@@ -5,7 +5,7 @@
 
 namespace Lattice::Editor {
 
-EditorViewport::EditorViewport(const SP<UI::AppState> &appState, const SP<KeyObserver> &keyObserver, QWidget *parent) :
+EditorViewport::EditorViewport(const SP<State::AppState> &appState, const SP<KeyObserver> &keyObserver, QWidget *parent) :
     Render::Viewport(parent),
     _cameraController(camera(), this),
     _appState(appState)

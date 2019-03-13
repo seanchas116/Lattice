@@ -1,7 +1,7 @@
 #include "ItemListView.hpp"
 #include "ItemModel.hpp"
 #include "ItemSelectionModel.hpp"
-#include "AppState.hpp"
+#include "../state/AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
 #include <QTreeView>
@@ -10,7 +10,7 @@
 
 namespace Lattice::UI {
 
-ItemListView::ItemListView(const SP<AppState> &appState, QWidget *parent) :
+ItemListView::ItemListView(const SP<State::AppState> &appState, QWidget *parent) :
     QWidget(parent),
     _appState(appState)
 {
@@ -32,7 +32,7 @@ ItemListView::ItemListView(const SP<AppState> &appState, QWidget *parent) :
         auto index = treeView->indexAt(p);
         if (index.isValid()) {
             QMenu contextMenu;
-            contextMenu.addAction(tr("Delete"), _appState.get(), &AppState::deleteItems);
+            contextMenu.addAction(tr("Delete"), _appState.get(), &State::AppState::deleteItems);
             contextMenu.exec(treeView->mapToGlobal(p));
         }
     });

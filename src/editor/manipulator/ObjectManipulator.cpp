@@ -1,5 +1,5 @@
 #include "ObjectManipulator.hpp"
-#include "../../ui/AppState.hpp"
+#include "../../state/AppState.hpp"
 #include "../../document/Document.hpp"
 #include "../../document/Item.hpp"
 #include "../../document/History.hpp"
@@ -8,7 +8,7 @@ namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
-ObjectManipulator::ObjectManipulator(const SP<UI::AppState> &appState) : _appState(appState)
+ObjectManipulator::ObjectManipulator(const SP<State::AppState> &appState) : _appState(appState)
 {
     connectToItem(appState->document()->currentItem());
     connect(appState->document().get(), &Document::Document::currentItemChanged, this, &ObjectManipulator::connectToItem);

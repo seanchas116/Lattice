@@ -2,9 +2,9 @@
 #include <QOpenGLWidget>
 #include "../support/Shorthands.hpp"
 #include "../render/ViewportContainer.hpp"
-#include "../ui/ViewportSplitMode.hpp"
+#include "../state/ViewportSplitMode.hpp"
 
-namespace Lattice::UI {
+namespace Lattice::State {
 class AppState;
 }
 
@@ -16,13 +16,13 @@ class EditorScene;
 class EditorViewportContainer final : public Render::ViewportContainer {
     Q_OBJECT
 public:
-    explicit EditorViewportContainer(const SP<UI::AppState>& appState, QWidget *parent = nullptr);
+    explicit EditorViewportContainer(const SP<State::AppState>& appState, QWidget *parent = nullptr);
 
 private:
-    void setSplitMode(UI::ViewportSplitMode split);
+    void setSplitMode(State::ViewportSplitMode split);
     void setRenderable(const Opt<SP<Render::Renderable>>& renderable);
 
-    SP<UI::AppState> _appState;
+    SP<State::AppState> _appState;
     SP<KeyObserver> _keyObserver;
     Opt<SP<EditorScene>> _scene;
     Opt<SP<Render::Renderable>> _renderable;
