@@ -13,7 +13,8 @@ Tool::HitTestExclusion ExtrudeTool::hitTestExclusion() const {
 }
 
 void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::MouseEvent &event) {
-    Q_UNUSED(target); Q_UNUSED(event);
+    // TODO: start extruding when dragg started
+
     auto& mesh = item()->mesh();
 
     if (target.vertex) {
