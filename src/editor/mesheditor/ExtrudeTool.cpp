@@ -13,6 +13,8 @@ Tool::HitTestExclusion ExtrudeTool::hitTestExclusion() const {
 }
 
 void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+    // TODO: extrude selection
+
     if (!target.vertex && !target.edge && !target.face) {
         return;
     }
