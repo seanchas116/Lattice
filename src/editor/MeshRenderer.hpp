@@ -60,6 +60,7 @@ private:
     bool _dragged = false;
     Location _dragInitLocation;
     glm::dvec3 _dragInitWorldPos;
+    glm::dvec2 _dragInitScreenPos;
     bool _dragStarted = false;
 };
 

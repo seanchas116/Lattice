@@ -67,6 +67,7 @@ void MeshRenderer::mousePress(const Render::MouseEvent &event) {
         _dragged = true;
         _dragInitLocation = _item->location();
         _dragInitWorldPos = worldPos;
+        _dragInitScreenPos = event.screenPos;
         _dragStarted = false;
 
         _appState->document()->selectItem(_item, event.originalEvent->modifiers() & Qt::ShiftModifier);
@@ -87,6 +88,9 @@ void MeshRenderer::mouseMove(const Render::MouseEvent &event) {
     newLocation.position += newWorldPos - _dragInitWorldPos;
 
     if (!_dragStarted) {
+        if (glm::distance(_dragInitScreenPos, event.screenPos) < _appState->preferences()->moveThreshold()) {
+            return;
+        }
         _appState->document()->history()->beginChange(tr("Move Item"));
         _dragStarted = true;
     }
