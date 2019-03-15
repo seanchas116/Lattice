@@ -50,6 +50,9 @@ public:
     void deleteEdges();
     void deleteFaces();
 
+    void selectAll();
+    void deselectAll();
+
 private:
     SP<Document::Document> _document;
     SP<Preferences> _preferences;

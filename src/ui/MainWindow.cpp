@@ -207,11 +207,13 @@ void MainWindow::setupMenu() {
         editMenu->addSeparator();
 
         auto selectAllAction = new QAction(tr("Select All"), this);
+        connect(selectAllAction, &QAction::triggered, _appState.get(), &State::AppState::selectAll);
         selectAllAction->setShortcut(QKeySequence::SelectAll);
         editMenu->addAction(selectAllAction);
 
         auto deselectAllAction = new QAction(tr("Deselect All"), this);
         deselectAllAction->setShortcut(QKeySequence("Ctrl+D"));
+        connect(deselectAllAction, &QAction::triggered, _appState.get(), &State::AppState::deselectAll);
         editMenu->addAction(deselectAllAction);
     }
 
