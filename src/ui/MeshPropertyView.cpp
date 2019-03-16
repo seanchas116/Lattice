@@ -33,14 +33,14 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
         auto label = new QLabel(tr("Position"));
         gridLayout->addWidget(label, 1, 0);
 
-        std::array<Widget::DoubleSpinBox*, 3> spinBoxes = {
+        _positionSpinBoxes = {
             new Widget::DoubleSpinBox(),
             new Widget::DoubleSpinBox(),
             new Widget::DoubleSpinBox(),
         };
 
         for (int i = 0; i < 3; ++i) {
-            auto spinBox = spinBoxes[i];
+            auto spinBox = _positionSpinBoxes[i];
             spinBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
             spinBox->setMinimum(-std::numeric_limits<double>::infinity());
             spinBox->setMaximum(std::numeric_limits<double>::infinity());

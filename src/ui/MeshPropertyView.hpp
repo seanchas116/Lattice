@@ -2,6 +2,7 @@
 
 #include "../support/Shorthands.hpp"
 #include <QWidget>
+#include <array>
 
 namespace Lattice {
 
@@ -10,6 +11,9 @@ class AppState;
 }
 namespace Document {
 class MeshItem;
+}
+namespace Widget {
+class DoubleSpinBox;
 }
 
 namespace UI {
@@ -27,6 +31,7 @@ private:
     SP<State::AppState> _appState;
     Opt<SP<Document::MeshItem>> _item;
     QMetaObject::Connection _connection;
+    std::array<Widget::DoubleSpinBox*, 3> _positionSpinBoxes;
 };
 
 } // namespace UI
