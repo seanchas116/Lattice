@@ -4,6 +4,7 @@
 #include "../support/Location.hpp"
 #include <QWidget>
 #include <array>
+#include <unordered_set>
 
 class QDoubleSpinBox;
 
@@ -21,7 +22,7 @@ class ItemPropertyView final : public QWidget {
 public:
     explicit ItemPropertyView(const SP<State::AppState> &appState, QWidget *parent = nullptr);
 
-    void setItems(const std::vector<SP<Document::Item>> &items);
+    void setItems(const std::unordered_set<SP<Document::Item>> &items);
     auto& items() const { return _items; }
 
 private:
@@ -31,7 +32,7 @@ private:
 
     void setEnabled(bool enabled);
 
-    std::vector<SP<Document::Item>> _items;
+    std::unordered_set<SP<Document::Item>> _items;
 
     SP<State::AppState> _appState;
     QMetaObject::Connection _itemConnection;

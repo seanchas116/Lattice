@@ -61,13 +61,12 @@ ItemPropertyView::ItemPropertyView(const SP<State::AppState> &appState, QWidget 
     setLayout(layout);
 
     connect(appState->document().get(), &Document::Document::selectedItemsChanged, this, [this](auto& items) {
-        setItems({items.begin(), items.end()});
+        setItems(items);
     });
-    auto selectedItems = appState->document()->selectedItems();
-    setItems({selectedItems.begin(), selectedItems.end()});
+    setItems(appState->document()->selectedItems());
 }
 
-void ItemPropertyView::setItems(const std::vector<SP<Document::Item>> &items) {
+void ItemPropertyView::setItems(const std::unordered_set<SP<Document::Item> > &items) {
     if (_items == items) {
         return;
     }
@@ -75,7 +74,7 @@ void ItemPropertyView::setItems(const std::vector<SP<Document::Item>> &items) {
 
     Opt<SP<Document::Item>> firstItem;
     if (!items.empty()) {
-        firstItem = items[0];
+        firstItem = *items.begin();
     }
 
     if (firstItem) {
@@ -92,7 +91,7 @@ void ItemPropertyView::onLocationChanged() {
     // TODO: support multiple items
     // TODO: spinboxes must be disbled when no item is selected
 
-    auto location = _items.empty() ? Location() : _items[0]->location();
+    auto location = _items.empty() ? Location() : (*_items.begin())->location();
     _location = location;
 
     glm::dvec3 eulerAngles = glm::eulerAngles(location.rotation);
@@ -108,7 +107,7 @@ void ItemPropertyView::setLocation() {
     if (_items.empty()) {
         return;
     }
-    auto item = _items[0];
+    auto item = *_items.begin();
 
     Location location;
 
