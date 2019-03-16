@@ -70,6 +70,29 @@ void MeshPropertyView::setItem(const Opt<SP<Document::MeshItem>> &maybeItem) {
 }
 
 void MeshPropertyView::setViewValues() {
+    auto selection = _appState->document()->meshSelection();
+    if (selection.vertices.empty()) {
+        return;
+    }
+
+    glm::bvec3 isPositionSame {true};
+
+    auto position = (*selection.vertices.begin())->position();
+
+    for (auto& vertex : selection.vertices) {
+        auto otherPosition = vertex->position();
+        for (int i = 0; i < 3; ++i) {
+            if (position[i] != otherPosition[i]) {
+                isPositionSame[i] = false;
+            }
+        }
+    }
+
+    auto specialValue = -std::numeric_limits<double>::infinity();
+
+    for (size_t i = 0; i < 3; ++i) {
+        _positionSpinBoxes[i]->setValue(isPositionSame[i] ? position[i] : specialValue);
+    }
 }
 
 } // namespace UI
