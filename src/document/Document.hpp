@@ -4,7 +4,7 @@
 #include <unordered_set>
 #include <optional>
 #include "../support/Shorthands.hpp"
-#include "MeshFragment.hpp"
+#include "../mesh/MeshFragment.hpp"
 
 namespace Lattice::Document {
 
