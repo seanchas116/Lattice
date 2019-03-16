@@ -37,6 +37,9 @@ void ViewportContainer::initializeGL() {
         qDebug() << "OpenGL debug enabled";
     }
 
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+
     _operations = makeShared<Operations>();
     emit initialized();
 }
