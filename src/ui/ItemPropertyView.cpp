@@ -74,9 +74,6 @@ void ItemPropertyView::setItems(const std::unordered_set<SP<Document::Item> > &i
 
     if (firstItem) {
         _itemConnection = connect(firstItem->get(), &Document::Item::locationChanged, this, &ItemPropertyView::setLocation);
-        setEnabled(true);
-    } else {
-        setEnabled(false);
     }
 
     setLocation();
@@ -118,18 +115,6 @@ void ItemPropertyView::handleLocationChange() {
     _location = location;
     (*item->document())->history()->beginChange(tr("Move Item"));
     item->setLocation(location);
-}
-
-void ItemPropertyView::setEnabled(bool enabled) {
-    for (auto& sb : _positionSpinBoxes) {
-        sb->setEnabled(enabled);
-    }
-    for (auto& sb : _rotationSpinBoxes) {
-        sb->setEnabled(enabled);
-    }
-    for (auto& sb : _scaleSpinBoxes) {
-        sb->setEnabled(enabled);
-    }
 }
 
 } // namespace Lattice

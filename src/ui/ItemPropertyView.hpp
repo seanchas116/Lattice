@@ -27,8 +27,6 @@ private:
 
     void handleLocationChange();
 
-    void setEnabled(bool enabled);
-
     std::unordered_set<SP<Document::Item>> _items;
 
     QMetaObject::Connection _itemConnection;
