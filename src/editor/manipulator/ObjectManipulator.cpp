@@ -89,8 +89,18 @@ void ObjectManipulator::updatePosition() {
         setTargetPosition(glm::dvec3(0));
         return;
     }
-    auto item = *_items.begin();
-    setTargetPosition(item->location().position);
+
+    glm::dvec3 minPos(INFINITY);
+    glm::dvec3 maxPos(-INFINITY);
+
+    for (auto& item : _items) {
+        auto p = item->location().position;
+        minPos = glm::min(minPos, p);
+        maxPos = glm::max(maxPos, p);
+    }
+
+    auto position = (minPos + maxPos) * 0.5;
+    setTargetPosition(position);
 }
 
 }
