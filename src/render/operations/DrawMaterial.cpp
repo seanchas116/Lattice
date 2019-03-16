@@ -4,7 +4,8 @@
 #include "../../resource/Resource.hpp"
 #include "../../support/Camera.hpp"
 
-namespace Lattice::Render {
+namespace Lattice {
+namespace Render {
 
 DrawMaterial::DrawMaterial() :
     _shader(Resource::read("src/render/operations/DrawMaterial.vert"), std::string(), Resource::read("src/render/operations/DrawMaterial.frag"))
@@ -46,4 +47,5 @@ SP<GL::Texture> DrawMaterial::getTexture(const QImage &image) {
     return texture;
 }
 
+}
 } // namespace Lattice

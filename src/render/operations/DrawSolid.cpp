@@ -3,7 +3,8 @@
 #include "../../resource/Resource.hpp"
 #include "../../support/Camera.hpp"
 
-namespace Lattice::Render {
+namespace Lattice {
+namespace Render {
 
 DrawSolid::DrawSolid() :
     _shader(Resource::read("src/render/operations/DrawSolid.vert"), std::string(), Resource::read("src/render/operations/DrawSolid.frag"))
@@ -19,4 +20,5 @@ void DrawSolid::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<
     vao->draw();
 }
 
+}
 } // namespace Lattice

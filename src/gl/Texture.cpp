@@ -1,6 +1,7 @@
 #include "Texture.hpp"
 
-namespace Lattice::GL {
+namespace Lattice {
+namespace GL {
 
 Texture::Texture(glm::ivec2 size, Texture::Format format, const void *pixels) {
     initializeOpenGLFunctions();
@@ -49,4 +50,5 @@ void Texture::unbind() {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+}
 } // namespace Lattice

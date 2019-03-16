@@ -3,7 +3,8 @@
 class QOpenGLContext;
 class QSurface;
 
-namespace Lattice::GL {
+namespace Lattice {
+namespace GL {
 
 class ContextRecallable {
 public:
@@ -16,4 +17,5 @@ private:
     QSurface* _surface;
 };
 
+}
 } // namespace Lattice

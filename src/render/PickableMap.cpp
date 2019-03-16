@@ -9,7 +9,8 @@
 
 using namespace glm;
 
-namespace Lattice::Render {
+namespace Lattice {
+namespace Render {
 
 PickableMap::PickableMap() : _framebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))) {
     initializeOpenGLFunctions();
@@ -50,4 +51,5 @@ void PickableMap::draw(const SP<Renderable> &renderable, const SP<Operations> &o
     renderable->drawPickablesRecursive(operations, camera, _lastRenderables);
 }
 
+}
 }

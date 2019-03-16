@@ -2,7 +2,8 @@
 #include <QItemSelectionModel>
 #include "../support/Shorthands.hpp"
 
-namespace Lattice::UI {
+namespace Lattice {
+namespace UI {
 
 class ItemModel;
 
@@ -16,4 +17,5 @@ signals:
 public slots:
 };
 
+}
 } // namespace Shapecraft

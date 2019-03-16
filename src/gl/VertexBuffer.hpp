@@ -3,7 +3,8 @@
 #include <glm/glm.hpp>
 #include "../support/AggregateUtil.hpp"
 
-namespace Lattice::GL {
+namespace Lattice {
+namespace GL {
 
 struct AttributeInfo {
     GLenum type;
@@ -81,4 +82,5 @@ struct Vertex {
     glm::vec4 color {0};
 };
 
+}
 } // namespace Lattice

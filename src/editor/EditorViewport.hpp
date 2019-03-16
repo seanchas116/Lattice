@@ -4,11 +4,12 @@
 #include "../support/Shorthands.hpp"
 #include "../render/Viewport.hpp"
 
-namespace Lattice::State {
+namespace Lattice {
+namespace State {
 class AppState;
 }
 
-namespace Lattice::Editor {
+namespace Editor {
 
 class EditorScene;
 class KeyObserver;
@@ -31,4 +32,5 @@ private:
     SP<State::AppState> _appState;
 };
 
+}
 } // namespace Lattice

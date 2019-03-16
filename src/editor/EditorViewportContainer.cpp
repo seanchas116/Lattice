@@ -6,7 +6,8 @@
 #include <QVBoxLayout>
 #include <QSplitter>
 
-namespace Lattice::Editor {
+namespace Lattice {
+namespace Editor {
 
 EditorViewportContainer::EditorViewportContainer(const SP<State::AppState> &appState, QWidget *parent) :
     Render::ViewportContainer(parent),
@@ -137,4 +138,5 @@ void EditorViewportContainer::setRenderable(const Opt<SP<Render::Renderable>> &r
     }
 }
 
+}
 } // namespace Lattice

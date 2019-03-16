@@ -3,7 +3,8 @@
 #include "../../gl/VAO.hpp"
 #include "../../resource/Resource.hpp"
 
-namespace Lattice::Render {
+namespace Lattice {
+namespace Render {
 
 DrawLine::DrawLine() :
     _shader(Resource::read("src/render/operations/DrawLine.vert"), Resource::read("src/render/operations/DrawLine.geom"), Resource::read("src/render/operations/DrawLine.frag"))
@@ -23,4 +24,5 @@ void DrawLine::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<C
     vao->draw();
 }
 
+}
 } // namespace Lattice

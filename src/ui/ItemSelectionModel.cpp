@@ -4,7 +4,8 @@
 #include "../support/OptionalGuard.hpp"
 #include <QtDebug>
 
-namespace Lattice::UI {
+namespace Lattice {
+namespace UI {
 
 ItemSelectionModel::ItemSelectionModel(ItemModel *model, QObject *parent) : QItemSelectionModel(model, parent)
 {
@@ -44,4 +45,5 @@ ItemSelectionModel::ItemSelectionModel(ItemModel *model, QObject *parent) : QIte
     });
 }
 
+}
 } // namespace Shapecraft

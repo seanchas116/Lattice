@@ -6,7 +6,8 @@
 
 using namespace glm;
 
-namespace Lattice::Editor {
+namespace Lattice {
+namespace Editor {
 
 CameraController::CameraController(const SP<Camera> &camera, QWidget *widget) : _camera(camera), _widget(widget) {
     Location location;
@@ -99,4 +100,5 @@ void CameraController::setPressedKeys(const std::unordered_set<int> &keys) {
     }
 }
 
+}
 } // namespace Lattice

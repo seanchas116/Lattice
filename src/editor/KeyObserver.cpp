@@ -4,7 +4,8 @@
 #include <QApplication>
 #include <QWindow>
 
-namespace Lattice::Editor {
+namespace Lattice {
+namespace Editor {
 
 KeyObserver::KeyObserver() {
     qApp->installEventFilter(this);
@@ -41,4 +42,5 @@ void KeyObserver::keyRelease(QKeyEvent *event) {
     emit pressedKeysChanged(_pressedKeys);
 }
 
+}
 } // namespace Lattice

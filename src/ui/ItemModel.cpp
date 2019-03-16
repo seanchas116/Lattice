@@ -7,7 +7,8 @@
 #include <QtDebug>
 #include <QDataStream>
 
-namespace Lattice::UI {
+namespace Lattice {
+namespace UI {
 
 ItemModel::ItemModel(const SP<Document::Document> &document, QObject *parent) :
     QAbstractItemModel(parent),
@@ -204,4 +205,5 @@ void ItemModel::disconnectItem(const SP<Document::Item> &item) {
     disconnect(item.get(), nullptr, this, nullptr);
 }
 
-} // namespace Shapecraft
+}
+}

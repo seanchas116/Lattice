@@ -1,6 +1,7 @@
 #include "EmptyItem.hpp"
 
-namespace Lattice::Document {
+namespace Lattice {
+namespace Document {
 
 EmptyItem::EmptyItem() {
 }
@@ -10,4 +11,5 @@ SP<Item> EmptyItem::clone() const {
     return cloned;
 }
 
+}
 } // namespace Lattice

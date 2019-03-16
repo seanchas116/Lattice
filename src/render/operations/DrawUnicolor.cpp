@@ -4,7 +4,8 @@
 #include "../../resource/Resource.hpp"
 #include "../../support/Camera.hpp"
 
-namespace Lattice::Render {
+namespace Lattice {
+namespace Render {
 
 DrawUnicolor::DrawUnicolor() :
     _shader(Resource::read("src/render/operations/DrawUnicolor.vert"), std::string(), Resource::read("src/render/operations/DrawUnicolor.frag"))
@@ -19,4 +20,5 @@ void DrawUnicolor::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const 
     vao->draw();
 }
 
+}
 } // namespace Lattice

@@ -9,13 +9,12 @@
 
 namespace Lattice {
 class Camera;
-}
 
-namespace Lattice::GL {
+namespace GL {
 class Framebuffer;
 }
 
-namespace Lattice::Render {
+namespace Render {
 
 class Renderable;
 class RenderableObject;
@@ -37,4 +36,5 @@ private:
     std::vector<SP<Renderable>> _lastRenderables;
 };
 
+}
 }

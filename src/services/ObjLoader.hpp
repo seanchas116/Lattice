@@ -4,15 +4,17 @@
 
 class QString;
 
-namespace Lattice::Document {
+namespace Lattice {
+namespace Document {
 class MeshItem;
 }
 
-namespace Lattice::Services {
+namespace Services {
 
 class ObjLoader final {
 public:
     static std::vector<SP<Document::MeshItem>> load(const QString &filePath);
 };
 
+}
 } // namespace Lattice

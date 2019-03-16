@@ -5,7 +5,8 @@
 #include "../support/Shorthands.hpp"
 #include "../support/PixelData.hpp"
 
-namespace Lattice::GL {
+namespace Lattice {
+namespace GL {
 
 class Texture;
 
@@ -35,4 +36,5 @@ private:
     Opt<SP<Texture>> _depthStencilBuffer;
 };
 
+}
 } // namespace Lattice

@@ -1,7 +1,8 @@
 #pragma once
 #include "Item.hpp"
 
-namespace Lattice::Document {
+namespace Lattice {
+namespace Document {
 
 class EmptyItem final : public Item {
     Q_OBJECT
@@ -10,4 +11,5 @@ public:
     SP<Item> clone() const override;
 };
 
+}
 } // namespace Lattice

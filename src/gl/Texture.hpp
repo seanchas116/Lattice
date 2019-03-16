@@ -3,7 +3,8 @@
 #include <glm/vec2.hpp>
 #include <QOpenGLExtraFunctions>
 
-namespace Lattice::GL {
+namespace Lattice {
+namespace GL {
 
 class Texture final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(Texture)
@@ -28,4 +29,5 @@ private:
     glm::ivec2 _size;
 };
 
+}
 } // namespace Lattice

@@ -3,7 +3,8 @@
 #include <glm/glm.hpp>
 #include "../support/Shorthands.hpp"
 
-namespace Lattice::GL {
+namespace Lattice {
+namespace GL {
 
 class Shader final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(Shader)
@@ -42,4 +43,5 @@ private:
     GLuint _program;
 };
 
+}
 }

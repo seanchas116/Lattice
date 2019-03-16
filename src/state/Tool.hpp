@@ -1,6 +1,7 @@
 #pragma once
 
-namespace Lattice::State {
+namespace Lattice {
+namespace State {
 
 enum class Tool {
     None,
@@ -10,4 +11,5 @@ enum class Tool {
     LoopCut,
 };
 
+}
 }

@@ -11,7 +11,8 @@
 
 using namespace glm;
 
-namespace Lattice::State {
+namespace Lattice {
+namespace State {
 
 AppState::AppState() :
     _document(makeShared<Document::Document>()),
@@ -173,4 +174,5 @@ void AppState::deselectAll() {
     }
 }
 
+}
 } // namespace Lattice

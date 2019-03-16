@@ -1,6 +1,7 @@
 #include "MaterialListView.hpp"
 
-namespace Lattice::UI {
+namespace Lattice {
+namespace UI {
 
 MaterialListView::MaterialListView(const SP<State::AppState> &appState, QWidget *parent) :
     QWidget(parent),
@@ -9,4 +10,5 @@ MaterialListView::MaterialListView(const SP<State::AppState> &appState, QWidget 
     // TODO
 }
 
+}
 } // namespace Lattice

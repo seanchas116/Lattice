@@ -3,7 +3,6 @@
 #include "../state/AppState.hpp"
 
 namespace Lattice {
-
 namespace Editor {
 
 class Background : public Render::RenderableObject, protected QOpenGLExtraFunctions {

@@ -3,13 +3,12 @@
 
 namespace Lattice {
 class Camera;
-}
 
-namespace Lattice::GL {
+namespace GL {
 class VAO;
 }
 
-namespace Lattice::Render {
+namespace Render {
 
 class DrawSolid final {
 public:
@@ -22,4 +21,5 @@ private:
     GL::Shader _shader;
 };
 
+}
 } // namespace Lattice

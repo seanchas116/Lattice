@@ -1,7 +1,8 @@
 #include "Shader.hpp"
 #include <QtDebug>
 
-namespace Lattice::GL {
+namespace Lattice {
+namespace GL {
 
 Shader::Shader(const std::string &vertexShader, const std::string &geometryShader, const std::string &fragmentShader) {
     initializeOpenGLFunctions();
@@ -156,4 +157,5 @@ GLuint Shader::loadShader(GLenum type, const std::string &src) {
     return shader;
 }
 
+}
 }

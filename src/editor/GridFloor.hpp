@@ -7,14 +7,13 @@
 
 namespace Lattice {
 class Camera;
-}
 
-namespace Lattice::GL {
+namespace GL {
 class VAO;
 class IndexBuffer;
 }
 
-namespace Lattice::Editor {
+namespace Editor {
 
 class GridFloor final : public Render::RenderableObject {
     Q_OBJECT
@@ -33,4 +32,5 @@ private:
     SP<GL::VAO> _zAxisVAO;
 };
 
+}
 } // namespace Lattice

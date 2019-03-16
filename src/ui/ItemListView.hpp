@@ -3,11 +3,13 @@
 #include <QWidget>
 #include "../support/Shorthands.hpp"
 
-namespace Lattice::State {
+namespace Lattice {
+
+namespace State {
 class AppState;
 }
 
-namespace Lattice::UI {
+namespace UI {
 
 class ItemListView final : public QWidget {
     Q_OBJECT
@@ -18,4 +20,5 @@ private:
     SP<State::AppState> _appState;
 };
 
+}
 } // namespace Shapecraft

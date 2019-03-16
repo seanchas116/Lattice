@@ -4,7 +4,8 @@
 
 class QKeyEvent;
 
-namespace Lattice::Editor {
+namespace Lattice {
+namespace Editor {
 
 class KeyObserver final : public QObject {
     Q_OBJECT
@@ -25,4 +26,5 @@ private:
     std::unordered_set<int> _pressedKeys;
 };
 
+}
 } // namespace Lattice

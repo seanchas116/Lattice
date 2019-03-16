@@ -4,11 +4,13 @@
 #include "../render/ViewportContainer.hpp"
 #include "../state/ViewportSplitMode.hpp"
 
-namespace Lattice::State {
+namespace Lattice {
+
+namespace State {
 class AppState;
 }
 
-namespace Lattice::Editor {
+namespace Editor {
 
 class KeyObserver;
 class EditorScene;
@@ -28,4 +30,5 @@ private:
     Opt<SP<Render::Renderable>> _renderable;
 };
 
+}
 } // namespace Lattice

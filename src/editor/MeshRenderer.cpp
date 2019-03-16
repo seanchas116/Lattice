@@ -13,7 +13,8 @@
 
 using namespace glm;
 
-namespace Lattice::Editor {
+namespace Lattice {
+namespace Editor {
 
 MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Document::MeshItem> &item) :
     _appState(appState),
@@ -118,4 +119,5 @@ void MeshRenderer::updateVAOs() {
     update();
 }
 
+}
 }

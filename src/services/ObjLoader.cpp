@@ -9,7 +9,8 @@
 
 using namespace glm;
 
-namespace Lattice::Services {
+namespace Lattice {
+namespace Services {
 
 std::vector<SP<Document::MeshItem>> ObjLoader::load(const QString &filePathString) {
     tinyobj::attrib_t attrib;
@@ -133,4 +134,5 @@ std::vector<SP<Document::MeshItem>> ObjLoader::load(const QString &filePathStrin
     return items;
 }
 
+}
 } // namespace Lattice

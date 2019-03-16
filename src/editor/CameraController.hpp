@@ -9,7 +9,8 @@
 class QMouseEvent;
 class QWheelEvent;
 
-namespace Lattice::Editor {
+namespace Lattice {
+namespace Editor {
 
 class CameraController final : public QObject {
     Q_OBJECT
@@ -40,4 +41,5 @@ private:
     bool _isOverridingCursor = false;
 };
 
+}
 } // namespace Lattice

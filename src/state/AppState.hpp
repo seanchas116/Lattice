@@ -7,11 +7,13 @@
 #include "Preferences.hpp"
 #include "Tool.hpp"
 
-namespace Lattice::Document {
+namespace Lattice {
+
+namespace Document {
 class Document;
 }
 
-namespace Lattice::State {
+namespace State {
 
 class AppState final : public QObject {
     Q_OBJECT
@@ -58,4 +60,5 @@ private:
     SP<Preferences> _preferences;
 };
 
+}
 } // namespace Lattice

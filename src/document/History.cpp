@@ -3,7 +3,8 @@
 #include <QUndoStack>
 #include <QUndoCommand>
 
-namespace Lattice::Document {
+namespace Lattice {
+namespace Document {
 
 namespace {
 
@@ -71,4 +72,5 @@ void History::clear() {
     _currentTitle.clear();
 }
 
+}
 } // namespace Lattice

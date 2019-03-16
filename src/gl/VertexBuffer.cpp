@@ -1,6 +1,7 @@
 #include "VertexBuffer.hpp"
 
-namespace Lattice::GL {
+namespace Lattice {
+namespace GL {
 
 AnyVertexBuffer::AnyVertexBuffer() {
     initializeOpenGLFunctions();
@@ -25,4 +26,5 @@ void AnyVertexBuffer::setVertexData(const void *data, size_t size) {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
+}
 } // namespace Lattice

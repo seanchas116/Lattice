@@ -5,7 +5,8 @@
 
 using namespace glm;
 
-namespace Lattice::Editor {
+namespace Lattice {
+namespace Editor {
 
 GridFloor::GridFloor() :
     _vbo(makeShared<GL::VertexBuffer<GL::Vertex>>()),
@@ -66,4 +67,5 @@ void GridFloor::draw(const SP<Render::Operations> &operations, const SP<Camera> 
     operations->drawLine.draw(_zAxisVAO, dmat4(1), camera, 1, vec4(0.5, 0.5, 0.8, 1));
 }
 
+}
 } // namespace Lattice

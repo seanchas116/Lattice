@@ -2,7 +2,8 @@
 #include "Texture.hpp"
 #include <QOpenGLContext>
 
-namespace Lattice::GL {
+namespace Lattice {
+namespace GL {
 
 Framebuffer::Framebuffer(glm::ivec2 size) :
     _isDefault(true),
@@ -94,4 +95,5 @@ void Framebuffer::blitTo(Framebuffer &dst, GLbitfield buffers, GLenum filter) {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+}
 } // namespace Lattice

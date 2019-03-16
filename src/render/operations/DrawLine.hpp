@@ -4,13 +4,12 @@
 
 namespace Lattice {
 class Camera;
-}
 
-namespace Lattice::GL {
+namespace GL {
 class VAO;
 }
 
-namespace Lattice::Render {
+namespace Render {
 
 class DrawLine final {
 public:
@@ -25,4 +24,5 @@ private:
     GL::Shader _shader;
 };
 
+}
 } // namespace Lattice

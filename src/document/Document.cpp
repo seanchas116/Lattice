@@ -4,7 +4,8 @@
 #include "../support/Debug.hpp"
 #include "../support/OptionalGuard.hpp"
 
-namespace Lattice::Document {
+namespace Lattice {
+namespace Document {
 
 namespace {
 
@@ -129,4 +130,5 @@ void Document::setMeshSelection(const Mesh::MeshFragment &meshSelection) {
     emit meshSelectionChanged(meshSelection);
 }
 
+}
 } // namespace Lattice

@@ -8,7 +8,8 @@
 #include <QVBoxLayout>
 #include <QMenu>
 
-namespace Lattice::UI {
+namespace Lattice {
+namespace UI {
 
 ItemListView::ItemListView(const SP<State::AppState> &appState, QWidget *parent) :
     QWidget(parent),
@@ -43,4 +44,5 @@ ItemListView::ItemListView(const SP<State::AppState> &appState, QWidget *parent)
     setLayout(layout);
 }
 
-} // namespace Shapecraft
+}
+}

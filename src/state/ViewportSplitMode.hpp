@@ -1,6 +1,7 @@
 #pragma once
 
-namespace Lattice::State {
+namespace Lattice {
+namespace State {
 
 enum class ViewportSplitMode {
     Single,
@@ -9,4 +10,5 @@ enum class ViewportSplitMode {
     Four,
 };
 
+}
 }

@@ -4,12 +4,14 @@
 #include <QUuid>
 #include "../support/Shorthands.hpp"
 
-namespace Lattice::Document {
+namespace Lattice {
+
+namespace Document {
 class Document;
 class Item;
 }
 
-namespace Lattice::UI {
+namespace UI {
 
 class ItemModel final : public QAbstractItemModel {
     Q_OBJECT
@@ -41,4 +43,5 @@ private:
     QUuid _uuid;
 };
 
+}
 } // namespace Shapecraft

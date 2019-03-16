@@ -1,7 +1,8 @@
 #pragma once
 #include <QtGlobal>
 
-namespace Lattice::GL {
+namespace Lattice {
+namespace GL {
 
 template <typename T>
 class Binder final {
@@ -17,4 +18,5 @@ private:
     T& _resource;
 };
 
+}
 }

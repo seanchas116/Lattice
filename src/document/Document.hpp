@@ -6,7 +6,8 @@
 #include "../support/Shorthands.hpp"
 #include "../mesh/MeshFragment.hpp"
 
-namespace Lattice::Document {
+namespace Lattice {
+namespace Document {
 
 class Item;
 class MeshItem;
@@ -66,4 +67,5 @@ private:
     SP<History> _history;
 };
 
+}
 } // namespace Lattice

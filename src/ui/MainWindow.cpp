@@ -13,7 +13,8 @@
 #include <QToolButton>
 #include <QKeyEvent>
 
-namespace Lattice::UI {
+namespace Lattice {
+namespace UI {
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), _appState(makeShared<State::AppState>()) {
     resize(1000, 1000);
@@ -279,4 +280,5 @@ void MainWindow::setupPanes() {
     }
 }
 
+}
 } // namespace Lattice

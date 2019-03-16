@@ -2,8 +2,10 @@
 
 #include <string>
 
-namespace Lattice::Resource {
+namespace Lattice {
+namespace Resource {
 
 std::string read(const char *path);
 
+}
 }

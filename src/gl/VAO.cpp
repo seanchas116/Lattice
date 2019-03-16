@@ -4,7 +4,8 @@
 #include <array>
 #include <glm/glm.hpp>
 
-namespace Lattice::GL {
+namespace Lattice {
+namespace GL {
 
 VAO::VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>> &buffers, const Opt<SP<IndexBuffer>> &indexBuffer, Primitive primitive) :
     _buffers(buffers),
@@ -108,4 +109,5 @@ void VAO::draw() {
     glBindVertexArray(0);
 }
 
+}
 }

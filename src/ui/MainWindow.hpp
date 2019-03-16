@@ -2,11 +2,13 @@
 #include <QMainWindow>
 #include "../support/Shorthands.hpp"
 
-namespace Lattice::State {
+namespace Lattice {
+
+namespace State {
 class AppState;
 }
 
-namespace Lattice::UI {
+namespace UI {
 
 class MainWindow final : public QMainWindow {
     Q_OBJECT
@@ -24,4 +26,5 @@ private:
     SP<State::AppState> _appState;
 };
 
+}
 } // namespace Lattice

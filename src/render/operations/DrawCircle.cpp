@@ -4,7 +4,8 @@
 #include "../../support/Location.hpp"
 #include "../../support/Camera.hpp"
 
-namespace Lattice::Render {
+namespace Lattice {
+namespace Render {
 
 DrawCircle::DrawCircle() :
     _shader(Resource::read("src/render/operations/DrawCircle.vert"), Resource::read("src/render/operations/DrawCircle.geom"), Resource::read("src/render/operations/DrawCircle.frag"))
@@ -22,4 +23,5 @@ void DrawCircle::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP
     vao->draw();
 }
 
+}
 } // namespace Lattice

@@ -6,14 +6,13 @@
 
 namespace Lattice {
 class Camera;
-}
 
-namespace Lattice::GL {
+namespace GL {
 class VAO;
 class Texture;
 }
 
-namespace Lattice::Render {
+namespace Render {
 
 class DrawMaterial final : protected QOpenGLExtraFunctions {
 public:
@@ -28,4 +27,5 @@ private:
     std::unordered_map<qint64, SP<GL::Texture>> _textures;
 };
 
+}
 } // namespace Lattice

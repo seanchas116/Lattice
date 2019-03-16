@@ -3,7 +3,8 @@
 #include "ViewportControlView.hpp"
 #include <QVBoxLayout>
 
-namespace Lattice::Editor {
+namespace Lattice {
+namespace Editor {
 
 EditorViewport::EditorViewport(const SP<State::AppState> &appState, const SP<KeyObserver> &keyObserver, QWidget *parent) :
     Render::Viewport(parent),
@@ -47,4 +48,5 @@ void EditorViewport::wheelEvent(QWheelEvent *event) {
     super::wheelEvent(event);
 }
 
+}
 } // namespace Lattice
