@@ -14,7 +14,7 @@ PropertyView::PropertyView(const SP<State::AppState> &appState, QWidget *parent)
     auto layout = new QVBoxLayout();
     layout->setMargin(0);
 
-    _itemPropertyView = new ItemPropertyView();
+    _itemPropertyView = new ItemPropertyView(appState);
     connect(appState->document().get(), &Document::Document::selectedItemsChanged, this, &PropertyView::handleSelectedItemsChanged);
     handleSelectedItemsChanged(appState->document()->selectedItems());
 

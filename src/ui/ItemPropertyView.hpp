@@ -6,20 +6,26 @@
 #include <array>
 #include <unordered_set>
 
-namespace Lattice::Widget {
+namespace Lattice {
+
+namespace State {
+class AppState;
+}
+
+namespace Widget {
 class DoubleSpinBox;
 }
 
-namespace Lattice::Document {
+namespace Document {
 class Item;
 }
 
-namespace Lattice::UI {
+namespace UI {
 
 class ItemPropertyView final : public QWidget {
     Q_OBJECT
 public:
-    explicit ItemPropertyView(QWidget *parent = nullptr);
+    explicit ItemPropertyView(const SP<State::AppState> &appState, QWidget *parent = nullptr);
 
     void setItems(const std::unordered_set<SP<Document::Item>> &items);
     auto& items() const { return _items; }
@@ -33,6 +39,8 @@ private:
 
     void handleLocationValueChange(LocationMember member, int index, double value);
 
+    SP<State::AppState> _appState;
+
     std::unordered_set<SP<Document::Item>> _items;
     std::vector<QMetaObject::Connection> _itemConnections;
 
@@ -43,4 +51,5 @@ private:
     std::array<Widget::DoubleSpinBox*, 3> _rotationSpinBoxes;
 };
 
+}
 } // namespace Lattice

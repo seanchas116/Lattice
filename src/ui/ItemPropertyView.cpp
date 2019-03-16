@@ -13,10 +13,12 @@
 #include <QLabel>
 #include <QtDebug>
 
-namespace Lattice::UI {
+namespace Lattice {
+namespace UI {
 
-ItemPropertyView::ItemPropertyView(QWidget *parent) :
-    QWidget(parent)
+ItemPropertyView::ItemPropertyView(const SP<State::AppState> &appState, QWidget *parent) :
+    QWidget(parent),
+    _appState(appState)
 {
     auto layout = new QVBoxLayout();
 
@@ -136,7 +138,7 @@ void ItemPropertyView::handleLocationValueChange(LocationMember member, int inde
         return;
     }
 
-    (*(*_items.begin())->document())->history()->beginChange(tr("Move Item"));
+    _appState->document()->history()->beginChange(tr("Move Item"));
     for (auto& item : _items) {
         auto location = item->location();
         auto eulerAngles = glm::eulerAngles(location.rotation);
@@ -157,4 +159,5 @@ void ItemPropertyView::handleLocationValueChange(LocationMember member, int inde
     }
 }
 
+}
 } // namespace Lattice
