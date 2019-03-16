@@ -16,7 +16,7 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
 {
     setItem(appState->document()->editedItem());
     connect(appState->document().get(), &Document::Document::editedItemChanged, this, &MeshPropertyView::setItem);
-    connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshPropertyView::updateViews);
+    connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshPropertyView::setViewValues);
 
     auto layout = new QVBoxLayout();
 
@@ -64,12 +64,12 @@ void MeshPropertyView::setItem(const Opt<SP<Document::MeshItem>> &maybeItem) {
     auto item = *maybeItem;
 
     _connection = connect(item->mesh().get(), &Mesh::Mesh::changed, this, [this] {
-        updateViews();
+        setViewValues();
     });
-    updateViews();
+    setViewValues();
 }
 
-void MeshPropertyView::updateViews() {
+void MeshPropertyView::setViewValues() {
 }
 
 } // namespace UI

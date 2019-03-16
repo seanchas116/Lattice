@@ -26,7 +26,7 @@ public:
     void setItem(const Opt<SP<Document::MeshItem>>& item);
 
 private:
-    void updateViews();
+    void setViewValues();
 
     SP<State::AppState> _appState;
     Opt<SP<Document::MeshItem>> _item;
