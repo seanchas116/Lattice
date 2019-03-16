@@ -23,9 +23,9 @@ public:
     auto& items() const { return _items; }
 
 private:
-    void onLocationChanged();
-
     void setLocation();
+
+    void handleLocationChange();
 
     void setEnabled(bool enabled);
 

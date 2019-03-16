@@ -45,7 +45,7 @@ ItemPropertyView::ItemPropertyView(QWidget *parent) :
             spinBox->setMaximum(std::numeric_limits<double>::infinity());
             gridLayout->addWidget(spinBox, row, int(i + 1));
 
-            connect(spinBox, &QDoubleSpinBox::editingFinished, this, &ItemPropertyView::setLocation);
+            connect(spinBox, &QDoubleSpinBox::editingFinished, this, &ItemPropertyView::handleLocationChange);
         }
 
         return spinBoxes;
@@ -73,16 +73,16 @@ void ItemPropertyView::setItems(const std::unordered_set<SP<Document::Item> > &i
     }
 
     if (firstItem) {
-        _itemConnection = connect(firstItem->get(), &Document::Item::locationChanged, this, &ItemPropertyView::onLocationChanged);
+        _itemConnection = connect(firstItem->get(), &Document::Item::locationChanged, this, &ItemPropertyView::setLocation);
         setEnabled(true);
     } else {
         setEnabled(false);
     }
 
-    onLocationChanged();
+    setLocation();
 }
 
-void ItemPropertyView::onLocationChanged() {
+void ItemPropertyView::setLocation() {
     // TODO: support multiple items
     // TODO: spinboxes must be disbled when no item is selected
 
@@ -98,7 +98,7 @@ void ItemPropertyView::onLocationChanged() {
     }
 }
 
-void ItemPropertyView::setLocation() {
+void ItemPropertyView::handleLocationChange() {
     if (_items.empty()) {
         return;
     }
