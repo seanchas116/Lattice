@@ -4,7 +4,7 @@
 #include <unordered_set>
 #include <optional>
 #include "../support/Shorthands.hpp"
-#include "MeshSelection.hpp"
+#include "MeshFragment.hpp"
 
 namespace Lattice::Document {
 
@@ -39,14 +39,14 @@ public:
     const SP<History>& history() const { return _history; }
 
     auto& meshSelection() const { return _meshSelection; }
-    void setMeshSelection(const MeshSelection &meshSelection);
+    void setMeshSelection(const MeshFragment &meshSelection);
 
 signals:
     void currentItemChanged(const Opt<SP<Item>>& item);
     void editedItemChanged(const Opt<SP<MeshItem>>& item);
     void isEditingChanged(bool isEditing);
     void selectedItemsChanged(const std::unordered_set<SP<Item>>& items);
-    void meshSelectionChanged(const MeshSelection &meshSelection);
+    void meshSelectionChanged(const MeshFragment &meshSelection);
 
     void itemAboutToBeInserted(const SP<Item>& item);
     void itemInserted(const SP<Item>& item);
@@ -61,7 +61,7 @@ private:
     Opt<SP<Item>> _currentItem;
     Opt<SP<MeshItem>> _editedItem;
     std::unordered_set<SP<Item>> _selectedItems;
-    MeshSelection _meshSelection;
+    MeshFragment _meshSelection;
 
     SP<History> _history;
 };

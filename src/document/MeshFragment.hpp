@@ -4,11 +4,11 @@
 namespace Lattice {
 namespace Document {
 
-class MeshSelection {
+class MeshFragment {
 public:
     std::unordered_set<SP<Mesh::Vertex>> vertices;
 
-    bool operator==(const MeshSelection& other) const {
+    bool operator==(const MeshFragment& other) const {
         return vertices == other.vertices;
     }
 

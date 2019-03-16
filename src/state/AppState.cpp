@@ -150,7 +150,7 @@ void AppState::selectAll() {
     auto maybeEditedItem = _document->editedItem();
     if (maybeEditedItem) {
         auto editedItem = *maybeEditedItem;
-        Document::MeshSelection selection;
+        Document::MeshFragment selection;
         selection.vertices = editedItem->mesh()->vertices();
         _document->setMeshSelection(selection);
     } else {
@@ -166,7 +166,7 @@ void AppState::deselectAll() {
     auto maybeEditedItem = _document->editedItem();
     if (maybeEditedItem) {
         auto editedItem = *maybeEditedItem;
-        Document::MeshSelection selection;
+        Document::MeshFragment selection;
         _document->setMeshSelection(selection);
     } else {
         _document->setSelectedItems({});

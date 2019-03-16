@@ -1,11 +1,11 @@
-#include "MeshSelection.hpp"
+#include "MeshFragment.hpp"
 
 using namespace glm;
 
 namespace Lattice {
 namespace Document {
 
-glm::vec3 MeshSelection::medianPosition() const {
+glm::vec3 MeshFragment::medianPosition() const {
     if (vertices.empty()) {
         return vec3(0);
     }
@@ -22,7 +22,7 @@ glm::vec3 MeshSelection::medianPosition() const {
     return (minPos + maxPos) / 2.f;
 }
 
-std::unordered_set<SP<Mesh::Edge> > MeshSelection::edges() const {
+std::unordered_set<SP<Mesh::Edge> > MeshFragment::edges() const {
     std::unordered_map<SP<Mesh::Edge>, size_t> edgeCounts;
 
     for (auto& v : vertices) {
@@ -45,7 +45,7 @@ std::unordered_set<SP<Mesh::Edge> > MeshSelection::edges() const {
     return edges;
 }
 
-std::unordered_set<SP<Mesh::Face> > MeshSelection::faces() const {
+std::unordered_set<SP<Mesh::Face> > MeshFragment::faces() const {
     std::unordered_map<SP<Mesh::Face>, size_t> faceCounts;
 
     for (auto& v : vertices) {
