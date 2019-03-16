@@ -27,6 +27,7 @@ public:
 
 private:
     void setViewValues();
+    void handlePositionValueChange(int index, double value);
 
     SP<State::AppState> _appState;
     Opt<SP<Document::MeshItem>> _item;

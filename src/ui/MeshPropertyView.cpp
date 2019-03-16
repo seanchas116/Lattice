@@ -46,6 +46,12 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
             spinBox->setMaximum(std::numeric_limits<double>::infinity());
             spinBox->setSpecialValueText(" ");
             gridLayout->addWidget(spinBox, 1, int(i + 1));
+
+            auto handleValueChange = [this, spinBox, i] {
+                this->handlePositionValueChange(i, spinBox->value());
+            };
+            connect(spinBox, &Widget::DoubleSpinBox::editingFinished, this, handleValueChange);
+            connect(spinBox, &Widget::DoubleSpinBox::stepped, this, handleValueChange);
         }
 
         layout->addLayout(gridLayout);
@@ -93,6 +99,10 @@ void MeshPropertyView::setViewValues() {
     for (size_t i = 0; i < 3; ++i) {
         _positionSpinBoxes[i]->setValue(isPositionSame[i] ? position[i] : specialValue);
     }
+}
+
+void MeshPropertyView::handlePositionValueChange(int index, double value) {
+    // TODO
 }
 
 } // namespace UI
