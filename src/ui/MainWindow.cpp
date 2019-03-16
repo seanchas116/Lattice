@@ -1,6 +1,6 @@
 #include "MainWindow.hpp"
 #include "ItemListView.hpp"
-#include "ItemPropertyView.hpp"
+#include "PropertyView.hpp"
 #include "../state/AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
@@ -274,11 +274,7 @@ void MainWindow::setupPanes() {
         auto dockWidget = new QDockWidget();
         dockWidget->setWindowTitle(tr("Property"));
 
-        auto itemPropertyView = new ItemPropertyView();
-        connect(_appState->document().get(), &Document::Document::selectedItemsChanged, itemPropertyView, &ItemPropertyView::setItems);
-        itemPropertyView->setItems(_appState->document()->selectedItems());
-
-        dockWidget->setWidget(itemPropertyView);
+        dockWidget->setWidget(new PropertyView(_appState));
         addDockWidget(Qt::LeftDockWidgetArea, dockWidget);
     }
 }
