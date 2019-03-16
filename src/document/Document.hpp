@@ -39,14 +39,14 @@ public:
     const SP<History>& history() const { return _history; }
 
     auto& meshSelection() const { return _meshSelection; }
-    void setMeshSelection(const MeshFragment &meshSelection);
+    void setMeshSelection(const Mesh::MeshFragment &meshSelection);
 
 signals:
     void currentItemChanged(const Opt<SP<Item>>& item);
     void editedItemChanged(const Opt<SP<MeshItem>>& item);
     void isEditingChanged(bool isEditing);
     void selectedItemsChanged(const std::unordered_set<SP<Item>>& items);
-    void meshSelectionChanged(const MeshFragment &meshSelection);
+    void meshSelectionChanged(const Mesh::MeshFragment &meshSelection);
 
     void itemAboutToBeInserted(const SP<Item>& item);
     void itemInserted(const SP<Item>& item);
@@ -61,7 +61,7 @@ private:
     Opt<SP<Item>> _currentItem;
     Opt<SP<MeshItem>> _editedItem;
     std::unordered_set<SP<Item>> _selectedItems;
-    MeshFragment _meshSelection;
+    Mesh::MeshFragment _meshSelection;
 
     SP<History> _history;
 };

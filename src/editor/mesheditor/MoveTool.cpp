@@ -36,7 +36,7 @@ void MoveTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
         }
     }
 
-    Document::MeshFragment selection;
+    Mesh::MeshFragment selection;
     if (event.originalEvent->modifiers() & Qt::ShiftModifier) {
         selection = oldSelection;
 

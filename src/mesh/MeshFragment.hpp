@@ -2,11 +2,11 @@
 #include "Mesh.hpp"
 
 namespace Lattice {
-namespace Document {
+namespace Mesh {
 
 class MeshFragment {
 public:
-    std::unordered_set<SP<Mesh::Vertex>> vertices;
+    std::unordered_set<SP<Vertex>> vertices;
 
     bool operator==(const MeshFragment& other) const {
         return vertices == other.vertices;
@@ -14,9 +14,9 @@ public:
 
     glm::vec3 medianPosition() const;
 
-    std::unordered_set<SP<Mesh::Edge>> edges() const;
-    std::unordered_set<SP<Mesh::Face>> faces() const;
+    std::unordered_set<SP<Edge>> edges() const;
+    std::unordered_set<SP<Face>> faces() const;
 };
 
-} // namespace Document
-} // namespace Lattice
+}
+}

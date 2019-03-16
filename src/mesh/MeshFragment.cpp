@@ -3,7 +3,7 @@
 using namespace glm;
 
 namespace Lattice {
-namespace Document {
+namespace Mesh {
 
 glm::vec3 MeshFragment::medianPosition() const {
     if (vertices.empty()) {
@@ -22,8 +22,8 @@ glm::vec3 MeshFragment::medianPosition() const {
     return (minPos + maxPos) / 2.f;
 }
 
-std::unordered_set<SP<Mesh::Edge> > MeshFragment::edges() const {
-    std::unordered_map<SP<Mesh::Edge>, size_t> edgeCounts;
+std::unordered_set<SP<Edge> > MeshFragment::edges() const {
+    std::unordered_map<SP<Edge>, size_t> edgeCounts;
 
     for (auto& v : vertices) {
         for (auto& e : v->edges()) {
@@ -34,7 +34,7 @@ std::unordered_set<SP<Mesh::Edge> > MeshFragment::edges() const {
             }
         }
     }
-    std::unordered_set<SP<Mesh::Edge>> edges;
+    std::unordered_set<SP<Edge>> edges;
 
     for (auto& [edge, count] : edgeCounts) {
         if (count == 2) {
@@ -45,8 +45,8 @@ std::unordered_set<SP<Mesh::Edge> > MeshFragment::edges() const {
     return edges;
 }
 
-std::unordered_set<SP<Mesh::Face> > MeshFragment::faces() const {
-    std::unordered_map<SP<Mesh::Face>, size_t> faceCounts;
+std::unordered_set<SP<Face> > MeshFragment::faces() const {
+    std::unordered_map<SP<Face>, size_t> faceCounts;
 
     for (auto& v : vertices) {
         for (auto& f : v->faces()) {
@@ -57,7 +57,7 @@ std::unordered_set<SP<Mesh::Face> > MeshFragment::faces() const {
             }
         }
     }
-    std::unordered_set<SP<Mesh::Face>> faces;
+    std::unordered_set<SP<Face>> faces;
 
     for (auto& [face, count] : faceCounts) {
         if (count == face->vertices().size()) {
@@ -68,5 +68,5 @@ std::unordered_set<SP<Mesh::Face> > MeshFragment::faces() const {
     return faces;
 }
 
-} // namespace Document
-} // namespace Lattice
+}
+}

@@ -17,7 +17,7 @@ public:
     void hoverLeave(const EventTarget &target) override;
 
 private:
-    Document::MeshFragment _nextSelection;
+    Mesh::MeshFragment _nextSelection;
     std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _initPositions;
     glm::dvec3 _initWorldPos {0};
     glm::dvec2 _initScreenPos {0};

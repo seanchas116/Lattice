@@ -121,7 +121,7 @@ void Document::watchChildrenInsertRemove(const SP<Item> &item) {
     });
 }
 
-void Document::setMeshSelection(const MeshFragment &meshSelection) {
+void Document::setMeshSelection(const Mesh::MeshFragment &meshSelection) {
     if (_meshSelection == meshSelection) {
         return;
     }
