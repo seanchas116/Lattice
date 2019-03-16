@@ -75,9 +75,6 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
         mesh->setPositions(positions);
         break;
     }
-    default:
-        // TODO
-        break;
     }
 }
 
