@@ -10,8 +10,8 @@ glm::vec3 MeshFragment::medianPosition() const {
         return vec3(0);
     }
 
-    vec3 minPos(INFINITY);
-    vec3 maxPos(-INFINITY);
+    vec3 minPos(std::numeric_limits<float>::infinity());
+    vec3 maxPos(-std::numeric_limits<float>::infinity());
 
     for (auto& v : vertices) {
         auto p = v->position();
@@ -19,7 +19,7 @@ glm::vec3 MeshFragment::medianPosition() const {
         maxPos = max(maxPos, p);
     }
 
-    return (minPos + maxPos) / 2.f;
+    return (minPos + maxPos) * 0.5f;
 }
 
 std::unordered_set<SP<Edge> > MeshFragment::edges() const {

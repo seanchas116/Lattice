@@ -90,8 +90,8 @@ void ObjectManipulator::updatePosition() {
         return;
     }
 
-    glm::dvec3 minPos(INFINITY);
-    glm::dvec3 maxPos(-INFINITY);
+    glm::dvec3 minPos(std::numeric_limits<double>::infinity());
+    glm::dvec3 maxPos(-std::numeric_limits<double>::infinity());
 
     for (auto& item : _items) {
         auto p = item->location().position;
