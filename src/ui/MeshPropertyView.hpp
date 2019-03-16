@@ -19,8 +19,9 @@ class MeshPropertyView : public QWidget {
 public:
     explicit MeshPropertyView(const SP<State::AppState> &appState, QWidget *parent = nullptr);
 
-private:
     void setItem(const Opt<SP<Document::MeshItem>>& item);
+
+private:
     void updateViews();
 
     SP<State::AppState> _appState;

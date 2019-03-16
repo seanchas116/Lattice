@@ -1,5 +1,6 @@
 #include "PropertyView.hpp"
 #include "ItemPropertyView.hpp"
+#include "MeshPropertyView.hpp"
 #include "../state/AppState.hpp"
 #include "../document/Document.hpp"
 #include <QVBoxLayout>
@@ -14,20 +15,28 @@ PropertyView::PropertyView(const SP<State::AppState> &appState, QWidget *parent)
     auto layout = new QVBoxLayout();
     layout->setMargin(0);
 
-    _itemPropertyView = new ItemPropertyView(appState);
-    connect(appState->document().get(), &Document::Document::selectedItemsChanged, this, &PropertyView::handleSelectedItemsChanged);
-    handleSelectedItemsChanged(appState->document()->selectedItems());
+    auto itemPropertyView = new ItemPropertyView(appState);
+    layout->addWidget(itemPropertyView);
+    auto meshPropertyView = new MeshPropertyView(appState);
+    layout->addWidget(meshPropertyView);
 
-    layout->addWidget(_itemPropertyView);
+    auto handleSelectedItemsChanged = [appState, itemPropertyView] {
+        itemPropertyView->setItems(appState->document()->selectedItems());
+        itemPropertyView->setVisible(!appState->document()->selectedItems().empty() && !appState->document()->editedItem());
+    };
+    auto handleEditedItemChanged = [appState, itemPropertyView, meshPropertyView] {
+        meshPropertyView->setItem(appState->document()->editedItem());
+        meshPropertyView->setVisible(!!appState->document()->editedItem());
+        itemPropertyView->setVisible(!appState->document()->selectedItems().empty() && !appState->document()->editedItem());
+    };
+    connect(appState->document().get(), &Document::Document::selectedItemsChanged, this, handleSelectedItemsChanged);
+    handleSelectedItemsChanged();
+
+    connect(appState->document().get(), &Document::Document::editedItemChanged, this, handleEditedItemChanged);
+    handleEditedItemChanged();
 
     setLayout(layout);
 }
-
-void PropertyView::handleSelectedItemsChanged(const std::unordered_set<SP<Document::Item>> &items) {
-    _itemPropertyView->setItems(items);
-    _itemPropertyView->setVisible(!items.empty());
-}
-
 
 } // namespace UI
 } // namespace Lattice
