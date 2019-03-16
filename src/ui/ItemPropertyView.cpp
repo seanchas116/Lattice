@@ -5,6 +5,7 @@
 #include "../document/History.hpp"
 #include "../support/Debug.hpp"
 #include "../support/OptionalGuard.hpp"
+#include "../widget/DoubleSpinBox.hpp"
 #include <QDoubleSpinBox>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -32,10 +33,10 @@ ItemPropertyView::ItemPropertyView(QWidget *parent) :
         auto label = new QLabel(title);
         gridLayout->addWidget(label, row, 0);
 
-        std::array<QDoubleSpinBox*, 3> spinBoxes = {
-            new QDoubleSpinBox(),
-            new QDoubleSpinBox(),
-            new QDoubleSpinBox(),
+        std::array<Widget::DoubleSpinBox*, 3> spinBoxes = {
+            new Widget::DoubleSpinBox(),
+            new Widget::DoubleSpinBox(),
+            new Widget::DoubleSpinBox(),
         };
 
         for (size_t i = 0; i < 3; ++i) {
@@ -45,7 +46,8 @@ ItemPropertyView::ItemPropertyView(QWidget *parent) :
             spinBox->setMaximum(std::numeric_limits<double>::infinity());
             gridLayout->addWidget(spinBox, row, int(i + 1));
 
-            connect(spinBox, &QDoubleSpinBox::editingFinished, this, &ItemPropertyView::handleLocationChange);
+            connect(spinBox, &Widget::DoubleSpinBox::editingFinished, this, &ItemPropertyView::handleLocationChange);
+            connect(spinBox, &Widget::DoubleSpinBox::stepped, this, &ItemPropertyView::handleLocationChange);
         }
 
         return spinBoxes;

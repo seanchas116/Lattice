@@ -6,7 +6,9 @@
 #include <array>
 #include <unordered_set>
 
-class QDoubleSpinBox;
+namespace Lattice::Widget {
+class DoubleSpinBox;
+}
 
 namespace Lattice::Document {
 class Item;
@@ -33,9 +35,9 @@ private:
 
     Location _location;
 
-    std::array<QDoubleSpinBox*, 3> _positionSpinBoxes;
-    std::array<QDoubleSpinBox*, 3> _scaleSpinBoxes;
-    std::array<QDoubleSpinBox*, 3> _rotationSpinBoxes;
+    std::array<Widget::DoubleSpinBox*, 3> _positionSpinBoxes;
+    std::array<Widget::DoubleSpinBox*, 3> _scaleSpinBoxes;
+    std::array<Widget::DoubleSpinBox*, 3> _rotationSpinBoxes;
 };
 
 } // namespace Lattice
