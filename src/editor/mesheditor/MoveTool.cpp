@@ -27,17 +27,20 @@ void MoveTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
         }
     }
 
+    bool alreadySelected = true;
+    auto oldSelection = appState()->document()->meshSelection();
+
+    for (auto& v : vertices) {
+        if (oldSelection.vertices.find(v) == oldSelection.vertices.end()) {
+            alreadySelected = false;
+        }
+    }
+
     Document::MeshSelection selection;
     if (event.originalEvent->modifiers() & Qt::ShiftModifier) {
-        selection = appState()->document()->meshSelection();
+        selection = oldSelection;
 
-        bool alreadyAdded = true;
-        for (auto& v : vertices) {
-            if (selection.vertices.find(v) == selection.vertices.end()) {
-                alreadyAdded = false;
-            }
-        }
-        if (alreadyAdded) {
+        if (alreadySelected) {
             for (auto& v : vertices) {
                 selection.vertices.erase(v);
             }
@@ -49,17 +52,18 @@ void MoveTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
     } else {
         selection.vertices = vertices;
     }
+    _nextSelection = selection;
+
+    auto& dragVertices = alreadySelected ? oldSelection.vertices : vertices;
 
     _dragged = true;
     _initPositions.clear();
-    for (auto& v : selection.vertices) {
+    for (auto& v : dragVertices) {
         _initPositions[v] = v->position();
     }
     _initWorldPos = event.worldPos();
     _initScreenPos = event.screenPos;
     _dragStarted = false;
-
-    appState()->document()->setMeshSelection(selection);
 }
 
 void MoveTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEvent &event) {
@@ -92,6 +96,9 @@ void MoveTool::mouseRelease(const Tool::EventTarget &target, const Render::Mouse
     Q_UNUSED(target); Q_UNUSED(event);
     _dragged = false;
     _initPositions.clear();
+    if (!_dragStarted) {
+        appState()->document()->setMeshSelection(_nextSelection);
+    }
 }
 
 void MoveTool::hoverEnter(const Tool::EventTarget &target, const Render::MouseEvent &event) {
