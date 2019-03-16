@@ -12,6 +12,7 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
 {
     setItem(appState->document()->editedItem());
     connect(appState->document().get(), &Document::Document::editedItemChanged, this, &MeshPropertyView::setItem);
+    connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshPropertyView::updateViews);
 }
 
 void MeshPropertyView::setItem(const Opt<SP<Document::MeshItem>> &maybeItem) {
