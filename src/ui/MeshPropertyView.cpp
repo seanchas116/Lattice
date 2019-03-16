@@ -129,7 +129,6 @@ void MeshPropertyView::handlePositionValueChange(int index, double value) {
     }
 
     item->mesh()->setPositions(newPositions);
-
 }
 
 } // namespace UI
