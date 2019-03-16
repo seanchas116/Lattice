@@ -14,14 +14,20 @@ PropertyView::PropertyView(const SP<State::AppState> &appState, QWidget *parent)
     auto layout = new QVBoxLayout();
     layout->setMargin(0);
 
-    auto itemPropertyView = new ItemPropertyView();
-    connect(appState->document().get(), &Document::Document::selectedItemsChanged, itemPropertyView, &ItemPropertyView::setItems);
-    itemPropertyView->setItems(appState->document()->selectedItems());
+    _itemPropertyView = new ItemPropertyView();
+    connect(appState->document().get(), &Document::Document::selectedItemsChanged, this, &PropertyView::handleSelectedItemsChanged);
+    handleSelectedItemsChanged(appState->document()->selectedItems());
 
-    layout->addWidget(itemPropertyView);
+    layout->addWidget(_itemPropertyView);
 
     setLayout(layout);
 }
+
+void PropertyView::handleSelectedItemsChanged(const std::unordered_set<SP<Document::Item>> &items) {
+    _itemPropertyView->setItems(items);
+    _itemPropertyView->setVisible(!items.empty());
+}
+
 
 } // namespace UI
 } // namespace Lattice
