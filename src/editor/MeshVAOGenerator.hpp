@@ -27,7 +27,8 @@ public:
 private:
     SP<Mesh::Mesh> _mesh;
     SP<GL::VertexBuffer<GL::Vertex>> _vertexBuffer;
-    std::unordered_map<Mesh::UVPoint*, uint32_t> _indices;
+    std::unordered_map<Mesh::UVPoint*, uint32_t> _foreIndices;
+    std::unordered_map<Mesh::UVPoint*, uint32_t> _backIndices;
 };
 
 } // namespace Viewport

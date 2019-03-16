@@ -291,11 +291,11 @@ void MeshEditor::updateWholeVAOs() {
         _faceAttributes.clear();
         _facePickAttributes.clear();
 
-        auto addPoint = [&](const SP<FacePickable>& pickable, const SP<Mesh::UVPoint>& p) {
+        auto addPoint = [&](const SP<FacePickable>& pickable, const SP<Mesh::UVPoint>& p, bool isBack) {
             GL::Vertex attrib;
             attrib.position = p->vertex()->position();
             attrib.texCoord = p->position();
-            attrib.normal = p->vertex()->normal();
+            attrib.normal = isBack ? -p->vertex()->normal() : p->vertex()->normal();
 
             GL::Vertex pickAttrib;
             pickAttrib.position = p->vertex()->position();
@@ -315,12 +315,24 @@ void MeshEditor::updateWholeVAOs() {
                 auto pickable = makeShared<FacePickable>(this, face->sharedFromThis());
                 childPickables.push_back(pickable);
 
-                auto i0 = addPoint(pickable, face->uvPoints()[0]);
-                for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
-                    auto i1 = addPoint(pickable, face->uvPoints()[i - 1]);
-                    auto i2 = addPoint(pickable, face->uvPoints()[i]);
-                    triangles.push_back({i0, i1, i2});
-                    pickTriangles.push_back({i0, i1, i2});
+                { // fore
+                    auto i0 = addPoint(pickable, face->uvPoints()[0], false);
+                    for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
+                        auto i1 = addPoint(pickable, face->uvPoints()[i - 1], false);
+                        auto i2 = addPoint(pickable, face->uvPoints()[i], false);
+                        triangles.push_back({i0, i1, i2});
+                        pickTriangles.push_back({i0, i1, i2});
+                    }
+                }
+
+                { // back
+                    auto i0 = addPoint(pickable, face->uvPoints()[0], true);
+                    for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
+                        auto i1 = addPoint(pickable, face->uvPoints()[i - 1], true);
+                        auto i2 = addPoint(pickable, face->uvPoints()[i], true);
+                        triangles.push_back({i0, i2, i1});
+                        pickTriangles.push_back({i0, i2, i1});
+                    }
                 }
             }
             auto indexBuffer = makeShared<GL::IndexBuffer>();
