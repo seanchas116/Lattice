@@ -10,15 +10,18 @@ namespace Manipulator {
 
 ObjectManipulator::ObjectManipulator(const SP<State::AppState> &appState) : _appState(appState)
 {
-    connectToItem(appState->document()->currentItem());
-    connect(appState->document().get(), &Document::Document::currentItemChanged, this, &ObjectManipulator::connectToItem);
+    setItems(appState->document()->selectedItems());
+    connect(appState->document().get(), &Document::Document::selectedItemsChanged, this, &ObjectManipulator::setItems);
     connect(this, &Manipulator::onBegin, this, &ObjectManipulator::handleOnBegin);
     connect(this, &Manipulator::onChange, this, &ObjectManipulator::handleOnChange);
     connect(this, &Manipulator::onEnd, this, &ObjectManipulator::handleOnEnd);
 }
 
 void ObjectManipulator::handleOnBegin(ValueType type, double value) {
-    LATTICE_OPTIONAL_GUARD(item, _item, return;)
+    if (_items.empty()) {
+        return;
+    }
+    auto item = *_items.begin();
 
     auto changeText = [&] {
         switch (type) {
@@ -37,7 +40,10 @@ void ObjectManipulator::handleOnBegin(ValueType type, double value) {
 }
 
 void ObjectManipulator::handleOnChange(ValueType type, int axis, double value) {
-    LATTICE_OPTIONAL_GUARD(item, _item, return;)
+    if (_items.empty()) {
+        return;
+    }
+    auto item = *_items.begin();
 
     auto loc = _initialLocation;
     switch (type) {
@@ -61,19 +67,29 @@ void ObjectManipulator::handleOnEnd(ValueType type) {
     Q_UNUSED(type);
 }
 
-void ObjectManipulator::connectToItem(const Opt<SP<Document::Item> > &maybeItem) {
-    disconnect(_connection);
-    _item = maybeItem;
-    LATTICE_OPTIONAL_GUARD(item, maybeItem, return;)
-    auto itemPtr = item.get();
-    _connection = connect(itemPtr, &Document::Item::locationChanged, this, [this] {
-        updatePosition();
-    });
+void ObjectManipulator::setItems(const std::unordered_set<SP<Document::Item> > &items) {
+    for (auto& c : _connections) {
+        disconnect(c);
+    }
+    _connections.clear();
+
+    _items = items;
+
+    for (auto& item : items) {
+        auto c = connect(item.get(), &Document::Item::locationChanged, this, [this] {
+            updatePosition();
+        });
+        _connections.push_back(c);
+    }
     updatePosition();
 }
 
 void ObjectManipulator::updatePosition() {
-    LATTICE_OPTIONAL_GUARD(item, _item, setTargetPosition(glm::dvec3(0)); return;)
+    if (_items.empty()) {
+        setTargetPosition(glm::dvec3(0));
+        return;
+    }
+    auto item = *_items.begin();
     setTargetPosition(item->location().position);
 }
 

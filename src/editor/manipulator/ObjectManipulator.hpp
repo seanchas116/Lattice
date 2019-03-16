@@ -24,15 +24,15 @@ private:
     void handleOnChange(ValueType type, int axis, double value);
     void handleOnEnd(ValueType type);
 
-    void connectToItem(const Opt<SP<Document::Item>> &maybeItem);
+    void setItems(const std::unordered_set<SP<Document::Item>> &items);
 
     void updatePosition();
 
     SP<State::AppState> _appState;
-    Opt<SP<Document::Item>> _item;
+    std::unordered_set<SP<Document::Item>> _items;
     double _initialValue;
     Location _initialLocation;
-    QMetaObject::Connection _connection;
+    std::vector<QMetaObject::Connection> _connections;
 };
 
 }
