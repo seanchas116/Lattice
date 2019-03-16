@@ -85,8 +85,6 @@ void ItemPropertyView::setItems(const std::unordered_set<SP<Document::Item> > &i
 }
 
 void ItemPropertyView::setLocation() {
-    // TODO: support multiple items
-    // TODO: spinboxes must be disbled when no item is selected
     if (_items.empty()) {
         return;
     }
