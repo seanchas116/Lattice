@@ -33,7 +33,7 @@ ItemPropertyView::ItemPropertyView(QWidget *parent) :
         auto label = new QLabel(title);
         gridLayout->addWidget(label, row, 0);
 
-        std::array spinBoxes = {
+        std::array<Widget::DoubleSpinBox*, 3> spinBoxes = {
             new Widget::DoubleSpinBox(),
             new Widget::DoubleSpinBox(),
             new Widget::DoubleSpinBox(),
