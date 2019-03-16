@@ -14,8 +14,8 @@
 
 namespace Lattice::UI {
 
-ItemPropertyView::ItemPropertyView(const SP<State::AppState> &appState, QWidget *parent) :
-    QWidget(parent), _appState(appState)
+ItemPropertyView::ItemPropertyView(QWidget *parent) :
+    QWidget(parent)
 {
     auto layout = new QVBoxLayout();
 
@@ -59,11 +59,6 @@ ItemPropertyView::ItemPropertyView(const SP<State::AppState> &appState, QWidget 
     layout->addStretch();
 
     setLayout(layout);
-
-    connect(appState->document().get(), &Document::Document::selectedItemsChanged, this, [this](auto& items) {
-        setItems(items);
-    });
-    setItems(appState->document()->selectedItems());
 }
 
 void ItemPropertyView::setItems(const std::unordered_set<SP<Document::Item> > &items) {
@@ -121,7 +116,7 @@ void ItemPropertyView::setLocation() {
     location.rotation = glm::normalize(glm::dquat(eulerAngles));
 
     _location = location;
-    _appState->document()->history()->beginChange(tr("Move Item"));
+    (*item->document())->history()->beginChange(tr("Move Item"));
     item->setLocation(location);
 }
 

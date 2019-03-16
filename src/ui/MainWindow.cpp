@@ -273,7 +273,12 @@ void MainWindow::setupPanes() {
     {
         auto dockWidget = new QDockWidget();
         dockWidget->setWindowTitle(tr("Property"));
-        dockWidget->setWidget(new ItemPropertyView(_appState));
+
+        auto itemPropertyView = new ItemPropertyView();
+        connect(_appState->document().get(), &Document::Document::selectedItemsChanged, itemPropertyView, &ItemPropertyView::setItems);
+        itemPropertyView->setItems(_appState->document()->selectedItems());
+
+        dockWidget->setWidget(itemPropertyView);
         addDockWidget(Qt::LeftDockWidgetArea, dockWidget);
     }
 }
