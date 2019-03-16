@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../support/Shorthands.hpp"
-#include "../support/Location.hpp"
 #include <QWidget>
 #include <array>
 #include <unordered_set>
@@ -43,8 +42,6 @@ private:
 
     std::unordered_set<SP<Document::Item>> _items;
     std::vector<QMetaObject::Connection> _itemConnections;
-
-    Location _location;
 
     std::array<Widget::DoubleSpinBox*, 3> _positionSpinBoxes;
     std::array<Widget::DoubleSpinBox*, 3> _scaleSpinBoxes;
