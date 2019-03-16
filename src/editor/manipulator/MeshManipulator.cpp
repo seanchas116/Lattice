@@ -12,8 +12,8 @@ namespace Manipulator {
 
 MeshManipulator::MeshManipulator(const SP<State::AppState> &appState) : _appState(appState)
 {
-    connectToItem(appState->document()->editedItem());
-    connect(appState->document().get(), &Document::Document::editedItemChanged, this, &MeshManipulator::connectToItem);
+    setItem(appState->document()->editedItem());
+    connect(appState->document().get(), &Document::Document::editedItemChanged, this, &MeshManipulator::setItem);
     connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshManipulator::updatePosition);
     connect(this, &Manipulator::onBegin, this, &MeshManipulator::handleOnBegin);
     connect(this, &Manipulator::onChange, this, &MeshManipulator::handleOnChange);
@@ -86,7 +86,7 @@ void MeshManipulator::handleOnEnd(ValueType type) {
     _initialPositions.clear();
 }
 
-void MeshManipulator::connectToItem(const Opt<SP<Document::MeshItem>> &maybeItem) {
+void MeshManipulator::setItem(const Opt<SP<Document::MeshItem>> &maybeItem) {
     disconnect(_connection);
     _item = maybeItem;
     LATTICE_OPTIONAL_GUARD(item, maybeItem, return;)

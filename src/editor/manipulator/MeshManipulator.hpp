@@ -27,7 +27,7 @@ private:
     void handleOnChange(ValueType type, int axis, double value);
     void handleOnEnd(ValueType type);
 
-    void connectToItem(const Opt<SP<Document::MeshItem>> &maybeItem);
+    void setItem(const Opt<SP<Document::MeshItem>> &maybeItem);
 
     void updatePosition();
 
