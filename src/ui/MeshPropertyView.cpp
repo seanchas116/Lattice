@@ -118,7 +118,7 @@ void MeshPropertyView::handlePositionValueChange(int index, double value) {
         return;
     }
 
-    _appState->document()->history()->beginChange(tr("Set Vertex Positions"));
+    _appState->document()->history()->beginChange(tr("Set Vertex Position"));
 
     std::unordered_map<SP<Mesh::Vertex>, glm::vec3> newPositions;
 

@@ -138,7 +138,7 @@ void ItemPropertyView::handleLocationValueChange(LocationMember member, int inde
         return;
     }
 
-    _appState->document()->history()->beginChange(tr("Move Item"));
+    _appState->document()->history()->beginChange(tr("Set Item Location"));
     for (auto& item : _items) {
         auto location = item->location();
         auto eulerAngles = glm::eulerAngles(location.rotation);
