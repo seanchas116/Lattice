@@ -44,6 +44,7 @@ ItemPropertyView::ItemPropertyView(QWidget *parent) :
             spinBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
             spinBox->setMinimum(-std::numeric_limits<double>::infinity());
             spinBox->setMaximum(std::numeric_limits<double>::infinity());
+            spinBox->setSpecialValueText(" ");
             gridLayout->addWidget(spinBox, row, int(i + 1));
 
             connect(spinBox, &Widget::DoubleSpinBox::editingFinished, this, &ItemPropertyView::handleLocationChange);
@@ -86,16 +87,39 @@ void ItemPropertyView::setItems(const std::unordered_set<SP<Document::Item> > &i
 void ItemPropertyView::setLocation() {
     // TODO: support multiple items
     // TODO: spinboxes must be disbled when no item is selected
+    if (_items.empty()) {
+        return;
+    }
 
-    auto location = _items.empty() ? Location() : (*_items.begin())->location();
-    _location = location;
+    auto location = (*_items.begin())->location();
+
+    glm::bvec3 isPositionSame {true};
+    glm::bvec3 isScaleSame {true};
+    glm::bvec3 isRotationSame {true};
+
+    for (auto& item : _items) {
+        auto otherLocation = item->location();
+        for (int i = 0; i < 3; ++i) {
+            if (location.position[i] != otherLocation.position[i]) {
+                isPositionSame[i] = false;
+            }
+            if (location.scale[i] != otherLocation.scale[i]) {
+                isScaleSame[i] = false;
+            }
+            if (glm::eulerAngles(location.rotation)[i] != glm::eulerAngles(otherLocation.rotation)[i]) {
+                isRotationSame[i] = false;
+            }
+        }
+    }
 
     glm::dvec3 eulerAngles = glm::eulerAngles(location.rotation);
 
+    auto specialValue = -std::numeric_limits<double>::infinity();
+
     for (size_t i = 0; i < 3; ++i) {
-        _positionSpinBoxes[i]->setValue(location.position[i]);
-        _scaleSpinBoxes[i]->setValue(location.scale[i]);
-        _rotationSpinBoxes[i]->setValue(glm::degrees(eulerAngles[i]));
+        _positionSpinBoxes[i]->setValue(isPositionSame[i] ? location.position[i] : specialValue);
+        _scaleSpinBoxes[i]->setValue(isScaleSame[i] ? location.scale[i] : specialValue);
+        _rotationSpinBoxes[i]->setValue(isScaleSame[i] ? glm::degrees(eulerAngles[i]) : specialValue);
     }
 }
 
