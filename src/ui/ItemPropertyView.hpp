@@ -10,6 +10,9 @@ class QDoubleSpinBox;
 namespace Lattice::State {
 class AppState;
 }
+namespace Lattice::Document {
+class Item;
+}
 
 namespace Lattice::UI {
 
@@ -18,13 +21,17 @@ class ItemPropertyView final : public QWidget {
 public:
     explicit ItemPropertyView(const SP<State::AppState> &appState, QWidget *parent = nullptr);
 
+    void setItems(const std::vector<SP<Document::Item>> &items);
+    auto& items() const { return _items; }
+
 private:
-    void onCurrentItemChanged();
     void onLocationChanged();
 
     void setLocation();
 
     void setEnabled(bool enabled);
+
+    std::vector<SP<Document::Item>> _items;
 
     SP<State::AppState> _appState;
     QMetaObject::Connection _itemConnection;

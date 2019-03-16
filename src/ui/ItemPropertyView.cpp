@@ -60,20 +60,31 @@ ItemPropertyView::ItemPropertyView(const SP<State::AppState> &appState, QWidget 
 
     setLayout(layout);
 
-    connect(appState->document().get(), &Document::Document::currentItemChanged, this, &ItemPropertyView::onCurrentItemChanged);
-    onCurrentItemChanged();
+    connect(appState->document().get(), &Document::Document::selectedItemsChanged, this, [this](auto& items) {
+        setItems({items.begin(), items.end()});
+    });
+    auto selectedItems = appState->document()->selectedItems();
+    setItems({selectedItems.begin(), selectedItems.end()});
 }
 
-void ItemPropertyView::onCurrentItemChanged() {
-    disconnect(_itemConnection);
+void ItemPropertyView::setItems(const std::vector<SP<Document::Item>> &items) {
+    if (_items == items) {
+        return;
+    }
+    _items = items;
 
-    auto currentItem = _appState->document()->currentItem();
-    if (currentItem) {
-        _itemConnection = connect(currentItem->get(), &Document::Item::locationChanged, this, &ItemPropertyView::onLocationChanged);
+    Opt<SP<Document::Item>> firstItem;
+    if (!items.empty()) {
+        firstItem = items[0];
+    }
+
+    if (firstItem) {
+        _itemConnection = connect(firstItem->get(), &Document::Item::locationChanged, this, &ItemPropertyView::onLocationChanged);
         setEnabled(true);
     } else {
         setEnabled(false);
     }
+
     onLocationChanged();
 }
 
@@ -81,8 +92,7 @@ void ItemPropertyView::onLocationChanged() {
     // TODO: support multiple items
     // TODO: spinboxes must be disbled when no item is selected
 
-    auto currentItem = _appState->document()->currentItem();
-    auto location = currentItem ? (*currentItem)->location() : Location();
+    auto location = _items.empty() ? Location() : _items[0]->location();
     _location = location;
 
     glm::dvec3 eulerAngles = glm::eulerAngles(location.rotation);
@@ -95,7 +105,11 @@ void ItemPropertyView::onLocationChanged() {
 }
 
 void ItemPropertyView::setLocation() {
-    LATTICE_OPTIONAL_GUARD(item,  _appState->document()->currentItem(), return;)
+    if (_items.empty()) {
+        return;
+    }
+    auto item = _items[0];
+
     Location location;
 
     glm::dvec3 eulerAngles(0);
