@@ -1,6 +1,7 @@
 #include "MeshPropertyView.hpp"
 #include "../document/MeshItem.hpp"
 #include "../document/Document.hpp"
+#include "../document/History.hpp"
 #include "../state/AppState.hpp"
 #include "../widget/DoubleSpinBox.hpp"
 #include <QVBoxLayout>
@@ -102,7 +103,33 @@ void MeshPropertyView::setViewValues() {
 }
 
 void MeshPropertyView::handlePositionValueChange(int index, double value) {
-    // TODO
+    if (!_item) {
+        return;
+    }
+    auto item = *_item;
+
+    auto selection = _appState->document()->meshSelection();
+    if (selection.vertices.empty()) {
+        return;
+    }
+
+    auto specialValue = -std::numeric_limits<double>::infinity();
+    if (value == specialValue) {
+        return;
+    }
+
+    _appState->document()->history()->beginChange(tr("Set Vertex Positions"));
+
+    std::unordered_map<SP<Mesh::Vertex>, glm::vec3> newPositions;
+
+    for (auto& vertex : selection.vertices) {
+        auto position = vertex->position();
+        position[index] = value;
+        newPositions[vertex] = position;
+    }
+
+    item->mesh()->setPositions(newPositions);
+
 }
 
 } // namespace UI
