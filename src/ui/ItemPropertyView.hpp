@@ -25,9 +25,13 @@ public:
     auto& items() const { return _items; }
 
 private:
+    enum class LocationMember {
+        Position, Scale, Rotation,
+    };
+
     void setLocation();
 
-    void handleLocationChange();
+    void handleLocationChange(LocationMember member, int index, double value);
 
     std::unordered_set<SP<Document::Item>> _items;
 
