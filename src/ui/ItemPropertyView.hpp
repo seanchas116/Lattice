@@ -34,8 +34,7 @@ private:
     void handleLocationValueChange(LocationMember member, int index, double value);
 
     std::unordered_set<SP<Document::Item>> _items;
-
-    QMetaObject::Connection _itemConnection;
+    std::vector<QMetaObject::Connection> _itemConnections;
 
     Location _location;
 
