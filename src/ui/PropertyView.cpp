@@ -20,20 +20,15 @@ PropertyView::PropertyView(const SP<State::AppState> &appState, QWidget *parent)
     auto meshPropertyView = new MeshPropertyView(appState);
     layout->addWidget(meshPropertyView);
 
-    auto handleSelectedItemsChanged = [appState, itemPropertyView] {
+    auto update = [appState, itemPropertyView, meshPropertyView] {
+        meshPropertyView->setItem(appState->document()->editedItem());
+        meshPropertyView->setVisible(!!appState->document()->editedItem());
         itemPropertyView->setItems(appState->document()->selectedItems());
         itemPropertyView->setVisible(!appState->document()->selectedItems().empty() && !appState->document()->editedItem());
     };
-    auto handleEditedItemChanged = [appState, itemPropertyView, meshPropertyView] {
-        meshPropertyView->setItem(appState->document()->editedItem());
-        meshPropertyView->setVisible(!!appState->document()->editedItem());
-        itemPropertyView->setVisible(!appState->document()->selectedItems().empty() && !appState->document()->editedItem());
-    };
-    connect(appState->document().get(), &Document::Document::selectedItemsChanged, this, handleSelectedItemsChanged);
-    handleSelectedItemsChanged();
-
-    connect(appState->document().get(), &Document::Document::editedItemChanged, this, handleEditedItemChanged);
-    handleEditedItemChanged();
+    connect(appState->document().get(), &Document::Document::selectedItemsChanged, this, update);
+    connect(appState->document().get(), &Document::Document::editedItemChanged, this, update);
+    update();
 
     setLayout(layout);
 }
