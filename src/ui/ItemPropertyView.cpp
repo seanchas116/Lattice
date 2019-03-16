@@ -72,6 +72,8 @@ void ItemPropertyView::setItems(const std::unordered_set<SP<Document::Item> > &i
         firstItem = *items.begin();
     }
 
+    disconnect(_itemConnection);
+
     if (firstItem) {
         _itemConnection = connect(firstItem->get(), &Document::Item::locationChanged, this, &ItemPropertyView::setLocation);
     }
