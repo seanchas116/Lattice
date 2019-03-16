@@ -21,7 +21,6 @@ void ObjectManipulator::handleOnBegin(ValueType type, double value) {
     if (_items.empty()) {
         return;
     }
-    auto item = *_items.begin();
 
     auto changeText = [&] {
         switch (type) {
@@ -35,36 +34,41 @@ void ObjectManipulator::handleOnBegin(ValueType type, double value) {
     }();
 
     _appState->document()->history()->beginChange(changeText);
-    _initialLocation = item->location();
+    for (auto& item : _items) {
+        _initialLocations[item] = item->location();
+    }
     _initialValue = value;
 }
 
 void ObjectManipulator::handleOnChange(ValueType type, int axis, double value) {
+    // TODO: scale and rotate from median center
+
     if (_items.empty()) {
         return;
     }
-    auto item = *_items.begin();
-
-    auto loc = _initialLocation;
-    switch (type) {
-    case ValueType::Translate:
-        loc.position[axis] += value - _initialValue;
-        break;
-    case ValueType::Scale:
-        loc.scale[axis] *= value / _initialValue;
-        break;
-    case ValueType::Rotate: {
-        glm::dvec3 eulerAngles(0);
-        eulerAngles[axis] = value - _initialValue;
-        loc.rotation = glm::dquat(eulerAngles) * loc.rotation;
-        break;
+    for (auto& item : _items) {
+        auto loc = _initialLocations.at(item);
+        switch (type) {
+        case ValueType::Translate:
+            loc.position[axis] += value - _initialValue;
+            break;
+        case ValueType::Scale:
+            loc.scale[axis] *= value / _initialValue;
+            break;
+        case ValueType::Rotate: {
+            glm::dvec3 eulerAngles(0);
+            eulerAngles[axis] = value - _initialValue;
+            loc.rotation = glm::dquat(eulerAngles) * loc.rotation;
+            break;
+        }
+        }
+        item->setLocation(loc);
     }
-    }
-    item->setLocation(loc);
 }
 
 void ObjectManipulator::handleOnEnd(ValueType type) {
     Q_UNUSED(type);
+    _initialLocations.clear();
 }
 
 void ObjectManipulator::setItems(const std::unordered_set<SP<Document::Item> > &items) {

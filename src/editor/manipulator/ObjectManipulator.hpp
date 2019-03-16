@@ -31,7 +31,7 @@ private:
     SP<State::AppState> _appState;
     std::unordered_set<SP<Document::Item>> _items;
     double _initialValue;
-    Location _initialLocation;
+    std::unordered_map<SP<Document::Item>, Location> _initialLocations;
     std::vector<QMetaObject::Connection> _connections;
 };
 
