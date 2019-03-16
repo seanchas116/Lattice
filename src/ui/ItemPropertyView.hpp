@@ -31,7 +31,7 @@ private:
 
     void setLocation();
 
-    void handleLocationChange(LocationMember member, int index, double value);
+    void handleLocationValueChange(LocationMember member, int index, double value);
 
     std::unordered_set<SP<Document::Item>> _items;
 

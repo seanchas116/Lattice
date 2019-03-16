@@ -47,11 +47,11 @@ ItemPropertyView::ItemPropertyView(QWidget *parent) :
             spinBox->setSpecialValueText(" ");
             gridLayout->addWidget(spinBox, row, int(i + 1));
 
-            auto handleLocationChange = [this, spinBox, member, i] {
-                this->handleLocationChange(member, i, spinBox->value());
+            auto handleValueChange = [this, spinBox, member, i] {
+                this->handleLocationValueChange(member, i, spinBox->value());
             };
-            connect(spinBox, &Widget::DoubleSpinBox::editingFinished, this, handleLocationChange);
-            connect(spinBox, &Widget::DoubleSpinBox::stepped, this, handleLocationChange);
+            connect(spinBox, &Widget::DoubleSpinBox::editingFinished, this, handleValueChange);
+            connect(spinBox, &Widget::DoubleSpinBox::stepped, this, handleValueChange);
         }
 
         return spinBoxes;
@@ -124,7 +124,7 @@ void ItemPropertyView::setLocation() {
     }
 }
 
-void ItemPropertyView::handleLocationChange(LocationMember member, int index, double value) {
+void ItemPropertyView::handleLocationValueChange(LocationMember member, int index, double value) {
     if (_items.empty()) {
         return;
     }
