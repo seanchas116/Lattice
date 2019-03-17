@@ -14,9 +14,9 @@ public:
     void mousePress(const EventTarget &target, const Render::MouseEvent &event) override;
     void mouseMove(const EventTarget &target, const Render::MouseEvent &event) override;
     void mouseRelease(const EventTarget &target, const Render::MouseEvent &event) override;
+    void keyPress(QKeyEvent *event) override;
 
 private:
-
     // draw
     std::vector<SP<Mesh::UVPoint>> _drawnUVPoints;
     Opt<SP<Mesh::UVPoint>> lastDrawnPoint() const;

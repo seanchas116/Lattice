@@ -119,6 +119,13 @@ void DrawTool::mouseRelease(const Tool::EventTarget &target, const Render::Mouse
     Q_UNUSED(target); Q_UNUSED(event);
 }
 
+void DrawTool::keyPress(QKeyEvent *event) {
+    if (event->key() == Qt::Key_Escape) {
+        item()->mesh()->removeVertex(_drawnUVPoints[_drawnUVPoints.size() - 1]->vertex());
+        _drawnUVPoints.clear();
+    }
+}
+
 Opt<SP<Mesh::UVPoint> > DrawTool::lastDrawnPoint() const {
     if (_drawnUVPoints.empty()) {
         return {};
