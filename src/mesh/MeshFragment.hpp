@@ -14,6 +14,8 @@ public:
 
     bool empty() const { return vertices.empty(); }
 
+    bool contains(const MeshFragment& other) const;
+
     glm::vec3 medianPosition() const;
 
     std::unordered_set<SP<Edge>> edges() const;

@@ -5,6 +5,15 @@ using namespace glm;
 namespace Lattice {
 namespace Mesh {
 
+bool MeshFragment::contains(const MeshFragment &other) const {
+    for (auto& v : other.vertices) {
+        if (vertices.find(v) == vertices.end()) {
+            return false;
+        }
+    }
+    return true;
+}
+
 glm::vec3 MeshFragment::medianPosition() const {
     if (vertices.empty()) {
         return vec3(0);

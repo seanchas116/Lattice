@@ -12,40 +12,30 @@ void MoveTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
     if (event.originalEvent->button() != Qt::LeftButton) {
         return;
     }
-    auto clickedVertices = target.vertices();
+    auto clickedFragment = target.fragment();
     auto oldSelection = appState()->document()->meshSelection();
 
-    bool alreadySelected;
-    if (clickedVertices.empty()) {
-        alreadySelected = false;
-    } else {
-        alreadySelected = true;
-        for (auto& v : clickedVertices) {
-            if (oldSelection.vertices.find(v) == oldSelection.vertices.end()) {
-                alreadySelected = false;
-            }
-        }
-    }
+    bool alreadySelected = !clickedFragment.empty() && oldSelection.contains(clickedFragment);
 
     Mesh::MeshFragment selection;
     if (event.originalEvent->modifiers() & Qt::ShiftModifier) {
         selection = oldSelection;
 
         if (alreadySelected) {
-            for (auto& v : clickedVertices) {
+            for (auto& v : clickedFragment.vertices) {
                 selection.vertices.erase(v);
             }
         } else {
-            for (auto& v: clickedVertices) {
+            for (auto& v: clickedFragment.vertices) {
                 selection.vertices.insert(v);
             }
         }
     } else {
-        selection.vertices = clickedVertices;
+        selection = clickedFragment;
     }
     _nextSelection = selection;
 
-    auto& dragVertices = alreadySelected ? oldSelection.vertices : clickedVertices;
+    auto& dragVertices = alreadySelected ? oldSelection.vertices : clickedFragment.vertices;
 
     _dragged = true;
     _initPositions.clear();
