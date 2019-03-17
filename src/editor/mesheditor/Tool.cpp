@@ -41,6 +41,14 @@ void Tool::hoverLeave(const Tool::EventTarget &target) {
     Q_UNUSED(target);
 }
 
+void Tool::keyPress(QKeyEvent *event) {
+    Q_UNUSED(event);
+}
+
+void Tool::keyRelease(QKeyEvent *event) {
+    Q_UNUSED(event);
+}
+
 } // namespace MeshEditor
 } // namespace Editor
 } // namespace Lattice
