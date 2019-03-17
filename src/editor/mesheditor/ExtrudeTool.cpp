@@ -1,6 +1,7 @@
 #include "ExtrudeTool.hpp"
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
+#include "../../support/Debug.hpp"
 
 using namespace glm;
 
@@ -58,12 +59,32 @@ void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::Mous
     }
 
     for (auto& openEdge : openEdges) {
+        bool isReverse = true;
+        for (auto& face : openEdge->faces()) {
+            if (faces.find(face) != faces.end()) {
+                continue;
+            }
+
+            for (size_t i = 0; i < face->vertices().size(); ++i) {
+                size_t i2 = (i + 1) % face->vertices().size();
+                if (face->vertices()[i] == openEdge->vertices()[0] && face->vertices()[i2] == openEdge->vertices()[1]) {
+                    isReverse = false;
+                    break;
+                }
+            }
+        }
+
         auto v0 = openEdge->vertices()[0];
         auto v1 = openEdge->vertices()[1];
         auto v2 = _oldToNewVertices.at(openEdge->vertices()[1]);
         auto v3 = _oldToNewVertices.at(openEdge->vertices()[0]);
         // TODO: find best material
-        mesh->addFace({v0->firstUVPoint(), v1->firstUVPoint(), v2->firstUVPoint(), v3->firstUVPoint()}, mesh->materials()[0]);
+
+        if (isReverse) {
+            mesh->addFace({v0->firstUVPoint(), v1->firstUVPoint(), v2->firstUVPoint(), v3->firstUVPoint()}, mesh->materials()[0]);
+        } else {
+            mesh->addFace({v3->firstUVPoint(), v2->firstUVPoint(), v1->firstUVPoint(), v0->firstUVPoint()}, mesh->materials()[0]);
+        }
     }
 
     for (auto& face : faces) {
