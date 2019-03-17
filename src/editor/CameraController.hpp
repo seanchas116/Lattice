@@ -30,6 +30,9 @@ private:
         Rotate,
     };
 
+    Location location() const;
+    void setLocationToCamera();
+
     SP<Camera> _camera;
     QWidget *_widget;
 
@@ -39,6 +42,8 @@ private:
     bool _rotateKey = false;
     bool _moveKey = false;
     bool _isOverridingCursor = false;
+    glm::dvec3 _position {0, 10, 10};
+    glm::dvec3 _eulerAngles {0, 0, 0};
 };
 
 }
