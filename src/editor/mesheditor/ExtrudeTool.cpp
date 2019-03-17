@@ -14,8 +14,8 @@ Tool::HitTestExclusion ExtrudeTool::hitTestExclusion() const {
 
 void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     // TODO: extrude selection
-
-    if (!target.vertex && !target.edge && !target.face) {
+    auto fragment = target.fragment();
+    if (fragment.empty()) {
         return;
     }
 
@@ -23,46 +23,52 @@ void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::Mous
     appState()->document()->history()->beginChange(tr("Extrude"));
     auto& mesh = item()->mesh();
 
-    if (target.vertex) {
-        // vertex extrude
-        auto vertex = *target.vertex;
-        auto uv = vertex->firstUVPoint();
+    _oldToNewVertices.clear();
+
+    auto edges = fragment.edges();
+    auto faces = fragment.faces();
+
+    std::unordered_set<SP<Mesh::Edge>> openEdges;
+    for (auto& edge : edges) {
+        int faceCount = 0;
+        for (auto& face : edge->faces()) {
+            if (faces.find(face) != faces.end()) {
+                ++faceCount;
+            }
+        }
+        if (faceCount <= 1) {
+            openEdges.insert(edge);
+        }
+    }
+
+    for (auto& vertex : fragment.vertices) {
+        auto uv = vertex->firstUVPoint(); // TODO: find best uv
         auto newUVPoint = mesh->addUVPoint(mesh->addVertex(vertex->position()), uv->position());
         mesh->addEdge({vertex, newUVPoint->vertex()});
         _oldToNewVertices.insert({vertex, newUVPoint->vertex()});
-    } else if (target.edge) {
-        // edge extrude
-        auto edge = *target.edge;
-        auto uv0 = edge->vertices()[0]->firstUVPoint();
-        auto uv1 = edge->vertices()[1]->firstUVPoint();
-        auto uv2 = mesh->addUVPoint(mesh->addVertex(uv1->vertex()->position()), uv1->position());
-        auto uv3 = mesh->addUVPoint(mesh->addVertex(uv0->vertex()->position()), uv0->position());
-        mesh->addFace({uv0, uv1, uv2, uv3}, mesh->materials()[0]); // TODO: correct material
-        // TODO: correct face orientation
+    }
 
-        _oldToNewVertices.insert({uv0->vertex(), uv3->vertex()});
-        _oldToNewVertices.insert({uv1->vertex(), uv2->vertex()});
-    } else if (target.face) {
-        auto face = *target.face;
+    for (auto& edge : edges) {
+        auto v0 = _oldToNewVertices.at(edge->vertices()[0]);
+        auto v1 = _oldToNewVertices.at(edge->vertices()[1]);
+        mesh->addEdge({v0, v1});
+    }
 
+    for (auto& openEdge : openEdges) {
+        auto v0 = openEdge->vertices()[0];
+        auto v1 = openEdge->vertices()[1];
+        auto v2 = _oldToNewVertices.at(openEdge->vertices()[1]);
+        auto v3 = _oldToNewVertices.at(openEdge->vertices()[0]);
+        // TODO: find best material
+        mesh->addFace({v0->firstUVPoint(), v1->firstUVPoint(), v2->firstUVPoint(), v3->firstUVPoint()}, mesh->materials()[0]);
+    }
+
+    for (auto& face : faces) {
         std::vector<SP<Mesh::UVPoint>> newUVPoints;
         for (auto& uv : face->uvPoints()) {
-            auto newUV = mesh->addUVPoint(mesh->addVertex(uv->vertex()->position()), uv->position());
-            newUVPoints.push_back(newUV);
+            auto newUV = _oldToNewVertices.at(uv->vertex());
+            newUVPoints.push_back(newUV->firstUVPoint());
         }
-
-        for (size_t i = 0; i < face->uvPoints().size(); ++i) {
-            size_t next = (i + 1) % face->uvPoints().size();
-            auto uv0 = face->uvPoints()[i];
-            auto uv1 = face->uvPoints()[next];
-            auto uv2 = newUVPoints[next];
-            auto uv3 = newUVPoints[i];
-
-            mesh->addFace({uv0, uv1, uv2, uv3}, face->material());
-
-            _oldToNewVertices.insert({face->uvPoints()[i]->vertex(), newUVPoints[i]->vertex()});
-        }
-
         mesh->addFace(newUVPoints, face->material());
         mesh->removeFace(face);
     }

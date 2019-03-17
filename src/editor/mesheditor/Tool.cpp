@@ -29,6 +29,10 @@ std::unordered_set<SP<Mesh::Vertex> > Tool::EventTarget::vertices() const {
     return {};
 }
 
+Mesh::MeshFragment Tool::EventTarget::fragment() const {
+    return Mesh::MeshFragment{vertices()};
+}
+
 } // namespace MeshEditor
 } // namespace Editor
 } // namespace Lattice

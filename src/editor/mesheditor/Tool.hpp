@@ -2,6 +2,7 @@
 #include <QObject>
 #include "../../state/AppState.hpp"
 #include "../../mesh/Mesh.hpp"
+#include "../../mesh/MeshFragment.hpp"
 #include "../../document/MeshItem.hpp"
 #include "../../render/MouseEvent.hpp"
 
@@ -18,6 +19,7 @@ public:
         Opt<SP<Mesh::Face>> face;
 
         std::unordered_set<SP<Mesh::Vertex>> vertices() const;
+        Mesh::MeshFragment fragment() const;
     };
 
     struct HitTestExclusion {

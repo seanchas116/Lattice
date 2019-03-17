@@ -12,6 +12,8 @@ public:
         return vertices == other.vertices;
     }
 
+    bool empty() const { return vertices.empty(); }
+
     glm::vec3 medianPosition() const;
 
     std::unordered_set<SP<Edge>> edges() const;
