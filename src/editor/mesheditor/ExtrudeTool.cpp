@@ -27,7 +27,7 @@ void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::Mous
     appState()->document()->history()->beginChange(tr("Extrude"));
     auto& mesh = item()->mesh();
 
-    _oldToNewVertices.clear();
+    _oldToNewUVPoints.clear();
 
     auto edges = fragment.edges();
     auto faces = fragment.faces();
@@ -49,13 +49,15 @@ void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::Mous
         auto uv = vertex->firstUVPoint(); // TODO: find best uv
         auto newUVPoint = mesh->addUVPoint(mesh->addVertex(vertex->position()), uv->position());
         mesh->addEdge({vertex, newUVPoint->vertex()});
-        _oldToNewVertices.insert({vertex, newUVPoint->vertex()});
+        _vertexToUV.insert({vertex, uv});
+        _vertexToUV.insert({newUVPoint->vertex(), newUVPoint});
+        _oldToNewUVPoints.insert({uv, newUVPoint});
     }
 
     for (auto& edge : edges) {
-        auto v0 = _oldToNewVertices.at(edge->vertices()[0]);
-        auto v1 = _oldToNewVertices.at(edge->vertices()[1]);
-        mesh->addEdge({v0, v1});
+        auto uv0 = _oldToNewUVPoints.at(_vertexToUV.at(edge->vertices()[0]));
+        auto uv1 = _oldToNewUVPoints.at(_vertexToUV.at(edge->vertices()[1]));
+        mesh->addEdge({uv0->vertex(), uv1->vertex()});
     }
 
     for (auto& openEdge : openEdges) {
@@ -77,38 +79,37 @@ void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::Mous
             }
         }
 
-        auto v0 = openEdge->vertices()[0];
-        auto v1 = openEdge->vertices()[1];
-        auto v2 = _oldToNewVertices.at(openEdge->vertices()[1]);
-        auto v3 = _oldToNewVertices.at(openEdge->vertices()[0]);
+        auto uv0 = _vertexToUV.at(openEdge->vertices()[0]);
+        auto uv1 = _vertexToUV.at(openEdge->vertices()[1]);
+        auto uv2 = _oldToNewUVPoints.at(uv1);
+        auto uv3 = _oldToNewUVPoints.at(uv0);
 
-        // TODO: find best uvpoint
         if (isReverse) {
-            mesh->addFace({v0->firstUVPoint(), v1->firstUVPoint(), v2->firstUVPoint(), v3->firstUVPoint()}, material);
+            mesh->addFace({uv0, uv1, uv2, uv3}, material);
         } else {
-            mesh->addFace({v3->firstUVPoint(), v2->firstUVPoint(), v1->firstUVPoint(), v0->firstUVPoint()}, material);
+            mesh->addFace({uv3, uv2, uv1, uv0}, material);
         }
     }
 
     for (auto& face : faces) {
         std::vector<SP<Mesh::UVPoint>> newUVPoints;
         for (auto& uv : face->uvPoints()) {
-            auto newUV = _oldToNewVertices.at(uv->vertex());
-            newUVPoints.push_back(newUV->firstUVPoint());
+            auto newUV = _oldToNewUVPoints.at(uv);
+            newUVPoints.push_back(newUV);
         }
         mesh->addFace(newUVPoints, face->material());
         mesh->removeFace(face);
     }
 
-    for (auto& [oldVertex, newVertex] : _oldToNewVertices) {
-        _initPositions[oldVertex] = oldVertex->position();
+    for (auto& [oldUV, newUV] : _oldToNewUVPoints) {
+        _initPositions[oldUV->vertex()] = oldUV->vertex()->position();
     }
     _initWorldPos = event.worldPos();
 }
 
 void ExtrudeTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     Q_UNUSED(target);
-    if (_oldToNewVertices.empty()) {
+    if (_oldToNewUVPoints.empty()) {
         return;
     }
 
@@ -116,8 +117,8 @@ void ExtrudeTool::mouseMove(const Tool::EventTarget &target, const Render::Mouse
 
     std::unordered_map<SP<Mesh::Vertex>, vec3> newPositions;
 
-    for (auto& [oldVertex, newVertex] : _oldToNewVertices) {
-        newPositions[newVertex] = _initPositions[oldVertex] + offset;
+    for (auto& [oldUV, newUV] : _oldToNewUVPoints) {
+        newPositions[newUV->vertex()] = _initPositions[oldUV->vertex()] + offset;
     }
 
     item()->mesh()->setPositions(newPositions);
@@ -126,7 +127,7 @@ void ExtrudeTool::mouseMove(const Tool::EventTarget &target, const Render::Mouse
 void ExtrudeTool::mouseRelease(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
 
-    _oldToNewVertices.clear();
+    _oldToNewUVPoints.clear();
     _initPositions.clear();
 }
 

@@ -19,7 +19,8 @@ public:
 
 private:
     std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _initPositions;
-    std::unordered_map<SP<Mesh::Vertex>, SP<Mesh::Vertex>> _oldToNewVertices;
+    std::unordered_map<SP<Mesh::Vertex>, SP<Mesh::UVPoint>> _vertexToUV;
+    std::unordered_map<SP<Mesh::UVPoint>, SP<Mesh::UVPoint>> _oldToNewUVPoints;
     glm::dvec3 _initWorldPos {0};
 };
 
