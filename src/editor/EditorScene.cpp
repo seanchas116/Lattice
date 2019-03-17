@@ -45,11 +45,11 @@ void EditorScene::updateRenderables() {
 
     auto editedItem = _appState->document()->editedItem();
     if (editedItem) {
-        if (!_editedMeshRenderers || (*_editedMeshRenderers)->item() != editedItem) {
-            _editedMeshRenderers = makeShared<MeshEditor::MeshEditor>(_appState, *editedItem);
+        if (!_meshEditor || (*_meshEditor)->item() != editedItem) {
+            _meshEditor = makeShared<MeshEditor::MeshEditor>(_appState, *editedItem);
         }
     } else {
-        _editedMeshRenderers = std::nullopt;
+        _meshEditor = std::nullopt;
     }
 
     _appState->document()->rootItem()->forEachDescendant([&] (auto& item) {
@@ -78,8 +78,8 @@ void EditorScene::updateRenderables() {
     for (auto& [item, renderer] : _meshRenderers) {
         renderables.push_back(renderer);
     }
-    if (_editedMeshRenderers) {
-        renderables.push_back(*_editedMeshRenderers);
+    if (_meshEditor) {
+        renderables.push_back(*_meshEditor);
     }
 
     if (!_appState->document()->selectedItems().empty() && !_appState->document()->isEditing()) {
@@ -98,14 +98,14 @@ void EditorScene::updateRenderables() {
 }
 
 void EditorScene::keyPressEvent(QKeyEvent *event) {
-    if (_editedMeshRenderers) {
-        (*_editedMeshRenderers)->keyPressEvent(event);
+    if (_meshEditor) {
+        (*_meshEditor)->keyPressEvent(event);
     }
 }
 
 void EditorScene::keyReleaseEvent(QKeyEvent *event) {
-    if (_editedMeshRenderers) {
-        (*_editedMeshRenderers)->keyReleaseEvent(event);
+    if (_meshEditor) {
+        (*_meshEditor)->keyReleaseEvent(event);
     }
 }
 
