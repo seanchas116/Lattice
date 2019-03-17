@@ -325,6 +325,7 @@ void MeshEditor::updateWholeVAOs() {
                     }
                 }
 
+                /*
                 { // back
                     auto i0 = addPoint(pickable, face->uvPoints()[0], true);
                     for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
@@ -334,6 +335,7 @@ void MeshEditor::updateWholeVAOs() {
                         pickTriangles.push_back({i0, i2, i1});
                     }
                 }
+                */
             }
             auto indexBuffer = makeShared<GL::IndexBuffer>();
             indexBuffer->setTriangles(triangles);

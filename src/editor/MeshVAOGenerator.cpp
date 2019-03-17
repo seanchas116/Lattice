@@ -70,6 +70,7 @@ std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> MeshVAOGenerator::generateFa
                 }
             }
 
+            /*
             { // back
                 auto i0 = _backIndices.at(v0.get());
                 for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
@@ -80,6 +81,7 @@ std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> MeshVAOGenerator::generateFa
                     triangles.push_back({i0, i2, i1});
                 }
             }
+            */
         }
         auto indexBuffer = makeShared<GL::IndexBuffer>();
         indexBuffer->setTriangles(triangles);
