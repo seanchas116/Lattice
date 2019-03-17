@@ -105,7 +105,7 @@ void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::Mous
         _useGuide = false;
     } else {
         _useGuide = true;
-        glm::vec3 normal {0};
+        glm::dvec3 normal {0};
         for (auto& face : faces) {
             normal += face->normal();
         }
@@ -127,7 +127,7 @@ void ExtrudeTool::mouseMove(const Tool::EventTarget &target, const Render::Mouse
         return;
     }
 
-    glm::vec3 offset = glm::vec3(event.worldPos()) - _initWorldPos;
+    auto offset = event.worldPos() - _initWorldPos;
     if (_useGuide) {
         offset = glm::dot(offset, _guideDirection) * _guideDirection;
     }

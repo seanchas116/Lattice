@@ -18,12 +18,12 @@ public:
     void hoverLeave(const EventTarget &target) override;
 
 private:
-    std::unordered_map<SP<Mesh::Vertex>, glm::vec3> _initPositions;
+    std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _initPositions;
     std::unordered_map<SP<Mesh::Vertex>, SP<Mesh::UVPoint>> _vertexToUV;
     std::unordered_map<SP<Mesh::UVPoint>, SP<Mesh::UVPoint>> _oldToNewUVPoints;
-    glm::vec3 _initWorldPos {0};
+    glm::dvec3 _initWorldPos {0};
     bool _useGuide {false};
-    glm::vec3 _guideDirection {0};
+    glm::dvec3 _guideDirection {0};
 };
 
 } // namespace MeshEditor
