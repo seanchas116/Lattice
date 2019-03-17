@@ -1,6 +1,7 @@
 #include "DrawTool.hpp"
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
+#include "../../support/Debug.hpp"
 
 using namespace glm;
 
@@ -120,8 +121,13 @@ void DrawTool::mouseRelease(const Tool::EventTarget &target, const Render::Mouse
 }
 
 void DrawTool::keyPress(QKeyEvent *event) {
+    qDebug() << event->key();
     if (event->key() == Qt::Key_Escape) {
+        // abort
         item()->mesh()->removeVertex(_drawnUVPoints[_drawnUVPoints.size() - 1]->vertex());
+        _drawnUVPoints.clear();
+    } else if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
+        // finish
         _drawnUVPoints.clear();
     }
 }
