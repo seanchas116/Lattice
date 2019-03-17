@@ -12,29 +12,29 @@ void MoveTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
     if (event.originalEvent->button() != Qt::LeftButton) {
         return;
     }
-    std::unordered_set<SP<Mesh::Vertex>> vertices;
+    std::unordered_set<SP<Mesh::Vertex>> clickedVertices;
 
     if (target.vertex) {
         auto& vertex = *target.vertex;
-        vertices = {vertex};
+        clickedVertices = {vertex};
     } else if (target.edge) {
         auto& edge = *target.edge;
-        vertices = {edge->vertices()[0], edge->vertices()[1]};
+        clickedVertices = {edge->vertices()[0], edge->vertices()[1]};
     } else if (target.face) {
         auto& face = *target.face;
         for (auto& v : face->vertices()) {
-            vertices.insert(v);
+            clickedVertices.insert(v);
         }
     }
 
     auto oldSelection = appState()->document()->meshSelection();
 
     bool alreadySelected;
-    if (vertices.empty()) {
+    if (clickedVertices.empty()) {
         alreadySelected = false;
     } else {
         alreadySelected = true;
-        for (auto& v : vertices) {
+        for (auto& v : clickedVertices) {
             if (oldSelection.vertices.find(v) == oldSelection.vertices.end()) {
                 alreadySelected = false;
             }
@@ -46,20 +46,20 @@ void MoveTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
         selection = oldSelection;
 
         if (alreadySelected) {
-            for (auto& v : vertices) {
+            for (auto& v : clickedVertices) {
                 selection.vertices.erase(v);
             }
         } else {
-            for (auto& v: vertices) {
+            for (auto& v: clickedVertices) {
                 selection.vertices.insert(v);
             }
         }
     } else {
-        selection.vertices = vertices;
+        selection.vertices = clickedVertices;
     }
     _nextSelection = selection;
 
-    auto& dragVertices = alreadySelected ? oldSelection.vertices : vertices;
+    auto& dragVertices = alreadySelected ? oldSelection.vertices : clickedVertices;
 
     _dragged = true;
     _initPositions.clear();
