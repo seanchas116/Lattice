@@ -176,11 +176,11 @@ void MeshEditor::mouseRelease(const Render::MouseEvent &event) {
 }
 
 void MeshEditor::keyPressEvent(QKeyEvent *event) {
-    qDebug() << "key press" << event->key();
+    _tool->keyPress(event);
 }
 
 void MeshEditor::keyReleaseEvent(QKeyEvent *event) {
-    qDebug() << "key release" << event->key();
+    _tool->keyRelease(event);
 }
 
 void MeshEditor::handleToolChange(State::Tool tool) {
