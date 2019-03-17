@@ -31,7 +31,7 @@ EditorScene::EditorScene(const SP<State::AppState> &appState) :
 
     connect(appState->document().get(), &Document::Document::itemInserted, this, &EditorScene::updateRenderables);
     connect(appState->document().get(), &Document::Document::itemRemoved, this, &EditorScene::updateRenderables);
-    connect(appState->document().get(), &Document::Document::currentItemChanged, this, &EditorScene::updateRenderables);
+    connect(appState->document().get(), &Document::Document::selectedItemsChanged, this, &EditorScene::updateRenderables);
     connect(appState->document().get(), &Document::Document::editedItemChanged, this, &EditorScene::updateRenderables);
     connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &EditorScene::updateRenderables);
 
@@ -82,7 +82,7 @@ void EditorScene::updateRenderables() {
         renderables.push_back(*_editedMeshRenderers);
     }
 
-    if (_appState->document()->currentItem() && !_appState->document()->isEditing()) {
+    if (!_appState->document()->selectedItems().empty() && !_appState->document()->isEditing()) {
         for (auto& h : _objectManipulator->handles(_appState->isTranslateHandleVisible(), _appState->isRotateHandleVisible(), _appState->isScaleHandleVisible())) {
             renderables.push_back(h);
         }
