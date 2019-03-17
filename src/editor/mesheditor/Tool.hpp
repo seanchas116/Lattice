@@ -16,6 +16,8 @@ public:
         Opt<SP<Mesh::Vertex>> vertex;
         Opt<SP<Mesh::Edge>> edge;
         Opt<SP<Mesh::Face>> face;
+
+        std::unordered_set<SP<Mesh::Vertex>> vertices() const;
     };
 
     struct HitTestExclusion {

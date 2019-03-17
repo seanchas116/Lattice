@@ -12,21 +12,7 @@ void MoveTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
     if (event.originalEvent->button() != Qt::LeftButton) {
         return;
     }
-    std::unordered_set<SP<Mesh::Vertex>> clickedVertices;
-
-    if (target.vertex) {
-        auto& vertex = *target.vertex;
-        clickedVertices = {vertex};
-    } else if (target.edge) {
-        auto& edge = *target.edge;
-        clickedVertices = {edge->vertices()[0], edge->vertices()[1]};
-    } else if (target.face) {
-        auto& face = *target.face;
-        for (auto& v : face->vertices()) {
-            clickedVertices.insert(v);
-        }
-    }
-
+    auto clickedVertices = target.vertices();
     auto oldSelection = appState()->document()->meshSelection();
 
     bool alreadySelected;
