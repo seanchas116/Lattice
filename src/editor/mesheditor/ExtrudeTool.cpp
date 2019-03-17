@@ -101,6 +101,17 @@ void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::Mous
         mesh->removeFace(face);
     }
 
+    if (faces.empty()) {
+        _useGuide = false;
+    } else {
+        _useGuide = true;
+        glm::vec3 normal {0};
+        for (auto& face : faces) {
+            normal += face->normal();
+        }
+        _guideDirection = glm::normalize(normal);
+    }
+
     Mesh::MeshFragment selection;
     for (auto& [oldUV, newUV] : _oldToNewUVPoints) {
         _initPositions[oldUV->vertex()] = oldUV->vertex()->position();
@@ -116,7 +127,10 @@ void ExtrudeTool::mouseMove(const Tool::EventTarget &target, const Render::Mouse
         return;
     }
 
-    auto offset = event.worldPos() - _initWorldPos;
+    glm::vec3 offset = glm::vec3(event.worldPos()) - _initWorldPos;
+    if (_useGuide) {
+        offset = glm::dot(offset, _guideDirection) * _guideDirection;
+    }
 
     std::unordered_map<SP<Mesh::Vertex>, vec3> newPositions;
 
