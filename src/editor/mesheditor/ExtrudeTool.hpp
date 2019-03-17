@@ -25,6 +25,7 @@ private:
     std::unordered_map<SP<Mesh::Vertex>, SP<Mesh::UVPoint>> _vertexToUV;
     std::unordered_map<SP<Mesh::UVPoint>, SP<Mesh::UVPoint>> _oldToNewUVPoints;
     glm::dvec3 _initWorldPos {0};
+    glm::dvec2 _initScreenPos {0};
     bool _useGuide {false};
     glm::dvec3 _guideDirection {0};
 };

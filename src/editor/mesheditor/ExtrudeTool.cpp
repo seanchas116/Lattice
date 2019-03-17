@@ -23,6 +23,14 @@ void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::Mous
         _fragment = clickedFragment;
     }
     _dragStarted = false;
+
+    _initWorldPos = event.worldPos();
+    _initScreenPos = event.screenPos;
+
+    _initPositions.clear();
+    for (auto& v : _fragment.vertices) {
+        _initPositions[v] = v->position();
+    }
 }
 
 void ExtrudeTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEvent &event) {
@@ -33,7 +41,7 @@ void ExtrudeTool::mouseMove(const Tool::EventTarget &target, const Render::Mouse
     }
 
     if (!_dragStarted) {
-        if (event.worldPos() == _initWorldPos) {
+        if (distance(_initScreenPos, event.screenPos) < appState()->preferences()->moveThreshold()) {
             return;
         }
 
@@ -127,10 +135,8 @@ void ExtrudeTool::mouseMove(const Tool::EventTarget &target, const Render::Mouse
 
         Mesh::MeshFragment selection;
         for (auto& [oldUV, newUV] : _oldToNewUVPoints) {
-            _initPositions[oldUV->vertex()] = oldUV->vertex()->position();
             selection.vertices.insert(newUV->vertex());
         }
-        _initWorldPos = event.worldPos();
         appState()->document()->setMeshSelection(selection);
 
         _dragStarted = true;
