@@ -60,8 +60,11 @@ void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::Mous
 
     for (auto& openEdge : openEdges) {
         bool isReverse = true;
+        SP<Mesh::Material> material = mesh->materials()[0];
+
         for (auto& face : openEdge->faces()) {
             if (faces.find(face) != faces.end()) {
+                material = face->material();
                 continue;
             }
 
@@ -78,12 +81,12 @@ void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::Mous
         auto v1 = openEdge->vertices()[1];
         auto v2 = _oldToNewVertices.at(openEdge->vertices()[1]);
         auto v3 = _oldToNewVertices.at(openEdge->vertices()[0]);
-        // TODO: find best material
 
+        // TODO: find best uvpoint
         if (isReverse) {
-            mesh->addFace({v0->firstUVPoint(), v1->firstUVPoint(), v2->firstUVPoint(), v3->firstUVPoint()}, mesh->materials()[0]);
+            mesh->addFace({v0->firstUVPoint(), v1->firstUVPoint(), v2->firstUVPoint(), v3->firstUVPoint()}, material);
         } else {
-            mesh->addFace({v3->firstUVPoint(), v2->firstUVPoint(), v1->firstUVPoint(), v0->firstUVPoint()}, mesh->materials()[0]);
+            mesh->addFace({v3->firstUVPoint(), v2->firstUVPoint(), v1->firstUVPoint(), v0->firstUVPoint()}, material);
         }
     }
 
