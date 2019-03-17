@@ -4,13 +4,6 @@ namespace Lattice {
 namespace Editor {
 namespace MeshEditor {
 
-Tool::~Tool() {
-}
-
-Tool::HitTestExclusion Tool::hitTestExclusion() const {
-    return {};
-}
-
 std::unordered_set<SP<Mesh::Vertex> > Tool::EventTarget::vertices() const {
     if (this->vertex) {
         auto& vertex = *this->vertex;
@@ -31,6 +24,21 @@ std::unordered_set<SP<Mesh::Vertex> > Tool::EventTarget::vertices() const {
 
 Mesh::MeshFragment Tool::EventTarget::fragment() const {
     return Mesh::MeshFragment{vertices()};
+}
+
+Tool::~Tool() {
+}
+
+Tool::HitTestExclusion Tool::hitTestExclusion() const {
+    return {};
+}
+
+void Tool::hoverEnter(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+    Q_UNUSED(target); Q_UNUSED(event);
+}
+
+void Tool::hoverLeave(const Tool::EventTarget &target) {
+    Q_UNUSED(target);
 }
 
 } // namespace MeshEditor

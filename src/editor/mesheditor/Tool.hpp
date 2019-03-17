@@ -39,8 +39,8 @@ public:
     virtual void mousePress(const EventTarget& target, const Render::MouseEvent &event) = 0;
     virtual void mouseMove(const EventTarget& target, const Render::MouseEvent &event) = 0;
     virtual void mouseRelease(const EventTarget& target, const Render::MouseEvent &event) = 0;
-    virtual void hoverEnter(const EventTarget& target, const Render::MouseEvent &event) = 0;
-    virtual void hoverLeave(const EventTarget& target) = 0;
+    virtual void hoverEnter(const EventTarget& target, const Render::MouseEvent &event);
+    virtual void hoverLeave(const EventTarget& target);
 
 private:
     SP<State::AppState> _appState;

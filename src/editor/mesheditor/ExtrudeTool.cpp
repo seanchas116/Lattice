@@ -167,16 +167,6 @@ void ExtrudeTool::mouseRelease(const Tool::EventTarget &target, const Render::Mo
     _dragStarted = false;
 }
 
-void ExtrudeTool::hoverEnter(const Tool::EventTarget &target, const Render::MouseEvent &event) {
-    Q_UNUSED(target); Q_UNUSED(event);
-    // TOOD
-}
-
-void ExtrudeTool::hoverLeave(const Tool::EventTarget &target) {
-    Q_UNUSED(target);
-    // TOOD
-}
-
 } // namespace MeshEditor
 } // namespace Editor
 } // namespace Lattice

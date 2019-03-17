@@ -23,16 +23,6 @@ void LoopCutTool::mouseRelease(const Tool::EventTarget &target, const Render::Mo
     // TOOD
 }
 
-void LoopCutTool::hoverEnter(const Tool::EventTarget &target, const Render::MouseEvent &event) {
-    Q_UNUSED(target); Q_UNUSED(event);
-    // TOOD
-}
-
-void LoopCutTool::hoverLeave(const Tool::EventTarget &target) {
-    Q_UNUSED(target);
-    // TOOD
-}
-
 } // namespace MeshEditor
 } // namespace Editor
 } // namespace Lattice

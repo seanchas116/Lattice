@@ -119,16 +119,6 @@ void DrawTool::mouseRelease(const Tool::EventTarget &target, const Render::Mouse
     Q_UNUSED(target); Q_UNUSED(event);
 }
 
-void DrawTool::hoverEnter(const Tool::EventTarget &target, const Render::MouseEvent &event) {
-    Q_UNUSED(target); Q_UNUSED(event);
-    // TOOD
-}
-
-void DrawTool::hoverLeave(const Tool::EventTarget &target) {
-    Q_UNUSED(target);
-    // TOOD
-}
-
 Opt<SP<Mesh::UVPoint> > DrawTool::lastDrawnPoint() const {
     if (_drawnUVPoints.empty()) {
         return {};
