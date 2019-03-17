@@ -13,7 +13,6 @@ Tool::HitTestExclusion ExtrudeTool::hitTestExclusion() const {
 }
 
 void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::MouseEvent &event) {
-    // TODO: extrude selection
     auto clickedFragment = target.fragment();
     if (clickedFragment.empty()) {
         return;
