@@ -14,9 +14,13 @@ Tool::HitTestExclusion ExtrudeTool::hitTestExclusion() const {
 
 void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     // TODO: extrude selection
-    auto fragment = target.fragment();
-    if (fragment.empty()) {
+    auto clickedFragment = target.fragment();
+    if (clickedFragment.empty()) {
         return;
+    }
+    auto fragment = appState()->document()->meshSelection();
+    if (!fragment.contains(clickedFragment)) {
+        fragment = clickedFragment;
     }
 
     // TODO: start extruding when dragg started
