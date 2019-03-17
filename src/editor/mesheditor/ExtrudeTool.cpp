@@ -101,10 +101,13 @@ void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::Mous
         mesh->removeFace(face);
     }
 
+    Mesh::MeshFragment selection;
     for (auto& [oldUV, newUV] : _oldToNewUVPoints) {
         _initPositions[oldUV->vertex()] = oldUV->vertex()->position();
+        selection.vertices.insert(newUV->vertex());
     }
     _initWorldPos = event.worldPos();
+    appState()->document()->setMeshSelection(selection);
 }
 
 void ExtrudeTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEvent &event) {
