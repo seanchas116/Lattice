@@ -18,6 +18,9 @@ public:
     void hoverLeave(const EventTarget &target) override;
 
 private:
+    bool _dragStarted {false};
+    Mesh::MeshFragment _fragment;
+
     std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _initPositions;
     std::unordered_map<SP<Mesh::Vertex>, SP<Mesh::UVPoint>> _vertexToUV;
     std::unordered_map<SP<Mesh::UVPoint>, SP<Mesh::UVPoint>> _oldToNewUVPoints;
