@@ -21,11 +21,13 @@ private:
     bool _dragStarted {false};
     Mesh::MeshFragment _fragment;
 
-    std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _initPositions;
-    std::unordered_map<SP<Mesh::Vertex>, SP<Mesh::UVPoint>> _vertexToUV;
-    std::unordered_map<SP<Mesh::UVPoint>, SP<Mesh::UVPoint>> _oldToNewUVPoints;
     glm::dvec3 _initWorldPos {0};
     glm::dvec2 _initScreenPos {0};
+    std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _initPositions;
+
+    std::unordered_map<SP<Mesh::Vertex>, SP<Mesh::UVPoint>> _vertexToUV;
+    std::unordered_map<SP<Mesh::UVPoint>, SP<Mesh::UVPoint>> _oldToNewUVPoints;
+
     bool _useGuide {false};
     glm::dvec3 _guideDirection {0};
 };
