@@ -27,12 +27,17 @@ void MoveTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
         }
     }
 
-    bool alreadySelected = true;
     auto oldSelection = appState()->document()->meshSelection();
 
-    for (auto& v : vertices) {
-        if (oldSelection.vertices.find(v) == oldSelection.vertices.end()) {
-            alreadySelected = false;
+    bool alreadySelected;
+    if (vertices.empty()) {
+        alreadySelected = false;
+    } else {
+        alreadySelected = true;
+        for (auto& v : vertices) {
+            if (oldSelection.vertices.find(v) == oldSelection.vertices.end()) {
+                alreadySelected = false;
+            }
         }
     }
 
