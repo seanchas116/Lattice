@@ -26,6 +26,18 @@ EditorViewportContainer::EditorViewportContainer(const SP<State::AppState> &appS
     });
 }
 
+void EditorViewportContainer::keyPressEvent(QKeyEvent *event) {
+    if (_scene) {
+        (*_scene)->keyPressEvent(event);
+    }
+}
+
+void EditorViewportContainer::keyReleaseEvent(QKeyEvent *event) {
+    if (_scene) {
+        (*_scene)->keyReleaseEvent(event);
+    }
+}
+
 void EditorViewportContainer::setSplitMode(State::ViewportSplitMode split) {
     auto oldLayout = layout();
     if (oldLayout) {

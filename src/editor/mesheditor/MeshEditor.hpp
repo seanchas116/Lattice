@@ -53,6 +53,9 @@ public:
     void mouseMove(const Render::MouseEvent &event) override;
     void mouseRelease(const Render::MouseEvent &event) override;
 
+    void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
+
 private:
     void handleToolChange(State::Tool tool);
     void updateWholeVAOs();

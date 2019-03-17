@@ -175,6 +175,14 @@ void MeshEditor::mouseRelease(const Render::MouseEvent &event) {
     mouseReleaseTarget({}, event);
 }
 
+void MeshEditor::keyPressEvent(QKeyEvent *event) {
+    qDebug() << "key press" << event->key();
+}
+
+void MeshEditor::keyReleaseEvent(QKeyEvent *event) {
+    qDebug() << "key release" << event->key();
+}
+
 void MeshEditor::handleToolChange(State::Tool tool) {
     switch (tool) {
     case State::Tool::Draw:

@@ -35,6 +35,9 @@ public:
 
     void updateRenderables();
 
+    void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
+
 private:
     SP<State::AppState> _appState;
 

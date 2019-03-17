@@ -97,5 +97,17 @@ void EditorScene::updateRenderables() {
     update();
 }
 
+void EditorScene::keyPressEvent(QKeyEvent *event) {
+    if (_editedMeshRenderers) {
+        (*_editedMeshRenderers)->keyPressEvent(event);
+    }
+}
+
+void EditorScene::keyReleaseEvent(QKeyEvent *event) {
+    if (_editedMeshRenderers) {
+        (*_editedMeshRenderers)->keyReleaseEvent(event);
+    }
+}
+
 } // namespace Editor
 } // namespace Lattice

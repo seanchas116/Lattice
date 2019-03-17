@@ -19,6 +19,8 @@ class EditorViewportContainer final : public Render::ViewportContainer {
     Q_OBJECT
 public:
     explicit EditorViewportContainer(const SP<State::AppState>& appState, QWidget *parent = nullptr);
+    void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
 
 private:
     void setSplitMode(State::ViewportSplitMode split);
