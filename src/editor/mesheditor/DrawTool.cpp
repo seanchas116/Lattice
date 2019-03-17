@@ -121,7 +121,6 @@ void DrawTool::mouseRelease(const Tool::EventTarget &target, const Render::Mouse
 }
 
 void DrawTool::keyPress(QKeyEvent *event) {
-    qDebug() << event->key();
     if (event->key() == Qt::Key_Escape) {
         // abort
         item()->mesh()->removeVertex(_drawnUVPoints[_drawnUVPoints.size() - 1]->vertex());
