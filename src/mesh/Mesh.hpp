@@ -4,6 +4,7 @@
 #include "../support/Box.hpp"
 #include "../support/SortedArray.hpp"
 #include "../support/Change.hpp"
+#include "../support/Ray.hpp"
 #include <QObject>
 #include <QImage>
 #include <glm/glm.hpp>
@@ -50,6 +51,12 @@ public:
     Edge(const std::array<SP<Vertex>, 2>& vertices) : _vertices(vertices) {}
 
     auto& vertices() const { return _vertices; }
+    auto ray() const {
+        auto p0 = _vertices[0]->position();
+        auto p1 = _vertices[1]->position();
+        return Ray<float>(p0, p1 - p0);
+    }
+
     std::vector<SP<Face>> faces() const;
 
 private:
