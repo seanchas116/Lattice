@@ -101,7 +101,28 @@ void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
             auto edge1 = mesh->addEdge({edge->vertices()[0], point1->vertex()});
             auto edge2 = mesh->addEdge({point1->vertex(), edge->vertices()[1]});
 
-            // TODO: split existing face
+            auto faces = edge->faces();
+            for (auto& face : faces) {
+                std::vector<SP<Mesh::UVPoint>> newFaceUVPoints;
+                for (size_t i = 0; i < face->uvPoints().size(); ++i) {
+                    auto uv0 = face->uvPoints()[i];
+                    auto uv1 = face->uvPoints()[(i + 1) % face->uvPoints().size()];
+
+                    newFaceUVPoints.push_back(uv0);
+
+                    // TODO: create separate uvpoint if possible when uv is split at the edge
+                    if (uv0->vertex() == edge->vertices()[0] && uv1->vertex() == edge->vertices()[1]) {
+                        newFaceUVPoints.push_back(point1);
+                    } else if (uv1->vertex() == edge->vertices()[0] && uv0->vertex() == edge->vertices()[1]) {
+                        newFaceUVPoints.push_back(point1);
+                    }
+                }
+                mesh->addFace(newFaceUVPoints, face->material());
+            }
+            for (auto& face : faces) {
+                mesh->removeFace(face);
+            }
+            mesh->removeEdge(edge);
         } else {
             // start from new vertex
             // TODO: better depth
