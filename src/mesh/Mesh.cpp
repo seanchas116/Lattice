@@ -663,6 +663,41 @@ SP<Face> Mesh::flipFace(const SP<Face> &face) {
     return addFace(reverseUVPoints, material);
 }
 
+SP<Vertex> Mesh::cutEdge(const SP<Edge> &edge, float t) {
+    auto pos = edge->ray().at(t);
+
+    auto uv = addUVPoint(addVertex(pos), vec2(0)); // Use better UV position
+
+    auto edge1 = addEdge({edge->vertices()[0], uv->vertex()});
+    auto edge2 = addEdge({uv->vertex(), edge->vertices()[1]});
+
+    auto faces = edge->faces();
+    for (auto& face : faces) {
+        std::vector<SP<UVPoint>> newFaceUVPoints;
+        for (size_t i = 0; i < face->uvPoints().size(); ++i) {
+            auto uv0 = face->uvPoints()[i];
+            auto uv1 = face->uvPoints()[(i + 1) % face->uvPoints().size()];
+
+            newFaceUVPoints.push_back(uv0);
+
+            // TODO: create separate uvpoint if possible when uv is split at the edge
+            if (uv0->vertex() == edge->vertices()[0] && uv1->vertex() == edge->vertices()[1]) {
+                newFaceUVPoints.push_back(uv);
+            } else if (uv1->vertex() == edge->vertices()[0] && uv0->vertex() == edge->vertices()[1]) {
+                newFaceUVPoints.push_back(uv);
+            }
+        }
+
+        addFace(newFaceUVPoints, face->material());
+    }
+    for (auto& face : faces) {
+        removeFace(face);
+    }
+    removeEdge(edge);
+
+    return uv->vertex();
+}
+
 SP<Mesh> Mesh::clone() const {
     auto newMesh = makeShared<Mesh>();
     newMesh->merge(sharedFromThis());

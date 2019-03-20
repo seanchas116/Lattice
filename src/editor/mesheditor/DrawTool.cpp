@@ -90,40 +90,12 @@ void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
             Ray<double> edgeRay = edge->ray();
             Ray<double> mouseRay = event.camera->modelMouseRay(modelMatrix, event.screenPos);
             RayRayDistanceSolver distanceSolver(edgeRay, mouseRay);
-            auto pos = edgeRay.at(distanceSolver.t0);
-
-            auto point1 = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
-            auto point2 = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
-            _drawnUVPoints.push_back(point1);
-            _drawnUVPoints.push_back(point2);
-            mesh->addEdge({point1->vertex(), point2->vertex()});
-
-            auto edge1 = mesh->addEdge({edge->vertices()[0], point1->vertex()});
-            auto edge2 = mesh->addEdge({point1->vertex(), edge->vertices()[1]});
-
-            auto faces = edge->faces();
-            for (auto& face : faces) {
-                std::vector<SP<Mesh::UVPoint>> newFaceUVPoints;
-                for (size_t i = 0; i < face->uvPoints().size(); ++i) {
-                    auto uv0 = face->uvPoints()[i];
-                    auto uv1 = face->uvPoints()[(i + 1) % face->uvPoints().size()];
-
-                    newFaceUVPoints.push_back(uv0);
-
-                    // TODO: create separate uvpoint if possible when uv is split at the edge
-                    if (uv0->vertex() == edge->vertices()[0] && uv1->vertex() == edge->vertices()[1]) {
-                        newFaceUVPoints.push_back(point1);
-                    } else if (uv1->vertex() == edge->vertices()[0] && uv0->vertex() == edge->vertices()[1]) {
-                        newFaceUVPoints.push_back(point1);
-                    }
-                }
-
-                mesh->addFace(newFaceUVPoints, face->material());
-            }
-            for (auto& face : faces) {
-                mesh->removeFace(face);
-            }
-            mesh->removeEdge(edge);
+            auto vertex0 = mesh->cutEdge(edge, distanceSolver.t0);
+            auto uv0 = vertex0->firstUVPoint();
+            auto uv1 = mesh->addUVPoint(mesh->addVertex(vertex0->position()), vec2(0));
+            _drawnUVPoints.push_back(uv0);
+            _drawnUVPoints.push_back(uv1);
+            mesh->addEdge({uv0->vertex(), uv1->vertex()});
         } else {
             // start from new vertex
             // TODO: better depth

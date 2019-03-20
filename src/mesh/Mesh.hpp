@@ -201,6 +201,7 @@ public:
     void merge(const SP<const Mesh> &other);
 
     SP<Face> flipFace(const SP<Face>& face);
+    SP<Vertex> cutEdge(const SP<Edge>& edge, float t);
 
     SP<Mesh> clone() const;
 
