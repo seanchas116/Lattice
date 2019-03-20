@@ -84,7 +84,6 @@ void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
             _drawnUVPoints.push_back(point1);
             _drawnUVPoints.push_back(point2);
             mesh->addEdge({point1->vertex(), point2->vertex()});
-
         } else {
             // start from new vertex
             // TODO: better depth
@@ -120,8 +119,8 @@ void DrawTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEve
             auto snapEdge = *target.edge;
             Ray<double> edgeRay = snapEdge->ray();
             Ray<double> mouseRay = event.camera->modelMouseRay(modelMatrix, event.screenPos);
-            RayRayDistance distance(edgeRay, mouseRay);
-            pos = edgeRay.at(distance.t0);
+            RayRayDistanceSolver distanceSolver(edgeRay, mouseRay);
+            pos = edgeRay.at(distanceSolver.t0);
         } else {
             auto [prevPosInScreen, isInScreen] = event.camera->mapModelToScreen(modelMatrix, prevVertex->position());
             if (!isInScreen) {
