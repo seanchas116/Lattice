@@ -1,6 +1,7 @@
 #include "DrawTool.hpp"
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
+#include "../../support/Distance.hpp"
 #include "../../support/Debug.hpp"
 
 using namespace glm;
@@ -112,6 +113,12 @@ void DrawTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEve
         if (target.vertex) {
             auto snapVertex = *target.vertex;
             pos = snapVertex->position();
+        } else if (target.edge) {
+            auto snapEdge = *target.edge;
+            Ray<double> edgeRay = snapEdge->ray();
+            Ray<double> mouseRay = event.camera->worldMouseRay(event.screenPos);
+            RayRayDistance distance(edgeRay, mouseRay);
+            pos = edgeRay.at(distance.t0);
         } else {
             auto [prevPosInScreen, isInScreen] = event.camera->mapWorldToScreen(prevVertex->position());
             if (!isInScreen) {
