@@ -84,6 +84,21 @@ void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
             _drawnUVPoints.push_back(point1);
             _drawnUVPoints.push_back(point2);
             mesh->addEdge({point1->vertex(), point2->vertex()});
+        } else if (target.edge) {
+            // start from edge
+            auto edge = *target.edge;
+            Ray<double> edgeRay = edge->ray();
+            Ray<double> mouseRay = event.camera->modelMouseRay(modelMatrix, event.screenPos);
+            RayRayDistanceSolver distanceSolver(edgeRay, mouseRay);
+            auto pos = edgeRay.at(distanceSolver.t0);
+
+            auto point1 = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
+            auto point2 = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
+            _drawnUVPoints.push_back(point1);
+            _drawnUVPoints.push_back(point2);
+            mesh->addEdge({point1->vertex(), point2->vertex()});
+
+            // TODO: split existing edge
         } else {
             // start from new vertex
             // TODO: better depth
