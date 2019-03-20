@@ -371,6 +371,34 @@ SP<Edge> Mesh::addEdge(const std::array<SP<Vertex>, 2> &vertices) {
     auto edge = makeShared<Edge>(vertices);
     auto change = makeShared<AddEdgeChange>(sharedFromThis(), edge);
     _changeHandler(change);
+
+    std::vector<SP<Face>> facesToRemove;
+
+    // cut faces that includes newly added edge
+    for (auto& [_, face] : _faces) {
+        auto& faceUVPoints = face->uvPoints();
+        auto uv0It = std::find_if(faceUVPoints.begin(), faceUVPoints.end(), [&](auto& uv) { return uv->vertex() == vertices[0]; });
+        auto uv1It = std::find_if(faceUVPoints.begin(), faceUVPoints.end(), [&](auto& uv) { return uv->vertex() == vertices[1]; });
+        if (uv0It != faceUVPoints.end() && uv1It != faceUVPoints.end()) {
+            // face includes edge
+            if (uv1It < uv0It) {
+                std::swap(uv0It, uv1It);
+            }
+
+            std::vector<SP<UVPoint>> uvPoints0;
+            uvPoints0.insert(uvPoints0.end(), uv1It, faceUVPoints.end());
+            uvPoints0.insert(uvPoints0.end(), faceUVPoints.begin(), uv0It + 1);
+            std::vector<SP<UVPoint>> uvPoints1(uv0It, uv1It + 1);
+
+            addFace(uvPoints0, face->material());
+            addFace(uvPoints1, face->material());
+            facesToRemove.push_back(face);
+        }
+    }
+    for (auto& f : facesToRemove) {
+        removeFace(f);
+    }
+
     return edge;
 }
 
