@@ -35,6 +35,9 @@ public:
     glm::dmat4 cameraToScreenMatrix() const { return _cameraToScreenMatrix; }
     glm::dmat4 worldToScreenMatrix() const { return _worldToScreenMatrix; }
 
+    std::pair<glm::dvec3, bool> mapModelToScreen(const glm::dmat4& modelMatrix, glm::dvec3 worldPos) const;
+    glm::dvec3 mapScreenToModel(const glm::dmat4& modelMatrix, glm::dvec3 screenPosWithDepth) const;
+
     std::pair<glm::dvec3, bool> mapWorldToScreen(glm::dvec3 worldPos) const;
     glm::dvec3 mapScreenToWorld(glm::dvec3 screenPosWithDepth) const;
 
@@ -47,6 +50,7 @@ public:
 
     Ray<double> cameraMouseRay(glm::dvec2 screenPos) const;
     Ray<double> worldMouseRay(glm::dvec2 screenPos) const;
+    Ray<double> modelMouseRay(const glm::dmat4& modelMatrix, glm::dvec2 screenPos) const;
 
 signals:
     void changed();

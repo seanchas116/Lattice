@@ -22,6 +22,15 @@ void Camera::lookFront() {
     setLocation(location);
 }
 
+std::pair<dvec3, bool> Camera::mapModelToScreen(const dmat4 &modelMatrix, dvec3 worldPos) const {
+    return mapWorldToScreen((modelMatrix * dvec4(worldPos, 1)).xyz);
+}
+
+dvec3 Camera::mapScreenToModel(const dmat4 &modelMatrix, dvec3 screenPosWithDepth) const {
+    dmat4 worldToModelMatrix = inverse(modelMatrix);
+    return (worldToModelMatrix * dvec4(mapScreenToWorld(screenPosWithDepth), 1)).xyz;
+}
+
 std::pair<glm::dvec3, bool> Camera::mapWorldToScreen(dvec3 worldPos) const {
     dvec3 pos_cameraSpace = (_worldToCameraMatrix * dvec4(worldPos, 1)).xyz;
     return mapCameraToScreen(pos_cameraSpace);
@@ -55,6 +64,12 @@ Ray<double> Camera::cameraMouseRay(dvec2 screenPos) const {
 Ray<double> Camera::worldMouseRay(dvec2 screenPos) const {
     dvec3 front = mapScreenToWorld(dvec3(screenPos, -1));
     dvec3 back = mapScreenToWorld(dvec3(screenPos, 1));
+    return {front, back - front};
+}
+
+Ray<double> Camera::modelMouseRay(const dmat4 &modelMatrix, dvec2 screenPos) const {
+    dvec3 front = mapScreenToModel(modelMatrix, dvec3(screenPos, -1));
+    dvec3 back = mapScreenToModel(modelMatrix, dvec3(screenPos, 1));
     return {front, back - front};
 }
 
