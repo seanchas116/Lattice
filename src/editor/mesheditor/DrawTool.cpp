@@ -98,7 +98,10 @@ void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
             _drawnUVPoints.push_back(point2);
             mesh->addEdge({point1->vertex(), point2->vertex()});
 
-            // TODO: split existing edge
+            auto edge1 = mesh->addEdge({edge->vertices()[0], point1->vertex()});
+            auto edge2 = mesh->addEdge({point1->vertex(), edge->vertices()[1]});
+
+            // TODO: split existing face
         } else {
             // start from new vertex
             // TODO: better depth
