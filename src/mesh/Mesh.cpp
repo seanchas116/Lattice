@@ -41,17 +41,25 @@ glm::vec3 Face::normal() const {
 
     // find average vertex normal
     glm::vec3 normalSum(0);
-    size_t count = _vertices.size();
+    int sumCount = 0;
+    int vertexCount = int(_vertices.size());
 
-    for (size_t i = 0; i < count; ++i) {
+    for (int i = 0; i < vertexCount; ++i) {
         auto prev = _vertices[i]->position();
-        auto curr = _vertices[(i + 1) % count]->position();
-        auto next = _vertices[(i + 2) % count]->position();
-        auto normal = normalize(cross(next - curr, prev - curr));
+        auto curr = _vertices[(i + 1) % vertexCount]->position();
+        auto next = _vertices[(i + 2) % vertexCount]->position();
+        auto crossValue = cross(next- curr, prev - curr);
+        if (crossValue == vec3(0)) {
+            continue;
+        }
+        auto normal = normalize(crossValue);
         normalSum += normal;
+        ++sumCount;
     }
-
-    return normalize(normalSum / float(count));
+    if (sumCount == 0) {
+        return vec3(0); // TODO: what should we do?
+    }
+    return normalize(normalSum);
 }
 
 class Mesh::AddVertexChange : public Change {
