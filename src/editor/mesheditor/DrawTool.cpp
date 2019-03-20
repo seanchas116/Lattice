@@ -107,11 +107,19 @@ void DrawTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEve
     if (maybePrevVertex) {
         auto prevVertex = *maybePrevVertex;
 
-        auto [prevPosInScreen, isInScreen] = event.camera->mapWorldToScreen(prevVertex->position());
-        if (!isInScreen) {
-            return;
+        vec3 pos{0};
+
+        if (target.vertex) {
+            auto snapVertex = *target.vertex;
+            pos = snapVertex->position();
+        } else {
+            auto [prevPosInScreen, isInScreen] = event.camera->mapWorldToScreen(prevVertex->position());
+            if (!isInScreen) {
+                return;
+            }
+            pos = event.camera->mapScreenToWorld(dvec3(event.screenPos, prevPosInScreen.z));
         }
-        auto pos = event.camera->mapScreenToWorld(dvec3(event.screenPos, prevPosInScreen.z));
+
         mesh->setPositions({{prevVertex, pos}});
     }
 }
