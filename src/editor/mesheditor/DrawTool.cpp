@@ -117,6 +117,7 @@ void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
                         newFaceUVPoints.push_back(point1);
                     }
                 }
+
                 mesh->addFace(newFaceUVPoints, face->material());
             }
             for (auto& face : faces) {

@@ -44,9 +44,9 @@ glm::vec3 Face::normal() const {
     size_t count = _vertices.size();
 
     for (size_t i = 0; i < count; ++i) {
-        auto prev = _vertices[mod(i - 1, count)]->position();
-        auto curr = _vertices[i]->position();
-        auto next = _vertices[mod(i + 1, count)]->position();
+        auto prev = _vertices[i]->position();
+        auto curr = _vertices[(i + 1) % count]->position();
+        auto next = _vertices[(i + 2) % count]->position();
         auto normal = normalize(cross(next - curr, prev - curr));
         normalSum += normal;
     }
