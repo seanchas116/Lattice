@@ -10,17 +10,17 @@ namespace MeshEditor {
 
 void LoopCutTool::mousePress(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
-    // TOOD
+    // TODO
 }
 
 void LoopCutTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
-    // TOOD
+    // TODO
 }
 
 void LoopCutTool::mouseRelease(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
-    // TOOD
+    // TODO
 }
 
 } // namespace MeshEditor
