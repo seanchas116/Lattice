@@ -20,9 +20,17 @@ public:
     using reverse_iterator = typename internal_container::reverse_iterator;
     using const_reverse_iterator = typename internal_container::const_reverse_iterator;
 
+    template <class ...Args, std::enable_if_t<(2 <= sizeof...(Args))>* = nullptr>
+    SortedArray(Args&&... args) : _array{std::forward<Args>(args)...} {
+        std::sort(_array.begin(), _array.end());
+    }
     SortedArray(const internal_container& array) : _array(array) {
         std::sort(_array.begin(), _array.end());
     }
+    SortedArray(internal_container&& array) : _array(array) {
+        std::sort(_array.begin(), _array.end());
+    }
+
     const auto& array() const { return _array; }
 
     const auto& at(size_type i) const { return _array.at(i); }
