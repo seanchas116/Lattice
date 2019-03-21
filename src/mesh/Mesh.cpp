@@ -363,7 +363,7 @@ SP<Vertex> Mesh::addVertex(glm::vec3 position) {
     return change->vertex;
 }
 
-SP<Edge> Mesh::addEdge(const std::array<SP<Vertex>, 2> &vertices) {
+SP<Edge> Mesh::addEdge(const SortedArray<SP<Vertex>, 2> &vertices) {
     auto it = _edges.find(vertices);
     if (it != _edges.end()) {
         return it->second;

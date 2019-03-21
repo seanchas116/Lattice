@@ -162,7 +162,7 @@ public:
     void setChangeHandler(const Fn<void(const SP<Change>& change)> &changeHandler) { _changeHandler = changeHandler; }
 
     SP<Vertex> addVertex(glm::vec3 position);
-    SP<Edge> addEdge(const std::array<SP<Vertex>, 2>& vertices);
+    SP<Edge> addEdge(const SortedArray<SP<Vertex>, 2>& vertices);
 
     SP<UVPoint> addUVPoint(const SP<Vertex>& vertex, glm::vec2 position);
 
