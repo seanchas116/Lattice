@@ -39,21 +39,18 @@ list(APPEND SOURCES "vendor/tinyobjloader/tiny_obj_loader.cc")
 file(GLOB_RECURSE SHADERS "src/*.vert" "src/*.geom" "src/*.frag")
 cmrc_add_resource_library(LatticeResources ${SHADERS})
 
+add_library(LatticeCommon STATIC ${SOURCES} ${HEADERS} ${SHADERS})
+target_link_libraries(LatticeCommon ${LIBRARIES} LatticeResources)
+
 if(WIN32)
     set(BUNDLE_TYPE WIN32)
 elseif(APPLE)
     set(BUNDLE_TYPE MACOSX_BUNDLE)
 endif()
 
-set(APP_SOURCES ${SOURCES})
-list(FILTER APP_SOURCES EXCLUDE REGEX "test\\.cpp$")
-
-set(TEST_SOURCES ${SOURCES})
-list(FILTER TEST_SOURCES EXCLUDE REGEX "main\\.cpp$")
-
-add_executable(Lattice ${BUNDLE_TYPE} ${APP_SOURCES} ${SHADERS})
-target_link_libraries(Lattice ${LIBRARIES} LatticeResources)
+add_executable(Lattice ${BUNDLE_TYPE} "main.cpp")
+target_link_libraries(Lattice LatticeCommon)
 set_target_properties(Lattice PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)
 
-add_executable(LatticeTest ${TEST_SOURCES})
-target_link_libraries(LatticeTest ${LIBRARIES} LatticeResources)
+add_executable(LatticeTest "main.test.cpp")
+target_link_libraries(LatticeTest LatticeCommon)
