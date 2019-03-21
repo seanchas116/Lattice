@@ -373,6 +373,7 @@ SP<Edge> Mesh::addEdge(const SortedArray<SP<Vertex>, 2> &vertices) {
     _changeHandler(change);
 
     std::vector<SP<Face>> facesToRemove;
+    std::vector<std::tuple<std::vector<SP<UVPoint>>, std::vector<SP<UVPoint>>, SP<Material>>> faceAdditions;
 
     // cut faces that includes newly added edge
     for (auto& [_, face] : _faces) {
@@ -390,10 +391,13 @@ SP<Edge> Mesh::addEdge(const SortedArray<SP<Vertex>, 2> &vertices) {
             uvPoints0.insert(uvPoints0.end(), faceUVPoints.begin(), uv0It + 1);
             std::vector<SP<UVPoint>> uvPoints1(uv0It, uv1It + 1);
 
-            addFace(uvPoints0, face->material());
-            addFace(uvPoints1, face->material());
+            faceAdditions.push_back({uvPoints0, uvPoints1, face->material()});
             facesToRemove.push_back(face);
         }
+    }
+    for (auto& [uvPoints0, uvPoints1, material] : faceAdditions) {
+        addFace(uvPoints0, material);
+        addFace(uvPoints1, material);
     }
     for (auto& f : facesToRemove) {
         removeFace(f);
