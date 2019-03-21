@@ -47,9 +47,15 @@ void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
             if (!isFaceFore) {
                 mesh->flipFace(face);
             }
-
             _drawnUVPoints.clear();
             _previewUVPoint = std::nullopt;
+
+            Mesh::MeshFragment selection;
+            for (auto& p : points) {
+                selection.vertices.insert(p->vertex());
+            }
+            appState()->document()->setMeshSelection(selection);
+
             return;
         }
 
