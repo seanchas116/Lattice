@@ -45,6 +45,15 @@ elseif(APPLE)
     set(BUNDLE_TYPE MACOSX_BUNDLE)
 endif()
 
-add_executable(Lattice ${BUNDLE_TYPE} ${SOURCES} ${SHADERS})
+set(APP_SOURCES ${SOURCES})
+list(FILTER APP_SOURCES EXCLUDE REGEX "test\\.cpp$")
+
+set(TEST_SOURCES ${SOURCES})
+list(FILTER TEST_SOURCES EXCLUDE REGEX "main\\.cpp$")
+
+add_executable(Lattice ${BUNDLE_TYPE} ${APP_SOURCES} ${SHADERS})
 target_link_libraries(Lattice ${LIBRARIES} LatticeResources)
 set_target_properties(Lattice PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)
+
+add_executable(LatticeTest ${TEST_SOURCES})
+target_link_libraries(LatticeTest ${LIBRARIES} LatticeResources)
