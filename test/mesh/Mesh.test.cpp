@@ -1,5 +1,5 @@
 #include <catch2/catch.hpp>
-#include "Mesh.hpp"
+#include "../../src/mesh/Mesh.hpp"
 
 using namespace Lattice;
 
@@ -9,7 +9,7 @@ TEST_CASE("Mesh") {
         glm::vec3 p(1, 2, 3);
         mesh->addVertex(p);
 
-        REQUIRE(mesh->vertices().size() == 0);
+        REQUIRE(mesh->vertices().size() == 1);
         REQUIRE((*mesh->vertices().begin())->position() == p);
     }
 }

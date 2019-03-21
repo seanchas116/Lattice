@@ -52,5 +52,6 @@ add_executable(Lattice ${BUNDLE_TYPE} "main.cpp")
 target_link_libraries(Lattice LatticeCommon)
 set_target_properties(Lattice PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)
 
-add_executable(LatticeTest "main.test.cpp")
+file(GLOB_RECURSE TEST_SOURCES "test/*.cpp")
+add_executable(LatticeTest "main.test.cpp" ${TEST_SOURCES})
 target_link_libraries(LatticeTest LatticeCommon)
