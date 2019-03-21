@@ -48,7 +48,7 @@ private:
 class Edge final : public EnableSharedFromThis<Edge> {
     Q_DISABLE_COPY(Edge)
 public:
-    Edge(const std::array<SP<Vertex>, 2>& vertices) : _vertices(vertices) {}
+    Edge(const SortedArray<SP<Vertex>, 2>& vertices) : _vertices(vertices) {}
 
     auto& vertices() const { return _vertices; }
     auto ray() const {
@@ -61,7 +61,7 @@ public:
 
 private:
     friend class Mesh;
-    std::array<SP<Vertex>, 2> _vertices;
+    SortedArray<SP<Vertex>, 2> _vertices;
     std::unordered_set<Face*> _faces;
 };
 
