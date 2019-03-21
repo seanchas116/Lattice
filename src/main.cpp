@@ -2,7 +2,7 @@
 #include <QSurfaceFormat>
 #include <QOpenGLContext>
 #include <QStyleFactory>
-#include "MainWindow.hpp"
+#include "ui/MainWindow.hpp"
 
 int main(int argc, char *argv[]) {
     QApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
