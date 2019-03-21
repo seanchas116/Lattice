@@ -18,7 +18,10 @@ int main(int argc, char *argv[]) {
     glFormat.setProfile(QSurfaceFormat::CoreProfile);
     glFormat.setDepthBufferSize(24);
     glFormat.setSamples(4);
-    glFormat.setOption(QSurfaceFormat::DebugContext); // TODO: unset in release
+
+#ifdef QT_DEBUG
+    glFormat.setOption(QSurfaceFormat::DebugContext);
+#endif
 
     QSurfaceFormat::setDefaultFormat(glFormat);
 
