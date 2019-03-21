@@ -32,13 +32,11 @@ void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
     }
 
     if (target.vertex) {
-        auto vertex = *target.vertex;
-
         if (_previewUVPoint) {
             mesh->removeVertex((*_previewUVPoint)->vertex());
         }
 
-        // connect to existing vertex
+        auto vertex = *target.vertex;
         auto closingPointIt = std::find(_drawnUVPoints.begin(), _drawnUVPoints.end(), vertex->firstUVPoint());
         if (closingPointIt != _drawnUVPoints.end()) {
             // create face
@@ -51,6 +49,7 @@ void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
             }
 
             _drawnUVPoints.clear();
+            _previewUVPoint = std::nullopt;
             return;
         }
 
