@@ -19,8 +19,7 @@ public:
 private:
     // draw
     std::vector<SP<Mesh::UVPoint>> _drawnUVPoints;
-    Opt<SP<Mesh::UVPoint>> lastDrawnPoint() const;
-    Opt<SP<Mesh::Vertex>> lastDrawnVertex() const;
+    Opt<SP<Mesh::UVPoint>> _previewUVPoint;
 };
 
 } // namespace MeshEditor
