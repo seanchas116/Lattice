@@ -28,6 +28,8 @@ void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
     auto mesh = item()->mesh();
     auto modelMatrix = item()->location().matrixToWorld();
 
+    Opt<SP<Mesh::UVPoint>> maybeConfirmedUVPoint;
+
     if (!_drawnUVPoints.empty()) {
         if (target.vertex) {
             auto targetVertex = *target.vertex;
@@ -52,12 +54,7 @@ void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
             }
             auto prevUVPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];
             mesh->addEdge({prevUVPoint->vertex(), targetVertex});
-            _drawnUVPoints.push_back(targetVertex->firstUVPoint());
-
-            auto uvPoint = mesh->addUVPoint(mesh->addVertex(targetVertex->position()), vec2(0));
-            _drawnUVPoints.push_back(uvPoint);
-            mesh->addEdge({targetVertex, uvPoint->vertex()});
-
+            maybeConfirmedUVPoint = targetVertex->firstUVPoint();
         } else {
             // add new vertex
             auto prevUVPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];
@@ -68,10 +65,7 @@ void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
             auto pos = event.camera->mapScreenToModel(modelMatrix, dvec3(event.screenPos, prevPosInScreen.z));
 
             mesh->setPositions({{prevUVPoint->vertex(), pos}});
-
-            auto uvPoint = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
-            _drawnUVPoints.push_back(uvPoint);
-            mesh->addEdge({prevUVPoint->vertex(), uvPoint->vertex()});
+            maybeConfirmedUVPoint = prevUVPoint;
         }
     } else {
         appState()->document()->history()->beginChange(tr("Draw"));
@@ -79,11 +73,7 @@ void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
         if (target.vertex) {
             // start from existing vertex
             auto& vertex = *target.vertex;
-            auto point1 = (*vertex->uvPoints().begin())->sharedFromThis();
-            auto point2 = mesh->addUVPoint(mesh->addVertex(vertex->position()), vec2(0));
-            _drawnUVPoints.push_back(point1);
-            _drawnUVPoints.push_back(point2);
-            mesh->addEdge({point1->vertex(), point2->vertex()});
+            maybeConfirmedUVPoint = (*vertex->uvPoints().begin())->sharedFromThis();
         } else if (target.edge) {
             // start from edge
             auto edge = *target.edge;
@@ -91,11 +81,7 @@ void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
             Ray<double> mouseRay = event.camera->modelMouseRay(modelMatrix, event.screenPos);
             RayRayDistanceSolver distanceSolver(edgeRay, mouseRay);
             auto vertex0 = mesh->cutEdge(edge, distanceSolver.t0);
-            auto uv0 = vertex0->firstUVPoint();
-            auto uv1 = mesh->addUVPoint(mesh->addVertex(vertex0->position()), vec2(0));
-            _drawnUVPoints.push_back(uv0);
-            _drawnUVPoints.push_back(uv1);
-            mesh->addEdge({uv0->vertex(), uv1->vertex()});
+            maybeConfirmedUVPoint = vertex0->firstUVPoint();
         } else {
             // start from new vertex
             // TODO: better depth
@@ -104,13 +90,18 @@ void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
                 return;
             }
             auto pos = event.camera->mapScreenToModel(modelMatrix, dvec3(event.screenPos, centerInScreen.z));
-            auto point1 = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
-            auto point2 = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
-            _drawnUVPoints.push_back(point1);
-            _drawnUVPoints.push_back(point2);
-            mesh->addEdge({point1->vertex(), point2->vertex()});
+            maybeConfirmedUVPoint = mesh->addUVPoint(mesh->addVertex(pos), vec2(0));
         }
     }
+
+    if (!maybeConfirmedUVPoint) {
+        return;
+    }
+    auto confirmedUVPoint = *maybeConfirmedUVPoint;
+    auto nextPoint = mesh->addUVPoint(mesh->addVertex(confirmedUVPoint->vertex()->position()), vec2(0));
+    _drawnUVPoints.push_back(confirmedUVPoint);
+    _drawnUVPoints.push_back(nextPoint);
+    mesh->addEdge({confirmedUVPoint->vertex(), nextPoint->vertex()});
 }
 
 void DrawTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEvent &event) {
