@@ -20,9 +20,9 @@ EditorScene::EditorScene(const SP<State::AppState> &appState) :
     _objectManipulator(makeShared<Manipulator::ObjectManipulator>(appState)),
     _meshManipulator(makeShared<Manipulator::MeshManipulator>(appState))
 {
-    connect(appState.get(), &State::AppState::isVertexVisibleChanged, this, &EditorScene::updateRenderables);
-    connect(appState.get(), &State::AppState::isEdgeVisibleChanged, this, &EditorScene::updateRenderables);
-    connect(appState.get(), &State::AppState::isFaceVisibleChanged, this, &EditorScene::updateRenderables);
+    connect(appState.get(), &State::AppState::isVertexSelectableChanged, this, &EditorScene::updateRenderables);
+    connect(appState.get(), &State::AppState::isEdgeSelectableChanged, this, &EditorScene::updateRenderables);
+    connect(appState.get(), &State::AppState::isFaceSelectableChanged, this, &EditorScene::updateRenderables);
     connect(appState.get(), &State::AppState::toolChanged, this, &EditorScene::updateRenderables);
 
     connect(appState.get(), &State::AppState::isTranslateHandleVisibleChanged, this, &EditorScene::updateRenderables);

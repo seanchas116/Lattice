@@ -133,15 +133,11 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
 }
 
 void MeshEditor::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
-    if (_appState->isFaceVisible()) {
-        for (auto& [material, vao] : _faceVAOs) {
-            operations->drawMaterial.draw(vao, _item->location().matrixToWorld(), camera, material);
-        }
+    for (auto& [material, vao] : _faceVAOs) {
+        operations->drawMaterial.draw(vao, _item->location().matrixToWorld(), camera, material);
     }
-    if (_appState->isEdgeVisible()) {
-        operations->drawLine.draw(_edgeVAO, _item->location().matrixToWorld(), camera, 1.0, vec4(0), true);
-    }
-    if (_appState->isVertexVisible()) {
+    operations->drawLine.draw(_edgeVAO, _item->location().matrixToWorld(), camera, 1.0, vec4(0), true);
+    if (_appState->isVertexSelectable()) {
         operations->drawCircle.draw(_vertexVAO, _item->location().matrixToWorld(), camera, 6.0, vec4(0), true);
     }
 }
@@ -152,13 +148,13 @@ void MeshEditor::drawPickables(const SP<Render::Operations> &operations, const S
     glClearDepthf(1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if (_appState->isFaceVisible()) {
+    if (_appState->isFaceSelectable()) {
         operations->drawUnicolor.draw(_facePickVAO, _item->location().matrixToWorld(), camera, vec4(0), true);
     }
-    if (_appState->isEdgeVisible()) {
+    if (_appState->isEdgeSelectable()) {
         operations->drawLine.draw(_edgePickVAO, _item->location().matrixToWorld(), camera, 12.0, vec4(0), true);
     }
-    if (_appState->isVertexVisible()) {
+    if (_appState->isVertexSelectable()) {
         operations->drawCircle.draw(_vertexPickVAO, _item->location().matrixToWorld(), camera, 24.0, vec4(0), true);
     }
 }

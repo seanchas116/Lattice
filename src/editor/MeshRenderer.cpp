@@ -27,26 +27,14 @@ MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Documen
 }
 
 void MeshRenderer::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
-    if (_appState->isFaceVisible()) {
-        for (auto& [material, vao] : _faceVAOs) {
-            operations->drawMaterial.draw(vao, _item->location().matrixToWorld(), camera, material);
-        }
+    for (auto& [material, vao] : _faceVAOs) {
+        operations->drawMaterial.draw(vao, _item->location().matrixToWorld(), camera, material);
     }
-    /*
-    if (_appState->isEdgeVisible()) {
-        operations->drawLine.draw(_edgeVAO, _item->location().matrix(), camera, 1.0, dvec3(0));
-    }
-    if (_appState->isVertexVisible()) {
-        operations->drawCircle.draw(_vertexVAO, _item->location().matrix(), camera, 4.0, dvec3(0));
-    }
-    */
 }
 
 void MeshRenderer::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
-    if (_appState->isFaceVisible()) {
-        for (auto& [material, vao] : _faceVAOs) {
-            operations->drawUnicolor.draw(vao, _item->location().matrixToWorld(), camera, toIDColor());
-        }
+    for (auto& [material, vao] : _faceVAOs) {
+        operations->drawUnicolor.draw(vao, _item->location().matrixToWorld(), camera, toIDColor());
     }
 }
 

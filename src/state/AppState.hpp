@@ -22,9 +22,9 @@ class AppState final : public QObject {
     LATTICE_AUTO_PROPERTY(bool, isRotateHandleVisible, setRotateHandleVisible, false)
     LATTICE_AUTO_PROPERTY(bool, isScaleHandleVisible, setScaleHandleVisible, false)
 
-    LATTICE_AUTO_PROPERTY(bool, isVertexVisible, setVertexVisible, true)
-    LATTICE_AUTO_PROPERTY(bool, isEdgeVisible, setEdgeVisible, true)
-    LATTICE_AUTO_PROPERTY(bool, isFaceVisible, setFaceVisible, true)
+    LATTICE_AUTO_PROPERTY(bool, isVertexSelectable, setVertexSelectable, true)
+    LATTICE_AUTO_PROPERTY(bool, isEdgeSelectable, setEdgeSelectable, true)
+    LATTICE_AUTO_PROPERTY(bool, isFaceSelectable, setFaceSelectable, true)
 
     LATTICE_AUTO_PROPERTY(Tool, tool, setTool, Tool::None)
 

@@ -117,25 +117,25 @@ void MainWindow::setupToolBar() {
 
     toolBar->addSeparator();
 
-    // toggle view visibility
+    // toggle selectabilities
 
     auto isVertexVisibleAction = toolBar->addAction(tr("Vertex"));
     isVertexVisibleAction->setCheckable(true);
-    isVertexVisibleAction->setChecked(_appState->isVertexVisible());
-    connect(_appState.get(), &State::AppState::isVertexVisibleChanged, isVertexVisibleAction, &QAction::setChecked);
-    connect(isVertexVisibleAction, &QAction::toggled, _appState.get(), &State::AppState::setVertexVisible);
+    isVertexVisibleAction->setChecked(_appState->isVertexSelectable());
+    connect(_appState.get(), &State::AppState::isVertexSelectableChanged, isVertexVisibleAction, &QAction::setChecked);
+    connect(isVertexVisibleAction, &QAction::toggled, _appState.get(), &State::AppState::setVertexSelectable);
 
     auto isEdgeVisibleAction = toolBar->addAction(tr("Edge"));
     isEdgeVisibleAction->setCheckable(true);
-    isEdgeVisibleAction->setChecked(_appState->isEdgeVisible());
-    connect(_appState.get(), &State::AppState::isEdgeVisibleChanged, isEdgeVisibleAction, &QAction::setChecked);
-    connect(isEdgeVisibleAction, &QAction::toggled, _appState.get(), &State::AppState::setEdgeVisible);
+    isEdgeVisibleAction->setChecked(_appState->isEdgeSelectable());
+    connect(_appState.get(), &State::AppState::isEdgeSelectableChanged, isEdgeVisibleAction, &QAction::setChecked);
+    connect(isEdgeVisibleAction, &QAction::toggled, _appState.get(), &State::AppState::setEdgeSelectable);
 
     auto isFaceVisibleAction = toolBar->addAction(tr("Face"));
     isFaceVisibleAction->setCheckable(true);
-    isFaceVisibleAction->setChecked(_appState->isFaceVisible());
-    connect(_appState.get(), &State::AppState::isFaceVisibleChanged, isFaceVisibleAction, &QAction::setChecked);
-    connect(isFaceVisibleAction, &QAction::toggled, _appState.get(), &State::AppState::setFaceVisible);
+    isFaceVisibleAction->setChecked(_appState->isFaceSelectable());
+    connect(_appState.get(), &State::AppState::isFaceSelectableChanged, isFaceVisibleAction, &QAction::setChecked);
+    connect(isFaceVisibleAction, &QAction::toggled, _appState.get(), &State::AppState::setFaceSelectable);
 }
 
 void MainWindow::setupMenu() {
