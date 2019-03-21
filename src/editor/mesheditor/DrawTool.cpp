@@ -149,6 +149,7 @@ void DrawTool::keyPress(QKeyEvent *event) {
             item()->mesh()->removeVertex((*_previewUVPoint)->vertex());
         }
         _drawnUVPoints.clear();
+        _previewUVPoint = std::nullopt;
     }
 }
 
