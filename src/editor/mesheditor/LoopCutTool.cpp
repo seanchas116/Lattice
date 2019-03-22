@@ -17,6 +17,7 @@ void LoopCutTool::mousePress(const Tool::EventTarget &target, const Render::Mous
         return;
     }
     auto edge = *target.edge;
+    auto mesh = item()->mesh();
 
     std::vector<SP<Mesh::Edge>> edges;
     Opt<SP<Mesh::Face>> lastFace;
@@ -34,8 +35,8 @@ void LoopCutTool::mousePress(const Tool::EventTarget &target, const Render::Mous
             return;
         }
         auto& nextFaceEdges = nextFace->edges();
-        int edgeIndex = std::find(nextFaceEdges.begin(), nextFaceEdges.end(), edge) - nextFaceEdges.begin();
-        int nextEdgeIndex = (edgeIndex + 2) % nextFaceEdges.size();
+        size_t edgeIndex = std::find(nextFaceEdges.begin(), nextFaceEdges.end(), edge) - nextFaceEdges.begin();
+        size_t nextEdgeIndex = (edgeIndex + 2) % nextFaceEdges.size();
         auto nextEdge = nextFaceEdges[nextEdgeIndex];
 
         if (nextEdge == edges[0]) {
@@ -49,7 +50,23 @@ void LoopCutTool::mousePress(const Tool::EventTarget &target, const Render::Mous
         edge = nextEdge;
     }
 
-    qDebug() << edges;
+    std::vector<SP<Mesh::Vertex>> vertices;
+    vertices.reserve(edges.size());
+    for (auto& e : edges) {
+        auto v = mesh->cutEdge(e, 0.5);
+        vertices.push_back(v);
+    }
+    for (size_t i = 0; i < vertices.size(); ++i) {
+        auto v0 = vertices[i];
+        auto v1 = vertices[(i + 1) % vertices.size()];
+        mesh->addEdge({v0, v1});
+    }
+
+    Mesh::MeshFragment selection;
+    for (auto& v : vertices) {
+        selection.vertices.insert(v);
+    }
+    appState()->document()->setMeshSelection(selection);
 }
 
 void LoopCutTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEvent &event) {
