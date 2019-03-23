@@ -39,11 +39,11 @@ public:
     bool mergeWith(const SP<const Change>& other) override {
         LATTICE_OPTIONAL_GUARD(change, dynamicPointerCast<const PropertyChange>(other), return false;)
 
-        auto oldValuesMerged = change->_oldValues;
+        auto oldValuesMerged = std::move(change->_oldValues); // invalidate other change
         for (auto& [obj, value] : _oldValues) {
             oldValuesMerged[obj] = value;
         }
-        _oldValues = oldValuesMerged;
+        _oldValues = std::move(oldValuesMerged);
 
         for (auto& [obj, value] : change->_newValues) {
             _newValues[obj] = value;
