@@ -5,7 +5,6 @@
 #include "../../support/Box.hpp"
 #include "../../support/Location.hpp"
 #include "../../render/RenderableObject.hpp"
-#include "../../gl/ContextRecallable.hpp"
 #include "../../gl/VertexBuffer.hpp"
 #include <glm/glm.hpp>
 #include <unordered_map>
@@ -39,7 +38,7 @@ namespace MeshEditor {
 class MoveTool;
 class DrawTool;
 
-class MeshEditor final : public Render::RenderableObject, protected GL::ContextRecallable, protected QOpenGLExtraFunctions {
+class MeshEditor final : public Render::RenderableObject, protected QOpenGLExtraFunctions {
     Q_OBJECT
 public:
     MeshEditor(const SP<State::AppState>& appState, const SP<Document::MeshItem>& item);
