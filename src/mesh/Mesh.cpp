@@ -1,6 +1,7 @@
 #include "Mesh.hpp"
 #include "../support/Mod.hpp"
 #include "../support/Debug.hpp"
+#include "../support/PropertyChange.hpp"
 
 using namespace glm;
 
@@ -445,7 +446,16 @@ SP<Material> Mesh::addMaterial() {
 }
 
 void Mesh::setPositions(const std::unordered_map<SP<Vertex>, vec3> &positions) {
-    auto change = makeShared<SetVertexPositionChange>(sharedFromThis(), positions);
+    auto setter = [self = sharedFromThis()](const SP<Vertex>& vertex, vec3 pos) {
+        vertex->_position = pos;
+        emit self->verticesChanged({vertex});
+    };
+    auto getter = [](const SP<Vertex>& vertex) {
+        return vertex->_position;
+    };
+
+    auto change = makePropertyChange(positions, getter, setter);
+    //auto change = makeShared<SetVertexPositionChange>(sharedFromThis(), positions);
     _changeHandler(change);
 }
 
