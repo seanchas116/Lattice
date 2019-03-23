@@ -2,6 +2,7 @@
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
 #include "../../support/Debug.hpp"
+#include "../../support/Distance.hpp"
 
 using namespace glm;
 
@@ -50,10 +51,14 @@ void LoopCutTool::mousePress(const Tool::EventTarget &target, const Render::Mous
         edge = nextEdge;
     }
 
+    Ray<double> mouseRay = event.camera->modelMouseRay(item()->location().matrixToWorld(), event.screenPos);
+    RayRayDistanceSolver distanceSolver(Ray<double>(edge->ray()), mouseRay);
+    double cutPosition = distanceSolver.t0;
+
     std::vector<SP<Mesh::Vertex>> vertices;
     vertices.reserve(edges.size());
     for (auto& e : edges) {
-        auto v = mesh->cutEdge(e, 0.5);
+        auto v = mesh->cutEdge(e, cutPosition);
         vertices.push_back(v);
     }
     for (size_t i = 0; i < vertices.size(); ++i) {
