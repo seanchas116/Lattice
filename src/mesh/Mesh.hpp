@@ -36,6 +36,7 @@ public:
     SP<UVPoint> firstUVPoint() const;
 
     glm::vec3 normal() const;
+    glm::vec3 normalForFace(const SP<Face>& face) const;
 
 private:
     friend class Mesh;

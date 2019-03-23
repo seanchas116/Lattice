@@ -19,6 +19,34 @@ glm::vec3 Vertex::normal() const {
     return normalize(normalSum / float(_faces.size()));
 }
 
+vec3 Vertex::normalForFace(const SP<Face> &face) const {
+    std::unordered_set<SP<Face>> connectedFaces {face};
+
+    while (true) {
+        bool added = false;
+        for (auto& edge : _edges) {
+            if (!edge->isSmooth()) {
+                continue;
+            }
+            for (auto& face : edge->faces()) {
+                auto [it, inserted] = connectedFaces.insert(face->sharedFromThis());
+                if (inserted) {
+                    added = true;
+                }
+            }
+        }
+        if (!added) {
+            break;
+        }
+    }
+
+    glm::vec3 normalSum(0);
+    for (auto& face : connectedFaces) {
+        normalSum += face->normal();
+    }
+    return normalize(normalSum / float(connectedFaces.size()));
+}
+
 std::vector<SP<Face> > UVPoint::faces() const {
     std::vector<SP<Face>> faces;
     for (auto& f : _faces) {
