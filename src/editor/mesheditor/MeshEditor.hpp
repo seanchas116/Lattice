@@ -75,7 +75,7 @@ private:
     SP<State::AppState> _appState;
     SP<Document::MeshItem> _item;
 
-    bool _isMeshDirty = true;
+    bool _isVAOsDirty = true;
 
     std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> _faceVAOs;
     SP<GL::VertexBuffer<GL::Vertex>> _faceVBO;

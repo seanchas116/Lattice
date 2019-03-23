@@ -201,12 +201,12 @@ void MeshEditor::handleToolChange(State::Tool tool) {
 }
 
 void MeshEditor::handleMeshChange() {
-    _isMeshDirty = true;
+    _isVAOsDirty = true;
     update();
 }
 
 void MeshEditor::updateWholeVAOs() {
-    if (!_isMeshDirty) {
+    if (!_isVAOsDirty) {
         return;
     }
 
@@ -368,7 +368,7 @@ void MeshEditor::updateWholeVAOs() {
 
     setChildren(childPickables);
 
-    _isMeshDirty = false;
+    _isVAOsDirty = false;
 }
 
 void MeshEditor::mousePressTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
