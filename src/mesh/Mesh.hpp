@@ -116,6 +116,8 @@ class Material final {
 public:
     Material() {}
 
+    // TODO: support undo/redo for Material changes
+
     glm::vec3 baseColor() const { return _baseColor; }
     void setBaseColor(const glm::vec3 &baseColor) { _baseColor = baseColor; }
 
