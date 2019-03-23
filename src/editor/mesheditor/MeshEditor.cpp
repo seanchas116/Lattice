@@ -127,12 +127,14 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
 {
     initializeOpenGLFunctions();
     updateWholeVAOs();
-    connect(_item->mesh().get(), &Mesh::Mesh::changed, this, &MeshEditor::updateWholeVAOs);
-    connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::updateWholeVAOs);
+    connect(_item->mesh().get(), &Mesh::Mesh::changed, this, &MeshEditor::handleMeshChange);
+    connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::handleMeshChange);
     connect(_appState.get(), &State::AppState::toolChanged, this, &MeshEditor::handleToolChange);
 }
 
 void MeshEditor::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+    updateWholeVAOs();
+
     for (auto& [material, vao] : _faceVAOs) {
         operations->drawMaterial.draw(vao, _item->location().matrixToWorld(), camera, material);
     }
@@ -143,6 +145,8 @@ void MeshEditor::draw(const SP<Render::Operations> &operations, const SP<Camera>
 }
 
 void MeshEditor::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+    updateWholeVAOs();
+
     auto idColor = toIDColor();
     glClearColor(idColor.r, idColor.g, idColor.b, idColor.a);
     glClearDepthf(1);
@@ -196,8 +200,15 @@ void MeshEditor::handleToolChange(State::Tool tool) {
     }
 }
 
+void MeshEditor::handleMeshChange() {
+    _isMeshDirty = true;
+    update();
+}
+
 void MeshEditor::updateWholeVAOs() {
-    recallContext();
+    if (!_isMeshDirty) {
+        return;
+    }
 
     auto& selectedVertices = _appState->document()->meshSelection().vertices;
 
@@ -356,7 +367,8 @@ void MeshEditor::updateWholeVAOs() {
     }
 
     setChildren(childPickables);
-    update();
+
+    _isMeshDirty = false;
 }
 
 void MeshEditor::mousePressTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {

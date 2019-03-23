@@ -58,7 +58,7 @@ public:
 
 private:
     void handleToolChange(State::Tool tool);
-    void updateWholeVAOs();
+    void handleMeshChange();
 
     void mousePressTarget(const Tool::EventTarget& target, const Render::MouseEvent &event);
     void mouseMoveTarget(const Tool::EventTarget& target, const Render::MouseEvent &event);
@@ -66,12 +66,16 @@ private:
     void hoverEnterTarget(const Tool::EventTarget& target, const Render::MouseEvent &event);
     void hoverLeaveTarget(const Tool::EventTarget& target);
 
+    void updateWholeVAOs();
+
     class VertexPickable;
     class EdgePickable;
     class FacePickable;
 
     SP<State::AppState> _appState;
     SP<Document::MeshItem> _item;
+
+    bool _isMeshDirty = true;
 
     std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> _faceVAOs;
     SP<GL::VertexBuffer<GL::Vertex>> _faceVBO;
