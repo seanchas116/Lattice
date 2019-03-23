@@ -21,6 +21,13 @@ public:
     {
     }
 
+    PropertyChange(const SP<TObject>& object, const TValue& value, TValue (TObject::*getter)(), void(TObject::*setter)(const TValue&)) :
+        _newValues{{object, value}},
+        _getter([getter](const SP<TObject>& object) { return object->*getter(); }),
+        _setter([setter](const SP<TObject>& object, const TValue& value) { return object->*setter(value); })
+    {
+    }
+
     void apply() override {
         std::vector<SP<TObject>> objects;
         objects.reserve(_newValues.size());
