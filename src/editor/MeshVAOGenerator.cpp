@@ -14,21 +14,13 @@ MeshVAOGenerator::MeshVAOGenerator(const SP<Mesh::Mesh> &mesh) :
     std::vector<GL::Vertex> vertices;
     for (auto& vertex : mesh->vertices()) {
         for (auto& uvPos : vertex->uvPoints()) {
-            _foreIndices[uvPos] = uint32_t(vertices.size());
+            _indices[uvPos] = uint32_t(vertices.size());
             GL::Vertex foreVertexData = {
                 vertex->position(),
-                uvPos->position(),
-                vertex->normal(),
+                glm::vec2(0),
+                glm::vec3(0)
             };
             vertices.push_back(foreVertexData);
-
-            _backIndices[uvPos] = uint32_t(vertices.size());
-            GL::Vertex backVertexData = {
-                vertex->position(),
-                uvPos->position(),
-                -vertex->normal(),
-            };
-            vertices.push_back(backVertexData);
         }
     }
     _vertexBuffer->setVertices(vertices);
@@ -41,8 +33,8 @@ SP<GL::VAO> MeshVAOGenerator::generateVertexVAO() const {
 SP<GL::VAO> MeshVAOGenerator::generateEdgeVAO() const {
     std::vector<GL::IndexBuffer::Line> lines;
     for (auto& [_, edge] : _mesh->edges()) {
-        auto i0 = _foreIndices.at(*edge->vertices()[0]->uvPoints().begin());
-        auto i1 = _foreIndices.at(*edge->vertices()[1]->uvPoints().begin());
+        auto i0 = _indices.at(*edge->vertices()[0]->uvPoints().begin());
+        auto i1 = _indices.at(*edge->vertices()[1]->uvPoints().begin());
         lines.push_back({i0, i1});
     }
     auto edgeIndexBuffer = makeShared<GL::IndexBuffer>();
