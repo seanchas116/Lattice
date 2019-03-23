@@ -174,8 +174,7 @@ void Item::addChange(const SP<Change> &change) {
 void Item::setName(const std::string &name) {
     if (_name != name) {
         auto change = makeShared<PropertyChange<Item, std::string>>(
-            sharedFromThis(),
-            name,
+            sharedFromThis(), name,
             [](auto& item) { return item->name(); },
             [](auto& item , auto& value) { item->setNameInternal(value); }
         );
@@ -193,8 +192,7 @@ void Item::setNameInternal(const std::string &name) {
 void Item::setLocation(const Location &location) {
     if (_location != location) {
         auto change = makeShared<PropertyChange<Item, Location>>(
-            sharedFromThis(),
-            location,
+            sharedFromThis(), location,
             [](auto& item) { return item->location(); },
             [](auto& item , auto& value) { item->setLocationInternal(value); }
         );
