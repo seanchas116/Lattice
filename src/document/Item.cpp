@@ -4,6 +4,7 @@
 #include "../support/JSON.hpp"
 #include "../support/OptionalGuard.hpp"
 #include "../support/Change.hpp"
+#include "../support/PropertyChange.hpp"
 #include <QtDebug>
 #include <nlohmann/json.hpp>
 #include <algorithm>
@@ -170,63 +171,15 @@ void Item::addChange(const SP<Change> &change) {
     ducument->history()->addChange(change);
 }
 
-class Item::NameChange : public Change {
-public:
-    NameChange(const SP<Item>& item, const std::string& name) : _item(item), _name(name) {
-    }
-
-    void apply() override {
-        _oldName = _item->name();
-        _item->setNameInternal(_name);
-    }
-
-    SP<Change> invert() const override {
-        return makeShared<NameChange>(_item, _oldName);
-    }
-
-    bool mergeWith(const SP<const Change>& other) override {
-        LATTICE_OPTIONAL_GUARD(change, dynamicPointerCast<const NameChange>(other), return false;)
-        if (change->_item != _item) { return false; }
-        _name = change->_name;
-        return true;
-    }
-
-private:
-    SP<Item> _item;
-    std::string _name;
-    std::string _oldName;
-};
-
-class Item::LocationChange : public Change {
-public:
-    LocationChange(const SP<Item>& item, const Location& location) : _item(item), _location(location) {
-    }
-
-    void apply() override {
-        _oldLocation = _item->location();
-        _item->setLocationInternal(_location);
-    }
-
-    SP<Change> invert() const override {
-        return makeShared<LocationChange>(_item, _oldLocation);
-    }
-
-    bool mergeWith(const SP<const Change>& other) override {
-        LATTICE_OPTIONAL_GUARD(change, dynamicPointerCast<const LocationChange>(other), return false;)
-        if (change->_item != _item) { return false; }
-        _location = change->_location;
-        return true;
-    }
-
-private:
-    SP<Item> _item;
-    Location _location;
-    Location _oldLocation;
-};
-
 void Item::setName(const std::string &name) {
     if (_name != name) {
-        addChange(makeShared<NameChange>(sharedFromThis(), name));
+        auto change = makeShared<PropertyChange<Item, std::string>>(
+            sharedFromThis(),
+            name,
+            [](auto& item) { return item->name(); },
+            [](auto& item , auto& value) { item->setNameInternal(value); }
+        );
+        addChange(change);
     }
 }
 
@@ -239,7 +192,13 @@ void Item::setNameInternal(const std::string &name) {
 
 void Item::setLocation(const Location &location) {
     if (_location != location) {
-        addChange(makeShared<LocationChange>(sharedFromThis(), location));
+        auto change = makeShared<PropertyChange<Item, Location>>(
+            sharedFromThis(),
+            location,
+            [](auto& item) { return item->location(); },
+            [](auto& item , auto& value) { item->setLocationInternal(value); }
+        );
+        addChange(change);
     }
 }
 
