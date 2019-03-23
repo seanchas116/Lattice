@@ -11,14 +11,6 @@ SP<UVPoint> Vertex::firstUVPoint() const {
     return (*_uvPoints.begin())->sharedFromThis();
 }
 
-glm::vec3 Vertex::normal() const {
-    glm::vec3 normalSum(0);
-    for (auto& face : _faces) {
-        normalSum += face->normal();
-    }
-    return normalize(normalSum / float(_faces.size()));
-}
-
 vec3 Vertex::normalForFace(const SP<Face> &face) const {
     std::unordered_set<SP<Face>> connectedFaces {face};
 
