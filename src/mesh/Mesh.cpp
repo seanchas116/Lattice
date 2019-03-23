@@ -456,7 +456,7 @@ void Mesh::setPositions(const std::unordered_map<SP<Vertex>, vec3> &positions) {
         return vertex->_position;
     };
 
-    auto change = makePropertyChange(positions, getter, setter);
+    auto change = makeShared<PropertyChange<Vertex, vec3>>(positions, getter, setter);
     _changeHandler(change);
 }
 
@@ -469,7 +469,7 @@ void Mesh::setPositions(const std::unordered_map<SP<UVPoint>, vec2> &positions) 
         return uvPoint->_position;
     };
 
-    auto change = makePropertyChange(positions, getter, setter);
+    auto change = makeShared<PropertyChange<UVPoint, vec2>>(positions, getter, setter);
     _changeHandler(change);
 }
 

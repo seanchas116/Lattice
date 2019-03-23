@@ -4,10 +4,14 @@
 
 namespace Lattice {
 
-template <typename TObject, typename TValue, typename TGetter, typename TSetter>
+template <typename TObject, typename TValue>
 class PropertyChange : public Change {
 public:
-    PropertyChange(const std::unordered_map<SP<TObject>, TValue>& values, TGetter getter, TSetter setter) :
+    using Values = std::unordered_map<SP<TObject>, TValue>;
+    using Getter = std::function<TValue(const SP<TObject>&)>;
+    using Setter = std::function<void(const SP<TObject>&, TValue)>;
+
+    PropertyChange(const Values& values, const Getter& getter, const Setter& setter) :
         _newValues(values), _getter(getter), _setter(setter)
     {
     }
@@ -43,15 +47,10 @@ public:
     }
 
 private:
-    std::unordered_map<SP<TObject>, TValue> _oldValues;
-    std::unordered_map<SP<TObject>, TValue> _newValues;
-    TGetter _getter;
-    TSetter _setter;
+    Values _oldValues;
+    Values _newValues;
+    Getter _getter;
+    Setter _setter;
 };
-
-template <typename TObject, typename TValue, typename TGetter, typename TSetter>
-auto makePropertyChange(const std::unordered_map<SP<TObject>, TValue>& positions, TGetter getter, TSetter setter) {
-    return makeShared<PropertyChange<TObject, TValue, TGetter, TSetter>>(positions, getter, setter);
-}
 
 } // namespace Lattice
