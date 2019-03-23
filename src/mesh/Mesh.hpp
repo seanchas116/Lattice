@@ -174,8 +174,8 @@ public:
     SP<Face> addFace(const std::vector<SP<UVPoint>>& uvPoints, const SP<Material>& material);
     SP<Material> addMaterial();
 
-    void setPositions(const std::unordered_map<SP<Vertex>, glm::vec3>& positions);
-    void setPositions(const std::unordered_map<SP<UVPoint>, glm::vec2>& positions);
+    void setPosition(const std::unordered_map<SP<Vertex>, glm::vec3>& positions);
+    void setPosition(const std::unordered_map<SP<UVPoint>, glm::vec2>& positions);
     void setSmooth(const std::unordered_map<SP<Edge>, bool>& values);
 
     void removeFace(const SP<Face>& face);

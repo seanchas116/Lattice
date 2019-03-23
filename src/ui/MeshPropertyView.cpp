@@ -135,7 +135,7 @@ void MeshPropertyView::handlePositionValueChange(int index, double value) {
     }
 
     _appState->document()->history()->beginChange(tr("Set Vertex Position"));
-    item->mesh()->setPositions(newPositions);
+    item->mesh()->setPosition(newPositions);
 }
 
 } // namespace UI

@@ -278,7 +278,7 @@ Mesh::Mesh() {
 SP<Vertex> Mesh::addVertex(glm::vec3 position) {
     auto change = makeShared<AddVertexChange>(sharedFromThis(), makeShared<Vertex>());
     _changeHandler(change);
-    setPositions({{change->vertex, position}});
+    setPosition({{change->vertex, position}});
     return change->vertex;
 }
 
@@ -328,7 +328,7 @@ SP<Edge> Mesh::addEdge(const SortedArray<SP<Vertex>, 2> &vertices) {
 SP<UVPoint> Mesh::addUVPoint(const SP<Vertex> &vertex, vec2 position) {
     auto change = makeShared<AddUVPointChange>(sharedFromThis(), makeShared<UVPoint>(vertex));
     _changeHandler(change);
-    setPositions({{change->uvPoint, position}});
+    setPosition({{change->uvPoint, position}});
     return change->uvPoint;
 }
 
@@ -363,7 +363,7 @@ SP<Material> Mesh::addMaterial() {
     return material;
 }
 
-void Mesh::setPositions(const std::unordered_map<SP<Vertex>, vec3> &positions) {
+void Mesh::setPosition(const std::unordered_map<SP<Vertex>, vec3> &positions) {
     auto setter = [self = sharedFromThis()](const SP<Vertex>& vertex, vec3 pos) {
         vertex->_position = pos;
         emit self->vertexChanged(vertex);
@@ -376,7 +376,7 @@ void Mesh::setPositions(const std::unordered_map<SP<Vertex>, vec3> &positions) {
     _changeHandler(change);
 }
 
-void Mesh::setPositions(const std::unordered_map<SP<UVPoint>, vec2> &positions) {
+void Mesh::setPosition(const std::unordered_map<SP<UVPoint>, vec2> &positions) {
     auto setter = [mesh = sharedFromThis()](const SP<UVPoint>& uvPoint, vec2 pos) {
         uvPoint->_position = pos;
         emit mesh->uvPointChanged(uvPoint);

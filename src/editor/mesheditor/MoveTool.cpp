@@ -70,7 +70,7 @@ void MoveTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEve
     for (auto& [v, initialPos] : _initPositions) {
         positions[v] = initialPos + offset;
     }
-    mesh->setPositions(positions);
+    mesh->setPosition(positions);
 }
 
 void MoveTool::mouseRelease(const Tool::EventTarget &target, const Render::MouseEvent &event) {

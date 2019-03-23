@@ -154,7 +154,7 @@ void ExtrudeTool::mouseMove(const Tool::EventTarget &target, const Render::Mouse
         newPositions[newUV->vertex()] = _initPositions[oldUV->vertex()] + offset;
     }
 
-    item()->mesh()->setPositions(newPositions);
+    item()->mesh()->setPosition(newPositions);
 }
 
 void ExtrudeTool::mouseRelease(const Tool::EventTarget &target, const Render::MouseEvent &event) {

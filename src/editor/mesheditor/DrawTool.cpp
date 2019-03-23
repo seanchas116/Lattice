@@ -93,7 +93,7 @@ void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
             }
             auto pos = event.camera->mapScreenToModel(modelMatrix, dvec3(event.screenPos, prevPosInScreen.z));
 
-            mesh->setPositions({{previewUVPoint->vertex(), pos}});
+            mesh->setPosition({{previewUVPoint->vertex(), pos}});
             _drawnUVPoints.push_back(previewUVPoint);
         } else {
             // add new point
@@ -142,7 +142,7 @@ void DrawTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEve
         pos = event.camera->mapScreenToModel(modelMatrix, dvec3(event.screenPos, prevPosInScreen.z));
     }
 
-    mesh->setPositions({{previewUVPoint->vertex(), pos}});
+    mesh->setPosition({{previewUVPoint->vertex(), pos}});
 }
 
 void DrawTool::mouseRelease(const Tool::EventTarget &target, const Render::MouseEvent &event) {

@@ -47,7 +47,7 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
         for (auto& [vertex, initialPos] : _initialPositions) {
             positions[vertex] = initialPos + offset;
         }
-        mesh->setPositions(positions);
+        mesh->setPosition(positions);
         break;
     }
     case ValueType::Scale: {
@@ -58,7 +58,7 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
             dvec3 initialOffset = initialPos - _initialMedianPos;
             positions[vertex] = _initialMedianPos + initialOffset * ratio;
         }
-        mesh->setPositions(positions);
+        mesh->setPosition(positions);
         break;
     }
     case ValueType::Rotate: {
@@ -72,7 +72,7 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
             dvec3 offset = (matrix * dvec4(initialOffset, 0)).xyz;
             positions[vertex] = _initialMedianPos + offset;
         }
-        mesh->setPositions(positions);
+        mesh->setPosition(positions);
         break;
     }
     }
