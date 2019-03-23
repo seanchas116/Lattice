@@ -271,6 +271,8 @@ Mesh::Mesh() {
     connect(this, &Mesh::topologyChanged, this, &Mesh::changed);
     connect(this, &Mesh::vertexChanged, this, &Mesh::changed);
     connect(this, &Mesh::uvPointChanged, this, &Mesh::changed);
+    connect(this, &Mesh::edgeChanged, this, &Mesh::changed);
+    connect(this, &Mesh::faceChanged, this, &Mesh::changed);
 }
 
 SP<Vertex> Mesh::addVertex(glm::vec3 position) {

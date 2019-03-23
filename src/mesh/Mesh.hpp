@@ -214,19 +214,20 @@ public:
 
 signals:
     void vertexAdded(const SP<Vertex>& vertex);
+    void vertexChanged(const SP<Vertex>& vertex);
     void vertexRemoved(const SP<Vertex>& vertex);
 
     void uvPointAdded(const SP<UVPoint>& uvPoint);
+    void uvPointChanged(const SP<UVPoint>& uvPoint);
     void uvPointRemoved(const SP<UVPoint>& uvPoint);
 
     void edgeAdded(const SP<Edge>& edge);
+    void edgeChanged(const SP<Edge>& edge);
     void edgeRemoved(const SP<Edge>& edge);
 
     void faceAdded(const SP<Face>& face);
+    void faceChanged(const SP<Face>& face);
     void faceRemoved(const SP<Face>& face);
-
-    void vertexChanged(const SP<Vertex>& vertex);
-    void uvPointChanged(const SP<UVPoint>& uvPoint);
 
     void topologyChanged();
     void changed();
