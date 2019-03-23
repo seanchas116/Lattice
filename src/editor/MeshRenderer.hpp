@@ -53,9 +53,11 @@ private:
 
     SP<State::AppState> _appState;
     SP<Document::MeshItem> _item;
+
     std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> _faceVAOs;
     SP<GL::VAO> _edgeVAO;
     SP<GL::VAO> _vertexVAO;
+    bool _isVAOsDirty = true;
 
     bool _dragged = false;
     Location _dragInitLocation;

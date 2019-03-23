@@ -23,16 +23,21 @@ MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Documen
     _vertexVAO(makeShared<GL::VAO>())
 {
     updateVAOs();
-    connect(item->mesh().get(), &Mesh::Mesh::changed, this, &MeshRenderer::updateVAOs);
+    connect(item->mesh().get(), &Mesh::Mesh::changed, this, [this] {
+        _isVAOsDirty = true;
+        update();
+    });
 }
 
 void MeshRenderer::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+    updateVAOs();
     for (auto& [material, vao] : _faceVAOs) {
         operations->drawMaterial.draw(vao, _item->location().matrixToWorld(), camera, material);
     }
 }
 
 void MeshRenderer::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+    updateVAOs();
     for (auto& [material, vao] : _faceVAOs) {
         operations->drawUnicolor.draw(vao, _item->location().matrixToWorld(), camera, toIDColor());
     }
@@ -97,14 +102,16 @@ void MeshRenderer::mouseDoubleClick(const Render::MouseEvent &event) {
 }
 
 void MeshRenderer::updateVAOs() {
-    recallContext();
+    if (!_isVAOsDirty) {
+        return;
+    }
 
     MeshVAOGenerator generator(_item->mesh());
     _vertexVAO = generator.generateVertexVAO();
     _edgeVAO = generator.generateEdgeVAO();
     _faceVAOs= generator.generateFaceVAOs();
 
-    update();
+    _isVAOsDirty = false;
 }
 
 }
