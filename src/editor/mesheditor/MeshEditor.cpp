@@ -306,11 +306,11 @@ void MeshEditor::updateWholeVAOs() {
         _faceAttributes.clear();
         _facePickAttributes.clear();
 
-        auto addPoint = [&](const SP<FacePickable>& pickable, const SP<Mesh::UVPoint>& p, bool isBack) {
+        auto addPoint = [&](const SP<Mesh::Face>& face, const SP<FacePickable>& pickable, const SP<Mesh::UVPoint>& p, bool isBack) {
             GL::Vertex attrib;
             attrib.position = p->vertex()->position();
             attrib.texCoord = p->position();
-            attrib.normal = isBack ? -p->vertex()->normal() : p->vertex()->normal();
+            attrib.normal = isBack ? -p->vertex()->normalForFace(face) : p->vertex()->normalForFace(face);
 
             GL::Vertex pickAttrib;
             pickAttrib.position = p->vertex()->position();
@@ -331,10 +331,10 @@ void MeshEditor::updateWholeVAOs() {
                 childPickables.push_back(pickable);
 
                 { // fore
-                    auto i0 = addPoint(pickable, face->uvPoints()[0], false);
+                    auto i0 = addPoint(face->sharedFromThis(), pickable, face->uvPoints()[0], false);
                     for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
-                        auto i1 = addPoint(pickable, face->uvPoints()[i - 1], false);
-                        auto i2 = addPoint(pickable, face->uvPoints()[i], false);
+                        auto i1 = addPoint(face->sharedFromThis(), pickable, face->uvPoints()[i - 1], false);
+                        auto i2 = addPoint(face->sharedFromThis(), pickable, face->uvPoints()[i], false);
                         triangles.push_back({i0, i1, i2});
                         pickTriangles.push_back({i0, i1, i2});
                     }
