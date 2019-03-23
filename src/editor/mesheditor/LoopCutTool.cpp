@@ -20,11 +20,12 @@ void LoopCutTool::mousePress(const Tool::EventTarget &target, const Render::Mous
     auto edge = *target.edge;
     auto mesh = item()->mesh();
 
-    std::vector<SP<Mesh::Edge>> edges;
+    bool isEdgeReverse = false;
+    std::vector<std::pair<SP<Mesh::Edge>, bool>> edges;
     Opt<SP<Mesh::Face>> lastFace;
 
     while (true) {
-        edges.push_back(edge);
+        edges.push_back({edge, isEdgeReverse});
 
         if (edge->faces().size() != 2) {
             return;
@@ -40,11 +41,17 @@ void LoopCutTool::mousePress(const Tool::EventTarget &target, const Render::Mous
         size_t nextEdgeIndex = (edgeIndex + 2) % nextFaceEdges.size();
         auto nextEdge = nextFaceEdges[nextEdgeIndex];
 
-        if (nextEdge == edges[0]) {
+        bool edgeDirection = nextFace->vertices()[edgeIndex] == edge->vertices()[0];
+        bool nextEdgeDirection = nextFace->vertices()[nextEdgeIndex] == nextEdge->vertices()[0];
+        if (edgeDirection == nextEdgeDirection) {
+            isEdgeReverse = !isEdgeReverse;
+        }
+
+        if (nextEdge == edges[0].first) {
             // loop found
             break;
         }
-        if (std::find(edges.begin(), edges.end(), nextEdge) != edges.end()) {
+        if (std::find_if(edges.begin(), edges.end(), [&](auto& pair) { return pair.first == nextEdge; }) != edges.end()) {
             // 9-like loop
             return;
         }
@@ -57,8 +64,8 @@ void LoopCutTool::mousePress(const Tool::EventTarget &target, const Render::Mous
 
     std::vector<SP<Mesh::Vertex>> vertices;
     vertices.reserve(edges.size());
-    for (auto& e : edges) {
-        auto v = mesh->cutEdge(e, cutPosition);
+    for (auto& [edge, isReverse] : edges) {
+        auto v = mesh->cutEdge(edge, isReverse ? (1.0 - cutPosition) : cutPosition);
         vertices.push_back(v);
     }
     for (size_t i = 0; i < vertices.size(); ++i) {
