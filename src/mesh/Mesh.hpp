@@ -50,6 +50,8 @@ class Edge final : public EnableSharedFromThis<Edge> {
 public:
     Edge(const SortedArray<SP<Vertex>, 2>& vertices) : _vertices(vertices) {}
 
+    bool isSmooth() const { return _isSmooth; }
+
     auto& vertices() const { return _vertices; }
     auto ray() const {
         auto p0 = _vertices[0]->position();
@@ -61,6 +63,7 @@ public:
 
 private:
     friend class Mesh;
+    bool _isSmooth = true;
     SortedArray<SP<Vertex>, 2> _vertices;
     std::unordered_set<Face*> _faces;
 };
