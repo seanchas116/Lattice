@@ -225,8 +225,8 @@ signals:
     void faceAdded(const SP<Face>& face);
     void faceRemoved(const SP<Face>& face);
 
-    void verticesChanged(const std::vector<SP<Vertex>>& vertices);
-    void uvPointsChanged(const std::vector<SP<UVPoint>>& uvPoint);
+    void vertexChanged(const SP<Vertex>& vertex);
+    void uvPointChanged(const SP<UVPoint>& uvPoint);
 
     void topologyChanged();
     void changed();

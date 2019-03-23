@@ -269,8 +269,8 @@ Mesh::Mesh() {
     connect(this, &Mesh::faceRemoved, this, &Mesh::topologyChanged);
 
     connect(this, &Mesh::topologyChanged, this, &Mesh::changed);
-    connect(this, &Mesh::verticesChanged, this, &Mesh::changed);
-    connect(this, &Mesh::uvPointsChanged, this, &Mesh::changed);
+    connect(this, &Mesh::vertexChanged, this, &Mesh::changed);
+    connect(this, &Mesh::uvPointChanged, this, &Mesh::changed);
 }
 
 SP<Vertex> Mesh::addVertex(glm::vec3 position) {
@@ -364,7 +364,7 @@ SP<Material> Mesh::addMaterial() {
 void Mesh::setPositions(const std::unordered_map<SP<Vertex>, vec3> &positions) {
     auto setter = [self = sharedFromThis()](const SP<Vertex>& vertex, vec3 pos) {
         vertex->_position = pos;
-        emit self->verticesChanged({vertex});
+        emit self->vertexChanged(vertex);
     };
     auto getter = [](const SP<Vertex>& vertex) {
         return vertex->_position;
@@ -377,7 +377,7 @@ void Mesh::setPositions(const std::unordered_map<SP<Vertex>, vec3> &positions) {
 void Mesh::setPositions(const std::unordered_map<SP<UVPoint>, vec2> &positions) {
     auto setter = [mesh = sharedFromThis()](const SP<UVPoint>& uvPoint, vec2 pos) {
         uvPoint->_position = pos;
-        emit mesh->uvPointsChanged({uvPoint});
+        emit mesh->uvPointChanged(uvPoint);
     };
     auto getter = [](const SP<UVPoint>& uvPoint) {
         return uvPoint->_position;
