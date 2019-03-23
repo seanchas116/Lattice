@@ -389,6 +389,19 @@ void Mesh::setPositions(const std::unordered_map<SP<UVPoint>, vec2> &positions) 
     _changeHandler(change);
 }
 
+void Mesh::setSmooth(const std::unordered_map<SP<Edge>, bool> &values) {
+    auto setter = [mesh = sharedFromThis()](const SP<Edge>& edge, bool value) {
+        edge->_isSmooth = value;
+        emit mesh->edgeChanged(edge);
+    };
+    auto getter = [](const SP<Edge>& edge) {
+        return edge->_isSmooth;
+    };
+
+    auto change = makeShared<PropertyChange<Edge, bool>>(values, getter, setter);
+    _changeHandler(change);
+}
+
 void Mesh::removeFace(const SP<Face> &face) {
     std::set<SP<Vertex>> vertexSet(face->_vertices.begin(), face->_vertices.end());
     auto it = _faces.find(vertexSet);

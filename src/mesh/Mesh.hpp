@@ -176,6 +176,7 @@ public:
 
     void setPositions(const std::unordered_map<SP<Vertex>, glm::vec3>& positions);
     void setPositions(const std::unordered_map<SP<UVPoint>, glm::vec2>& positions);
+    void setSmooth(const std::unordered_map<SP<Edge>, bool>& values);
 
     void removeFace(const SP<Face>& face);
     void removeEdge(const SP<Edge>& edge);
