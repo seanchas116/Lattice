@@ -461,9 +461,9 @@ void Mesh::setPositions(const std::unordered_map<SP<Vertex>, vec3> &positions) {
 }
 
 void Mesh::setPositions(const std::unordered_map<SP<UVPoint>, vec2> &positions) {
-    auto setter = [self = sharedFromThis()](const SP<UVPoint>& uvPoint, vec2 pos) {
+    auto setter = [mesh = sharedFromThis()](const SP<UVPoint>& uvPoint, vec2 pos) {
         uvPoint->_position = pos;
-        emit self->uvPointsChanged({uvPoint});
+        emit mesh->uvPointsChanged({uvPoint});
     };
     auto getter = [](const SP<UVPoint>& uvPoint) {
         return uvPoint->_position;
