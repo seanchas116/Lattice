@@ -35,9 +35,6 @@ class VAO;
 namespace Editor {
 namespace MeshEditor {
 
-class MoveTool;
-class DrawTool;
-
 class MeshEditor final : public Render::RenderableObject, protected QOpenGLExtraFunctions {
     Q_OBJECT
 public:
