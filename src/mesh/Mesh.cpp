@@ -11,7 +11,7 @@ SP<UVPoint> Vertex::firstUVPoint() const {
     return (*_uvPoints.begin())->sharedFromThis();
 }
 
-vec3 Vertex::normalForFace(const SP<Face> &face) const {
+vec3 Vertex::normal(const SP<Face> &face) const {
     std::unordered_set<SP<Face>> connectedFaces {face};
 
     while (true) {

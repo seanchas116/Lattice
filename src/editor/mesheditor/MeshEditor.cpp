@@ -310,7 +310,7 @@ void MeshEditor::updateWholeVAOs() {
             GL::Vertex attrib;
             attrib.position = p->vertex()->position();
             attrib.texCoord = p->position();
-            attrib.normal = isBack ? -p->vertex()->normalForFace(face) : p->vertex()->normalForFace(face);
+            attrib.normal = isBack ? -p->vertex()->normal(face) : p->vertex()->normal(face);
 
             GL::Vertex pickAttrib;
             pickAttrib.position = p->vertex()->position();

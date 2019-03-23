@@ -53,7 +53,7 @@ std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> MeshVAOGenerator::generateFa
         GL::Vertex attrib;
         attrib.position = p->vertex()->position();
         attrib.texCoord = p->position();
-        attrib.normal = p->vertex()->normalForFace(face);
+        attrib.normal = p->vertex()->normal(face);
 
         auto index = uint32_t(faceAttributes.size());
         faceAttributes.push_back(attrib);
