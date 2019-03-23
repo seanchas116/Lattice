@@ -254,6 +254,7 @@ SP<Change> Mesh::RemoveFaceChange::invert() const {
     return makeShared<AddFaceChange>(mesh, face);
 }
 
+/*
 class Mesh::SetVertexPositionChange : public Change {
 public:
     SetVertexPositionChange(const SP<Mesh>& mesh, const std::unordered_map<SP<Vertex>, glm::vec3>& positions) :
@@ -336,6 +337,7 @@ public:
     std::unordered_map<SP<UVPoint>, glm::vec2> oldPositions;
     std::unordered_map<SP<UVPoint>, glm::vec2> newPositions;
 };
+*/
 
 
 Mesh::Mesh() {
@@ -455,12 +457,19 @@ void Mesh::setPositions(const std::unordered_map<SP<Vertex>, vec3> &positions) {
     };
 
     auto change = makePropertyChange(positions, getter, setter);
-    //auto change = makeShared<SetVertexPositionChange>(sharedFromThis(), positions);
     _changeHandler(change);
 }
 
 void Mesh::setPositions(const std::unordered_map<SP<UVPoint>, vec2> &positions) {
-    auto change = makeShared<SetUVPositionChange>(sharedFromThis(), positions);
+    auto setter = [self = sharedFromThis()](const SP<UVPoint>& uvPoint, vec2 pos) {
+        uvPoint->_position = pos;
+        emit self->uvPointsChanged({uvPoint});
+    };
+    auto getter = [](const SP<UVPoint>& uvPoint) {
+        return uvPoint->_position;
+    };
+
+    auto change = makePropertyChange(positions, getter, setter);
     _changeHandler(change);
 }
 
