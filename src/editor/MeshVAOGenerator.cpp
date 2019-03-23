@@ -52,42 +52,41 @@ SP<GL::VAO> MeshVAOGenerator::generateEdgeVAO() const {
 }
 
 std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() const {
+    // TODO: build more efficient VBO
     std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> faceVAOs;
+    auto faceVBO = makeShared<GL::VertexBuffer<GL::Vertex>>();
+    std::vector<GL::Vertex> faceAttributes;
+
+    auto addPoint = [&](const SP<Mesh::Face>& face, const SP<Mesh::UVPoint>& p) {
+        GL::Vertex attrib;
+        attrib.position = p->vertex()->position();
+        attrib.texCoord = p->position();
+        attrib.normal = p->vertex()->normalForFace(face);
+
+        auto index = uint32_t(faceAttributes.size());
+        faceAttributes.push_back(attrib);
+        return index;
+    };
+
+    std::vector<GL::IndexBuffer::Triangle> pickTriangles;
 
     for (auto& material : _mesh->materials()) {
         std::vector<GL::IndexBuffer::Triangle> triangles;
         for (auto& face : material->faces()) {
-            auto v0 = face->uvPoints()[0];
-
-            { // fore
-                auto i0 = _foreIndices.at(v0.get());
-                for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
-                    auto v1 = face->uvPoints()[i - 1];
-                    auto v2 = face->uvPoints()[i];
-                    auto i1 = _foreIndices.at(v1.get());
-                    auto i2 = _foreIndices.at(v2.get());
-                    triangles.push_back({i0, i1, i2});
-                }
+            auto i0 = addPoint(face->sharedFromThis(), face->uvPoints()[0]);
+            for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
+                auto i1 = addPoint(face->sharedFromThis(), face->uvPoints()[i - 1]);
+                auto i2 = addPoint(face->sharedFromThis(), face->uvPoints()[i]);
+                triangles.push_back({i0, i1, i2});
+                pickTriangles.push_back({i0, i1, i2});
             }
-
-            /*
-            { // back
-                auto i0 = _backIndices.at(v0.get());
-                for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
-                    auto v1 = face->uvPoints()[i - 1];
-                    auto v2 = face->uvPoints()[i];
-                    auto i1 = _backIndices.at(v1.get());
-                    auto i2 = _backIndices.at(v2.get());
-                    triangles.push_back({i0, i2, i1});
-                }
-            }
-            */
         }
         auto indexBuffer = makeShared<GL::IndexBuffer>();
         indexBuffer->setTriangles(triangles);
-        auto vao = makeShared<GL::VAO>(_vertexBuffer, indexBuffer);
+        auto vao = makeShared<GL::VAO>(faceVBO, indexBuffer);
         faceVAOs.insert({material, vao});
     }
+    faceVBO->setVertices(faceAttributes);
 
     return faceVAOs;
 }
