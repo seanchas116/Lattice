@@ -20,6 +20,10 @@ void LoopCutTool::mousePress(const Tool::EventTarget &target, const Render::Mous
     auto edge = *target.edge;
     auto mesh = item()->mesh();
 
+    Ray<double> mouseRay = event.camera->modelMouseRay(item()->location().matrixToWorld(), event.screenPos);
+    RayRayDistanceSolver distanceSolver(Ray<double>(edge->ray()), mouseRay);
+    double cutPosition = distanceSolver.t0;
+
     bool isEdgeReverse = false;
     std::vector<std::pair<SP<Mesh::Edge>, bool>> edges;
     Opt<SP<Mesh::Face>> lastFace;
@@ -57,10 +61,6 @@ void LoopCutTool::mousePress(const Tool::EventTarget &target, const Render::Mous
         }
         edge = nextEdge;
     }
-
-    Ray<double> mouseRay = event.camera->modelMouseRay(item()->location().matrixToWorld(), event.screenPos);
-    RayRayDistanceSolver distanceSolver(Ray<double>(edge->ray()), mouseRay);
-    double cutPosition = distanceSolver.t0;
 
     std::vector<SP<Mesh::Vertex>> vertices;
     vertices.reserve(edges.size());
