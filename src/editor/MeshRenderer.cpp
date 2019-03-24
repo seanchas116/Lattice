@@ -53,7 +53,7 @@ void MeshRenderer::mousePress(const Render::MouseEvent &event) {
     }
     case Qt::LeftButton: {
         glm::dvec3 worldPos = event.worldPos();
-        auto [screenDragPos, isInViewport] = event.camera->mapWorldToViewport(worldPos);
+        auto [viewportDragPos, isInViewport] = event.camera->mapWorldToViewport(worldPos);
         if (!isInViewport) {
             return;
         }

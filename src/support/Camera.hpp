@@ -41,7 +41,7 @@ public:
     std::pair<glm::dvec3, bool> mapWorldToViewport(glm::dvec3 worldPos) const;
     glm::dvec3 mapViewportToWorld(glm::dvec3 viewportPosWithDepth) const;
 
-    // screen coordinate range:
+    // viewport coordinate range:
     //  0 <= x <= logical window width
     //  0 <= y <= logical window height
     //  0 <= z <= 1 (1 is farthest from camera)

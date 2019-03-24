@@ -11,7 +11,7 @@ namespace Editor {
 namespace {
 
 // same as DrawLine.geom
-bool mapLineToScreen(const mat4& P, vec2 viewportSize, float zNear, vec4 p0_cameraSpace, vec4 p1_cameraSpace, vec3& p0_screenSpace, vec3& p1_screenSpace) {
+bool mapLineToViewport(const mat4& P, vec2 viewportSize, float zNear, vec4 p0_cameraSpace, vec4 p1_cameraSpace, vec3& p0_viewportSpace, vec3& p1_viewportSpace) {
     // Don't render lines behind camera
     if (p0_cameraSpace.z > -zNear && p1_cameraSpace.z > -zNear) {
         return false;
@@ -38,8 +38,8 @@ bool mapLineToScreen(const mat4& P, vec2 viewportSize, float zNear, vec4 p0_came
     float d0 = p0_clipSpace.z / p0_clipSpace.w * 0.5f + 0.5f;
     float d1 = p1_clipSpace.z / p1_clipSpace.w * 0.5f + 0.5f;
 
-    p0_screenSpace = vec3(p0, d0);
-    p1_screenSpace = vec3(p1, d1);
+    p0_viewportSpace = vec3(p0, d0);
+    p1_viewportSpace = vec3(p1, d1);
     return true;
 }
 
@@ -48,8 +48,8 @@ bool mapLineToScreen(const mat4& P, vec2 viewportSize, float zNear, vec4 p0_came
 MeshPicker::MeshPicker(const SP<Mesh::Mesh> &mesh) : _mesh(mesh) {
 }
 
-Opt<std::pair<SP<Mesh::Face>, double> > MeshPicker::pickFace(const dmat4 &modelToWorld, const SP<Camera> &camera, dvec2 screenPos) const {
-    Ray<float> ray = inverse(modelToWorld) * camera->worldMouseRay(screenPos);
+Opt<std::pair<SP<Mesh::Face>, double> > MeshPicker::pickFace(const dmat4 &modelToWorld, const SP<Camera> &camera, dvec2 viewportPos) const {
+    Ray<float> ray = inverse(modelToWorld) * camera->worldMouseRay(viewportPos);
     // TODO: Use Bounding Volume Hierarchy to do faster
     //ScopedTimer timer("MeshPicker::pickFace");
     std::map<double, SP<Mesh::Face>> intersectings;
@@ -62,8 +62,8 @@ Opt<std::pair<SP<Mesh::Face>, double> > MeshPicker::pickFace(const dmat4 &modelT
             auto [intersects, t] = ray.intersectsTriangle({v0, v1, v2});
             if (intersects) {
                 dvec3 intersectingPos = ray.at(t);
-                auto [intersectingPosScreen, isInViewport] = camera->mapWorldToViewport((modelToWorld * dvec4(intersectingPos, 1)).xyz);
-                intersectings.insert({intersectingPosScreen.z, f});
+                auto [intersectingPosViewport, isInViewport] = camera->mapWorldToViewport((modelToWorld * dvec4(intersectingPos, 1)).xyz);
+                intersectings.insert({intersectingPosViewport.z, f});
             }
         }
     }
@@ -74,15 +74,15 @@ Opt<std::pair<SP<Mesh::Face>, double> > MeshPicker::pickFace(const dmat4 &modelT
     return {{nearest->second, nearest->first}};
 }
 
-Opt<std::pair<SP<Mesh::Vertex>, double> > MeshPicker::pickVertex(const dmat4 &modelToWorld, const SP<Camera> &camera, dvec2 screenPos, double distance) const {
+Opt<std::pair<SP<Mesh::Vertex>, double> > MeshPicker::pickVertex(const dmat4 &modelToWorld, const SP<Camera> &camera, dvec2 viewportPos, double distance) const {
     std::map<double, SP<Mesh::Vertex>> intersectings;
 
     for (auto& v : _mesh->vertices()) {
-        auto [screenVertexPos, isInViewport] = camera->mapWorldToViewport((modelToWorld * vec4(v->position(), 1)).xyz);
+        auto [viewportVertexPos, isInViewport] = camera->mapWorldToViewport((modelToWorld * vec4(v->position(), 1)).xyz);
         if (!isInViewport) { continue; }
 
-        if (glm::distance(dvec2(screenVertexPos.xy), screenPos) <= distance) {
-            intersectings.insert({screenVertexPos.z, v});
+        if (glm::distance(dvec2(viewportVertexPos.xy), viewportPos) <= distance) {
+            intersectings.insert({viewportVertexPos.z, v});
         }
     }
 
@@ -93,7 +93,7 @@ Opt<std::pair<SP<Mesh::Vertex>, double> > MeshPicker::pickVertex(const dmat4 &mo
     return {{nearest->second, nearest->first}};
 }
 
-Opt<std::pair<SP<Mesh::Edge>, double> > MeshPicker::pickEdge(const dmat4 &modelToWorld, const SP<Camera> &camera, dvec2 screenPos, double distance) const {
+Opt<std::pair<SP<Mesh::Edge>, double> > MeshPicker::pickEdge(const dmat4 &modelToWorld, const SP<Camera> &camera, dvec2 viewportPos, double distance) const {
     std::map<double, SP<Mesh::Edge>> intersectings;
 
     for (auto& [_, e] : _mesh->edges()) {
@@ -101,21 +101,21 @@ Opt<std::pair<SP<Mesh::Edge>, double> > MeshPicker::pickEdge(const dmat4 &modelT
         vec4 p1_modelSpace = vec4(e->vertices()[1]->position(), 1);
         vec4 p0_cameraSpace = camera->worldToCameraMatrix() * modelToWorld * p0_modelSpace;
         vec4 p1_cameraSpace = camera->worldToCameraMatrix() * modelToWorld * p1_modelSpace;
-        vec3 p0_screenSpace;
-        vec3 p1_screenSpace;
-        bool ok = mapLineToScreen(camera->cameraToViewportMatrix(), camera->viewSize(), camera->zNear(), p0_cameraSpace, p1_cameraSpace, p0_screenSpace, p1_screenSpace);
+        vec3 p0_viewportSpace;
+        vec3 p1_viewportSpace;
+        bool ok = mapLineToViewport(camera->cameraToViewportMatrix(), camera->viewSize(), camera->zNear(), p0_cameraSpace, p1_cameraSpace, p0_viewportSpace, p1_viewportSpace);
         if (!ok) {
             continue;
         }
 
-        vec2 ab = p1_screenSpace.xy - p0_screenSpace.xy;
-        vec2 w = vec2(screenPos) - p0_screenSpace.xy;
+        vec2 ab = p1_viewportSpace.xy - p0_viewportSpace.xy;
+        vec2 w = vec2(viewportPos) - p0_viewportSpace.xy;
         vec2 v = normalize(ab);
         float d = abs(cross(vec3(w, 0), vec3(v, 0)).z);
         float t = dot(ab, w) / dot(ab, ab);
 
         if (d <= distance && 0 <= t && t <= 1) {
-            float depth =  mix(p0_screenSpace.z, p1_screenSpace.z, t);
+            float depth =  mix(p0_viewportSpace.z, p1_viewportSpace.z, t);
             intersectings.insert({depth, e});
         }
     }

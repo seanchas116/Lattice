@@ -1,6 +1,6 @@
 #version 330
 
-bool mapLineToScreen(mat4 P, vec2 viewportSize, float zNear, vec4 p0_cameraSpace, vec4 p1_cameraSpace, out vec3 p0_screenSpace, out vec3 p1_screenSpace, out bool swapped) {
+bool mapLineToViewport(mat4 P, vec2 viewportSize, float zNear, vec4 p0_cameraSpace, vec4 p1_cameraSpace, out vec3 p0_viewportSpace, out vec3 p1_viewportSpace, out bool swapped) {
     // Don't render lines behind camera
     if (p0_cameraSpace.z > -zNear && p1_cameraSpace.z > -zNear) {
         return false;
@@ -30,8 +30,8 @@ bool mapLineToScreen(mat4 P, vec2 viewportSize, float zNear, vec4 p0_cameraSpace
     float d0 = p0_clipSpace.z / p0_clipSpace.w;
     float d1 = p1_clipSpace.z / p1_clipSpace.w;
 
-    p0_screenSpace = vec3(p0, d0);
-    p1_screenSpace = vec3(p1, d1);
+    p0_viewportSpace = vec3(p0, d0);
+    p1_viewportSpace = vec3(p1, d1);
     return true;
 }
 
@@ -55,7 +55,7 @@ void main(void) {
     vec3 p1;
     bool swapped;
 
-    bool ok = mapLineToScreen(P, viewportSize, zNear, MV * p0_modelSpace, MV * p1_modelSpace, p0, p1, swapped);
+    bool ok = mapLineToViewport(P, viewportSize, zNear, MV * p0_modelSpace, MV * p1_modelSpace, p0, p1, swapped);
     if (!ok) {
         EndPrimitive();
         return;

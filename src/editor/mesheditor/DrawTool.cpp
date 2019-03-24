@@ -87,21 +87,21 @@ void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
 
             auto previewUVPoint = *_previewUVPoint;
             _previewUVPoint = std::nullopt;
-            auto [prevPosInScreen, isInViewport] = event.camera->mapModelToViewport(modelMatrix, previewUVPoint->vertex()->position());
+            auto [prevPosInViewport, isInViewport] = event.camera->mapModelToViewport(modelMatrix, previewUVPoint->vertex()->position());
             if (!isInViewport) {
                 return;
             }
-            auto pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos, prevPosInScreen.z));
+            auto pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos, prevPosInViewport.z));
 
             mesh->setPosition({{previewUVPoint->vertex(), pos}});
             _drawnUVPoints.push_back(previewUVPoint);
         } else {
             // add new point
-            auto [centerInScreen, isCenterInScreen] = event.camera->mapModelToViewport(modelMatrix, vec3(0));
-            if (!isCenterInScreen) {
+            auto [centerInViewport, isCenterInViewport] = event.camera->mapModelToViewport(modelMatrix, vec3(0));
+            if (!isCenterInViewport) {
                 return;
             }
-            auto pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos, centerInScreen.z));
+            auto pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos, centerInViewport.z));
             _drawnUVPoints.push_back(mesh->addUVPoint(mesh->addVertex(pos), vec2(0)));
         }
     }
@@ -135,11 +135,11 @@ void DrawTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEve
         RayRayDistanceSolver distanceSolver(edgeRay, mouseRay);
         pos = edgeRay.at(distanceSolver.t0);
     } else {
-        auto [prevPosInScreen, isInViewport] = event.camera->mapModelToViewport(modelMatrix, previewUVPoint->vertex()->position());
+        auto [prevPosInViewport, isInViewport] = event.camera->mapModelToViewport(modelMatrix, previewUVPoint->vertex()->position());
         if (!isInViewport) {
             return;
         }
-        pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos, prevPosInScreen.z));
+        pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos, prevPosInViewport.z));
     }
 
     mesh->setPosition({{previewUVPoint->vertex(), pos}});
