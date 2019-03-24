@@ -30,6 +30,10 @@ void Renderable::mouseDoubleClick(const MouseEvent &event) {
     Q_UNUSED(event);
 }
 
+void Renderable::contextMenu(const ContextMenuEvent &event) {
+    Q_UNUSED(event);
+}
+
 void Renderable::hoverEnter(const MouseEvent &event) {
     Q_UNUSED(event);
 }
