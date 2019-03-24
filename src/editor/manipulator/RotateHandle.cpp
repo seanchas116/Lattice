@@ -26,7 +26,7 @@ RotateHandle::RotateHandle(int axis) :
 
 void RotateHandle::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
     Coordinates coordinates(camera, _targetPosition);
-    if (!coordinates.isInScreen){
+    if (!coordinates.isInViewport){
         return;
     }
 
@@ -39,7 +39,7 @@ void RotateHandle::draw(const SP<Render::Operations> &operations, const SP<Camer
 
 void RotateHandle::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
     Coordinates coordinates(camera, _targetPosition);
-    if (!coordinates.isInScreen){
+    if (!coordinates.isInViewport){
         return;
     }
 
@@ -56,7 +56,7 @@ void RotateHandle::mousePress(const Render::MouseEvent &event) {
     }
 
     Coordinates coordinates(event.camera, _targetPosition);
-    if (!coordinates.isInScreen) {
+    if (!coordinates.isInViewport) {
         return;
     }
 
@@ -78,7 +78,7 @@ void RotateHandle::mouseMove(const Render::MouseEvent &event) {
     }
 
     Coordinates coordinates(event.camera, _initialTargetPosition);
-    if (!coordinates.isInScreen) {
+    if (!coordinates.isInViewport) {
         return;
     }
 

@@ -87,8 +87,8 @@ void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
 
             auto previewUVPoint = *_previewUVPoint;
             _previewUVPoint = std::nullopt;
-            auto [prevPosInScreen, isInScreen] = event.camera->mapModelToViewport(modelMatrix, previewUVPoint->vertex()->position());
-            if (!isInScreen) {
+            auto [prevPosInScreen, isInViewport] = event.camera->mapModelToViewport(modelMatrix, previewUVPoint->vertex()->position());
+            if (!isInViewport) {
                 return;
             }
             auto pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos, prevPosInScreen.z));
@@ -135,8 +135,8 @@ void DrawTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEve
         RayRayDistanceSolver distanceSolver(edgeRay, mouseRay);
         pos = edgeRay.at(distanceSolver.t0);
     } else {
-        auto [prevPosInScreen, isInScreen] = event.camera->mapModelToViewport(modelMatrix, previewUVPoint->vertex()->position());
-        if (!isInScreen) {
+        auto [prevPosInScreen, isInViewport] = event.camera->mapModelToViewport(modelMatrix, previewUVPoint->vertex()->position());
+        if (!isInViewport) {
             return;
         }
         pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos, prevPosInScreen.z));

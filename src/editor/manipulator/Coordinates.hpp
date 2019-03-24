@@ -12,9 +12,9 @@ public:
     Coordinates(const SP<Camera>& camera, glm::dvec3 targetPos) : targetPos(targetPos) {
         using namespace glm;
 
-        auto [screenPos, isInScreen] = camera->mapWorldToViewport(targetPos);
-        this->isInScreen = isInScreen;
-        if (!isInScreen) {
+        auto [screenPos, isInViewport] = camera->mapWorldToViewport(targetPos);
+        this->isInViewport = isInViewport;
+        if (!isInViewport) {
             return;
         }
 
@@ -42,7 +42,7 @@ public:
     }
 
     glm::dvec3 targetPos;
-    bool isInScreen;
+    bool isInViewport;
     glm::dmat4 manipulatorToWorld;
     glm::dmat4 manipulatorToCamera;
     double scale;

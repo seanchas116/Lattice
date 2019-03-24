@@ -27,7 +27,7 @@ ArrowHandle::ArrowHandle(int axis, HandleType handleType) :
 
 void ArrowHandle::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
     Coordinates coordinates(camera, _targetPosition);
-    if (!coordinates.isInScreen){
+    if (!coordinates.isInViewport){
         return;
     }
 
@@ -38,7 +38,7 @@ void ArrowHandle::draw(const SP<Render::Operations> &operations, const SP<Camera
 
 void ArrowHandle::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
     Coordinates coordinates(camera, _targetPosition);
-    if (!coordinates.isInScreen){
+    if (!coordinates.isInViewport){
         return;
     }
 
@@ -51,7 +51,7 @@ void ArrowHandle::mousePress(const Render::MouseEvent &event) {
     }
 
     Coordinates coordinates(event.camera, _targetPosition);
-    if (!coordinates.isInScreen) {
+    if (!coordinates.isInViewport) {
         return;
     }
 
@@ -69,7 +69,7 @@ void ArrowHandle::mouseMove(const Render::MouseEvent &event) {
     }
 
     Coordinates coordinates(event.camera, _initialTargetPosition);
-    if (!coordinates.isInScreen) {
+    if (!coordinates.isInViewport) {
         return;
     }
 
