@@ -55,11 +55,11 @@ std::vector<SP<Render::RenderableObject> > Manipulator::handles(bool withTransla
         for (auto& h : _translateHandles) {
             handles.push_back(h);
         }
+    }
     if (withRotate) {
         for (auto& h : _rotateHandles) {
             handles.push_back(h);
         }
-    }
     }
     if (withScale) {
         for (auto& h : _scaleHandles) {
