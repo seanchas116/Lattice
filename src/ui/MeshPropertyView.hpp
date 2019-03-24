@@ -30,6 +30,7 @@ public:
 private:
     void setViewValues();
     void handlePositionValueChange(int index, double value);
+    void handleEdgeSmoothChange(bool smooth);
 
     SP<State::AppState> _appState;
     Opt<SP<Document::MeshItem>> _item;

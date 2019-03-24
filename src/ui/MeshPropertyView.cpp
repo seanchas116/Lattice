@@ -61,6 +61,7 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
 
     _smoothEdgeCheckBox = new QCheckBox(tr("Smooth Edge"));
     _smoothEdgeCheckBox->setTristate(true);
+    connect(_smoothEdgeCheckBox, &QCheckBox::toggled, this, &MeshPropertyView::handleEdgeSmoothChange);
     layout->addWidget(_smoothEdgeCheckBox);
 
     layout->addStretch();
@@ -173,6 +174,26 @@ void MeshPropertyView::handlePositionValueChange(int index, double value) {
 
     _appState->document()->history()->beginChange(tr("Set Vertex Position"));
     item->mesh()->setPosition(newPositions);
+}
+
+void MeshPropertyView::handleEdgeSmoothChange(bool smooth) {
+    if (!_item) {
+        return;
+    }
+    auto item = *_item;
+
+    auto edges = _appState->document()->meshSelection().edges();
+    if (edges.empty()) {
+        return;
+    }
+
+    _appState->document()->history()->beginChange(tr("Set Edge Smooth"));
+
+    std::unordered_map<SP<Mesh::Edge>, bool> values;
+    for (auto& edge : edges) {
+        values[edge] = smooth;
+    }
+    item->mesh()->setSmooth(values);
 }
 
 } // namespace UI
