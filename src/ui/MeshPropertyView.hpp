@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <array>
 
+class QCheckBox;
+
 namespace Lattice {
 
 namespace State {
@@ -33,6 +35,7 @@ private:
     Opt<SP<Document::MeshItem>> _item;
     QMetaObject::Connection _connection;
     std::array<Widget::DoubleSpinBox*, 3> _positionSpinBoxes;
+    QCheckBox* _smoothEdgeCheckBox = nullptr;
 };
 
 } // namespace UI

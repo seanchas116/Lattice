@@ -59,8 +59,8 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
         layout->addLayout(gridLayout);
     }
 
-    auto smoothEdgeCheckbox = new QCheckBox(tr("Smooth Edge"));
-    layout->addWidget(smoothEdgeCheckbox);
+    _smoothEdgeCheckBox = new QCheckBox(tr("Smooth Edge"));
+    layout->addWidget(_smoothEdgeCheckBox);
 
     layout->addStretch();
 
