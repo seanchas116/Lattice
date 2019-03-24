@@ -7,6 +7,7 @@
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QLabel>
+#include <QCheckBox>
 
 namespace Lattice {
 namespace UI {
@@ -57,6 +58,10 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
 
         layout->addLayout(gridLayout);
     }
+
+    auto smoothEdgeCheckbox = new QCheckBox(tr("Smooth Edge"));
+    layout->addWidget(smoothEdgeCheckbox);
+
     layout->addStretch();
 
     setLayout(layout);
