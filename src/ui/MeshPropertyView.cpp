@@ -112,7 +112,7 @@ void MeshPropertyView::setViewValues() {
 
     {
         auto edgeSet = selection.edges();
-        std::vector edges(edgeSet.begin(), edgeSet.end());
+        std::vector<SP<Mesh::Edge>> edges(edgeSet.begin(), edgeSet.end());
         if (edges.empty()) {
             _smoothEdgeCheckBox->setEnabled(false);
         } else {
@@ -121,7 +121,7 @@ void MeshPropertyView::setViewValues() {
             bool isSmoothEdgeSame = true;
             bool isSmooth = edges[0]->isSmooth();
 
-            for (int i = 1; i < edges.size(); ++i) {
+            for (size_t i = 1; i < edges.size(); ++i) {
                 if (edges[i]->isSmooth() != isSmooth) {
                     isSmoothEdgeSame = false;
                 }
