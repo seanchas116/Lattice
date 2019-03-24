@@ -40,5 +40,16 @@ public:
     QMouseEvent* originalEvent;
 };
 
+struct ContextMenuEvent : public LocatedEvent {
+public:
+    ContextMenuEvent(QContextMenuEvent* originalEvent, glm::dvec2 viewportPos, const SP<Camera>& camera, double depth) :
+        LocatedEvent(viewportPos, camera, depth),
+        originalEvent(originalEvent)
+    {}
+
+    QContextMenuEvent* originalEvent;
+};
+
+
 } // namespace Render
 } // namespace Lattice
