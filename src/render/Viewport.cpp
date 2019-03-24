@@ -89,6 +89,18 @@ void Viewport::mouseDoubleClickEvent(QMouseEvent *event) {
     renderable->mouseDoubleClick(renderMouseEvent);
 }
 
+void Viewport::contextMenuEvent(QContextMenuEvent *event) {
+    auto pos = mapQtToGL(this, event->pos());
+
+    auto maybeHitResult = hitTest(pos, _camera);
+    if (!maybeHitResult) { return; }
+
+    auto [renderable, hitResult] = *maybeHitResult;
+
+    ContextMenuEvent renderContextMenuEvent(event, pos, _camera, hitResult);
+    renderable->contextMenu(renderContextMenuEvent);
+}
+
 void Viewport::moveEvent(QMoveEvent *event) {
     super::moveEvent(event);
     emit updateRequested();
