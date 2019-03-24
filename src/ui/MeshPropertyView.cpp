@@ -60,6 +60,7 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
     }
 
     _smoothEdgeCheckBox = new QCheckBox(tr("Smooth Edge"));
+    _smoothEdgeCheckBox->setTristate(true);
     layout->addWidget(_smoothEdgeCheckBox);
 
     layout->addStretch();
@@ -87,23 +88,54 @@ void MeshPropertyView::setViewValues() {
         return;
     }
 
-    glm::bvec3 isPositionSame {true};
+    {
+        glm::bvec3 isPositionSame {true};
 
-    auto position = (*selection.vertices.begin())->position();
+        auto position = (*selection.vertices.begin())->position();
 
-    for (auto& vertex : selection.vertices) {
-        auto otherPosition = vertex->position();
-        for (int i = 0; i < 3; ++i) {
-            if (position[i] != otherPosition[i]) {
-                isPositionSame[i] = false;
+        for (auto& vertex : selection.vertices) {
+            auto otherPosition = vertex->position();
+            for (int i = 0; i < 3; ++i) {
+                if (position[i] != otherPosition[i]) {
+                    isPositionSame[i] = false;
+                }
             }
+        }
+
+        auto specialValue = -std::numeric_limits<double>::infinity();
+
+        for (size_t i = 0; i < 3; ++i) {
+            _positionSpinBoxes[i]->setValue(isPositionSame[i] ? position[i] : specialValue);
         }
     }
 
-    auto specialValue = -std::numeric_limits<double>::infinity();
+    {
+        auto edgeSet = selection.edges();
+        std::vector edges(edgeSet.begin(), edgeSet.end());
+        if (edges.empty()) {
+            _smoothEdgeCheckBox->setEnabled(false);
+        } else {
+            _smoothEdgeCheckBox->setEnabled(true);
 
-    for (size_t i = 0; i < 3; ++i) {
-        _positionSpinBoxes[i]->setValue(isPositionSame[i] ? position[i] : specialValue);
+            bool isSmoothEdgeSame = true;
+            bool isSmooth = edges[0]->isSmooth();
+
+            for (int i = 1; i < edges.size(); ++i) {
+                if (edges[i]->isSmooth() != isSmooth) {
+                    isSmoothEdgeSame = false;
+                }
+            }
+
+            if (isSmoothEdgeSame) {
+                if (isSmooth) {
+                    _smoothEdgeCheckBox->setCheckState(Qt::Checked);
+                } else {
+                    _smoothEdgeCheckBox->setCheckState(Qt::Unchecked);
+                }
+            } else {
+                _smoothEdgeCheckBox->setCheckState(Qt::PartiallyChecked);
+            }
+        }
     }
 }
 
