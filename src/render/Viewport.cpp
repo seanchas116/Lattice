@@ -96,7 +96,7 @@ void Viewport::moveEvent(QMoveEvent *event) {
 
 void Viewport::resizeEvent(QResizeEvent *event) {
     super::resizeEvent(event);
-    _camera->setViewSize(mapQtToGL(this, QPoint(event->size().width(), 0)));
+    _camera->setViewportSize(mapQtToGL(this, QPoint(event->size().width(), 0)));
     emit updateRequested();
 }
 

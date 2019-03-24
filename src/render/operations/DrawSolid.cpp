@@ -16,7 +16,7 @@ void DrawSolid::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<
     _shader.setUniform("diffuse", diffuse);
     _shader.setUniform("ambient", ambient);
     _shader.setUniform("MV", camera->worldToCameraMatrix() * matrix);
-    _shader.setUniform("MVP", camera->worldToScreenMatrix() * matrix);
+    _shader.setUniform("MVP", camera->worldToViewportMatrix() * matrix);
     vao->draw();
 }
 

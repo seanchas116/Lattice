@@ -26,7 +26,7 @@ RotateHandle::RotateHandle(int axis) :
 
 void RotateHandle::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
     Coordinates coordinates(camera, _targetPosition);
-    if (!coordinates.isInScreen){
+    if (!coordinates.isInViewport){
         return;
     }
 
@@ -39,7 +39,7 @@ void RotateHandle::draw(const SP<Render::Operations> &operations, const SP<Camer
 
 void RotateHandle::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
     Coordinates coordinates(camera, _targetPosition);
-    if (!coordinates.isInScreen){
+    if (!coordinates.isInViewport){
         return;
     }
 
@@ -56,13 +56,13 @@ void RotateHandle::mousePress(const Render::MouseEvent &event) {
     }
 
     Coordinates coordinates(event.camera, _targetPosition);
-    if (!coordinates.isInScreen) {
+    if (!coordinates.isInViewport) {
         return;
     }
 
     dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * Constants::swizzleTransforms[_axis];
     dmat4 rotateHandleMatrixInverse = inverse(rotateHandleMatrix);
-    auto rotateHandleRay = rotateHandleMatrixInverse * event.camera->cameraMouseRay(event.screenPos);
+    auto rotateHandleRay = rotateHandleMatrixInverse * event.camera->cameraMouseRay(event.viewportPos);
 
     dvec3 intersection = rotateHandleRay.whereXIsZero();
     double angle = atan2(intersection.z, intersection.y);
@@ -78,13 +78,13 @@ void RotateHandle::mouseMove(const Render::MouseEvent &event) {
     }
 
     Coordinates coordinates(event.camera, _initialTargetPosition);
-    if (!coordinates.isInScreen) {
+    if (!coordinates.isInViewport) {
         return;
     }
 
     dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * Constants::swizzleTransforms[_axis];
     dmat4 rotateHandleMatrixInverse = inverse(rotateHandleMatrix);
-    auto rotateHandleRay = rotateHandleMatrixInverse * event.camera->cameraMouseRay(event.screenPos);
+    auto rotateHandleRay = rotateHandleMatrixInverse * event.camera->cameraMouseRay(event.viewportPos);
     dvec3 intersection = rotateHandleRay.whereXIsZero();
     double angle = atan2(intersection.z, intersection.y);
 

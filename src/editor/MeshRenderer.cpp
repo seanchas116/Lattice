@@ -53,15 +53,15 @@ void MeshRenderer::mousePress(const Render::MouseEvent &event) {
     }
     case Qt::LeftButton: {
         glm::dvec3 worldPos = event.worldPos();
-        auto [screenDragPos, isInScreen] = event.camera->mapWorldToScreen(worldPos);
-        if (!isInScreen) {
+        auto [viewportDragPos, isInViewport] = event.camera->mapWorldToViewport(worldPos);
+        if (!isInViewport) {
             return;
         }
 
         _dragged = true;
         _dragInitLocation = _item->location();
         _dragInitWorldPos = worldPos;
-        _dragInitScreenPos = event.screenPos;
+        _dragInitViewportPos = event.viewportPos;
         _dragStarted = false;
 
         _appState->document()->selectItem(_item, event.originalEvent->modifiers() & Qt::ShiftModifier);
@@ -82,7 +82,7 @@ void MeshRenderer::mouseMove(const Render::MouseEvent &event) {
     newLocation.position += newWorldPos - _dragInitWorldPos;
 
     if (!_dragStarted) {
-        if (glm::distance(_dragInitScreenPos, event.screenPos) < _appState->preferences()->moveThreshold()) {
+        if (glm::distance(_dragInitViewportPos, event.viewportPos) < _appState->preferences()->moveThreshold()) {
             return;
         }
         _appState->document()->history()->beginChange(tr("Move Item"));

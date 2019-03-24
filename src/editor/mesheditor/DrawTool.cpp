@@ -71,7 +71,7 @@ void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
 
         auto edge = *target.edge;
         Ray<double> edgeRay = edge->ray();
-        Ray<double> mouseRay = event.camera->modelMouseRay(modelMatrix, event.screenPos);
+        Ray<double> mouseRay = event.camera->modelMouseRay(modelMatrix, event.viewportPos);
         RayRayDistanceSolver distanceSolver(edgeRay, mouseRay);
         auto vertex = mesh->cutEdge(edge, distanceSolver.t0);
 
@@ -87,21 +87,21 @@ void DrawTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
 
             auto previewUVPoint = *_previewUVPoint;
             _previewUVPoint = std::nullopt;
-            auto [prevPosInScreen, isInScreen] = event.camera->mapModelToScreen(modelMatrix, previewUVPoint->vertex()->position());
-            if (!isInScreen) {
+            auto [prevPosInViewport, isInViewport] = event.camera->mapModelToViewport(modelMatrix, previewUVPoint->vertex()->position());
+            if (!isInViewport) {
                 return;
             }
-            auto pos = event.camera->mapScreenToModel(modelMatrix, dvec3(event.screenPos, prevPosInScreen.z));
+            auto pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos, prevPosInViewport.z));
 
             mesh->setPosition({{previewUVPoint->vertex(), pos}});
             _drawnUVPoints.push_back(previewUVPoint);
         } else {
             // add new point
-            auto [centerInScreen, isCenterInScreen] = event.camera->mapModelToScreen(modelMatrix, vec3(0));
-            if (!isCenterInScreen) {
+            auto [centerInViewport, isCenterInViewport] = event.camera->mapModelToViewport(modelMatrix, vec3(0));
+            if (!isCenterInViewport) {
                 return;
             }
-            auto pos = event.camera->mapScreenToModel(modelMatrix, dvec3(event.screenPos, centerInScreen.z));
+            auto pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos, centerInViewport.z));
             _drawnUVPoints.push_back(mesh->addUVPoint(mesh->addVertex(pos), vec2(0)));
         }
     }
@@ -131,15 +131,15 @@ void DrawTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEve
     } else if (target.edge) {
         auto snapEdge = *target.edge;
         Ray<double> edgeRay = snapEdge->ray();
-        Ray<double> mouseRay = event.camera->modelMouseRay(modelMatrix, event.screenPos);
+        Ray<double> mouseRay = event.camera->modelMouseRay(modelMatrix, event.viewportPos);
         RayRayDistanceSolver distanceSolver(edgeRay, mouseRay);
         pos = edgeRay.at(distanceSolver.t0);
     } else {
-        auto [prevPosInScreen, isInScreen] = event.camera->mapModelToScreen(modelMatrix, previewUVPoint->vertex()->position());
-        if (!isInScreen) {
+        auto [prevPosInViewport, isInViewport] = event.camera->mapModelToViewport(modelMatrix, previewUVPoint->vertex()->position());
+        if (!isInViewport) {
             return;
         }
-        pos = event.camera->mapScreenToModel(modelMatrix, dvec3(event.screenPos, prevPosInScreen.z));
+        pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos, prevPosInViewport.z));
     }
 
     mesh->setPosition({{previewUVPoint->vertex(), pos}});

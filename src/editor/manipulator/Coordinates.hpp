@@ -12,18 +12,18 @@ public:
     Coordinates(const SP<Camera>& camera, glm::dvec3 targetPos) : targetPos(targetPos) {
         using namespace glm;
 
-        auto [screenPos, isInScreen] = camera->mapWorldToScreen(targetPos);
-        this->isInScreen = isInScreen;
-        if (!isInScreen) {
+        auto [viewportPos, isInViewport] = camera->mapWorldToViewport(targetPos);
+        this->isInViewport = isInViewport;
+        if (!isInViewport) {
             return;
         }
 
-        // TODO: calculate scale from desired arrow length in screen space
+        // TODO: calculate scale from desired arrow length in viewport space
         if (camera->projection() == Camera::Projection::Perspective) {
-            dvec3 screenPosFixedDepth(screenPos.xy, Constants::fixedDepth);
-            dvec3 positionFixedDepth_worldSpace = camera->mapScreenToWorld(screenPosFixedDepth);
+            dvec3 viewportPosFixedDepth(viewportPos.xy, Constants::fixedDepth);
+            dvec3 positionFixedDepth_worldSpace = camera->mapViewportToWorld(viewportPosFixedDepth);
 
-            scale = 1.0 / double(camera->viewSize().y) * 20.0;
+            scale = 1.0 / double(camera->viewportSize().y) * 20.0;
 
             manipulatorToWorld = glm::scale(glm::translate(glm::dmat4(1), positionFixedDepth_worldSpace), dvec3(scale));
         } else {
@@ -42,7 +42,7 @@ public:
     }
 
     glm::dvec3 targetPos;
-    bool isInScreen;
+    bool isInViewport;
     glm::dmat4 manipulatorToWorld;
     glm::dmat4 manipulatorToCamera;
     double scale;
