@@ -23,7 +23,7 @@ public:
             dvec3 viewportPosFixedDepth(viewportPos.xy, Constants::fixedDepth);
             dvec3 positionFixedDepth_worldSpace = camera->mapViewportToWorld(viewportPosFixedDepth);
 
-            scale = 1.0 / double(camera->viewSize().y) * 20.0;
+            scale = 1.0 / double(camera->viewportSize().y) * 20.0;
 
             manipulatorToWorld = glm::scale(glm::translate(glm::dmat4(1), positionFixedDepth_worldSpace), dvec3(scale));
         } else {

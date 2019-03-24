@@ -8,7 +8,7 @@ namespace Lattice {
 Camera::Camera() {
     connect(this, &Camera::projectionChanged, this, &Camera::changed);
     connect(this, &Camera::locationChanged, this, &Camera::changed);
-    connect(this, &Camera::viewSizeChanged, this, &Camera::changed);
+    connect(this, &Camera::viewportSizeChanged, this, &Camera::changed);
     connect(this, &Camera::fieldOfViewChanged, this, &Camera::changed);
     connect(this, &Camera::zNearChanged, this, &Camera::changed);
     connect(this, &Camera::zFarChanged, this, &Camera::changed);
@@ -46,13 +46,13 @@ std::pair<dvec3, bool> Camera::mapCameraToViewport(dvec3 cameraPos) const {
     vec4 pos_clipSpace = _cameraToViewportMatrix * vec4(cameraPos, 1);
     if (fabs(pos_clipSpace.x) <= pos_clipSpace.w && fabs(pos_clipSpace.y) <= pos_clipSpace.w && fabs(pos_clipSpace.z) <= pos_clipSpace.w) {
         vec3 ndc = vec3(pos_clipSpace.xyz) / pos_clipSpace.w;
-        return {vec3((vec2(ndc.xy) + 1.f) * 0.5f * vec2(_viewSize), ndc.z * 0.5f + 0.5f), true};
+        return {vec3((vec2(ndc.xy) + 1.f) * 0.5f * vec2(_viewportSize), ndc.z * 0.5f + 0.5f), true};
     }
     return {vec3(0), false};
 }
 
 dvec3 Camera::mapViewportToCamera(dvec3 viewportPosWithDepth) const {
-    return glm::unProject(viewportPosWithDepth, dmat4(1), _cameraToViewportMatrix, dvec4(0, 0, _viewSize));
+    return glm::unProject(viewportPosWithDepth, dmat4(1), _cameraToViewportMatrix, dvec4(0, 0, _viewportSize));
 }
 
 Ray<double> Camera::cameraMouseRay(dvec2 viewportPos) const {
@@ -76,9 +76,9 @@ Ray<double> Camera::modelMouseRay(const dmat4 &modelMatrix, dvec2 viewportPos) c
 void Camera::updateMatrix() {
     _worldToCameraMatrix = inverse(_location.matrixToWorld());
     if (_projection == Projection::Perspective) {
-        _cameraToViewportMatrix = glm::perspective(_fieldOfView, double(_viewSize.x) / double(_viewSize.y), _zNear, _zFar);
+        _cameraToViewportMatrix = glm::perspective(_fieldOfView, double(_viewportSize.x) / double(_viewportSize.y), _zNear, _zFar);
     } else {
-        dvec2 topRight = _viewSize / _orthoScale * 0.5;
+        dvec2 topRight = _viewportSize / _orthoScale * 0.5;
         _cameraToViewportMatrix = glm::ortho(-topRight.x, topRight.x, -topRight.y, topRight.y, -10000.0, 10000.0);
     }
     _worldToViewportMatrix = _cameraToViewportMatrix * _worldToCameraMatrix;

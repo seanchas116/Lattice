@@ -15,7 +15,7 @@ DrawCircle::DrawCircle() :
 void DrawCircle::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<Camera> &camera, double width, glm::vec4 color, bool useVertexColor, double zOffset) {
     _shader.bind();
     _shader.setUniform("MVP", camera->worldToViewportMatrix() * matrix);
-    _shader.setUniform("viewportSize", camera->viewSize());
+    _shader.setUniform("viewportSize", camera->viewportSize());
     _shader.setUniform("width", width);
     _shader.setUniform("color", color);
     _shader.setUniform("useVertexColor", useVertexColor);

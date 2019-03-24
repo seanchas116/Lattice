@@ -58,7 +58,7 @@ signals:
 private:
     LATTICE_AUTO_PROPERTY(Projection, projection, setProjection, Projection::Perspective)
     LATTICE_AUTO_PROPERTY(Location, location, setLocation, {})
-    LATTICE_AUTO_PROPERTY(glm::dvec2, viewSize, setViewSize, glm::dvec2(100, 100))
+    LATTICE_AUTO_PROPERTY(glm::dvec2, viewportSize, setViewportSize, glm::dvec2(100, 100))
     LATTICE_AUTO_PROPERTY(double, fieldOfView, setFieldOfView, glm::radians(60.0))
     LATTICE_AUTO_PROPERTY(double, zNear, setZNear, 0.1)
     LATTICE_AUTO_PROPERTY(double, zFar, setZFar, 100.0)

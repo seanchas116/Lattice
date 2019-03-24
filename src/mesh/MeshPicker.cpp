@@ -103,7 +103,7 @@ Opt<std::pair<SP<Mesh::Edge>, double> > MeshPicker::pickEdge(const dmat4 &modelT
         vec4 p1_cameraSpace = camera->worldToCameraMatrix() * modelToWorld * p1_modelSpace;
         vec3 p0_viewportSpace;
         vec3 p1_viewportSpace;
-        bool ok = mapLineToViewport(camera->cameraToViewportMatrix(), camera->viewSize(), camera->zNear(), p0_cameraSpace, p1_cameraSpace, p0_viewportSpace, p1_viewportSpace);
+        bool ok = mapLineToViewport(camera->cameraToViewportMatrix(), camera->viewportSize(), camera->zNear(), p0_cameraSpace, p1_cameraSpace, p0_viewportSpace, p1_viewportSpace);
         if (!ok) {
             continue;
         }

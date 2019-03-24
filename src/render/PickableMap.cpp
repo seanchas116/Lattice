@@ -40,7 +40,7 @@ Opt<std::pair<SP<Renderable>, double>> PickableMap::pick(vec2 physicalPos) {
 }
 
 void PickableMap::draw(const SP<Renderable> &renderable, const SP<Operations> &operations, const SP<Camera> &camera) {
-    resize(camera->viewSize());
+    resize(camera->viewportSize());
 
     GL::Binder binder(*_framebuffer);
     glClearColor(0, 0, 0, 0);
