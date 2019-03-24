@@ -8,7 +8,7 @@ namespace Lattice {
 namespace Editor {
 namespace MeshEditor {
 
-void MoveTool::mousePress(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void MoveTool::mousePressEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     if (event.originalEvent->button() != Qt::LeftButton) {
         return;
     }
@@ -47,7 +47,7 @@ void MoveTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
     _dragStarted = false;
 }
 
-void MoveTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void MoveTool::mouseMoveEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     Q_UNUSED(target);
 
     if (!_dragged) {
@@ -73,7 +73,7 @@ void MoveTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEve
     mesh->setPosition(positions);
 }
 
-void MoveTool::mouseRelease(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void MoveTool::mouseReleaseEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
     _dragged = false;
     _initPositions.clear();

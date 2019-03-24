@@ -10,7 +10,7 @@ namespace Lattice {
 namespace Editor {
 namespace MeshEditor {
 
-void LoopCutTool::mousePress(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void LoopCutTool::mousePressEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
     // TODO
 
@@ -81,12 +81,12 @@ void LoopCutTool::mousePress(const Tool::EventTarget &target, const Render::Mous
     appState()->document()->setMeshSelection(selection);
 }
 
-void LoopCutTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void LoopCutTool::mouseMoveEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
     // TODO
 }
 
-void LoopCutTool::mouseRelease(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void LoopCutTool::mouseReleaseEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
     // TODO
 }

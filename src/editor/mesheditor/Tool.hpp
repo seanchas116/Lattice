@@ -36,13 +36,13 @@ public:
 
     virtual HitTestExclusion hitTestExclusion() const;
 
-    virtual void mousePress(const EventTarget& target, const Render::MouseEvent &event) = 0;
-    virtual void mouseMove(const EventTarget& target, const Render::MouseEvent &event) = 0;
-    virtual void mouseRelease(const EventTarget& target, const Render::MouseEvent &event) = 0;
-    virtual void hoverEnter(const EventTarget& target, const Render::MouseEvent &event);
-    virtual void hoverLeave(const EventTarget& target);
-    virtual void keyPress(QKeyEvent* event);
-    virtual void keyRelease(QKeyEvent* event);
+    virtual void mousePressEvent(const EventTarget& target, const Render::MouseEvent &event) = 0;
+    virtual void mouseMoveEvent(const EventTarget& target, const Render::MouseEvent &event) = 0;
+    virtual void mouseReleaseEvent(const EventTarget& target, const Render::MouseEvent &event) = 0;
+    virtual void hoverEnterEvent(const EventTarget& target, const Render::MouseEvent &event);
+    virtual void hoverLeaveEvent(const EventTarget& target);
+    virtual void keyPressEvent(QKeyEvent* event);
+    virtual void keyReleaseEvent(QKeyEvent* event);
 
 private:
     SP<State::AppState> _appState;

@@ -11,10 +11,10 @@ public:
 
     HitTestExclusion hitTestExclusion() const override;
 
-    void mousePress(const EventTarget &target, const Render::MouseEvent &event) override;
-    void mouseMove(const EventTarget &target, const Render::MouseEvent &event) override;
-    void mouseRelease(const EventTarget &target, const Render::MouseEvent &event) override;
-    void keyPress(QKeyEvent *event) override;
+    void mousePressEvent(const EventTarget &target, const Render::MouseEvent &event) override;
+    void mouseMoveEvent(const EventTarget &target, const Render::MouseEvent &event) override;
+    void mouseReleaseEvent(const EventTarget &target, const Render::MouseEvent &event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 
 private:
     // draw

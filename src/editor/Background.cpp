@@ -29,7 +29,7 @@ void Background::drawPickables(const SP<Render::Operations> &operations, const S
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Background::mousePress(const Render::MouseEvent &event) {
+void Background::mousePressEvent(const Render::MouseEvent &event) {
     Q_UNUSED(event);
     _appState->document()->setSelectedItems({});
     _appState->document()->setMeshSelection({});

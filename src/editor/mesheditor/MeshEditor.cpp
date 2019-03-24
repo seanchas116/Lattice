@@ -31,23 +31,23 @@ class MeshEditor::VertexPickable : public Render::Renderable {
 public:
     VertexPickable(MeshEditor* editor, const SP<Mesh::Vertex>& vertex) : _editor(editor), _vertex(vertex) {}
 
-    void mousePress(const Render::MouseEvent &event) override {
+    void mousePressEvent(const Render::MouseEvent &event) override {
         _editor->mousePressTarget({_vertex, {}, {}}, event);
     }
 
-    void mouseMove(const Render::MouseEvent &event) override {
+    void mouseMoveEvent(const Render::MouseEvent &event) override {
         _editor->mouseMoveTarget({_vertex, {}, {}}, event);
     }
 
-    void mouseRelease(const Render::MouseEvent &event) override {
+    void mouseReleaseEvent(const Render::MouseEvent &event) override {
         _editor->mouseReleaseTarget({_vertex, {}, {}}, event);
     }
 
-    void hoverEnter(const Render::MouseEvent &event) override {
+    void hoverEnterEvent(const Render::MouseEvent &event) override {
         _editor->hoverEnterTarget({_vertex, {}, {}}, event);
     }
 
-    void hoverLeave() override {
+    void hoverLeaveEvent() override {
         _editor->hoverLeaveTarget({_vertex, {}, {}});
     }
 
@@ -60,23 +60,23 @@ class MeshEditor::EdgePickable : public Render::Renderable {
 public:
     EdgePickable(MeshEditor* editor, const SP<Mesh::Edge>& edge) : _editor(editor), _edge(edge) {}
 
-    void mousePress(const Render::MouseEvent &event) override {
+    void mousePressEvent(const Render::MouseEvent &event) override {
         _editor->mousePressTarget({{}, _edge, {}}, event);
     }
 
-    void mouseMove(const Render::MouseEvent &event) override {
+    void mouseMoveEvent(const Render::MouseEvent &event) override {
         _editor->mouseMoveTarget({{}, _edge, {}}, event);
     }
 
-    void mouseRelease(const Render::MouseEvent &event) override {
+    void mouseReleaseEvent(const Render::MouseEvent &event) override {
         _editor->mouseReleaseTarget({{}, _edge, {}}, event);
     }
 
-    void hoverEnter(const Render::MouseEvent &event) override {
+    void hoverEnterEvent(const Render::MouseEvent &event) override {
         _editor->hoverEnterTarget({{}, _edge, {}}, event);
     }
 
-    void hoverLeave() override {
+    void hoverLeaveEvent() override {
         _editor->hoverLeaveTarget({{}, _edge, {}});
     }
 
@@ -89,23 +89,23 @@ class MeshEditor::FacePickable : public Render::Renderable {
 public:
     FacePickable(MeshEditor* editor, const SP<Mesh::Face>& face) : _editor(editor), _face(face) {}
 
-    void mousePress(const Render::MouseEvent &event) override {
+    void mousePressEvent(const Render::MouseEvent &event) override {
         _editor->mousePressTarget({{}, {}, _face}, event);
     }
 
-    void mouseMove(const Render::MouseEvent &event) override {
+    void mouseMoveEvent(const Render::MouseEvent &event) override {
         _editor->mouseMoveTarget({{}, {}, _face}, event);
     }
 
-    void mouseRelease(const Render::MouseEvent &event) override {
+    void mouseReleaseEvent(const Render::MouseEvent &event) override {
         _editor->mouseReleaseTarget({{}, {}, _face}, event);
     }
 
-    void hoverEnter(const Render::MouseEvent &event) override {
+    void hoverEnterEvent(const Render::MouseEvent &event) override {
         _editor->hoverEnterTarget({{}, {}, _face}, event);
     }
 
-    void hoverLeave() override {
+    void hoverLeaveEvent() override {
         _editor->hoverLeaveTarget({{}, {}, _face});
     }
 
@@ -163,24 +163,24 @@ void MeshEditor::drawPickables(const SP<Render::Operations> &operations, const S
     }
 }
 
-void MeshEditor::mousePress(const Render::MouseEvent &event) {
+void MeshEditor::mousePressEvent(const Render::MouseEvent &event) {
     mousePressTarget({}, event);
 }
 
-void MeshEditor::mouseMove(const Render::MouseEvent &event) {
+void MeshEditor::mouseMoveEvent(const Render::MouseEvent &event) {
     mouseMoveTarget({}, event);
 }
 
-void MeshEditor::mouseRelease(const Render::MouseEvent &event) {
+void MeshEditor::mouseReleaseEvent(const Render::MouseEvent &event) {
     mouseReleaseTarget({}, event);
 }
 
 void MeshEditor::keyPressEvent(QKeyEvent *event) {
-    _tool->keyPress(event);
+    _tool->keyPressEvent(event);
 }
 
 void MeshEditor::keyReleaseEvent(QKeyEvent *event) {
-    _tool->keyRelease(event);
+    _tool->keyReleaseEvent(event);
 }
 
 void MeshEditor::handleToolChange(State::Tool tool) {
@@ -369,15 +369,15 @@ void MeshEditor::mousePressTarget(const Tool::EventTarget &target, const Render:
         return;
     }
 
-    _tool->mousePress(target, event);
+    _tool->mousePressEvent(target, event);
 }
 
 void MeshEditor::mouseMoveTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
-    _tool->mouseMove(target, event);
+    _tool->mouseMoveEvent(target, event);
 }
 
 void MeshEditor::mouseReleaseTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
-    _tool->mouseRelease(target, event);
+    _tool->mouseReleaseEvent(target, event);
 }
 
 void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
@@ -389,7 +389,7 @@ void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Render:
         _hoveredEdge = target.edge;
         updateWholeVAOs(); // TODO: update partially
     }
-    _tool->hoverEnter(target, event);
+    _tool->hoverEnterEvent(target, event);
 }
 
 void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
@@ -400,7 +400,7 @@ void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
         _hoveredEdge = {};
         updateWholeVAOs(); // TODO: update partially
     }
-    _tool->hoverLeave(target);
+    _tool->hoverLeaveEvent(target);
 }
 
 }

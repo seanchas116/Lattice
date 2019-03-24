@@ -13,7 +13,7 @@ Tool::HitTestExclusion ExtrudeTool::hitTestExclusion() const {
     return {};
 }
 
-void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void ExtrudeTool::mousePressEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     auto clickedFragment = target.fragment();
     if (clickedFragment.empty()) {
         return;
@@ -33,7 +33,7 @@ void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::Mous
     }
 }
 
-void ExtrudeTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void ExtrudeTool::mouseMoveEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     Q_UNUSED(target);
 
     if (_fragment.empty()) {
@@ -157,7 +157,7 @@ void ExtrudeTool::mouseMove(const Tool::EventTarget &target, const Render::Mouse
     item()->mesh()->setPosition(newPositions);
 }
 
-void ExtrudeTool::mouseRelease(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void ExtrudeTool::mouseReleaseEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
 
     _fragment = {};

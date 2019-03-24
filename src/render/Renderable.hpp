@@ -17,13 +17,13 @@ public:
     virtual void draw(const SP<Operations>& operations, const SP<Camera>& camera);
     virtual void drawPickables(const SP<Operations>& operations, const SP<Camera>& camera);
 
-    virtual void mousePress(const MouseEvent& event);
-    virtual void mouseMove(const MouseEvent& event);
-    virtual void mouseRelease(const MouseEvent& event);
-    virtual void mouseDoubleClick(const MouseEvent& event);
-    virtual void contextMenu(const ContextMenuEvent& event);
-    virtual void hoverEnter(const MouseEvent& event);
-    virtual void hoverLeave();
+    virtual void mousePressEvent(const MouseEvent& event);
+    virtual void mouseMoveEvent(const MouseEvent& event);
+    virtual void mouseReleaseEvent(const MouseEvent& event);
+    virtual void mouseDoubleClickEvent(const MouseEvent& event);
+    virtual void contextMenuEvent(const ContextMenuEvent& event);
+    virtual void hoverEnterEvent(const MouseEvent& event);
+    virtual void hoverLeaveEvent();
 
     void drawRecursive(const SP<Operations>& operations, const SP<Camera>& camera);
     void drawPickablesRecursive(const SP<Operations>& operations, const SP<Camera>& camera, std::vector<SP<Renderable>>& renderedChildren);

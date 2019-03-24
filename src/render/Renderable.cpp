@@ -14,31 +14,31 @@ void Renderable::drawPickables(const SP<Operations> &operations, const SP<Camera
     Q_UNUSED(operations); Q_UNUSED(camera);
 }
 
-void Renderable::mousePress(const MouseEvent &event) {
+void Renderable::mousePressEvent(const MouseEvent &event) {
     Q_UNUSED(event);
 }
 
-void Renderable::mouseMove(const MouseEvent &event) {
+void Renderable::mouseMoveEvent(const MouseEvent &event) {
     Q_UNUSED(event);
 }
 
-void Renderable::mouseRelease(const MouseEvent &event) {
+void Renderable::mouseReleaseEvent(const MouseEvent &event) {
     Q_UNUSED(event);
 }
 
-void Renderable::mouseDoubleClick(const MouseEvent &event) {
+void Renderable::mouseDoubleClickEvent(const MouseEvent &event) {
     Q_UNUSED(event);
 }
 
-void Renderable::contextMenu(const ContextMenuEvent &event) {
+void Renderable::contextMenuEvent(const ContextMenuEvent &event) {
     Q_UNUSED(event);
 }
 
-void Renderable::hoverEnter(const MouseEvent &event) {
+void Renderable::hoverEnterEvent(const MouseEvent &event) {
     Q_UNUSED(event);
 }
 
-void Renderable::hoverLeave() {
+void Renderable::hoverLeaveEvent() {
 }
 
 void Renderable::drawRecursive(const SP<Operations> &operations, const SP<Camera> &camera) {
