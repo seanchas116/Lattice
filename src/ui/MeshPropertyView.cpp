@@ -77,9 +77,7 @@ void MeshPropertyView::setItem(const Opt<SP<Document::MeshItem>> &maybeItem) {
     }
     auto item = *maybeItem;
 
-    _connection = connect(item->mesh().get(), &Mesh::Mesh::changed, this, [this] {
-        setViewValues();
-    });
+    _connection = connect(item.get(), &Document::MeshItem::meshChangedInLastTick, this, &MeshPropertyView::setViewValues);
     setViewValues();
 }
 
