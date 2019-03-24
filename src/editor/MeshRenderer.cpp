@@ -82,7 +82,7 @@ void MeshRenderer::mouseMoveEvent(const Render::MouseEvent &event) {
     newLocation.position += newWorldPos - _dragInitWorldPos;
 
     if (!_dragStarted) {
-        if (glm::distance(_dragInitViewportPos, event.viewportPos) < _appState->preferences()->moveThreshold()) {
+        if (glm::distance(_dragInitViewportPos, dvec2(event.viewportPos.xy)) < _appState->preferences()->moveThreshold()) {
             return;
         }
         _appState->document()->history()->beginChange(tr("Move Item"));

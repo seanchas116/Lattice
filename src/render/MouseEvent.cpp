@@ -7,7 +7,7 @@ LocatedEvent::~LocatedEvent() {
 }
 
 glm::dvec3 LocatedEvent::worldPos() const {
-    return camera->mapViewportToWorld(glm::dvec3(viewportPos, depth));
+    return camera->mapViewportToWorld(viewportPos);
 }
 
 }

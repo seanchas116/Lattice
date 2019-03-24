@@ -58,7 +58,7 @@ void MoveTool::mouseMoveEvent(const Tool::EventTarget &target, const Render::Mou
     dvec3 offset = worldPos - _initWorldPos;
 
     if (!_dragStarted) {
-        if (distance(_initViewportPos, event.viewportPos) < appState()->preferences()->moveThreshold()) {
+        if (distance(_initViewportPos, dvec2(event.viewportPos.xy)) < appState()->preferences()->moveThreshold()) {
             return;
         }
         appState()->document()->history()->beginChange(tr("Move Vertex"));
