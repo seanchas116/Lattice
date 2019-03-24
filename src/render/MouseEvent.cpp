@@ -4,7 +4,7 @@ namespace Lattice {
 namespace Render {
 
 glm::dvec3 MouseEvent::worldPos() const {
-    return camera->mapScreenToWorld(glm::dvec3(screenPos, depth));
+    return camera->mapViewportToWorld(glm::dvec3(viewportPos, depth));
 }
 
 }

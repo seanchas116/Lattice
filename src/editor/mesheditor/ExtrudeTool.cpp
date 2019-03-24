@@ -25,7 +25,7 @@ void ExtrudeTool::mousePress(const Tool::EventTarget &target, const Render::Mous
     _dragStarted = false;
 
     _initWorldPos = event.worldPos();
-    _initScreenPos = event.screenPos;
+    _initViewportPos = event.viewportPos;
 
     _initPositions.clear();
     for (auto& v : _fragment.vertices) {
@@ -41,7 +41,7 @@ void ExtrudeTool::mouseMove(const Tool::EventTarget &target, const Render::Mouse
     }
 
     if (!_dragStarted) {
-        if (distance(_initScreenPos, event.screenPos) < appState()->preferences()->moveThreshold()) {
+        if (distance(_initViewportPos, event.viewportPos) < appState()->preferences()->moveThreshold()) {
             return;
         }
 

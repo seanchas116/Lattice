@@ -43,7 +43,7 @@ void MoveTool::mousePress(const Tool::EventTarget &target, const Render::MouseEv
         _initPositions[v] = v->position();
     }
     _initWorldPos = event.worldPos();
-    _initScreenPos = event.screenPos;
+    _initViewportPos = event.viewportPos;
     _dragStarted = false;
 }
 
@@ -58,7 +58,7 @@ void MoveTool::mouseMove(const Tool::EventTarget &target, const Render::MouseEve
     dvec3 offset = worldPos - _initWorldPos;
 
     if (!_dragStarted) {
-        if (distance(_initScreenPos, event.screenPos) < appState()->preferences()->moveThreshold()) {
+        if (distance(_initViewportPos, event.viewportPos) < appState()->preferences()->moveThreshold()) {
             return;
         }
         appState()->document()->history()->beginChange(tr("Move Vertex"));

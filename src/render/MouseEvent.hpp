@@ -15,9 +15,9 @@ namespace Render {
 
 struct MouseEvent {
 public:
-    MouseEvent(QMouseEvent* originalEvent, glm::dvec2 screenPos, const SP<Camera>& camera, double depth) :
+    MouseEvent(QMouseEvent* originalEvent, glm::dvec2 viewportPos, const SP<Camera>& camera, double depth) :
         originalEvent(originalEvent),
-        screenPos(screenPos),
+        viewportPos(viewportPos),
         camera(camera),
         depth(depth)
     {}
@@ -25,7 +25,7 @@ public:
     glm::dvec3 worldPos() const;
 
     QMouseEvent* originalEvent;
-    glm::dvec2 screenPos;
+    glm::dvec2 viewportPos;
     const SP<Camera>& camera;
     double depth;
 };

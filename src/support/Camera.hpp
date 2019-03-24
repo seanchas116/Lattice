@@ -32,25 +32,25 @@ public:
     void lookFront();
 
     glm::dmat4 worldToCameraMatrix() const { return _worldToCameraMatrix; }
-    glm::dmat4 cameraToScreenMatrix() const { return _cameraToScreenMatrix; }
-    glm::dmat4 worldToScreenMatrix() const { return _worldToScreenMatrix; }
+    glm::dmat4 cameraToViewportMatrix() const { return _cameraToViewportMatrix; }
+    glm::dmat4 worldToViewportMatrix() const { return _worldToViewportMatrix; }
 
-    std::pair<glm::dvec3, bool> mapModelToScreen(const glm::dmat4& modelMatrix, glm::dvec3 worldPos) const;
-    glm::dvec3 mapScreenToModel(const glm::dmat4& modelMatrix, glm::dvec3 screenPosWithDepth) const;
+    std::pair<glm::dvec3, bool> mapModelToViewport(const glm::dmat4& modelMatrix, glm::dvec3 worldPos) const;
+    glm::dvec3 mapViewportToModel(const glm::dmat4& modelMatrix, glm::dvec3 viewportPosWithDepth) const;
 
-    std::pair<glm::dvec3, bool> mapWorldToScreen(glm::dvec3 worldPos) const;
-    glm::dvec3 mapScreenToWorld(glm::dvec3 screenPosWithDepth) const;
+    std::pair<glm::dvec3, bool> mapWorldToViewport(glm::dvec3 worldPos) const;
+    glm::dvec3 mapViewportToWorld(glm::dvec3 viewportPosWithDepth) const;
 
     // screen coordinate range:
     //  0 <= x <= logical window width
     //  0 <= y <= logical window height
     //  0 <= z <= 1 (1 is farthest from camera)
-    std::pair<glm::dvec3, bool> mapCameraToScreen(glm::dvec3 cameraPos) const;
-    glm::dvec3 mapScreenToCamera(glm::dvec3 screenPosWithDepth) const;
+    std::pair<glm::dvec3, bool> mapCameraToViewport(glm::dvec3 cameraPos) const;
+    glm::dvec3 mapViewportToCamera(glm::dvec3 viewportPosWithDepth) const;
 
-    Ray<double> cameraMouseRay(glm::dvec2 screenPos) const;
-    Ray<double> worldMouseRay(glm::dvec2 screenPos) const;
-    Ray<double> modelMouseRay(const glm::dmat4& modelMatrix, glm::dvec2 screenPos) const;
+    Ray<double> cameraMouseRay(glm::dvec2 viewportPos) const;
+    Ray<double> worldMouseRay(glm::dvec2 viewportPos) const;
+    Ray<double> modelMouseRay(const glm::dmat4& modelMatrix, glm::dvec2 viewportPos) const;
 
 signals:
     void changed();
@@ -66,9 +66,9 @@ private:
 
     void updateMatrix();
 
-    glm::dmat4 _cameraToScreenMatrix;
+    glm::dmat4 _cameraToViewportMatrix;
     glm::dmat4 _worldToCameraMatrix;
-    glm::dmat4 _worldToScreenMatrix;
+    glm::dmat4 _worldToViewportMatrix;
 };
 
 } // namespace Lattice

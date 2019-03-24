@@ -55,7 +55,7 @@ void ArrowHandle::mousePress(const Render::MouseEvent &event) {
         return;
     }
 
-    RayRayDistanceSolver mouseToAxisDistanceSolver(event.camera->cameraMouseRay(event.screenPos), coordinates.axisRaysInCameraSpace[_axis]);
+    RayRayDistanceSolver mouseToAxisDistanceSolver(event.camera->cameraMouseRay(event.viewportPos), coordinates.axisRaysInCameraSpace[_axis]);
     double tAxis = mouseToAxisDistanceSolver.t1;
 
     _initialTargetPosition = _targetPosition;
@@ -73,7 +73,7 @@ void ArrowHandle::mouseMove(const Render::MouseEvent &event) {
         return;
     }
 
-    RayRayDistanceSolver mouseToAxisDistanceSolver(event.camera->cameraMouseRay(event.screenPos), coordinates.axisRaysInCameraSpace[_axis]);
+    RayRayDistanceSolver mouseToAxisDistanceSolver(event.camera->cameraMouseRay(event.viewportPos), coordinates.axisRaysInCameraSpace[_axis]);
     double tAxis = mouseToAxisDistanceSolver.t1;
 
     emit onChange(tAxis);

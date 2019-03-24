@@ -20,7 +20,7 @@ private:
     Mesh::MeshFragment _fragment;
 
     glm::dvec3 _initWorldPos {0};
-    glm::dvec2 _initScreenPos {0};
+    glm::dvec2 _initViewportPos {0};
     std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _initPositions;
 
     std::unordered_map<SP<Mesh::Vertex>, SP<Mesh::UVPoint>> _vertexToUV;

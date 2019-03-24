@@ -18,7 +18,7 @@ private:
     Mesh::MeshFragment _nextSelection;
     std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _initPositions;
     glm::dvec3 _initWorldPos {0};
-    glm::dvec2 _initScreenPos {0};
+    glm::dvec2 _initViewportPos {0};
     bool _dragged {false};
     bool _dragStarted {false};
 };

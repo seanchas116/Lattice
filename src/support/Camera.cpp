@@ -22,28 +22,28 @@ void Camera::lookFront() {
     setLocation(location);
 }
 
-std::pair<dvec3, bool> Camera::mapModelToScreen(const dmat4 &modelMatrix, dvec3 worldPos) const {
-    return mapWorldToScreen((modelMatrix * dvec4(worldPos, 1)).xyz);
+std::pair<dvec3, bool> Camera::mapModelToViewport(const dmat4 &modelMatrix, dvec3 worldPos) const {
+    return mapWorldToViewport((modelMatrix * dvec4(worldPos, 1)).xyz);
 }
 
-dvec3 Camera::mapScreenToModel(const dmat4 &modelMatrix, dvec3 screenPosWithDepth) const {
+dvec3 Camera::mapViewportToModel(const dmat4 &modelMatrix, dvec3 viewportPosWithDepth) const {
     dmat4 worldToModelMatrix = inverse(modelMatrix);
-    return (worldToModelMatrix * dvec4(mapScreenToWorld(screenPosWithDepth), 1)).xyz;
+    return (worldToModelMatrix * dvec4(mapViewportToWorld(viewportPosWithDepth), 1)).xyz;
 }
 
-std::pair<glm::dvec3, bool> Camera::mapWorldToScreen(dvec3 worldPos) const {
+std::pair<glm::dvec3, bool> Camera::mapWorldToViewport(dvec3 worldPos) const {
     dvec3 pos_cameraSpace = (_worldToCameraMatrix * dvec4(worldPos, 1)).xyz;
-    return mapCameraToScreen(pos_cameraSpace);
+    return mapCameraToViewport(pos_cameraSpace);
 }
 
-glm::dvec3 Camera::mapScreenToWorld(dvec3 screenPosWithDepth) const {
-    auto cameraPos = mapScreenToCamera(screenPosWithDepth);
+glm::dvec3 Camera::mapViewportToWorld(dvec3 viewportPosWithDepth) const {
+    auto cameraPos = mapViewportToCamera(viewportPosWithDepth);
     auto cameraToWorldMatrix = _location.matrixToWorld();
     return (cameraToWorldMatrix * vec4(cameraPos, 1)).xyz;
 }
 
-std::pair<dvec3, bool> Camera::mapCameraToScreen(dvec3 cameraPos) const {
-    vec4 pos_clipSpace = _cameraToScreenMatrix * vec4(cameraPos, 1);
+std::pair<dvec3, bool> Camera::mapCameraToViewport(dvec3 cameraPos) const {
+    vec4 pos_clipSpace = _cameraToViewportMatrix * vec4(cameraPos, 1);
     if (fabs(pos_clipSpace.x) <= pos_clipSpace.w && fabs(pos_clipSpace.y) <= pos_clipSpace.w && fabs(pos_clipSpace.z) <= pos_clipSpace.w) {
         vec3 ndc = vec3(pos_clipSpace.xyz) / pos_clipSpace.w;
         return {vec3((vec2(ndc.xy) + 1.f) * 0.5f * vec2(_viewSize), ndc.z * 0.5f + 0.5f), true};
@@ -51,37 +51,37 @@ std::pair<dvec3, bool> Camera::mapCameraToScreen(dvec3 cameraPos) const {
     return {vec3(0), false};
 }
 
-dvec3 Camera::mapScreenToCamera(dvec3 screenPosWithDepth) const {
-    return glm::unProject(screenPosWithDepth, dmat4(1), _cameraToScreenMatrix, dvec4(0, 0, _viewSize));
+dvec3 Camera::mapViewportToCamera(dvec3 viewportPosWithDepth) const {
+    return glm::unProject(viewportPosWithDepth, dmat4(1), _cameraToViewportMatrix, dvec4(0, 0, _viewSize));
 }
 
-Ray<double> Camera::cameraMouseRay(dvec2 screenPos) const {
-    dvec3 front = mapScreenToCamera(dvec3(screenPos, -1));
-    dvec3 back = mapScreenToCamera(dvec3(screenPos, 1));
+Ray<double> Camera::cameraMouseRay(dvec2 viewportPos) const {
+    dvec3 front = mapViewportToCamera(dvec3(viewportPos, -1));
+    dvec3 back = mapViewportToCamera(dvec3(viewportPos, 1));
     return {front, back - front};
 }
 
-Ray<double> Camera::worldMouseRay(dvec2 screenPos) const {
-    dvec3 front = mapScreenToWorld(dvec3(screenPos, -1));
-    dvec3 back = mapScreenToWorld(dvec3(screenPos, 1));
+Ray<double> Camera::worldMouseRay(dvec2 viewportPos) const {
+    dvec3 front = mapViewportToWorld(dvec3(viewportPos, -1));
+    dvec3 back = mapViewportToWorld(dvec3(viewportPos, 1));
     return {front, back - front};
 }
 
-Ray<double> Camera::modelMouseRay(const dmat4 &modelMatrix, dvec2 screenPos) const {
-    dvec3 front = mapScreenToModel(modelMatrix, dvec3(screenPos, -1));
-    dvec3 back = mapScreenToModel(modelMatrix, dvec3(screenPos, 1));
+Ray<double> Camera::modelMouseRay(const dmat4 &modelMatrix, dvec2 viewportPos) const {
+    dvec3 front = mapViewportToModel(modelMatrix, dvec3(viewportPos, -1));
+    dvec3 back = mapViewportToModel(modelMatrix, dvec3(viewportPos, 1));
     return {front, back - front};
 }
 
 void Camera::updateMatrix() {
     _worldToCameraMatrix = inverse(_location.matrixToWorld());
     if (_projection == Projection::Perspective) {
-        _cameraToScreenMatrix = glm::perspective(_fieldOfView, double(_viewSize.x) / double(_viewSize.y), _zNear, _zFar);
+        _cameraToViewportMatrix = glm::perspective(_fieldOfView, double(_viewSize.x) / double(_viewSize.y), _zNear, _zFar);
     } else {
         dvec2 topRight = _viewSize / _orthoScale * 0.5;
-        _cameraToScreenMatrix = glm::ortho(-topRight.x, topRight.x, -topRight.y, topRight.y, -10000.0, 10000.0);
+        _cameraToViewportMatrix = glm::ortho(-topRight.x, topRight.x, -topRight.y, topRight.y, -10000.0, 10000.0);
     }
-    _worldToScreenMatrix = _cameraToScreenMatrix * _worldToCameraMatrix;
+    _worldToViewportMatrix = _cameraToViewportMatrix * _worldToCameraMatrix;
 }
 
 } // namespace Lattice

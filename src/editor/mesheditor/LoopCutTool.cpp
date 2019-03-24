@@ -20,7 +20,7 @@ void LoopCutTool::mousePress(const Tool::EventTarget &target, const Render::Mous
     auto edge = *target.edge;
     auto mesh = item()->mesh();
 
-    Ray<double> mouseRay = event.camera->modelMouseRay(item()->location().matrixToWorld(), event.screenPos);
+    Ray<double> mouseRay = event.camera->modelMouseRay(item()->location().matrixToWorld(), event.viewportPos);
     RayRayDistanceSolver distanceSolver(Ray<double>(edge->ray()), mouseRay);
     double cutPosition = distanceSolver.t0;
 
