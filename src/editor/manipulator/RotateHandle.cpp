@@ -97,6 +97,10 @@ void RotateHandle::mouseReleaseEvent(const Render::MouseEvent &event) {
     emit onEnd();
 }
 
+void RotateHandle::contextMenuEvent(const Render::ContextMenuEvent &event) {
+    emit onContextMenu(event);
+}
+
 SP<Mesh::Mesh> RotateHandle::createMesh() {
     auto mesh = makeShared<Mesh::Mesh>();
     auto material = mesh->addMaterial();

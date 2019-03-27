@@ -27,12 +27,16 @@ public:
     void mouseMoveEvent(const Render::MouseEvent &event) override;
     void mouseReleaseEvent(const Render::MouseEvent &event) override;
 
+    void contextMenuEvent(const Render::ContextMenuEvent &event) override;
+
     void setTargetPosition(const glm::dvec3 &targetPosition) { _targetPosition = targetPosition; }
 
 signals:
     void onBegin(double value);
     void onChange(double value);
     void onEnd();
+
+    void onContextMenu(const Render::ContextMenuEvent& event);
 
 private:
     SP<Mesh::Mesh> createMesh();

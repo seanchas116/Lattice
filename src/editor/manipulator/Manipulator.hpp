@@ -40,6 +40,8 @@ signals:
     void onChange(ValueType type, int axis, double value);
     void onEnd(ValueType type);
 
+    void onContextMenu(const Render::ContextMenuEvent& event);
+
 private:
     void updateChildren();
 

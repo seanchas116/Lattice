@@ -22,6 +22,9 @@ public:
     void mousePressEvent(const Render::MouseEvent &event) override;
     void mouseMoveEvent(const Render::MouseEvent &event) override;
     void mouseReleaseEvent(const Render::MouseEvent &event) override;
+
+    void contextMenuEvent(const Render::ContextMenuEvent &event) override;
+
     void hoverEnterEvent(const Render::MouseEvent& event) override;
     void hoverLeaveEvent() override;
 
@@ -32,6 +35,8 @@ signals:
     void onBegin(double value);
     void onChange(double value);
     void onEnd();
+
+    void onContextMenu(const Render::ContextMenuEvent& event);
 
 private:
     SP<GL::VAO> createHandleVAO();

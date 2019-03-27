@@ -85,6 +85,10 @@ void ArrowHandle::mouseReleaseEvent(const Render::MouseEvent &event) {
     emit onEnd();
 }
 
+void ArrowHandle::contextMenuEvent(const Render::ContextMenuEvent &event) {
+    emit onContextMenu(event);
+}
+
 void ArrowHandle::hoverEnterEvent(const Render::MouseEvent &event) {
     Q_UNUSED(event);
     _hovered = true;
