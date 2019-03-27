@@ -41,9 +41,9 @@ Manipulator::Manipulator() {
         _rotateHandles.push_back(std::move(handle));
     }
 
-    connect(this, &Manipulator::isTranslateHandleVisibleChanged, this, &Manipulator::updateChildren);
-    connect(this, &Manipulator::isRotateHandleVisibleChanged, this, &Manipulator::updateChildren);
-    connect(this, &Manipulator::isScaleHandleVisibleChanged, this, &Manipulator::updateChildren);
+    connect(this, &Manipulator::translateHandleVisibleChanged, this, &Manipulator::updateChildren);
+    connect(this, &Manipulator::rotateHandleVisibleChanged, this, &Manipulator::updateChildren);
+    connect(this, &Manipulator::scaleHandleVisibleChanged, this, &Manipulator::updateChildren);
     updateChildren();
 }
 
@@ -55,28 +55,28 @@ void Manipulator::setTargetPosition(glm::dvec3 position) {
     emit targetPositionChanged(position);
 }
 
-void Manipulator::setIsTranslateHandleVisible(bool isTranslateHandleVisible) {
+void Manipulator::setTranslateHandleVisible(bool isTranslateHandleVisible) {
     if (_isTranslateHandleVisible == isTranslateHandleVisible) {
         return;
     }
     _isTranslateHandleVisible = isTranslateHandleVisible;
-    emit isTranslateHandleVisibleChanged(isTranslateHandleVisible);
+    emit translateHandleVisibleChanged(isTranslateHandleVisible);
 }
 
-void Manipulator::setIsRotateHandleVisible(bool isRotateHandleVisible) {
+void Manipulator::setRotateHandleVisible(bool isRotateHandleVisible) {
     if (_isRotateHandleVisible == isRotateHandleVisible) {
         return;
     }
     _isRotateHandleVisible = isRotateHandleVisible;
-    emit isRotateHandleVisibleChanged(isRotateHandleVisible);
+    emit rotateHandleVisibleChanged(isRotateHandleVisible);
 }
 
-void Manipulator::setIsScaleHandleVisible(bool isScaleHandleVisible) {
+void Manipulator::setScaleHandleVisible(bool isScaleHandleVisible) {
     if (_isScaleHandleVisible == isScaleHandleVisible) {
         return;
     }
     _isScaleHandleVisible = isScaleHandleVisible;
-    emit isScaleHandleVisibleChanged(isScaleHandleVisible);
+    emit scaleHandleVisibleChanged(isScaleHandleVisible);
 }
 
 void Manipulator::updateChildren() {

@@ -21,20 +21,20 @@ public:
     void setTargetPosition(glm::dvec3 position);
 
     bool isTranslateHandleVisible() const { return _isTranslateHandleVisible; }
-    void setIsTranslateHandleVisible(bool isTranslateHandleVisible);
+    void setTranslateHandleVisible(bool isTranslateHandleVisible);
 
     bool isRotateHandleVisible() const { return _isRotateHandleVisible; }
-    void setIsRotateHandleVisible(bool isRotateHandleVisible);
+    void setRotateHandleVisible(bool isRotateHandleVisible);
 
     bool isScaleHandleVisible() const { return _isScaleHandleVisible; }
-    void setIsScaleHandleVisible(bool isScaleHandleVisible);
+    void setScaleHandleVisible(bool isScaleHandleVisible);
 
 signals:
     void targetPositionChanged(glm::dvec3 position);
 
-    void isTranslateHandleVisibleChanged(bool isTranslateHandleVisible);
-    void isRotateHandleVisibleChanged(bool isRotateHandleVisible);
-    void isScaleHandleVisibleChanged(bool isScaleHandleVisible);
+    void translateHandleVisibleChanged(bool isTranslateHandleVisible);
+    void rotateHandleVisibleChanged(bool isRotateHandleVisible);
+    void scaleHandleVisibleChanged(bool isScaleHandleVisible);
 
     void onBegin(ValueType type, double value);
     void onChange(ValueType type, int axis, double value);
