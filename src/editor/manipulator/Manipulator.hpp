@@ -7,7 +7,7 @@ namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
-class Manipulator : public QObject {
+class Manipulator : public Render::RenderableObject {
     Q_OBJECT
 
 public:
