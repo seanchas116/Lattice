@@ -35,6 +35,10 @@ class VAO;
 }
 
 namespace Editor {
+namespace Manipulator {
+class MeshManipulator;
+}
+
 namespace MeshEditor {
 
 class MeshEditor final : public Render::RenderableObject, protected QOpenGLExtraFunctions {
@@ -78,6 +82,8 @@ private:
 
     SP<State::AppState> _appState;
     SP<Document::MeshItem> _item;
+
+    SP<Manipulator::MeshManipulator> _manipulator;
 
     bool _isVAOsDirty = true;
 

@@ -3,6 +3,7 @@
 #include "DrawTool.hpp"
 #include "ExtrudeTool.hpp"
 #include "LoopCutTool.hpp"
+#include "../manipulator/MeshManipulator.hpp"
 #include "../../state/AppState.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
@@ -87,6 +88,7 @@ private:
 MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::MeshItem> &item) :
     _appState(appState),
     _item(item),
+    _manipulator(makeShared<Manipulator::MeshManipulator>(appState)),
     _faceVBO(makeShared<GL::VertexBuffer<GL::Vertex>>()),
     _facePickVAO(makeShared<GL::VAO>()),
     _edgeVAO(makeShared<GL::VAO>()),
@@ -189,6 +191,7 @@ void MeshEditor::updateWholeVAOs() {
     auto hitTestExclusion = _tool->hitTestExclusion();
 
     std::vector<SP<Render::Renderable>> childPickables;
+    childPickables.push_back(_manipulator);
 
     {
         _vertexAttributes.clear();
