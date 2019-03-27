@@ -2,14 +2,14 @@
 
 #include "../support/Shorthands.hpp"
 #include "../render/RenderableObject.hpp"
-#include "../gl/VertexBuffer.hpp"
 #include <glm/glm.hpp>
 
 namespace Lattice {
 class Camera;
 
 namespace GL {
-class VAO;
+struct Vertex;
+template <typename T> class VertexBuffer;
 class IndexBuffer;
 }
 

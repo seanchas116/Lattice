@@ -1,5 +1,4 @@
 #pragma once
-#include "../../gl/VertexBuffer.hpp"
 #include "../../render/RenderableObject.hpp"
 
 namespace Lattice {
