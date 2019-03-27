@@ -1,6 +1,7 @@
 #pragma once
 #include "../support/Shorthands.hpp"
 #include "../gl/VertexBuffer.hpp"
+#include "../gl/Vertex.hpp"
 #include <unordered_map>
 
 namespace Lattice {

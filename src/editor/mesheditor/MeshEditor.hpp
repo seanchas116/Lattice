@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Tool.hpp"
+#include "../../render/RenderableObject.hpp"
+#include "../../gl/Vertex.hpp"
 #include "../../support/Shorthands.hpp"
 #include "../../support/Box.hpp"
 #include "../../support/Location.hpp"
-#include "../../render/RenderableObject.hpp"
-#include "../../gl/VertexBuffer.hpp"
 #include <glm/glm.hpp>
 #include <unordered_map>
 
@@ -29,6 +29,8 @@ class Material;
 }
 
 namespace GL {
+struct Vertex;
+template <typename T> class VertexBuffer;
 class VAO;
 }
 

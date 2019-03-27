@@ -1,4 +1,5 @@
 #include "VAO.hpp"
+#include "Vertex.hpp"
 #include "VertexBuffer.hpp"
 #include "IndexBuffer.hpp"
 #include <array>
