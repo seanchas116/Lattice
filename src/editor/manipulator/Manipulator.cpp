@@ -1,6 +1,7 @@
 #include "Manipulator.hpp"
 #include "ArrowHandle.hpp"
 #include "RotateHandle.hpp"
+#include "Manipulator.hpp"
 
 namespace Lattice {
 namespace Editor {
@@ -67,6 +68,30 @@ std::vector<SP<Render::RenderableObject> > Manipulator::handles(bool withTransla
         }
     }
     return handles;
+}
+
+void Manipulator::setIsTranslateHandleVisible(bool isTranslateHandleVisible) {
+    if (_isTranslateHandleVisible == isTranslateHandleVisible) {
+        return;
+    }
+    _isTranslateHandleVisible = isTranslateHandleVisible;
+    emit isTranslateHandleVisibleChanged(isTranslateHandleVisible);
+}
+
+void Manipulator::setIsRotateHandleVisible(bool isRotateHandleVisible) {
+    if (_isRotateHandleVisible == isRotateHandleVisible) {
+        return;
+    }
+    _isRotateHandleVisible = isRotateHandleVisible;
+    emit isRotateHandleVisibleChanged(isRotateHandleVisible);
+}
+
+void Manipulator::setIsScaleHandleVisible(bool isScaleHandleVisible) {
+    if (_isScaleHandleVisible == isScaleHandleVisible) {
+        return;
+    }
+    _isScaleHandleVisible = isScaleHandleVisible;
+    emit isScaleHandleVisibleChanged(isScaleHandleVisible);
 }
 
 }

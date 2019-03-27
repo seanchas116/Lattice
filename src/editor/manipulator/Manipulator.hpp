@@ -24,8 +24,22 @@ public:
         Translate, Scale, Rotate
     };
 
+    bool isTranslateHandleVisible() const { return _isTranslateHandleVisible; }
+    void setIsTranslateHandleVisible(bool isTranslateHandleVisible);
+
+    bool isRotateHandleVisible() const { return _isRotateHandleVisible; }
+    void setIsRotateHandleVisible(bool isRotateHandleVisible);
+
+    bool isScaleHandleVisible() const { return _isScaleHandleVisible; }
+    void setIsScaleHandleVisible(bool isScaleHandleVisible);
+
 signals:
+    void isTranslateHandleVisibleChanged(bool isTranslateHandleVisible);
+    void isRotateHandleVisibleChanged(bool isRotateHandleVisible);
+    void isScaleHandleVisibleChanged(bool isScaleHandleVisible);
+
     void targetPositionChanged(glm::dvec3 position);
+
     void onBegin(ValueType type, double value);
     void onChange(ValueType type, int axis, double value);
     void onEnd(ValueType type);
@@ -35,6 +49,9 @@ private:
     std::vector<SP<Render::RenderableObject>> _rotateHandles;
     std::vector<SP<Render::RenderableObject>> _scaleHandles;
     glm::dvec3 _targetPosition;
+    bool _isTranslateHandleVisible = true;
+    bool _isRotateHandleVisible = true;
+    bool _isScaleHandleVisible = true;
 };
 
 }
