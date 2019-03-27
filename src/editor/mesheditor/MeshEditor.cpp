@@ -345,23 +345,29 @@ void MeshEditor::mouseReleaseTarget(const Tool::EventTarget &target, const Rende
 
 void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
     Q_UNUSED(event);
+    // TODO: update partially
     if (target.vertex) {
         _hoveredVertex = target.vertex;
-        updateWholeVAOs(); // TODO: update partially
+        _isVAOsDirty = true;
+        update();
     } else if (target.edge) {
         _hoveredEdge = target.edge;
-        updateWholeVAOs(); // TODO: update partially
+        _isVAOsDirty = true;
+        update();
     }
     _tool->hoverEnterEvent(target, event);
 }
 
 void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
+    // TODO: update partially
     if (target.vertex) {
         _hoveredVertex = {};
-        updateWholeVAOs(); // TODO: update partially
+        _isVAOsDirty = true;
+        update();
     } else if (target.edge) {
         _hoveredEdge = {};
-        updateWholeVAOs(); // TODO: update partially
+        _isVAOsDirty = true;
+        update();
     }
     _tool->hoverLeaveEvent(target);
 }
