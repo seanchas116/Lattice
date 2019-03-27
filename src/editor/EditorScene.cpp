@@ -89,9 +89,6 @@ void EditorScene::updateRenderables() {
     if (!_appState->document()->selectedItems().empty() && !_appState->document()->isEditing()) {
         renderables.push_back(_objectManipulator);
     }
-    if (_appState->document()->isEditing() && !_appState->document()->meshSelection().vertices.empty() && _appState->tool() == State::Tool::None) {
-        renderables.push_back(_meshManipulator);
-    }
 
     setChildRenderables(renderables);
     update();
