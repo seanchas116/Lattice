@@ -3,7 +3,18 @@
 namespace Lattice {
 namespace Render {
 
+void RenderableObject::setVisible(bool visible) {
+    if (_isVisible == visible) {
+        return;
+    }
+    _isVisible = visible;
+    update();
+}
+
 void RenderableObject::drawRecursive(const SP<Operations> &operations, const SP<Camera> &camera) {
+    if (!_isVisible) {
+        return;
+    }
     draw(operations, camera);
     for (auto& c : childRenderables()) {
         auto childObj = dynamicPointerCast<RenderableObject>(c);
@@ -16,6 +27,9 @@ void RenderableObject::drawRecursive(const SP<Operations> &operations, const SP<
 }
 
 void RenderableObject::drawPickablesRecursive(const SP<Operations> &operations, const SP<Camera> &camera, std::vector<SP<Renderable> > &renderedChildren) {
+    if (!_isVisible) {
+        return;
+    }
     drawPickables(operations, camera);
     for (auto& c : childRenderables()) {
         auto childObj = dynamicPointerCast<RenderableObject>(c);

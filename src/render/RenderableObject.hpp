@@ -15,6 +15,9 @@ class RenderableObject : public QObject, public Renderable {
 public:
     RenderableObject() {}
 
+    bool isVisible() const { return _isVisible; }
+    void setVisible(bool visible);
+
     void drawRecursive(const SP<Operations>& operations, const SP<Camera>& camera);
     void drawPickablesRecursive(const SP<Operations>& operations, const SP<Camera>& camera, std::vector<SP<Renderable>>& renderedChildren);
 
@@ -28,6 +31,7 @@ signals:
 
 private:
     std::vector<SP<Renderable>> _childRenderables;
+    bool _isVisible = true;
 };
 
 } // namespace Renderer
