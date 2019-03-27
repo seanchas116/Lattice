@@ -82,19 +82,13 @@ void Manipulator::setScaleHandleVisible(bool isScaleHandleVisible) {
 void Manipulator::updateChildren() {
     std::vector<SP<Render::Renderable>> handles;
     if (_isTranslateHandleVisible) {
-        for (auto& h : _translateHandles) {
-            handles.push_back(h);
-        }
+        handles.insert(handles.end(), _translateHandles.begin(), _translateHandles.end());
     }
     if (_isRotateHandleVisible) {
-        for (auto& h : _rotateHandles) {
-            handles.push_back(h);
-        }
+        handles.insert(handles.end(), _rotateHandles.begin(), _rotateHandles.end());
     }
     if (_isScaleHandleVisible) {
-        for (auto& h : _scaleHandles) {
-            handles.push_back(h);
-        }
+        handles.insert(handles.end(), _scaleHandles.begin(), _scaleHandles.end());
     }
     setChildRenderables(handles);
 }

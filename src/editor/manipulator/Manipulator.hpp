@@ -43,9 +43,9 @@ signals:
 private:
     void updateChildren();
 
-    std::vector<SP<Render::RenderableObject>> _translateHandles;
-    std::vector<SP<Render::RenderableObject>> _rotateHandles;
-    std::vector<SP<Render::RenderableObject>> _scaleHandles;
+    std::vector<SP<Render::Renderable>> _translateHandles;
+    std::vector<SP<Render::Renderable>> _rotateHandles;
+    std::vector<SP<Render::Renderable>> _scaleHandles;
     glm::dvec3 _targetPosition;
     bool _isTranslateHandleVisible = true;
     bool _isRotateHandleVisible = false;
