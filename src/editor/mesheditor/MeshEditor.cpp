@@ -27,90 +27,60 @@ const vec4 hoveredColor = vec4(1, 1, 0, 1);
 
 }
 
-class MeshEditor::VertexPickable : public Render::Renderable {
+class MeshEditor::EditorPickable : public Render::Renderable {
 public:
-    VertexPickable(MeshEditor* editor, const SP<Mesh::Vertex>& vertex) : _editor(editor), _vertex(vertex) {}
-
+    EditorPickable(MeshEditor* editor) : _editor(editor) {}
     void mousePressEvent(const Render::MouseEvent &event) override {
-        _editor->mousePressTarget({_vertex, {}, {}}, event);
+        _editor->mousePressTarget(target(), event);
     }
-
     void mouseMoveEvent(const Render::MouseEvent &event) override {
-        _editor->mouseMoveTarget({_vertex, {}, {}}, event);
+        _editor->mouseMoveTarget(target(), event);
     }
-
     void mouseReleaseEvent(const Render::MouseEvent &event) override {
-        _editor->mouseReleaseTarget({_vertex, {}, {}}, event);
+        _editor->mouseReleaseTarget(target(), event);
     }
-
+    void contextMenuEvent(const Render::ContextMenuEvent &event) override {
+        _editor->contextMenuEvent(event);
+    }
     void hoverEnterEvent(const Render::MouseEvent &event) override {
-        _editor->hoverEnterTarget({_vertex, {}, {}}, event);
+        _editor->hoverEnterTarget(target(), event);
     }
-
     void hoverLeaveEvent() override {
-        _editor->hoverLeaveTarget({_vertex, {}, {}});
+        _editor->hoverLeaveTarget(target());
     }
-
+protected:
+    virtual Tool::EventTarget target() const = 0;
 private:
     MeshEditor* _editor;
+};
+
+class MeshEditor::VertexPickable : public MeshEditor::EditorPickable {
+public:
+    VertexPickable(MeshEditor* editor, const SP<Mesh::Vertex>& vertex) : EditorPickable(editor), _vertex(vertex) {}
+    Tool::EventTarget target() const override {
+        return {_vertex, {}, {}};
+    }
+private:
     SP<Mesh::Vertex> _vertex;
 };
 
-class MeshEditor::EdgePickable : public Render::Renderable {
+class MeshEditor::EdgePickable : public MeshEditor::EditorPickable {
 public:
-    EdgePickable(MeshEditor* editor, const SP<Mesh::Edge>& edge) : _editor(editor), _edge(edge) {}
-
-    void mousePressEvent(const Render::MouseEvent &event) override {
-        _editor->mousePressTarget({{}, _edge, {}}, event);
+    EdgePickable(MeshEditor* editor, const SP<Mesh::Edge>& edge) : EditorPickable(editor), _edge(edge) {}
+    Tool::EventTarget target() const override {
+        return {{}, _edge, {}};
     }
-
-    void mouseMoveEvent(const Render::MouseEvent &event) override {
-        _editor->mouseMoveTarget({{}, _edge, {}}, event);
-    }
-
-    void mouseReleaseEvent(const Render::MouseEvent &event) override {
-        _editor->mouseReleaseTarget({{}, _edge, {}}, event);
-    }
-
-    void hoverEnterEvent(const Render::MouseEvent &event) override {
-        _editor->hoverEnterTarget({{}, _edge, {}}, event);
-    }
-
-    void hoverLeaveEvent() override {
-        _editor->hoverLeaveTarget({{}, _edge, {}});
-    }
-
 private:
-    MeshEditor* _editor;
     SP<Mesh::Edge> _edge;
 };
 
-class MeshEditor::FacePickable : public Render::Renderable {
+class MeshEditor::FacePickable : public MeshEditor::EditorPickable {
 public:
-    FacePickable(MeshEditor* editor, const SP<Mesh::Face>& face) : _editor(editor), _face(face) {}
-
-    void mousePressEvent(const Render::MouseEvent &event) override {
-        _editor->mousePressTarget({{}, {}, _face}, event);
+    FacePickable(MeshEditor* editor, const SP<Mesh::Face>& face) : EditorPickable(editor), _face(face) {}
+    Tool::EventTarget target() const override {
+        return {{}, {}, _face};
     }
-
-    void mouseMoveEvent(const Render::MouseEvent &event) override {
-        _editor->mouseMoveTarget({{}, {}, _face}, event);
-    }
-
-    void mouseReleaseEvent(const Render::MouseEvent &event) override {
-        _editor->mouseReleaseTarget({{}, {}, _face}, event);
-    }
-
-    void hoverEnterEvent(const Render::MouseEvent &event) override {
-        _editor->hoverEnterTarget({{}, {}, _face}, event);
-    }
-
-    void hoverLeaveEvent() override {
-        _editor->hoverLeaveTarget({{}, {}, _face});
-    }
-
 private:
-    MeshEditor* _editor;
     SP<Mesh::Face> _face;
 };
 

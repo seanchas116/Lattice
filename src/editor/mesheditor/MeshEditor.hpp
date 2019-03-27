@@ -64,6 +64,7 @@ private:
 
     void updateWholeVAOs();
 
+    class EditorPickable;
     class VertexPickable;
     class EdgePickable;
     class FacePickable;
