@@ -101,6 +101,10 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     updateWholeVAOs();
     connect(_item->mesh().get(), &Mesh::Mesh::changed, this, &MeshEditor::handleMeshChange);
     connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::handleMeshChange);
+    connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, [this](auto& selection) {
+        _manipulator->setVisible(!selection.empty());
+    });
+    _manipulator->setVisible(!_appState->document()->meshSelection().empty());
     connect(_appState.get(), &State::AppState::toolChanged, this, &MeshEditor::handleToolChange);
 }
 
