@@ -3,8 +3,47 @@
 namespace Lattice {
 namespace Render {
 
-void RenderableObject::onUpdate() {
-    emit updated();
+void RenderableObject::drawRecursive(const SP<Operations> &operations, const SP<Camera> &camera) {
+    draw(operations, camera);
+    for (auto& c : childRenderables()) {
+        auto childObj = dynamicPointerCast<RenderableObject>(c);
+        if (childObj) {
+            (*childObj)->drawRecursive(operations, camera);
+        } else {
+            c->draw(operations, camera);
+        }
+    }
+}
+
+void RenderableObject::drawPickablesRecursive(const SP<Operations> &operations, const SP<Camera> &camera, std::vector<SP<Renderable> > &renderedChildren) {
+    drawPickables(operations, camera);
+    for (auto& c : childRenderables()) {
+        auto childObj = dynamicPointerCast<RenderableObject>(c);
+        if (childObj) {
+            (*childObj)->drawPickablesRecursive(operations, camera, renderedChildren);
+        } else {
+            c->drawPickables(operations, camera);
+        }
+    }
+    renderedChildren.insert(renderedChildren.end(), _childRenderables.begin(), _childRenderables.end());
+}
+
+void RenderableObject::setChildRenderables(const std::vector<SP<Renderable> > &children) {
+    for (auto& child : _childRenderables) {
+        auto childObj = dynamicPointerCast<RenderableObject>(child);
+        if (childObj) {
+            disconnect(childObj->get(), &RenderableObject::updated, this, &RenderableObject::updated);
+        }
+    }
+
+    _childRenderables = children;
+
+    for (auto& child : _childRenderables) {
+        auto childObj = dynamicPointerCast<RenderableObject>(child);
+        if (childObj) {
+            connect(childObj->get(), &RenderableObject::updated, this, &RenderableObject::updated);
+        }
+    }
 }
 
 } // namespace Renderer

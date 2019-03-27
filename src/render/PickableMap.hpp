@@ -26,7 +26,7 @@ public:
     PickableMap();
 
     Opt<std::pair<SP<Renderable>, double>> pick(glm::vec2 physicalPos);
-    void draw(const SP<Renderable> &renderables, const SP<Operations>& operations, const SP<Camera>& camera);
+    void draw(const SP<RenderableObject> &renderable, const SP<Operations>& operations, const SP<Camera>& camera);
 
 private:
     void resize(glm::ivec2 size);

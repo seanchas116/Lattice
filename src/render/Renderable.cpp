@@ -41,21 +41,6 @@ void Renderable::hoverEnterEvent(const MouseEvent &event) {
 void Renderable::hoverLeaveEvent() {
 }
 
-void Renderable::drawRecursive(const SP<Operations> &operations, const SP<Camera> &camera) {
-    draw(operations, camera);
-    for (auto& c : children()) {
-        c->drawRecursive(operations, camera);
-    }
-}
-
-void Renderable::drawPickablesRecursive(const SP<Operations> &operations, const SP<Camera> &camera, std::vector<SP<Renderable> > &renderedChildren) {
-    drawPickables(operations, camera);
-    for (auto& c : children()) {
-        c->drawPickablesRecursive(operations, camera, renderedChildren);
-    }
-    renderedChildren.insert(renderedChildren.end(), _children.begin(), _children.end());
-}
-
 glm::vec4 Renderable::toIDColor() const {
     union {
         const Renderable* ptr;
@@ -76,27 +61,6 @@ Opt<SP<Renderable> > Renderable::fromIDColor(glm::vec4 color) {
         return {};
     }
     return idColor.ptr->sharedFromThis();
-}
-
-void Renderable::setChildren(const std::vector<SP<Renderable> > &children) {
-    for (auto& c : _children) {
-        c->_parent = nullptr;
-    }
-    _children = children;
-    for (auto& c : children) {
-        c->_parent = this;
-    }
-    update();
-}
-
-void Renderable::update() {
-    onUpdate();
-    if (_parent) {
-        _parent->update();
-    }
-}
-
-void Renderable::onUpdate() {
 }
 
 } // namespace Render

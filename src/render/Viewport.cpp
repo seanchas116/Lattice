@@ -15,11 +15,8 @@ Viewport::Viewport(QWidget *parent) : QWidget(parent), _camera(makeShared<Camera
     setMouseTracking(true);
 }
 
-void Viewport::setRenderable(const Opt<SP<Renderable> > &renderable) {
-    auto renderableObject = dynamicPointerCast<RenderableObject>(renderable);
-    if (renderableObject) {
-        connect(renderableObject->get(), &RenderableObject::updated, this, &Viewport::updateRequested);
-    }
+void Viewport::setRenderable(const Opt<SP<RenderableObject> > &renderable) {
+     connect(renderable->get(), &RenderableObject::updated, this, &Viewport::updateRequested);
     _renderable = renderable;
 }
 

@@ -25,23 +25,8 @@ public:
     virtual void hoverEnterEvent(const MouseEvent& event);
     virtual void hoverLeaveEvent();
 
-    void drawRecursive(const SP<Operations>& operations, const SP<Camera>& camera);
-    void drawPickablesRecursive(const SP<Operations>& operations, const SP<Camera>& camera, std::vector<SP<Renderable>>& renderedChildren);
-
     glm::vec4 toIDColor() const;
     static Opt<SP<Renderable>> fromIDColor(glm::vec4 color);
-
-    auto& children() const { return _children; }
-    void setChildren(const std::vector<SP<Renderable>>& children);
-
-    void update();
-
-protected:
-    virtual void onUpdate();
-
-private:
-    Renderable* _parent = nullptr;
-    std::vector<SP<Renderable>> _children;
 };
 
 } // namespace Render

@@ -143,7 +143,7 @@ void EditorViewportContainer::setSplitMode(State::ViewportSplitMode split) {
     update();
 }
 
-void EditorViewportContainer::setRenderable(const Opt<SP<Render::Renderable>> &renderable) {
+void EditorViewportContainer::setRenderable(const Opt<SP<Render::RenderableObject> > &renderable) {
     _renderable = renderable;
     for (auto& v : viewports()) {
         v->setRenderable(renderable);

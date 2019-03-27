@@ -24,12 +24,12 @@ public:
 
 private:
     void setSplitMode(State::ViewportSplitMode split);
-    void setRenderable(const Opt<SP<Render::Renderable>>& renderable);
+    void setRenderable(const Opt<SP<Render::RenderableObject>>& renderable);
 
     SP<State::AppState> _appState;
     SP<KeyObserver> _keyObserver;
     Opt<SP<EditorScene>> _scene;
-    Opt<SP<Render::Renderable>> _renderable;
+    Opt<SP<Render::RenderableObject>> _renderable;
 };
 
 }

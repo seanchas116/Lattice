@@ -93,7 +93,7 @@ void EditorScene::updateRenderables() {
         }
     }
 
-    setChildren(renderables);
+    setChildRenderables(renderables);
     update();
 }
 

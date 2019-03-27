@@ -326,7 +326,7 @@ void MeshEditor::updateWholeVAOs() {
         _facePickVAO = makeShared<GL::VAO>(pickVertexBuffer, pickIndexBuffer);
     }
 
-    setChildren(childPickables);
+    setChildRenderables(childPickables);
 
     _isVAOsDirty = false;
 }
