@@ -99,13 +99,15 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
 {
     initializeOpenGLFunctions();
     updateWholeVAOs();
+
     connect(_item->mesh().get(), &Mesh::Mesh::changed, this, &MeshEditor::handleMeshChange);
     connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::handleMeshChange);
-    connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, [this](auto& selection) {
-        _manipulator->setVisible(!selection.empty());
-    });
-    _manipulator->setVisible(!_appState->document()->meshSelection().empty());
+
     connect(_appState.get(), &State::AppState::toolChanged, this, &MeshEditor::handleToolChange);
+
+    connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::updateManinpulatorVisibility);
+    connect(_appState.get(), &State::AppState::toolChanged, this, &MeshEditor::updateManinpulatorVisibility);
+    updateManinpulatorVisibility();
 }
 
 void MeshEditor::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
@@ -336,6 +338,10 @@ void MeshEditor::updateWholeVAOs() {
     setChildRenderables(childPickables);
 
     _isVAOsDirty = false;
+}
+
+void MeshEditor::updateManinpulatorVisibility() {
+    _manipulator->setVisible(!_appState->document()->meshSelection().empty() && _appState->tool() == State::Tool::None);
 }
 
 void MeshEditor::mousePressTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {

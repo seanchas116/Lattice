@@ -75,6 +75,8 @@ private:
 
     void updateWholeVAOs();
 
+    void updateManinpulatorVisibility();
+
     class EditorPickable;
     class VertexPickable;
     class EdgePickable;
