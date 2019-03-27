@@ -25,9 +25,13 @@ EditorScene::EditorScene(const SP<State::AppState> &appState) :
     connect(appState.get(), &State::AppState::isFaceSelectableChanged, this, &EditorScene::updateRenderables);
     connect(appState.get(), &State::AppState::toolChanged, this, &EditorScene::updateRenderables);
 
-    connect(appState.get(), &State::AppState::isTranslateHandleVisibleChanged, this, &EditorScene::updateRenderables);
-    connect(appState.get(), &State::AppState::isRotateHandleVisibleChanged, this, &EditorScene::updateRenderables);
-    connect(appState.get(), &State::AppState::isScaleHandleVisibleChanged, this, &EditorScene::updateRenderables);
+    connect(appState.get(), &State::AppState::isTranslateHandleVisibleChanged, _objectManipulator.get(), &Manipulator::Manipulator::setTranslateHandleVisible);
+    connect(appState.get(), &State::AppState::isRotateHandleVisibleChanged, _objectManipulator.get(), &Manipulator::Manipulator::setRotateHandleVisible);
+    connect(appState.get(), &State::AppState::isScaleHandleVisibleChanged, _objectManipulator.get(), &Manipulator::Manipulator::setScaleHandleVisible);
+
+    connect(appState.get(), &State::AppState::isTranslateHandleVisibleChanged, _meshManipulator.get(), &Manipulator::Manipulator::setTranslateHandleVisible);
+    connect(appState.get(), &State::AppState::isRotateHandleVisibleChanged, _meshManipulator.get(), &Manipulator::Manipulator::setRotateHandleVisible);
+    connect(appState.get(), &State::AppState::isScaleHandleVisibleChanged, _meshManipulator.get(), &Manipulator::Manipulator::setScaleHandleVisible);
 
     connect(appState->document().get(), &Document::Document::itemInserted, this, &EditorScene::updateRenderables);
     connect(appState->document().get(), &Document::Document::itemRemoved, this, &EditorScene::updateRenderables);
@@ -83,14 +87,10 @@ void EditorScene::updateRenderables() {
     }
 
     if (!_appState->document()->selectedItems().empty() && !_appState->document()->isEditing()) {
-        for (auto& h : _objectManipulator->handles(_appState->isTranslateHandleVisible(), _appState->isRotateHandleVisible(), _appState->isScaleHandleVisible())) {
-            renderables.push_back(h);
-        }
+        renderables.push_back(_objectManipulator);
     }
     if (_appState->document()->isEditing() && !_appState->document()->meshSelection().vertices.empty() && _appState->tool() == State::Tool::None) {
-        for (auto& h : _meshManipulator->handles(_appState->isTranslateHandleVisible(), _appState->isRotateHandleVisible(), _appState->isScaleHandleVisible())) {
-            renderables.push_back(h);
-        }
+        renderables.push_back(_meshManipulator);
     }
 
     setChildRenderables(renderables);

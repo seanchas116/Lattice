@@ -1,6 +1,7 @@
 #include "Manipulator.hpp"
 #include "ArrowHandle.hpp"
 #include "RotateHandle.hpp"
+#include "Manipulator.hpp"
 
 namespace Lattice {
 namespace Editor {
@@ -39,6 +40,11 @@ Manipulator::Manipulator() {
         connect(handle.get(), &RotateHandle::onEnd, this, [this] { emit onEnd(ValueType::Rotate); });
         _rotateHandles.push_back(std::move(handle));
     }
+
+    connect(this, &Manipulator::translateHandleVisibleChanged, this, &Manipulator::updateChildren);
+    connect(this, &Manipulator::rotateHandleVisibleChanged, this, &Manipulator::updateChildren);
+    connect(this, &Manipulator::scaleHandleVisibleChanged, this, &Manipulator::updateChildren);
+    updateChildren();
 }
 
 void Manipulator::setTargetPosition(glm::dvec3 position) {
@@ -49,24 +55,42 @@ void Manipulator::setTargetPosition(glm::dvec3 position) {
     emit targetPositionChanged(position);
 }
 
-std::vector<SP<Render::RenderableObject> > Manipulator::handles(bool withTranslate, bool withRotate, bool withScale) const {
-    std::vector<SP<Render::RenderableObject>> handles;
-    if (withTranslate) {
-        for (auto& h : _translateHandles) {
-            handles.push_back(h);
-        }
+void Manipulator::setTranslateHandleVisible(bool isTranslateHandleVisible) {
+    if (_isTranslateHandleVisible == isTranslateHandleVisible) {
+        return;
     }
-    if (withRotate) {
-        for (auto& h : _rotateHandles) {
-            handles.push_back(h);
-        }
+    _isTranslateHandleVisible = isTranslateHandleVisible;
+    emit translateHandleVisibleChanged(isTranslateHandleVisible);
+}
+
+void Manipulator::setRotateHandleVisible(bool isRotateHandleVisible) {
+    if (_isRotateHandleVisible == isRotateHandleVisible) {
+        return;
     }
-    if (withScale) {
-        for (auto& h : _scaleHandles) {
-            handles.push_back(h);
-        }
+    _isRotateHandleVisible = isRotateHandleVisible;
+    emit rotateHandleVisibleChanged(isRotateHandleVisible);
+}
+
+void Manipulator::setScaleHandleVisible(bool isScaleHandleVisible) {
+    if (_isScaleHandleVisible == isScaleHandleVisible) {
+        return;
     }
-    return handles;
+    _isScaleHandleVisible = isScaleHandleVisible;
+    emit scaleHandleVisibleChanged(isScaleHandleVisible);
+}
+
+void Manipulator::updateChildren() {
+    std::vector<SP<Render::Renderable>> handles;
+    if (_isTranslateHandleVisible) {
+        handles.insert(handles.end(), _translateHandles.begin(), _translateHandles.end());
+    }
+    if (_isRotateHandleVisible) {
+        handles.insert(handles.end(), _rotateHandles.begin(), _rotateHandles.end());
+    }
+    if (_isScaleHandleVisible) {
+        handles.insert(handles.end(), _scaleHandles.begin(), _scaleHandles.end());
+    }
+    setChildRenderables(handles);
 }
 
 }

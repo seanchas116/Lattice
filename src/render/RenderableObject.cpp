@@ -44,6 +44,8 @@ void RenderableObject::setChildRenderables(const std::vector<SP<Renderable> > &c
             connect(childObj->get(), &RenderableObject::updated, this, &RenderableObject::updated);
         }
     }
+
+    update();
 }
 
 } // namespace Renderer
