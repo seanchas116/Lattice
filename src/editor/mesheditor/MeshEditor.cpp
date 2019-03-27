@@ -40,7 +40,7 @@ public:
         _editor->mouseReleaseTarget(target(), event);
     }
     void contextMenuEvent(const Render::ContextMenuEvent &event) override {
-        _editor->contextMenuEvent(event);
+        _editor->contextMenuTarget(target(), event);
     }
     void hoverEnterEvent(const Render::MouseEvent &event) override {
         _editor->hoverEnterTarget(target(), event);
@@ -143,6 +143,10 @@ void MeshEditor::mouseMoveEvent(const Render::MouseEvent &event) {
 
 void MeshEditor::mouseReleaseEvent(const Render::MouseEvent &event) {
     mouseReleaseTarget({}, event);
+}
+
+void MeshEditor::contextMenuEvent(const Render::ContextMenuEvent &event) {
+    contextMenuTarget({}, event);
 }
 
 void MeshEditor::keyPressEvent(QKeyEvent *event) {
@@ -328,17 +332,6 @@ void MeshEditor::updateWholeVAOs() {
 }
 
 void MeshEditor::mousePressTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
-    if (event.originalEvent->button() != Qt::LeftButton) {
-        if (event.originalEvent->button() == Qt::RightButton) {
-            QMenu contextMenu;
-            contextMenu.addAction(tr("Delete Vertices"), _appState.get(), &State::AppState::deleteVertices);
-            contextMenu.addAction(tr("Delete Edges"), _appState.get(), &State::AppState::deleteEdges);
-            contextMenu.addAction(tr("Delete Faces"), _appState.get(), &State::AppState::deleteFaces);
-            contextMenu.exec(event.originalEvent->globalPos());
-        }
-        return;
-    }
-
     _tool->mousePressEvent(target, event);
 }
 
@@ -371,6 +364,16 @@ void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
         updateWholeVAOs(); // TODO: update partially
     }
     _tool->hoverLeaveEvent(target);
+}
+
+void MeshEditor::contextMenuTarget(const Tool::EventTarget &target, const Render::ContextMenuEvent &event) {
+    Q_UNUSED(target);
+
+    QMenu contextMenu;
+    contextMenu.addAction(tr("Delete Vertices"), _appState.get(), &State::AppState::deleteVertices);
+    contextMenu.addAction(tr("Delete Edges"), _appState.get(), &State::AppState::deleteEdges);
+    contextMenu.addAction(tr("Delete Faces"), _appState.get(), &State::AppState::deleteFaces);
+    contextMenu.exec(event.originalEvent->globalPos());
 }
 
 }

@@ -49,6 +49,8 @@ public:
     void mouseMoveEvent(const Render::MouseEvent &event) override;
     void mouseReleaseEvent(const Render::MouseEvent &event) override;
 
+    void contextMenuEvent(const Render::ContextMenuEvent &event) override;
+
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
 
@@ -59,8 +61,11 @@ private:
     void mousePressTarget(const Tool::EventTarget& target, const Render::MouseEvent &event);
     void mouseMoveTarget(const Tool::EventTarget& target, const Render::MouseEvent &event);
     void mouseReleaseTarget(const Tool::EventTarget& target, const Render::MouseEvent &event);
+
     void hoverEnterTarget(const Tool::EventTarget& target, const Render::MouseEvent &event);
     void hoverLeaveTarget(const Tool::EventTarget& target);
+
+    void contextMenuTarget(const Tool::EventTarget& target, const Render::ContextMenuEvent& event);
 
     void updateWholeVAOs();
 
