@@ -83,14 +83,10 @@ void EditorScene::updateRenderables() {
     }
 
     if (!_appState->document()->selectedItems().empty() && !_appState->document()->isEditing()) {
-        for (auto& h : _objectManipulator->handles(_appState->isTranslateHandleVisible(), _appState->isRotateHandleVisible(), _appState->isScaleHandleVisible())) {
-            renderables.push_back(h);
-        }
+        renderables.push_back(_objectManipulator);
     }
     if (_appState->document()->isEditing() && !_appState->document()->meshSelection().vertices.empty() && _appState->tool() == State::Tool::None) {
-        for (auto& h : _meshManipulator->handles(_appState->isTranslateHandleVisible(), _appState->isRotateHandleVisible(), _appState->isScaleHandleVisible())) {
-            renderables.push_back(h);
-        }
+        renderables.push_back(_meshManipulator);
     }
 
     setChildRenderables(renderables);

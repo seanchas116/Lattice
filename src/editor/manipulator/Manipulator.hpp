@@ -29,11 +29,6 @@ public:
     bool isScaleHandleVisible() const { return _isScaleHandleVisible; }
     void setIsScaleHandleVisible(bool isScaleHandleVisible);
 
-    auto& translateHandles() const { return _translateHandles; }
-    auto& rotateHandles() const { return _rotateHandles; }
-    auto& scaleHandles() const { return _scaleHandles; }
-    std::vector<SP<Render::RenderableObject>> handles(bool withTranslate, bool withRotate, bool withScale) const;
-
 signals:
     void targetPositionChanged(glm::dvec3 position);
 
@@ -53,8 +48,8 @@ private:
     std::vector<SP<Render::RenderableObject>> _scaleHandles;
     glm::dvec3 _targetPosition;
     bool _isTranslateHandleVisible = true;
-    bool _isRotateHandleVisible = true;
-    bool _isScaleHandleVisible = true;
+    bool _isRotateHandleVisible = false;
+    bool _isScaleHandleVisible = false;
 };
 
 }

@@ -44,6 +44,7 @@ Manipulator::Manipulator() {
     connect(this, &Manipulator::isTranslateHandleVisibleChanged, this, &Manipulator::updateChildren);
     connect(this, &Manipulator::isRotateHandleVisibleChanged, this, &Manipulator::updateChildren);
     connect(this, &Manipulator::isScaleHandleVisibleChanged, this, &Manipulator::updateChildren);
+    updateChildren();
 }
 
 void Manipulator::setTargetPosition(glm::dvec3 position) {
@@ -52,26 +53,6 @@ void Manipulator::setTargetPosition(glm::dvec3 position) {
     }
     _targetPosition = position;
     emit targetPositionChanged(position);
-}
-
-std::vector<SP<Render::RenderableObject> > Manipulator::handles(bool withTranslate, bool withRotate, bool withScale) const {
-    std::vector<SP<Render::RenderableObject>> handles;
-    if (withTranslate) {
-        for (auto& h : _translateHandles) {
-            handles.push_back(h);
-        }
-    }
-    if (withRotate) {
-        for (auto& h : _rotateHandles) {
-            handles.push_back(h);
-        }
-    }
-    if (withScale) {
-        for (auto& h : _scaleHandles) {
-            handles.push_back(h);
-        }
-    }
-    return handles;
 }
 
 void Manipulator::setIsTranslateHandleVisible(bool isTranslateHandleVisible) {
