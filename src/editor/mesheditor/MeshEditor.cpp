@@ -108,6 +108,10 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::updateManinpulatorVisibility);
     connect(_appState.get(), &State::AppState::toolChanged, this, &MeshEditor::updateManinpulatorVisibility);
     updateManinpulatorVisibility();
+
+    connect(_manipulator.get(), &Manipulator::Manipulator::onContextMenu, this, [this](auto& event) {
+        contextMenuTarget({}, event);
+    });
 }
 
 void MeshEditor::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
