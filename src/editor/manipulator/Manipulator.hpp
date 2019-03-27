@@ -46,6 +46,8 @@ signals:
     void onEnd(ValueType type);
 
 private:
+    void updateChildren();
+
     std::vector<SP<Render::RenderableObject>> _translateHandles;
     std::vector<SP<Render::RenderableObject>> _rotateHandles;
     std::vector<SP<Render::RenderableObject>> _scaleHandles;
