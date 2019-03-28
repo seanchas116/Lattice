@@ -5,10 +5,10 @@ namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
-class CenterPickable : public Render::RenderableObject {
+class CenterHandle : public Render::RenderableObject {
     Q_OBJECT
 public:
-    CenterPickable();
+    CenterHandle();
 
     void draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) override;
     void drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) override;
