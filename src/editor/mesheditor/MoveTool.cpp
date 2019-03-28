@@ -42,7 +42,7 @@ void MoveTool::mousePressEvent(const Tool::EventTarget &target, const Render::Mo
     for (auto& v : dragVertices) {
         _initPositions[v] = v->position();
     }
-    _initWorldPos = event.worldPos();
+    _initItemPos = (item()->location().matrixToModel() * dvec4(event.worldPos(), 1)).xyz;
     _initViewportPos = event.viewportPos;
     _dragStarted = false;
 }
@@ -54,8 +54,8 @@ void MoveTool::mouseMoveEvent(const Tool::EventTarget &target, const Render::Mou
         return;
     }
 
-    dvec3 worldPos = event.worldPos();
-    dvec3 offset = worldPos - _initWorldPos;
+    dvec3 itemPos = (item()->location().matrixToModel() * dvec4(event.worldPos(), 1)).xyz;
+    dvec3 offset = itemPos - _initItemPos;
 
     if (!_dragStarted) {
         if (distance(_initViewportPos, dvec2(event.viewportPos.xy)) < appState()->preferences()->moveThreshold()) {
