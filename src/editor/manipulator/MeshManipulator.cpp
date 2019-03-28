@@ -10,20 +10,20 @@ namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
-MeshManipulator::MeshManipulator(const SP<State::AppState> &appState) : _appState(appState)
+MeshManipulator::MeshManipulator(const SP<State::AppState> &appState, const SP<Document::MeshItem> &item) :
+    _appState(appState),
+    _item(item)
 {
-    setItem(appState->document()->editedItem());
-    connect(appState->document().get(), &Document::Document::editedItemChanged, this, &MeshManipulator::setItem);
+    connect(item->mesh().get(), &Mesh::Mesh::changed, this, &MeshManipulator::updatePosition);
     connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshManipulator::updatePosition);
+    updatePosition();
+
     connect(this, &Manipulator::onBegin, this, &MeshManipulator::handleOnBegin);
     connect(this, &Manipulator::onChange, this, &MeshManipulator::handleOnChange);
     connect(this, &Manipulator::onEnd, this, &MeshManipulator::handleOnEnd);
 }
 
 void MeshManipulator::handleOnBegin(ValueType type, double value) {
-    Q_UNUSED(type) // TODO
-    LATTICE_OPTIONAL_GUARD(item, _item, return;)
-
     _appState->document()->history()->beginChange(tr("Move Vertex"));
 
     _initialValue = value;
@@ -35,9 +35,7 @@ void MeshManipulator::handleOnBegin(ValueType type, double value) {
 }
 
 void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
-    // TODO
-    LATTICE_OPTIONAL_GUARD(item, _item, return;)
-    auto& mesh = item->mesh();
+    auto& mesh = _item->mesh();
 
     switch (type) {
     case ValueType::Translate: {
@@ -83,20 +81,9 @@ void MeshManipulator::handleOnEnd(ValueType type) {
     _initialPositions.clear();
 }
 
-void MeshManipulator::setItem(const Opt<SP<Document::MeshItem>> &maybeItem) {
-    disconnect(_connection);
-    _item = maybeItem;
-    LATTICE_OPTIONAL_GUARD(item, maybeItem, return;)
-    _connection = connect(item->mesh().get(), &Mesh::Mesh::changed, this, [this] {
-        updatePosition();
-    });
-    updatePosition();
-}
-
 void MeshManipulator::updatePosition() {
-    LATTICE_OPTIONAL_GUARD(item, _item, setTargetPosition(dvec3(0));)
     auto median = _appState->document()->meshSelection().medianPosition();
-    auto matrix = item->location().matrixToWorld();
+    auto matrix = _item->location().matrixToWorld();
     setTargetPosition((matrix * dvec4(median, 1)).xyz);
 }
 

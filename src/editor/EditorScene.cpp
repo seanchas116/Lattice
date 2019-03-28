@@ -17,8 +17,7 @@ EditorScene::EditorScene(const SP<State::AppState> &appState) :
     _appState(appState),
     _background(makeShared<Background>(appState)),
     _gridFloor(makeShared<GridFloor>()),
-    _objectManipulator(makeShared<Manipulator::ObjectManipulator>(appState)),
-    _meshManipulator(makeShared<Manipulator::MeshManipulator>(appState))
+    _objectManipulator(makeShared<Manipulator::ObjectManipulator>(appState))
 {
     connect(appState.get(), &State::AppState::isVertexSelectableChanged, this, &EditorScene::updateRenderables);
     connect(appState.get(), &State::AppState::isEdgeSelectableChanged, this, &EditorScene::updateRenderables);
@@ -28,10 +27,6 @@ EditorScene::EditorScene(const SP<State::AppState> &appState) :
     connect(appState.get(), &State::AppState::isTranslateHandleVisibleChanged, _objectManipulator.get(), &Manipulator::Manipulator::setTranslateHandleVisible);
     connect(appState.get(), &State::AppState::isRotateHandleVisibleChanged, _objectManipulator.get(), &Manipulator::Manipulator::setRotateHandleVisible);
     connect(appState.get(), &State::AppState::isScaleHandleVisibleChanged, _objectManipulator.get(), &Manipulator::Manipulator::setScaleHandleVisible);
-
-    connect(appState.get(), &State::AppState::isTranslateHandleVisibleChanged, _meshManipulator.get(), &Manipulator::Manipulator::setTranslateHandleVisible);
-    connect(appState.get(), &State::AppState::isRotateHandleVisibleChanged, _meshManipulator.get(), &Manipulator::Manipulator::setRotateHandleVisible);
-    connect(appState.get(), &State::AppState::isScaleHandleVisibleChanged, _meshManipulator.get(), &Manipulator::Manipulator::setScaleHandleVisible);
 
     connect(appState->document().get(), &Document::Document::itemInserted, this, &EditorScene::updateRenderables);
     connect(appState->document().get(), &Document::Document::itemRemoved, this, &EditorScene::updateRenderables);

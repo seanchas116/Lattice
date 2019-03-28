@@ -20,19 +20,17 @@ namespace Manipulator {
 class MeshManipulator : public Manipulator {
     Q_OBJECT
 public:
-    MeshManipulator(const SP<State::AppState>& appState);
+    MeshManipulator(const SP<State::AppState>& appState, const SP<Document::MeshItem>& item);
 
 private:
     void handleOnBegin(ValueType type, double value);
     void handleOnChange(ValueType type, int axis, double value);
     void handleOnEnd(ValueType type);
 
-    void setItem(const Opt<SP<Document::MeshItem>> &maybeItem);
-
     void updatePosition();
 
     SP<State::AppState> _appState;
-    Opt<SP<Document::MeshItem>> _item;
+    SP<Document::MeshItem> _item;
     std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _initialPositions;
     glm::dvec3 _initialMedianPos;
     double _initialValue;

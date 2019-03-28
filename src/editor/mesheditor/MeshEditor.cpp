@@ -88,7 +88,7 @@ private:
 MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::MeshItem> &item) :
     _appState(appState),
     _item(item),
-    _manipulator(makeShared<Manipulator::MeshManipulator>(appState)),
+    _manipulator(makeShared<Manipulator::MeshManipulator>(appState, item)),
     _faceVBO(makeShared<GL::VertexBuffer<GL::Vertex>>()),
     _facePickVAO(makeShared<GL::VAO>()),
     _edgeVAO(makeShared<GL::VAO>()),
