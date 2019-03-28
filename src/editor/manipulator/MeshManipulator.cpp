@@ -28,14 +28,17 @@ void MeshManipulator::handleOnBegin(ValueType type, double value) {
 
     _initialValue = value;
 
+    dmat4 itemToWorld = _item->location().matrixToWorld();
+
     for (auto& v : _appState->document()->meshSelection().vertices) {
-        _initialPositions[v] = v->position();
+        _initialPositions[v] = (itemToWorld * dvec4(v->position(), 1)).xyz;
     }
-    _initialMedianPos = _appState->document()->meshSelection().medianPosition();
+    _initialMedianPos = (itemToWorld * dvec4(_appState->document()->meshSelection().medianPosition(), 1)).xyz;
 }
 
 void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
     auto& mesh = _item->mesh();
+    auto worldToItem = _item->location().matrixToModel();
 
     switch (type) {
     case ValueType::Translate: {
@@ -43,7 +46,8 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
         offset[axis] = value - _initialValue;
         std::unordered_map<SP<Mesh::Vertex>, vec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
-            positions[vertex] = initialPos + offset;
+            auto newPos = initialPos + offset;
+            positions[vertex] = dvec3((worldToItem * dvec4(newPos, 1)).xyz);
         }
         mesh->setPosition(positions);
         break;
@@ -54,7 +58,8 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
         std::unordered_map<SP<Mesh::Vertex>, vec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
             dvec3 initialOffset = initialPos - _initialMedianPos;
-            positions[vertex] = _initialMedianPos + initialOffset * ratio;
+            auto newPos = _initialMedianPos + initialOffset * ratio;
+            positions[vertex] = dvec3((worldToItem * dvec4(newPos, 1)).xyz);
         }
         mesh->setPosition(positions);
         break;
@@ -68,7 +73,8 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
         for (auto& [vertex, initialPos] : _initialPositions) {
             dvec3 initialOffset = initialPos - _initialMedianPos;
             dvec3 offset = (matrix * dvec4(initialOffset, 0)).xyz;
-            positions[vertex] = _initialMedianPos + offset;
+            auto newPos = _initialMedianPos + offset;
+            positions[vertex] = dvec3((worldToItem * dvec4(newPos, 1)).xyz);
         }
         mesh->setPosition(positions);
         break;
