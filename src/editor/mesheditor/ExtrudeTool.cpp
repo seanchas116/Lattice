@@ -148,7 +148,7 @@ void ExtrudeTool::mouseMoveEvent(const Tool::EventTarget &target, const Render::
         offset = glm::dot(offset, _guideDirection) * _guideDirection;
     }
 
-    std::unordered_map<SP<Mesh::Vertex>, vec3> newPositions;
+    std::unordered_map<SP<Mesh::Vertex>, dvec3> newPositions;
 
     for (auto& [oldUV, newUV] : _oldToNewUVPoints) {
         newPositions[newUV->vertex()] = _initPositions[oldUV->vertex()] + offset;

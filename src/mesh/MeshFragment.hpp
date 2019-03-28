@@ -16,7 +16,7 @@ public:
 
     bool contains(const MeshFragment& other) const;
 
-    glm::vec3 medianPosition() const;
+    glm::dvec3 medianPosition() const;
 
     std::unordered_set<SP<Edge>> edges() const;
     std::unordered_set<SP<Face>> faces() const;

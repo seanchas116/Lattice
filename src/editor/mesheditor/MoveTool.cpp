@@ -66,7 +66,7 @@ void MoveTool::mouseMoveEvent(const Tool::EventTarget &target, const Render::Mou
     }
 
     auto& mesh = item()->mesh();
-    std::unordered_map<SP<Mesh::Vertex>, vec3> positions;
+    std::unordered_map<SP<Mesh::Vertex>, dvec3> positions;
     for (auto& [v, initialPos] : _initPositions) {
         positions[v] = initialPos + offset;
     }

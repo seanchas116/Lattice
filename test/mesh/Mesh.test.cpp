@@ -8,7 +8,7 @@ TEST_CASE("Mesh") {
     auto mesh = makeShared<Mesh::Mesh>();
     SECTION("addVertex") {
         SECTION("adds verted at specified position") {
-            glm::vec3 p(1, 2, 3);
+            dvec3 p(1, 2, 3);
             mesh->addVertex(p);
 
             REQUIRE(mesh->vertices().size() == 1);
@@ -16,8 +16,8 @@ TEST_CASE("Mesh") {
         }
     }
     SECTION("addEdge") {
-        vec3 p1(1, 2, 3);
-        vec3 p2(4, 5, 6);
+        dvec3 p1(1, 2, 3);
+        dvec3 p2(4, 5, 6);
 
         auto v1 = mesh->addVertex(p1);
         auto v2 = mesh->addVertex(p2);

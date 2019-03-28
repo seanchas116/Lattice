@@ -27,7 +27,7 @@ class Vertex final : public EnableSharedFromThis<Vertex> {
     Q_DISABLE_COPY(Vertex)
 public:
     Vertex() {}
-    glm::vec3 position() const { return _position; }
+    glm::dvec3 position() const { return _position; }
 
     auto& edges() const { return _edges; }
     auto& faces() const { return _faces; }
@@ -35,11 +35,11 @@ public:
 
     SP<UVPoint> firstUVPoint() const;
 
-    glm::vec3 normal(const SP<Face>& face) const;
+    glm::dvec3 normal(const SP<Face>& face) const;
 
 private:
     friend class Mesh;
-    glm::vec3 _position {0};
+    glm::dvec3 _position {0};
     std::unordered_set<Edge*> _edges;
     std::unordered_set<Face*> _faces;
     std::unordered_set<UVPoint*> _uvPoints;
@@ -73,14 +73,14 @@ class UVPoint final : public EnableSharedFromThis<UVPoint> {
 public:
     UVPoint(const SP<Vertex>& vertex) : _vertex(vertex) {}
 
-    glm::vec2 position() const { return _position; }
+    glm::dvec2 position() const { return _position; }
 
     auto& vertex() const { return _vertex; }
     std::vector<SP<Face>> faces() const;
 
 private:
     friend class Mesh;
-    glm::vec2 _position {0};
+    glm::dvec2 _position {0};
     SP<Vertex> _vertex;
     std::unordered_set<Face*> _faces;
 };
@@ -101,7 +101,7 @@ public:
     auto& edges() const { return _edges; }
     auto& uvPoints() const { return _uvPoints; }
 
-    glm::vec3 normal() const;
+    glm::dvec3 normal() const;
 
     auto& material() const { return _material; }
     void setMaterial(const SP<Material>& material);
@@ -121,8 +121,8 @@ public:
 
     // TODO: support undo/redo for Material changes
 
-    glm::vec3 baseColor() const { return _baseColor; }
-    void setBaseColor(const glm::vec3 &baseColor) { _baseColor = baseColor; }
+    glm::dvec3 baseColor() const { return _baseColor; }
+    void setBaseColor(const glm::dvec3 &baseColor) { _baseColor = baseColor; }
 
     // TODO: image should be storead as a reference to an item of per-document image list
     QImage baseColorImage() const { return _baseColorImage; }
@@ -147,7 +147,7 @@ private:
     friend class Mesh;
     friend class Face;
 
-    glm::vec3 _baseColor {1, 0, 0};
+    glm::dvec3 _baseColor {1, 0, 0};
     QImage _baseColorImage;
 
     float _metallic {0};
@@ -166,16 +166,16 @@ public:
 
     void setChangeHandler(const Fn<void(const SP<Change>& change)> &changeHandler) { _changeHandler = changeHandler; }
 
-    SP<Vertex> addVertex(glm::vec3 position);
+    SP<Vertex> addVertex(glm::dvec3 position);
     SP<Edge> addEdge(const SortedArray<SP<Vertex>, 2>& vertices);
 
-    SP<UVPoint> addUVPoint(const SP<Vertex>& vertex, glm::vec2 position);
+    SP<UVPoint> addUVPoint(const SP<Vertex>& vertex, glm::dvec2 position);
 
     SP<Face> addFace(const std::vector<SP<UVPoint>>& uvPoints, const SP<Material>& material);
     SP<Material> addMaterial();
 
-    void setPosition(const std::unordered_map<SP<Vertex>, glm::vec3>& positions);
-    void setPosition(const std::unordered_map<SP<UVPoint>, glm::vec2>& positions);
+    void setPosition(const std::unordered_map<SP<Vertex>, glm::dvec3>& positions);
+    void setPosition(const std::unordered_map<SP<UVPoint>, glm::dvec2>& positions);
     void setSmooth(const std::unordered_map<SP<Edge>, bool>& values);
 
     void removeFace(const SP<Face>& face);

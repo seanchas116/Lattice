@@ -9,6 +9,8 @@
 #include <QLabel>
 #include <QCheckBox>
 
+using namespace glm;
+
 namespace Lattice {
 namespace UI {
 
@@ -154,7 +156,7 @@ void MeshPropertyView::handlePositionValueChange(int index, double value) {
         return;
     }
 
-    std::unordered_map<SP<Mesh::Vertex>, glm::vec3> newPositions;
+    std::unordered_map<SP<Mesh::Vertex>, dvec3> newPositions;
     bool changed = false;
 
     for (auto& vertex : selection.vertices) {

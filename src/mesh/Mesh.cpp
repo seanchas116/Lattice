@@ -11,7 +11,7 @@ SP<UVPoint> Vertex::firstUVPoint() const {
     return (*_uvPoints.begin())->sharedFromThis();
 }
 
-vec3 Vertex::normal(const SP<Face> &face) const {
+dvec3 Vertex::normal(const SP<Face> &face) const {
     std::unordered_set<SP<Face>> connectedFaces {face};
 
     while (true) {
@@ -32,11 +32,11 @@ vec3 Vertex::normal(const SP<Face> &face) const {
         }
     }
 
-    glm::vec3 normalSum(0);
+    glm::dvec3 normalSum(0);
     for (auto& face : connectedFaces) {
         normalSum += face->normal();
     }
-    return normalize(normalSum / float(connectedFaces.size()));
+    return normalize(normalSum / double(connectedFaces.size()));
 }
 
 std::vector<SP<Face> > UVPoint::faces() const {
@@ -55,13 +55,13 @@ std::vector<SP<Face> > Edge::faces() const {
     return faces;
 }
 
-glm::vec3 Face::normal() const {
+dvec3 Face::normal() const {
     if (_vertices.size() == 3) {
         return normalize(cross(_vertices[1]->position() - _vertices[0]->position(), _vertices[2]->position() - _vertices[0]->position()));
     }
 
     // find average vertex normal
-    glm::vec3 normalSum(0);
+    glm::dvec3 normalSum(0);
     int sumCount = 0;
     int vertexCount = int(_vertices.size());
 
@@ -70,7 +70,7 @@ glm::vec3 Face::normal() const {
         auto curr = _vertices[(i + 1) % vertexCount]->position();
         auto next = _vertices[(i + 2) % vertexCount]->position();
         auto crossValue = cross(next- curr, prev - curr);
-        if (crossValue == vec3(0)) {
+        if (crossValue == dvec3(0)) {
             continue;
         }
         auto normal = normalize(crossValue);
@@ -78,7 +78,7 @@ glm::vec3 Face::normal() const {
         ++sumCount;
     }
     if (sumCount == 0) {
-        return vec3(0); // TODO: what should we do?
+        return dvec3(0); // TODO: what should we do?
     }
     return normalize(normalSum);
 }
@@ -295,7 +295,7 @@ Mesh::Mesh() {
     connect(this, &Mesh::faceChanged, this, &Mesh::changed);
 }
 
-SP<Vertex> Mesh::addVertex(glm::vec3 position) {
+SP<Vertex> Mesh::addVertex(dvec3 position) {
     auto change = makeShared<AddVertexChange>(sharedFromThis(), makeShared<Vertex>());
     _changeHandler(change);
     setPosition({{change->vertex, position}});
@@ -345,7 +345,7 @@ SP<Edge> Mesh::addEdge(const SortedArray<SP<Vertex>, 2> &vertices) {
     return edge;
 }
 
-SP<UVPoint> Mesh::addUVPoint(const SP<Vertex> &vertex, vec2 position) {
+SP<UVPoint> Mesh::addUVPoint(const SP<Vertex> &vertex, dvec2 position) {
     auto change = makeShared<AddUVPointChange>(sharedFromThis(), makeShared<UVPoint>(vertex));
     _changeHandler(change);
     setPosition({{change->uvPoint, position}});
@@ -383,8 +383,8 @@ SP<Material> Mesh::addMaterial() {
     return material;
 }
 
-void Mesh::setPosition(const std::unordered_map<SP<Vertex>, vec3> &positions) {
-    auto setter = [self = sharedFromThis()](const SP<Vertex>& vertex, vec3 pos) {
+void Mesh::setPosition(const std::unordered_map<SP<Vertex>, dvec3> &positions) {
+    auto setter = [self = sharedFromThis()](const SP<Vertex>& vertex, dvec3 pos) {
         vertex->_position = pos;
         emit self->vertexChanged(vertex);
     };
@@ -392,12 +392,12 @@ void Mesh::setPosition(const std::unordered_map<SP<Vertex>, vec3> &positions) {
         return vertex->_position;
     };
 
-    auto change = makeShared<PropertyChange<Vertex, vec3>>(positions, getter, setter);
+    auto change = makeShared<PropertyChange<Vertex, dvec3>>(positions, getter, setter);
     _changeHandler(change);
 }
 
-void Mesh::setPosition(const std::unordered_map<SP<UVPoint>, vec2> &positions) {
-    auto setter = [mesh = sharedFromThis()](const SP<UVPoint>& uvPoint, vec2 pos) {
+void Mesh::setPosition(const std::unordered_map<SP<UVPoint>, dvec2> &positions) {
+    auto setter = [mesh = sharedFromThis()](const SP<UVPoint>& uvPoint, dvec2 pos) {
         uvPoint->_position = pos;
         emit mesh->uvPointChanged(uvPoint);
     };
@@ -405,7 +405,7 @@ void Mesh::setPosition(const std::unordered_map<SP<UVPoint>, vec2> &positions) {
         return uvPoint->_position;
     };
 
-    auto change = makeShared<PropertyChange<UVPoint, vec2>>(positions, getter, setter);
+    auto change = makeShared<PropertyChange<UVPoint, dvec2>>(positions, getter, setter);
     _changeHandler(change);
 }
 
@@ -476,14 +476,14 @@ void Mesh::addCube(glm::dvec3 minPos, glm::dvec3 maxPos, const SP<Material> &mat
     //   0    1
     // 4    5
 
-    auto v0 = addUVPoint(addVertex(vec3(minPos.x, minPos.y, minPos.z)), vec2(0));
-    auto v1 = addUVPoint(addVertex(vec3(maxPos.x, minPos.y, minPos.z)), vec2(0));
-    auto v2 = addUVPoint(addVertex(vec3(minPos.x, maxPos.y, minPos.z)), vec2(0));
-    auto v3 = addUVPoint(addVertex(vec3(maxPos.x, maxPos.y, minPos.z)), vec2(0));
-    auto v4 = addUVPoint(addVertex(vec3(minPos.x, minPos.y, maxPos.z)), vec2(0));
-    auto v5 = addUVPoint(addVertex(vec3(maxPos.x, minPos.y, maxPos.z)), vec2(0));
-    auto v6 = addUVPoint(addVertex(vec3(minPos.x, maxPos.y, maxPos.z)), vec2(0));
-    auto v7 = addUVPoint(addVertex(vec3(maxPos.x, maxPos.y, maxPos.z)), vec2(0));
+    auto v0 = addUVPoint(addVertex(dvec3(minPos.x, minPos.y, minPos.z)), dvec2(0));
+    auto v1 = addUVPoint(addVertex(dvec3(maxPos.x, minPos.y, minPos.z)), dvec2(0));
+    auto v2 = addUVPoint(addVertex(dvec3(minPos.x, maxPos.y, minPos.z)), dvec2(0));
+    auto v3 = addUVPoint(addVertex(dvec3(maxPos.x, maxPos.y, minPos.z)), dvec2(0));
+    auto v4 = addUVPoint(addVertex(dvec3(minPos.x, minPos.y, maxPos.z)), dvec2(0));
+    auto v5 = addUVPoint(addVertex(dvec3(maxPos.x, minPos.y, maxPos.z)), dvec2(0));
+    auto v6 = addUVPoint(addVertex(dvec3(minPos.x, maxPos.y, maxPos.z)), dvec2(0));
+    auto v7 = addUVPoint(addVertex(dvec3(maxPos.x, maxPos.y, maxPos.z)), dvec2(0));
 
     auto f0 = addFace({v0, v4, v6, v2}, material);
     auto f1 = addFace({v1, v3, v7, v5}, material);
@@ -505,7 +505,7 @@ void Mesh::addCircle(glm::dvec3 center, double radius, int segmentCount, Mesh::C
         offset[(normalAxis + 1) % 3] = cos(angle);
         offset[(normalAxis + 2) % 3] = sin(angle);
         dvec3 pos = center + offset * radius;
-        uvPoints.push_back(addUVPoint(addVertex(pos), vec2(0)));
+        uvPoints.push_back(addUVPoint(addVertex(pos), dvec2(0)));
     }
 
     addFace(uvPoints, material);
@@ -526,14 +526,14 @@ void Mesh::addSphere(dvec3 center, double radius, int segmentCount, int ringCoun
             offset[(axis + 1) % 3] = cos(latitude) * cos(longitude);
             offset[(axis + 2) % 3] = sin(latitude) * cos(longitude);
             dvec3 pos = center + offset * radius;
-            uvPoints.push_back(addUVPoint(addVertex(pos), vec2(0)));
+            uvPoints.push_back(addUVPoint(addVertex(pos), dvec2(0)));
         }
 
         uvPointMatrix.push_back(std::move(uvPoints));
     }
 
-    auto bottom = addUVPoint(addVertex(center + dvec3(0, -radius, 0)), vec2(0));
-    auto top = addUVPoint(addVertex(center + dvec3(0, radius, 0)), vec2(0));
+    auto bottom = addUVPoint(addVertex(center + dvec3(0, -radius, 0)), dvec2(0));
+    auto top = addUVPoint(addVertex(center + dvec3(0, radius, 0)), dvec2(0));
 
     for (int i = 0; i < segmentCount; ++i) {
         int next = (i + 1) % segmentCount;
@@ -557,7 +557,7 @@ void Mesh::addCone(dvec3 center, double radius, double height, int segmentCount,
         offset[(axis + 1) % 3] = cos(angle);
         offset[(axis + 2) % 3] = sin(angle);
         dvec3 pos = center + offset * radius;
-        auto v = addUVPoint(addVertex(pos), vec2(0));
+        auto v = addUVPoint(addVertex(pos), dvec2(0));
         uvPoints.push_back(v);
     }
 
@@ -567,7 +567,7 @@ void Mesh::addCone(dvec3 center, double radius, double height, int segmentCount,
     dvec3 topPosition = center;
     topPosition[axis] += height;
 
-    auto top = addUVPoint(addVertex(topPosition), vec2(0));
+    auto top = addUVPoint(addVertex(topPosition), dvec2(0));
 
     for (int i = 0; i < segmentCount; ++i) {
         auto v0 = uvPoints[i];
@@ -588,7 +588,7 @@ void Mesh::addCylinder(dvec3 center, double radius, double height, int segmentCo
         offset[(axis + 1) % 3] = cos(angle) * radius;
         offset[(axis + 2) % 3] = sin(angle) * radius;
         dvec3 pos = center + offset;
-        auto v = addUVPoint(addVertex(pos), vec2(0));
+        auto v = addUVPoint(addVertex(pos), dvec2(0));
         bottomUVPoints.push_back(v);
     }
 
@@ -605,7 +605,7 @@ void Mesh::addCylinder(dvec3 center, double radius, double height, int segmentCo
         offset[(axis + 2) % 3] = sin(angle) * radius;
         offset[axis] = height;
         dvec3 pos = center + offset;
-        auto v = addUVPoint(addVertex(pos), vec2(0));
+        auto v = addUVPoint(addVertex(pos), dvec2(0));
         topUVPoints.push_back(v);
     }
 
@@ -666,7 +666,7 @@ SP<Face> Mesh::flipFace(const SP<Face> &face) {
 SP<Vertex> Mesh::cutEdge(const SP<Edge> &edge, float t) {
     auto pos = edge->ray().at(t);
 
-    auto uv = addUVPoint(addVertex(pos), vec2(0)); // Use better UV position
+    auto uv = addUVPoint(addVertex(pos), dvec2(0)); // Use better UV position
 
     auto edge1 = addEdge({edge->vertices()[0], uv->vertex()});
     auto edge2 = addEdge({uv->vertex(), edge->vertices()[1]});
@@ -705,10 +705,10 @@ SP<Mesh> Mesh::clone() const {
 }
 
 Box<float> Mesh::boundingBox() const {
-    vec3 minPos(INFINITY);
-    vec3 maxPos(-INFINITY);
+    dvec3 minPos(INFINITY);
+    dvec3 maxPos(-INFINITY);
     for (auto& v : _vertices) {
-        vec3 p = v->position();
+        dvec3 p = v->position();
         minPos = min(p, minPos);
         maxPos = max(p, maxPos);
     }

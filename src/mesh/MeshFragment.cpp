@@ -14,13 +14,13 @@ bool MeshFragment::contains(const MeshFragment &other) const {
     return true;
 }
 
-glm::vec3 MeshFragment::medianPosition() const {
+glm::dvec3 MeshFragment::medianPosition() const {
     if (vertices.empty()) {
-        return vec3(0);
+        return dvec3(0);
     }
 
-    vec3 minPos(std::numeric_limits<float>::infinity());
-    vec3 maxPos(-std::numeric_limits<float>::infinity());
+    dvec3 minPos(std::numeric_limits<double>::infinity());
+    dvec3 maxPos(-std::numeric_limits<double>::infinity());
 
     for (auto& v : vertices) {
         auto p = v->position();
@@ -28,7 +28,7 @@ glm::vec3 MeshFragment::medianPosition() const {
         maxPos = max(maxPos, p);
     }
 
-    return (minPos + maxPos) * 0.5f;
+    return (minPos + maxPos) * 0.5;
 }
 
 std::unordered_set<SP<Edge> > MeshFragment::edges() const {

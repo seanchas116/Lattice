@@ -44,10 +44,10 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
     case ValueType::Translate: {
         dvec3 offset(0);
         offset[axis] = value - _initialValue;
-        std::unordered_map<SP<Mesh::Vertex>, vec3> positions;
+        std::unordered_map<SP<Mesh::Vertex>, dvec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
             auto newPos = initialPos + offset;
-            positions[vertex] = dvec3((worldToItem * dvec4(newPos, 1)).xyz);
+            positions[vertex] = (worldToItem * dvec4(newPos, 1)).xyz;
         }
         mesh->setPosition(positions);
         break;
@@ -55,11 +55,11 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
     case ValueType::Scale: {
         dvec3 ratio(1);
         ratio[axis] = value / _initialValue;
-        std::unordered_map<SP<Mesh::Vertex>, vec3> positions;
+        std::unordered_map<SP<Mesh::Vertex>, dvec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
             dvec3 initialOffset = initialPos - _initialMedianPos;
             auto newPos = _initialMedianPos + initialOffset * ratio;
-            positions[vertex] = dvec3((worldToItem * dvec4(newPos, 1)).xyz);
+            positions[vertex] = (worldToItem * dvec4(newPos, 1)).xyz;
         }
         mesh->setPosition(positions);
         break;
@@ -69,12 +69,12 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
         eulerAngles[axis] = value - _initialValue;
         auto matrix = mat4_cast(dquat(eulerAngles));
 
-        std::unordered_map<SP<Mesh::Vertex>, vec3> positions;
+        std::unordered_map<SP<Mesh::Vertex>, dvec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
             dvec3 initialOffset = initialPos - _initialMedianPos;
             dvec3 offset = (matrix * dvec4(initialOffset, 0)).xyz;
             auto newPos = _initialMedianPos + offset;
-            positions[vertex] = dvec3((worldToItem * dvec4(newPos, 1)).xyz);
+            positions[vertex] = (worldToItem * dvec4(newPos, 1)).xyz;
         }
         mesh->setPosition(positions);
         break;

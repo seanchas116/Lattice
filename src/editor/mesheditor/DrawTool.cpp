@@ -43,7 +43,7 @@ void DrawTool::mousePressEvent(const Tool::EventTarget &target, const Render::Mo
             std::vector<SP<Mesh::UVPoint>> points(closingPointIt, _drawnUVPoints.end());
             auto face = mesh->addFace(points, mesh->materials()[0]);
 
-            bool isFaceFore = dot(face->normal(), vec3(event.camera->location().backward())) > 0;
+            bool isFaceFore = dot(face->normal(), event.camera->location().backward()) > 0;
             if (!isFaceFore) {
                 mesh->flipFace(face);
             }
