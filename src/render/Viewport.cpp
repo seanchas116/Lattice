@@ -16,7 +16,9 @@ Viewport::Viewport(QWidget *parent) : QWidget(parent), _camera(makeShared<Camera
 }
 
 void Viewport::setRenderable(const Opt<SP<RenderableObject> > &renderable) {
-     connect(renderable->get(), &RenderableObject::updated, this, &Viewport::updateRequested);
+    if (renderable) {
+        connect(renderable->get(), &RenderableObject::updated, this, &Viewport::updateRequested);
+    }
     _renderable = renderable;
 }
 
