@@ -100,18 +100,22 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     initializeOpenGLFunctions();
     updateWholeVAOs();
 
-    connect(_item->mesh().get(), &Mesh::Mesh::changed, this, &MeshEditor::handleMeshChange);
-    connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::handleMeshChange);
+    connect(item->mesh().get(), &Mesh::Mesh::changed, this, &MeshEditor::handleMeshChange);
+    connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::handleMeshChange);
 
-    connect(_appState.get(), &State::AppState::toolChanged, this, &MeshEditor::handleToolChange);
+    connect(appState.get(), &State::AppState::toolChanged, this, &MeshEditor::handleToolChange);
 
-    connect(_appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::updateManinpulatorVisibility);
-    connect(_appState.get(), &State::AppState::toolChanged, this, &MeshEditor::updateManinpulatorVisibility);
+    connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::updateManinpulatorVisibility);
+    connect(appState.get(), &State::AppState::toolChanged, this, &MeshEditor::updateManinpulatorVisibility);
     updateManinpulatorVisibility();
 
     connect(_manipulator.get(), &Manipulator::Manipulator::onContextMenu, this, [this](auto& event) {
         contextMenuTarget({}, event);
     });
+
+    connect(appState.get(), &State::AppState::isTranslateHandleVisibleChanged, _manipulator.get(), &Manipulator::Manipulator::setTranslateHandleVisible);
+    connect(appState.get(), &State::AppState::isRotateHandleVisibleChanged, _manipulator.get(), &Manipulator::Manipulator::setRotateHandleVisible);
+    connect(appState.get(), &State::AppState::isScaleHandleVisibleChanged, _manipulator.get(), &Manipulator::Manipulator::setScaleHandleVisible);
 }
 
 void MeshEditor::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
