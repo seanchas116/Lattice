@@ -7,6 +7,10 @@ namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
+class CenterHandle;
+class ArrowHandle;
+class RotateHandle;
+
 class Manipulator : public Render::RenderableObject {
     Q_OBJECT
 
@@ -45,9 +49,10 @@ signals:
 private:
     void updateChildren();
 
-    std::vector<SP<Render::Renderable>> _translateHandles;
-    std::vector<SP<Render::Renderable>> _rotateHandles;
-    std::vector<SP<Render::Renderable>> _scaleHandles;
+    SP<CenterHandle> _centerHandle;
+    std::vector<SP<ArrowHandle>> _translateHandles;
+    std::vector<SP<RotateHandle>> _rotateHandles;
+    std::vector<SP<ArrowHandle>> _scaleHandles;
     glm::dvec3 _targetPosition;
     bool _isTranslateHandleVisible = true;
     bool _isRotateHandleVisible = false;

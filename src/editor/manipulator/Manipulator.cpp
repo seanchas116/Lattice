@@ -1,13 +1,18 @@
 #include "Manipulator.hpp"
 #include "ArrowHandle.hpp"
 #include "RotateHandle.hpp"
+#include "CenterHandle.hpp"
 #include "Manipulator.hpp"
 
 namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
-Manipulator::Manipulator() {
+Manipulator::Manipulator() :
+    _centerHandle(makeShared<CenterHandle>())
+{
+    connect(this, &Manipulator::targetPositionChanged, _centerHandle.get(), &CenterHandle::setTargetPosition);
+
     for (int axis = 0; axis < 3; ++axis) {
         auto handle = makeShared<ArrowHandle>(axis, ArrowHandle::HandleType::Translate);
         handle->setTargetPosition(targetPosition());
@@ -83,7 +88,7 @@ void Manipulator::setScaleHandleVisible(bool isScaleHandleVisible) {
 }
 
 void Manipulator::updateChildren() {
-    std::vector<SP<Render::Renderable>> handles;
+    std::vector<SP<Render::Renderable>> handles = {_centerHandle};
     if (_isTranslateHandleVisible) {
         handles.insert(handles.end(), _translateHandles.begin(), _translateHandles.end());
     }
