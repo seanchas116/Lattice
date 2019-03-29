@@ -24,7 +24,7 @@ void CenterHandle::draw(const SP<Render::Operations> &operations, const SP<Camer
     auto vbo = makeShared<GL::VertexBuffer<GL::Vertex>>();
     vbo->setVertices({vertex});
     auto vao = makeShared<GL::VAO>(vbo, GL::Primitive::Point);
-    operations->drawCircle.draw2D(vao, dmat4(1), camera->viewportSize(), 50, glm::vec4(0, 0, 1, 1));
+    operations->drawCircle.draw2D(vao, dmat4(1), camera->viewportSize(), 32, glm::vec4(0, 0, 1, 1));
 }
 
 void CenterHandle::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
