@@ -30,11 +30,11 @@ void DrawCircle::draw2D(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, glm::i
     _shader.bind();
     dmat4 MVP = translate(dvec3(-1.0)) * scale(dvec3(2.0 / dvec2(viewportSize), 2.0)) * matrix;
     _shader.setUniform("MVP", MVP);
-    _shader.setUniform("viewportSize", viewportSize);
+    _shader.setUniform("viewportSize", dvec2(viewportSize));
     _shader.setUniform("width", width);
     _shader.setUniform("color", color);
     _shader.setUniform("useVertexColor", useVertexColor);
-    _shader.setUniform("zOffset", 0);
+    _shader.setUniform("zOffset", 0.0);
     vao->draw();
 }
 
