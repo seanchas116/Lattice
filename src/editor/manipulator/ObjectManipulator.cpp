@@ -12,9 +12,9 @@ ObjectManipulator::ObjectManipulator(const SP<State::AppState> &appState) : _app
 {
     setItems(appState->document()->selectedItems());
     connect(appState->document().get(), &Document::Document::selectedItemsChanged, this, &ObjectManipulator::setItems);
-    connect(this, &Manipulator::onBegin, this, &ObjectManipulator::handleOnBegin);
-    connect(this, &Manipulator::onChange, this, &ObjectManipulator::handleOnChange);
-    connect(this, &Manipulator::onEnd, this, &ObjectManipulator::handleOnEnd);
+    connect(this, &Manipulator::onDragBegin, this, &ObjectManipulator::handleOnBegin);
+    connect(this, &Manipulator::onDragMove, this, &ObjectManipulator::handleOnChange);
+    connect(this, &Manipulator::onDragEnd, this, &ObjectManipulator::handleOnEnd);
 }
 
 void ObjectManipulator::handleOnBegin(ValueType type, double value) {

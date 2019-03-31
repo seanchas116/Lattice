@@ -32,9 +32,9 @@ public:
     void setLength(double length);
 
 signals:
-    void onBegin(double value);
-    void onChange(double value);
-    void onEnd();
+    void onDragBegin(double value);
+    void onDragMove(double value);
+    void onDragEnd();
 
     void onContextMenu(const Render::ContextMenuEvent& event);
 

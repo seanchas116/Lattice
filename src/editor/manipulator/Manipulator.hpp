@@ -40,9 +40,9 @@ signals:
     void rotateHandleVisibleChanged(bool isRotateHandleVisible);
     void scaleHandleVisibleChanged(bool isScaleHandleVisible);
 
-    void onBegin(ValueType type, double value);
-    void onChange(ValueType type, int axis, double value);
-    void onEnd(ValueType type);
+    void onDragBegin(ValueType type, double value);
+    void onDragMove(ValueType type, int axis, double value);
+    void onDragEnd(ValueType type);
 
     void onContextMenu(const Render::ContextMenuEvent& event);
 

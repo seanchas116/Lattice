@@ -18,9 +18,9 @@ Manipulator::Manipulator() :
         handle->setTargetPosition(targetPosition());
         connect(this, &Manipulator::targetPositionChanged, handle.get(), &ArrowHandle::setTargetPosition);
 
-        connect(handle.get(), &ArrowHandle::onBegin, this, [this] (double value) { emit onBegin(ValueType::Translate, value); });
-        connect(handle.get(), &ArrowHandle::onChange, this, [this, axis] (double value) { emit onChange(ValueType::Translate, axis, value); });
-        connect(handle.get(), &ArrowHandle::onEnd, this, [this] { emit onEnd(ValueType::Translate); });
+        connect(handle.get(), &ArrowHandle::onDragBegin, this, [this] (double value) { emit onDragBegin(ValueType::Translate, value); });
+        connect(handle.get(), &ArrowHandle::onDragMove, this, [this, axis] (double value) { emit onDragMove(ValueType::Translate, axis, value); });
+        connect(handle.get(), &ArrowHandle::onDragEnd, this, [this] { emit onDragEnd(ValueType::Translate); });
         connect(handle.get(), &ArrowHandle::onContextMenu, this, &Manipulator::onContextMenu);
         _translateHandles.push_back(std::move(handle));
     }
@@ -30,9 +30,9 @@ Manipulator::Manipulator() :
         handle->setTargetPosition(targetPosition());
         connect(this, &Manipulator::targetPositionChanged, handle.get(), &ArrowHandle::setTargetPosition);
 
-        connect(handle.get(), &ArrowHandle::onBegin, this, [this] (double value) { emit onBegin(ValueType::Scale, value); });
-        connect(handle.get(), &ArrowHandle::onChange, this, [this, axis] (double value) { emit onChange(ValueType::Scale, axis, value); });
-        connect(handle.get(), &ArrowHandle::onEnd, this, [this] { emit onEnd(ValueType::Scale); });
+        connect(handle.get(), &ArrowHandle::onDragBegin, this, [this] (double value) { emit onDragBegin(ValueType::Scale, value); });
+        connect(handle.get(), &ArrowHandle::onDragMove, this, [this, axis] (double value) { emit onDragMove(ValueType::Scale, axis, value); });
+        connect(handle.get(), &ArrowHandle::onDragEnd, this, [this] { emit onDragEnd(ValueType::Scale); });
         connect(handle.get(), &ArrowHandle::onContextMenu, this, &Manipulator::onContextMenu);
         _scaleHandles.push_back(std::move(handle));
     }
@@ -42,9 +42,9 @@ Manipulator::Manipulator() :
         handle->setTargetPosition(targetPosition());
         connect(this, &Manipulator::targetPositionChanged, handle.get(), &RotateHandle::setTargetPosition);
 
-        connect(handle.get(), &RotateHandle::onBegin, this, [this] (double value) { emit onBegin(ValueType::Rotate, value); });
-        connect(handle.get(), &RotateHandle::onChange, this, [this, axis] (double value) { emit onChange(ValueType::Rotate, axis, value); });
-        connect(handle.get(), &RotateHandle::onEnd, this, [this] { emit onEnd(ValueType::Rotate); });
+        connect(handle.get(), &RotateHandle::onDragBegin, this, [this] (double value) { emit onDragBegin(ValueType::Rotate, value); });
+        connect(handle.get(), &RotateHandle::onDragMove, this, [this, axis] (double value) { emit onDragMove(ValueType::Rotate, axis, value); });
+        connect(handle.get(), &RotateHandle::onDragEnd, this, [this] { emit onDragEnd(ValueType::Rotate); });
         connect(handle.get(), &RotateHandle::onContextMenu, this, &Manipulator::onContextMenu);
         _rotateHandles.push_back(std::move(handle));
     }

@@ -20,9 +20,9 @@ public:
     void setTargetPosition(glm::dvec3 pos) { _targetPosition = pos; }
 
 signals:
-    void onBegin(glm::dvec3 pos);
-    void onChange(glm::dvec3 pos);
-    void onEnd();
+    void onDragBegin(glm::dvec3 pos);
+    void onDragMove(glm::dvec3 pos);
+    void onDragEnd();
 
     void onContextMenu(const Render::ContextMenuEvent& event);
 

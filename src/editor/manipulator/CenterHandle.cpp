@@ -43,7 +43,7 @@ void CenterHandle::mousePressEvent(const Render::MouseEvent &event) {
     _depth = viewportPos.z;
     _dragged = true;
     auto pos = event.camera->mapViewportToWorld(dvec3(dvec2(event.viewportPos), _depth));
-    emit onBegin(pos);
+    emit onDragBegin(pos);
 }
 
 void CenterHandle::mouseMoveEvent(const Render::MouseEvent &event) {
@@ -51,7 +51,7 @@ void CenterHandle::mouseMoveEvent(const Render::MouseEvent &event) {
         return;
     }
     auto pos = event.camera->mapViewportToWorld(dvec3(dvec2(event.viewportPos), _depth));
-    emit onChange(pos);
+    emit onDragMove(pos);
 }
 
 void CenterHandle::mouseReleaseEvent(const Render::MouseEvent &event) {
@@ -60,7 +60,7 @@ void CenterHandle::mouseReleaseEvent(const Render::MouseEvent &event) {
         return;
     }
     _dragged = false;
-    emit onEnd();
+    emit onDragEnd();
 }
 
 void CenterHandle::contextMenuEvent(const Render::ContextMenuEvent &event) {

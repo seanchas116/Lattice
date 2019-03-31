@@ -18,9 +18,9 @@ MeshManipulator::MeshManipulator(const SP<State::AppState> &appState, const SP<D
     connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshManipulator::updatePosition);
     updatePosition();
 
-    connect(this, &Manipulator::onBegin, this, &MeshManipulator::handleOnBegin);
-    connect(this, &Manipulator::onChange, this, &MeshManipulator::handleOnChange);
-    connect(this, &Manipulator::onEnd, this, &MeshManipulator::handleOnEnd);
+    connect(this, &Manipulator::onDragBegin, this, &MeshManipulator::handleOnBegin);
+    connect(this, &Manipulator::onDragMove, this, &MeshManipulator::handleOnChange);
+    connect(this, &Manipulator::onDragEnd, this, &MeshManipulator::handleOnEnd);
 }
 
 void MeshManipulator::handleOnBegin(ValueType type, double value) {

@@ -69,7 +69,7 @@ void RotateHandle::mousePressEvent(const Render::MouseEvent &event) {
 
     _initialTargetPosition = _targetPosition;
     _dragged = true;
-    emit onBegin(angle);
+    emit onDragBegin(angle);
 }
 
 void RotateHandle::mouseMoveEvent(const Render::MouseEvent &event) {
@@ -88,13 +88,13 @@ void RotateHandle::mouseMoveEvent(const Render::MouseEvent &event) {
     dvec3 intersection = rotateHandleRay.whereXIsZero();
     double angle = atan2(intersection.z, intersection.y);
 
-    emit onChange(angle);
+    emit onDragMove(angle);
 }
 
 void RotateHandle::mouseReleaseEvent(const Render::MouseEvent &event) {
     Q_UNUSED(event);
     _dragged = false;
-    emit onEnd();
+    emit onDragEnd();
 }
 
 void RotateHandle::contextMenuEvent(const Render::ContextMenuEvent &event) {
