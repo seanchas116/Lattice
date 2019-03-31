@@ -20,8 +20,8 @@ public:
     ObjectManipulator(const SP<State::AppState>& appState);
 
 private:
-    void handleOnDragBegin(ValueType type, double value);
-    void handleOnDragMove(ValueType type, int axis, double value);
+    void handleOnDragBegin(ValueType type, glm::dvec3 values);
+    void handleOnDragMove(ValueType type, glm::dvec3 values);
     void handleOnDragEnd(ValueType type);
 
     void setItems(const std::unordered_set<SP<Document::Item>> &items);
@@ -30,7 +30,7 @@ private:
 
     SP<State::AppState> _appState;
     std::unordered_set<SP<Document::Item>> _items;
-    double _initialValue;
+    glm::dvec3 _initialValues;
     std::unordered_map<SP<Document::Item>, Location> _initialLocations;
     std::vector<QMetaObject::Connection> _connections;
 };

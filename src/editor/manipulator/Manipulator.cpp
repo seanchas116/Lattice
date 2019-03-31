@@ -12,9 +12,15 @@ Manipulator::Manipulator() :
     _centerHandle(makeShared<CenterHandle>())
 {
     connect(this, &Manipulator::targetPositionChanged, _centerHandle.get(), &CenterHandle::setTargetPosition);
-    connect(_centerHandle.get(), &CenterHandle::onDragBegin, this, &Manipulator::onCenterDragBegin);
-    connect(_centerHandle.get(), &CenterHandle::onDragMove, this, &Manipulator::onCenterDragMove);
-    connect(_centerHandle.get(), &CenterHandle::onDragEnd, this, &Manipulator::onCenterDragEnd);
+    connect(_centerHandle.get(), &CenterHandle::onDragBegin, this, [this] (glm::dvec3 values) {
+        emit onDragBegin(ValueType::Translate, values);
+    });
+    connect(_centerHandle.get(), &CenterHandle::onDragMove, this, [this] (glm::dvec3 values) {
+        emit onDragMove(ValueType::Translate, values);
+    });
+    connect(_centerHandle.get(), &CenterHandle::onDragEnd, this, [this] () {
+        emit onDragEnd(ValueType::Translate);
+    });
     connect(_centerHandle.get(), &CenterHandle::onContextMenu, this, &Manipulator::onContextMenu);
 
     for (int axis = 0; axis < 3; ++axis) {
@@ -22,9 +28,19 @@ Manipulator::Manipulator() :
         handle->setTargetPosition(targetPosition());
         connect(this, &Manipulator::targetPositionChanged, handle.get(), &ArrowHandle::setTargetPosition);
 
-        connect(handle.get(), &ArrowHandle::onDragBegin, this, [this] (double value) { emit onDragBegin(ValueType::Translate, value); });
-        connect(handle.get(), &ArrowHandle::onDragMove, this, [this, axis] (double value) { emit onDragMove(ValueType::Translate, axis, value); });
-        connect(handle.get(), &ArrowHandle::onDragEnd, this, [this] { emit onDragEnd(ValueType::Translate); });
+        connect(handle.get(), &ArrowHandle::onDragBegin, this, [this, axis] (double value) {
+            glm::dvec3 values(0);
+            values[axis] = value;
+            emit onDragBegin(ValueType::Translate, values);
+        });
+        connect(handle.get(), &ArrowHandle::onDragMove, this, [this, axis] (double value) {
+            glm::dvec3 values(0);
+            values[axis] = value;
+            emit onDragMove(ValueType::Translate, values);
+        });
+        connect(handle.get(), &ArrowHandle::onDragEnd, this, [this] {
+            emit onDragEnd(ValueType::Translate);
+        });
         connect(handle.get(), &ArrowHandle::onContextMenu, this, &Manipulator::onContextMenu);
         _translateHandles.push_back(std::move(handle));
     }
@@ -34,9 +50,19 @@ Manipulator::Manipulator() :
         handle->setTargetPosition(targetPosition());
         connect(this, &Manipulator::targetPositionChanged, handle.get(), &ArrowHandle::setTargetPosition);
 
-        connect(handle.get(), &ArrowHandle::onDragBegin, this, [this] (double value) { emit onDragBegin(ValueType::Scale, value); });
-        connect(handle.get(), &ArrowHandle::onDragMove, this, [this, axis] (double value) { emit onDragMove(ValueType::Scale, axis, value); });
-        connect(handle.get(), &ArrowHandle::onDragEnd, this, [this] { emit onDragEnd(ValueType::Scale); });
+        connect(handle.get(), &ArrowHandle::onDragBegin, this, [this, axis] (double value) {
+            glm::dvec3 values(1);
+            values[axis] = value;
+            emit onDragBegin(ValueType::Scale, values);
+        });
+        connect(handle.get(), &ArrowHandle::onDragMove, this, [this, axis] (double value) {
+            glm::dvec3 values(1);
+            values[axis] = value;
+            emit onDragMove(ValueType::Scale, values);
+        });
+        connect(handle.get(), &ArrowHandle::onDragEnd, this, [this] {
+            emit onDragEnd(ValueType::Scale);
+        });
         connect(handle.get(), &ArrowHandle::onContextMenu, this, &Manipulator::onContextMenu);
         _scaleHandles.push_back(std::move(handle));
     }
@@ -46,9 +72,19 @@ Manipulator::Manipulator() :
         handle->setTargetPosition(targetPosition());
         connect(this, &Manipulator::targetPositionChanged, handle.get(), &RotateHandle::setTargetPosition);
 
-        connect(handle.get(), &RotateHandle::onDragBegin, this, [this] (double value) { emit onDragBegin(ValueType::Rotate, value); });
-        connect(handle.get(), &RotateHandle::onDragMove, this, [this, axis] (double value) { emit onDragMove(ValueType::Rotate, axis, value); });
-        connect(handle.get(), &RotateHandle::onDragEnd, this, [this] { emit onDragEnd(ValueType::Rotate); });
+        connect(handle.get(), &RotateHandle::onDragBegin, this, [this, axis] (double value) {
+            glm::dvec3 values(0);
+            values[axis] = value;
+            emit onDragBegin(ValueType::Rotate, values);
+        });
+        connect(handle.get(), &RotateHandle::onDragMove, this, [this, axis] (double value) {
+            glm::dvec3 values(0);
+            values[axis] = value;
+            emit onDragMove(ValueType::Rotate, values);
+        });
+        connect(handle.get(), &RotateHandle::onDragEnd, this, [this] {
+            emit onDragEnd(ValueType::Rotate);
+        });
         connect(handle.get(), &RotateHandle::onContextMenu, this, &Manipulator::onContextMenu);
         _rotateHandles.push_back(std::move(handle));
     }

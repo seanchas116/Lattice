@@ -23,10 +23,10 @@ MeshManipulator::MeshManipulator(const SP<State::AppState> &appState, const SP<D
     connect(this, &Manipulator::onDragEnd, this, &MeshManipulator::handleOnDragEnd);
 }
 
-void MeshManipulator::handleOnDragBegin(ValueType type, double value) {
+void MeshManipulator::handleOnDragBegin(ValueType type, dvec3 values) {
     _appState->document()->history()->beginChange(tr("Move Vertex"));
 
-    _initialValue = value;
+    _initialValues = values;
 
     dmat4 itemToWorld = _item->location().matrixToWorld();
 
@@ -36,14 +36,13 @@ void MeshManipulator::handleOnDragBegin(ValueType type, double value) {
     _initialMedianPos = (itemToWorld * dvec4(_appState->document()->meshSelection().medianPosition(), 1)).xyz;
 }
 
-void MeshManipulator::handleOnDragMove(ValueType type, int axis, double value) {
+void MeshManipulator::handleOnDragMove(ValueType type, dvec3 values) {
     auto& mesh = _item->mesh();
     auto worldToItem = _item->location().matrixToModel();
 
     switch (type) {
     case ValueType::Translate: {
-        dvec3 offset(0);
-        offset[axis] = value - _initialValue;
+        dvec3 offset = values - _initialValues;
         std::unordered_map<SP<Mesh::Vertex>, dvec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
             auto newPos = initialPos + offset;
@@ -53,8 +52,7 @@ void MeshManipulator::handleOnDragMove(ValueType type, int axis, double value) {
         break;
     }
     case ValueType::Scale: {
-        dvec3 ratio(1);
-        ratio[axis] = value / _initialValue;
+        dvec3 ratio = values / _initialValues;
         std::unordered_map<SP<Mesh::Vertex>, dvec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
             dvec3 initialOffset = initialPos - _initialMedianPos;
@@ -65,8 +63,7 @@ void MeshManipulator::handleOnDragMove(ValueType type, int axis, double value) {
         break;
     }
     case ValueType::Rotate: {
-        dvec3 eulerAngles(0);
-        eulerAngles[axis] = value - _initialValue;
+        dvec3 eulerAngles = values - _initialValues;
         auto matrix = mat4_cast(dquat(eulerAngles));
 
         std::unordered_map<SP<Mesh::Vertex>, dvec3> positions;

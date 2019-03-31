@@ -23,8 +23,8 @@ public:
     MeshManipulator(const SP<State::AppState>& appState, const SP<Document::MeshItem>& item);
 
 private:
-    void handleOnDragBegin(ValueType type, double value);
-    void handleOnDragMove(ValueType type, int axis, double value);
+    void handleOnDragBegin(ValueType type, glm::dvec3 values);
+    void handleOnDragMove(ValueType type, glm::dvec3 values);
     void handleOnDragEnd(ValueType type);
 
     void updatePosition();
@@ -33,7 +33,7 @@ private:
     SP<Document::MeshItem> _item;
     std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _initialPositions;
     glm::dvec3 _initialMedianPos;
-    double _initialValue;
+    glm::dvec3 _initialValues;
     QMetaObject::Connection _connection;
 };
 

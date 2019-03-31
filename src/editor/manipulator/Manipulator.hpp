@@ -40,13 +40,9 @@ signals:
     void rotateHandleVisibleChanged(bool isRotateHandleVisible);
     void scaleHandleVisibleChanged(bool isScaleHandleVisible);
 
-    void onDragBegin(ValueType type, double value);
-    void onDragMove(ValueType type, int axis, double value);
+    void onDragBegin(ValueType type, glm::dvec3 values);
+    void onDragMove(ValueType type, glm::dvec3 values);
     void onDragEnd(ValueType type);
-
-    void onCenterDragBegin(glm::dvec3 pos);
-    void onCenterDragMove(glm::dvec3 pos);
-    void onCenterDragEnd();
 
     void onContextMenu(const Render::ContextMenuEvent& event);
 

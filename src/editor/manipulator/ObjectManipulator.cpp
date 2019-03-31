@@ -17,7 +17,7 @@ ObjectManipulator::ObjectManipulator(const SP<State::AppState> &appState) : _app
     connect(this, &Manipulator::onDragEnd, this, &ObjectManipulator::handleOnDragEnd);
 }
 
-void ObjectManipulator::handleOnDragBegin(ValueType type, double value) {
+void ObjectManipulator::handleOnDragBegin(ValueType type, glm::dvec3 values) {
     if (_items.empty()) {
         return;
     }
@@ -37,10 +37,10 @@ void ObjectManipulator::handleOnDragBegin(ValueType type, double value) {
     for (auto& item : _items) {
         _initialLocations[item] = item->location();
     }
-    _initialValue = value;
+    _initialValues = values;
 }
 
-void ObjectManipulator::handleOnDragMove(ValueType type, int axis, double value) {
+void ObjectManipulator::handleOnDragMove(ValueType type, glm::dvec3 values) {
     // TODO: scale and rotate from median center
 
     if (_items.empty()) {
@@ -50,14 +50,13 @@ void ObjectManipulator::handleOnDragMove(ValueType type, int axis, double value)
         auto loc = _initialLocations.at(item);
         switch (type) {
         case ValueType::Translate:
-            loc.position[axis] += value - _initialValue;
+            loc.position += values - _initialValues;
             break;
         case ValueType::Scale:
-            loc.scale[axis] *= value / _initialValue;
+            loc.scale *= values / _initialValues;
             break;
         case ValueType::Rotate: {
-            glm::dvec3 eulerAngles(0);
-            eulerAngles[axis] = value - _initialValue;
+            glm::dvec3 eulerAngles = values - _initialValues;
             loc.rotation = glm::dquat(eulerAngles) * loc.rotation;
             break;
         }
