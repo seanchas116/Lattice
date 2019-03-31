@@ -23,9 +23,9 @@ public:
     MeshManipulator(const SP<State::AppState>& appState, const SP<Document::MeshItem>& item);
 
 private:
-    void handleOnBegin(ValueType type, double value);
-    void handleOnChange(ValueType type, int axis, double value);
-    void handleOnEnd(ValueType type);
+    void handleOnDragBegin(ValueType type, double value);
+    void handleOnDragMove(ValueType type, int axis, double value);
+    void handleOnDragEnd(ValueType type);
 
     void updatePosition();
 

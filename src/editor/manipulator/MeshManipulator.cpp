@@ -18,12 +18,12 @@ MeshManipulator::MeshManipulator(const SP<State::AppState> &appState, const SP<D
     connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshManipulator::updatePosition);
     updatePosition();
 
-    connect(this, &Manipulator::onDragBegin, this, &MeshManipulator::handleOnBegin);
-    connect(this, &Manipulator::onDragMove, this, &MeshManipulator::handleOnChange);
-    connect(this, &Manipulator::onDragEnd, this, &MeshManipulator::handleOnEnd);
+    connect(this, &Manipulator::onDragBegin, this, &MeshManipulator::handleOnDragBegin);
+    connect(this, &Manipulator::onDragMove, this, &MeshManipulator::handleOnDragMove);
+    connect(this, &Manipulator::onDragEnd, this, &MeshManipulator::handleOnDragEnd);
 }
 
-void MeshManipulator::handleOnBegin(ValueType type, double value) {
+void MeshManipulator::handleOnDragBegin(ValueType type, double value) {
     _appState->document()->history()->beginChange(tr("Move Vertex"));
 
     _initialValue = value;
@@ -36,7 +36,7 @@ void MeshManipulator::handleOnBegin(ValueType type, double value) {
     _initialMedianPos = (itemToWorld * dvec4(_appState->document()->meshSelection().medianPosition(), 1)).xyz;
 }
 
-void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
+void MeshManipulator::handleOnDragMove(ValueType type, int axis, double value) {
     auto& mesh = _item->mesh();
     auto worldToItem = _item->location().matrixToModel();
 
@@ -82,7 +82,7 @@ void MeshManipulator::handleOnChange(ValueType type, int axis, double value) {
     }
 }
 
-void MeshManipulator::handleOnEnd(ValueType type) {
+void MeshManipulator::handleOnDragEnd(ValueType type) {
     Q_UNUSED(type);
     _initialPositions.clear();
 }

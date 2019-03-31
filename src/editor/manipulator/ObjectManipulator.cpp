@@ -12,12 +12,12 @@ ObjectManipulator::ObjectManipulator(const SP<State::AppState> &appState) : _app
 {
     setItems(appState->document()->selectedItems());
     connect(appState->document().get(), &Document::Document::selectedItemsChanged, this, &ObjectManipulator::setItems);
-    connect(this, &Manipulator::onDragBegin, this, &ObjectManipulator::handleOnBegin);
-    connect(this, &Manipulator::onDragMove, this, &ObjectManipulator::handleOnChange);
-    connect(this, &Manipulator::onDragEnd, this, &ObjectManipulator::handleOnEnd);
+    connect(this, &Manipulator::onDragBegin, this, &ObjectManipulator::handleOnDragBegin);
+    connect(this, &Manipulator::onDragMove, this, &ObjectManipulator::handleOnDragMove);
+    connect(this, &Manipulator::onDragEnd, this, &ObjectManipulator::handleOnDragEnd);
 }
 
-void ObjectManipulator::handleOnBegin(ValueType type, double value) {
+void ObjectManipulator::handleOnDragBegin(ValueType type, double value) {
     if (_items.empty()) {
         return;
     }
@@ -40,7 +40,7 @@ void ObjectManipulator::handleOnBegin(ValueType type, double value) {
     _initialValue = value;
 }
 
-void ObjectManipulator::handleOnChange(ValueType type, int axis, double value) {
+void ObjectManipulator::handleOnDragMove(ValueType type, int axis, double value) {
     // TODO: scale and rotate from median center
 
     if (_items.empty()) {
@@ -66,7 +66,7 @@ void ObjectManipulator::handleOnChange(ValueType type, int axis, double value) {
     }
 }
 
-void ObjectManipulator::handleOnEnd(ValueType type) {
+void ObjectManipulator::handleOnDragEnd(ValueType type) {
     Q_UNUSED(type);
     _initialLocations.clear();
 }
