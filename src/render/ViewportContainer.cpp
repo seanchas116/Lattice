@@ -79,11 +79,11 @@ void ViewportContainer::paintGL() {
         viewport->pickableMap()->draw(*viewport->_renderable, operations, viewport->camera());
     }
 
-    glDisable(GL_SCISSOR_TEST);
-    glDisable(GL_DEPTH_TEST);
+    //glDisable(GL_SCISSOR_TEST);
+    //glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
-    glViewport(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
-    glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebufferObject());
+    //glViewport(0, 0, width() * devicePixelRatio(), height() * devicePixelRatio());
+    //glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebufferObject());
 
     QOpenGLPaintDevice device(width() * devicePixelRatio(), height() * devicePixelRatio());
     QPainter painter(&device);
