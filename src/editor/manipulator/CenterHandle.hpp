@@ -28,6 +28,8 @@ signals:
 
 private:
     glm::dvec3 _targetPosition {0};
+    double _depth = 0;
+    bool _dragged = false;
 };
 
 } // namespace Manipulator
