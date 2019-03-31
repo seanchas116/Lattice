@@ -12,6 +12,10 @@ Manipulator::Manipulator() :
     _centerHandle(makeShared<CenterHandle>())
 {
     connect(this, &Manipulator::targetPositionChanged, _centerHandle.get(), &CenterHandle::setTargetPosition);
+    connect(_centerHandle.get(), &CenterHandle::onDragBegin, this, &Manipulator::onCenterDragBegin);
+    connect(_centerHandle.get(), &CenterHandle::onDragMove, this, &Manipulator::onCenterDragMove);
+    connect(_centerHandle.get(), &CenterHandle::onDragEnd, this, &Manipulator::onCenterDragEnd);
+    connect(_centerHandle.get(), &CenterHandle::onContextMenu, this, &Manipulator::onContextMenu);
 
     for (int axis = 0; axis < 3; ++axis) {
         auto handle = makeShared<ArrowHandle>(axis, ArrowHandle::HandleType::Translate);

@@ -44,6 +44,10 @@ signals:
     void onDragMove(ValueType type, int axis, double value);
     void onDragEnd(ValueType type);
 
+    void onCenterDragBegin(glm::dvec3 pos);
+    void onCenterDragMove(glm::dvec3 pos);
+    void onCenterDragEnd();
+
     void onContextMenu(const Render::ContextMenuEvent& event);
 
 private:
