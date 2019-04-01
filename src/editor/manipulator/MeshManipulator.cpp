@@ -24,6 +24,7 @@ MeshManipulator::MeshManipulator(const SP<State::AppState> &appState, const SP<D
 }
 
 void MeshManipulator::handleOnDragBegin(ValueType type, dvec3 values) {
+    Q_UNUSED(type);
     _appState->document()->history()->beginChange(tr("Move Vertex"));
 
     _initialValues = values;
