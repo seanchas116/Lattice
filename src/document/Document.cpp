@@ -14,11 +14,10 @@ public:
     RootObject(Document* document) : _document(document) {}
 
     SP<Object> clone() const override {
-        throw std::runtime_error("RootItem cannot be copied");
+        throw std::runtime_error("RootObject cannot be copied");
     }
 
-    bool canInsertItem(const SP<const Object>& item) const override {
-        Q_UNUSED(item)
+    bool canInsertItem(const SP<const Object>&) const override {
         return true;
     }
 
