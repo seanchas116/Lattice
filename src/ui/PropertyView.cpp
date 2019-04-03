@@ -15,18 +15,18 @@ PropertyView::PropertyView(const SP<State::AppState> &appState, QWidget *parent)
     auto layout = new QVBoxLayout();
     layout->setMargin(0);
 
-    auto itemPropertyView = new ObjectPropertyView(appState);
-    layout->addWidget(itemPropertyView);
+    auto objectPropertyView = new ObjectPropertyView(appState);
+    layout->addWidget(objectPropertyView);
     auto meshPropertyView = new MeshPropertyView(appState);
     layout->addWidget(meshPropertyView);
 
     auto document = appState->document();
 
-    auto update = [document, itemPropertyView, meshPropertyView] {
+    auto update = [document, objectPropertyView, meshPropertyView] {
         meshPropertyView->setObject(document->editedObject());
         meshPropertyView->setVisible(!!document->editedObject() && !document->meshSelection().vertices.empty());
-        itemPropertyView->setObjects(document->selectedObjects());
-        itemPropertyView->setVisible(!document->selectedObjects().empty() && !document->editedObject());
+        objectPropertyView->setObjects(document->selectedObjects());
+        objectPropertyView->setVisible(!document->selectedObjects().empty() && !document->editedObject());
     };
     connect(document.get(), &Document::Document::selectedObjectsChanged, this, update);
     connect(document.get(), &Document::Document::editedObjectChanged, this, update);
