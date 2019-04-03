@@ -10,7 +10,7 @@ public:
     SingletonBag();
 
     template <typename T>
-    T getOrCreate(T (*factory)()) {
+    T get(T (*factory)()) {
         auto it = instances.find(factory);
         if (it == instances.end()) {
             bool inserted;

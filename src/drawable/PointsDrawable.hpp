@@ -31,7 +31,6 @@ public:
     void draw2D(SingletonBag& singletonBag, const glm::dmat4 &matrix, glm::ivec2 viewportSize);
 
 private:
-    static SP<GL::Shader> shader(SingletonBag& resourceBag);
     SP<GL::VertexBuffer<Point>> _vbo;
     SP<GL::VAO> _vao;
     double _width = 1;

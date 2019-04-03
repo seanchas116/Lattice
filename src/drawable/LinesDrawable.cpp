@@ -10,6 +10,17 @@
 namespace Lattice {
 namespace Drawable {
 
+namespace {
+
+SP<GL::Shader> createShader() {
+    return makeShared<GL::Shader>(
+        Resource::read("src/drawable/LinesDrawable.vert"),
+        Resource::read("src/drawable/LinesDrawable.geom"),
+        Resource::read("src/drawable/LinesDrawable.frag"));
+}
+
+}
+
 LinesDrawable::LinesDrawable() :
     _vbo(makeShared<GL::VertexBuffer<Point>>()),
     _ibo(makeShared<GL::IndexBuffer>()),
@@ -30,12 +41,7 @@ void LinesDrawable::setLineStrips(const std::vector<std::vector<uint32_t>> &line
 }
 
 void LinesDrawable::draw(SingletonBag& singletonBag, const glm::dmat4 &matrix, const SP<Camera> &camera) {
-    auto shader = singletonBag.getOrCreate<SP<GL::Shader>>([] {
-        return makeShared<GL::Shader>(
-            Resource::read("src/drawable/LinesDrawable.vert"),
-            Resource::read("src/drawable/LinesDrawable.geom"),
-            Resource::read("src/drawable/LinesDrawable.frag"));
-    });
+    auto shader = singletonBag.get(createShader);
 
     shader->bind();
     shader->setUniform("MV", camera->worldToCameraMatrix() * matrix);
