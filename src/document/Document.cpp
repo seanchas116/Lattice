@@ -1,5 +1,5 @@
 #include "Document.hpp"
-#include "MeshItem.hpp"
+#include "MeshObject.hpp"
 #include "History.hpp"
 #include "../support/Debug.hpp"
 #include "../support/OptionalGuard.hpp"
@@ -9,16 +9,15 @@ namespace Document {
 
 namespace {
 
-class RootItem final : public Item {
+class RootObject final : public Object {
 public:
-    RootItem(Document* document) : _document(document) {}
+    RootObject(Document* document) : _document(document) {}
 
-    SP<Item> clone() const override {
-        throw std::runtime_error("RootItem cannot be copied");
+    SP<Object> clone() const override {
+        throw std::runtime_error("RootObject cannot be copied");
     }
 
-    bool canInsertItem(const SP<const Item>& item) const override {
-        Q_UNUSED(item)
+    bool canInsertObject(const SP<const Object>&) const override {
         return true;
     }
 
@@ -33,91 +32,91 @@ private:
 }
 
 Document::Document() :
-    _rootItem(makeShared<RootItem>(this)),
+    _rootObject(makeShared<RootObject>(this)),
     _history(makeShared<History>())
 {
-    watchChildrenInsertRemove(_rootItem);
-    connect(this, &Document::editedItemChanged, this, [this] {
+    watchChildrenInsertRemove(_rootObject);
+    connect(this, &Document::editedObjectChanged, this, [this] {
         emit isEditingChanged(isEditing());
     });
 }
 
-void Document::setCurrentItem(const Opt<SP<Item> > &item) {
-    if (item != _currentItem) {
-        _currentItem = item;
-        emit currentItemChanged(item);
+void Document::setCurrentObject(const Opt<SP<Object> > &object) {
+    if (object != _currentObject) {
+        _currentObject = object;
+        emit currentObjectChanged(object);
     }
 }
 
-void Document::setEditedItem(const Opt<SP<MeshItem> > &item) {
-    if (item != _editedItem) {
-        _editedItem = item;
-        emit editedItemChanged(item);
+void Document::setEditedObject(const Opt<SP<MeshObject> > &object) {
+    if (object != _editedObject) {
+        _editedObject = object;
+        emit editedObjectChanged(object);
     }
 }
 
 void Document::setIsEditing(bool isEditing) {
     if (isEditing) {
-        auto item = dynamicPointerCast<MeshItem>(_currentItem);
-        setEditedItem(item);
+        auto object = dynamicPointerCast<MeshObject>(_currentObject);
+        setEditedObject(object);
     } else {
-        setEditedItem(std::nullopt);
+        setEditedObject(std::nullopt);
     }
 }
 
-void Document::setSelectedItems(const std::unordered_set<SP<Item>> &items) {
-    if (_selectedItems != items) {
-        _selectedItems = items;
-        emit selectedItemsChanged(items);
+void Document::setSelectedObjects(const std::unordered_set<SP<Object>> &objects) {
+    if (_selectedObjects != objects) {
+        _selectedObjects = objects;
+        emit selectedObjectsChanged(objects);
     }
 }
 
-void Document::selectItem(const SP<Item> &item, bool append) {
-    std::unordered_set<SP<Item>> items;
+void Document::selectObject(const SP<Object> &object, bool append) {
+    std::unordered_set<SP<Object>> objects;
     if (append) {
-        items = _selectedItems;
+        objects = _selectedObjects;
     }
-    items.insert(item);
-    setSelectedItems(items);
-    setCurrentItem(item);
+    objects.insert(object);
+    setSelectedObjects(objects);
+    setCurrentObject(object);
 }
 
-void Document::insertItemToCurrentPosition(const SP<Item> &item) {
+void Document::insertObjectToCurrentPosition(const SP<Object> &object) {
     // TODO: better insertion positon
-    _rootItem->appendChildItem(item);
+    _rootObject->appendChildObject(object);
 }
 
-void Document::deleteSelectedItems() {
-    auto items = _selectedItems;
-    for (auto& item : items) {
-        LATTICE_OPTIONAL_GUARD(parent, item->parentItem(), continue;)
-        parent->removeChildItem(item);
+void Document::deleteSelectedObjects() {
+    auto& objects = _selectedObjects;
+    for (auto& object : objects) {
+        LATTICE_OPTIONAL_GUARD(parent, object->parentObject(), continue;)
+        parent->removeChildObject(object);
     }
 }
 
-void Document::watchChildrenInsertRemove(const SP<Item> &item) {
-    auto itemPtr = item.get();
-    connect(itemPtr, &Item::childItemsAboutToBeInserted, this, [this] (int, int, const auto& items) {
-        for (auto& item : items) {
-            emit itemAboutToBeInserted(item);
+void Document::watchChildrenInsertRemove(const SP<Object> &object) {
+    auto objectPtr = object.get();
+    connect(objectPtr, &Object::childObjectsAboutToBeInserted, this, [this] (int, int, const auto& objects) {
+        for (auto& object : objects) {
+            emit objectAboutToBeInserted(object);
         }
     });
-    connect(itemPtr, &Item::childItemsInserted, this, [this, itemPtr] (int first, int last) {
+    connect(objectPtr, &Object::childObjectsInserted, this, [this, objectPtr] (int first, int last) {
         for (int i = first; i <= last; ++i) {
-            auto& child = itemPtr->childItems()[i];
+            auto& child = objectPtr->childObjects()[i];
             watchChildrenInsertRemove(child);
-            emit itemInserted(child);
+            emit objectInserted(child);
         }
     });
-    connect(itemPtr, &Item::childItemsAboutToBeRemoved, this, [this, itemPtr] (int first, int last) {
+    connect(objectPtr, &Object::childObjectsAboutToBeRemoved, this, [this, objectPtr] (int first, int last) {
         for (int i = first; i <= last; ++i) {
-            auto& child = itemPtr->childItems()[i];
-            emit itemAboutToBeRemoved(child);
+            auto& child = objectPtr->childObjects()[i];
+            emit objectAboutToBeRemoved(child);
         }
     });
-    connect(itemPtr, &Item::childItemsRemoved, this, [this] (int, int, const auto& items) {
-        for (auto& item : items) {
-            emit itemRemoved(item);
+    connect(objectPtr, &Object::childObjectsRemoved, this, [this] (int, int, const auto& objects) {
+        for (auto& object : objects) {
+            emit objectRemoved(object);
         }
     });
 }

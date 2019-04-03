@@ -7,8 +7,8 @@
 #include "./manipulator/MeshManipulator.hpp"
 #include "../state/AppState.hpp"
 #include "../document/Document.hpp"
-#include "../document/Item.hpp"
-#include "../document/MeshItem.hpp"
+#include "../document/Object.hpp"
+#include "../document/MeshObject.hpp"
 
 namespace Lattice {
 namespace Editor {
@@ -28,10 +28,10 @@ EditorScene::EditorScene(const SP<State::AppState> &appState) :
     connect(appState.get(), &State::AppState::isRotateHandleVisibleChanged, _objectManipulator.get(), &Manipulator::Manipulator::setRotateHandleVisible);
     connect(appState.get(), &State::AppState::isScaleHandleVisibleChanged, _objectManipulator.get(), &Manipulator::Manipulator::setScaleHandleVisible);
 
-    connect(appState->document().get(), &Document::Document::itemInserted, this, &EditorScene::updateRenderables);
-    connect(appState->document().get(), &Document::Document::itemRemoved, this, &EditorScene::updateRenderables);
-    connect(appState->document().get(), &Document::Document::selectedItemsChanged, this, &EditorScene::updateRenderables);
-    connect(appState->document().get(), &Document::Document::editedItemChanged, this, &EditorScene::updateRenderables);
+    connect(appState->document().get(), &Document::Document::objectInserted, this, &EditorScene::updateRenderables);
+    connect(appState->document().get(), &Document::Document::objectRemoved, this, &EditorScene::updateRenderables);
+    connect(appState->document().get(), &Document::Document::selectedObjectsChanged, this, &EditorScene::updateRenderables);
+    connect(appState->document().get(), &Document::Document::editedObjectChanged, this, &EditorScene::updateRenderables);
     connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &EditorScene::updateRenderables);
 
     updateRenderables();
@@ -40,32 +40,32 @@ EditorScene::EditorScene(const SP<State::AppState> &appState) :
 void EditorScene::updateRenderables() {
     recallContext();
 
-    std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> newMeshRenderers;
+    std::unordered_map<SP<Document::MeshObject>, SP<MeshRenderer>> newMeshRenderers;
 
-    auto editedItem = _appState->document()->editedItem();
-    if (editedItem) {
-        if (!_meshEditor || (*_meshEditor)->item() != editedItem) {
-            _meshEditor = makeShared<MeshEditor::MeshEditor>(_appState, *editedItem);
+    auto editedObject = _appState->document()->editedObject();
+    if (editedObject) {
+        if (!_meshEditor || (*_meshEditor)->object() != editedObject) {
+            _meshEditor = makeShared<MeshEditor::MeshEditor>(_appState, *editedObject);
         }
     } else {
         _meshEditor = std::nullopt;
     }
 
-    _appState->document()->rootItem()->forEachDescendant([&] (auto& item) {
-        LATTICE_OPTIONAL_GUARD(meshItem, dynamicPointerCast<Document::MeshItem>(item), return;)
-                connect(meshItem.get(), &Document::MeshItem::locationChanged, this, [this] { update(); });
-        if (item == _appState->document()->editedItem()) {
+    _appState->document()->rootObject()->forEachDescendant([&] (auto& object) {
+        LATTICE_OPTIONAL_GUARD(meshObject, dynamicPointerCast<Document::MeshObject>(object), return;)
+        connect(meshObject.get(), &Document::MeshObject::locationChanged, this, [this] { update(); });
+        if (object == _appState->document()->editedObject()) {
             return;
         }
 
-        auto it = _meshRenderers.find(meshItem);
+        auto it = _meshRenderers.find(meshObject);
         if (it != _meshRenderers.end()) {
-            newMeshRenderers.insert({meshItem, it->second});
+            newMeshRenderers.insert({meshObject, it->second});
             return;
         }
 
-        auto renderer = makeShared<MeshRenderer>(_appState, meshItem);
-        newMeshRenderers.insert({meshItem, renderer});
+        auto renderer = makeShared<MeshRenderer>(_appState, meshObject);
+        newMeshRenderers.insert({meshObject, renderer});
     });
 
     _meshRenderers = newMeshRenderers;
@@ -74,14 +74,14 @@ void EditorScene::updateRenderables() {
     renderables.push_back(_background);
 
     renderables.push_back(_gridFloor);
-    for (auto& [item, renderer] : _meshRenderers) {
+    for (auto& [object, renderer] : _meshRenderers) {
         renderables.push_back(renderer);
     }
     if (_meshEditor) {
         renderables.push_back(*_meshEditor);
     }
 
-    if (!_appState->document()->selectedItems().empty() && !_appState->document()->isEditing()) {
+    if (!_appState->document()->selectedObjects().empty() && !_appState->document()->isEditing()) {
         renderables.push_back(_objectManipulator);
     }
 

@@ -1,6 +1,6 @@
-#include "ItemListView.hpp"
-#include "ItemModel.hpp"
-#include "ItemSelectionModel.hpp"
+#include "ObjectListView.hpp"
+#include "ObjectItemModel.hpp"
+#include "ObjectSelectionModel.hpp"
 #include "../state/AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
@@ -11,7 +11,7 @@
 namespace Lattice {
 namespace UI {
 
-ItemListView::ItemListView(const SP<State::AppState> &appState, QWidget *parent) :
+ObjectListView::ObjectListView(const SP<State::AppState> &appState, QWidget *parent) :
     QWidget(parent),
     _appState(appState)
 {
@@ -23,8 +23,8 @@ ItemListView::ItemListView(const SP<State::AppState> &appState, QWidget *parent)
     treeView->setDropIndicatorShown(true);
     treeView->setAcceptDrops(true);
 
-    auto model = new ItemModel(appState->document(), this);
-    auto selectionModel = new ItemSelectionModel(model, this);
+    auto model = new ObjectItemModel(appState->document(), this);
+    auto selectionModel = new ObjectSelectionModel(model, this);
     treeView->setModel(model);
     treeView->setSelectionModel(selectionModel);
 
@@ -33,7 +33,7 @@ ItemListView::ItemListView(const SP<State::AppState> &appState, QWidget *parent)
         auto index = treeView->indexAt(p);
         if (index.isValid()) {
             QMenu contextMenu;
-            contextMenu.addAction(tr("Delete"), _appState.get(), &State::AppState::deleteItems);
+            contextMenu.addAction(tr("Delete"), _appState.get(), &State::AppState::deleteObjects);
             contextMenu.exec(treeView->mapToGlobal(p));
         }
     });

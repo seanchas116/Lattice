@@ -46,7 +46,7 @@ void ExtrudeTool::mouseMoveEvent(const Tool::EventTarget &target, const Render::
         }
 
         appState()->document()->history()->beginChange(tr("Extrude"));
-        auto& mesh = item()->mesh();
+        auto& mesh = object()->mesh();
 
         _oldToNewUVPoints.clear();
 
@@ -154,7 +154,7 @@ void ExtrudeTool::mouseMoveEvent(const Tool::EventTarget &target, const Render::
         newPositions[newUV->vertex()] = _initPositions[oldUV->vertex()] + offset;
     }
 
-    item()->mesh()->setPosition(newPositions);
+    object()->mesh()->setPosition(newPositions);
 }
 
 void ExtrudeTool::mouseReleaseEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {

@@ -3,7 +3,7 @@
 #include "../../state/AppState.hpp"
 #include "../../mesh/Mesh.hpp"
 #include "../../mesh/MeshFragment.hpp"
-#include "../../document/MeshItem.hpp"
+#include "../../document/MeshObject.hpp"
 #include "../../render/MouseEvent.hpp"
 
 namespace Lattice {
@@ -28,11 +28,11 @@ public:
         std::vector<SP<Mesh::Face>> faces;
     };
 
-    Tool(const SP<State::AppState>& appState, const SP<Document::MeshItem>& item) : _appState(appState), _item(item) {}
+    Tool(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object) : _appState(appState), _object(object) {}
     ~Tool();
 
     auto& appState() const { return _appState; }
-    auto& item() const { return _item; }
+    auto& object() const { return _object; }
 
     virtual HitTestExclusion hitTestExclusion() const;
 
@@ -46,7 +46,7 @@ public:
 
 private:
     SP<State::AppState> _appState;
-    SP<Document::MeshItem> _item;
+    SP<Document::MeshObject> _object;
 };
 
 } // namespace MeshEditor

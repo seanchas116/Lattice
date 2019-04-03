@@ -1,6 +1,6 @@
 #include "MeshVAOGenerator.hpp"
 #include "../mesh/Mesh.hpp"
-#include "../document/MeshItem.hpp"
+#include "../document/MeshObject.hpp"
 #include "../gl/VAO.hpp"
 #include "../gl/VertexBuffer.hpp"
 

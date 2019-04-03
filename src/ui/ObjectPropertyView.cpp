@@ -1,7 +1,7 @@
-#include "ItemPropertyView.hpp"
+#include "ObjectPropertyView.hpp"
 #include "../state/AppState.hpp"
 #include "../document/Document.hpp"
-#include "../document/Item.hpp"
+#include "../document/Object.hpp"
 #include "../document/History.hpp"
 #include "../support/Debug.hpp"
 #include "../support/OptionalGuard.hpp"
@@ -16,7 +16,7 @@
 namespace Lattice {
 namespace UI {
 
-ItemPropertyView::ItemPropertyView(const SP<State::AppState> &appState, QWidget *parent) :
+ObjectPropertyView::ObjectPropertyView(const SP<State::AppState> &appState, QWidget *parent) :
     QWidget(parent),
     _appState(appState)
 {
@@ -69,42 +69,42 @@ ItemPropertyView::ItemPropertyView(const SP<State::AppState> &appState, QWidget 
     setLayout(layout);
 }
 
-void ItemPropertyView::setItems(const std::unordered_set<SP<Document::Item> > &items) {
-    if (_items == items) {
+void ObjectPropertyView::setObjects(const std::unordered_set<SP<Document::Object> > &objects) {
+    if (_objects == objects) {
         return;
     }
-    _items = items;
+    _objects = objects;
 
-    Opt<SP<Document::Item>> firstItem;
-    if (!items.empty()) {
-        firstItem = *items.begin();
+    Opt<SP<Document::Object>> firstObject;
+    if (!objects.empty()) {
+        firstObject = *objects.begin();
     }
 
-    for (auto& c : _itemConnections) {
+    for (auto& c : _connections) {
         disconnect(c);
     }
-    _itemConnections.clear();
+    _connections.clear();
 
-    for (auto& item : items) {
-        auto c = connect(item.get(), &Document::Item::locationChanged, this, &ItemPropertyView::setLocation);
-        _itemConnections.push_back(c);
+    for (auto& object : objects) {
+        auto c = connect(object.get(), &Document::Object::locationChanged, this, &ObjectPropertyView::setLocation);
+        _connections.push_back(c);
     }
     setLocation();
 }
 
-void ItemPropertyView::setLocation() {
-    if (_items.empty()) {
+void ObjectPropertyView::setLocation() {
+    if (_objects.empty()) {
         return;
     }
 
-    auto location = (*_items.begin())->location();
+    auto location = (*_objects.begin())->location();
 
     glm::bvec3 isPositionSame {true};
     glm::bvec3 isScaleSame {true};
     glm::bvec3 isRotationSame {true};
 
-    for (auto& item : _items) {
-        auto otherLocation = item->location();
+    for (auto& object : _objects) {
+        auto otherLocation = object->location();
         for (int i = 0; i < 3; ++i) {
             if (location.position[i] != otherLocation.position[i]) {
                 isPositionSame[i] = false;
@@ -129,8 +129,8 @@ void ItemPropertyView::setLocation() {
     }
 }
 
-void ItemPropertyView::handleLocationValueChange(LocationMember member, int index, double value) {
-    if (_items.empty()) {
+void ObjectPropertyView::handleLocationValueChange(LocationMember member, int index, double value) {
+    if (_objects.empty()) {
         return;
     }
     auto specialValue = -std::numeric_limits<double>::infinity();
@@ -138,9 +138,9 @@ void ItemPropertyView::handleLocationValueChange(LocationMember member, int inde
         return;
     }
 
-    _appState->document()->history()->beginChange(tr("Set Item Location"));
-    for (auto& item : _items) {
-        auto location = item->location();
+    _appState->document()->history()->beginChange(tr("Set Object Location"));
+    for (auto& object : _objects) {
+        auto location = object->location();
         auto eulerAngles = glm::eulerAngles(location.rotation);
 
         switch (member) {
@@ -155,7 +155,7 @@ void ItemPropertyView::handleLocationValueChange(LocationMember member, int inde
             break;
         }
         location.rotation = glm::normalize(glm::dquat(eulerAngles));
-        item->setLocation(location);
+        object->setLocation(location);
     }
 }
 

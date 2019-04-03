@@ -1,5 +1,5 @@
 #include "MainWindow.hpp"
-#include "ItemListView.hpp"
+#include "ObjectListView.hpp"
 #include "PropertyView.hpp"
 #include "../state/AppState.hpp"
 #include "../document/Document.hpp"
@@ -29,7 +29,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
     switch (event->key()) {
     case Qt::Key_Delete:
     case Qt::Key_Backspace:
-        _appState->document()->deleteSelectedItems();
+        _appState->document()->deleteSelectedObjects();
         break;
     }
     QMainWindow::keyPressEvent(event);
@@ -266,8 +266,8 @@ void MainWindow::setupMenu() {
 void MainWindow::setupPanes() {
     {
         auto dockWidget = new QDockWidget();
-        dockWidget->setWindowTitle(tr("Items"));
-        dockWidget->setWidget(new ItemListView(_appState));
+        dockWidget->setWindowTitle(tr("Objects"));
+        dockWidget->setWidget(new ObjectListView(_appState));
         addDockWidget(Qt::LeftDockWidgetArea, dockWidget);
     }
 

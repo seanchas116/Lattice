@@ -18,7 +18,7 @@ class AppState;
 }
 
 namespace Document {
-class MeshItem;
+class MeshObject;
 }
 
 namespace Mesh {
@@ -37,7 +37,7 @@ class MeshPicker;
 class MeshRenderer final : public Render::RenderableObject {
     Q_OBJECT
 public:
-    MeshRenderer(const SP<State::AppState>& appState, const SP<Document::MeshItem>& item);
+    MeshRenderer(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object);
 
     void draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) override;
     void drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) override;
@@ -51,7 +51,7 @@ private:
     void updateVAOs();
 
     SP<State::AppState> _appState;
-    SP<Document::MeshItem> _item;
+    SP<Document::MeshObject> _object;
 
     std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> _faceVAOs;
     SP<GL::VAO> _edgeVAO;

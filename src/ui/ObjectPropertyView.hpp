@@ -16,18 +16,18 @@ class DoubleSpinBox;
 }
 
 namespace Document {
-class Item;
+class Object;
 }
 
 namespace UI {
 
-class ItemPropertyView final : public QWidget {
+class ObjectPropertyView final : public QWidget {
     Q_OBJECT
 public:
-    explicit ItemPropertyView(const SP<State::AppState> &appState, QWidget *parent = nullptr);
+    explicit ObjectPropertyView(const SP<State::AppState> &appState, QWidget *parent = nullptr);
 
-    void setItems(const std::unordered_set<SP<Document::Item>> &items);
-    auto& items() const { return _items; }
+    void setObjects(const std::unordered_set<SP<Document::Object>> &objects);
+    auto& objects() const { return _objects; }
 
 private:
     enum class LocationMember {
@@ -40,8 +40,8 @@ private:
 
     SP<State::AppState> _appState;
 
-    std::unordered_set<SP<Document::Item>> _items;
-    std::vector<QMetaObject::Connection> _itemConnections;
+    std::unordered_set<SP<Document::Object>> _objects;
+    std::vector<QMetaObject::Connection> _connections;
 
     std::array<Widget::DoubleSpinBox*, 3> _positionSpinBoxes;
     std::array<Widget::DoubleSpinBox*, 3> _scaleSpinBoxes;

@@ -10,7 +10,7 @@ class AppState;
 }
 
 namespace Document {
-class MeshItem;
+class MeshObject;
 }
 
 namespace Editor {
@@ -43,7 +43,7 @@ private:
     SP<Background> _background;
     SP<GridFloor> _gridFloor;
     SP<Manipulator::ObjectManipulator> _objectManipulator;
-    std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> _meshRenderers;
+    std::unordered_map<SP<Document::MeshObject>, SP<MeshRenderer>> _meshRenderers;
     Opt<SP<MeshEditor::MeshEditor>> _meshEditor;
 };
 
