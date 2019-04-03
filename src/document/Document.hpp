@@ -18,7 +18,7 @@ class Document final : public QObject, public EnableSharedFromThis<Document> {
 public:
     Document();
 
-    const SP<Object>& rootItem() const { return _rootItem; }
+    auto& rootItem() const { return _rootItem; }
 
     auto& currentItem() const { return _currentItem; }
     void setCurrentItem(const Opt<SP<Object>>& item);
@@ -37,7 +37,7 @@ public:
     void insertItemToCurrentPosition(const SP<Object>& item);
     void deleteSelectedItems();
 
-    const SP<History>& history() const { return _history; }
+    auto& history() const { return _history; }
 
     auto& meshSelection() const { return _meshSelection; }
     void setMeshSelection(const Mesh::MeshFragment &meshSelection);
