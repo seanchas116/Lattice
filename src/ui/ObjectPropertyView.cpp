@@ -1,4 +1,4 @@
-#include "ItemPropertyView.hpp"
+#include "ObjectPropertyView.hpp"
 #include "../state/AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/Object.hpp"
@@ -16,7 +16,7 @@
 namespace Lattice {
 namespace UI {
 
-ItemPropertyView::ItemPropertyView(const SP<State::AppState> &appState, QWidget *parent) :
+ObjectPropertyView::ObjectPropertyView(const SP<State::AppState> &appState, QWidget *parent) :
     QWidget(parent),
     _appState(appState)
 {
@@ -69,7 +69,7 @@ ItemPropertyView::ItemPropertyView(const SP<State::AppState> &appState, QWidget 
     setLayout(layout);
 }
 
-void ItemPropertyView::setItems(const std::unordered_set<SP<Document::Object> > &items) {
+void ObjectPropertyView::setItems(const std::unordered_set<SP<Document::Object> > &items) {
     if (_items == items) {
         return;
     }
@@ -86,13 +86,13 @@ void ItemPropertyView::setItems(const std::unordered_set<SP<Document::Object> > 
     _itemConnections.clear();
 
     for (auto& item : items) {
-        auto c = connect(item.get(), &Document::Object::locationChanged, this, &ItemPropertyView::setLocation);
+        auto c = connect(item.get(), &Document::Object::locationChanged, this, &ObjectPropertyView::setLocation);
         _itemConnections.push_back(c);
     }
     setLocation();
 }
 
-void ItemPropertyView::setLocation() {
+void ObjectPropertyView::setLocation() {
     if (_items.empty()) {
         return;
     }
@@ -129,7 +129,7 @@ void ItemPropertyView::setLocation() {
     }
 }
 
-void ItemPropertyView::handleLocationValueChange(LocationMember member, int index, double value) {
+void ObjectPropertyView::handleLocationValueChange(LocationMember member, int index, double value) {
     if (_items.empty()) {
         return;
     }

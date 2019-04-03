@@ -14,7 +14,7 @@ class Object;
 
 namespace UI {
 
-class ItemPropertyView;
+class ObjectPropertyView;
 class MeshPropertyView;
 
 class PropertyView : public QWidget {

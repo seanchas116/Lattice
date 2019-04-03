@@ -1,5 +1,5 @@
 #include "PropertyView.hpp"
-#include "ItemPropertyView.hpp"
+#include "ObjectPropertyView.hpp"
 #include "MeshPropertyView.hpp"
 #include "../state/AppState.hpp"
 #include "../document/Document.hpp"
@@ -15,7 +15,7 @@ PropertyView::PropertyView(const SP<State::AppState> &appState, QWidget *parent)
     auto layout = new QVBoxLayout();
     layout->setMargin(0);
 
-    auto itemPropertyView = new ItemPropertyView(appState);
+    auto itemPropertyView = new ObjectPropertyView(appState);
     layout->addWidget(itemPropertyView);
     auto meshPropertyView = new MeshPropertyView(appState);
     layout->addWidget(meshPropertyView);

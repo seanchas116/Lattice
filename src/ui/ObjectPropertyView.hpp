@@ -21,10 +21,10 @@ class Object;
 
 namespace UI {
 
-class ItemPropertyView final : public QWidget {
+class ObjectPropertyView final : public QWidget {
     Q_OBJECT
 public:
-    explicit ItemPropertyView(const SP<State::AppState> &appState, QWidget *parent = nullptr);
+    explicit ObjectPropertyView(const SP<State::AppState> &appState, QWidget *parent = nullptr);
 
     void setItems(const std::unordered_set<SP<Document::Object>> &items);
     auto& items() const { return _items; }
