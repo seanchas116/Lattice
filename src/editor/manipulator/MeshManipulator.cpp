@@ -1,7 +1,7 @@
 #include "MeshManipulator.hpp"
 #include "../../state/AppState.hpp"
 #include "../../document/Document.hpp"
-#include "../../document/MeshItem.hpp"
+#include "../../document/MeshObject.hpp"
 #include "../../document/History.hpp"
 
 using namespace glm;
@@ -10,7 +10,7 @@ namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
-MeshManipulator::MeshManipulator(const SP<State::AppState> &appState, const SP<Document::MeshItem> &item) :
+MeshManipulator::MeshManipulator(const SP<State::AppState> &appState, const SP<Document::MeshObject> &item) :
     _appState(appState),
     _item(item)
 {

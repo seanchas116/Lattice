@@ -1,5 +1,5 @@
 #include "MeshPropertyView.hpp"
-#include "../document/MeshItem.hpp"
+#include "../document/MeshObject.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
 #include "../state/AppState.hpp"
@@ -71,7 +71,7 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
     setLayout(layout);
 }
 
-void MeshPropertyView::setItem(const Opt<SP<Document::MeshItem>> &maybeItem) {
+void MeshPropertyView::setItem(const Opt<SP<Document::MeshObject>> &maybeItem) {
     disconnect(_connection);
     _item = maybeItem;
     if (!maybeItem) {
@@ -79,7 +79,7 @@ void MeshPropertyView::setItem(const Opt<SP<Document::MeshItem>> &maybeItem) {
     }
     auto item = *maybeItem;
 
-    _connection = connect(item.get(), &Document::MeshItem::meshChangedInLastTick, this, &MeshPropertyView::setViewValues);
+    _connection = connect(item.get(), &Document::MeshObject::meshChangedInLastTick, this, &MeshPropertyView::setViewValues);
     setViewValues();
 }
 

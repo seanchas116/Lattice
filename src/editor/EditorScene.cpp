@@ -8,7 +8,7 @@
 #include "../state/AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/Object.hpp"
-#include "../document/MeshItem.hpp"
+#include "../document/MeshObject.hpp"
 
 namespace Lattice {
 namespace Editor {
@@ -40,7 +40,7 @@ EditorScene::EditorScene(const SP<State::AppState> &appState) :
 void EditorScene::updateRenderables() {
     recallContext();
 
-    std::unordered_map<SP<Document::MeshItem>, SP<MeshRenderer>> newMeshRenderers;
+    std::unordered_map<SP<Document::MeshObject>, SP<MeshRenderer>> newMeshRenderers;
 
     auto editedItem = _appState->document()->editedItem();
     if (editedItem) {
@@ -52,8 +52,8 @@ void EditorScene::updateRenderables() {
     }
 
     _appState->document()->rootItem()->forEachDescendant([&] (auto& item) {
-        LATTICE_OPTIONAL_GUARD(meshItem, dynamicPointerCast<Document::MeshItem>(item), return;)
-                connect(meshItem.get(), &Document::MeshItem::locationChanged, this, [this] { update(); });
+        LATTICE_OPTIONAL_GUARD(meshItem, dynamicPointerCast<Document::MeshObject>(item), return;)
+                connect(meshItem.get(), &Document::MeshObject::locationChanged, this, [this] { update(); });
         if (item == _appState->document()->editedItem()) {
             return;
         }

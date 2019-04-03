@@ -9,7 +9,7 @@
 #include "../../gl/VertexBuffer.hpp"
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
-#include "../../document/MeshItem.hpp"
+#include "../../document/MeshObject.hpp"
 #include "../../mesh/Mesh.hpp"
 #include "../../support/Debug.hpp"
 #include "../../support/Camera.hpp"
@@ -85,7 +85,7 @@ private:
     SP<Mesh::Face> _face;
 };
 
-MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::MeshItem> &item) :
+MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::MeshObject> &item) :
     _appState(appState),
     _item(item),
     _manipulator(makeShared<Manipulator::MeshManipulator>(appState, item)),

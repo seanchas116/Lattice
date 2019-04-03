@@ -20,7 +20,7 @@ class AppState;
 }
 
 namespace Document {
-class MeshItem;
+class MeshObject;
 }
 
 namespace Mesh {
@@ -44,7 +44,7 @@ namespace MeshEditor {
 class MeshEditor final : public Render::RenderableObject, protected QOpenGLExtraFunctions {
     Q_OBJECT
 public:
-    MeshEditor(const SP<State::AppState>& appState, const SP<Document::MeshItem>& item);
+    MeshEditor(const SP<State::AppState>& appState, const SP<Document::MeshObject>& item);
 
     auto& item() const { return _item; }
 
@@ -83,7 +83,7 @@ private:
     class FacePickable;
 
     SP<State::AppState> _appState;
-    SP<Document::MeshItem> _item;
+    SP<Document::MeshObject> _item;
 
     SP<Manipulator::MeshManipulator> _manipulator;
 

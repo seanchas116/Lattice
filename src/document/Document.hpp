@@ -10,7 +10,7 @@ namespace Lattice {
 namespace Document {
 
 class Object;
-class MeshItem;
+class MeshObject;
 class History;
 
 class Document final : public QObject, public EnableSharedFromThis<Document> {
@@ -24,7 +24,7 @@ public:
     void setCurrentItem(const Opt<SP<Object>>& item);
 
     auto& editedItem() const { return _editedItem; }
-    void setEditedItem(const Opt<SP<MeshItem>>& item);
+    void setEditedItem(const Opt<SP<MeshObject>>& item);
 
     bool isEditing() const { return bool(_editedItem); }
     void setIsEditing(bool isEditing);
@@ -44,7 +44,7 @@ public:
 
 signals:
     void currentItemChanged(const Opt<SP<Object>>& item);
-    void editedItemChanged(const Opt<SP<MeshItem>>& item);
+    void editedItemChanged(const Opt<SP<MeshObject>>& item);
     void isEditingChanged(bool isEditing);
     void selectedItemsChanged(const std::unordered_set<SP<Object>>& items);
     void meshSelectionChanged(const Mesh::MeshFragment &meshSelection);
@@ -60,7 +60,7 @@ private:
     SP<Object> _rootItem;
 
     Opt<SP<Object>> _currentItem;
-    Opt<SP<MeshItem>> _editedItem;
+    Opt<SP<MeshObject>> _editedItem;
     std::unordered_set<SP<Object>> _selectedItems;
     Mesh::MeshFragment _meshSelection;
 

@@ -2,7 +2,7 @@
 #include "../services/ObjLoader.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
-#include "../document/MeshItem.hpp"
+#include "../document/MeshObject.hpp"
 #include "../mesh/Mesh.hpp"
 #include <QFileDialog>
 #include <QtDebug>
@@ -31,7 +31,7 @@ void AppState::deleteItems() {
 
 void AppState::addPlane() {
     _document->history()->beginChange(tr("Add Plane"));
-    auto item = makeShared<Document::MeshItem>();
+    auto item = makeShared<Document::MeshObject>();
     item->setName(tr("Plane").toStdString());
     item->mesh()->addPlane(dvec3(0), dvec2(2), 1, item->mesh()->addMaterial());
     _document->insertItemToCurrentPosition(item);
@@ -39,7 +39,7 @@ void AppState::addPlane() {
 
 void AppState::addCube() {
     _document->history()->beginChange(tr("Add Cube"));
-    auto item = makeShared<Document::MeshItem>();
+    auto item = makeShared<Document::MeshObject>();
     item->setName(tr("Cube").toStdString());
     item->mesh()->addCube(glm::vec3(-1), glm::vec3(1), item->mesh()->addMaterial());
     _document->insertItemToCurrentPosition(item);
@@ -47,7 +47,7 @@ void AppState::addCube() {
 
 void AppState::addCircle() {
     _document->history()->beginChange(tr("Add Circle"));
-    auto item = makeShared<Document::MeshItem>();
+    auto item = makeShared<Document::MeshObject>();
     item->setName(tr("Circle").toStdString());
     item->mesh()->addCircle(glm::vec3(0), 1.0, 16, Mesh::Mesh::CircleFill::Ngon, 1, item->mesh()->addMaterial());
     _document->insertItemToCurrentPosition(item);
@@ -55,7 +55,7 @@ void AppState::addCircle() {
 
 void AppState::addSphere() {
     _document->history()->beginChange(tr("Add Sphere"));
-    auto item = makeShared<Document::MeshItem>();
+    auto item = makeShared<Document::MeshObject>();
     item->setName(tr("Sphere").toStdString());
     item->mesh()->addSphere(glm::vec3(0), 1.0, 16, 8, 1, item->mesh()->addMaterial());
     _document->insertItemToCurrentPosition(item);
@@ -63,7 +63,7 @@ void AppState::addSphere() {
 
 void AppState::addCone() {
     _document->history()->beginChange(tr("Add Cone"));
-    auto item = makeShared<Document::MeshItem>();
+    auto item = makeShared<Document::MeshObject>();
     item->setName(tr("Cone").toStdString());
     item->mesh()->addCone(glm::vec3(0), 1.0, 1.0, 16, 1, item->mesh()->addMaterial());
     _document->insertItemToCurrentPosition(item);
@@ -71,7 +71,7 @@ void AppState::addCone() {
 
 void AppState::addCylinder() {
     _document->history()->beginChange(tr("Add Cylinder"));
-    auto item = makeShared<Document::MeshItem>();
+    auto item = makeShared<Document::MeshObject>();
     item->setName(tr("Cylinder").toStdString());
     item->mesh()->addCylinder(glm::vec3(0), 1.0, 1.0, 16, 1, item->mesh()->addMaterial());
     _document->insertItemToCurrentPosition(item);

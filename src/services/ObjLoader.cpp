@@ -1,6 +1,6 @@
 #include "ObjLoader.hpp"
 #include "../mesh/Mesh.hpp"
-#include "../document/MeshItem.hpp"
+#include "../document/MeshObject.hpp"
 #include <tiny_obj_loader.h>
 #include <QDir>
 #include <QFileInfo>
@@ -12,7 +12,7 @@ using namespace glm;
 namespace Lattice {
 namespace Services {
 
-std::vector<SP<Document::MeshItem>> ObjLoader::load(const QString &filePathString) {
+std::vector<SP<Document::MeshObject>> ObjLoader::load(const QString &filePathString) {
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> objShapes;
     std::vector<tinyobj::material_t> objMaterials;
@@ -34,7 +34,7 @@ std::vector<SP<Document::MeshItem>> ObjLoader::load(const QString &filePathStrin
         return {};
     }
 
-    std::vector<SP<Document::MeshItem>> items;
+    std::vector<SP<Document::MeshObject>> items;
 
     auto loadImage = [&](const std::string& name) {
         if (name.empty()) {
@@ -45,7 +45,7 @@ std::vector<SP<Document::MeshItem>> ObjLoader::load(const QString &filePathStrin
     };
 
     for (auto& objShape : objShapes) {
-        auto item = makeShared<Document::MeshItem>();
+        auto item = makeShared<Document::MeshObject>();
         item->setName(objShape.name);
 
         // TODO: use index_t as key

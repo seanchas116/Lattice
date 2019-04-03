@@ -1,5 +1,5 @@
 #include "Document.hpp"
-#include "MeshItem.hpp"
+#include "MeshObject.hpp"
 #include "History.hpp"
 #include "../support/Debug.hpp"
 #include "../support/OptionalGuard.hpp"
@@ -49,7 +49,7 @@ void Document::setCurrentItem(const Opt<SP<Object> > &item) {
     }
 }
 
-void Document::setEditedItem(const Opt<SP<MeshItem> > &item) {
+void Document::setEditedItem(const Opt<SP<MeshObject> > &item) {
     if (item != _editedItem) {
         _editedItem = item;
         emit editedItemChanged(item);
@@ -58,7 +58,7 @@ void Document::setEditedItem(const Opt<SP<MeshItem> > &item) {
 
 void Document::setIsEditing(bool isEditing) {
     if (isEditing) {
-        auto item = dynamicPointerCast<MeshItem>(_currentItem);
+        auto item = dynamicPointerCast<MeshObject>(_currentItem);
         setEditedItem(item);
     } else {
         setEditedItem(std::nullopt);

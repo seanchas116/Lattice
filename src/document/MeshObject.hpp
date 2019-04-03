@@ -10,10 +10,10 @@ class Mesh;
 
 namespace Document {
 
-class MeshItem final : public Object {
+class MeshObject final : public Object {
     Q_OBJECT
 public:
-    MeshItem();
+    MeshObject();
 
     const SP<Mesh::Mesh>& mesh() const { return _mesh; }
 

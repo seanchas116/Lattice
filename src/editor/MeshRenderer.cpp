@@ -4,7 +4,7 @@
 #include "../gl/VAO.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
-#include "../document/MeshItem.hpp"
+#include "../document/MeshObject.hpp"
 #include "../mesh/Mesh.hpp"
 #include "../support/Debug.hpp"
 #include "../support/Camera.hpp"
@@ -16,7 +16,7 @@ using namespace glm;
 namespace Lattice {
 namespace Editor {
 
-MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Document::MeshItem> &item) :
+MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Document::MeshObject> &item) :
     _appState(appState),
     _item(item),
     _edgeVAO(makeShared<GL::VAO>()),
