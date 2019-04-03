@@ -15,7 +15,7 @@ ItemModel::ItemModel(const SP<Document::Document> &document, QObject *parent) :
     _document(document),
     _uuid(QUuid::createUuid())
 {
-    connectItem(document->rootItem());
+    connectItem(document->rootObject());
 }
 
 QVariant ItemModel::data(const QModelIndex &index, int role) const {
@@ -120,7 +120,7 @@ bool ItemModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int r
             QVector<int> indexPath;
             stream >> indexPath;
 
-            SP<Document::Object> item = _document->rootItem();
+            SP<Document::Object> item = _document->rootObject();
             for (int index : indexPath) {
                 item = item->childItems()[index];
             }
@@ -152,7 +152,7 @@ bool ItemModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int r
 }
 
 QModelIndex ItemModel::indexForItem(const SP<Document::Object>& item) const {
-    if (item == _document->rootItem()) {
+    if (item == _document->rootObject()) {
         return {};
     }
     return createIndex(item->index(), 0, item.get());
@@ -160,7 +160,7 @@ QModelIndex ItemModel::indexForItem(const SP<Document::Object>& item) const {
 
 SP<Document::Object> ItemModel::itemForIndex(const QModelIndex &index) const {
     if (!index.isValid()) {
-        return _document->rootItem();
+        return _document->rootObject();
     }
     return static_cast<Document::Object *>(index.internalPointer())->sharedFromThis();
 }

@@ -11,19 +11,19 @@ ItemSelectionModel::ItemSelectionModel(ItemModel *model, QObject *parent) : QIte
 {
     auto onSelectionChange = [this, model] {
         QItemSelection selection;
-        for (auto item : model->document()->selectedItems()) {
+        for (auto item : model->document()->selectedObjects()) {
             auto index = model->indexForItem(item);
             selection.select(index, index);
         }
         select(selection, QItemSelectionModel::ClearAndSelect);
     };
     auto onCurrentChange = [this, model] {
-        LATTICE_OPTIONAL_GUARD(currentItem, model->document()->currentItem(), clearCurrentIndex();)
+        LATTICE_OPTIONAL_GUARD(currentItem, model->document()->currentObject(), clearCurrentIndex();)
         auto current = model->indexForItem(currentItem);
         select(current, QItemSelectionModel::Current);
     };
-    connect(model->document().get(), &Document::Document::selectedItemsChanged, this, onSelectionChange);
-    connect(model->document().get(), &Document::Document::currentItemChanged, this, onCurrentChange);
+    connect(model->document().get(), &Document::Document::selectedObjectsChanged, this, onSelectionChange);
+    connect(model->document().get(), &Document::Document::currentObjectChanged, this, onCurrentChange);
     onSelectionChange();
     onCurrentChange();
 
@@ -32,15 +32,15 @@ ItemSelectionModel::ItemSelectionModel(ItemModel *model, QObject *parent) : QIte
         for (auto index : selectedIndexes()) {
             items.insert(model->itemForIndex(index));
         }
-        model->document()->setSelectedItems(std::move(items));
+        model->document()->setSelectedObjects(std::move(items));
     });
     connect(this, &QItemSelectionModel::currentChanged, model, [this, model] {
         auto index = currentIndex();
         if (index.isValid()) {
             auto item = model->itemForIndex(currentIndex());
-            model->document()->setCurrentItem(item);
+            model->document()->setCurrentObject(item);
         } else {
-            model->document()->setCurrentItem({});
+            model->document()->setCurrentObject({});
         }
     });
 }

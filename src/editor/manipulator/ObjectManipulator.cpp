@@ -10,8 +10,8 @@ namespace Manipulator {
 
 ObjectManipulator::ObjectManipulator(const SP<State::AppState> &appState) : _appState(appState)
 {
-    setItems(appState->document()->selectedItems());
-    connect(appState->document().get(), &Document::Document::selectedItemsChanged, this, &ObjectManipulator::setItems);
+    setItems(appState->document()->selectedObjects());
+    connect(appState->document().get(), &Document::Document::selectedObjectsChanged, this, &ObjectManipulator::setItems);
     connect(this, &Manipulator::onDragBegin, this, &ObjectManipulator::handleOnDragBegin);
     connect(this, &Manipulator::onDragMove, this, &ObjectManipulator::handleOnDragMove);
     connect(this, &Manipulator::onDragEnd, this, &ObjectManipulator::handleOnDragEnd);

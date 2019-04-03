@@ -64,7 +64,7 @@ void MeshRenderer::mousePressEvent(const Render::MouseEvent &event) {
         _dragInitViewportPos = event.viewportPos;
         _dragStarted = false;
 
-        _appState->document()->selectItem(_item, event.originalEvent->modifiers() & Qt::ShiftModifier);
+        _appState->document()->selectObject(_item, event.originalEvent->modifiers() & Qt::ShiftModifier);
         return;
     }
     default:
@@ -98,7 +98,7 @@ void MeshRenderer::mouseReleaseEvent(const Render::MouseEvent &event) {
 
 void MeshRenderer::mouseDoubleClickEvent(const Render::MouseEvent &event) {
     Q_UNUSED(event);
-    _appState->document()->setEditedItem(_item);
+    _appState->document()->setEditedObject(_item);
 }
 
 void MeshRenderer::updateVAOs() {

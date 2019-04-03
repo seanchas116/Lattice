@@ -29,7 +29,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
     switch (event->key()) {
     case Qt::Key_Delete:
     case Qt::Key_Backspace:
-        _appState->document()->deleteSelectedItems();
+        _appState->document()->deleteSelectedObjects();
         break;
     }
     QMainWindow::keyPressEvent(event);

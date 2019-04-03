@@ -28,10 +28,10 @@ EditorScene::EditorScene(const SP<State::AppState> &appState) :
     connect(appState.get(), &State::AppState::isRotateHandleVisibleChanged, _objectManipulator.get(), &Manipulator::Manipulator::setRotateHandleVisible);
     connect(appState.get(), &State::AppState::isScaleHandleVisibleChanged, _objectManipulator.get(), &Manipulator::Manipulator::setScaleHandleVisible);
 
-    connect(appState->document().get(), &Document::Document::itemInserted, this, &EditorScene::updateRenderables);
-    connect(appState->document().get(), &Document::Document::itemRemoved, this, &EditorScene::updateRenderables);
-    connect(appState->document().get(), &Document::Document::selectedItemsChanged, this, &EditorScene::updateRenderables);
-    connect(appState->document().get(), &Document::Document::editedItemChanged, this, &EditorScene::updateRenderables);
+    connect(appState->document().get(), &Document::Document::objectInserted, this, &EditorScene::updateRenderables);
+    connect(appState->document().get(), &Document::Document::objectRemoved, this, &EditorScene::updateRenderables);
+    connect(appState->document().get(), &Document::Document::selectedObjectsChanged, this, &EditorScene::updateRenderables);
+    connect(appState->document().get(), &Document::Document::editedObjectChanged, this, &EditorScene::updateRenderables);
     connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &EditorScene::updateRenderables);
 
     updateRenderables();
@@ -42,7 +42,7 @@ void EditorScene::updateRenderables() {
 
     std::unordered_map<SP<Document::MeshObject>, SP<MeshRenderer>> newMeshRenderers;
 
-    auto editedItem = _appState->document()->editedItem();
+    auto editedItem = _appState->document()->editedObject();
     if (editedItem) {
         if (!_meshEditor || (*_meshEditor)->item() != editedItem) {
             _meshEditor = makeShared<MeshEditor::MeshEditor>(_appState, *editedItem);
@@ -51,10 +51,10 @@ void EditorScene::updateRenderables() {
         _meshEditor = std::nullopt;
     }
 
-    _appState->document()->rootItem()->forEachDescendant([&] (auto& item) {
+    _appState->document()->rootObject()->forEachDescendant([&] (auto& item) {
         LATTICE_OPTIONAL_GUARD(meshItem, dynamicPointerCast<Document::MeshObject>(item), return;)
                 connect(meshItem.get(), &Document::MeshObject::locationChanged, this, [this] { update(); });
-        if (item == _appState->document()->editedItem()) {
+        if (item == _appState->document()->editedObject()) {
             return;
         }
 
@@ -81,7 +81,7 @@ void EditorScene::updateRenderables() {
         renderables.push_back(*_meshEditor);
     }
 
-    if (!_appState->document()->selectedItems().empty() && !_appState->document()->isEditing()) {
+    if (!_appState->document()->selectedObjects().empty() && !_appState->document()->isEditing()) {
         renderables.push_back(_objectManipulator);
     }
 

@@ -18,24 +18,24 @@ class Document final : public QObject, public EnableSharedFromThis<Document> {
 public:
     Document();
 
-    auto& rootItem() const { return _rootItem; }
+    auto& rootObject() const { return _rootItem; }
 
-    auto& currentItem() const { return _currentItem; }
-    void setCurrentItem(const Opt<SP<Object>>& item);
+    auto& currentObject() const { return _currentItem; }
+    void setCurrentObject(const Opt<SP<Object>>& item);
 
-    auto& editedItem() const { return _editedItem; }
-    void setEditedItem(const Opt<SP<MeshObject>>& item);
+    auto& editedObject() const { return _editedItem; }
+    void setEditedObject(const Opt<SP<MeshObject>>& item);
 
     bool isEditing() const { return bool(_editedItem); }
     void setIsEditing(bool isEditing);
 
-    auto& selectedItems() const { return _selectedItems; }
-    void setSelectedItems(const std::unordered_set<SP<Object>>& items);
+    auto& selectedObjects() const { return _selectedItems; }
+    void setSelectedObjects(const std::unordered_set<SP<Object>>& items);
 
-    void selectItem(const SP<Object>& item, bool append);
+    void selectObject(const SP<Object>& item, bool append);
 
-    void insertItemToCurrentPosition(const SP<Object>& item);
-    void deleteSelectedItems();
+    void insertObjectToCurrentPosition(const SP<Object>& item);
+    void deleteSelectedObjects();
 
     auto& history() const { return _history; }
 
@@ -43,16 +43,16 @@ public:
     void setMeshSelection(const Mesh::MeshFragment &meshSelection);
 
 signals:
-    void currentItemChanged(const Opt<SP<Object>>& item);
-    void editedItemChanged(const Opt<SP<MeshObject>>& item);
+    void currentObjectChanged(const Opt<SP<Object>>& item);
+    void editedObjectChanged(const Opt<SP<MeshObject>>& item);
     void isEditingChanged(bool isEditing);
-    void selectedItemsChanged(const std::unordered_set<SP<Object>>& items);
+    void selectedObjectsChanged(const std::unordered_set<SP<Object>>& items);
     void meshSelectionChanged(const Mesh::MeshFragment &meshSelection);
 
-    void itemAboutToBeInserted(const SP<Object>& item);
-    void itemInserted(const SP<Object>& item);
-    void itemAboutToBeRemoved(const SP<Object>& item);
-    void itemRemoved(const SP<Object>& item);
+    void objectAboutToBeInserted(const SP<Object>& item);
+    void objectInserted(const SP<Object>& item);
+    void objectAboutToBeRemoved(const SP<Object>& item);
+    void objectRemoved(const SP<Object>& item);
 
 private:
     void watchChildrenInsertRemove(const SP<Object>& item);

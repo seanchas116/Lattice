@@ -19,14 +19,14 @@ AppState::AppState() :
     _preferences(makeShared<Preferences>())
 {
     addCube();
-    auto item = _document->rootItem()->childItems()[0];
-    _document->setCurrentItem(item);
+    auto item = _document->rootObject()->childItems()[0];
+    _document->setCurrentObject(item);
     _document->history()->clear();
 }
 
 void AppState::deleteItems() {
     _document->history()->beginChange(tr("Delete Items"));
-    _document->deleteSelectedItems();
+    _document->deleteSelectedObjects();
 }
 
 void AppState::addPlane() {
@@ -34,7 +34,7 @@ void AppState::addPlane() {
     auto item = makeShared<Document::MeshObject>();
     item->setName(tr("Plane").toStdString());
     item->mesh()->addPlane(dvec3(0), dvec2(2), 1, item->mesh()->addMaterial());
-    _document->insertItemToCurrentPosition(item);
+    _document->insertObjectToCurrentPosition(item);
 }
 
 void AppState::addCube() {
@@ -42,7 +42,7 @@ void AppState::addCube() {
     auto item = makeShared<Document::MeshObject>();
     item->setName(tr("Cube").toStdString());
     item->mesh()->addCube(glm::vec3(-1), glm::vec3(1), item->mesh()->addMaterial());
-    _document->insertItemToCurrentPosition(item);
+    _document->insertObjectToCurrentPosition(item);
 }
 
 void AppState::addCircle() {
@@ -50,7 +50,7 @@ void AppState::addCircle() {
     auto item = makeShared<Document::MeshObject>();
     item->setName(tr("Circle").toStdString());
     item->mesh()->addCircle(glm::vec3(0), 1.0, 16, Mesh::Mesh::CircleFill::Ngon, 1, item->mesh()->addMaterial());
-    _document->insertItemToCurrentPosition(item);
+    _document->insertObjectToCurrentPosition(item);
 }
 
 void AppState::addSphere() {
@@ -58,7 +58,7 @@ void AppState::addSphere() {
     auto item = makeShared<Document::MeshObject>();
     item->setName(tr("Sphere").toStdString());
     item->mesh()->addSphere(glm::vec3(0), 1.0, 16, 8, 1, item->mesh()->addMaterial());
-    _document->insertItemToCurrentPosition(item);
+    _document->insertObjectToCurrentPosition(item);
 }
 
 void AppState::addCone() {
@@ -66,7 +66,7 @@ void AppState::addCone() {
     auto item = makeShared<Document::MeshObject>();
     item->setName(tr("Cone").toStdString());
     item->mesh()->addCone(glm::vec3(0), 1.0, 1.0, 16, 1, item->mesh()->addMaterial());
-    _document->insertItemToCurrentPosition(item);
+    _document->insertObjectToCurrentPosition(item);
 }
 
 void AppState::addCylinder() {
@@ -74,7 +74,7 @@ void AppState::addCylinder() {
     auto item = makeShared<Document::MeshObject>();
     item->setName(tr("Cylinder").toStdString());
     item->mesh()->addCylinder(glm::vec3(0), 1.0, 1.0, 16, 1, item->mesh()->addMaterial());
-    _document->insertItemToCurrentPosition(item);
+    _document->insertObjectToCurrentPosition(item);
 }
 
 void AppState::addText() {
@@ -96,12 +96,12 @@ void AppState::import() {
     auto items = Services::ObjLoader::load(filePath);
     _document->history()->beginChange(tr("Import"));
     for (auto& item: items) {
-        _document->insertItemToCurrentPosition(item);
+        _document->insertObjectToCurrentPosition(item);
     }
 }
 
 void AppState::deleteVertices() {
-    auto maybeEditedItem = _document->editedItem();
+    auto maybeEditedItem = _document->editedObject();
     if (!maybeEditedItem) {
         return;
     }
@@ -118,7 +118,7 @@ void AppState::deleteVertices() {
 }
 
 void AppState::deleteEdges() {
-    auto maybeEditedItem = _document->editedItem();
+    auto maybeEditedItem = _document->editedObject();
     if (!maybeEditedItem) {
         return;
     }
@@ -133,7 +133,7 @@ void AppState::deleteEdges() {
 }
 
 void AppState::deleteFaces() {
-    auto maybeEditedItem = _document->editedItem();
+    auto maybeEditedItem = _document->editedObject();
     if (!maybeEditedItem) {
         return;
     }
@@ -148,7 +148,7 @@ void AppState::deleteFaces() {
 }
 
 void AppState::selectAll() {
-    auto maybeEditedItem = _document->editedItem();
+    auto maybeEditedItem = _document->editedObject();
     if (maybeEditedItem) {
         auto editedItem = *maybeEditedItem;
         Mesh::MeshFragment selection;
@@ -156,21 +156,21 @@ void AppState::selectAll() {
         _document->setMeshSelection(selection);
     } else {
         std::unordered_set<SP<Document::Object>> allItems;
-        _document->rootItem()->forEachDescendant([&] (auto& item) {
+        _document->rootObject()->forEachDescendant([&] (auto& item) {
             allItems.insert(item);
         });
-        _document->setSelectedItems(allItems);
+        _document->setSelectedObjects(allItems);
     }
 }
 
 void AppState::deselectAll() {
-    auto maybeEditedItem = _document->editedItem();
+    auto maybeEditedItem = _document->editedObject();
     if (maybeEditedItem) {
         auto editedItem = *maybeEditedItem;
         Mesh::MeshFragment selection;
         _document->setMeshSelection(selection);
     } else {
-        _document->setSelectedItems({});
+        _document->setSelectedObjects({});
     }
 }
 

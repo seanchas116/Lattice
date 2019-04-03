@@ -37,57 +37,57 @@ Document::Document() :
     _history(makeShared<History>())
 {
     watchChildrenInsertRemove(_rootItem);
-    connect(this, &Document::editedItemChanged, this, [this] {
+    connect(this, &Document::editedObjectChanged, this, [this] {
         emit isEditingChanged(isEditing());
     });
 }
 
-void Document::setCurrentItem(const Opt<SP<Object> > &item) {
+void Document::setCurrentObject(const Opt<SP<Object> > &item) {
     if (item != _currentItem) {
         _currentItem = item;
-        emit currentItemChanged(item);
+        emit currentObjectChanged(item);
     }
 }
 
-void Document::setEditedItem(const Opt<SP<MeshObject> > &item) {
+void Document::setEditedObject(const Opt<SP<MeshObject> > &item) {
     if (item != _editedItem) {
         _editedItem = item;
-        emit editedItemChanged(item);
+        emit editedObjectChanged(item);
     }
 }
 
 void Document::setIsEditing(bool isEditing) {
     if (isEditing) {
         auto item = dynamicPointerCast<MeshObject>(_currentItem);
-        setEditedItem(item);
+        setEditedObject(item);
     } else {
-        setEditedItem(std::nullopt);
+        setEditedObject(std::nullopt);
     }
 }
 
-void Document::setSelectedItems(const std::unordered_set<SP<Object>> &items) {
+void Document::setSelectedObjects(const std::unordered_set<SP<Object>> &items) {
     if (_selectedItems != items) {
         _selectedItems = items;
-        emit selectedItemsChanged(items);
+        emit selectedObjectsChanged(items);
     }
 }
 
-void Document::selectItem(const SP<Object> &item, bool append) {
+void Document::selectObject(const SP<Object> &item, bool append) {
     std::unordered_set<SP<Object>> items;
     if (append) {
         items = _selectedItems;
     }
     items.insert(item);
-    setSelectedItems(items);
-    setCurrentItem(item);
+    setSelectedObjects(items);
+    setCurrentObject(item);
 }
 
-void Document::insertItemToCurrentPosition(const SP<Object> &item) {
+void Document::insertObjectToCurrentPosition(const SP<Object> &item) {
     // TODO: better insertion positon
     _rootItem->appendChildItem(item);
 }
 
-void Document::deleteSelectedItems() {
+void Document::deleteSelectedObjects() {
     auto items = _selectedItems;
     for (auto& item : items) {
         LATTICE_OPTIONAL_GUARD(parent, item->parentItem(), continue;)
@@ -99,25 +99,25 @@ void Document::watchChildrenInsertRemove(const SP<Object> &item) {
     auto itemPtr = item.get();
     connect(itemPtr, &Object::childItemsAboutToBeInserted, this, [this] (int, int, const auto& items) {
         for (auto& item : items) {
-            emit itemAboutToBeInserted(item);
+            emit objectAboutToBeInserted(item);
         }
     });
     connect(itemPtr, &Object::childItemsInserted, this, [this, itemPtr] (int first, int last) {
         for (int i = first; i <= last; ++i) {
             auto& child = itemPtr->childItems()[i];
             watchChildrenInsertRemove(child);
-            emit itemInserted(child);
+            emit objectInserted(child);
         }
     });
     connect(itemPtr, &Object::childItemsAboutToBeRemoved, this, [this, itemPtr] (int first, int last) {
         for (int i = first; i <= last; ++i) {
             auto& child = itemPtr->childItems()[i];
-            emit itemAboutToBeRemoved(child);
+            emit objectAboutToBeRemoved(child);
         }
     });
     connect(itemPtr, &Object::childItemsRemoved, this, [this] (int, int, const auto& items) {
         for (auto& item : items) {
-            emit itemRemoved(item);
+            emit objectRemoved(item);
         }
     });
 }

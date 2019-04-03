@@ -31,7 +31,7 @@ void Background::drawPickables(const SP<Render::Operations> &operations, const S
 
 void Background::mousePressEvent(const Render::MouseEvent &event) {
     Q_UNUSED(event);
-    _appState->document()->setSelectedItems({});
+    _appState->document()->setSelectedObjects({});
     _appState->document()->setMeshSelection({});
 }
 
