@@ -1,4 +1,5 @@
 #include "PointsDrawable.hpp"
+#include "../support/Camera.hpp"
 #include "../resource/Resource.hpp"
 #include "../gl/Shader.hpp"
 #include "../gl/VAO.hpp"
@@ -15,6 +16,17 @@ PointsDrawable::PointsDrawable() :
 
 void PointsDrawable::setPoints(const std::vector<Point> &points) {
     _vbo->setVertices(points);
+}
+
+void PointsDrawable::draw(const glm::dmat4 &matrix, const SP<Camera> &camera) {
+    shader()->bind();
+    shader()->setUniform("MVP", camera->worldToViewportMatrix() * matrix);
+    shader()->setUniform("viewportSize", camera->viewportSize());
+    shader()->setUniform("width", _width);
+    shader()->setUniform("color", glm::vec3(0));
+    shader()->setUniform("useVertexColor", true);
+    shader()->setUniform("zOffset", _zOffset);
+    _vao->draw();
 }
 
 const SP<GL::Shader> &PointsDrawable::shader() {

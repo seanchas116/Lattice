@@ -4,6 +4,9 @@
 #include <vector>
 
 namespace Lattice {
+
+class Camera;
+
 namespace GL {
 class Shader;
 class VAO;
@@ -26,6 +29,8 @@ public:
     void setWidth(double width) { _width = width; }
     void setZOffset(double zOffset) { _zOffset = zOffset; }
     void setPoints(const std::vector<Point>& points);
+
+    void draw(const glm::dmat4 &matrix, const SP<Camera>& camera);
 
 private:
     static const SP<GL::Shader>& shader();
