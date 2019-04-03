@@ -14,15 +14,15 @@ namespace Document {
 
 class Object::ChildInsertChange : public Change {
 public:
-    ChildInsertChange(const SP<Object>& parent, const SP<Object>& item, const Opt<SP<const Object>>& reference) :
+    ChildInsertChange(const SP<Object>& parent, const SP<Object>& object, const Opt<SP<const Object>>& reference) :
         _parent(parent),
-        _item(item),
+        _object(object),
         _reference(reference)
     {
     }
 
     void apply() override {
-        _parent->insertObjectBeforeInternal(_item, _reference);
+        _parent->insertObjectBeforeInternal(_object, _reference);
     }
 
     SP<Change> invert() const override;
@@ -30,18 +30,18 @@ public:
 private:
 
     SP<Object> _parent;
-    SP<Object> _item;
+    SP<Object> _object;
     Opt<SP<const Object>> _reference;
 };
 
 class Object::ChildRemoveChange : public Change {
 public:
-    ChildRemoveChange(const SP<Object>& parent, const SP<Object>& item) : _parent(parent), _item(item) {
+    ChildRemoveChange(const SP<Object>& parent, const SP<Object>& object) : _parent(parent), _object(object) {
     }
 
     void apply() override {
-        _reference = _item->nextObject();
-        _parent->removeChildItemInternal(_item);
+        _reference = _object->nextObject();
+        _parent->removeChildItemInternal(_object);
     }
 
     SP<Change> invert() const override;
@@ -49,16 +49,16 @@ public:
 private:
 
     SP<Object> _parent;
-    SP<Object> _item;
+    SP<Object> _object;
     Opt<SP<Object>> _reference;
 };
 
 SP<Change> Object::ChildInsertChange::invert() const {
-    return makeShared<ChildRemoveChange>(_parent, _item);
+    return makeShared<ChildRemoveChange>(_parent, _object);
 }
 
 SP<Change> Object::ChildRemoveChange::invert() const {
-    return makeShared<ChildInsertChange>(_parent, _item, _reference);
+    return makeShared<ChildInsertChange>(_parent, _object, _reference);
 }
 
 Opt<SP<Object> > Object::parentObject() const {
