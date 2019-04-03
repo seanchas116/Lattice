@@ -29,26 +29,24 @@ void LinesDrawable::setLineStrips(const std::vector<std::vector<uint32_t>> &line
     _ibo->setLineStrips(lineStrips);
 }
 
-void LinesDrawable::draw(const glm::dmat4 &matrix, const SP<Camera> &camera) {
-    shader()->bind();
-    shader()->setUniform("MV", camera->worldToCameraMatrix() * matrix);
-    shader()->setUniform("P", camera->cameraToViewportMatrix());
-    shader()->setUniform("viewportSize", camera->viewportSize());
-    shader()->setUniform("zNear", camera->projection() == Camera::Projection::Perspective ? camera->zNear() : -10000.0); // TODO: specify depth in better way
-    shader()->setUniform("width", _width);
-    shader()->setUniform("color", _color);
-    shader()->setUniform("useVertexColor", _useVertexColor);
-    shader()->setUniform("zOffset", _zOffset);
-    _vao->draw();
-}
+void LinesDrawable::draw(SharedResourceBag& resourceBag, const glm::dmat4 &matrix, const SP<Camera> &camera) {
+    auto shader = resourceBag.getOrCreate<SP<GL::Shader>>([] {
+        return makeShared<GL::Shader>(
+            Resource::read("src/drawable/LinesDrawable.vert"),
+            Resource::read("src/drawable/LinesDrawable.geom"),
+            Resource::read("src/drawable/LinesDrawable.frag"));
+    });
 
-const SP<GL::Shader> &LinesDrawable::shader() {
-    // TODO: support context loss
-    static auto shader = makeShared<GL::Shader>(
-        Resource::read("src/drawable/LinesDrawable.vert"),
-        Resource::read("src/drawable/LinesDrawable.geom"),
-        Resource::read("src/drawable/LinesDrawable.frag"));
-    return shader;
+    shader->bind();
+    shader->setUniform("MV", camera->worldToCameraMatrix() * matrix);
+    shader->setUniform("P", camera->cameraToViewportMatrix());
+    shader->setUniform("viewportSize", camera->viewportSize());
+    shader->setUniform("zNear", camera->projection() == Camera::Projection::Perspective ? camera->zNear() : -10000.0); // TODO: specify depth in better way
+    shader->setUniform("width", _width);
+    shader->setUniform("color", _color);
+    shader->setUniform("useVertexColor", _useVertexColor);
+    shader->setUniform("zOffset", _zOffset);
+    _vao->draw();
 }
 
 } // namespace Drawable

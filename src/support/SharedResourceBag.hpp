@@ -13,7 +13,8 @@ public:
     T getOrCreate(T (*factory)()) {
         auto it = instances.find(factory);
         if (it == instances.end()) {
-            it = instances.insert({factory, factory()});
+            bool inserted;
+            std::tie(it, inserted) = instances.insert({factory, factory()});
         }
         return std::any_cast<T>(it->second);
     }

@@ -1,6 +1,7 @@
 #pragma once
 #include "Point.hpp"
 #include "../support/Shorthands.hpp"
+#include "../support/SharedResourceBag.hpp"
 #include <glm/glm.hpp>
 #include <vector>
 
@@ -31,7 +32,7 @@ public:
     void setLines(const std::vector<std::array<uint32_t, 2>>& lines);
     void setLineStrips(const std::vector<std::vector<uint32_t>>& lineStrips);
 
-    void draw(const glm::dmat4 &matrix, const SP<Camera>& camera);
+    void draw(SharedResourceBag& resourceBag, const glm::dmat4 &matrix, const SP<Camera>& camera);
 
 private:
     static const SP<GL::Shader>& shader();

@@ -5,6 +5,7 @@
 #include "./operations/DrawSolid.hpp"
 #include "./operations/DrawMaterial.hpp"
 #include "./operations/DrawUnicolor.hpp"
+#include "../support/SharedResourceBag.hpp"
 
 namespace Lattice {
 namespace Render {
@@ -19,6 +20,8 @@ public:
     DrawMaterial drawMaterial;
 
     DrawUnicolor drawUnicolor;
+
+    SharedResourceBag resourceBag;
 };
 
 }

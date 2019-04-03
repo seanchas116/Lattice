@@ -19,36 +19,37 @@ void PointsDrawable::setPoints(const std::vector<Point> &points) {
     _vbo->setVertices(points);
 }
 
-void PointsDrawable::draw(const glm::dmat4 &matrix, const SP<Camera> &camera) {
-    shader()->bind();
-    shader()->setUniform("MVP", camera->worldToViewportMatrix() * matrix);
-    shader()->setUniform("viewportSize", camera->viewportSize());
-    shader()->setUniform("width", _width);
-    shader()->setUniform("color", glm::vec3(0));
-    shader()->setUniform("useVertexColor", true);
-    shader()->setUniform("zOffset", _zOffset);
+void PointsDrawable::draw(SharedResourceBag& resourceBag, const glm::dmat4 &matrix, const SP<Camera> &camera) {
+    auto shader = this->shader(resourceBag);
+    shader->bind();
+    shader->setUniform("MVP", camera->worldToViewportMatrix() * matrix);
+    shader->setUniform("viewportSize", camera->viewportSize());
+    shader->setUniform("width", _width);
+    shader->setUniform("color", glm::vec3(0));
+    shader->setUniform("useVertexColor", true);
+    shader->setUniform("zOffset", _zOffset);
     _vao->draw();
 }
 
-void PointsDrawable::draw2D(const glm::dmat4 &matrix, glm::ivec2 viewportSize) {
-    shader()->bind();
+void PointsDrawable::draw2D(SharedResourceBag& resourceBag, const glm::dmat4 &matrix, glm::ivec2 viewportSize) {
+    auto shader = this->shader(resourceBag);
     glm::dmat4 MVP = glm::translate(glm::dvec3(-1.0)) * glm::scale(glm::dvec3(2.0 / glm::dvec2(viewportSize), 2.0)) * matrix;
-    shader()->setUniform("MVP", MVP);
-    shader()->setUniform("viewportSize", glm::dvec2(viewportSize));
-    shader()->setUniform("width", _width);
-    shader()->setUniform("color", glm::vec3(0));
-    shader()->setUniform("useVertexColor", true);
-    shader()->setUniform("zOffset", 0.0);
+    shader->setUniform("MVP", MVP);
+    shader->setUniform("viewportSize", glm::dvec2(viewportSize));
+    shader->setUniform("width", _width);
+    shader->setUniform("color", glm::vec3(0));
+    shader->setUniform("useVertexColor", true);
+    shader->setUniform("zOffset", 0.0);
     _vao->draw();
 }
 
-const SP<GL::Shader> &PointsDrawable::shader() {
-    // TODO: support context loss
-    static auto shader = makeShared<GL::Shader>(
-        Resource::read("src/drawable/PointsDrawable.vert"),
-        Resource::read("src/drawable/PointsDrawable.geom"),
-        Resource::read("src/drawable/PointsDrawable.frag"));
-    return shader;
+SP<GL::Shader> PointsDrawable::shader(SharedResourceBag &resourceBag) {
+    return resourceBag.getOrCreate<SP<GL::Shader>>([] {
+        return makeShared<GL::Shader>(
+            Resource::read("src/drawable/PointsDrawable.vert"),
+            Resource::read("src/drawable/PointsDrawable.geom"),
+            Resource::read("src/drawable/PointsDrawable.frag"));
+    });
 }
 
 } // namespace Drawable
