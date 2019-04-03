@@ -7,10 +7,10 @@ namespace UI {
 
 class ObjectItemModel;
 
-class ItemSelectionModel final : public QItemSelectionModel {
+class ObjectSelectionModel final : public QItemSelectionModel {
     Q_OBJECT
 public:
-    explicit ItemSelectionModel(ObjectItemModel* model, QObject *parent = nullptr);
+    explicit ObjectSelectionModel(ObjectItemModel* model, QObject *parent = nullptr);
 
 signals:
 

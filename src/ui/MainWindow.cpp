@@ -266,7 +266,7 @@ void MainWindow::setupMenu() {
 void MainWindow::setupPanes() {
     {
         auto dockWidget = new QDockWidget();
-        dockWidget->setWindowTitle(tr("Items"));
+        dockWidget->setWindowTitle(tr("Objects"));
         dockWidget->setWidget(new ObjectListView(_appState));
         addDockWidget(Qt::LeftDockWidgetArea, dockWidget);
     }

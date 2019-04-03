@@ -1,6 +1,6 @@
 #include "ObjectListView.hpp"
 #include "ObjectItemModel.hpp"
-#include "ItemSelectionModel.hpp"
+#include "ObjectSelectionModel.hpp"
 #include "../state/AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
@@ -24,7 +24,7 @@ ObjectListView::ObjectListView(const SP<State::AppState> &appState, QWidget *par
     treeView->setAcceptDrops(true);
 
     auto model = new ObjectItemModel(appState->document(), this);
-    auto selectionModel = new ItemSelectionModel(model, this);
+    auto selectionModel = new ObjectSelectionModel(model, this);
     treeView->setModel(model);
     treeView->setSelectionModel(selectionModel);
 
