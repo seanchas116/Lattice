@@ -1,14 +1,14 @@
 #pragma once
-#include "Item.hpp"
+#include "Object.hpp"
 
 namespace Lattice {
 namespace Document {
 
-class EmptyItem final : public Item {
+class EmptyItem final : public Object {
     Q_OBJECT
 public:
     EmptyItem();
-    SP<Item> clone() const override;
+    SP<Object> clone() const override;
 };
 
 }

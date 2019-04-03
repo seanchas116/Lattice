@@ -11,13 +11,13 @@ namespace Document {
 
 MeshItem::MeshItem() : _mesh(makeShared<Mesh::Mesh>()) {
     connect(_mesh.get(), &Mesh::Mesh::changed, this, &MeshItem::handleMeshChange);
-    connect(this, &MeshItem::meshChangedInLastTick, this, &Item::changed);
+    connect(this, &MeshItem::meshChangedInLastTick, this, &Object::changed);
     _mesh->setChangeHandler([this](const auto& change) {
         addChange(change);
     });
 }
 
-SP<Item> MeshItem::clone() const {
+SP<Object> MeshItem::clone() const {
     auto cloned = makeShared<MeshItem>();
     // FIXME: item name is not copied
     cloned->_mesh = _mesh->clone();
@@ -25,14 +25,14 @@ SP<Item> MeshItem::clone() const {
 }
 
 void MeshItem::toJSON(nlohmann::json &json) const {
-    Item::toJSON(json);
+    Object::toJSON(json);
     throw std::runtime_error("TODO");
     // TODO
     // _shape->toJSON(json["shape"]);
 }
 
 void MeshItem::fromJSON(const nlohmann::json &json) {
-    Item::fromJSON(json);
+    Object::fromJSON(json);
     throw std::runtime_error("TODO");
     // TODO
     //_shape->fomJSON(json["shape"]);

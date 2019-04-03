@@ -1,7 +1,7 @@
 #include "ObjectManipulator.hpp"
 #include "../../state/AppState.hpp"
 #include "../../document/Document.hpp"
-#include "../../document/Item.hpp"
+#include "../../document/Object.hpp"
 #include "../../document/History.hpp"
 
 namespace Lattice {
@@ -70,7 +70,7 @@ void ObjectManipulator::handleOnDragEnd(ValueType type) {
     _initialLocations.clear();
 }
 
-void ObjectManipulator::setItems(const std::unordered_set<SP<Document::Item> > &items) {
+void ObjectManipulator::setItems(const std::unordered_set<SP<Document::Object> > &items) {
     for (auto& c : _connections) {
         disconnect(c);
     }
@@ -79,7 +79,7 @@ void ObjectManipulator::setItems(const std::unordered_set<SP<Document::Item> > &
     _items = items;
 
     for (auto& item : items) {
-        auto c = connect(item.get(), &Document::Item::locationChanged, this, [this] {
+        auto c = connect(item.get(), &Document::Object::locationChanged, this, [this] {
             updatePosition();
         });
         _connections.push_back(c);

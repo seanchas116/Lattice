@@ -1,5 +1,5 @@
 #pragma once
-#include "Item.hpp"
+#include "Object.hpp"
 #include <glm/glm.hpp>
 
 namespace Lattice {
@@ -10,14 +10,14 @@ class Mesh;
 
 namespace Document {
 
-class MeshItem final : public Item {
+class MeshItem final : public Object {
     Q_OBJECT
 public:
     MeshItem();
 
     const SP<Mesh::Mesh>& mesh() const { return _mesh; }
 
-    SP<Item> clone() const override;
+    SP<Object> clone() const override;
     void toJSON(nlohmann::json& json) const override;
     void fromJSON(const nlohmann::json& json) override;
 

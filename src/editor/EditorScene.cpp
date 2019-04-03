@@ -7,7 +7,7 @@
 #include "./manipulator/MeshManipulator.hpp"
 #include "../state/AppState.hpp"
 #include "../document/Document.hpp"
-#include "../document/Item.hpp"
+#include "../document/Object.hpp"
 #include "../document/MeshItem.hpp"
 
 namespace Lattice {

@@ -155,7 +155,7 @@ void AppState::selectAll() {
         selection.vertices = editedItem->mesh()->vertices();
         _document->setMeshSelection(selection);
     } else {
-        std::unordered_set<SP<Document::Item>> allItems;
+        std::unordered_set<SP<Document::Object>> allItems;
         _document->rootItem()->forEachDescendant([&] (auto& item) {
             allItems.insert(item);
         });

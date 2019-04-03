@@ -28,7 +28,7 @@ ItemSelectionModel::ItemSelectionModel(ItemModel *model, QObject *parent) : QIte
     onCurrentChange();
 
     connect(this, &QItemSelectionModel::selectionChanged, model, [this, model] {
-        std::unordered_set<SP<Document::Item>> items;
+        std::unordered_set<SP<Document::Object>> items;
         for (auto index : selectedIndexes()) {
             items.insert(model->itemForIndex(index));
         }

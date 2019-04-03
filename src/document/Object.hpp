@@ -15,15 +15,15 @@ namespace Document {
 
 class Document;
 
-class Item : public QObject, public EnableSharedFromThis<Item> {
+class Object : public QObject, public EnableSharedFromThis<Object> {
     Q_OBJECT
 public:
-    Opt<SP<Item>> parentItem() const;
-    const std::vector<SP<Item>>& childItems() const { return _childItems; }
-    Opt<SP<Item>> nextItem() const;
-    void appendChildItem(const SP<Item>& item);
-    void insertItemBefore(const SP<Item>& item, const Opt<SP<const Item> > &reference);
-    void removeChildItem(const SP<Item>& item);
+    Opt<SP<Object>> parentItem() const;
+    const std::vector<SP<Object>>& childItems() const { return _childItems; }
+    Opt<SP<Object>> nextItem() const;
+    void appendChildItem(const SP<Object>& item);
+    void insertItemBefore(const SP<Object>& item, const Opt<SP<const Object> > &reference);
+    void removeChildItem(const SP<Object>& item);
     int index() const;
     std::vector<int> indexPath() const;
 
@@ -37,10 +37,10 @@ public:
     void notifyChanged() { emit changed(); }
     void notifyChangeFinished() { emit changeFinished(); }
 
-    void forEachDescendant(const Fn<void(const SP<Item> &)> &callback);
+    void forEachDescendant(const Fn<void(const SP<Object> &)> &callback);
 
-    virtual bool canInsertItem(const SP<const Item>& item) const;
-    virtual SP<Item> clone() const = 0;
+    virtual bool canInsertItem(const SP<const Object>& item) const;
+    virtual SP<Object> clone() const = 0;
     virtual void toJSON(nlohmann::json& json) const;
     virtual void fromJSON(const nlohmann::json& json);
     virtual Opt<SP<Document>> document() const;
@@ -55,10 +55,10 @@ signals:
     void nameChanged(const std::string& name);
     void locationChanged(const Location &location);
 
-    void childItemsAboutToBeInserted(int first, int last, const std::vector<SP<Item>>& items);
+    void childItemsAboutToBeInserted(int first, int last, const std::vector<SP<Object>>& items);
     void childItemsInserted(int first, int last);
     void childItemsAboutToBeRemoved(int first, int last);
-    void childItemsRemoved(int first, int last, const std::vector<SP<Item>>& items);
+    void childItemsRemoved(int first, int last, const std::vector<SP<Object>>& items);
 
 private:
     class NameChange;
@@ -69,13 +69,13 @@ private:
     void setNameInternal(const std::string& name);
     void setLocationInternal(const Location& location);
 
-    void insertItemBeforeInternal(const SP<Item>& item, const Opt<SP<const Item> > &reference);
-    void removeChildItemInternal(const SP<Item>& item);
+    void insertItemBeforeInternal(const SP<Object>& item, const Opt<SP<const Object> > &reference);
+    void removeChildItemInternal(const SP<Object>& item);
 
     std::string _name;
     Location _location;
-    WP<Item> _parentItem;
-    std::vector<SP<Item>> _childItems;
+    WP<Object> _parentItem;
+    std::vector<SP<Object>> _childItems;
 };
 
 }

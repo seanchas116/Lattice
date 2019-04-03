@@ -1,7 +1,7 @@
 #include "ItemPropertyView.hpp"
 #include "../state/AppState.hpp"
 #include "../document/Document.hpp"
-#include "../document/Item.hpp"
+#include "../document/Object.hpp"
 #include "../document/History.hpp"
 #include "../support/Debug.hpp"
 #include "../support/OptionalGuard.hpp"
@@ -69,13 +69,13 @@ ItemPropertyView::ItemPropertyView(const SP<State::AppState> &appState, QWidget 
     setLayout(layout);
 }
 
-void ItemPropertyView::setItems(const std::unordered_set<SP<Document::Item> > &items) {
+void ItemPropertyView::setItems(const std::unordered_set<SP<Document::Object> > &items) {
     if (_items == items) {
         return;
     }
     _items = items;
 
-    Opt<SP<Document::Item>> firstItem;
+    Opt<SP<Document::Object>> firstItem;
     if (!items.empty()) {
         firstItem = *items.begin();
     }
@@ -86,7 +86,7 @@ void ItemPropertyView::setItems(const std::unordered_set<SP<Document::Item> > &i
     _itemConnections.clear();
 
     for (auto& item : items) {
-        auto c = connect(item.get(), &Document::Item::locationChanged, this, &ItemPropertyView::setLocation);
+        auto c = connect(item.get(), &Document::Object::locationChanged, this, &ItemPropertyView::setLocation);
         _itemConnections.push_back(c);
     }
     setLocation();

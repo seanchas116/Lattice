@@ -9,15 +9,15 @@ namespace Document {
 
 namespace {
 
-class RootItem final : public Item {
+class RootItem final : public Object {
 public:
     RootItem(Document* document) : _document(document) {}
 
-    SP<Item> clone() const override {
+    SP<Object> clone() const override {
         throw std::runtime_error("RootItem cannot be copied");
     }
 
-    bool canInsertItem(const SP<const Item>& item) const override {
+    bool canInsertItem(const SP<const Object>& item) const override {
         Q_UNUSED(item)
         return true;
     }
@@ -42,7 +42,7 @@ Document::Document() :
     });
 }
 
-void Document::setCurrentItem(const Opt<SP<Item> > &item) {
+void Document::setCurrentItem(const Opt<SP<Object> > &item) {
     if (item != _currentItem) {
         _currentItem = item;
         emit currentItemChanged(item);
@@ -65,15 +65,15 @@ void Document::setIsEditing(bool isEditing) {
     }
 }
 
-void Document::setSelectedItems(const std::unordered_set<SP<Item>> &items) {
+void Document::setSelectedItems(const std::unordered_set<SP<Object>> &items) {
     if (_selectedItems != items) {
         _selectedItems = items;
         emit selectedItemsChanged(items);
     }
 }
 
-void Document::selectItem(const SP<Item> &item, bool append) {
-    std::unordered_set<SP<Item>> items;
+void Document::selectItem(const SP<Object> &item, bool append) {
+    std::unordered_set<SP<Object>> items;
     if (append) {
         items = _selectedItems;
     }
@@ -82,7 +82,7 @@ void Document::selectItem(const SP<Item> &item, bool append) {
     setCurrentItem(item);
 }
 
-void Document::insertItemToCurrentPosition(const SP<Item> &item) {
+void Document::insertItemToCurrentPosition(const SP<Object> &item) {
     // TODO: better insertion positon
     _rootItem->appendChildItem(item);
 }
@@ -95,27 +95,27 @@ void Document::deleteSelectedItems() {
     }
 }
 
-void Document::watchChildrenInsertRemove(const SP<Item> &item) {
+void Document::watchChildrenInsertRemove(const SP<Object> &item) {
     auto itemPtr = item.get();
-    connect(itemPtr, &Item::childItemsAboutToBeInserted, this, [this] (int, int, const auto& items) {
+    connect(itemPtr, &Object::childItemsAboutToBeInserted, this, [this] (int, int, const auto& items) {
         for (auto& item : items) {
             emit itemAboutToBeInserted(item);
         }
     });
-    connect(itemPtr, &Item::childItemsInserted, this, [this, itemPtr] (int first, int last) {
+    connect(itemPtr, &Object::childItemsInserted, this, [this, itemPtr] (int first, int last) {
         for (int i = first; i <= last; ++i) {
             auto& child = itemPtr->childItems()[i];
             watchChildrenInsertRemove(child);
             emit itemInserted(child);
         }
     });
-    connect(itemPtr, &Item::childItemsAboutToBeRemoved, this, [this, itemPtr] (int first, int last) {
+    connect(itemPtr, &Object::childItemsAboutToBeRemoved, this, [this, itemPtr] (int first, int last) {
         for (int i = first; i <= last; ++i) {
             auto& child = itemPtr->childItems()[i];
             emit itemAboutToBeRemoved(child);
         }
     });
-    connect(itemPtr, &Item::childItemsRemoved, this, [this] (int, int, const auto& items) {
+    connect(itemPtr, &Object::childItemsRemoved, this, [this] (int, int, const auto& items) {
         for (auto& item : items) {
             emit itemRemoved(item);
         }

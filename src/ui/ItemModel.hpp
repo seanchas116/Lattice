@@ -8,7 +8,7 @@ namespace Lattice {
 
 namespace Document {
 class Document;
-class Item;
+class Object;
 }
 
 namespace UI {
@@ -20,8 +20,8 @@ public:
 
     const SP<Document::Document>& document() const { return _document; }
 
-    QModelIndex indexForItem(const SP<Document::Item>& item) const;
-    SP<Document::Item> itemForIndex(const QModelIndex& index) const;
+    QModelIndex indexForItem(const SP<Document::Object>& item) const;
+    SP<Document::Object> itemForIndex(const QModelIndex& index) const;
 
     QVariant data(const QModelIndex &index, int role) const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
@@ -36,8 +36,8 @@ public:
     bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
 
 private:
-    void connectItem(const SP<Document::Item>& item);
-    void disconnectItem(const SP<Document::Item>& item);
+    void connectItem(const SP<Document::Object>& item);
+    void disconnectItem(const SP<Document::Object>& item);
 
     SP<Document::Document> _document;
     QUuid _uuid;

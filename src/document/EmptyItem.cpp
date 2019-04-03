@@ -6,7 +6,7 @@ namespace Document {
 EmptyItem::EmptyItem() {
 }
 
-SP<Item> EmptyItem::clone() const {
+SP<Object> EmptyItem::clone() const {
     auto cloned = makeShared<EmptyItem>();
     return cloned;
 }

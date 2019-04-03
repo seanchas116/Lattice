@@ -9,7 +9,7 @@ namespace State {
 class AppState;
 }
 namespace Document {
-class Item;
+class Object;
 }
 
 namespace UI {

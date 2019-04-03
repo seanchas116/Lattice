@@ -1,5 +1,5 @@
 #include "ItemModel.hpp"
-#include "../document/Item.hpp"
+#include "../document/Object.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
 #include "../support/OptionalGuard.hpp"
@@ -114,13 +114,13 @@ bool ItemModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int r
             return false;
         }
 
-        std::vector<SP<Document::Item>> items;
+        std::vector<SP<Document::Object>> items;
 
         while (!stream.atEnd()) {
             QVector<int> indexPath;
             stream >> indexPath;
 
-            SP<Document::Item> item = _document->rootItem();
+            SP<Document::Object> item = _document->rootItem();
             for (int index : indexPath) {
                 item = item->childItems()[index];
             }
@@ -128,7 +128,7 @@ bool ItemModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int r
             items.push_back(item);
         }
 
-        Opt<SP<Document::Item>> ref;
+        Opt<SP<Document::Object>> ref;
         if (row != -1 && row != int(parentItem->childItems().size())) {
             ref = parentItem->childItems()[row];
         }
@@ -151,31 +151,31 @@ bool ItemModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int r
     return false;
 }
 
-QModelIndex ItemModel::indexForItem(const SP<Document::Item>& item) const {
+QModelIndex ItemModel::indexForItem(const SP<Document::Object>& item) const {
     if (item == _document->rootItem()) {
         return {};
     }
     return createIndex(item->index(), 0, item.get());
 }
 
-SP<Document::Item> ItemModel::itemForIndex(const QModelIndex &index) const {
+SP<Document::Object> ItemModel::itemForIndex(const QModelIndex &index) const {
     if (!index.isValid()) {
         return _document->rootItem();
     }
-    return static_cast<Document::Item *>(index.internalPointer())->sharedFromThis();
+    return static_cast<Document::Object *>(index.internalPointer())->sharedFromThis();
 }
 
-void ItemModel::connectItem(const SP<Document::Item> &item) {
+void ItemModel::connectItem(const SP<Document::Object> &item) {
     auto itemPtr = item.get();
-    connect(itemPtr, &Document::Item::nameChanged, this, [this, itemPtr] () {
+    connect(itemPtr, &Document::Object::nameChanged, this, [this, itemPtr] () {
         auto index = indexForItem(itemPtr->sharedFromThis());
         emit dataChanged(index, index, {Qt::DisplayRole});
     });
-    connect(itemPtr, &Document::Item::childItemsAboutToBeInserted, this, [this, itemPtr] (int first, int last) {
+    connect(itemPtr, &Document::Object::childItemsAboutToBeInserted, this, [this, itemPtr] (int first, int last) {
         auto index = indexForItem(itemPtr->sharedFromThis());
         beginInsertRows(index, first, last);
     });
-    connect(itemPtr, &Document::Item::childItemsInserted, this, [this, itemPtr] (int first, int last) {
+    connect(itemPtr, &Document::Object::childItemsInserted, this, [this, itemPtr] (int first, int last) {
         auto item = itemPtr->sharedFromThis();
         for (int i = first; i <= last; ++i) {
             auto& child = item->childItems()[i];
@@ -183,7 +183,7 @@ void ItemModel::connectItem(const SP<Document::Item> &item) {
         }
         endInsertRows();
     });
-    connect(itemPtr, &Document::Item::childItemsAboutToBeRemoved, this, [this, itemPtr] (int first, int last) {
+    connect(itemPtr, &Document::Object::childItemsAboutToBeRemoved, this, [this, itemPtr] (int first, int last) {
         auto item = itemPtr->sharedFromThis();
         for (int i = first; i <= last; ++i) {
             auto& child = item->childItems()[i];
@@ -192,7 +192,7 @@ void ItemModel::connectItem(const SP<Document::Item> &item) {
         auto index = indexForItem(item);
         beginRemoveRows(index, first, last);
     });
-    connect(itemPtr, &Document::Item::childItemsRemoved, this, [this] () {
+    connect(itemPtr, &Document::Object::childItemsRemoved, this, [this] () {
         endRemoveRows();
     });
 
@@ -201,7 +201,7 @@ void ItemModel::connectItem(const SP<Document::Item> &item) {
     }
 }
 
-void ItemModel::disconnectItem(const SP<Document::Item> &item) {
+void ItemModel::disconnectItem(const SP<Document::Object> &item) {
     disconnect(item.get(), nullptr, this, nullptr);
 }
 

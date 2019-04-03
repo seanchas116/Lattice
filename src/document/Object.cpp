@@ -1,4 +1,4 @@
-#include "Item.hpp"
+#include "Object.hpp"
 #include "Document.hpp"
 #include "History.hpp"
 #include "../support/JSON.hpp"
@@ -12,9 +12,9 @@
 namespace Lattice {
 namespace Document {
 
-class Item::ChildInsertChange : public Change {
+class Object::ChildInsertChange : public Change {
 public:
-    ChildInsertChange(const SP<Item>& parent, const SP<Item>& item, const Opt<SP<const Item>>& reference) :
+    ChildInsertChange(const SP<Object>& parent, const SP<Object>& item, const Opt<SP<const Object>>& reference) :
         _parent(parent),
         _item(item),
         _reference(reference)
@@ -29,14 +29,14 @@ public:
 
 private:
 
-    SP<Item> _parent;
-    SP<Item> _item;
-    Opt<SP<const Item>> _reference;
+    SP<Object> _parent;
+    SP<Object> _item;
+    Opt<SP<const Object>> _reference;
 };
 
-class Item::ChildRemoveChange : public Change {
+class Object::ChildRemoveChange : public Change {
 public:
-    ChildRemoveChange(const SP<Item>& parent, const SP<Item>& item) : _parent(parent), _item(item) {
+    ChildRemoveChange(const SP<Object>& parent, const SP<Object>& item) : _parent(parent), _item(item) {
     }
 
     void apply() override {
@@ -48,20 +48,20 @@ public:
 
 private:
 
-    SP<Item> _parent;
-    SP<Item> _item;
-    Opt<SP<Item>> _reference;
+    SP<Object> _parent;
+    SP<Object> _item;
+    Opt<SP<Object>> _reference;
 };
 
-SP<Change> Item::ChildInsertChange::invert() const {
+SP<Change> Object::ChildInsertChange::invert() const {
     return makeShared<ChildRemoveChange>(_parent, _item);
 }
 
-SP<Change> Item::ChildRemoveChange::invert() const {
+SP<Change> Object::ChildRemoveChange::invert() const {
     return makeShared<ChildInsertChange>(_parent, _item, _reference);
 }
 
-Opt<SP<Item> > Item::parentItem() const {
+Opt<SP<Object> > Object::parentItem() const {
     auto ptr = _parentItem.lock();
     if (ptr) {
         return {ptr};
@@ -70,7 +70,7 @@ Opt<SP<Item> > Item::parentItem() const {
     }
 }
 
-Opt<SP<Item>> Item::nextItem() const {
+Opt<SP<Object>> Object::nextItem() const {
     LATTICE_OPTIONAL_GUARD(parent, parentItem(), return {};)
 
     auto it = std::find(parent->_childItems.begin(), parent->_childItems.end(), sharedFromThis());
@@ -80,15 +80,15 @@ Opt<SP<Item>> Item::nextItem() const {
     return *(it + 1);
 }
 
-void Item::appendChildItem(const SP<Item> &item) {
+void Object::appendChildItem(const SP<Object> &item) {
     insertItemBefore(item, {});
 }
 
-void Item::insertItemBefore(const SP<Item> &item, const Opt<SP<const Item>> &reference) {
-    addChange(makeShared<Item::ChildInsertChange>(sharedFromThis(), item, reference));
+void Object::insertItemBefore(const SP<Object> &item, const Opt<SP<const Object>> &reference) {
+    addChange(makeShared<Object::ChildInsertChange>(sharedFromThis(), item, reference));
 }
 
-void Item::insertItemBeforeInternal(const SP<Item> &item, const Opt<SP<const Item>> &reference) {
+void Object::insertItemBeforeInternal(const SP<Object> &item, const Opt<SP<const Object>> &reference) {
     if (!canInsertItem(item)) {
         throw std::runtime_error("cannot insert item");
     }
@@ -112,11 +112,11 @@ void Item::insertItemBeforeInternal(const SP<Item> &item, const Opt<SP<const Ite
     emit childItemsInserted(index, index);
 }
 
-void Item::removeChildItem(const SP<Item>& item) {
-    addChange(makeShared<Item::ChildRemoveChange>(sharedFromThis(), item));
+void Object::removeChildItem(const SP<Object>& item) {
+    addChange(makeShared<Object::ChildRemoveChange>(sharedFromThis(), item));
 }
 
-void Item::removeChildItemInternal(const SP<Item>& item) {
+void Object::removeChildItemInternal(const SP<Object>& item) {
     auto it = std::find(_childItems.begin(), _childItems.end(), item);
     if (it == _childItems.end()) {
         throw std::runtime_error("cannot find item");
@@ -128,7 +128,7 @@ void Item::removeChildItemInternal(const SP<Item>& item) {
     emit childItemsRemoved(index, index, {item});
 }
 
-int Item::index() const {
+int Object::index() const {
     LATTICE_OPTIONAL_GUARD(parent, _parentItem.lock(), return -1;)
 
     auto& siblings = parent->_childItems;
@@ -139,67 +139,67 @@ int Item::index() const {
     return it - siblings.begin();
 }
 
-std::vector<int> Item::indexPath() const {
+std::vector<int> Object::indexPath() const {
     LATTICE_OPTIONAL_GUARD(parent, parentItem(), return {};)
     auto path = parent->indexPath();
     path.push_back(index());
     return path;
 }
 
-bool Item::canInsertItem(const SP<const Item> &item) const {
+bool Object::canInsertItem(const SP<const Object> &item) const {
     Q_UNUSED(item)
     return true;
 }
 
-void Item::toJSON(nlohmann::json &json) const {
+void Object::toJSON(nlohmann::json &json) const {
     json["name"] = name();
     json["location"] = location();
 }
 
-void Item::fromJSON(const nlohmann::json &json) {
+void Object::fromJSON(const nlohmann::json &json) {
     setName(json["name"]);
     setLocation(json["location"]);
 }
 
-Opt<SP<Document>> Item::document() const {
+Opt<SP<Document>> Object::document() const {
     LATTICE_OPTIONAL_GUARD(parent, _parentItem.lock(), return {};)
     return parent->document();
 }
 
-void Item::addChange(const SP<Change> &change) {
+void Object::addChange(const SP<Change> &change) {
     LATTICE_OPTIONAL_GUARD(ducument, this->document(), change->apply(); return;);
     ducument->history()->addChange(change);
 }
 
-void Item::setName(const std::string &name) {
+void Object::setName(const std::string &name) {
     if (_name != name) {
-        auto change = makeShared<PropertyChange<Item, std::string>>(sharedFromThis(), name, &Item::name, &Item::setNameInternal);
+        auto change = makeShared<PropertyChange<Object, std::string>>(sharedFromThis(), name, &Object::name, &Object::setNameInternal);
         addChange(change);
     }
 }
 
-void Item::setNameInternal(const std::string &name) {
+void Object::setNameInternal(const std::string &name) {
     if (_name != name) {
         _name = name;
         emit nameChanged(name);
     }
 }
 
-void Item::setLocation(const Location &location) {
+void Object::setLocation(const Location &location) {
     if (_location != location) {
-        auto change = makeShared<PropertyChange<Item, Location>>(sharedFromThis(), location, &Item::location, &Item::setLocationInternal);
+        auto change = makeShared<PropertyChange<Object, Location>>(sharedFromThis(), location, &Object::location, &Object::setLocationInternal);
         addChange(change);
     }
 }
 
-void Item::forEachDescendant(const Fn<void(const SP<Item>&)> &callback) {
+void Object::forEachDescendant(const Fn<void(const SP<Object>&)> &callback) {
     callback(sharedFromThis());
     for (auto& child : _childItems) {
         child->forEachDescendant(callback);
     }
 }
 
-void Item::setLocationInternal(const Location &location) {
+void Object::setLocationInternal(const Location &location) {
     if (_location != location) {
         _location = location;
         emit locationChanged(location);
