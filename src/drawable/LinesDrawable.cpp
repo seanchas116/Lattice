@@ -21,8 +21,12 @@ void LinesDrawable::setPoints(const std::vector<Point> &points) {
     _vbo->setVertices(points);
 }
 
-void LinesDrawable::setIndices(const std::vector<std::array<uint32_t, 2>> &indices) {
-    _ibo->setLines(indices);
+void LinesDrawable::setLines(const std::vector<std::array<uint32_t, 2>> &lines) {
+    _ibo->setLines(lines);
+}
+
+void LinesDrawable::setLineStrips(const std::vector<std::vector<uint32_t>> &lineStrips) {
+    _ibo->setLineStrips(lineStrips);
 }
 
 void LinesDrawable::draw(const glm::dmat4 &matrix, const SP<Camera> &camera) {
@@ -32,8 +36,8 @@ void LinesDrawable::draw(const glm::dmat4 &matrix, const SP<Camera> &camera) {
     shader()->setUniform("viewportSize", camera->viewportSize());
     shader()->setUniform("zNear", camera->projection() == Camera::Projection::Perspective ? camera->zNear() : -10000.0); // TODO: specify depth in better way
     shader()->setUniform("width", _width);
-    shader()->setUniform("color", glm::vec3(0));
-    shader()->setUniform("useVertexColor", true);
+    shader()->setUniform("color", _color);
+    shader()->setUniform("useVertexColor", _useVertexColor);
     shader()->setUniform("zOffset", _zOffset);
     _vao->draw();
 }

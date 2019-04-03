@@ -13,6 +13,10 @@ template <typename T> class VertexBuffer;
 class IndexBuffer;
 }
 
+namespace Drawable {
+class LinesDrawable;
+}
+
 namespace Editor {
 
 class GridFloor final : public Render::RenderableObject {
@@ -23,13 +27,9 @@ public:
     void draw(const SP<Render::Operations>& operations, const SP<Camera>& camera) override;
 
 private:
-    SP<GL::VertexBuffer<GL::Vertex>> _vbo;
-    SP<GL::IndexBuffer> _indexBuffer;
-    SP<GL::VAO> _vao;
-    SP<GL::IndexBuffer> _xAxisIndexBuffer;
-    SP<GL::IndexBuffer> _zAxisIndexBuffer;
-    SP<GL::VAO> _xAxisVAO;
-    SP<GL::VAO> _zAxisVAO;
+    SP<Drawable::LinesDrawable> _drawable;
+    SP<Drawable::LinesDrawable> _xAxisDrawable;
+    SP<Drawable::LinesDrawable> _zAxisDrawable;
 };
 
 }

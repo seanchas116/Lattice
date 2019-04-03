@@ -3,26 +3,22 @@
 #include "../gl/VertexBuffer.hpp"
 #include "../gl/Vertex.hpp"
 #include "../support/Camera.hpp"
+#include "../drawable/LinesDrawable.hpp"
 
 using namespace glm;
 
 namespace Lattice {
 namespace Editor {
 
-GridFloor::GridFloor() :
-    _vbo(makeShared<GL::VertexBuffer<GL::Vertex>>()),
-    _indexBuffer(makeShared<GL::IndexBuffer>()),
-    _vao(makeShared<GL::VAO>(_vbo, _indexBuffer)),
-    _xAxisIndexBuffer(makeShared<GL::IndexBuffer>()),
-    _zAxisIndexBuffer(makeShared<GL::IndexBuffer>()),
-    _xAxisVAO(makeShared<GL::VAO>(_vbo, _xAxisIndexBuffer)),
-    _zAxisVAO(makeShared<GL::VAO>(_vbo, _zAxisIndexBuffer))
+GridFloor::GridFloor() : _drawable(makeShared<Drawable::LinesDrawable>()),
+                         _xAxisDrawable(makeShared<Drawable::LinesDrawable>()),
+                         _zAxisDrawable(makeShared<Drawable::LinesDrawable>())
 {
     // build grid
     constexpr int count = 200;
     constexpr double unit = 1;
 
-    std::vector<GL::Vertex> vertices;
+    std::vector<Drawable::Point> vertices;
     std::vector<std::vector<uint32_t>> lineStrips;
     std::vector<uint32_t> xLineStrip;
     std::vector<uint32_t> zLineStrip;
@@ -31,9 +27,9 @@ GridFloor::GridFloor() :
         dvec3 v1(-count*unit, 0, z*unit);
         dvec3 v2(count*unit, 0, z*unit);
         auto i1 = uint32_t(vertices.size());
-        vertices.push_back({v1, {}, {}});
+        vertices.push_back({v1, {}});
         auto i2 = uint32_t(vertices.size());
-        vertices.push_back({v2, {}, {}});
+        vertices.push_back({v2, {}});
 
         if (z == 0) {
             xLineStrip = {i1, i2};
@@ -45,9 +41,9 @@ GridFloor::GridFloor() :
         dvec3 v1(x*unit, 0, -count*unit);
         dvec3 v2(x*unit, 0, count*unit);
         auto i1 = uint32_t(vertices.size());
-        vertices.push_back({v1, {}, {}});
+        vertices.push_back({v1, {}});
         auto i2 = uint32_t(vertices.size());
-        vertices.push_back({v2, {}, {}});
+        vertices.push_back({v2, {}});
 
         if (x == 0) {
             zLineStrip = {i1, i2};
@@ -56,16 +52,27 @@ GridFloor::GridFloor() :
         }
     }
 
-    _vbo->setVertices(vertices);
-    _indexBuffer->setLineStrips(lineStrips);
-    _xAxisIndexBuffer->setLineStrips({xLineStrip});
-    _zAxisIndexBuffer->setLineStrips({zLineStrip});
+    _drawable->setPoints(vertices);
+    _xAxisDrawable->setPoints(vertices);
+    _zAxisDrawable->setPoints(vertices);
+
+    _drawable->setLineStrips(lineStrips);
+    _xAxisDrawable->setLineStrips({xLineStrip});
+    _zAxisDrawable->setLineStrips({zLineStrip});
+
+    _drawable->setUseVertexColor(false);
+    _drawable->setColor(vec4(0.5, 0.5, 0.5, 1));
+    _xAxisDrawable->setUseVertexColor(false);
+    _xAxisDrawable->setColor(vec4(0.8, 0.5, 0.5, 1));
+    _zAxisDrawable->setUseVertexColor(false);
+    _zAxisDrawable->setColor(vec4(0.5, 0.5, 0.8, 1));
 }
 
 void GridFloor::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
-    operations->drawLine.draw(_vao, dmat4(1), camera, 1, vec4(0.5, 0.5, 0.5, 1));
-    operations->drawLine.draw(_xAxisVAO, dmat4(1), camera, 1, vec4(0.8, 0.5, 0.5, 1));
-    operations->drawLine.draw(_zAxisVAO, dmat4(1), camera, 1, vec4(0.5, 0.5, 0.8, 1));
+    Q_UNUSED(operations);
+    _drawable->draw(dmat4(1), camera);
+    _xAxisDrawable->draw(dmat4(1), camera);
+    _zAxisDrawable->draw(dmat4(1), camera);
 }
 
 }

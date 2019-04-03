@@ -25,8 +25,11 @@ public:
 
     void setWidth(double width) { _width = width; }
     void setZOffset(double zOffset) { _zOffset = zOffset; }
+    void setColor(glm::vec4 color) { _color = color ; }
+    void setUseVertexColor(bool use) { _useVertexColor = use; }
     void setPoints(const std::vector<Point>& points);
-    void setIndices(const std::vector<std::array<uint32_t, 2>>& indices);
+    void setLines(const std::vector<std::array<uint32_t, 2>>& lines);
+    void setLineStrips(const std::vector<std::vector<uint32_t>>& lineStrips);
 
     void draw(const glm::dmat4 &matrix, const SP<Camera>& camera);
 
@@ -37,6 +40,8 @@ private:
     SP<GL::VAO> _vao;
     double _width = 1;
     double _zOffset = defaultZOffset;
+    glm::vec4 _color {0};
+    bool _useVertexColor = true;
 };
 
 } // namespace Drawable
