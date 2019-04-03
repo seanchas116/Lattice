@@ -19,7 +19,7 @@ AppState::AppState() :
     _preferences(makeShared<Preferences>())
 {
     addCube();
-    auto item = _document->rootObject()->childItems()[0];
+    auto item = _document->rootObject()->childObjects()[0];
     _document->setCurrentObject(item);
     _document->history()->clear();
 }

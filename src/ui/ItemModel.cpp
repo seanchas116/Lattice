@@ -50,17 +50,17 @@ Qt::ItemFlags ItemModel::flags(const QModelIndex &index) const {
 QModelIndex ItemModel::index(int row, int column, const QModelIndex &parentIndex) const {
     Q_UNUSED(column)
     auto parent = itemForIndex(parentIndex);
-    return indexForItem(parent->childItems()[row]);
+    return indexForItem(parent->childObjects()[row]);
 }
 
 QModelIndex ItemModel::parent(const QModelIndex &child) const {
     auto item = itemForIndex(child);
-    LATTICE_OPTIONAL_GUARD(parent, item->parentItem(), return {};)
+    LATTICE_OPTIONAL_GUARD(parent, item->parentObject(), return {};)
     return indexForItem(parent);
 }
 
 int ItemModel::rowCount(const QModelIndex &parent) const {
-    return int(itemForIndex(parent)->childItems().size());
+    return int(itemForIndex(parent)->childObjects().size());
 }
 
 int ItemModel::columnCount(const QModelIndex &parent) const {
@@ -122,26 +122,26 @@ bool ItemModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int r
 
             SP<Document::Object> item = _document->rootObject();
             for (int index : indexPath) {
-                item = item->childItems()[index];
+                item = item->childObjects()[index];
             }
 
             items.push_back(item);
         }
 
         Opt<SP<Document::Object>> ref;
-        if (row != -1 && row != int(parentItem->childItems().size())) {
-            ref = parentItem->childItems()[row];
+        if (row != -1 && row != int(parentItem->childObjects().size())) {
+            ref = parentItem->childObjects()[row];
         }
         switch (action) {
         default:
         case Qt::CopyAction:
             for (const auto& item : items) {
-                parentItem->insertItemBefore(item->clone(), ref);
+                parentItem->insertObjectBefore(item->clone(), ref);
             }
             break;
         case Qt::MoveAction:
             for (const auto& item : items) {
-                parentItem->insertItemBefore(item, ref);
+                parentItem->insertObjectBefore(item, ref);
             }
             break;
         }
@@ -171,32 +171,32 @@ void ItemModel::connectItem(const SP<Document::Object> &item) {
         auto index = indexForItem(itemPtr->sharedFromThis());
         emit dataChanged(index, index, {Qt::DisplayRole});
     });
-    connect(itemPtr, &Document::Object::childItemsAboutToBeInserted, this, [this, itemPtr] (int first, int last) {
+    connect(itemPtr, &Document::Object::childObjectsAboutToBeInserted, this, [this, itemPtr] (int first, int last) {
         auto index = indexForItem(itemPtr->sharedFromThis());
         beginInsertRows(index, first, last);
     });
-    connect(itemPtr, &Document::Object::childItemsInserted, this, [this, itemPtr] (int first, int last) {
+    connect(itemPtr, &Document::Object::childObjectsInserted, this, [this, itemPtr] (int first, int last) {
         auto item = itemPtr->sharedFromThis();
         for (int i = first; i <= last; ++i) {
-            auto& child = item->childItems()[i];
+            auto& child = item->childObjects()[i];
             connectItem(child);
         }
         endInsertRows();
     });
-    connect(itemPtr, &Document::Object::childItemsAboutToBeRemoved, this, [this, itemPtr] (int first, int last) {
+    connect(itemPtr, &Document::Object::childObjectsAboutToBeRemoved, this, [this, itemPtr] (int first, int last) {
         auto item = itemPtr->sharedFromThis();
         for (int i = first; i <= last; ++i) {
-            auto& child = item->childItems()[i];
+            auto& child = item->childObjects()[i];
             disconnectItem(child);
         }
         auto index = indexForItem(item);
         beginRemoveRows(index, first, last);
     });
-    connect(itemPtr, &Document::Object::childItemsRemoved, this, [this] () {
+    connect(itemPtr, &Document::Object::childObjectsRemoved, this, [this] () {
         endRemoveRows();
     });
 
-    for (auto& child : item->childItems()) {
+    for (auto& child : item->childObjects()) {
         connectItem(child);
     }
 }

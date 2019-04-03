@@ -18,12 +18,12 @@ class Document;
 class Object : public QObject, public EnableSharedFromThis<Object> {
     Q_OBJECT
 public:
-    Opt<SP<Object>> parentItem() const;
-    const std::vector<SP<Object>>& childItems() const { return _childItems; }
-    Opt<SP<Object>> nextItem() const;
-    void appendChildItem(const SP<Object>& item);
-    void insertItemBefore(const SP<Object>& item, const Opt<SP<const Object> > &reference);
-    void removeChildItem(const SP<Object>& item);
+    Opt<SP<Object>> parentObject() const;
+    const std::vector<SP<Object>>& childObjects() const { return _childItems; }
+    Opt<SP<Object>> nextObject() const;
+    void appendChildObject(const SP<Object>& item);
+    void insertObjectBefore(const SP<Object>& item, const Opt<SP<const Object> > &reference);
+    void removeChildObject(const SP<Object>& item);
     int index() const;
     std::vector<int> indexPath() const;
 
@@ -39,7 +39,7 @@ public:
 
     void forEachDescendant(const Fn<void(const SP<Object> &)> &callback);
 
-    virtual bool canInsertItem(const SP<const Object>& item) const;
+    virtual bool canInsertObject(const SP<const Object>& item) const;
     virtual SP<Object> clone() const = 0;
     virtual void toJSON(nlohmann::json& json) const;
     virtual void fromJSON(const nlohmann::json& json);
@@ -55,10 +55,10 @@ signals:
     void nameChanged(const std::string& name);
     void locationChanged(const Location &location);
 
-    void childItemsAboutToBeInserted(int first, int last, const std::vector<SP<Object>>& items);
-    void childItemsInserted(int first, int last);
-    void childItemsAboutToBeRemoved(int first, int last);
-    void childItemsRemoved(int first, int last, const std::vector<SP<Object>>& items);
+    void childObjectsAboutToBeInserted(int first, int last, const std::vector<SP<Object>>& items);
+    void childObjectsInserted(int first, int last);
+    void childObjectsAboutToBeRemoved(int first, int last);
+    void childObjectsRemoved(int first, int last, const std::vector<SP<Object>>& items);
 
 private:
     class NameChange;
@@ -69,7 +69,7 @@ private:
     void setNameInternal(const std::string& name);
     void setLocationInternal(const Location& location);
 
-    void insertItemBeforeInternal(const SP<Object>& item, const Opt<SP<const Object> > &reference);
+    void insertObjectBeforeInternal(const SP<Object>& item, const Opt<SP<const Object> > &reference);
     void removeChildItemInternal(const SP<Object>& item);
 
     std::string _name;

@@ -17,7 +17,7 @@ public:
         throw std::runtime_error("RootObject cannot be copied");
     }
 
-    bool canInsertItem(const SP<const Object>&) const override {
+    bool canInsertObject(const SP<const Object>&) const override {
         return true;
     }
 
@@ -83,38 +83,38 @@ void Document::selectObject(const SP<Object> &object, bool append) {
 
 void Document::insertObjectToCurrentPosition(const SP<Object> &object) {
     // TODO: better insertion positon
-    _rootObject->appendChildItem(object);
+    _rootObject->appendChildObject(object);
 }
 
 void Document::deleteSelectedObjects() {
     auto items = _selectedObjects;
     for (auto& item : items) {
-        LATTICE_OPTIONAL_GUARD(parent, item->parentItem(), continue;)
-        parent->removeChildItem(item);
+        LATTICE_OPTIONAL_GUARD(parent, item->parentObject(), continue;)
+        parent->removeChildObject(item);
     }
 }
 
 void Document::watchChildrenInsertRemove(const SP<Object> &object) {
     auto itemPtr = object.get();
-    connect(itemPtr, &Object::childItemsAboutToBeInserted, this, [this] (int, int, const auto& items) {
+    connect(itemPtr, &Object::childObjectsAboutToBeInserted, this, [this] (int, int, const auto& items) {
         for (auto& item : items) {
             emit objectAboutToBeInserted(item);
         }
     });
-    connect(itemPtr, &Object::childItemsInserted, this, [this, itemPtr] (int first, int last) {
+    connect(itemPtr, &Object::childObjectsInserted, this, [this, itemPtr] (int first, int last) {
         for (int i = first; i <= last; ++i) {
-            auto& child = itemPtr->childItems()[i];
+            auto& child = itemPtr->childObjects()[i];
             watchChildrenInsertRemove(child);
             emit objectInserted(child);
         }
     });
-    connect(itemPtr, &Object::childItemsAboutToBeRemoved, this, [this, itemPtr] (int first, int last) {
+    connect(itemPtr, &Object::childObjectsAboutToBeRemoved, this, [this, itemPtr] (int first, int last) {
         for (int i = first; i <= last; ++i) {
-            auto& child = itemPtr->childItems()[i];
+            auto& child = itemPtr->childObjects()[i];
             emit objectAboutToBeRemoved(child);
         }
     });
-    connect(itemPtr, &Object::childItemsRemoved, this, [this] (int, int, const auto& items) {
+    connect(itemPtr, &Object::childObjectsRemoved, this, [this] (int, int, const auto& items) {
         for (auto& item : items) {
             emit objectRemoved(item);
         }

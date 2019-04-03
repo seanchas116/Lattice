@@ -22,7 +22,7 @@ public:
     }
 
     void apply() override {
-        _parent->insertItemBeforeInternal(_item, _reference);
+        _parent->insertObjectBeforeInternal(_item, _reference);
     }
 
     SP<Change> invert() const override;
@@ -40,7 +40,7 @@ public:
     }
 
     void apply() override {
-        _reference = _item->nextItem();
+        _reference = _item->nextObject();
         _parent->removeChildItemInternal(_item);
     }
 
@@ -61,7 +61,7 @@ SP<Change> Object::ChildRemoveChange::invert() const {
     return makeShared<ChildInsertChange>(_parent, _item, _reference);
 }
 
-Opt<SP<Object> > Object::parentItem() const {
+Opt<SP<Object> > Object::parentObject() const {
     auto ptr = _parentItem.lock();
     if (ptr) {
         return {ptr};
@@ -70,8 +70,8 @@ Opt<SP<Object> > Object::parentItem() const {
     }
 }
 
-Opt<SP<Object>> Object::nextItem() const {
-    LATTICE_OPTIONAL_GUARD(parent, parentItem(), return {};)
+Opt<SP<Object>> Object::nextObject() const {
+    LATTICE_OPTIONAL_GUARD(parent, parentObject(), return {};)
 
     auto it = std::find(parent->_childItems.begin(), parent->_childItems.end(), sharedFromThis());
     if (it == parent->_childItems.end() || it == parent->_childItems.end() - 1) {
@@ -80,20 +80,20 @@ Opt<SP<Object>> Object::nextItem() const {
     return *(it + 1);
 }
 
-void Object::appendChildItem(const SP<Object> &item) {
-    insertItemBefore(item, {});
+void Object::appendChildObject(const SP<Object> &item) {
+    insertObjectBefore(item, {});
 }
 
-void Object::insertItemBefore(const SP<Object> &item, const Opt<SP<const Object>> &reference) {
+void Object::insertObjectBefore(const SP<Object> &item, const Opt<SP<const Object>> &reference) {
     addChange(makeShared<Object::ChildInsertChange>(sharedFromThis(), item, reference));
 }
 
-void Object::insertItemBeforeInternal(const SP<Object> &item, const Opt<SP<const Object>> &reference) {
-    if (!canInsertItem(item)) {
+void Object::insertObjectBeforeInternal(const SP<Object> &item, const Opt<SP<const Object>> &reference) {
+    if (!canInsertObject(item)) {
         throw std::runtime_error("cannot insert item");
     }
-    LATTICE_OPTIONAL_LET(oldParent, item->parentItem(),
-         oldParent->removeChildItem(item);
+    LATTICE_OPTIONAL_LET(oldParent, item->parentObject(),
+         oldParent->removeChildObject(item);
     )
 
     decltype(_childItems)::iterator it;
@@ -106,13 +106,13 @@ void Object::insertItemBeforeInternal(const SP<Object> &item, const Opt<SP<const
         it = _childItems.end();
     }
     int index = it - _childItems.begin();
-    emit childItemsAboutToBeInserted(index, index, {item});
+    emit childObjectsAboutToBeInserted(index, index, {item});
     _childItems.insert(it, item);
     item->_parentItem = sharedFromThis();
-    emit childItemsInserted(index, index);
+    emit childObjectsInserted(index, index);
 }
 
-void Object::removeChildItem(const SP<Object>& item) {
+void Object::removeChildObject(const SP<Object>& item) {
     addChange(makeShared<Object::ChildRemoveChange>(sharedFromThis(), item));
 }
 
@@ -122,10 +122,10 @@ void Object::removeChildItemInternal(const SP<Object>& item) {
         throw std::runtime_error("cannot find item");
     }
     int index = it - _childItems.begin();
-    emit childItemsAboutToBeRemoved(index, index);
+    emit childObjectsAboutToBeRemoved(index, index);
     _childItems.erase(it);
     item->_parentItem.reset();
-    emit childItemsRemoved(index, index, {item});
+    emit childObjectsRemoved(index, index, {item});
 }
 
 int Object::index() const {
@@ -140,13 +140,13 @@ int Object::index() const {
 }
 
 std::vector<int> Object::indexPath() const {
-    LATTICE_OPTIONAL_GUARD(parent, parentItem(), return {};)
+    LATTICE_OPTIONAL_GUARD(parent, parentObject(), return {};)
     auto path = parent->indexPath();
     path.push_back(index());
     return path;
 }
 
-bool Object::canInsertItem(const SP<const Object> &item) const {
+bool Object::canInsertObject(const SP<const Object> &item) const {
     Q_UNUSED(item)
     return true;
 }
