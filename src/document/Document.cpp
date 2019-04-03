@@ -42,17 +42,17 @@ Document::Document() :
     });
 }
 
-void Document::setCurrentObject(const Opt<SP<Object> > &item) {
-    if (item != _currentObject) {
-        _currentObject = item;
-        emit currentObjectChanged(item);
+void Document::setCurrentObject(const Opt<SP<Object> > &object) {
+    if (object != _currentObject) {
+        _currentObject = object;
+        emit currentObjectChanged(object);
     }
 }
 
-void Document::setEditedObject(const Opt<SP<MeshObject> > &item) {
-    if (item != _editedObject) {
-        _editedObject = item;
-        emit editedObjectChanged(item);
+void Document::setEditedObject(const Opt<SP<MeshObject> > &object) {
+    if (object != _editedObject) {
+        _editedObject = object;
+        emit editedObjectChanged(object);
     }
 }
 
@@ -65,26 +65,26 @@ void Document::setIsEditing(bool isEditing) {
     }
 }
 
-void Document::setSelectedObjects(const std::unordered_set<SP<Object>> &items) {
-    if (_selectedObjects != items) {
-        _selectedObjects = items;
-        emit selectedObjectsChanged(items);
+void Document::setSelectedObjects(const std::unordered_set<SP<Object>> &objects) {
+    if (_selectedObjects != objects) {
+        _selectedObjects = objects;
+        emit selectedObjectsChanged(objects);
     }
 }
 
-void Document::selectObject(const SP<Object> &item, bool append) {
+void Document::selectObject(const SP<Object> &object, bool append) {
     std::unordered_set<SP<Object>> items;
     if (append) {
         items = _selectedObjects;
     }
-    items.insert(item);
+    items.insert(object);
     setSelectedObjects(items);
-    setCurrentObject(item);
+    setCurrentObject(object);
 }
 
-void Document::insertObjectToCurrentPosition(const SP<Object> &item) {
+void Document::insertObjectToCurrentPosition(const SP<Object> &object) {
     // TODO: better insertion positon
-    _rootObject->appendChildItem(item);
+    _rootObject->appendChildItem(object);
 }
 
 void Document::deleteSelectedObjects() {
@@ -95,8 +95,8 @@ void Document::deleteSelectedObjects() {
     }
 }
 
-void Document::watchChildrenInsertRemove(const SP<Object> &item) {
-    auto itemPtr = item.get();
+void Document::watchChildrenInsertRemove(const SP<Object> &object) {
+    auto itemPtr = object.get();
     connect(itemPtr, &Object::childItemsAboutToBeInserted, this, [this] (int, int, const auto& items) {
         for (auto& item : items) {
             emit objectAboutToBeInserted(item);

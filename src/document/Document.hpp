@@ -21,20 +21,20 @@ public:
     auto& rootObject() const { return _rootObject; }
 
     auto& currentObject() const { return _currentObject; }
-    void setCurrentObject(const Opt<SP<Object>>& item);
+    void setCurrentObject(const Opt<SP<Object>>& object);
 
     auto& editedObject() const { return _editedObject; }
-    void setEditedObject(const Opt<SP<MeshObject>>& item);
+    void setEditedObject(const Opt<SP<MeshObject>>& object);
 
     bool isEditing() const { return bool(_editedObject); }
     void setIsEditing(bool isEditing);
 
     auto& selectedObjects() const { return _selectedObjects; }
-    void setSelectedObjects(const std::unordered_set<SP<Object>>& items);
+    void setSelectedObjects(const std::unordered_set<SP<Object>>& objects);
 
-    void selectObject(const SP<Object>& item, bool append);
+    void selectObject(const SP<Object>& object, bool append);
 
-    void insertObjectToCurrentPosition(const SP<Object>& item);
+    void insertObjectToCurrentPosition(const SP<Object>& object);
     void deleteSelectedObjects();
 
     auto& history() const { return _history; }
@@ -43,19 +43,19 @@ public:
     void setMeshSelection(const Mesh::MeshFragment &meshSelection);
 
 signals:
-    void currentObjectChanged(const Opt<SP<Object>>& item);
-    void editedObjectChanged(const Opt<SP<MeshObject>>& item);
+    void currentObjectChanged(const Opt<SP<Object>>& object);
+    void editedObjectChanged(const Opt<SP<MeshObject>>& object);
     void isEditingChanged(bool isEditing);
-    void selectedObjectsChanged(const std::unordered_set<SP<Object>>& items);
+    void selectedObjectsChanged(const std::unordered_set<SP<Object>>& objects);
     void meshSelectionChanged(const Mesh::MeshFragment &meshSelection);
 
-    void objectAboutToBeInserted(const SP<Object>& item);
-    void objectInserted(const SP<Object>& item);
-    void objectAboutToBeRemoved(const SP<Object>& item);
-    void objectRemoved(const SP<Object>& item);
+    void objectAboutToBeInserted(const SP<Object>& object);
+    void objectInserted(const SP<Object>& object);
+    void objectAboutToBeRemoved(const SP<Object>& object);
+    void objectRemoved(const SP<Object>& object);
 
 private:
-    void watchChildrenInsertRemove(const SP<Object>& item);
+    void watchChildrenInsertRemove(const SP<Object>& object);
 
     SP<Object> _rootObject;
 
