@@ -1,5 +1,5 @@
 #include "MainWindow.hpp"
-#include "ItemListView.hpp"
+#include "ObjectListView.hpp"
 #include "PropertyView.hpp"
 #include "../state/AppState.hpp"
 #include "../document/Document.hpp"
@@ -267,7 +267,7 @@ void MainWindow::setupPanes() {
     {
         auto dockWidget = new QDockWidget();
         dockWidget->setWindowTitle(tr("Items"));
-        dockWidget->setWidget(new ItemListView(_appState));
+        dockWidget->setWidget(new ObjectListView(_appState));
         addDockWidget(Qt::LeftDockWidgetArea, dockWidget);
     }
 

@@ -11,10 +11,10 @@ class AppState;
 
 namespace UI {
 
-class ItemListView final : public QWidget {
+class ObjectListView final : public QWidget {
     Q_OBJECT
 public:
-    explicit ItemListView(const SP<State::AppState> &appState, QWidget *parent = nullptr);
+    explicit ObjectListView(const SP<State::AppState> &appState, QWidget *parent = nullptr);
 
 private:
     SP<State::AppState> _appState;
