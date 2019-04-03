@@ -1,11 +1,16 @@
 #include "PointsDrawable.hpp"
 #include "../resource/Resource.hpp"
 #include "../gl/Shader.hpp"
+#include "../gl/VAO.hpp"
+#include "../gl/VertexBuffer.hpp"
 
 namespace Lattice {
 namespace Drawable {
 
-PointsDrawable::PointsDrawable() {
+PointsDrawable::PointsDrawable() :
+    _vbo(makeShared<GL::VertexBuffer<Point>>()),
+    _vao(makeShared<GL::VAO>(_vbo, GL::Primitive::Point))
+{
 }
 
 const SP<GL::Shader> &PointsDrawable::shader() {

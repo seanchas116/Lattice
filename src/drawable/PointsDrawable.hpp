@@ -7,6 +7,7 @@ namespace Lattice {
 namespace GL {
 class Shader;
 class VAO;
+template <typename T> class VertexBuffer;
 }
 
 namespace Drawable {
@@ -26,6 +27,8 @@ public:
 
 private:
     static const SP<GL::Shader>& shader();
+    SP<GL::VertexBuffer<Point>> _vbo;
+    SP<GL::VAO> _vao;
 };
 
 } // namespace Drawable
