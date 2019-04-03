@@ -33,7 +33,7 @@ ItemListView::ItemListView(const SP<State::AppState> &appState, QWidget *parent)
         auto index = treeView->indexAt(p);
         if (index.isValid()) {
             QMenu contextMenu;
-            contextMenu.addAction(tr("Delete"), _appState.get(), &State::AppState::deleteItems);
+            contextMenu.addAction(tr("Delete"), _appState.get(), &State::AppState::deleteObjects);
             contextMenu.exec(treeView->mapToGlobal(p));
         }
     });

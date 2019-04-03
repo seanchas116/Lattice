@@ -19,7 +19,7 @@ MeshObject::MeshObject() : _mesh(makeShared<Mesh::Mesh>()) {
 
 SP<Object> MeshObject::clone() const {
     auto cloned = makeShared<MeshObject>();
-    // FIXME: item name is not copied
+    // FIXME: object name is not copied
     cloned->_mesh = _mesh->clone();
     return cloned;
 }

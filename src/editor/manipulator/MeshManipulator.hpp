@@ -20,7 +20,7 @@ namespace Manipulator {
 class MeshManipulator : public Manipulator {
     Q_OBJECT
 public:
-    MeshManipulator(const SP<State::AppState>& appState, const SP<Document::MeshObject>& item);
+    MeshManipulator(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object);
 
 private:
     void handleOnDragBegin(ValueType type, glm::dvec3 values);
@@ -30,7 +30,7 @@ private:
     void updatePosition();
 
     SP<State::AppState> _appState;
-    SP<Document::MeshObject> _item;
+    SP<Document::MeshObject> _object;
     std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _initialPositions;
     glm::dvec3 _initialMedianPos;
     glm::dvec3 _initialValues;

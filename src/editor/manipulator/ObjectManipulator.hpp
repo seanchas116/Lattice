@@ -24,12 +24,12 @@ private:
     void handleOnDragMove(ValueType type, glm::dvec3 values);
     void handleOnDragEnd(ValueType type);
 
-    void setItems(const std::unordered_set<SP<Document::Object>> &items);
+    void setObjects(const std::unordered_set<SP<Document::Object>> &objects);
 
     void updatePosition();
 
     SP<State::AppState> _appState;
-    std::unordered_set<SP<Document::Object>> _items;
+    std::unordered_set<SP<Document::Object>> _objects;
     glm::dvec3 _initialValues;
     std::unordered_map<SP<Document::Object>, Location> _initialLocations;
     std::vector<QMetaObject::Connection> _connections;

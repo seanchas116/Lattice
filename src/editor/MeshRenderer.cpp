@@ -16,14 +16,14 @@ using namespace glm;
 namespace Lattice {
 namespace Editor {
 
-MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Document::MeshObject> &item) :
+MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Document::MeshObject> &object) :
     _appState(appState),
-    _item(item),
+    _object(object),
     _edgeVAO(makeShared<GL::VAO>()),
     _vertexVAO(makeShared<GL::VAO>())
 {
     updateVAOs();
-    connect(item->mesh().get(), &Mesh::Mesh::changed, this, [this] {
+    connect(object->mesh().get(), &Mesh::Mesh::changed, this, [this] {
         _isVAOsDirty = true;
         update();
     });
@@ -32,14 +32,14 @@ MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Documen
 void MeshRenderer::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
     updateVAOs();
     for (auto& [material, vao] : _faceVAOs) {
-        operations->drawMaterial.draw(vao, _item->location().matrixToWorld(), camera, material);
+        operations->drawMaterial.draw(vao, _object->location().matrixToWorld(), camera, material);
     }
 }
 
 void MeshRenderer::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
     updateVAOs();
     for (auto& [material, vao] : _faceVAOs) {
-        operations->drawUnicolor.draw(vao, _item->location().matrixToWorld(), camera, toIDColor());
+        operations->drawUnicolor.draw(vao, _object->location().matrixToWorld(), camera, toIDColor());
     }
 }
 
@@ -47,7 +47,7 @@ void MeshRenderer::mousePressEvent(const Render::MouseEvent &event) {
     switch (event.originalEvent->button()) {
     case Qt::RightButton: {
         QMenu contextMenu;
-        contextMenu.addAction(tr("Delete"), _appState.get(), &State::AppState::deleteItems);
+        contextMenu.addAction(tr("Delete"), _appState.get(), &State::AppState::deleteObjects);
         contextMenu.exec(event.originalEvent->globalPos());
         return;
     }
@@ -59,12 +59,12 @@ void MeshRenderer::mousePressEvent(const Render::MouseEvent &event) {
         }
 
         _dragged = true;
-        _dragInitLocation = _item->location();
+        _dragInitLocation = _object->location();
         _dragInitWorldPos = worldPos;
         _dragInitViewportPos = event.viewportPos;
         _dragStarted = false;
 
-        _appState->document()->selectObject(_item, event.originalEvent->modifiers() & Qt::ShiftModifier);
+        _appState->document()->selectObject(_object, event.originalEvent->modifiers() & Qt::ShiftModifier);
         return;
     }
     default:
@@ -85,10 +85,10 @@ void MeshRenderer::mouseMoveEvent(const Render::MouseEvent &event) {
         if (glm::distance(_dragInitViewportPos, dvec2(event.viewportPos.xy)) < _appState->preferences()->moveThreshold()) {
             return;
         }
-        _appState->document()->history()->beginChange(tr("Move Item"));
+        _appState->document()->history()->beginChange(tr("Move Object"));
         _dragStarted = true;
     }
-    _item->setLocation(newLocation);
+    _object->setLocation(newLocation);
 }
 
 void MeshRenderer::mouseReleaseEvent(const Render::MouseEvent &event) {
@@ -98,7 +98,7 @@ void MeshRenderer::mouseReleaseEvent(const Render::MouseEvent &event) {
 
 void MeshRenderer::mouseDoubleClickEvent(const Render::MouseEvent &event) {
     Q_UNUSED(event);
-    _appState->document()->setEditedObject(_item);
+    _appState->document()->setEditedObject(_object);
 }
 
 void MeshRenderer::updateVAOs() {
@@ -106,7 +106,7 @@ void MeshRenderer::updateVAOs() {
         return;
     }
 
-    MeshVAOGenerator generator(_item->mesh());
+    MeshVAOGenerator generator(_object->mesh());
     _vertexVAO = generator.generateVertexVAO();
     _edgeVAO = generator.generateEdgeVAO();
     _faceVAOs= generator.generateFaceVAOs();

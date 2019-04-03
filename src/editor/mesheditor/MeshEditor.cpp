@@ -85,22 +85,22 @@ private:
     SP<Mesh::Face> _face;
 };
 
-MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::MeshObject> &item) :
+MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::MeshObject> &object) :
     _appState(appState),
-    _item(item),
-    _manipulator(makeShared<Manipulator::MeshManipulator>(appState, item)),
+    _object(object),
+    _manipulator(makeShared<Manipulator::MeshManipulator>(appState, object)),
     _faceVBO(makeShared<GL::VertexBuffer<GL::Vertex>>()),
     _facePickVAO(makeShared<GL::VAO>()),
     _edgeVAO(makeShared<GL::VAO>()),
     _edgePickVAO(makeShared<GL::VAO>()),
     _vertexVAO(makeShared<GL::VAO>()),
     _vertexPickVAO(makeShared<GL::VAO>()),
-    _tool(makeShared<MoveTool>(appState, item))
+    _tool(makeShared<MoveTool>(appState, object))
 {
     initializeOpenGLFunctions();
     updateWholeVAOs();
 
-    connect(item->mesh().get(), &Mesh::Mesh::changed, this, &MeshEditor::handleMeshChange);
+    connect(object->mesh().get(), &Mesh::Mesh::changed, this, &MeshEditor::handleMeshChange);
     connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::handleMeshChange);
 
     connect(appState.get(), &State::AppState::toolChanged, this, &MeshEditor::handleToolChange);
@@ -122,11 +122,11 @@ void MeshEditor::draw(const SP<Render::Operations> &operations, const SP<Camera>
     updateWholeVAOs();
 
     for (auto& [material, vao] : _faceVAOs) {
-        operations->drawMaterial.draw(vao, _item->location().matrixToWorld(), camera, material);
+        operations->drawMaterial.draw(vao, _object->location().matrixToWorld(), camera, material);
     }
-    operations->drawLine.draw(_edgeVAO, _item->location().matrixToWorld(), camera, 1.0, vec4(0), true);
+    operations->drawLine.draw(_edgeVAO, _object->location().matrixToWorld(), camera, 1.0, vec4(0), true);
     if (_appState->isVertexSelectable()) {
-        operations->drawCircle.draw(_vertexVAO, _item->location().matrixToWorld(), camera, 6.0, vec4(0), true);
+        operations->drawCircle.draw(_vertexVAO, _object->location().matrixToWorld(), camera, 6.0, vec4(0), true);
     }
 }
 
@@ -139,13 +139,13 @@ void MeshEditor::drawPickables(const SP<Render::Operations> &operations, const S
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (_appState->isFaceSelectable()) {
-        operations->drawUnicolor.draw(_facePickVAO, _item->location().matrixToWorld(), camera, vec4(0), true);
+        operations->drawUnicolor.draw(_facePickVAO, _object->location().matrixToWorld(), camera, vec4(0), true);
     }
     if (_appState->isEdgeSelectable()) {
-        operations->drawLine.draw(_edgePickVAO, _item->location().matrixToWorld(), camera, 12.0, vec4(0), true);
+        operations->drawLine.draw(_edgePickVAO, _object->location().matrixToWorld(), camera, 12.0, vec4(0), true);
     }
     if (_appState->isVertexSelectable()) {
-        operations->drawCircle.draw(_vertexPickVAO, _item->location().matrixToWorld(), camera, 24.0, vec4(0), true);
+        operations->drawCircle.draw(_vertexPickVAO, _object->location().matrixToWorld(), camera, 24.0, vec4(0), true);
     }
 }
 
@@ -176,16 +176,16 @@ void MeshEditor::keyReleaseEvent(QKeyEvent *event) {
 void MeshEditor::handleToolChange(State::Tool tool) {
     switch (tool) {
     case State::Tool::Draw:
-        _tool = makeShared<DrawTool>(_appState, _item);
+        _tool = makeShared<DrawTool>(_appState, _object);
         break;
     case State::Tool::Extrude:
-        _tool = makeShared<ExtrudeTool>(_appState, _item);
+        _tool = makeShared<ExtrudeTool>(_appState, _object);
         break;
     case State::Tool::LoopCut:
-        _tool = makeShared<LoopCutTool>(_appState, _item);
+        _tool = makeShared<LoopCutTool>(_appState, _object);
         break;
     default:
-        _tool = makeShared<MoveTool>(_appState, _item);
+        _tool = makeShared<MoveTool>(_appState, _object);
         break;
     }
 }
@@ -209,11 +209,11 @@ void MeshEditor::updateWholeVAOs() {
 
     {
         _vertexAttributes.clear();
-        _vertexAttributes.reserve(_item->mesh()->vertices().size());
+        _vertexAttributes.reserve(_object->mesh()->vertices().size());
         _vertexPickAttributes.clear();
-        _vertexPickAttributes.reserve(_item->mesh()->vertices().size());
+        _vertexPickAttributes.reserve(_object->mesh()->vertices().size());
 
-        for (auto& v : _item->mesh()->vertices()) {
+        for (auto& v : _object->mesh()->vertices()) {
             bool selected = selectedVertices.find(v) != selectedVertices.end();
             bool hovered = v == _hoveredVertex;
 
@@ -246,12 +246,12 @@ void MeshEditor::updateWholeVAOs() {
 
     {
         _edgeAttributes.clear();
-        _edgeAttributes.reserve(_item->mesh()->edges().size() * 2);
+        _edgeAttributes.reserve(_object->mesh()->edges().size() * 2);
         _edgePickAttributes.clear();
-        _edgePickAttributes.reserve(_item->mesh()->edges().size() * 2);
+        _edgePickAttributes.reserve(_object->mesh()->edges().size() * 2);
 
         std::vector<GL::IndexBuffer::Line> indices;
-        for (auto& [_, e] : _item->mesh()->edges()) {
+        for (auto& [_, e] : _object->mesh()->edges()) {
             bool hovered = e == _hoveredEdge;
 
             auto pickable = makeShared<EdgePickable>(this, e);
@@ -315,7 +315,7 @@ void MeshEditor::updateWholeVAOs() {
 
         std::vector<GL::IndexBuffer::Triangle> pickTriangles;
 
-        for (auto& material : _item->mesh()->materials()) {
+        for (auto& material : _object->mesh()->materials()) {
             std::vector<GL::IndexBuffer::Triangle> triangles;
             for (auto& face : material->faces()) {
                 auto pickable = makeShared<FacePickable>(this, face->sharedFromThis());

@@ -35,7 +35,7 @@ public:
     const auto& document() const { return _document; }
     const auto& preferences() const { return _preferences; }
 
-    void deleteItems();
+    void deleteObjects();
 
     void addPlane();
     void addCube();

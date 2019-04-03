@@ -42,7 +42,7 @@ void MoveTool::mousePressEvent(const Tool::EventTarget &target, const Render::Mo
     for (auto& v : dragVertices) {
         _initPositions[v] = v->position();
     }
-    _initItemPos = (item()->location().matrixToModel() * dvec4(event.worldPos(), 1)).xyz;
+    _initObjectPos = (object()->location().matrixToModel() * dvec4(event.worldPos(), 1)).xyz;
     _initViewportPos = event.viewportPos;
     _dragStarted = false;
 }
@@ -54,8 +54,8 @@ void MoveTool::mouseMoveEvent(const Tool::EventTarget &target, const Render::Mou
         return;
     }
 
-    dvec3 itemPos = (item()->location().matrixToModel() * dvec4(event.worldPos(), 1)).xyz;
-    dvec3 offset = itemPos - _initItemPos;
+    dvec3 objectPos = (object()->location().matrixToModel() * dvec4(event.worldPos(), 1)).xyz;
+    dvec3 offset = objectPos - _initObjectPos;
 
     if (!_dragStarted) {
         if (distance(_initViewportPos, dvec2(event.viewportPos.xy)) < appState()->preferences()->moveThreshold()) {
@@ -65,7 +65,7 @@ void MoveTool::mouseMoveEvent(const Tool::EventTarget &target, const Render::Mou
         _dragStarted = true;
     }
 
-    auto& mesh = item()->mesh();
+    auto& mesh = object()->mesh();
     std::unordered_map<SP<Mesh::Vertex>, dvec3> positions;
     for (auto& [v, initialPos] : _initPositions) {
         positions[v] = initialPos + offset;

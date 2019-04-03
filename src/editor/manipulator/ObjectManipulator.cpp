@@ -10,32 +10,32 @@ namespace Manipulator {
 
 ObjectManipulator::ObjectManipulator(const SP<State::AppState> &appState) : _appState(appState)
 {
-    setItems(appState->document()->selectedObjects());
-    connect(appState->document().get(), &Document::Document::selectedObjectsChanged, this, &ObjectManipulator::setItems);
+    setObjects(appState->document()->selectedObjects());
+    connect(appState->document().get(), &Document::Document::selectedObjectsChanged, this, &ObjectManipulator::setObjects);
     connect(this, &Manipulator::onDragBegin, this, &ObjectManipulator::handleOnDragBegin);
     connect(this, &Manipulator::onDragMove, this, &ObjectManipulator::handleOnDragMove);
     connect(this, &Manipulator::onDragEnd, this, &ObjectManipulator::handleOnDragEnd);
 }
 
 void ObjectManipulator::handleOnDragBegin(ValueType type, glm::dvec3 values) {
-    if (_items.empty()) {
+    if (_objects.empty()) {
         return;
     }
 
     auto changeText = [&] {
         switch (type) {
         case ValueType::Translate:
-            return tr("Move Item");
+            return tr("Move Object");
         case ValueType::Scale:
-            return tr("Scale Item");
+            return tr("Scale Object");
         case ValueType::Rotate:
-            return tr("Rotate Item");
+            return tr("Rotate Object");
         }
     }();
 
     _appState->document()->history()->beginChange(changeText);
-    for (auto& item : _items) {
-        _initialLocations[item] = item->location();
+    for (auto& object : _objects) {
+        _initialLocations[object] = object->location();
     }
     _initialValues = values;
 }
@@ -43,11 +43,11 @@ void ObjectManipulator::handleOnDragBegin(ValueType type, glm::dvec3 values) {
 void ObjectManipulator::handleOnDragMove(ValueType type, glm::dvec3 values) {
     // TODO: scale and rotate from median center
 
-    if (_items.empty()) {
+    if (_objects.empty()) {
         return;
     }
-    for (auto& item : _items) {
-        auto loc = _initialLocations.at(item);
+    for (auto& object : _objects) {
+        auto loc = _initialLocations.at(object);
         switch (type) {
         case ValueType::Translate:
             loc.position += values - _initialValues;
@@ -61,7 +61,7 @@ void ObjectManipulator::handleOnDragMove(ValueType type, glm::dvec3 values) {
             break;
         }
         }
-        item->setLocation(loc);
+        object->setLocation(loc);
     }
 }
 
@@ -70,16 +70,16 @@ void ObjectManipulator::handleOnDragEnd(ValueType type) {
     _initialLocations.clear();
 }
 
-void ObjectManipulator::setItems(const std::unordered_set<SP<Document::Object> > &items) {
+void ObjectManipulator::setObjects(const std::unordered_set<SP<Document::Object> > &objects) {
     for (auto& c : _connections) {
         disconnect(c);
     }
     _connections.clear();
 
-    _items = items;
+    _objects = objects;
 
-    for (auto& item : items) {
-        auto c = connect(item.get(), &Document::Object::locationChanged, this, [this] {
+    for (auto& object : objects) {
+        auto c = connect(object.get(), &Document::Object::locationChanged, this, [this] {
             updatePosition();
         });
         _connections.push_back(c);
@@ -88,7 +88,7 @@ void ObjectManipulator::setItems(const std::unordered_set<SP<Document::Object> >
 }
 
 void ObjectManipulator::updatePosition() {
-    if (_items.empty()) {
+    if (_objects.empty()) {
         setTargetPosition(glm::dvec3(0));
         return;
     }
@@ -96,8 +96,8 @@ void ObjectManipulator::updatePosition() {
     glm::dvec3 minPos(std::numeric_limits<double>::infinity());
     glm::dvec3 maxPos(-std::numeric_limits<double>::infinity());
 
-    for (auto& item : _items) {
-        auto p = item->location().position;
+    for (auto& object : _objects) {
+        auto p = object->location().position;
         minPos = glm::min(minPos, p);
         maxPos = glm::max(maxPos, p);
     }
