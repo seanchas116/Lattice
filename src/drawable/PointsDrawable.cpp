@@ -5,9 +5,13 @@
 namespace Lattice {
 namespace Drawable {
 
-PointsDrawable::PointsDrawable() :
-    _shader(makeShared<GL::Shader>(Resource::read("src/drawable/Points.vert"), Resource::read("src/drawable/Points.geom"), Resource::read("src/drawable/Points.frag")))
-{
+PointsDrawable::PointsDrawable() {
+}
+
+const SP<GL::Shader> &PointsDrawable::shader() {
+    // TODO: support context loss
+    auto shader = makeShared<GL::Shader>(Resource::read("src/drawable/Points.vert"), Resource::read("src/drawable/Points.geom"), Resource::read("src/drawable/Points.frag"));
+    return shader;
 }
 
 } // namespace Drawable

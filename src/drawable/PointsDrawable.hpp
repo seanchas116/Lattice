@@ -25,7 +25,7 @@ public:
     void setPoints(const std::vector<Point>& points);
 
 private:
-    SP<GL::Shader> _shader;
+    static const SP<GL::Shader>& shader();
 };
 
 } // namespace Drawable
