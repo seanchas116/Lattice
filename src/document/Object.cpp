@@ -62,7 +62,7 @@ SP<Change> Object::ChildRemoveChange::invert() const {
 }
 
 Opt<SP<Object> > Object::parentObject() const {
-    auto ptr = _parentItem.lock();
+    auto ptr = _parentObject.lock();
     if (ptr) {
         return {ptr};
     } else {
@@ -73,65 +73,65 @@ Opt<SP<Object> > Object::parentObject() const {
 Opt<SP<Object>> Object::nextObject() const {
     LATTICE_OPTIONAL_GUARD(parent, parentObject(), return {};)
 
-    auto it = std::find(parent->_childItems.begin(), parent->_childItems.end(), sharedFromThis());
-    if (it == parent->_childItems.end() || it == parent->_childItems.end() - 1) {
+    auto it = std::find(parent->_childObjects.begin(), parent->_childObjects.end(), sharedFromThis());
+    if (it == parent->_childObjects.end() || it == parent->_childObjects.end() - 1) {
         return {};
     }
     return *(it + 1);
 }
 
-void Object::appendChildObject(const SP<Object> &item) {
-    insertObjectBefore(item, {});
+void Object::appendChildObject(const SP<Object> &object) {
+    insertObjectBefore(object, {});
 }
 
-void Object::insertObjectBefore(const SP<Object> &item, const Opt<SP<const Object>> &reference) {
-    addChange(makeShared<Object::ChildInsertChange>(sharedFromThis(), item, reference));
+void Object::insertObjectBefore(const SP<Object> &object, const Opt<SP<const Object>> &reference) {
+    addChange(makeShared<Object::ChildInsertChange>(sharedFromThis(), object, reference));
 }
 
-void Object::insertObjectBeforeInternal(const SP<Object> &item, const Opt<SP<const Object>> &reference) {
-    if (!canInsertObject(item)) {
+void Object::insertObjectBeforeInternal(const SP<Object> &object, const Opt<SP<const Object>> &reference) {
+    if (!canInsertObject(object)) {
         throw std::runtime_error("cannot insert item");
     }
-    LATTICE_OPTIONAL_LET(oldParent, item->parentObject(),
-         oldParent->removeChildObject(item);
+    LATTICE_OPTIONAL_LET(oldParent, object->parentObject(),
+         oldParent->removeChildObject(object);
     )
 
-    decltype(_childItems)::iterator it;
+    decltype(_childObjects)::iterator it;
     if (reference) {
-        it = std::find(_childItems.begin(), _childItems.end(), reference);
-        if (it == _childItems.end()) {
+        it = std::find(_childObjects.begin(), _childObjects.end(), reference);
+        if (it == _childObjects.end()) {
             throw std::runtime_error("cannot find reference item");
         }
     } else {
-        it = _childItems.end();
+        it = _childObjects.end();
     }
-    int index = it - _childItems.begin();
-    emit childObjectsAboutToBeInserted(index, index, {item});
-    _childItems.insert(it, item);
-    item->_parentItem = sharedFromThis();
+    int index = it - _childObjects.begin();
+    emit childObjectsAboutToBeInserted(index, index, {object});
+    _childObjects.insert(it, object);
+    object->_parentObject = sharedFromThis();
     emit childObjectsInserted(index, index);
 }
 
-void Object::removeChildObject(const SP<Object>& item) {
-    addChange(makeShared<Object::ChildRemoveChange>(sharedFromThis(), item));
+void Object::removeChildObject(const SP<Object>& object) {
+    addChange(makeShared<Object::ChildRemoveChange>(sharedFromThis(), object));
 }
 
-void Object::removeChildItemInternal(const SP<Object>& item) {
-    auto it = std::find(_childItems.begin(), _childItems.end(), item);
-    if (it == _childItems.end()) {
+void Object::removeChildItemInternal(const SP<Object>& object) {
+    auto it = std::find(_childObjects.begin(), _childObjects.end(), object);
+    if (it == _childObjects.end()) {
         throw std::runtime_error("cannot find item");
     }
-    int index = it - _childItems.begin();
+    int index = it - _childObjects.begin();
     emit childObjectsAboutToBeRemoved(index, index);
-    _childItems.erase(it);
-    item->_parentItem.reset();
-    emit childObjectsRemoved(index, index, {item});
+    _childObjects.erase(it);
+    object->_parentObject.reset();
+    emit childObjectsRemoved(index, index, {object});
 }
 
 int Object::index() const {
-    LATTICE_OPTIONAL_GUARD(parent, _parentItem.lock(), return -1;)
+    LATTICE_OPTIONAL_GUARD(parent, _parentObject.lock(), return -1;)
 
-    auto& siblings = parent->_childItems;
+    auto& siblings = parent->_childObjects;
     auto it = std::find(siblings.begin(), siblings.end(), sharedFromThis());
     if (it == siblings.end()) {
         return -1;
@@ -146,8 +146,8 @@ std::vector<int> Object::indexPath() const {
     return path;
 }
 
-bool Object::canInsertObject(const SP<const Object> &item) const {
-    Q_UNUSED(item)
+bool Object::canInsertObject(const SP<const Object> &object) const {
+    Q_UNUSED(object)
     return true;
 }
 
@@ -162,7 +162,7 @@ void Object::fromJSON(const nlohmann::json &json) {
 }
 
 Opt<SP<Document>> Object::document() const {
-    LATTICE_OPTIONAL_GUARD(parent, _parentItem.lock(), return {};)
+    LATTICE_OPTIONAL_GUARD(parent, _parentObject.lock(), return {};)
     return parent->document();
 }
 
@@ -194,7 +194,7 @@ void Object::setLocation(const Location &location) {
 
 void Object::forEachDescendant(const Fn<void(const SP<Object>&)> &callback) {
     callback(sharedFromThis());
-    for (auto& child : _childItems) {
+    for (auto& child : _childObjects) {
         child->forEachDescendant(callback);
     }
 }
