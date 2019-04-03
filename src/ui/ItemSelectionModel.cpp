@@ -1,5 +1,5 @@
 #include "ItemSelectionModel.hpp"
-#include "ItemModel.hpp"
+#include "ObjectItemModel.hpp"
 #include "../document/Document.hpp"
 #include "../support/OptionalGuard.hpp"
 #include <QtDebug>
@@ -7,19 +7,19 @@
 namespace Lattice {
 namespace UI {
 
-ItemSelectionModel::ItemSelectionModel(ItemModel *model, QObject *parent) : QItemSelectionModel(model, parent)
+ItemSelectionModel::ItemSelectionModel(ObjectItemModel *model, QObject *parent) : QItemSelectionModel(model, parent)
 {
     auto onSelectionChange = [this, model] {
         QItemSelection selection;
         for (auto item : model->document()->selectedObjects()) {
-            auto index = model->indexForItem(item);
+            auto index = model->indexForObject(item);
             selection.select(index, index);
         }
         select(selection, QItemSelectionModel::ClearAndSelect);
     };
     auto onCurrentChange = [this, model] {
         LATTICE_OPTIONAL_GUARD(currentItem, model->document()->currentObject(), clearCurrentIndex();)
-        auto current = model->indexForItem(currentItem);
+        auto current = model->indexForObject(currentItem);
         select(current, QItemSelectionModel::Current);
     };
     connect(model->document().get(), &Document::Document::selectedObjectsChanged, this, onSelectionChange);
@@ -30,14 +30,14 @@ ItemSelectionModel::ItemSelectionModel(ItemModel *model, QObject *parent) : QIte
     connect(this, &QItemSelectionModel::selectionChanged, model, [this, model] {
         std::unordered_set<SP<Document::Object>> items;
         for (auto index : selectedIndexes()) {
-            items.insert(model->itemForIndex(index));
+            items.insert(model->objectForIndex(index));
         }
         model->document()->setSelectedObjects(std::move(items));
     });
     connect(this, &QItemSelectionModel::currentChanged, model, [this, model] {
         auto index = currentIndex();
         if (index.isValid()) {
-            auto item = model->itemForIndex(currentIndex());
+            auto item = model->objectForIndex(currentIndex());
             model->document()->setCurrentObject(item);
         } else {
             model->document()->setCurrentObject({});

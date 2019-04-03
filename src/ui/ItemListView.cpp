@@ -1,5 +1,5 @@
 #include "ItemListView.hpp"
-#include "ItemModel.hpp"
+#include "ObjectItemModel.hpp"
 #include "ItemSelectionModel.hpp"
 #include "../state/AppState.hpp"
 #include "../document/Document.hpp"
@@ -23,7 +23,7 @@ ItemListView::ItemListView(const SP<State::AppState> &appState, QWidget *parent)
     treeView->setDropIndicatorShown(true);
     treeView->setAcceptDrops(true);
 
-    auto model = new ItemModel(appState->document(), this);
+    auto model = new ObjectItemModel(appState->document(), this);
     auto selectionModel = new ItemSelectionModel(model, this);
     treeView->setModel(model);
     treeView->setSelectionModel(selectionModel);

@@ -5,12 +5,12 @@
 namespace Lattice {
 namespace UI {
 
-class ItemModel;
+class ObjectItemModel;
 
 class ItemSelectionModel final : public QItemSelectionModel {
     Q_OBJECT
 public:
-    explicit ItemSelectionModel(ItemModel* model, QObject *parent = nullptr);
+    explicit ItemSelectionModel(ObjectItemModel* model, QObject *parent = nullptr);
 
 signals:
 
