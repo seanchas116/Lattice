@@ -13,6 +13,7 @@
 #include "../../mesh/Mesh.hpp"
 #include "../../support/Debug.hpp"
 #include "../../support/Camera.hpp"
+#include "../../drawable/PointsDrawable.hpp"
 #include <QMouseEvent>
 #include <QMenu>
 
@@ -93,12 +94,15 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     _facePickVAO(makeShared<GL::VAO>()),
     _edgeVAO(makeShared<GL::VAO>()),
     _edgePickVAO(makeShared<GL::VAO>()),
-    _vertexVAO(makeShared<GL::VAO>()),
-    _vertexPickVAO(makeShared<GL::VAO>()),
+    _vertexDrawable(makeShared<Drawable::PointsDrawable>()),
+    _vertexPickDrawable(makeShared<Drawable::PointsDrawable>()),
     _tool(makeShared<MoveTool>(appState, object))
 {
     initializeOpenGLFunctions();
     updateWholeVAOs();
+
+    _vertexDrawable->setWidth(6);
+    _vertexPickDrawable->setWidth(24);
 
     connect(object->mesh().get(), &Mesh::Mesh::changed, this, &MeshEditor::handleMeshChange);
     connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::handleMeshChange);
@@ -126,7 +130,7 @@ void MeshEditor::draw(const SP<Render::Operations> &operations, const SP<Camera>
     }
     operations->drawLine.draw(_edgeVAO, _object->location().matrixToWorld(), camera, 1.0, vec4(0), true);
     if (_appState->isVertexSelectable()) {
-        operations->drawCircle.draw(_vertexVAO, _object->location().matrixToWorld(), camera, 6.0, vec4(0), true);
+        _vertexDrawable->draw(_object->location().matrixToWorld(), camera);
     }
 }
 
@@ -145,7 +149,7 @@ void MeshEditor::drawPickables(const SP<Render::Operations> &operations, const S
         operations->drawLine.draw(_edgePickVAO, _object->location().matrixToWorld(), camera, 12.0, vec4(0), true);
     }
     if (_appState->isVertexSelectable()) {
-        operations->drawCircle.draw(_vertexPickVAO, _object->location().matrixToWorld(), camera, 24.0, vec4(0), true);
+        _vertexPickDrawable->draw(_object->location().matrixToWorld(), camera);
     }
 }
 
@@ -217,7 +221,7 @@ void MeshEditor::updateWholeVAOs() {
             bool selected = selectedVertices.find(v) != selectedVertices.end();
             bool hovered = v == _hoveredVertex;
 
-            GL::Vertex attrib;
+            Drawable::Point attrib;
             attrib.position = v->position();
             attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
             _vertexAttributes.push_back(attrib);
@@ -227,7 +231,7 @@ void MeshEditor::updateWholeVAOs() {
             if (!hitTestExcluded) {
                 auto pickable = makeShared<VertexPickable>(this, v);
                 childPickables.push_back(pickable);
-                GL::Vertex pickAttrib;
+                Drawable::Point pickAttrib;
                 pickAttrib.position = v->position();
                 pickAttrib.color = pickable->toIDColor();
 
@@ -235,13 +239,8 @@ void MeshEditor::updateWholeVAOs() {
             }
         }
 
-        auto vertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
-        vertexBuffer->setVertices(_vertexAttributes);
-        _vertexVAO = makeShared<GL::VAO>(vertexBuffer, GL::Primitive::Point);
-
-        auto pickVertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
-        pickVertexBuffer->setVertices(_vertexPickAttributes);
-        _vertexPickVAO = makeShared<GL::VAO>(pickVertexBuffer, GL::Primitive::Point);
+        _vertexDrawable->setPoints(_vertexAttributes);
+        _vertexPickDrawable->setPoints(_vertexPickAttributes);
     }
 
     {

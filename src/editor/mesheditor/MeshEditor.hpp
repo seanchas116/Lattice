@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Tool.hpp"
+#include "../../drawable/Point.hpp"
 #include "../../render/RenderableObject.hpp"
 #include "../../gl/Vertex.hpp"
 #include "../../support/Shorthands.hpp"
@@ -32,6 +33,10 @@ namespace GL {
 struct Vertex;
 template <typename T> class VertexBuffer;
 class VAO;
+}
+
+namespace Drawable {
+class PointsDrawable;
 }
 
 namespace Editor {
@@ -100,10 +105,10 @@ private:
     SP<GL::VAO> _edgePickVAO;
     std::vector<GL::Vertex> _edgePickAttributes;
 
-    SP<GL::VAO> _vertexVAO;
-    std::vector<GL::Vertex> _vertexAttributes;
-    SP<GL::VAO> _vertexPickVAO;
-    std::vector<GL::Vertex> _vertexPickAttributes;
+    SP<Drawable::PointsDrawable> _vertexDrawable;
+    std::vector<Drawable::Point> _vertexAttributes;
+    SP<Drawable::PointsDrawable> _vertexPickDrawable;
+    std::vector<Drawable::Point> _vertexPickAttributes;
 
     SP<Tool> _tool;
 
