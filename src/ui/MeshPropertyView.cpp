@@ -18,8 +18,8 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
     QWidget(parent),
     _appState(appState)
 {
-    setItem(appState->document()->editedObject());
-    connect(appState->document().get(), &Document::Document::editedObjectChanged, this, &MeshPropertyView::setItem);
+    setObject(appState->document()->editedObject());
+    connect(appState->document().get(), &Document::Document::editedObjectChanged, this, &MeshPropertyView::setObject);
     connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshPropertyView::setViewValues);
 
     auto layout = new QVBoxLayout();
@@ -71,15 +71,14 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
     setLayout(layout);
 }
 
-void MeshPropertyView::setItem(const Opt<SP<Document::MeshObject>> &maybeItem) {
+void MeshPropertyView::setObject(const Opt<SP<Document::MeshObject>> &object) {
     disconnect(_connection);
-    _item = maybeItem;
-    if (!maybeItem) {
+    _object = object;
+    if (!object) {
         return;
     }
-    auto item = *maybeItem;
 
-    _connection = connect(item.get(), &Document::MeshObject::meshChangedInLastTick, this, &MeshPropertyView::setViewValues);
+    _connection = connect(object->get(), &Document::MeshObject::meshChangedInLastTick, this, &MeshPropertyView::setViewValues);
     setViewValues();
 }
 
@@ -141,10 +140,10 @@ void MeshPropertyView::setViewValues() {
 }
 
 void MeshPropertyView::handlePositionValueChange(int index, double value) {
-    if (!_item) {
+    if (!_object) {
         return;
     }
-    auto item = *_item;
+    auto object = *_object;
 
     auto selection = _appState->document()->meshSelection();
     if (selection.vertices.empty()) {
@@ -173,14 +172,14 @@ void MeshPropertyView::handlePositionValueChange(int index, double value) {
     }
 
     _appState->document()->history()->beginChange(tr("Set Vertex Position"));
-    item->mesh()->setPosition(newPositions);
+    object->mesh()->setPosition(newPositions);
 }
 
 void MeshPropertyView::handleEdgeSmoothChange(bool smooth) {
-    if (!_item) {
+    if (!_object) {
         return;
     }
-    auto item = *_item;
+    auto object = *_object;
 
     auto edges = _appState->document()->meshSelection().edges();
     if (edges.empty()) {
@@ -193,7 +192,7 @@ void MeshPropertyView::handleEdgeSmoothChange(bool smooth) {
     for (auto& edge : edges) {
         values[edge] = smooth;
     }
-    item->mesh()->setSmooth(values);
+    object->mesh()->setSmooth(values);
 }
 
 } // namespace UI

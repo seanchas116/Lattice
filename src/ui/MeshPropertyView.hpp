@@ -25,7 +25,7 @@ class MeshPropertyView : public QWidget {
 public:
     explicit MeshPropertyView(const SP<State::AppState> &appState, QWidget *parent = nullptr);
 
-    void setItem(const Opt<SP<Document::MeshObject>>& item);
+    void setObject(const Opt<SP<Document::MeshObject>>& object);
 
 private:
     void setViewValues();
@@ -33,7 +33,7 @@ private:
     void handleEdgeSmoothChange(bool smooth);
 
     SP<State::AppState> _appState;
-    Opt<SP<Document::MeshObject>> _item;
+    Opt<SP<Document::MeshObject>> _object;
     QMetaObject::Connection _connection;
     std::array<Widget::DoubleSpinBox*, 3> _positionSpinBoxes;
     QCheckBox* _smoothEdgeCheckBox = nullptr;
