@@ -41,7 +41,7 @@ public:
 
     void apply() override {
         _reference = _object->nextObject();
-        _parent->removeChildItemInternal(_object);
+        _parent->removeChildObjectInternal(_object);
     }
 
     SP<Change> invert() const override;
@@ -90,7 +90,7 @@ void Object::insertObjectBefore(const SP<Object> &object, const Opt<SP<const Obj
 
 void Object::insertObjectBeforeInternal(const SP<Object> &object, const Opt<SP<const Object>> &reference) {
     if (!canInsertObject(object)) {
-        throw std::runtime_error("cannot insert item");
+        throw std::runtime_error("cannot insert object");
     }
     LATTICE_OPTIONAL_LET(oldParent, object->parentObject(),
          oldParent->removeChildObject(object);
@@ -100,7 +100,7 @@ void Object::insertObjectBeforeInternal(const SP<Object> &object, const Opt<SP<c
     if (reference) {
         it = std::find(_childObjects.begin(), _childObjects.end(), reference);
         if (it == _childObjects.end()) {
-            throw std::runtime_error("cannot find reference item");
+            throw std::runtime_error("cannot find reference object");
         }
     } else {
         it = _childObjects.end();
@@ -116,10 +116,10 @@ void Object::removeChildObject(const SP<Object>& object) {
     addChange(makeShared<Object::ChildRemoveChange>(sharedFromThis(), object));
 }
 
-void Object::removeChildItemInternal(const SP<Object>& object) {
+void Object::removeChildObjectInternal(const SP<Object>& object) {
     auto it = std::find(_childObjects.begin(), _childObjects.end(), object);
     if (it == _childObjects.end()) {
-        throw std::runtime_error("cannot find item");
+        throw std::runtime_error("cannot find object");
     }
     int index = it - _childObjects.begin();
     emit childObjectsAboutToBeRemoved(index, index);

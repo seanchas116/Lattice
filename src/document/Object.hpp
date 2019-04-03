@@ -70,7 +70,7 @@ private:
     void setLocationInternal(const Location& location);
 
     void insertObjectBeforeInternal(const SP<Object>& object, const Opt<SP<const Object> > &reference);
-    void removeChildItemInternal(const SP<Object>& object);
+    void removeChildObjectInternal(const SP<Object>& object);
 
     std::string _name;
     Location _location;

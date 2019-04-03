@@ -57,8 +57,8 @@ void Document::setEditedObject(const Opt<SP<MeshObject> > &object) {
 
 void Document::setIsEditing(bool isEditing) {
     if (isEditing) {
-        auto item = dynamicPointerCast<MeshObject>(_currentObject);
-        setEditedObject(item);
+        auto object = dynamicPointerCast<MeshObject>(_currentObject);
+        setEditedObject(object);
     } else {
         setEditedObject(std::nullopt);
     }
@@ -72,12 +72,12 @@ void Document::setSelectedObjects(const std::unordered_set<SP<Object>> &objects)
 }
 
 void Document::selectObject(const SP<Object> &object, bool append) {
-    std::unordered_set<SP<Object>> items;
+    std::unordered_set<SP<Object>> objects;
     if (append) {
-        items = _selectedObjects;
+        objects = _selectedObjects;
     }
-    items.insert(object);
-    setSelectedObjects(items);
+    objects.insert(object);
+    setSelectedObjects(objects);
     setCurrentObject(object);
 }
 
@@ -87,36 +87,36 @@ void Document::insertObjectToCurrentPosition(const SP<Object> &object) {
 }
 
 void Document::deleteSelectedObjects() {
-    auto items = _selectedObjects;
-    for (auto& item : items) {
-        LATTICE_OPTIONAL_GUARD(parent, item->parentObject(), continue;)
-        parent->removeChildObject(item);
+    auto& objects = _selectedObjects;
+    for (auto& object : objects) {
+        LATTICE_OPTIONAL_GUARD(parent, object->parentObject(), continue;)
+        parent->removeChildObject(object);
     }
 }
 
 void Document::watchChildrenInsertRemove(const SP<Object> &object) {
-    auto itemPtr = object.get();
-    connect(itemPtr, &Object::childObjectsAboutToBeInserted, this, [this] (int, int, const auto& items) {
-        for (auto& item : items) {
-            emit objectAboutToBeInserted(item);
+    auto objectPtr = object.get();
+    connect(objectPtr, &Object::childObjectsAboutToBeInserted, this, [this] (int, int, const auto& objects) {
+        for (auto& object : objects) {
+            emit objectAboutToBeInserted(object);
         }
     });
-    connect(itemPtr, &Object::childObjectsInserted, this, [this, itemPtr] (int first, int last) {
+    connect(objectPtr, &Object::childObjectsInserted, this, [this, objectPtr] (int first, int last) {
         for (int i = first; i <= last; ++i) {
-            auto& child = itemPtr->childObjects()[i];
+            auto& child = objectPtr->childObjects()[i];
             watchChildrenInsertRemove(child);
             emit objectInserted(child);
         }
     });
-    connect(itemPtr, &Object::childObjectsAboutToBeRemoved, this, [this, itemPtr] (int first, int last) {
+    connect(objectPtr, &Object::childObjectsAboutToBeRemoved, this, [this, objectPtr] (int first, int last) {
         for (int i = first; i <= last; ++i) {
-            auto& child = itemPtr->childObjects()[i];
+            auto& child = objectPtr->childObjects()[i];
             emit objectAboutToBeRemoved(child);
         }
     });
-    connect(itemPtr, &Object::childObjectsRemoved, this, [this] (int, int, const auto& items) {
-        for (auto& item : items) {
-            emit objectRemoved(item);
+    connect(objectPtr, &Object::childObjectsRemoved, this, [this] (int, int, const auto& objects) {
+        for (auto& object : objects) {
+            emit objectRemoved(object);
         }
     });
 }
