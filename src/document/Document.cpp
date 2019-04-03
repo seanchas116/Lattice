@@ -9,9 +9,9 @@ namespace Document {
 
 namespace {
 
-class RootItem final : public Object {
+class RootObject final : public Object {
 public:
-    RootItem(Document* document) : _document(document) {}
+    RootObject(Document* document) : _document(document) {}
 
     SP<Object> clone() const override {
         throw std::runtime_error("RootItem cannot be copied");
@@ -33,7 +33,7 @@ private:
 }
 
 Document::Document() :
-    _rootObject(makeShared<RootItem>(this)),
+    _rootObject(makeShared<RootObject>(this)),
     _history(makeShared<History>())
 {
     watchChildrenInsertRemove(_rootObject);
