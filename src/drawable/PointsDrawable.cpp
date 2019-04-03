@@ -44,7 +44,10 @@ void PointsDrawable::draw2D(const glm::dmat4 &matrix, glm::ivec2 viewportSize) {
 
 const SP<GL::Shader> &PointsDrawable::shader() {
     // TODO: support context loss
-    static auto shader = makeShared<GL::Shader>(Resource::read("src/drawable/Points.vert"), Resource::read("src/drawable/Points.geom"), Resource::read("src/drawable/Points.frag"));
+    static auto shader = makeShared<GL::Shader>(
+        Resource::read("src/drawable/PointsDrawable.vert"),
+        Resource::read("src/drawable/PointsDrawable.geom"),
+        Resource::read("src/drawable/PointsDrawable.frag"));
     return shader;
 }
 
