@@ -25,7 +25,7 @@ PropertyView::PropertyView(const SP<State::AppState> &appState, QWidget *parent)
     auto update = [document, itemPropertyView, meshPropertyView] {
         meshPropertyView->setItem(document->editedObject());
         meshPropertyView->setVisible(!!document->editedObject() && !document->meshSelection().vertices.empty());
-        itemPropertyView->setItems(document->selectedObjects());
+        itemPropertyView->setObjects(document->selectedObjects());
         itemPropertyView->setVisible(!document->selectedObjects().empty() && !document->editedObject());
     };
     connect(document.get(), &Document::Document::selectedObjectsChanged, this, update);

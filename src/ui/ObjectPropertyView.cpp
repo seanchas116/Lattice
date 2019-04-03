@@ -69,42 +69,42 @@ ObjectPropertyView::ObjectPropertyView(const SP<State::AppState> &appState, QWid
     setLayout(layout);
 }
 
-void ObjectPropertyView::setItems(const std::unordered_set<SP<Document::Object> > &items) {
-    if (_items == items) {
+void ObjectPropertyView::setObjects(const std::unordered_set<SP<Document::Object> > &objects) {
+    if (_objects == objects) {
         return;
     }
-    _items = items;
+    _objects = objects;
 
-    Opt<SP<Document::Object>> firstItem;
-    if (!items.empty()) {
-        firstItem = *items.begin();
+    Opt<SP<Document::Object>> firstObject;
+    if (!objects.empty()) {
+        firstObject = *objects.begin();
     }
 
-    for (auto& c : _itemConnections) {
+    for (auto& c : _connections) {
         disconnect(c);
     }
-    _itemConnections.clear();
+    _connections.clear();
 
-    for (auto& item : items) {
-        auto c = connect(item.get(), &Document::Object::locationChanged, this, &ObjectPropertyView::setLocation);
-        _itemConnections.push_back(c);
+    for (auto& object : objects) {
+        auto c = connect(object.get(), &Document::Object::locationChanged, this, &ObjectPropertyView::setLocation);
+        _connections.push_back(c);
     }
     setLocation();
 }
 
 void ObjectPropertyView::setLocation() {
-    if (_items.empty()) {
+    if (_objects.empty()) {
         return;
     }
 
-    auto location = (*_items.begin())->location();
+    auto location = (*_objects.begin())->location();
 
     glm::bvec3 isPositionSame {true};
     glm::bvec3 isScaleSame {true};
     glm::bvec3 isRotationSame {true};
 
-    for (auto& item : _items) {
-        auto otherLocation = item->location();
+    for (auto& object : _objects) {
+        auto otherLocation = object->location();
         for (int i = 0; i < 3; ++i) {
             if (location.position[i] != otherLocation.position[i]) {
                 isPositionSame[i] = false;
@@ -130,7 +130,7 @@ void ObjectPropertyView::setLocation() {
 }
 
 void ObjectPropertyView::handleLocationValueChange(LocationMember member, int index, double value) {
-    if (_items.empty()) {
+    if (_objects.empty()) {
         return;
     }
     auto specialValue = -std::numeric_limits<double>::infinity();
@@ -138,9 +138,9 @@ void ObjectPropertyView::handleLocationValueChange(LocationMember member, int in
         return;
     }
 
-    _appState->document()->history()->beginChange(tr("Set Item Location"));
-    for (auto& item : _items) {
-        auto location = item->location();
+    _appState->document()->history()->beginChange(tr("Set Object Location"));
+    for (auto& object : _objects) {
+        auto location = object->location();
         auto eulerAngles = glm::eulerAngles(location.rotation);
 
         switch (member) {
@@ -155,7 +155,7 @@ void ObjectPropertyView::handleLocationValueChange(LocationMember member, int in
             break;
         }
         location.rotation = glm::normalize(glm::dquat(eulerAngles));
-        item->setLocation(location);
+        object->setLocation(location);
     }
 }
 
