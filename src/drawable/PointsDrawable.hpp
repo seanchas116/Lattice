@@ -1,4 +1,5 @@
 #pragma once
+#include "Point.hpp"
 #include "../support/Shorthands.hpp"
 #include <glm/glm.hpp>
 #include <vector>
@@ -14,11 +15,6 @@ template <typename T> class VertexBuffer;
 }
 
 namespace Drawable {
-
-struct Point {
-    glm::vec3 position;
-    glm::vec3 color;
-};
 
 class PointsDrawable {
 public:
