@@ -33,32 +33,32 @@ private:
 }
 
 Document::Document() :
-    _rootItem(makeShared<RootItem>(this)),
+    _rootObject(makeShared<RootItem>(this)),
     _history(makeShared<History>())
 {
-    watchChildrenInsertRemove(_rootItem);
+    watchChildrenInsertRemove(_rootObject);
     connect(this, &Document::editedObjectChanged, this, [this] {
         emit isEditingChanged(isEditing());
     });
 }
 
 void Document::setCurrentObject(const Opt<SP<Object> > &item) {
-    if (item != _currentItem) {
-        _currentItem = item;
+    if (item != _currentObject) {
+        _currentObject = item;
         emit currentObjectChanged(item);
     }
 }
 
 void Document::setEditedObject(const Opt<SP<MeshObject> > &item) {
-    if (item != _editedItem) {
-        _editedItem = item;
+    if (item != _editedObject) {
+        _editedObject = item;
         emit editedObjectChanged(item);
     }
 }
 
 void Document::setIsEditing(bool isEditing) {
     if (isEditing) {
-        auto item = dynamicPointerCast<MeshObject>(_currentItem);
+        auto item = dynamicPointerCast<MeshObject>(_currentObject);
         setEditedObject(item);
     } else {
         setEditedObject(std::nullopt);
@@ -66,8 +66,8 @@ void Document::setIsEditing(bool isEditing) {
 }
 
 void Document::setSelectedObjects(const std::unordered_set<SP<Object>> &items) {
-    if (_selectedItems != items) {
-        _selectedItems = items;
+    if (_selectedObjects != items) {
+        _selectedObjects = items;
         emit selectedObjectsChanged(items);
     }
 }
@@ -75,7 +75,7 @@ void Document::setSelectedObjects(const std::unordered_set<SP<Object>> &items) {
 void Document::selectObject(const SP<Object> &item, bool append) {
     std::unordered_set<SP<Object>> items;
     if (append) {
-        items = _selectedItems;
+        items = _selectedObjects;
     }
     items.insert(item);
     setSelectedObjects(items);
@@ -84,11 +84,11 @@ void Document::selectObject(const SP<Object> &item, bool append) {
 
 void Document::insertObjectToCurrentPosition(const SP<Object> &item) {
     // TODO: better insertion positon
-    _rootItem->appendChildItem(item);
+    _rootObject->appendChildItem(item);
 }
 
 void Document::deleteSelectedObjects() {
-    auto items = _selectedItems;
+    auto items = _selectedObjects;
     for (auto& item : items) {
         LATTICE_OPTIONAL_GUARD(parent, item->parentItem(), continue;)
         parent->removeChildItem(item);
