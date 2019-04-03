@@ -29,8 +29,8 @@ void LinesDrawable::setLineStrips(const std::vector<std::vector<uint32_t>> &line
     _ibo->setLineStrips(lineStrips);
 }
 
-void LinesDrawable::draw(SharedResourceBag& resourceBag, const glm::dmat4 &matrix, const SP<Camera> &camera) {
-    auto shader = resourceBag.getOrCreate<SP<GL::Shader>>([] {
+void LinesDrawable::draw(SingletonBag& singletonBag, const glm::dmat4 &matrix, const SP<Camera> &camera) {
+    auto shader = singletonBag.getOrCreate<SP<GL::Shader>>([] {
         return makeShared<GL::Shader>(
             Resource::read("src/drawable/LinesDrawable.vert"),
             Resource::read("src/drawable/LinesDrawable.geom"),

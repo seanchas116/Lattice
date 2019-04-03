@@ -1,7 +1,7 @@
 #pragma once
 #include "Point.hpp"
 #include "../support/Shorthands.hpp"
-#include "../support/SharedResourceBag.hpp"
+#include "../support/SingletonBag.hpp"
 #include <glm/glm.hpp>
 #include <vector>
 
@@ -27,11 +27,11 @@ public:
     void setZOffset(double zOffset) { _zOffset = zOffset; }
     void setPoints(const std::vector<Point>& points);
 
-    void draw(SharedResourceBag& resourceBag, const glm::dmat4 &matrix, const SP<Camera>& camera);
-    void draw2D(SharedResourceBag& resourceBag, const glm::dmat4 &matrix, glm::ivec2 viewportSize);
+    void draw(SingletonBag& singletonBag, const glm::dmat4 &matrix, const SP<Camera>& camera);
+    void draw2D(SingletonBag& singletonBag, const glm::dmat4 &matrix, glm::ivec2 viewportSize);
 
 private:
-    static SP<GL::Shader> shader(SharedResourceBag& resourceBag);
+    static SP<GL::Shader> shader(SingletonBag& resourceBag);
     SP<GL::VertexBuffer<Point>> _vbo;
     SP<GL::VAO> _vao;
     double _width = 1;

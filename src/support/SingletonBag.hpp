@@ -5,9 +5,9 @@
 
 namespace Lattice {
 
-class SharedResourceBag {
+class SingletonBag {
 public:
-    SharedResourceBag();
+    SingletonBag();
 
     template <typename T>
     T getOrCreate(T (*factory)()) {

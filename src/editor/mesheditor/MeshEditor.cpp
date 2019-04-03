@@ -130,7 +130,7 @@ void MeshEditor::draw(const SP<Render::Operations> &operations, const SP<Camera>
     }
     operations->drawLine.draw(_edgeVAO, _object->location().matrixToWorld(), camera, 1.0, vec4(0), true);
     if (_appState->isVertexSelectable()) {
-        _vertexDrawable->draw(operations->resourceBag, _object->location().matrixToWorld(), camera);
+        _vertexDrawable->draw(operations->singletonBag, _object->location().matrixToWorld(), camera);
     }
 }
 
@@ -149,7 +149,7 @@ void MeshEditor::drawPickables(const SP<Render::Operations> &operations, const S
         operations->drawLine.draw(_edgePickVAO, _object->location().matrixToWorld(), camera, 12.0, vec4(0), true);
     }
     if (_appState->isVertexSelectable()) {
-        _vertexPickDrawable->draw(operations->resourceBag, _object->location().matrixToWorld(), camera);
+        _vertexPickDrawable->draw(operations->singletonBag, _object->location().matrixToWorld(), camera);
     }
 }
 

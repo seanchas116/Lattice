@@ -70,9 +70,9 @@ GridFloor::GridFloor() : _drawable(makeShared<Drawable::LinesDrawable>()),
 
 void GridFloor::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
     Q_UNUSED(operations);
-    _drawable->draw(operations->resourceBag, dmat4(1), camera);
-    _xAxisDrawable->draw(operations->resourceBag, dmat4(1), camera);
-    _zAxisDrawable->draw(operations->resourceBag, dmat4(1), camera);
+    _drawable->draw(operations->singletonBag, dmat4(1), camera);
+    _xAxisDrawable->draw(operations->singletonBag, dmat4(1), camera);
+    _zAxisDrawable->draw(operations->singletonBag, dmat4(1), camera);
 }
 
 }
