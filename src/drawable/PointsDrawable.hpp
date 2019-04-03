@@ -31,6 +31,7 @@ public:
     void setPoints(const std::vector<Point>& points);
 
     void draw(const glm::dmat4 &matrix, const SP<Camera>& camera);
+    void draw2D(const glm::dmat4 &matrix, glm::ivec2 viewportSize);
 
 private:
     static const SP<GL::Shader>& shader();
