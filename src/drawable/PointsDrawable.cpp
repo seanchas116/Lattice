@@ -13,9 +13,13 @@ PointsDrawable::PointsDrawable() :
 {
 }
 
+void PointsDrawable::setPoints(const std::vector<Point> &points) {
+    _vbo->setVertices(points);
+}
+
 const SP<GL::Shader> &PointsDrawable::shader() {
     // TODO: support context loss
-    auto shader = makeShared<GL::Shader>(Resource::read("src/drawable/Points.vert"), Resource::read("src/drawable/Points.geom"), Resource::read("src/drawable/Points.frag"));
+    static auto shader = makeShared<GL::Shader>(Resource::read("src/drawable/Points.vert"), Resource::read("src/drawable/Points.geom"), Resource::read("src/drawable/Points.frag"));
     return shader;
 }
 
