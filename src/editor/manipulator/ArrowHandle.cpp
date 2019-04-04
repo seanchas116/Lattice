@@ -21,7 +21,7 @@ ArrowHandle::ArrowHandle(int axis, HandleType handleType) :
     _axis(axis),
     _handleType(handleType),
     _handleVAO(createHandleVAO()),
-    _bodyVAO(createBodyVAO(_length)),
+    _bodyDrawable(createBodyDrawable(_length)),
     _bodyPickVAO(createBodyPickVAO(_length))
 {
 }
@@ -35,9 +35,9 @@ void ArrowHandle::draw(const SP<Render::Operations> &operations, const SP<Camera
     dmat4 translate = glm::translate(dvec3(_length, 0, 0));
     operations->drawSolid.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis] * translate, camera, vec3(0), _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
 
-    _bodyVAO->setColor(_hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
-    _bodyVAO->setUseVertexColor(false);
-    _bodyVAO->draw(operations->singletonBag, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera);
+    _bodyDrawable->setColor(_hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
+    _bodyDrawable->setUseVertexColor(false);
+    _bodyDrawable->draw(operations->singletonBag, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera);
 }
 
 void ArrowHandle::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
@@ -109,7 +109,7 @@ void ArrowHandle::setLength(double length) {
         return;
     }
     _length = length;
-    _bodyVAO = createBodyVAO(length);
+    _bodyDrawable = createBodyDrawable(length);
     _bodyPickVAO = createBodyPickVAO(length);
 }
 
@@ -125,7 +125,7 @@ SP<GL::VAO> ArrowHandle::createHandleVAO() {
     return MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
 }
 
-SP<Drawable::LinesDrawable> ArrowHandle::createBodyVAO(double length) {
+SP<Drawable::LinesDrawable> ArrowHandle::createBodyDrawable(double length) {
     auto drawable = makeShared<Drawable::LinesDrawable>();
     drawable->setWidth(Constants::bodyWidth);
     drawable->setPoints({{vec3(Constants::bodyBegin, 0, 0), {}}, {vec3(length, 0, 0), {}}});
