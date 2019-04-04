@@ -36,7 +36,7 @@ void PointsDrawable::draw(SingletonBag& singletonBag, const glm::dmat4 &matrix, 
     shader->setUniform("MVP", camera->worldToViewportMatrix() * matrix);
     shader->setUniform("viewportSize", camera->viewportSize());
     shader->setUniform("width", _width);
-    shader->setUniform("color", glm::vec3(0));
+    shader->setUniform("color", glm::vec4(0));
     shader->setUniform("useVertexColor", true);
     shader->setUniform("zOffset", _zOffset);
     _vao->draw();
@@ -48,7 +48,7 @@ void PointsDrawable::draw2D(SingletonBag& singletonBag, const glm::dmat4 &matrix
     shader->setUniform("MVP", MVP);
     shader->setUniform("viewportSize", glm::dvec2(viewportSize));
     shader->setUniform("width", _width);
-    shader->setUniform("color", glm::vec3(0));
+    shader->setUniform("color", glm::vec4(0));
     shader->setUniform("useVertexColor", true);
     shader->setUniform("zOffset", 0.0);
     _vao->draw();
