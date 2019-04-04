@@ -271,7 +271,7 @@ void MeshEditor::updateWholeVAOs() {
                 if (!hitTestExcluded) {
                     GL::Vertex pickAttrib;
                     pickAttrib.position = v->position();
-                     pickAttrib.color = pickable->toIDColor();
+                    pickAttrib.color = pickable->toIDColor();
                     _edgePickAttributes.push_back(pickAttrib);
                 }
             }
