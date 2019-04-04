@@ -3,6 +3,10 @@
 
 namespace Lattice {
 
+namespace Drawable {
+class LinesDrawable;
+}
+
 namespace Editor {
 namespace Manipulator {
 
@@ -40,7 +44,7 @@ signals:
 
 private:
     SP<GL::VAO> createHandleVAO();
-    SP<GL::VAO> createBodyVAO(double length);
+    SP<Drawable::LinesDrawable> createBodyVAO(double length);
     SP<GL::VAO> createBodyPickVAO(double length);
 
     int _axis;
@@ -48,7 +52,7 @@ private:
     glm::dvec3 _targetPosition {0};
     double _length {2.0};
     SP<GL::VAO> _handleVAO;
-    SP<GL::VAO> _bodyVAO;
+    SP<Drawable::LinesDrawable> _bodyVAO;
     SP<GL::VAO> _bodyPickVAO;
     glm::dvec3 _initialTargetPosition {0};
     bool _hovered = false;

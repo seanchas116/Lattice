@@ -9,6 +9,7 @@
 #include "../../support/Debug.hpp"
 #include "../../support/Ray.hpp"
 #include "../../support/Distance.hpp"
+#include "../../drawable/LinesDrawable.hpp"
 
 using namespace glm;
 
@@ -33,7 +34,10 @@ void ArrowHandle::draw(const SP<Render::Operations> &operations, const SP<Camera
 
     dmat4 translate = glm::translate(dvec3(_length, 0, 0));
     operations->drawSolid.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis] * translate, camera, vec3(0), _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
-    operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
+
+    _bodyVAO->setColor(_hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
+    _bodyVAO->setUseVertexColor(false);
+    _bodyVAO->draw(operations->singletonBag, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera);
 }
 
 void ArrowHandle::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
@@ -121,13 +125,12 @@ SP<GL::VAO> ArrowHandle::createHandleVAO() {
     return MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
 }
 
-SP<GL::VAO> ArrowHandle::createBodyVAO(double length) {
-    auto indexBuffer = makeShared<GL::IndexBuffer>();
-    indexBuffer->setLineStrips({{0, 1}});
-    auto vertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
-    vertexBuffer->setVertices({{vec3(Constants::bodyBegin, 0, 0), {}, {}}, {vec3(length, 0, 0), {}, {}}});
-    auto bodyVAO = makeShared<GL::VAO>(vertexBuffer, indexBuffer);
-    return bodyVAO;
+SP<Drawable::LinesDrawable> ArrowHandle::createBodyVAO(double length) {
+    auto drawable = makeShared<Drawable::LinesDrawable>();
+    drawable->setWidth(Constants::bodyWidth);
+    drawable->setPoints({{vec3(Constants::bodyBegin, 0, 0), {}}, {vec3(length, 0, 0), {}}});
+    drawable->setLineStrips({{0, 1}});
+    return drawable;
 }
 
 SP<GL::VAO> ArrowHandle::createBodyPickVAO(double length) {
