@@ -3,6 +3,7 @@
 #include "../../gl/Vertex.hpp"
 #include "../../gl/VertexBuffer.hpp"
 #include "../../support/Debug.hpp"
+#include "../../drawable/PointsDrawable.hpp"
 
 using namespace glm;
 
@@ -24,11 +25,10 @@ void CenterHandle::drawPickables(const SP<Render::Operations> &operations, const
     }
     dvec3 frontPos(viewportPos.xy, 0);
 
-    GL::Vertex vertex { frontPos };
-    auto vbo = makeShared<GL::VertexBuffer<GL::Vertex>>();
-    vbo->setVertices({vertex});
-    auto vao = makeShared<GL::VAO>(vbo, GL::Primitive::Point);
-    operations->drawCircle.draw2D(vao, dmat4(1), camera->viewportSize(), 32, toIDColor());
+    Drawable::PointsDrawable drawable;
+    drawable.setPoints({{frontPos, toIDColor()}});
+    drawable.setWidth(32);
+    drawable.draw2D(operations->singletonBag, dmat4(1), camera->viewportSize());
 }
 
 void CenterHandle::mousePressEvent(const Render::MouseEvent &event) {
