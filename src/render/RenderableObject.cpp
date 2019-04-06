@@ -11,7 +11,7 @@ void RenderableObject::setVisible(bool visible) {
     update();
 }
 
-void RenderableObject::drawRecursive(const SP<Operations> &operations, const SP<Camera> &camera) {
+void RenderableObject::drawRecursive(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     if (!_isVisible) {
         return;
     }
@@ -26,7 +26,7 @@ void RenderableObject::drawRecursive(const SP<Operations> &operations, const SP<
     }
 }
 
-void RenderableObject::drawPickablesRecursive(const SP<Operations> &operations, const SP<Camera> &camera, std::vector<SP<Renderable> > &renderedChildren) {
+void RenderableObject::drawPickablesRecursive(const SP<Draw::Operations> &operations, const SP<Camera> &camera, std::vector<SP<Renderable> > &renderedChildren) {
     if (!_isVisible) {
         return;
     }

@@ -40,7 +40,7 @@ void ViewportContainer::initializeGL() {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 
-    _operations = makeShared<Operations>();
+    _operations = makeShared<Draw::Operations>();
     emit initialized();
 }
 

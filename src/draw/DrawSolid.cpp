@@ -4,7 +4,7 @@
 #include "../support/Camera.hpp"
 
 namespace Lattice {
-namespace Render {
+namespace Draw {
 
 DrawSolid::DrawSolid() : _shader(Resource::read("src/draw/DrawSolid.vert"),
                                  std::string(),

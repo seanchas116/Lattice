@@ -14,11 +14,14 @@ namespace GL {
 class Framebuffer;
 }
 
+namespace Draw {
+class Operations;
+}
+
 namespace Render {
 
 class Renderable;
 class RenderableObject;
-class Operations;
 
 class PickableMap final : protected QOpenGLExtraFunctions, protected GL::ContextRecallable {
     Q_DISABLE_COPY(PickableMap)
@@ -26,7 +29,7 @@ public:
     PickableMap();
 
     Opt<std::pair<SP<Renderable>, double>> pick(glm::vec2 physicalPos);
-    void draw(const SP<RenderableObject> &renderable, const SP<Operations>& operations, const SP<Camera>& camera);
+    void draw(const SP<RenderableObject> &renderable, const SP<Draw::Operations>& operations, const SP<Camera>& camera);
 
 private:
     void resize(glm::ivec2 size);

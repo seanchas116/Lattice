@@ -18,8 +18,8 @@ public:
     bool isVisible() const { return _isVisible; }
     void setVisible(bool visible);
 
-    void drawRecursive(const SP<Operations>& operations, const SP<Camera>& camera);
-    void drawPickablesRecursive(const SP<Operations>& operations, const SP<Camera>& camera, std::vector<SP<Renderable>>& renderedChildren);
+    void drawRecursive(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
+    void drawPickablesRecursive(const SP<Draw::Operations>& operations, const SP<Camera>& camera, std::vector<SP<Renderable>>& renderedChildren);
 
     auto& childRenderables() const { return _childRenderables; }
     void setChildRenderables(const std::vector<SP<Renderable>>& children);

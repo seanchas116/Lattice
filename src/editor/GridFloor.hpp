@@ -20,7 +20,7 @@ class GridFloor final : public Render::RenderableObject {
 public:
     GridFloor();
 
-    void draw(const SP<Render::Operations>& operations, const SP<Camera>& camera) override;
+    void draw(const SP<Draw::Operations>& operations, const SP<Camera>& camera) override;
 
 private:
     SP<GL::VertexBuffer<GL::Vertex>> _vbo;

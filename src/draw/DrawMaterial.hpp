@@ -12,7 +12,7 @@ class VAO;
 class Texture;
 }
 
-namespace Render {
+namespace Draw {
 
 class DrawMaterial final : protected QOpenGLExtraFunctions {
 public:

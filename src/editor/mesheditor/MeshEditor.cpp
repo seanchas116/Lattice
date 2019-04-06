@@ -118,7 +118,7 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     connect(appState.get(), &State::AppState::isScaleHandleVisibleChanged, _manipulator.get(), &Manipulator::Manipulator::setScaleHandleVisible);
 }
 
-void MeshEditor::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     updateWholeVAOs();
 
     for (auto& [material, vao] : _faceVAOs) {
@@ -130,7 +130,7 @@ void MeshEditor::draw(const SP<Render::Operations> &operations, const SP<Camera>
     }
 }
 
-void MeshEditor::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+void MeshEditor::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     updateWholeVAOs();
 
     auto idColor = toIDColor();

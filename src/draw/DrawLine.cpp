@@ -4,7 +4,7 @@
 #include "../resource/Resource.hpp"
 
 namespace Lattice {
-namespace Render {
+namespace Draw {
 
 DrawLine::DrawLine() : _shader(Resource::read("src/draw/DrawLine.vert"),
                                Resource::read("src/draw/DrawLine.geom"),

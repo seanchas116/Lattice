@@ -29,14 +29,14 @@ MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Documen
     });
 }
 
-void MeshRenderer::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+void MeshRenderer::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     updateVAOs();
     for (auto& [material, vao] : _faceVAOs) {
         operations->drawMaterial.draw(vao, _object->location().matrixToWorld(), camera, material);
     }
 }
 
-void MeshRenderer::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+void MeshRenderer::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     updateVAOs();
     for (auto& [material, vao] : _faceVAOs) {
         operations->drawUnicolor.draw(vao, _object->location().matrixToWorld(), camera, toIDColor());

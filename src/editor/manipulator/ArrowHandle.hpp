@@ -16,8 +16,8 @@ public:
 
     ArrowHandle(int axis, HandleType handleType);
 
-    void draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) override;
-    void drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) override;
+    void draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
+    void drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
 
     void mousePressEvent(const Render::MouseEvent &event) override;
     void mouseMoveEvent(const Render::MouseEvent &event) override;

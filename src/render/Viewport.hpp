@@ -7,6 +7,7 @@
 namespace Lattice {
 namespace Render {
 
+class Renderable;
 class RenderableObject;
 class RenderWidget;
 class PickableMap;

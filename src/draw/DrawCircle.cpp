@@ -8,7 +8,7 @@
 using namespace glm;
 
 namespace Lattice {
-namespace Render {
+namespace Draw {
 
 DrawCircle::DrawCircle() : _shader(Resource::read("src/draw/DrawCircle.vert"),
                                    Resource::read("src/draw/DrawCircle.geom"),

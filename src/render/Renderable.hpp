@@ -4,9 +4,12 @@
 #include "../support/SharedPointer.hpp"
 
 namespace Lattice {
-namespace Render {
 
+namespace Draw {
 class Operations;
+}
+
+namespace Render {
 
 class Renderable : public EnableSharedFromThis<Renderable> {
     Q_DISABLE_COPY(Renderable)
@@ -14,8 +17,8 @@ public:
     Renderable() {}
     virtual ~Renderable();
 
-    virtual void draw(const SP<Operations>& operations, const SP<Camera>& camera);
-    virtual void drawPickables(const SP<Operations>& operations, const SP<Camera>& camera);
+    virtual void draw(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
+    virtual void drawPickables(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
 
     virtual void mousePressEvent(const MouseEvent& event);
     virtual void mouseMoveEvent(const MouseEvent& event);

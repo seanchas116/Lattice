@@ -8,9 +8,7 @@ namespace GL {
 class VAO;
 }
 
-namespace Render {
-
-class Renderable;
+namespace Draw {
 
 class DrawUnicolor final {
 public:

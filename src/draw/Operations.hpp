@@ -7,7 +7,7 @@
 #include "./DrawUnicolor.hpp"
 
 namespace Lattice {
-namespace Render {
+namespace Draw {
 
 class Operations final {
 public:

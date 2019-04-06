@@ -24,7 +24,7 @@ RotateHandle::RotateHandle(int axis) :
     initializeOpenGLFunctions();
 }
 
-void RotateHandle::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+void RotateHandle::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInViewport){
         return;
@@ -37,7 +37,7 @@ void RotateHandle::draw(const SP<Render::Operations> &operations, const SP<Camer
     glClear(GL_DEPTH_BUFFER_BIT);
 }
 
-void RotateHandle::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+void RotateHandle::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInViewport){
         return;

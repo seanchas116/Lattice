@@ -31,7 +31,7 @@ protected:
 private:
 
     std::vector<Viewport*> _viewports;
-    Opt<SP<Operations>> _operations;
+    Opt<SP<Draw::Operations>> _operations;
 };
 
 } // namespace Renderer

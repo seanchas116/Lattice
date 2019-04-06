@@ -4,7 +4,7 @@
 #include "../support/Camera.hpp"
 
 namespace Lattice {
-namespace Render {
+namespace Draw {
 
 DrawUnicolor::DrawUnicolor() : _shader(Resource::read("src/draw/DrawUnicolor.vert"),
                                        std::string(),

@@ -9,7 +9,7 @@ namespace GL {
 class VAO;
 }
 
-namespace Render {
+namespace Draw {
 
 class DrawLine final {
 public:
