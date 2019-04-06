@@ -23,7 +23,7 @@ Tool::HitTestExclusion DrawTool::hitTestExclusion() const {
     return {{uvPoint->vertex()}, edges, {}};
 }
 
-void DrawTool::mousePressEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void DrawTool::mousePressEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     auto mesh = object()->mesh();
     auto modelMatrix = object()->location().matrixToWorld();
 
@@ -112,7 +112,7 @@ void DrawTool::mousePressEvent(const Tool::EventTarget &target, const Render::Mo
     _previewUVPoint = previewPoint;
 }
 
-void DrawTool::mouseMoveEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void DrawTool::mouseMoveEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target);
 
     auto mesh = object()->mesh();
@@ -145,7 +145,7 @@ void DrawTool::mouseMoveEvent(const Tool::EventTarget &target, const Render::Mou
     mesh->setPosition({{previewUVPoint->vertex(), pos}});
 }
 
-void DrawTool::mouseReleaseEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void DrawTool::mouseReleaseEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
 }
 

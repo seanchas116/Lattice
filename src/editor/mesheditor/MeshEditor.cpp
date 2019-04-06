@@ -28,22 +28,22 @@ const vec4 hoveredColor = vec4(1, 1, 0, 1);
 
 }
 
-class MeshEditor::EditorPickable : public Render::Renderable {
+class MeshEditor::EditorPickable : public Viewport::Renderable {
 public:
     EditorPickable(MeshEditor* editor) : _editor(editor) {}
-    void mousePressEvent(const Render::MouseEvent &event) override {
+    void mousePressEvent(const Viewport::MouseEvent &event) override {
         _editor->mousePressTarget(target(), event);
     }
-    void mouseMoveEvent(const Render::MouseEvent &event) override {
+    void mouseMoveEvent(const Viewport::MouseEvent &event) override {
         _editor->mouseMoveTarget(target(), event);
     }
-    void mouseReleaseEvent(const Render::MouseEvent &event) override {
+    void mouseReleaseEvent(const Viewport::MouseEvent &event) override {
         _editor->mouseReleaseTarget(target(), event);
     }
-    void contextMenuEvent(const Render::ContextMenuEvent &event) override {
+    void contextMenuEvent(const Viewport::ContextMenuEvent &event) override {
         _editor->contextMenuTarget(target(), event);
     }
-    void hoverEnterEvent(const Render::MouseEvent &event) override {
+    void hoverEnterEvent(const Viewport::MouseEvent &event) override {
         _editor->hoverEnterTarget(target(), event);
     }
     void hoverLeaveEvent() override {
@@ -149,19 +149,19 @@ void MeshEditor::drawPickables(const SP<Draw::Operations> &operations, const SP<
     }
 }
 
-void MeshEditor::mousePressEvent(const Render::MouseEvent &event) {
+void MeshEditor::mousePressEvent(const Viewport::MouseEvent &event) {
     mousePressTarget({}, event);
 }
 
-void MeshEditor::mouseMoveEvent(const Render::MouseEvent &event) {
+void MeshEditor::mouseMoveEvent(const Viewport::MouseEvent &event) {
     mouseMoveTarget({}, event);
 }
 
-void MeshEditor::mouseReleaseEvent(const Render::MouseEvent &event) {
+void MeshEditor::mouseReleaseEvent(const Viewport::MouseEvent &event) {
     mouseReleaseTarget({}, event);
 }
 
-void MeshEditor::contextMenuEvent(const Render::ContextMenuEvent &event) {
+void MeshEditor::contextMenuEvent(const Viewport::ContextMenuEvent &event) {
     contextMenuTarget({}, event);
 }
 
@@ -204,7 +204,7 @@ void MeshEditor::updateWholeVAOs() {
 
     auto hitTestExclusion = _tool->hitTestExclusion();
 
-    std::vector<SP<Render::Renderable>> childPickables;
+    std::vector<SP<Viewport::Renderable>> childPickables;
     childPickables.push_back(_manipulator);
 
     {
@@ -352,19 +352,19 @@ void MeshEditor::updateManinpulatorVisibility() {
     _manipulator->setVisible(!_appState->document()->meshSelection().empty() && _appState->tool() == State::Tool::None);
 }
 
-void MeshEditor::mousePressTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void MeshEditor::mousePressTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     _tool->mousePressEvent(target, event);
 }
 
-void MeshEditor::mouseMoveTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void MeshEditor::mouseMoveTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     _tool->mouseMoveEvent(target, event);
 }
 
-void MeshEditor::mouseReleaseTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void MeshEditor::mouseReleaseTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     _tool->mouseReleaseEvent(target, event);
 }
 
-void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(event);
     // TODO: update partially
     if (target.vertex) {
@@ -393,7 +393,7 @@ void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
     _tool->hoverLeaveEvent(target);
 }
 
-void MeshEditor::contextMenuTarget(const Tool::EventTarget &target, const Render::ContextMenuEvent &event) {
+void MeshEditor::contextMenuTarget(const Tool::EventTarget &target, const Viewport::ContextMenuEvent &event) {
     Q_UNUSED(target);
 
     QMenu contextMenu;

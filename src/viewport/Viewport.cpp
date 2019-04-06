@@ -8,7 +8,7 @@
 #include <QResizeEvent>
 
 namespace Lattice {
-namespace Render {
+namespace Viewport {
 
 Viewport::Viewport(QWidget *parent) : QWidget(parent), _camera(makeShared<Camera>()) {
     connect(_camera.get(), &Camera::changed, this, &Viewport::updateRequested);

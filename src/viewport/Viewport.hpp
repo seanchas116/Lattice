@@ -5,7 +5,7 @@
 #include "MouseEvent.hpp"
 
 namespace Lattice {
-namespace Render {
+namespace Viewport {
 
 class Renderable;
 class RenderableObject;

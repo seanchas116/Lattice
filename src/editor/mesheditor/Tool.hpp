@@ -4,7 +4,7 @@
 #include "../../mesh/Mesh.hpp"
 #include "../../mesh/MeshFragment.hpp"
 #include "../../document/MeshObject.hpp"
-#include "../../render/MouseEvent.hpp"
+#include "../../viewport/MouseEvent.hpp"
 
 namespace Lattice {
 namespace Editor {
@@ -36,10 +36,10 @@ public:
 
     virtual HitTestExclusion hitTestExclusion() const;
 
-    virtual void mousePressEvent(const EventTarget& target, const Render::MouseEvent &event) = 0;
-    virtual void mouseMoveEvent(const EventTarget& target, const Render::MouseEvent &event) = 0;
-    virtual void mouseReleaseEvent(const EventTarget& target, const Render::MouseEvent &event) = 0;
-    virtual void hoverEnterEvent(const EventTarget& target, const Render::MouseEvent &event);
+    virtual void mousePressEvent(const EventTarget& target, const Viewport::MouseEvent &event) = 0;
+    virtual void mouseMoveEvent(const EventTarget& target, const Viewport::MouseEvent &event) = 0;
+    virtual void mouseReleaseEvent(const EventTarget& target, const Viewport::MouseEvent &event) = 0;
+    virtual void hoverEnterEvent(const EventTarget& target, const Viewport::MouseEvent &event);
     virtual void hoverLeaveEvent(const EventTarget& target);
     virtual void keyPressEvent(QKeyEvent* event);
     virtual void keyReleaseEvent(QKeyEvent* event);

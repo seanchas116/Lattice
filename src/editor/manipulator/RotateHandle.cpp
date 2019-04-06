@@ -50,7 +50,7 @@ void RotateHandle::drawPickables(const SP<Draw::Operations> &operations, const S
     glClear(GL_DEPTH_BUFFER_BIT);
 }
 
-void RotateHandle::mousePressEvent(const Render::MouseEvent &event) {
+void RotateHandle::mousePressEvent(const Viewport::MouseEvent &event) {
     if (event.originalEvent->button() != Qt::LeftButton) {
         return;
     }
@@ -72,7 +72,7 @@ void RotateHandle::mousePressEvent(const Render::MouseEvent &event) {
     emit onDragBegin(angle);
 }
 
-void RotateHandle::mouseMoveEvent(const Render::MouseEvent &event) {
+void RotateHandle::mouseMoveEvent(const Viewport::MouseEvent &event) {
     if (!_dragged) {
         return;
     }
@@ -91,13 +91,13 @@ void RotateHandle::mouseMoveEvent(const Render::MouseEvent &event) {
     emit onDragMove(angle);
 }
 
-void RotateHandle::mouseReleaseEvent(const Render::MouseEvent &event) {
+void RotateHandle::mouseReleaseEvent(const Viewport::MouseEvent &event) {
     Q_UNUSED(event);
     _dragged = false;
     emit onDragEnd();
 }
 
-void RotateHandle::contextMenuEvent(const Render::ContextMenuEvent &event) {
+void RotateHandle::contextMenuEvent(const Viewport::ContextMenuEvent &event) {
     emit onContextMenu(event);
 }
 

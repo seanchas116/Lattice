@@ -43,7 +43,7 @@ void MeshRenderer::drawPickables(const SP<Draw::Operations> &operations, const S
     }
 }
 
-void MeshRenderer::mousePressEvent(const Render::MouseEvent &event) {
+void MeshRenderer::mousePressEvent(const Viewport::MouseEvent &event) {
     switch (event.originalEvent->button()) {
     case Qt::RightButton: {
         QMenu contextMenu;
@@ -72,7 +72,7 @@ void MeshRenderer::mousePressEvent(const Render::MouseEvent &event) {
     }
 }
 
-void MeshRenderer::mouseMoveEvent(const Render::MouseEvent &event) {
+void MeshRenderer::mouseMoveEvent(const Viewport::MouseEvent &event) {
     if (!_dragged) {
         return;
     }
@@ -91,12 +91,12 @@ void MeshRenderer::mouseMoveEvent(const Render::MouseEvent &event) {
     _object->setLocation(newLocation);
 }
 
-void MeshRenderer::mouseReleaseEvent(const Render::MouseEvent &event) {
+void MeshRenderer::mouseReleaseEvent(const Viewport::MouseEvent &event) {
     Q_UNUSED(event);
     _dragged = false;
 }
 
-void MeshRenderer::mouseDoubleClickEvent(const Render::MouseEvent &event) {
+void MeshRenderer::mouseDoubleClickEvent(const Viewport::MouseEvent &event) {
     Q_UNUSED(event);
     _appState->document()->setEditedObject(_object);
 }

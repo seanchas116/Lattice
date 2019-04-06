@@ -1,5 +1,5 @@
 #pragma once
-#include "../../render/RenderableObject.hpp"
+#include "../../viewport/RenderableObject.hpp"
 
 namespace Lattice {
 
@@ -15,7 +15,7 @@ namespace Editor {
 class MeshPicker;
 namespace Manipulator {
 
-class RotateHandle : public Render::RenderableObject, protected QOpenGLExtraFunctions {
+class RotateHandle : public Viewport::RenderableObject, protected QOpenGLExtraFunctions {
     Q_OBJECT
 public:
     RotateHandle(int axis);
@@ -23,11 +23,11 @@ public:
     void draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
     void drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
 
-    void mousePressEvent(const Render::MouseEvent &event) override;
-    void mouseMoveEvent(const Render::MouseEvent &event) override;
-    void mouseReleaseEvent(const Render::MouseEvent &event) override;
+    void mousePressEvent(const Viewport::MouseEvent &event) override;
+    void mouseMoveEvent(const Viewport::MouseEvent &event) override;
+    void mouseReleaseEvent(const Viewport::MouseEvent &event) override;
 
-    void contextMenuEvent(const Render::ContextMenuEvent &event) override;
+    void contextMenuEvent(const Viewport::ContextMenuEvent &event) override;
 
     void setTargetPosition(const glm::dvec3 &targetPosition) { _targetPosition = targetPosition; }
 
@@ -36,7 +36,7 @@ signals:
     void onDragMove(double value);
     void onDragEnd();
 
-    void onContextMenu(const Render::ContextMenuEvent& event);
+    void onContextMenu(const Viewport::ContextMenuEvent& event);
 
 private:
     SP<Mesh::Mesh> createMesh();

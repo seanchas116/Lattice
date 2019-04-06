@@ -70,7 +70,7 @@ void EditorScene::updateRenderables() {
 
     _meshRenderers = newMeshRenderers;
 
-    std::vector<SP<Render::Renderable>> renderables;
+    std::vector<SP<Viewport::Renderable>> renderables;
     renderables.push_back(_background);
 
     renderables.push_back(_gridFloor);

@@ -45,7 +45,7 @@ void ArrowHandle::drawPickables(const SP<Draw::Operations> &operations, const SP
     operations->drawUnicolor.draw(_bodyPickVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, toIDColor());
 }
 
-void ArrowHandle::mousePressEvent(const Render::MouseEvent &event) {
+void ArrowHandle::mousePressEvent(const Viewport::MouseEvent &event) {
     if (event.originalEvent->button() != Qt::LeftButton) {
         return;
     }
@@ -63,7 +63,7 @@ void ArrowHandle::mousePressEvent(const Render::MouseEvent &event) {
     emit onDragBegin(tAxis);
 }
 
-void ArrowHandle::mouseMoveEvent(const Render::MouseEvent &event) {
+void ArrowHandle::mouseMoveEvent(const Viewport::MouseEvent &event) {
     if (!_dragged) {
         return;
     }
@@ -79,17 +79,17 @@ void ArrowHandle::mouseMoveEvent(const Render::MouseEvent &event) {
     emit onDragMove(tAxis);
 }
 
-void ArrowHandle::mouseReleaseEvent(const Render::MouseEvent &event) {
+void ArrowHandle::mouseReleaseEvent(const Viewport::MouseEvent &event) {
     Q_UNUSED(event);
     _dragged = false;
     emit onDragEnd();
 }
 
-void ArrowHandle::contextMenuEvent(const Render::ContextMenuEvent &event) {
+void ArrowHandle::contextMenuEvent(const Viewport::ContextMenuEvent &event) {
     emit onContextMenu(event);
 }
 
-void ArrowHandle::hoverEnterEvent(const Render::MouseEvent &event) {
+void ArrowHandle::hoverEnterEvent(const Viewport::MouseEvent &event) {
     Q_UNUSED(event);
     _hovered = true;
     update();

@@ -10,7 +10,7 @@
 using namespace glm;
 
 namespace Lattice {
-namespace Render {
+namespace Viewport {
 
 PickableMap::PickableMap() : _framebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))) {
     initializeOpenGLFunctions();

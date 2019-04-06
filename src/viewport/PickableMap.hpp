@@ -18,7 +18,7 @@ namespace Draw {
 class Operations;
 }
 
-namespace Render {
+namespace Viewport {
 
 class Renderable;
 class RenderableObject;

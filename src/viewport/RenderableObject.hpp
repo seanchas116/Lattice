@@ -8,7 +8,7 @@
 class QMouseEvent;
 
 namespace Lattice {
-namespace Render {
+namespace Viewport {
 
 class RenderableObject : public QObject, public Renderable {
     Q_OBJECT

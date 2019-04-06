@@ -1,7 +1,7 @@
 #include "RenderableObject.hpp"
 
 namespace Lattice {
-namespace Render {
+namespace Viewport {
 
 void RenderableObject::setVisible(bool visible) {
     if (_isVisible == visible) {

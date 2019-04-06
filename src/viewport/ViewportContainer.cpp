@@ -8,7 +8,7 @@
 #include <QOpenGLDebugLogger>
 
 namespace Lattice {
-namespace Render {
+namespace Viewport {
 
 ViewportContainer::ViewportContainer(QWidget *parent) :
     QOpenGLWidget(parent)

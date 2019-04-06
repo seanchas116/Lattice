@@ -9,7 +9,7 @@ namespace Draw {
 class Operations;
 }
 
-namespace Render {
+namespace Viewport {
 
 class Renderable : public EnableSharedFromThis<Renderable> {
     Q_DISABLE_COPY(Renderable)

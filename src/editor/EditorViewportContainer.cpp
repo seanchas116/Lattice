@@ -10,7 +10,7 @@ namespace Lattice {
 namespace Editor {
 
 EditorViewportContainer::EditorViewportContainer(const SP<State::AppState> &appState, QWidget *parent) :
-    Render::ViewportContainer(parent),
+    Viewport::ViewportContainer(parent),
     _appState(appState),
     _keyObserver(makeShared<KeyObserver>())
 {
@@ -52,7 +52,7 @@ void EditorViewportContainer::setSplitMode(State::ViewportSplitMode split) {
     layout->setMargin(0);
     layout->setSpacing(0);
 
-    std::vector<Render::Viewport*> viewports;
+    std::vector<Viewport::Viewport*> viewports;
 
     switch (split) {
     case State::ViewportSplitMode::Single: {
@@ -143,7 +143,7 @@ void EditorViewportContainer::setSplitMode(State::ViewportSplitMode split) {
     update();
 }
 
-void EditorViewportContainer::setRenderable(const Opt<SP<Render::RenderableObject> > &renderable) {
+void EditorViewportContainer::setRenderable(const Opt<SP<Viewport::RenderableObject> > &renderable) {
     _renderable = renderable;
     for (auto& v : viewports()) {
         v->setRenderable(renderable);

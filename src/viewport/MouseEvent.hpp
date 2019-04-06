@@ -11,7 +11,7 @@ class MeshEdge;
 class MeshFace;
 }
 
-namespace Render {
+namespace Viewport {
 
 struct LocatedEvent {
     Q_DISABLE_COPY(LocatedEvent)

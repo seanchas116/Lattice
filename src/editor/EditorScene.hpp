@@ -1,7 +1,7 @@
 #pragma once
 #include <QObject>
 #include "../gl/ContextRecallable.hpp"
-#include "../render/RenderableObject.hpp"
+#include "../viewport/RenderableObject.hpp"
 
 namespace Lattice {
 
@@ -27,7 +27,7 @@ namespace Manipulator {
 class ObjectManipulator;
 }
 
-class EditorScene : public Render::RenderableObject, protected GL::ContextRecallable {
+class EditorScene : public Viewport::RenderableObject, protected GL::ContextRecallable {
     Q_OBJECT
 public:
     EditorScene(const SP<State::AppState>& appState);

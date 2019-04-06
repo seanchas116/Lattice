@@ -1,7 +1,7 @@
 #include "Renderable.hpp"
 
 namespace Lattice {
-namespace Render {
+namespace Viewport {
 
 Renderable::~Renderable() {
 }

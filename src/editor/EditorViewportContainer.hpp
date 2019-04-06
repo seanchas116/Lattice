@@ -1,7 +1,7 @@
 #pragma once
 #include <QOpenGLWidget>
 #include "../support/Shorthands.hpp"
-#include "../render/ViewportContainer.hpp"
+#include "../viewport/ViewportContainer.hpp"
 #include "../state/ViewportSplitMode.hpp"
 
 namespace Lattice {
@@ -15,7 +15,7 @@ namespace Editor {
 class KeyObserver;
 class EditorScene;
 
-class EditorViewportContainer final : public Render::ViewportContainer {
+class EditorViewportContainer final : public Viewport::ViewportContainer {
     Q_OBJECT
 public:
     explicit EditorViewportContainer(const SP<State::AppState>& appState, QWidget *parent = nullptr);
@@ -24,12 +24,12 @@ public:
 
 private:
     void setSplitMode(State::ViewportSplitMode split);
-    void setRenderable(const Opt<SP<Render::RenderableObject>>& renderable);
+    void setRenderable(const Opt<SP<Viewport::RenderableObject>>& renderable);
 
     SP<State::AppState> _appState;
     SP<KeyObserver> _keyObserver;
     Opt<SP<EditorScene>> _scene;
-    Opt<SP<Render::RenderableObject>> _renderable;
+    Opt<SP<Viewport::RenderableObject>> _renderable;
 };
 
 }

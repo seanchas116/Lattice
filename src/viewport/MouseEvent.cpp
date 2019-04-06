@@ -1,7 +1,7 @@
 #include "MouseEvent.hpp"
 
 namespace Lattice {
-namespace Render {
+namespace Viewport {
 
 LocatedEvent::~LocatedEvent() {
 }
