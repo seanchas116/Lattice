@@ -28,7 +28,7 @@ const vec4 hoveredColor = vec4(1, 1, 0, 1);
 
 const vec4 unselectedFaceHighlight = vec4(0, 0, 0, 0);
 const vec4 selectedFaceHighlight = vec4(1, 1, 1, 0.5);
-const vec4 hoveredFaceHighlight = vec4(1, 1, 1, 0.25);
+const vec4 hoveredFaceHighlight = vec4(1, 1, 1, 0.5);
 
 }
 
@@ -308,7 +308,7 @@ void MeshEditor::updateWholeVAOs() {
             attrib.position = p->vertex()->position();
             attrib.texCoord = p->position();
             attrib.normal = p->vertex()->normal(face);
-            attrib.color = selected ? selectedFaceHighlight : hovered ? hoveredFaceHighlight : unselectedFaceHighlight;
+            attrib.color = hovered ? hoveredFaceHighlight : selected ? selectedFaceHighlight : unselectedFaceHighlight;
 
             GL::Vertex pickAttrib;
             pickAttrib.position = p->vertex()->position();
