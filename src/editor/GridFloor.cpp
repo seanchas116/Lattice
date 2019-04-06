@@ -4,6 +4,7 @@
 #include "../gl/Vertex.hpp"
 #include "../support/Camera.hpp"
 #include "../drawable/LinesDrawable.hpp"
+#include "../drawable/LinesGeometry.hpp"
 
 using namespace glm;
 
@@ -52,13 +53,13 @@ GridFloor::GridFloor() : _drawable(makeShared<Drawable::LinesDrawable>()),
         }
     }
 
-    _drawable->setPoints(vertices);
-    _xAxisDrawable->setPoints(vertices);
-    _zAxisDrawable->setPoints(vertices);
+    _drawable->geometry()->setPoints(vertices);
+    _xAxisDrawable->geometry()->setPoints(vertices);
+    _zAxisDrawable->geometry()->setPoints(vertices);
 
-    _drawable->setLineStrips(lineStrips);
-    _xAxisDrawable->setLineStrips({xLineStrip});
-    _zAxisDrawable->setLineStrips({zLineStrip});
+    _drawable->geometry()->setLineStrips(lineStrips);
+    _xAxisDrawable->geometry()->setLineStrips({xLineStrip});
+    _zAxisDrawable->geometry()->setLineStrips({zLineStrip});
 
     _drawable->setUseVertexColor(false);
     _drawable->setColor(vec4(0.5, 0.5, 0.5, 1));

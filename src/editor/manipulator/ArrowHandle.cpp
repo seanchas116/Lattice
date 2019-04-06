@@ -10,6 +10,7 @@
 #include "../../support/Ray.hpp"
 #include "../../support/Distance.hpp"
 #include "../../drawable/LinesDrawable.hpp"
+#include "../../drawable/LinesGeometry.hpp"
 
 using namespace glm;
 
@@ -128,8 +129,8 @@ SP<GL::VAO> ArrowHandle::createHandleVAO() {
 SP<Drawable::LinesDrawable> ArrowHandle::createBodyDrawable(double length) {
     auto drawable = makeShared<Drawable::LinesDrawable>();
     drawable->setWidth(Constants::bodyWidth);
-    drawable->setPoints({{vec3(Constants::bodyBegin, 0, 0), {}}, {vec3(length, 0, 0), {}}});
-    drawable->setLineStrips({{0, 1}});
+    drawable->geometry()->setPoints({{vec3(Constants::bodyBegin, 0, 0), {}}, {vec3(length, 0, 0), {}}});
+    drawable->geometry()->setLineStrips({{0, 1}});
     return drawable;
 }
 

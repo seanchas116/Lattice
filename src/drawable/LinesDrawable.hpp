@@ -18,6 +18,8 @@ class IndexBuffer;
 
 namespace Drawable {
 
+class LinesGeometry;
+
 class LinesDrawable {
 public:
     inline static constexpr double defaultZOffset = -0.00002;
@@ -28,17 +30,14 @@ public:
     void setZOffset(double zOffset) { _zOffset = zOffset; }
     void setColor(glm::vec4 color) { _color = color ; }
     void setUseVertexColor(bool use) { _useVertexColor = use; }
-    void setPoints(const std::vector<Point>& points);
-    void setLines(const std::vector<std::array<uint32_t, 2>>& lines);
-    void setLineStrips(const std::vector<std::vector<uint32_t>>& lineStrips);
+
+    auto& geometry() const { return _geometry; }
 
     void draw(SingletonBag& singletonBag, const glm::dmat4 &matrix, const SP<Camera>& camera);
 
 private:
     static const SP<GL::Shader>& shader();
-    SP<GL::VertexBuffer<Point>> _vbo;
-    SP<GL::IndexBuffer> _ibo;
-    SP<GL::VAO> _vao;
+    SP<LinesGeometry> _geometry;
     double _width = 1;
     double _zOffset = defaultZOffset;
     glm::vec4 _color {0};
