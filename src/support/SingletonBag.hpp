@@ -11,10 +11,11 @@ public:
 
     template <typename T>
     T get(T (*factory)()) {
-        auto it = instances.find(factory);
+        auto key = reinterpret_cast<void *>(factory);
+        auto it = instances.find(key);
         if (it == instances.end()) {
             bool inserted;
-            std::tie(it, inserted) = instances.insert({factory, factory()});
+            std::tie(it, inserted) = instances.insert({key, factory()});
         }
         return std::any_cast<T>(it->second);
     }
