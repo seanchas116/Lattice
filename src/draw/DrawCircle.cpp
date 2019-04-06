@@ -1,8 +1,8 @@
 #include "DrawCircle.hpp"
-#include "../../gl/VAO.hpp"
-#include "../../resource/Resource.hpp"
-#include "../../support/Location.hpp"
-#include "../../support/Camera.hpp"
+#include "../gl/VAO.hpp"
+#include "../resource/Resource.hpp"
+#include "../support/Location.hpp"
+#include "../support/Camera.hpp"
 #include <glm/gtx/transform.hpp>
 
 using namespace glm;
@@ -10,9 +10,9 @@ using namespace glm;
 namespace Lattice {
 namespace Render {
 
-DrawCircle::DrawCircle() :
-    _shader(Resource::read("src/render/operations/DrawCircle.vert"), Resource::read("src/render/operations/DrawCircle.geom"), Resource::read("src/render/operations/DrawCircle.frag"))
-{
+DrawCircle::DrawCircle() : _shader(Resource::read("src/draw/DrawCircle.vert"),
+                                   Resource::read("src/draw/DrawCircle.geom"),
+                                   Resource::read("src/draw/DrawCircle.frag")) {
 }
 
 void DrawCircle::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<Camera> &camera, double width, glm::vec4 color, bool useVertexColor, double zOffset) {

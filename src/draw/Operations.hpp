@@ -1,10 +1,10 @@
 #pragma once
 
-#include "./operations/DrawCircle.hpp"
-#include "./operations/DrawLine.hpp"
-#include "./operations/DrawSolid.hpp"
-#include "./operations/DrawMaterial.hpp"
-#include "./operations/DrawUnicolor.hpp"
+#include "./DrawCircle.hpp"
+#include "./DrawLine.hpp"
+#include "./DrawSolid.hpp"
+#include "./DrawMaterial.hpp"
+#include "./DrawUnicolor.hpp"
 
 namespace Lattice {
 namespace Render {

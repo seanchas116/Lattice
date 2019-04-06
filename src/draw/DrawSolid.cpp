@@ -1,14 +1,14 @@
 #include "DrawSolid.hpp"
-#include "../../gl/VAO.hpp"
-#include "../../resource/Resource.hpp"
-#include "../../support/Camera.hpp"
+#include "../gl/VAO.hpp"
+#include "../resource/Resource.hpp"
+#include "../support/Camera.hpp"
 
 namespace Lattice {
 namespace Render {
 
-DrawSolid::DrawSolid() :
-    _shader(Resource::read("src/render/operations/DrawSolid.vert"), std::string(), Resource::read("src/render/operations/DrawSolid.frag"))
-{
+DrawSolid::DrawSolid() : _shader(Resource::read("src/draw/DrawSolid.vert"),
+                                 std::string(),
+                                 Resource::read("src/draw/DrawSolid.frag")) {
 }
 
 void DrawSolid::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<Camera> &camera, glm::dvec3 diffuse, glm::dvec3 ambient) {

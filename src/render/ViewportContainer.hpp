@@ -1,7 +1,7 @@
 #pragma once
 #include <QOpenGLWidget>
 #include "../support/Shorthands.hpp"
-#include "Operations.hpp"
+#include "../draw/Operations.hpp"
 #include "MouseEvent.hpp"
 
 namespace Lattice {

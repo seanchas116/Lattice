@@ -2,7 +2,7 @@
 #include "Constants.hpp"
 #include "Coordinates.hpp"
 #include "../MeshVAOGenerator.hpp"
-#include "../../render/Operations.hpp"
+#include "../../draw/Operations.hpp"
 #include "../../mesh/Mesh.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"

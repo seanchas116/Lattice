@@ -1,6 +1,6 @@
 #pragma once
-#include "../../gl/Shader.hpp"
-#include "../../mesh/Mesh.hpp"
+#include "../gl/Shader.hpp"
+#include "../mesh/Mesh.hpp"
 #include <unordered_map>
 #include <QOpenGLExtraFunctions>
 

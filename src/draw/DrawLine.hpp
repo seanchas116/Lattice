@@ -1,5 +1,6 @@
 #pragma once
-#include "../../gl/Shader.hpp"
+
+#include "../gl/Shader.hpp"
 
 namespace Lattice {
 class Camera;
@@ -10,12 +11,14 @@ class VAO;
 
 namespace Render {
 
-class DrawSolid final {
+class DrawLine final {
 public:
-    DrawSolid();
+    inline static constexpr double defaultZOffset = -0.00001;
+
+    DrawLine();
 
     void draw(const SP<GL::VAO>& vao, const glm::dmat4 &matrix, const SP<Camera>& camera,
-              glm::dvec3 diffuse, glm::dvec3 ambient);
+              double width, glm::vec4 color, bool useVertexColor = false, double zOffset = defaultZOffset);
 
 private:
     GL::Shader _shader;

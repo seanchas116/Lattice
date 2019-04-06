@@ -1,7 +1,7 @@
 #pragma once
 #include <QtGlobal>
 #include <QObject>
-#include "Operations.hpp"
+#include "../draw/Operations.hpp"
 #include "MouseEvent.hpp"
 #include "Renderable.hpp"
 

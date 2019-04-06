@@ -1,14 +1,14 @@
 #include "DrawLine.hpp"
-#include "../../support/Camera.hpp"
-#include "../../gl/VAO.hpp"
-#include "../../resource/Resource.hpp"
+#include "../support/Camera.hpp"
+#include "../gl/VAO.hpp"
+#include "../resource/Resource.hpp"
 
 namespace Lattice {
 namespace Render {
 
-DrawLine::DrawLine() :
-    _shader(Resource::read("src/render/operations/DrawLine.vert"), Resource::read("src/render/operations/DrawLine.geom"), Resource::read("src/render/operations/DrawLine.frag"))
-{
+DrawLine::DrawLine() : _shader(Resource::read("src/draw/DrawLine.vert"),
+                               Resource::read("src/draw/DrawLine.geom"),
+                               Resource::read("src/draw/DrawLine.frag")) {
 }
 
 void DrawLine::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<Camera> &camera, double width, glm::vec4 color, bool useVertexColor, double zOffset) {

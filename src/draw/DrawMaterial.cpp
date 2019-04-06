@@ -1,15 +1,15 @@
 #include "DrawMaterial.hpp"
-#include "../../gl/VAO.hpp"
-#include "../../gl/Texture.hpp"
-#include "../../resource/Resource.hpp"
-#include "../../support/Camera.hpp"
+#include "../gl/VAO.hpp"
+#include "../gl/Texture.hpp"
+#include "../resource/Resource.hpp"
+#include "../support/Camera.hpp"
 
 namespace Lattice {
 namespace Render {
 
-DrawMaterial::DrawMaterial() :
-    _shader(Resource::read("src/render/operations/DrawMaterial.vert"), std::string(), Resource::read("src/render/operations/DrawMaterial.frag"))
-{
+DrawMaterial::DrawMaterial() : _shader(Resource::read("src/draw/DrawMaterial.vert"),
+                                       std::string(),
+                                       Resource::read("src/draw/DrawMaterial.frag")) {
     initializeOpenGLFunctions();
 }
 
