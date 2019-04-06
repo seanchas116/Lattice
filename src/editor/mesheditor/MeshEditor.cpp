@@ -28,7 +28,7 @@ const vec4 hoveredColor = vec4(1, 1, 0, 1);
 
 const vec4 unselectedFaceHighlight = vec4(0, 0, 0, 0);
 const vec4 selectedFaceHighlight = vec4(1, 1, 1, 0.5);
-const vec4 hoveredFaceHighlight = vec4(1, 1, 1, 0.5);
+const vec4 hoveredFaceHighlight = vec4(1, 1, 0.5, 0.5);
 
 }
 
