@@ -2,6 +2,7 @@
 
 in vec3 normal_cameraSpace;
 in vec2 texCoords;
+in vec4 vertexColor;
 
 out vec4 fragColor;
 
@@ -18,5 +19,7 @@ void main(void) {
 
     float diffuseStrength = clamp(dot(normalDirection, lightDirection), 0.0, 1.0);
 
-    fragColor = vec4(ambient + d * diffuseStrength, 1);
+    vec3 color = ambient + d * diffuseStrength;
+
+    fragColor = vec4(mix(color, vertexColor.rgb, vertexColor.a), 1);
 }

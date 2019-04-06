@@ -26,6 +26,10 @@ const vec4 unselectedColor = vec4(0, 0, 0, 1);
 const vec4 selectedColor = vec4(1, 1, 1, 1);
 const vec4 hoveredColor = vec4(1, 1, 0, 1);
 
+const vec4 unselectedFaceHighlight = vec4(0, 0, 0, 0);
+const vec4 selectedFaceHighlight = vec4(1, 1, 1, 0.5);
+const vec4 hoveredFaceHighlight = vec4(1, 1, 1, 0.25);
+
 }
 
 class MeshEditor::EditorPickable : public Viewport::Renderable {
@@ -201,6 +205,7 @@ void MeshEditor::updateWholeVAOs() {
     }
 
     auto& selectedVertices = _appState->document()->meshSelection().vertices;
+    auto selectedFaces = _appState->document()->meshSelection().faces();
 
     auto hitTestExclusion = _tool->hitTestExclusion();
 
@@ -297,11 +302,13 @@ void MeshEditor::updateWholeVAOs() {
         _faceAttributes.clear();
         _facePickAttributes.clear();
 
-        auto addPoint = [&](const SP<Mesh::Face>& face, const SP<FacePickable>& pickable, const SP<Mesh::UVPoint>& p) {
+        auto addPoint = [&](const SP<Mesh::Face>& face, const SP<FacePickable>& pickable, const SP<Mesh::UVPoint>& p, bool hovered, bool selected) {
             GL::Vertex attrib;
+
             attrib.position = p->vertex()->position();
             attrib.texCoord = p->position();
             attrib.normal = p->vertex()->normal(face);
+            attrib.color = selected ? selectedFaceHighlight : hovered ? hoveredFaceHighlight : unselectedFaceHighlight;
 
             GL::Vertex pickAttrib;
             pickAttrib.position = p->vertex()->position();
@@ -318,13 +325,16 @@ void MeshEditor::updateWholeVAOs() {
         for (auto& material : _object->mesh()->materials()) {
             std::vector<GL::IndexBuffer::Triangle> triangles;
             for (auto& face : material->faces()) {
+                bool hovered = _hoveredFace == face->sharedFromThis();
+                bool selected = selectedFaces.find(face->sharedFromThis()) != selectedFaces.end();
+
                 auto pickable = makeShared<FacePickable>(this, face->sharedFromThis());
                 childPickables.push_back(pickable);
 
-                auto i0 = addPoint(face->sharedFromThis(), pickable, face->uvPoints()[0]);
+                auto i0 = addPoint(face->sharedFromThis(), pickable, face->uvPoints()[0], hovered, selected);
                 for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
-                    auto i1 = addPoint(face->sharedFromThis(), pickable, face->uvPoints()[i - 1]);
-                    auto i2 = addPoint(face->sharedFromThis(), pickable, face->uvPoints()[i]);
+                    auto i1 = addPoint(face->sharedFromThis(), pickable, face->uvPoints()[i - 1], hovered, selected);
+                    auto i2 = addPoint(face->sharedFromThis(), pickable, face->uvPoints()[i], hovered, selected);
                     triangles.push_back({i0, i1, i2});
                     pickTriangles.push_back({i0, i1, i2});
                 }
@@ -375,6 +385,10 @@ void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Viewpor
         _hoveredEdge = target.edge;
         _isVAOsDirty = true;
         update();
+    } else if (target.face) {
+        _hoveredFace = target.face;
+        _isVAOsDirty = true;
+        update();
     }
     _tool->hoverEnterEvent(target, event);
 }
@@ -387,6 +401,10 @@ void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
         update();
     } else if (target.edge) {
         _hoveredEdge = {};
+        _isVAOsDirty = true;
+        update();
+    } else if (target.face) {
+        _hoveredFace = {};
         _isVAOsDirty = true;
         update();
     }

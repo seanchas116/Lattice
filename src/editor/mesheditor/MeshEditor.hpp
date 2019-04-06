@@ -110,6 +110,7 @@ private:
     // vertex hover
     Opt<SP<Mesh::Vertex>> _hoveredVertex;
     Opt<SP<Mesh::Edge>> _hoveredEdge;
+    Opt<SP<Mesh::Face>> _hoveredFace;
     // TODO: hovered face
 };
 
