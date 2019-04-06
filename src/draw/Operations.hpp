@@ -2,7 +2,6 @@
 
 #include "./DrawCircle.hpp"
 #include "./DrawLine.hpp"
-#include "./DrawSolid.hpp"
 #include "./DrawMaterial.hpp"
 #include "./DrawUnicolor.hpp"
 
@@ -15,9 +14,7 @@ public:
 
     DrawCircle drawCircle;
     DrawLine drawLine;
-    DrawSolid drawSolid;
     DrawMaterial drawMaterial;
-
     DrawUnicolor drawUnicolor;
 };
 

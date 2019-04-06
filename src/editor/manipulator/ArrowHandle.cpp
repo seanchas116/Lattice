@@ -32,7 +32,7 @@ void ArrowHandle::draw(const SP<Draw::Operations> &operations, const SP<Camera> 
     }
 
     dmat4 translate = glm::translate(dvec3(_length, 0, 0));
-    operations->drawSolid.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis] * translate, camera, vec3(0), _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
+    operations->drawUnicolor.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis] * translate, camera, _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
     operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
 }
 
