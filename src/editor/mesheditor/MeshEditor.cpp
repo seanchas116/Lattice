@@ -3,6 +3,7 @@
 #include "DrawTool.hpp"
 #include "ExtrudeTool.hpp"
 #include "LoopCutTool.hpp"
+#include "BorderSelectTool.hpp"
 #include "../manipulator/MeshManipulator.hpp"
 #include "../../state/AppState.hpp"
 #include "../../gl/VAO.hpp"
@@ -187,6 +188,9 @@ void MeshEditor::handleToolChange(State::Tool tool) {
         break;
     case State::Tool::LoopCut:
         _tool = makeShared<LoopCutTool>(_appState, _object);
+        break;
+    case State::Tool::BorderSelect:
+        _tool = makeShared<BorderSelectTool>(_appState, _object);
         break;
     default:
         _tool = makeShared<MoveTool>(_appState, _object);

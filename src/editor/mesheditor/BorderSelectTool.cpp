@@ -1,6 +1,7 @@
 #include "BorderSelectTool.hpp"
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
+#include "../../support/Debug.hpp"
 
 using namespace glm;
 
@@ -16,6 +17,7 @@ void BorderSelectTool::mousePressEvent(const Tool::EventTarget &target, const Vi
     }
     _dragged = true;
     _initViewportPos = event.viewportPos;
+    qDebug() << "dragging";
 }
 
 void BorderSelectTool::mouseMoveEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {

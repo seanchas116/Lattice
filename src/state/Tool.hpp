@@ -9,6 +9,7 @@ enum class Tool {
     Extrude,
     InsetFaces,
     LoopCut,
+    BorderSelect,
 };
 
 }

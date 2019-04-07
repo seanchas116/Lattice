@@ -65,6 +65,7 @@ void MainWindow::setupToolBar() {
         {State::Tool::Extrude, tr("Extrude")},
         {State::Tool::InsetFaces, tr("Inset Faces")},
         {State::Tool::LoopCut, tr("Loop Cut")},
+        {State::Tool::BorderSelect, tr("Border Select")},
     };
 
     for (auto [tool, text] : tools) {
