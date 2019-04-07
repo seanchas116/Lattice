@@ -133,6 +133,8 @@ void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &
     if (_appState->isVertexSelectable()) {
         operations->drawCircle.draw(_vertexVAO, _object->location().matrixToWorld(), camera, 6.0, vec4(0), true);
     }
+
+    _tool->draw(operations, camera);
 }
 
 void MeshEditor::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {

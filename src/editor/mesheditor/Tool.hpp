@@ -7,6 +7,11 @@
 #include "../../viewport/MouseEvent.hpp"
 
 namespace Lattice {
+
+namespace Draw {
+class Operations;
+}
+
 namespace Editor {
 namespace MeshEditor {
 
@@ -43,6 +48,8 @@ public:
     virtual void hoverLeaveEvent(const EventTarget& target);
     virtual void keyPressEvent(QKeyEvent* event);
     virtual void keyReleaseEvent(QKeyEvent* event);
+
+    virtual void draw(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
 
 private:
     SP<State::AppState> _appState;
