@@ -74,8 +74,8 @@ private:
     void contextMenuTarget(const Tool::EventTarget& target, const Viewport::ContextMenuEvent& event);
 
     void updateWholeVAOs();
-
     void updateManinpulatorVisibility();
+    void updateChildren();
 
     class EditorPickable;
     class VertexPickable;
@@ -104,6 +104,8 @@ private:
     std::vector<GL::Vertex> _vertexAttributes;
     SP<GL::VAO> _vertexPickVAO;
     std::vector<GL::Vertex> _vertexPickAttributes;
+
+    std::vector<SP<Viewport::Renderable>> _pickables;
 
     SP<Tool> _tool;
 

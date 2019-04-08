@@ -198,6 +198,7 @@ void MeshEditor::handleToolChange(State::Tool tool) {
         _tool = makeShared<MoveTool>(_appState, _object);
         break;
     }
+    updateChildren();
 }
 
 void MeshEditor::handleMeshChange() {
@@ -216,7 +217,6 @@ void MeshEditor::updateWholeVAOs() {
     auto hitTestExclusion = _tool->hitTestExclusion();
 
     std::vector<SP<Viewport::Renderable>> childPickables;
-    childPickables.push_back(_manipulator);
 
     {
         _vertexAttributes.clear();
@@ -359,13 +359,21 @@ void MeshEditor::updateWholeVAOs() {
         _facePickVAO = makeShared<GL::VAO>(pickVertexBuffer, pickIndexBuffer);
     }
 
-    setChildRenderables(childPickables);
+    _pickables = childPickables;
+    updateChildren();
 
     _isVAOsDirty = false;
 }
 
 void MeshEditor::updateManinpulatorVisibility() {
     _manipulator->setVisible(!_appState->document()->meshSelection().empty() && _appState->tool() == State::Tool::None);
+}
+
+void MeshEditor::updateChildren() {
+    auto children = _pickables;
+    children.push_back(_manipulator);
+    children.push_back(_tool);
+    setChildRenderables(children);
 }
 
 void MeshEditor::mousePressTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
