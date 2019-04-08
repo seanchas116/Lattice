@@ -5,6 +5,7 @@
 #include "../../mesh/MeshFragment.hpp"
 #include "../../document/MeshObject.hpp"
 #include "../../viewport/MouseEvent.hpp"
+#include "../../viewport/RenderableObject.hpp"
 
 namespace Lattice {
 
@@ -15,7 +16,7 @@ class Operations;
 namespace Editor {
 namespace MeshEditor {
 
-class Tool : public QObject {
+class Tool : public Viewport::RenderableObject {
     Q_OBJECT
 public:
     struct EventTarget {
@@ -48,8 +49,6 @@ public:
     virtual void hoverLeaveTool(const EventTarget& target);
     virtual void keyPressTool(QKeyEvent* event);
     virtual void keyReleaseTool(QKeyEvent* event);
-
-    virtual void draw(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
 
 private:
     SP<State::AppState> _appState;

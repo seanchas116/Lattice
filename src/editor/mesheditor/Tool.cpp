@@ -49,10 +49,6 @@ void Tool::keyReleaseTool(QKeyEvent *event) {
     Q_UNUSED(event);
 }
 
-void Tool::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
-    Q_UNUSED(operations); Q_UNUSED(camera);
-}
-
 } // namespace MeshEditor
 } // namespace Editor
 } // namespace Lattice
