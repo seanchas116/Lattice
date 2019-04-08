@@ -39,7 +39,6 @@ void CenterHandle::mousePressEvent(const Viewport::MouseEvent &event) {
     if (!isInViewport) {
         return;
     }
-    qDebug() << "center press";
     _depth = viewportPos.z;
     _dragged = true;
     auto pos = event.camera->mapViewportToWorld(dvec3(dvec2(event.viewportPos), _depth));
