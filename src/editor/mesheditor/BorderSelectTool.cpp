@@ -9,7 +9,7 @@ namespace Lattice {
 namespace Editor {
 namespace MeshEditor {
 
-void BorderSelectTool::mousePressEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
+void BorderSelectTool::mousePressTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target);
 
     if (event.originalEvent->button() != Qt::LeftButton) {
@@ -20,7 +20,7 @@ void BorderSelectTool::mousePressEvent(const Tool::EventTarget &target, const Vi
     qDebug() << "dragging";
 }
 
-void BorderSelectTool::mouseMoveEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
+void BorderSelectTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
 
     if (!_dragged) {
@@ -29,7 +29,7 @@ void BorderSelectTool::mouseMoveEvent(const Tool::EventTarget &target, const Vie
     // TODO
 }
 
-void BorderSelectTool::mouseReleaseEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
+void BorderSelectTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
 
     _dragged = false;

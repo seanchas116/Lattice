@@ -11,9 +11,9 @@ public:
 
     HitTestExclusion hitTestExclusion() const override;
 
-    void mousePressEvent(const EventTarget &target, const Viewport::MouseEvent &event) override;
-    void mouseMoveEvent(const EventTarget &target, const Viewport::MouseEvent &event) override;
-    void mouseReleaseEvent(const EventTarget &target, const Viewport::MouseEvent &event) override;
+    void mousePressTool(const EventTarget &target, const Viewport::MouseEvent &event) override;
+    void mouseMoveTool(const EventTarget &target, const Viewport::MouseEvent &event) override;
+    void mouseReleaseTool(const EventTarget &target, const Viewport::MouseEvent &event) override;
 
 private:
     bool _dragStarted {false};

@@ -33,19 +33,19 @@ Tool::HitTestExclusion Tool::hitTestExclusion() const {
     return {};
 }
 
-void Tool::hoverEnterEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
+void Tool::hoverEnterTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
 }
 
-void Tool::hoverLeaveEvent(const Tool::EventTarget &target) {
+void Tool::hoverLeaveTool(const Tool::EventTarget &target) {
     Q_UNUSED(target);
 }
 
-void Tool::keyPressEvent(QKeyEvent *event) {
+void Tool::keyPressTool(QKeyEvent *event) {
     Q_UNUSED(event);
 }
 
-void Tool::keyReleaseEvent(QKeyEvent *event) {
+void Tool::keyReleaseTool(QKeyEvent *event) {
     Q_UNUSED(event);
 }
 

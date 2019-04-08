@@ -23,7 +23,7 @@ Tool::HitTestExclusion DrawTool::hitTestExclusion() const {
     return {{uvPoint->vertex()}, edges, {}};
 }
 
-void DrawTool::mousePressEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
+void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     auto mesh = object()->mesh();
     auto modelMatrix = object()->location().matrixToWorld();
 
@@ -112,7 +112,7 @@ void DrawTool::mousePressEvent(const Tool::EventTarget &target, const Viewport::
     _previewUVPoint = previewPoint;
 }
 
-void DrawTool::mouseMoveEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
+void DrawTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target);
 
     auto mesh = object()->mesh();
@@ -145,11 +145,11 @@ void DrawTool::mouseMoveEvent(const Tool::EventTarget &target, const Viewport::M
     mesh->setPosition({{previewUVPoint->vertex(), pos}});
 }
 
-void DrawTool::mouseReleaseEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
+void DrawTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
 }
 
-void DrawTool::keyPressEvent(QKeyEvent *event) {
+void DrawTool::keyPressTool(QKeyEvent *event) {
     if (event->key() == Qt::Key_Escape || event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
         if (_previewUVPoint) {
             object()->mesh()->removeVertex((*_previewUVPoint)->vertex());

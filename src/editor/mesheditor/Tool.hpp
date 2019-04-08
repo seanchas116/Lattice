@@ -41,13 +41,13 @@ public:
 
     virtual HitTestExclusion hitTestExclusion() const;
 
-    virtual void mousePressEvent(const EventTarget& target, const Viewport::MouseEvent &event) = 0;
-    virtual void mouseMoveEvent(const EventTarget& target, const Viewport::MouseEvent &event) = 0;
-    virtual void mouseReleaseEvent(const EventTarget& target, const Viewport::MouseEvent &event) = 0;
-    virtual void hoverEnterEvent(const EventTarget& target, const Viewport::MouseEvent &event);
-    virtual void hoverLeaveEvent(const EventTarget& target);
-    virtual void keyPressEvent(QKeyEvent* event);
-    virtual void keyReleaseEvent(QKeyEvent* event);
+    virtual void mousePressTool(const EventTarget& target, const Viewport::MouseEvent &event) = 0;
+    virtual void mouseMoveTool(const EventTarget& target, const Viewport::MouseEvent &event) = 0;
+    virtual void mouseReleaseTool(const EventTarget& target, const Viewport::MouseEvent &event) = 0;
+    virtual void hoverEnterTool(const EventTarget& target, const Viewport::MouseEvent &event);
+    virtual void hoverLeaveTool(const EventTarget& target);
+    virtual void keyPressTool(QKeyEvent* event);
+    virtual void keyReleaseTool(QKeyEvent* event);
 
     virtual void draw(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
 

@@ -173,11 +173,11 @@ void MeshEditor::contextMenuEvent(const Viewport::ContextMenuEvent &event) {
 }
 
 void MeshEditor::keyPressEvent(QKeyEvent *event) {
-    _tool->keyPressEvent(event);
+    _tool->keyPressTool(event);
 }
 
 void MeshEditor::keyReleaseEvent(QKeyEvent *event) {
-    _tool->keyReleaseEvent(event);
+    _tool->keyReleaseTool(event);
 }
 
 void MeshEditor::handleToolChange(State::Tool tool) {
@@ -369,15 +369,15 @@ void MeshEditor::updateManinpulatorVisibility() {
 }
 
 void MeshEditor::mousePressTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
-    _tool->mousePressEvent(target, event);
+    _tool->mousePressTool(target, event);
 }
 
 void MeshEditor::mouseMoveTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
-    _tool->mouseMoveEvent(target, event);
+    _tool->mouseMoveTool(target, event);
 }
 
 void MeshEditor::mouseReleaseTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
-    _tool->mouseReleaseEvent(target, event);
+    _tool->mouseReleaseTool(target, event);
 }
 
 void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -396,7 +396,7 @@ void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Viewpor
         _isVAOsDirty = true;
         update();
     }
-    _tool->hoverEnterEvent(target, event);
+    _tool->hoverEnterTool(target, event);
 }
 
 void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
@@ -414,7 +414,7 @@ void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
         _isVAOsDirty = true;
         update();
     }
-    _tool->hoverLeaveEvent(target);
+    _tool->hoverLeaveTool(target);
 }
 
 void MeshEditor::contextMenuTarget(const Tool::EventTarget &target, const Viewport::ContextMenuEvent &event) {
