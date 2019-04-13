@@ -99,9 +99,6 @@ void ViewportContainer::paintGL() {
         (*viewport->_renderable)->draw2DRecursive(&painter, viewport->size());
         painter.restore();
     }
-
-    //painter.setBrush(Qt::blue);
-    //painter.drawRect(0, 0, 100, 100);
 }
 
 } // namespace Renderer
