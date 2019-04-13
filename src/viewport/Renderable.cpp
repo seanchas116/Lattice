@@ -14,7 +14,7 @@ void Renderable::drawPickables(const SP<Draw::Operations> &operations, const SP<
     Q_UNUSED(operations); Q_UNUSED(camera);
 }
 
-void Renderable::draw2D(QPainter *painter, glm::ivec2 viewportSize) {
+void Renderable::draw2D(QPainter *painter, const QSize &viewportSize) {
     Q_UNUSED(painter); Q_UNUSED(viewportSize);
 }
 
