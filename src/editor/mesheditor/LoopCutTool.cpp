@@ -10,7 +10,7 @@ namespace Lattice {
 namespace Editor {
 namespace MeshEditor {
 
-void LoopCutTool::mousePressEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void LoopCutTool::mousePressEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
     // TODO
 
@@ -18,9 +18,9 @@ void LoopCutTool::mousePressEvent(const Tool::EventTarget &target, const Render:
         return;
     }
     auto edge = *target.edge;
-    auto mesh = item()->mesh();
+    auto mesh = object()->mesh();
 
-    Ray<double> mouseRay = event.camera->modelMouseRay(item()->location().matrixToWorld(), event.viewportPos);
+    Ray<double> mouseRay = event.camera->modelMouseRay(object()->location().matrixToWorld(), event.viewportPos);
     RayRayDistanceSolver distanceSolver(Ray<double>(edge->ray()), mouseRay);
     double cutPosition = distanceSolver.t0;
 
@@ -81,12 +81,12 @@ void LoopCutTool::mousePressEvent(const Tool::EventTarget &target, const Render:
     appState()->document()->setMeshSelection(selection);
 }
 
-void LoopCutTool::mouseMoveEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void LoopCutTool::mouseMoveEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
     // TODO
 }
 
-void LoopCutTool::mouseReleaseEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void LoopCutTool::mouseReleaseEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
     // TODO
 }

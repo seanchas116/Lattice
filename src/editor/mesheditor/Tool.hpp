@@ -3,8 +3,8 @@
 #include "../../state/AppState.hpp"
 #include "../../mesh/Mesh.hpp"
 #include "../../mesh/MeshFragment.hpp"
-#include "../../document/MeshItem.hpp"
-#include "../../render/MouseEvent.hpp"
+#include "../../document/MeshObject.hpp"
+#include "../../viewport/MouseEvent.hpp"
 
 namespace Lattice {
 namespace Editor {
@@ -28,25 +28,25 @@ public:
         std::vector<SP<Mesh::Face>> faces;
     };
 
-    Tool(const SP<State::AppState>& appState, const SP<Document::MeshItem>& item) : _appState(appState), _item(item) {}
+    Tool(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object) : _appState(appState), _object(object) {}
     ~Tool();
 
     auto& appState() const { return _appState; }
-    auto& item() const { return _item; }
+    auto& object() const { return _object; }
 
     virtual HitTestExclusion hitTestExclusion() const;
 
-    virtual void mousePressEvent(const EventTarget& target, const Render::MouseEvent &event) = 0;
-    virtual void mouseMoveEvent(const EventTarget& target, const Render::MouseEvent &event) = 0;
-    virtual void mouseReleaseEvent(const EventTarget& target, const Render::MouseEvent &event) = 0;
-    virtual void hoverEnterEvent(const EventTarget& target, const Render::MouseEvent &event);
+    virtual void mousePressEvent(const EventTarget& target, const Viewport::MouseEvent &event) = 0;
+    virtual void mouseMoveEvent(const EventTarget& target, const Viewport::MouseEvent &event) = 0;
+    virtual void mouseReleaseEvent(const EventTarget& target, const Viewport::MouseEvent &event) = 0;
+    virtual void hoverEnterEvent(const EventTarget& target, const Viewport::MouseEvent &event);
     virtual void hoverLeaveEvent(const EventTarget& target);
     virtual void keyPressEvent(QKeyEvent* event);
     virtual void keyReleaseEvent(QKeyEvent* event);
 
 private:
     SP<State::AppState> _appState;
-    SP<Document::MeshItem> _item;
+    SP<Document::MeshObject> _object;
 };
 
 } // namespace MeshEditor

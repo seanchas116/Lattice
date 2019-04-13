@@ -23,9 +23,9 @@ Tool::HitTestExclusion DrawTool::hitTestExclusion() const {
     return {{uvPoint->vertex()}, edges, {}};
 }
 
-void DrawTool::mousePressEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
-    auto mesh = item()->mesh();
-    auto modelMatrix = item()->location().matrixToWorld();
+void DrawTool::mousePressEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
+    auto mesh = object()->mesh();
+    auto modelMatrix = object()->location().matrixToWorld();
 
     if (_drawnUVPoints.empty()) {
         appState()->document()->history()->beginChange(tr("Draw"));
@@ -112,11 +112,11 @@ void DrawTool::mousePressEvent(const Tool::EventTarget &target, const Render::Mo
     _previewUVPoint = previewPoint;
 }
 
-void DrawTool::mouseMoveEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void DrawTool::mouseMoveEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target);
 
-    auto mesh = item()->mesh();
-    auto modelMatrix = item()->location().matrixToWorld();
+    auto mesh = object()->mesh();
+    auto modelMatrix = object()->location().matrixToWorld();
 
     if (!_previewUVPoint) {
         return;
@@ -145,14 +145,14 @@ void DrawTool::mouseMoveEvent(const Tool::EventTarget &target, const Render::Mou
     mesh->setPosition({{previewUVPoint->vertex(), pos}});
 }
 
-void DrawTool::mouseReleaseEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void DrawTool::mouseReleaseEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
 }
 
 void DrawTool::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_Escape || event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
         if (_previewUVPoint) {
-            item()->mesh()->removeVertex((*_previewUVPoint)->vertex());
+            object()->mesh()->removeVertex((*_previewUVPoint)->vertex());
         }
         _drawnUVPoints.clear();
         _previewUVPoint = std::nullopt;

@@ -7,13 +7,13 @@ namespace MeshEditor {
 
 class DrawTool : public Tool {
 public:
-    DrawTool(const SP<State::AppState>& appState, const SP<Document::MeshItem>& item) : Tool(appState, item) {}
+    DrawTool(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object) : Tool(appState, object) {}
 
     HitTestExclusion hitTestExclusion() const override;
 
-    void mousePressEvent(const EventTarget &target, const Render::MouseEvent &event) override;
-    void mouseMoveEvent(const EventTarget &target, const Render::MouseEvent &event) override;
-    void mouseReleaseEvent(const EventTarget &target, const Render::MouseEvent &event) override;
+    void mousePressEvent(const EventTarget &target, const Viewport::MouseEvent &event) override;
+    void mouseMoveEvent(const EventTarget &target, const Viewport::MouseEvent &event) override;
+    void mouseReleaseEvent(const EventTarget &target, const Viewport::MouseEvent &event) override;
     void keyPressEvent(QKeyEvent *event) override;
 
 private:

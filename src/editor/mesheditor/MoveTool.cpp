@@ -8,7 +8,7 @@ namespace Lattice {
 namespace Editor {
 namespace MeshEditor {
 
-void MoveTool::mousePressEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void MoveTool::mousePressEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     if (event.originalEvent->button() != Qt::LeftButton) {
         return;
     }
@@ -42,20 +42,20 @@ void MoveTool::mousePressEvent(const Tool::EventTarget &target, const Render::Mo
     for (auto& v : dragVertices) {
         _initPositions[v] = v->position();
     }
-    _initItemPos = (item()->location().matrixToModel() * dvec4(event.worldPos(), 1)).xyz;
+    _initObjectPos = (object()->location().matrixToModel() * dvec4(event.worldPos(), 1)).xyz;
     _initViewportPos = event.viewportPos;
     _dragStarted = false;
 }
 
-void MoveTool::mouseMoveEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void MoveTool::mouseMoveEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target);
 
     if (!_dragged) {
         return;
     }
 
-    dvec3 itemPos = (item()->location().matrixToModel() * dvec4(event.worldPos(), 1)).xyz;
-    dvec3 offset = itemPos - _initItemPos;
+    dvec3 objectPos = (object()->location().matrixToModel() * dvec4(event.worldPos(), 1)).xyz;
+    dvec3 offset = objectPos - _initObjectPos;
 
     if (!_dragStarted) {
         if (distance(_initViewportPos, dvec2(event.viewportPos.xy)) < appState()->preferences()->moveThreshold()) {
@@ -65,7 +65,7 @@ void MoveTool::mouseMoveEvent(const Tool::EventTarget &target, const Render::Mou
         _dragStarted = true;
     }
 
-    auto& mesh = item()->mesh();
+    auto& mesh = object()->mesh();
     std::unordered_map<SP<Mesh::Vertex>, dvec3> positions;
     for (auto& [v, initialPos] : _initPositions) {
         positions[v] = initialPos + offset;
@@ -73,7 +73,7 @@ void MoveTool::mouseMoveEvent(const Tool::EventTarget &target, const Render::Mou
     mesh->setPosition(positions);
 }
 
-void MoveTool::mouseReleaseEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void MoveTool::mouseReleaseEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
     _dragged = false;
     _initPositions.clear();

@@ -9,7 +9,7 @@ Background::Background(const SP<State::AppState> &appState) : _appState(appState
     initializeOpenGLFunctions();
 }
 
-void Background::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+void Background::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     Q_UNUSED(operations); Q_UNUSED(camera);
 
     // TODO: manage depth test in better way
@@ -21,7 +21,7 @@ void Background::draw(const SP<Render::Operations> &operations, const SP<Camera>
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Background::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+void Background::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     Q_UNUSED(operations); Q_UNUSED(camera);
 
     auto color = toIDColor();
@@ -29,9 +29,9 @@ void Background::drawPickables(const SP<Render::Operations> &operations, const S
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Background::mousePressEvent(const Render::MouseEvent &event) {
+void Background::mousePressEvent(const Viewport::MouseEvent &event) {
     Q_UNUSED(event);
-    _appState->document()->setSelectedItems({});
+    _appState->document()->setSelectedObjects({});
     _appState->document()->setMeshSelection({});
 }
 

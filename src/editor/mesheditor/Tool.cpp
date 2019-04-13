@@ -33,7 +33,7 @@ Tool::HitTestExclusion Tool::hitTestExclusion() const {
     return {};
 }
 
-void Tool::hoverEnterEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void Tool::hoverEnterEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
 }
 

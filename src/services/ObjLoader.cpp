@@ -1,6 +1,6 @@
 #include "ObjLoader.hpp"
 #include "../mesh/Mesh.hpp"
-#include "../document/MeshItem.hpp"
+#include "../document/MeshObject.hpp"
 #include <tiny_obj_loader.h>
 #include <QDir>
 #include <QFileInfo>
@@ -12,7 +12,7 @@ using namespace glm;
 namespace Lattice {
 namespace Services {
 
-std::vector<SP<Document::MeshItem>> ObjLoader::load(const QString &filePathString) {
+std::vector<SP<Document::MeshObject>> ObjLoader::load(const QString &filePathString) {
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> objShapes;
     std::vector<tinyobj::material_t> objMaterials;
@@ -34,7 +34,7 @@ std::vector<SP<Document::MeshItem>> ObjLoader::load(const QString &filePathStrin
         return {};
     }
 
-    std::vector<SP<Document::MeshItem>> items;
+    std::vector<SP<Document::MeshObject>> objects;
 
     auto loadImage = [&](const std::string& name) {
         if (name.empty()) {
@@ -45,8 +45,8 @@ std::vector<SP<Document::MeshItem>> ObjLoader::load(const QString &filePathStrin
     };
 
     for (auto& objShape : objShapes) {
-        auto item = makeShared<Document::MeshItem>();
-        item->setName(objShape.name);
+        auto object = makeShared<Document::MeshObject>();
+        object->setName(objShape.name);
 
         // TODO: use index_t as key
         std::unordered_map<int, SP<Mesh::Vertex>> vertexForIndices;
@@ -59,7 +59,7 @@ std::vector<SP<Document::MeshItem>> ObjLoader::load(const QString &filePathStrin
             vec3 diffuse(objMaterial.diffuse[0], objMaterial.diffuse[1], objMaterial.diffuse[2]);
             auto diffuseImage = loadImage(objMaterial.diffuse_texname);
 
-            auto material = item->mesh()->addMaterial();
+            auto material = object->mesh()->addMaterial();
             material->setBaseColor(diffuse);
             material->setBaseColorImage(diffuseImage);
 
@@ -95,7 +95,7 @@ std::vector<SP<Document::MeshItem>> ObjLoader::load(const QString &filePathStrin
                     // tinyobj::real_t green = attrib.colors[3*idx.vertex_index+1];
                     // tinyobj::real_t blue = attrib.colors[3*idx.vertex_index+2];
                     glm::vec3 pos(vx, vy, vz);
-                    auto vertex = item->mesh()->addVertex(pos);
+                    auto vertex = object->mesh()->addVertex(pos);
                     vertexForIndices.insert({idx.vertex_index, vertex});
                     return vertex;
                 }();
@@ -108,7 +108,7 @@ std::vector<SP<Document::MeshItem>> ObjLoader::load(const QString &filePathStrin
                     tinyobj::real_t tx = attrib.texcoords[2*idx.texcoord_index+0];
                     tinyobj::real_t ty = attrib.texcoords[2*idx.texcoord_index+1];
                     glm::vec2 uv(tx, ty);
-                    auto uvPoint = item->mesh()->addUVPoint(vertex, uv);
+                    auto uvPoint = object->mesh()->addUVPoint(vertex, uv);
 
                     uvPointForIndices.insert({{idx.vertex_index, idx.texcoord_index}, uvPoint});
                     return uvPoint;
@@ -121,17 +121,17 @@ std::vector<SP<Document::MeshItem>> ObjLoader::load(const QString &filePathStrin
             auto materialID = objShape.mesh.material_ids[f];
             if (materialID >= 0) {
                 auto material = materials.at(materialID);
-                item->mesh()->addFace(uvPoints, material);
+                object->mesh()->addFace(uvPoints, material);
             } else {
                 // TODO: add default material
             }
 
         }
 
-        items.push_back(item);
+        objects.push_back(object);
     }
 
-    return items;
+    return objects;
 }
 
 }

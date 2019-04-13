@@ -2,7 +2,7 @@
 #include "Constants.hpp"
 #include "Coordinates.hpp"
 #include "../MeshVAOGenerator.hpp"
-#include "../../render/Operations.hpp"
+#include "../../draw/Operations.hpp"
 #include "../../mesh/Mesh.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
@@ -25,18 +25,18 @@ ArrowHandle::ArrowHandle(int axis, HandleType handleType) :
 {
 }
 
-void ArrowHandle::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+void ArrowHandle::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInViewport){
         return;
     }
 
     dmat4 translate = glm::translate(dvec3(_length, 0, 0));
-    operations->drawSolid.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis] * translate, camera, vec3(0), _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
+    operations->drawUnicolor.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis] * translate, camera, _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
     operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
 }
 
-void ArrowHandle::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+void ArrowHandle::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInViewport){
         return;
@@ -45,7 +45,7 @@ void ArrowHandle::drawPickables(const SP<Render::Operations> &operations, const 
     operations->drawUnicolor.draw(_bodyPickVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, toIDColor());
 }
 
-void ArrowHandle::mousePressEvent(const Render::MouseEvent &event) {
+void ArrowHandle::mousePressEvent(const Viewport::MouseEvent &event) {
     if (event.originalEvent->button() != Qt::LeftButton) {
         return;
     }
@@ -63,7 +63,7 @@ void ArrowHandle::mousePressEvent(const Render::MouseEvent &event) {
     emit onDragBegin(tAxis);
 }
 
-void ArrowHandle::mouseMoveEvent(const Render::MouseEvent &event) {
+void ArrowHandle::mouseMoveEvent(const Viewport::MouseEvent &event) {
     if (!_dragged) {
         return;
     }
@@ -79,17 +79,17 @@ void ArrowHandle::mouseMoveEvent(const Render::MouseEvent &event) {
     emit onDragMove(tAxis);
 }
 
-void ArrowHandle::mouseReleaseEvent(const Render::MouseEvent &event) {
+void ArrowHandle::mouseReleaseEvent(const Viewport::MouseEvent &event) {
     Q_UNUSED(event);
     _dragged = false;
     emit onDragEnd();
 }
 
-void ArrowHandle::contextMenuEvent(const Render::ContextMenuEvent &event) {
+void ArrowHandle::contextMenuEvent(const Viewport::ContextMenuEvent &event) {
     emit onContextMenu(event);
 }
 
-void ArrowHandle::hoverEnterEvent(const Render::MouseEvent &event) {
+void ArrowHandle::hoverEnterEvent(const Viewport::MouseEvent &event) {
     Q_UNUSED(event);
     _hovered = true;
     update();

@@ -128,7 +128,7 @@ void Manipulator::setScaleHandleVisible(bool isScaleHandleVisible) {
 }
 
 void Manipulator::updateChildren() {
-    std::vector<SP<Render::Renderable>> handles = {_centerHandle};
+    std::vector<SP<Viewport::Renderable>> handles = {_centerHandle};
     if (_isTranslateHandleVisible) {
         handles.insert(handles.end(), _translateHandles.begin(), _translateHandles.end());
     }

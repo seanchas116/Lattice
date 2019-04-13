@@ -1,6 +1,6 @@
 #pragma once
 #include <QObject>
-#include "../../render/RenderableObject.hpp"
+#include "../../viewport/RenderableObject.hpp"
 
 namespace Lattice {
 
@@ -11,7 +11,7 @@ class CenterHandle;
 class ArrowHandle;
 class RotateHandle;
 
-class Manipulator : public Render::RenderableObject {
+class Manipulator : public Viewport::RenderableObject {
     Q_OBJECT
 
 public:
@@ -44,7 +44,7 @@ signals:
     void onDragMove(ValueType type, glm::dvec3 values);
     void onDragEnd(ValueType type);
 
-    void onContextMenu(const Render::ContextMenuEvent& event);
+    void onContextMenu(const Viewport::ContextMenuEvent& event);
 
 private:
     void updateChildren();

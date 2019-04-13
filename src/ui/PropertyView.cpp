@@ -1,5 +1,5 @@
 #include "PropertyView.hpp"
-#include "ItemPropertyView.hpp"
+#include "ObjectPropertyView.hpp"
 #include "MeshPropertyView.hpp"
 #include "../state/AppState.hpp"
 #include "../document/Document.hpp"
@@ -15,21 +15,21 @@ PropertyView::PropertyView(const SP<State::AppState> &appState, QWidget *parent)
     auto layout = new QVBoxLayout();
     layout->setMargin(0);
 
-    auto itemPropertyView = new ItemPropertyView(appState);
-    layout->addWidget(itemPropertyView);
+    auto objectPropertyView = new ObjectPropertyView(appState);
+    layout->addWidget(objectPropertyView);
     auto meshPropertyView = new MeshPropertyView(appState);
     layout->addWidget(meshPropertyView);
 
     auto document = appState->document();
 
-    auto update = [document, itemPropertyView, meshPropertyView] {
-        meshPropertyView->setItem(document->editedItem());
-        meshPropertyView->setVisible(!!document->editedItem() && !document->meshSelection().vertices.empty());
-        itemPropertyView->setItems(document->selectedItems());
-        itemPropertyView->setVisible(!document->selectedItems().empty() && !document->editedItem());
+    auto update = [document, objectPropertyView, meshPropertyView] {
+        meshPropertyView->setObject(document->editedObject());
+        meshPropertyView->setVisible(!!document->editedObject() && !document->meshSelection().vertices.empty());
+        objectPropertyView->setObjects(document->selectedObjects());
+        objectPropertyView->setVisible(!document->selectedObjects().empty() && !document->editedObject());
     };
-    connect(document.get(), &Document::Document::selectedItemsChanged, this, update);
-    connect(document.get(), &Document::Document::editedItemChanged, this, update);
+    connect(document.get(), &Document::Document::selectedObjectsChanged, this, update);
+    connect(document.get(), &Document::Document::editedObjectChanged, this, update);
     connect(document.get(), &Document::Document::meshSelectionChanged, this, update);
     update();
 

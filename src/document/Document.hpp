@@ -9,8 +9,8 @@
 namespace Lattice {
 namespace Document {
 
-class Item;
-class MeshItem;
+class Object;
+class MeshObject;
 class History;
 
 class Document final : public QObject, public EnableSharedFromThis<Document> {
@@ -18,50 +18,50 @@ class Document final : public QObject, public EnableSharedFromThis<Document> {
 public:
     Document();
 
-    const SP<Item>& rootItem() const { return _rootItem; }
+    auto& rootObject() const { return _rootObject; }
 
-    auto& currentItem() const { return _currentItem; }
-    void setCurrentItem(const Opt<SP<Item>>& item);
+    auto& currentObject() const { return _currentObject; }
+    void setCurrentObject(const Opt<SP<Object>>& object);
 
-    auto& editedItem() const { return _editedItem; }
-    void setEditedItem(const Opt<SP<MeshItem>>& item);
+    auto& editedObject() const { return _editedObject; }
+    void setEditedObject(const Opt<SP<MeshObject>>& object);
 
-    bool isEditing() const { return bool(_editedItem); }
+    bool isEditing() const { return bool(_editedObject); }
     void setIsEditing(bool isEditing);
 
-    auto& selectedItems() const { return _selectedItems; }
-    void setSelectedItems(const std::unordered_set<SP<Item>>& items);
+    auto& selectedObjects() const { return _selectedObjects; }
+    void setSelectedObjects(const std::unordered_set<SP<Object>>& objects);
 
-    void selectItem(const SP<Item>& item, bool append);
+    void selectObject(const SP<Object>& object, bool append);
 
-    void insertItemToCurrentPosition(const SP<Item>& item);
-    void deleteSelectedItems();
+    void insertObjectToCurrentPosition(const SP<Object>& object);
+    void deleteSelectedObjects();
 
-    const SP<History>& history() const { return _history; }
+    auto& history() const { return _history; }
 
     auto& meshSelection() const { return _meshSelection; }
     void setMeshSelection(const Mesh::MeshFragment &meshSelection);
 
 signals:
-    void currentItemChanged(const Opt<SP<Item>>& item);
-    void editedItemChanged(const Opt<SP<MeshItem>>& item);
+    void currentObjectChanged(const Opt<SP<Object>>& object);
+    void editedObjectChanged(const Opt<SP<MeshObject>>& object);
     void isEditingChanged(bool isEditing);
-    void selectedItemsChanged(const std::unordered_set<SP<Item>>& items);
+    void selectedObjectsChanged(const std::unordered_set<SP<Object>>& objects);
     void meshSelectionChanged(const Mesh::MeshFragment &meshSelection);
 
-    void itemAboutToBeInserted(const SP<Item>& item);
-    void itemInserted(const SP<Item>& item);
-    void itemAboutToBeRemoved(const SP<Item>& item);
-    void itemRemoved(const SP<Item>& item);
+    void objectAboutToBeInserted(const SP<Object>& object);
+    void objectInserted(const SP<Object>& object);
+    void objectAboutToBeRemoved(const SP<Object>& object);
+    void objectRemoved(const SP<Object>& object);
 
 private:
-    void watchChildrenInsertRemove(const SP<Item>& item);
+    void watchChildrenInsertRemove(const SP<Object>& object);
 
-    SP<Item> _rootItem;
+    SP<Object> _rootObject;
 
-    Opt<SP<Item>> _currentItem;
-    Opt<SP<MeshItem>> _editedItem;
-    std::unordered_set<SP<Item>> _selectedItems;
+    Opt<SP<Object>> _currentObject;
+    Opt<SP<MeshObject>> _editedObject;
+    std::unordered_set<SP<Object>> _selectedObjects;
     Mesh::MeshFragment _meshSelection;
 
     SP<History> _history;

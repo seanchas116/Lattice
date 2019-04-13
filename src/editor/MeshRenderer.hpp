@@ -3,7 +3,7 @@
 #include "../support/Shorthands.hpp"
 #include "../support/Box.hpp"
 #include "../support/Location.hpp"
-#include "../render/RenderableObject.hpp"
+#include "../viewport/RenderableObject.hpp"
 #include <glm/glm.hpp>
 #include <unordered_map>
 
@@ -18,7 +18,7 @@ class AppState;
 }
 
 namespace Document {
-class MeshItem;
+class MeshObject;
 }
 
 namespace Mesh {
@@ -34,24 +34,24 @@ namespace Editor {
 
 class MeshPicker;
 
-class MeshRenderer final : public Render::RenderableObject {
+class MeshRenderer final : public Viewport::RenderableObject {
     Q_OBJECT
 public:
-    MeshRenderer(const SP<State::AppState>& appState, const SP<Document::MeshItem>& item);
+    MeshRenderer(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object);
 
-    void draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) override;
-    void drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) override;
+    void draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
+    void drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
 
-    void mousePressEvent(const Render::MouseEvent &event) override;
-    void mouseMoveEvent(const Render::MouseEvent &event) override;
-    void mouseReleaseEvent(const Render::MouseEvent &event) override;
-    void mouseDoubleClickEvent(const Render::MouseEvent &event) override;
+    void mousePressEvent(const Viewport::MouseEvent &event) override;
+    void mouseMoveEvent(const Viewport::MouseEvent &event) override;
+    void mouseReleaseEvent(const Viewport::MouseEvent &event) override;
+    void mouseDoubleClickEvent(const Viewport::MouseEvent &event) override;
 
 private:
     void updateVAOs();
 
     SP<State::AppState> _appState;
-    SP<Document::MeshItem> _item;
+    SP<Document::MeshObject> _object;
 
     std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> _faceVAOs;
     SP<GL::VAO> _edgeVAO;

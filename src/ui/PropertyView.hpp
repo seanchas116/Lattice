@@ -9,12 +9,12 @@ namespace State {
 class AppState;
 }
 namespace Document {
-class Item;
+class Object;
 }
 
 namespace UI {
 
-class ItemPropertyView;
+class ObjectPropertyView;
 class MeshPropertyView;
 
 class PropertyView : public QWidget {

@@ -3,13 +3,14 @@
 #include "DrawTool.hpp"
 #include "ExtrudeTool.hpp"
 #include "LoopCutTool.hpp"
+#include "BorderSelectTool.hpp"
 #include "../manipulator/MeshManipulator.hpp"
 #include "../../state/AppState.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
-#include "../../document/MeshItem.hpp"
+#include "../../document/MeshObject.hpp"
 #include "../../mesh/Mesh.hpp"
 #include "../../support/Debug.hpp"
 #include "../../support/Camera.hpp"
@@ -26,24 +27,28 @@ const vec4 unselectedColor = vec4(0, 0, 0, 1);
 const vec4 selectedColor = vec4(1, 1, 1, 1);
 const vec4 hoveredColor = vec4(1, 1, 0, 1);
 
+const vec4 unselectedFaceHighlight = vec4(0, 0, 0, 0);
+const vec4 selectedFaceHighlight = vec4(1, 1, 1, 0.5);
+const vec4 hoveredFaceHighlight = vec4(1, 1, 0.5, 0.5);
+
 }
 
-class MeshEditor::EditorPickable : public Render::Renderable {
+class MeshEditor::EditorPickable : public Viewport::Renderable {
 public:
     EditorPickable(MeshEditor* editor) : _editor(editor) {}
-    void mousePressEvent(const Render::MouseEvent &event) override {
+    void mousePressEvent(const Viewport::MouseEvent &event) override {
         _editor->mousePressTarget(target(), event);
     }
-    void mouseMoveEvent(const Render::MouseEvent &event) override {
+    void mouseMoveEvent(const Viewport::MouseEvent &event) override {
         _editor->mouseMoveTarget(target(), event);
     }
-    void mouseReleaseEvent(const Render::MouseEvent &event) override {
+    void mouseReleaseEvent(const Viewport::MouseEvent &event) override {
         _editor->mouseReleaseTarget(target(), event);
     }
-    void contextMenuEvent(const Render::ContextMenuEvent &event) override {
+    void contextMenuEvent(const Viewport::ContextMenuEvent &event) override {
         _editor->contextMenuTarget(target(), event);
     }
-    void hoverEnterEvent(const Render::MouseEvent &event) override {
+    void hoverEnterEvent(const Viewport::MouseEvent &event) override {
         _editor->hoverEnterTarget(target(), event);
     }
     void hoverLeaveEvent() override {
@@ -85,22 +90,22 @@ private:
     SP<Mesh::Face> _face;
 };
 
-MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::MeshItem> &item) :
+MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::MeshObject> &object) :
     _appState(appState),
-    _item(item),
-    _manipulator(makeShared<Manipulator::MeshManipulator>(appState, item)),
+    _object(object),
+    _manipulator(makeShared<Manipulator::MeshManipulator>(appState, object)),
     _faceVBO(makeShared<GL::VertexBuffer<GL::Vertex>>()),
     _facePickVAO(makeShared<GL::VAO>()),
     _edgeVAO(makeShared<GL::VAO>()),
     _edgePickVAO(makeShared<GL::VAO>()),
     _vertexVAO(makeShared<GL::VAO>()),
     _vertexPickVAO(makeShared<GL::VAO>()),
-    _tool(makeShared<MoveTool>(appState, item))
+    _tool(makeShared<MoveTool>(appState, object))
 {
     initializeOpenGLFunctions();
     updateWholeVAOs();
 
-    connect(item->mesh().get(), &Mesh::Mesh::changed, this, &MeshEditor::handleMeshChange);
+    connect(object->mesh().get(), &Mesh::Mesh::changed, this, &MeshEditor::handleMeshChange);
     connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::handleMeshChange);
 
     connect(appState.get(), &State::AppState::toolChanged, this, &MeshEditor::handleToolChange);
@@ -118,19 +123,19 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     connect(appState.get(), &State::AppState::isScaleHandleVisibleChanged, _manipulator.get(), &Manipulator::Manipulator::setScaleHandleVisible);
 }
 
-void MeshEditor::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     updateWholeVAOs();
 
     for (auto& [material, vao] : _faceVAOs) {
-        operations->drawMaterial.draw(vao, _item->location().matrixToWorld(), camera, material);
+        operations->drawMaterial.draw(vao, _object->location().matrixToWorld(), camera, material);
     }
-    operations->drawLine.draw(_edgeVAO, _item->location().matrixToWorld(), camera, 1.0, vec4(0), true);
+    operations->drawLine.draw(_edgeVAO, _object->location().matrixToWorld(), camera, 1.0, vec4(0), true);
     if (_appState->isVertexSelectable()) {
-        operations->drawCircle.draw(_vertexVAO, _item->location().matrixToWorld(), camera, 6.0, vec4(0), true);
+        operations->drawCircle.draw(_vertexVAO, _object->location().matrixToWorld(), camera, 6.0, vec4(0), true);
     }
 }
 
-void MeshEditor::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+void MeshEditor::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     updateWholeVAOs();
 
     auto idColor = toIDColor();
@@ -139,29 +144,29 @@ void MeshEditor::drawPickables(const SP<Render::Operations> &operations, const S
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (_appState->isFaceSelectable()) {
-        operations->drawUnicolor.draw(_facePickVAO, _item->location().matrixToWorld(), camera, vec4(0), true);
+        operations->drawUnicolor.draw(_facePickVAO, _object->location().matrixToWorld(), camera, vec4(0), true);
     }
     if (_appState->isEdgeSelectable()) {
-        operations->drawLine.draw(_edgePickVAO, _item->location().matrixToWorld(), camera, 12.0, vec4(0), true);
+        operations->drawLine.draw(_edgePickVAO, _object->location().matrixToWorld(), camera, 12.0, vec4(0), true);
     }
     if (_appState->isVertexSelectable()) {
-        operations->drawCircle.draw(_vertexPickVAO, _item->location().matrixToWorld(), camera, 24.0, vec4(0), true);
+        operations->drawCircle.draw(_vertexPickVAO, _object->location().matrixToWorld(), camera, 24.0, vec4(0), true);
     }
 }
 
-void MeshEditor::mousePressEvent(const Render::MouseEvent &event) {
+void MeshEditor::mousePressEvent(const Viewport::MouseEvent &event) {
     mousePressTarget({}, event);
 }
 
-void MeshEditor::mouseMoveEvent(const Render::MouseEvent &event) {
+void MeshEditor::mouseMoveEvent(const Viewport::MouseEvent &event) {
     mouseMoveTarget({}, event);
 }
 
-void MeshEditor::mouseReleaseEvent(const Render::MouseEvent &event) {
+void MeshEditor::mouseReleaseEvent(const Viewport::MouseEvent &event) {
     mouseReleaseTarget({}, event);
 }
 
-void MeshEditor::contextMenuEvent(const Render::ContextMenuEvent &event) {
+void MeshEditor::contextMenuEvent(const Viewport::ContextMenuEvent &event) {
     contextMenuTarget({}, event);
 }
 
@@ -176,16 +181,19 @@ void MeshEditor::keyReleaseEvent(QKeyEvent *event) {
 void MeshEditor::handleToolChange(State::Tool tool) {
     switch (tool) {
     case State::Tool::Draw:
-        _tool = makeShared<DrawTool>(_appState, _item);
+        _tool = makeShared<DrawTool>(_appState, _object);
         break;
     case State::Tool::Extrude:
-        _tool = makeShared<ExtrudeTool>(_appState, _item);
+        _tool = makeShared<ExtrudeTool>(_appState, _object);
         break;
     case State::Tool::LoopCut:
-        _tool = makeShared<LoopCutTool>(_appState, _item);
+        _tool = makeShared<LoopCutTool>(_appState, _object);
+        break;
+    case State::Tool::BorderSelect:
+        _tool = makeShared<BorderSelectTool>(_appState, _object);
         break;
     default:
-        _tool = makeShared<MoveTool>(_appState, _item);
+        _tool = makeShared<MoveTool>(_appState, _object);
         break;
     }
 }
@@ -201,19 +209,20 @@ void MeshEditor::updateWholeVAOs() {
     }
 
     auto& selectedVertices = _appState->document()->meshSelection().vertices;
+    auto selectedFaces = _appState->document()->meshSelection().faces();
 
     auto hitTestExclusion = _tool->hitTestExclusion();
 
-    std::vector<SP<Render::Renderable>> childPickables;
+    std::vector<SP<Viewport::Renderable>> childPickables;
     childPickables.push_back(_manipulator);
 
     {
         _vertexAttributes.clear();
-        _vertexAttributes.reserve(_item->mesh()->vertices().size());
+        _vertexAttributes.reserve(_object->mesh()->vertices().size());
         _vertexPickAttributes.clear();
-        _vertexPickAttributes.reserve(_item->mesh()->vertices().size());
+        _vertexPickAttributes.reserve(_object->mesh()->vertices().size());
 
-        for (auto& v : _item->mesh()->vertices()) {
+        for (auto& v : _object->mesh()->vertices()) {
             bool selected = selectedVertices.find(v) != selectedVertices.end();
             bool hovered = v == _hoveredVertex;
 
@@ -246,12 +255,12 @@ void MeshEditor::updateWholeVAOs() {
 
     {
         _edgeAttributes.clear();
-        _edgeAttributes.reserve(_item->mesh()->edges().size() * 2);
+        _edgeAttributes.reserve(_object->mesh()->edges().size() * 2);
         _edgePickAttributes.clear();
-        _edgePickAttributes.reserve(_item->mesh()->edges().size() * 2);
+        _edgePickAttributes.reserve(_object->mesh()->edges().size() * 2);
 
         std::vector<GL::IndexBuffer::Line> indices;
-        for (auto& [_, e] : _item->mesh()->edges()) {
+        for (auto& [_, e] : _object->mesh()->edges()) {
             bool hovered = e == _hoveredEdge;
 
             auto pickable = makeShared<EdgePickable>(this, e);
@@ -297,11 +306,13 @@ void MeshEditor::updateWholeVAOs() {
         _faceAttributes.clear();
         _facePickAttributes.clear();
 
-        auto addPoint = [&](const SP<Mesh::Face>& face, const SP<FacePickable>& pickable, const SP<Mesh::UVPoint>& p) {
+        auto addPoint = [&](const SP<Mesh::Face>& face, const SP<FacePickable>& pickable, const SP<Mesh::UVPoint>& p, bool hovered, bool selected) {
             GL::Vertex attrib;
+
             attrib.position = p->vertex()->position();
             attrib.texCoord = p->position();
             attrib.normal = p->vertex()->normal(face);
+            attrib.color = hovered ? hoveredFaceHighlight : selected ? selectedFaceHighlight : unselectedFaceHighlight;
 
             GL::Vertex pickAttrib;
             pickAttrib.position = p->vertex()->position();
@@ -315,16 +326,19 @@ void MeshEditor::updateWholeVAOs() {
 
         std::vector<GL::IndexBuffer::Triangle> pickTriangles;
 
-        for (auto& material : _item->mesh()->materials()) {
+        for (auto& material : _object->mesh()->materials()) {
             std::vector<GL::IndexBuffer::Triangle> triangles;
             for (auto& face : material->faces()) {
+                bool hovered = _hoveredFace == face->sharedFromThis();
+                bool selected = selectedFaces.find(face->sharedFromThis()) != selectedFaces.end();
+
                 auto pickable = makeShared<FacePickable>(this, face->sharedFromThis());
                 childPickables.push_back(pickable);
 
-                auto i0 = addPoint(face->sharedFromThis(), pickable, face->uvPoints()[0]);
+                auto i0 = addPoint(face->sharedFromThis(), pickable, face->uvPoints()[0], hovered, selected);
                 for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
-                    auto i1 = addPoint(face->sharedFromThis(), pickable, face->uvPoints()[i - 1]);
-                    auto i2 = addPoint(face->sharedFromThis(), pickable, face->uvPoints()[i]);
+                    auto i1 = addPoint(face->sharedFromThis(), pickable, face->uvPoints()[i - 1], hovered, selected);
+                    auto i2 = addPoint(face->sharedFromThis(), pickable, face->uvPoints()[i], hovered, selected);
                     triangles.push_back({i0, i1, i2});
                     pickTriangles.push_back({i0, i1, i2});
                 }
@@ -352,19 +366,19 @@ void MeshEditor::updateManinpulatorVisibility() {
     _manipulator->setVisible(!_appState->document()->meshSelection().empty() && _appState->tool() == State::Tool::None);
 }
 
-void MeshEditor::mousePressTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void MeshEditor::mousePressTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     _tool->mousePressEvent(target, event);
 }
 
-void MeshEditor::mouseMoveTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void MeshEditor::mouseMoveTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     _tool->mouseMoveEvent(target, event);
 }
 
-void MeshEditor::mouseReleaseTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void MeshEditor::mouseReleaseTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     _tool->mouseReleaseEvent(target, event);
 }
 
-void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(event);
     // TODO: update partially
     if (target.vertex) {
@@ -373,6 +387,10 @@ void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Render:
         update();
     } else if (target.edge) {
         _hoveredEdge = target.edge;
+        _isVAOsDirty = true;
+        update();
+    } else if (target.face) {
+        _hoveredFace = target.face;
         _isVAOsDirty = true;
         update();
     }
@@ -389,11 +407,15 @@ void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
         _hoveredEdge = {};
         _isVAOsDirty = true;
         update();
+    } else if (target.face) {
+        _hoveredFace = {};
+        _isVAOsDirty = true;
+        update();
     }
     _tool->hoverLeaveEvent(target);
 }
 
-void MeshEditor::contextMenuTarget(const Tool::EventTarget &target, const Render::ContextMenuEvent &event) {
+void MeshEditor::contextMenuTarget(const Tool::EventTarget &target, const Viewport::ContextMenuEvent &event) {
     Q_UNUSED(target);
 
     QMenu contextMenu;

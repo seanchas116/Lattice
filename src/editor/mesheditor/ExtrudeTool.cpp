@@ -13,7 +13,7 @@ Tool::HitTestExclusion ExtrudeTool::hitTestExclusion() const {
     return {};
 }
 
-void ExtrudeTool::mousePressEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void ExtrudeTool::mousePressEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     auto clickedFragment = target.fragment();
     if (clickedFragment.empty()) {
         return;
@@ -33,7 +33,7 @@ void ExtrudeTool::mousePressEvent(const Tool::EventTarget &target, const Render:
     }
 }
 
-void ExtrudeTool::mouseMoveEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void ExtrudeTool::mouseMoveEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target);
 
     if (_fragment.empty()) {
@@ -46,7 +46,7 @@ void ExtrudeTool::mouseMoveEvent(const Tool::EventTarget &target, const Render::
         }
 
         appState()->document()->history()->beginChange(tr("Extrude"));
-        auto& mesh = item()->mesh();
+        auto& mesh = object()->mesh();
 
         _oldToNewUVPoints.clear();
 
@@ -154,10 +154,10 @@ void ExtrudeTool::mouseMoveEvent(const Tool::EventTarget &target, const Render::
         newPositions[newUV->vertex()] = _initPositions[oldUV->vertex()] + offset;
     }
 
-    item()->mesh()->setPosition(newPositions);
+    object()->mesh()->setPosition(newPositions);
 }
 
-void ExtrudeTool::mouseReleaseEvent(const Tool::EventTarget &target, const Render::MouseEvent &event) {
+void ExtrudeTool::mouseReleaseEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
 
     _fragment = {};

@@ -13,11 +13,11 @@ namespace Manipulator {
 CenterHandle::CenterHandle() {
 }
 
-void CenterHandle::draw(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+void CenterHandle::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     Q_UNUSED(operations); Q_UNUSED(camera);
 }
 
-void CenterHandle::drawPickables(const SP<Render::Operations> &operations, const SP<Camera> &camera) {
+void CenterHandle::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     auto [viewportPos, isInViewport] = camera->mapWorldToViewport(_targetPosition);
     if (!isInViewport) {
         return;
@@ -31,7 +31,7 @@ void CenterHandle::drawPickables(const SP<Render::Operations> &operations, const
     operations->drawCircle.draw2D(vao, dmat4(1), camera->viewportSize(), 32, toIDColor());
 }
 
-void CenterHandle::mousePressEvent(const Render::MouseEvent &event) {
+void CenterHandle::mousePressEvent(const Viewport::MouseEvent &event) {
     if (event.originalEvent->button() != Qt::LeftButton) {
         return;
     }
@@ -46,7 +46,7 @@ void CenterHandle::mousePressEvent(const Render::MouseEvent &event) {
     emit onDragBegin(pos);
 }
 
-void CenterHandle::mouseMoveEvent(const Render::MouseEvent &event) {
+void CenterHandle::mouseMoveEvent(const Viewport::MouseEvent &event) {
     if (!_dragged) {
         return;
     }
@@ -54,7 +54,7 @@ void CenterHandle::mouseMoveEvent(const Render::MouseEvent &event) {
     emit onDragMove(pos);
 }
 
-void CenterHandle::mouseReleaseEvent(const Render::MouseEvent &event) {
+void CenterHandle::mouseReleaseEvent(const Viewport::MouseEvent &event) {
     Q_UNUSED(event);
     if (!_dragged) {
         return;
@@ -63,7 +63,7 @@ void CenterHandle::mouseReleaseEvent(const Render::MouseEvent &event) {
     emit onDragEnd();
 }
 
-void CenterHandle::contextMenuEvent(const Render::ContextMenuEvent &event) {
+void CenterHandle::contextMenuEvent(const Viewport::ContextMenuEvent &event) {
     emit onContextMenu(event);
 }
 

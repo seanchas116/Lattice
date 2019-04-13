@@ -2,7 +2,7 @@
 #include <QOpenGLWidget>
 #include "CameraController.hpp"
 #include "../support/Shorthands.hpp"
-#include "../render/Viewport.hpp"
+#include "../viewport/Viewport.hpp"
 
 namespace Lattice {
 namespace State {
@@ -14,9 +14,9 @@ namespace Editor {
 class EditorScene;
 class KeyObserver;
 
-class EditorViewport final : public Render::Viewport {
+class EditorViewport final : public Viewport::Viewport {
     Q_OBJECT
-    using super = Render::Viewport;
+    using super = Viewport;
 public:
     explicit EditorViewport(const SP<State::AppState>& appState, const SP<KeyObserver>& keyObserver, QWidget *parent = nullptr);
 

@@ -8,16 +8,16 @@ namespace MeshEditor {
 
 class MoveTool : public Tool {
 public:
-    MoveTool(const SP<State::AppState>& appState, const SP<Document::MeshItem>& item) : Tool(appState, item) {}
+    MoveTool(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object) : Tool(appState, object) {}
 
-    void mousePressEvent(const EventTarget &target, const Render::MouseEvent &event) override;
-    void mouseMoveEvent(const EventTarget &target, const Render::MouseEvent &event) override;
-    void mouseReleaseEvent(const EventTarget &target, const Render::MouseEvent &event) override;
+    void mousePressEvent(const EventTarget &target, const Viewport::MouseEvent &event) override;
+    void mouseMoveEvent(const EventTarget &target, const Viewport::MouseEvent &event) override;
+    void mouseReleaseEvent(const EventTarget &target, const Viewport::MouseEvent &event) override;
 
 private:
     Mesh::MeshFragment _nextSelection;
     std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _initPositions;
-    glm::dvec3 _initItemPos {0};
+    glm::dvec3 _initObjectPos {0};
     glm::dvec2 _initViewportPos {0};
     bool _dragged {false};
     bool _dragStarted {false};
