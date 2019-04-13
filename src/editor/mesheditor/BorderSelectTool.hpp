@@ -14,8 +14,11 @@ public:
     void mouseMoveTool(const EventTarget &target, const Viewport::MouseEvent &event) override;
     void mouseReleaseTool(const EventTarget &target, const Viewport::MouseEvent &event) override;
 
+    void draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
+
 private:
     glm::dvec2 _initViewportPos {0};
+    glm::dvec2 _currentViewportPos {0};
     bool _dragged {false};
 };
 

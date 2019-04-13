@@ -2,6 +2,9 @@
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
 #include "../../support/Debug.hpp"
+#include "../../gl/VAO.hpp"
+#include "../../gl/Vertex.hpp"
+#include "../../gl/VertexBuffer.hpp"
 
 using namespace glm;
 
@@ -16,8 +19,8 @@ void BorderSelectTool::mousePressTool(const Tool::EventTarget &target, const Vie
         return;
     }
     _dragged = true;
-    _initViewportPos = event.viewportPos;
-    qDebug() << "dragging";
+    _initViewportPos = _currentViewportPos = event.viewportPos;
+    update();
 }
 
 void BorderSelectTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -26,15 +29,24 @@ void BorderSelectTool::mouseMoveTool(const Tool::EventTarget &target, const View
     if (!_dragged) {
         return;
     }
-    // TODO
+
+    _currentViewportPos = event.viewportPos;
+    update();
 }
 
 void BorderSelectTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
 
     _dragged = false;
+    update();
+}
 
-    // TODO
+void BorderSelectTool::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+    GL::Vertex vertex { dvec3(_currentViewportPos, 0) };
+    auto vbo = makeShared<GL::VertexBuffer<GL::Vertex>>();
+    vbo->setVertices({vertex});
+    auto vao = makeShared<GL::VAO>(vbo, GL::Primitive::Point);
+    operations->drawCircle.draw2D(vao, dmat4(1), camera->viewportSize(), 32, glm::vec4(0, 0, 1, 1));
 }
 
 } // namespace MeshEditor
