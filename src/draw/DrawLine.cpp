@@ -8,7 +8,10 @@ namespace Draw {
 
 DrawLine::DrawLine() : _shader(Resource::read("src/draw/DrawLine.vert"),
                                Resource::read("src/draw/DrawLine.geom"),
-                               Resource::read("src/draw/DrawLine.frag")) {
+                               Resource::read("src/draw/DrawLine.frag")),
+                       _shader2D(Resource::read("src/draw/DrawLine2D.vert"),
+                                 Resource::read("src/draw/DrawLine2D.geom"),
+                                 Resource::read("src/draw/DrawLine.frag")) {
 }
 
 void DrawLine::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<Camera> &camera, double width, glm::vec4 color, bool useVertexColor, double zOffset) {

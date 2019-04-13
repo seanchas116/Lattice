@@ -22,6 +22,7 @@ public:
 
 private:
     GL::Shader _shader;
+    GL::Shader _shader2D;
 };
 
 }
