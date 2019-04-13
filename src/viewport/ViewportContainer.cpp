@@ -86,8 +86,19 @@ void ViewportContainer::paintGL() {
     QPainter painter(&device);
 
     painter.setRenderHint(QPainter::Antialiasing);
-    painter.setBrush(Qt::blue);
-    painter.drawRect(0, 0, 100, 100);
+
+    for (auto viewport : _viewports) {
+        if (!viewport->_renderable) {
+            continue;
+        }
+        painter.save();
+        painter.translate(viewport->rect().topLeft());
+        (*viewport->_renderable)->draw2DRecursive(&painter, viewport->size());
+        painter.restore();
+    }
+
+    //painter.setBrush(Qt::blue);
+    //painter.drawRect(0, 0, 100, 100);
 }
 
 } // namespace Renderer
