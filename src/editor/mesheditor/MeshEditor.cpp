@@ -156,6 +156,7 @@ void MeshEditor::drawPickables(const SP<Draw::Operations> &operations, const SP<
 }
 
 void MeshEditor::draw2D(QPainter *painter, const QSize &viewportSize) {
+    //qDebug() << "draw2D";
     painter->setBrush(Qt::blue);
     painter->drawRect(0, 0, 100, 100);
 }

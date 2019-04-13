@@ -8,6 +8,7 @@
 #include <QOpenGLDebugLogger>
 #include <QOpenGLPaintDevice>
 #include <QPainter>
+#include <QTransform>
 
 namespace Lattice {
 namespace Viewport {
@@ -82,8 +83,9 @@ void ViewportContainer::paintGL() {
     glDisable(GL_CULL_FACE);
     glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebufferObject());
 
-    QOpenGLPaintDevice device(width() * devicePixelRatio(), height() * devicePixelRatio());
+    QOpenGLPaintDevice device(width() * devicePixelRatioF(), height() * devicePixelRatioF());
     QPainter painter(&device);
+    painter.scale(devicePixelRatioF(), devicePixelRatioF());
 
     painter.setRenderHint(QPainter::Antialiasing);
 
@@ -92,7 +94,8 @@ void ViewportContainer::paintGL() {
             continue;
         }
         painter.save();
-        painter.translate(viewport->rect().topLeft());
+        auto offset = viewport->mapTo(this, viewport->rect().topLeft());
+        painter.translate(offset);
         (*viewport->_renderable)->draw2DRecursive(&painter, viewport->size());
         painter.restore();
     }
