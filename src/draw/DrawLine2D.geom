@@ -1,6 +1,5 @@
 #version 330
 
-uniform mat4 MVP;
 uniform float width;
 uniform vec2 viewportSize;
 
@@ -11,8 +10,8 @@ in vec4 vertexColor_vert[];
 out vec4 vertexColor_geom;
 
 void main(void) {
-    vec4 p0_clipSpace = MVP * gl_in[0].gl_Position;
-    vec4 p1_clipSpace = MVP * gl_in[1].gl_Position;
+    vec4 p0_clipSpace = gl_in[0].gl_Position;
+    vec4 p1_clipSpace = gl_in[1].gl_Position;
     vec3 p0 = vec3((p0_clipSpace.xy + 1.0) * (viewportSize * 0.5), p0_clipSpace.z);
     vec3 p1 = vec3((p1_clipSpace.xy + 1.0) * (viewportSize * 0.5), p1_clipSpace.z);
 
