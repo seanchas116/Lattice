@@ -16,6 +16,7 @@
 #include "../../support/Camera.hpp"
 #include <QMouseEvent>
 #include <QMenu>
+#include <QPainter>
 
 using namespace glm;
 
@@ -152,6 +153,11 @@ void MeshEditor::drawPickables(const SP<Draw::Operations> &operations, const SP<
     if (_appState->isVertexSelectable()) {
         operations->drawCircle.draw(_vertexPickVAO, _object->location().matrixToWorld(), camera, 24.0, vec4(0), true);
     }
+}
+
+void MeshEditor::draw2D(QPainter *painter, const QSize &viewportSize) {
+    painter->setBrush(Qt::blue);
+    painter->drawRect(0, 0, 100, 100);
 }
 
 void MeshEditor::mousePressEvent(const Viewport::MouseEvent &event) {
