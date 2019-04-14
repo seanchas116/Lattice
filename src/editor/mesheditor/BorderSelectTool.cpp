@@ -18,7 +18,6 @@ void BorderSelectTool::mousePressEvent(const Tool::EventTarget &target, const Vi
     }
     _dragged = true;
     _initViewportPos = _currentViewportPos = event.viewportPos;
-    emit overlayUpdated();
 
     _vertices.clear();
     _vertices.reserve(object()->mesh()->vertices().size());
@@ -30,6 +29,8 @@ void BorderSelectTool::mousePressEvent(const Tool::EventTarget &target, const Vi
         }
         _vertices.push_back({vertex, screenPos.xy});
     }
+
+    emit overlayUpdated();
 }
 
 void BorderSelectTool::mouseMoveEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -39,6 +40,19 @@ void BorderSelectTool::mouseMoveEvent(const Tool::EventTarget &target, const Vie
         return;
     }
     _currentViewportPos = event.viewportPos;
+
+    auto minPos = min(_initViewportPos, _currentViewportPos);
+    auto maxPos = max(_initViewportPos, _currentViewportPos);
+
+    Mesh::MeshFragment selection;
+
+    for (auto& [vertex, screenPos] : _vertices) {
+        if (minPos.x <= screenPos.x && minPos.y <= screenPos.y && screenPos.x <= maxPos.x && screenPos.y <= maxPos.y) {
+            selection.vertices.insert(vertex);
+        }
+    }
+
+    appState()->document()->setMeshSelection(selection);
     emit overlayUpdated();
 }
 
@@ -46,6 +60,7 @@ void BorderSelectTool::mouseReleaseEvent(const Tool::EventTarget &target, const 
     Q_UNUSED(target); Q_UNUSED(event);
 
     _dragged = false;
+    _vertices.clear();
     emit overlayUpdated();
 }
 
