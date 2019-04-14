@@ -110,6 +110,7 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::handleMeshChange);
 
     connect(appState.get(), &State::AppState::toolChanged, this, &MeshEditor::handleToolChange);
+    handleToolChange(appState->tool());
 
     connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::updateManinpulatorVisibility);
     connect(appState.get(), &State::AppState::toolChanged, this, &MeshEditor::updateManinpulatorVisibility);
