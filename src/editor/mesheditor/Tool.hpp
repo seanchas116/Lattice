@@ -44,6 +44,11 @@ public:
     virtual void keyPressEvent(QKeyEvent* event);
     virtual void keyReleaseEvent(QKeyEvent* event);
 
+    virtual void drawOverlay(QPainter* painter, const QSize& viewportSize);
+
+signals:
+    void overlayUpdated();
+
 private:
     SP<State::AppState> _appState;
     SP<Document::MeshObject> _object;

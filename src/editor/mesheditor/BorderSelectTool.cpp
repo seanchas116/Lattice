@@ -2,6 +2,7 @@
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
 #include "../../support/Debug.hpp"
+#include <QPainter>
 
 using namespace glm;
 
@@ -16,8 +17,8 @@ void BorderSelectTool::mousePressEvent(const Tool::EventTarget &target, const Vi
         return;
     }
     _dragged = true;
-    _initViewportPos = event.viewportPos;
-    qDebug() << "dragging";
+    _initViewportPos = _currentViewportPos = event.viewportPos;
+    emit overlayUpdated();
 }
 
 void BorderSelectTool::mouseMoveEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -26,15 +27,28 @@ void BorderSelectTool::mouseMoveEvent(const Tool::EventTarget &target, const Vie
     if (!_dragged) {
         return;
     }
-    // TODO
+    _currentViewportPos = event.viewportPos;
+    emit overlayUpdated();
 }
 
 void BorderSelectTool::mouseReleaseEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
 
     _dragged = false;
+    emit overlayUpdated();
+}
 
-    // TODO
+void BorderSelectTool::drawOverlay(QPainter *painter, const QSize &viewportSize) {
+    Q_UNUSED(viewportSize);
+    if (!_dragged) {
+        return;
+    }
+
+    auto minPos = min(_initViewportPos, _currentViewportPos);
+    auto maxPos = max(_initViewportPos, _currentViewportPos);
+    auto size = maxPos - minPos;
+
+    painter->drawRect(minPos.x, minPos.y, size.x, size.y);
 }
 
 } // namespace MeshEditor

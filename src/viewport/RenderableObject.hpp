@@ -20,6 +20,7 @@ public:
 
     void drawRecursive(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
     void drawPickablesRecursive(const SP<Draw::Operations>& operations, const SP<Camera>& camera, std::vector<SP<Renderable>>& renderedChildren);
+    void draw2DRecursive(QPainter* painter, const QSize& viewportSize);
 
     auto& childRenderables() const { return _childRenderables; }
     void setChildRenderables(const std::vector<SP<Renderable>>& children);

@@ -6,6 +6,9 @@
 #include "../support/Debug.hpp"
 #include <QMouseEvent>
 #include <QOpenGLDebugLogger>
+#include <QOpenGLPaintDevice>
+#include <QPainter>
+#include <QTransform>
 
 namespace Lattice {
 namespace Viewport {
@@ -75,6 +78,27 @@ void ViewportContainer::paintGL() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         viewport->pickableMap()->draw(*viewport->_renderable, operations, viewport->camera());
+    }
+
+    glDisable(GL_CULL_FACE);
+    glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebufferObject());
+
+    QOpenGLPaintDevice device(width() * devicePixelRatioF(), height() * devicePixelRatioF());
+    QPainter painter(&device);
+    painter.setRenderHint(QPainter::Antialiasing);
+
+    for (auto viewport : _viewports) {
+        if (!viewport->_renderable) {
+            continue;
+        }
+        painter.save();
+        auto offset = viewport->mapTo(this, viewport->rect().topLeft());
+        auto transform = QTransform(1, 0, 0, -1, 0, viewport->rect().height())
+            * QTransform::fromTranslate(offset.x(), offset.y())
+            * QTransform::fromScale(devicePixelRatioF(), devicePixelRatioF());
+        painter.setTransform(transform);
+        (*viewport->_renderable)->draw2DRecursive(&painter, viewport->size());
+        painter.restore();
     }
 }
 
