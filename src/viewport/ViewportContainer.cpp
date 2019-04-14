@@ -85,8 +85,6 @@ void ViewportContainer::paintGL() {
 
     QOpenGLPaintDevice device(width() * devicePixelRatioF(), height() * devicePixelRatioF());
     QPainter painter(&device);
-    painter.scale(devicePixelRatioF(), devicePixelRatioF());
-
     painter.setRenderHint(QPainter::Antialiasing);
 
     for (auto viewport : _viewports) {
@@ -95,7 +93,10 @@ void ViewportContainer::paintGL() {
         }
         painter.save();
         auto offset = viewport->mapTo(this, viewport->rect().topLeft());
-        painter.translate(offset);
+        auto transform = QTransform(1, 0, 0, -1, 0, viewport->rect().height())
+            * QTransform::fromTranslate(offset.x(), offset.y())
+            * QTransform::fromScale(devicePixelRatioF(), devicePixelRatioF());
+        painter.setTransform(transform);
         (*viewport->_renderable)->draw2DRecursive(&painter, viewport->size());
         painter.restore();
     }
