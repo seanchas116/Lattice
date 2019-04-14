@@ -19,6 +19,17 @@ void BorderSelectTool::mousePressEvent(const Tool::EventTarget &target, const Vi
     _dragged = true;
     _initViewportPos = _currentViewportPos = event.viewportPos;
     emit overlayUpdated();
+
+    _vertices.clear();
+    _vertices.reserve(object()->mesh()->vertices().size());
+    for (auto& vertex : object()->mesh()->vertices()) {
+        // TODO: optimize
+        auto [screenPos, isInScreen] = event.camera->mapModelToViewport(object()->location().matrixToWorld(), vertex->position());
+        if (!isInScreen) {
+            continue;
+        }
+        _vertices.push_back({vertex, screenPos.xy});
+    }
 }
 
 void BorderSelectTool::mouseMoveEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
