@@ -47,6 +47,7 @@ public:
     virtual void drawOverlay(QPainter* painter, const QSize& viewportSize);
 
 signals:
+    void finished();
     void overlayUpdated();
 
 private:

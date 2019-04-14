@@ -203,6 +203,9 @@ void MeshEditor::handleToolChange(State::Tool tool) {
         break;
     }
     connect(_tool.get(), &Tool::overlayUpdated, this, &MeshEditor::updated);
+    connect(_tool.get(), &Tool::finished, _appState.get(), [appState = _appState] {
+        appState->setTool(State::Tool::None);
+    });
 }
 
 void MeshEditor::handleMeshChange() {

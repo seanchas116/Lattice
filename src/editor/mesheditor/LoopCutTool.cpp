@@ -79,6 +79,7 @@ void LoopCutTool::mousePressEvent(const Tool::EventTarget &target, const Viewpor
         selection.vertices.insert(v);
     }
     appState()->document()->setMeshSelection(selection);
+    emit finished();
 }
 
 void LoopCutTool::mouseMoveEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {

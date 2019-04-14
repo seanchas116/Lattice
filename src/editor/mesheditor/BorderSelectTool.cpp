@@ -62,6 +62,7 @@ void BorderSelectTool::mouseReleaseEvent(const Tool::EventTarget &target, const 
     _dragged = false;
     _vertices.clear();
     emit overlayUpdated();
+    emit finished();
 }
 
 void BorderSelectTool::drawOverlay(QPainter *painter, const QSize &viewportSize) {
