@@ -49,6 +49,10 @@ void Tool::keyReleaseEvent(QKeyEvent *event) {
     Q_UNUSED(event);
 }
 
+void Tool::draw2D(QPainter *painter, glm::ivec2 viewportSize) {
+    Q_UNUSED(painter); Q_UNUSED(viewportSize);
+}
+
 } // namespace MeshEditor
 } // namespace Editor
 } // namespace Lattice
