@@ -14,8 +14,11 @@ public:
     void mouseMoveEvent(const EventTarget &target, const Viewport::MouseEvent &event) override;
     void mouseReleaseEvent(const EventTarget &target, const Viewport::MouseEvent &event) override;
 
+    void draw2D(QPainter *painter, const QSize &viewportSize) override;
+
 private:
     glm::dvec2 _initViewportPos {0};
+    glm::dvec2 _currentViewportPos {0};
     bool _dragged {false};
 };
 

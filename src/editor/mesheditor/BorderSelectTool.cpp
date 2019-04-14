@@ -2,6 +2,7 @@
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
 #include "../../support/Debug.hpp"
+#include <QPainter>
 
 using namespace glm;
 
@@ -16,7 +17,7 @@ void BorderSelectTool::mousePressEvent(const Tool::EventTarget &target, const Vi
         return;
     }
     _dragged = true;
-    _initViewportPos = event.viewportPos;
+    _initViewportPos = _currentViewportPos = event.viewportPos;
     qDebug() << "dragging";
 }
 
@@ -26,7 +27,7 @@ void BorderSelectTool::mouseMoveEvent(const Tool::EventTarget &target, const Vie
     if (!_dragged) {
         return;
     }
-    // TODO
+    _currentViewportPos = event.viewportPos;
 }
 
 void BorderSelectTool::mouseReleaseEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -35,6 +36,16 @@ void BorderSelectTool::mouseReleaseEvent(const Tool::EventTarget &target, const 
     _dragged = false;
 
     // TODO
+}
+
+void BorderSelectTool::draw2D(QPainter *painter, const QSize &viewportSize) {
+    Q_UNUSED(viewportSize);
+
+    auto minPos = min(_initViewportPos, _currentViewportPos);
+    auto maxPos = max(_initViewportPos, _currentViewportPos);
+    auto size = maxPos - minPos;
+
+    painter->drawRect(minPos.x, minPos.y, size.x, size.y);
 }
 
 } // namespace MeshEditor
