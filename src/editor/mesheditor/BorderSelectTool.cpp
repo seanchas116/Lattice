@@ -74,6 +74,8 @@ void BorderSelectTool::drawOverlay(QPainter *painter, const QSize &viewportSize)
     auto maxPos = max(_initViewportPos, _currentViewportPos);
     auto size = maxPos - minPos;
 
+    painter->setBrush(QColor(255, 255, 255, 50));
+
     painter->drawRect(minPos.x, minPos.y, size.x, size.y);
 }
 
