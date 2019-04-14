@@ -25,8 +25,6 @@ public:
     auto& childRenderables() const { return _childRenderables; }
     void setChildRenderables(const std::vector<SP<Renderable>>& children);
 
-    void update() { emit updated(); }
-
 signals:
     void updated();
 

@@ -8,7 +8,7 @@ void RenderableObject::setVisible(bool visible) {
         return;
     }
     _isVisible = visible;
-    update();
+    emit updated();
 }
 
 void RenderableObject::drawRecursive(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
@@ -74,7 +74,7 @@ void RenderableObject::setChildRenderables(const std::vector<SP<Renderable> > &c
         }
     }
 
-    update();
+    emit updated();
 }
 
 } // namespace Renderer

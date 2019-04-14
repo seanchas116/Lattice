@@ -202,12 +202,12 @@ void MeshEditor::handleToolChange(State::Tool tool) {
         _tool = makeShared<MoveTool>(_appState, _object);
         break;
     }
-    connect(_tool.get(), &Tool::overlayUpdated, this, &MeshEditor::update);
+    connect(_tool.get(), &Tool::overlayUpdated, this, &MeshEditor::updated);
 }
 
 void MeshEditor::handleMeshChange() {
     _isVAOsDirty = true;
-    update();
+    emit updated();
 }
 
 void MeshEditor::updateWholeVAOs() {
@@ -391,15 +391,15 @@ void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Viewpor
     if (target.vertex) {
         _hoveredVertex = target.vertex;
         _isVAOsDirty = true;
-        update();
+        emit updated();
     } else if (target.edge) {
         _hoveredEdge = target.edge;
         _isVAOsDirty = true;
-        update();
+        emit updated();
     } else if (target.face) {
         _hoveredFace = target.face;
         _isVAOsDirty = true;
-        update();
+        emit updated();
     }
     _tool->hoverEnterEvent(target, event);
 }
@@ -409,15 +409,15 @@ void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
     if (target.vertex) {
         _hoveredVertex = {};
         _isVAOsDirty = true;
-        update();
+        emit updated();
     } else if (target.edge) {
         _hoveredEdge = {};
         _isVAOsDirty = true;
-        update();
+        emit updated();
     } else if (target.face) {
         _hoveredFace = {};
         _isVAOsDirty = true;
-        update();
+        emit updated();
     }
     _tool->hoverLeaveEvent(target);
 }

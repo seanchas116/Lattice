@@ -92,12 +92,12 @@ void ArrowHandle::contextMenuEvent(const Viewport::ContextMenuEvent &event) {
 void ArrowHandle::hoverEnterEvent(const Viewport::MouseEvent &event) {
     Q_UNUSED(event);
     _hovered = true;
-    update();
+    emit updated();
 }
 
 void ArrowHandle::hoverLeaveEvent() {
     _hovered = false;
-    update();
+    emit updated();
 }
 
 void ArrowHandle::setLength(double length) {

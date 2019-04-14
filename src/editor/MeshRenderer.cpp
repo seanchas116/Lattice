@@ -25,7 +25,7 @@ MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Documen
     updateVAOs();
     connect(object->mesh().get(), &Mesh::Mesh::changed, this, [this] {
         _isVAOsDirty = true;
-        update();
+        emit updated();
     });
 }
 
