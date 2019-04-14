@@ -49,7 +49,7 @@ void Tool::keyReleaseEvent(QKeyEvent *event) {
     Q_UNUSED(event);
 }
 
-void Tool::draw2D(QPainter *painter, const QSize &viewportSize) {
+void Tool::drawOverlay(QPainter *painter, const QSize &viewportSize) {
     Q_UNUSED(painter); Q_UNUSED(viewportSize);
 }
 

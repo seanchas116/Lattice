@@ -18,7 +18,7 @@ void BorderSelectTool::mousePressEvent(const Tool::EventTarget &target, const Vi
     }
     _dragged = true;
     _initViewportPos = _currentViewportPos = event.viewportPos;
-    qDebug() << "dragging";
+    emit overlayUpdated();
 }
 
 void BorderSelectTool::mouseMoveEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -28,18 +28,21 @@ void BorderSelectTool::mouseMoveEvent(const Tool::EventTarget &target, const Vie
         return;
     }
     _currentViewportPos = event.viewportPos;
+    emit overlayUpdated();
 }
 
 void BorderSelectTool::mouseReleaseEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
 
     _dragged = false;
-
-    // TODO
+    emit overlayUpdated();
 }
 
-void BorderSelectTool::draw2D(QPainter *painter, const QSize &viewportSize) {
+void BorderSelectTool::drawOverlay(QPainter *painter, const QSize &viewportSize) {
     Q_UNUSED(viewportSize);
+    if (!_dragged) {
+        return;
+    }
 
     auto minPos = min(_initViewportPos, _currentViewportPos);
     auto maxPos = max(_initViewportPos, _currentViewportPos);

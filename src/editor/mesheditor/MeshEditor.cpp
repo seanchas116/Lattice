@@ -156,9 +156,7 @@ void MeshEditor::drawPickables(const SP<Draw::Operations> &operations, const SP<
 }
 
 void MeshEditor::draw2D(QPainter *painter, const QSize &viewportSize) {
-    //painter->setBrush(QColor(0, 255, 0, 100));
-    //painter->drawRect(0, 0, 100, 100);
-    _tool->draw2D(painter, viewportSize);
+    _tool->drawOverlay(painter, viewportSize);
 }
 
 void MeshEditor::mousePressEvent(const Viewport::MouseEvent &event) {
@@ -203,6 +201,7 @@ void MeshEditor::handleToolChange(State::Tool tool) {
         _tool = makeShared<MoveTool>(_appState, _object);
         break;
     }
+    connect(_tool.get(), &Tool::overlayUpdated, this, &MeshEditor::update);
 }
 
 void MeshEditor::handleMeshChange() {
