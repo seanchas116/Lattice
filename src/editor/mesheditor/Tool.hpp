@@ -9,10 +9,6 @@
 
 namespace Lattice {
 
-namespace Draw {
-class Operations;
-}
-
 namespace Editor {
 namespace MeshEditor {
 
