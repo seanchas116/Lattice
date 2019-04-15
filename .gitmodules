@@ -13,3 +13,6 @@
 [submodule "vendor/Catch2"]
 	path = vendor/Catch2
 	url = https://github.com/catchorg/Catch2.git
+[submodule "vendor/OpenSubdiv"]
+	path = vendor/OpenSubdiv
+	url = git@github.com:seanchas116/OpenSubdiv.git
