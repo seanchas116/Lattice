@@ -164,7 +164,11 @@ void ExtrudeTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewpo
     _initPositions.clear();
     _vertexToUV.clear();
     _oldToNewUVPoints.clear();
-    _dragStarted = false;
+
+    if (_dragStarted) {
+        _dragStarted = false;
+        emit finished();
+    }
 }
 
 } // namespace MeshEditor

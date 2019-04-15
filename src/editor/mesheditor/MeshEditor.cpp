@@ -16,6 +16,7 @@
 #include "../../support/Camera.hpp"
 #include <QMouseEvent>
 #include <QMenu>
+#include <QPainter>
 
 using namespace glm;
 
@@ -109,6 +110,7 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::handleMeshChange);
 
     connect(appState.get(), &State::AppState::toolChanged, this, &MeshEditor::handleToolChange);
+    handleToolChange(appState->tool());
 
     connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::updateManinpulatorVisibility);
     connect(appState.get(), &State::AppState::toolChanged, this, &MeshEditor::updateManinpulatorVisibility);
@@ -156,6 +158,10 @@ void MeshEditor::drawPickables(const SP<Draw::Operations> &operations, const SP<
     }
 }
 
+void MeshEditor::draw2D(QPainter *painter, const QSize &viewportSize) {
+    _tool->drawOverlay(painter, viewportSize);
+}
+
 void MeshEditor::mousePressEvent(const Viewport::MouseEvent &event) {
     mousePressTarget({}, event);
 }
@@ -198,12 +204,15 @@ void MeshEditor::handleToolChange(State::Tool tool) {
         _tool = makeShared<MoveTool>(_appState, _object);
         break;
     }
+    connect(_tool.get(), &Tool::finished, _appState.get(), [appState = _appState] {
+        appState->setTool(State::Tool::None);
+    });
     updateChildren();
 }
 
 void MeshEditor::handleMeshChange() {
     _isVAOsDirty = true;
-    update();
+    emit updated();
 }
 
 void MeshEditor::updateWholeVAOs() {
@@ -394,15 +403,15 @@ void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Viewpor
     if (target.vertex) {
         _hoveredVertex = target.vertex;
         _isVAOsDirty = true;
-        update();
+        emit updated();
     } else if (target.edge) {
         _hoveredEdge = target.edge;
         _isVAOsDirty = true;
-        update();
+        emit updated();
     } else if (target.face) {
         _hoveredFace = target.face;
         _isVAOsDirty = true;
-        update();
+        emit updated();
     }
     _tool->hoverEnterTool(target, event);
 }
@@ -412,15 +421,15 @@ void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
     if (target.vertex) {
         _hoveredVertex = {};
         _isVAOsDirty = true;
-        update();
+        emit updated();
     } else if (target.edge) {
         _hoveredEdge = {};
         _isVAOsDirty = true;
-        update();
+        emit updated();
     } else if (target.face) {
         _hoveredFace = {};
         _isVAOsDirty = true;
-        update();
+        emit updated();
     }
     _tool->hoverLeaveTool(target);
 }

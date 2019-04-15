@@ -49,6 +49,10 @@ void Tool::keyReleaseTool(QKeyEvent *event) {
     Q_UNUSED(event);
 }
 
+void Tool::drawOverlay(QPainter *painter, const QSize &viewportSize) {
+    Q_UNUSED(painter); Q_UNUSED(viewportSize);
+}
+
 } // namespace MeshEditor
 } // namespace Editor
 } // namespace Lattice

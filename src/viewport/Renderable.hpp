@@ -2,6 +2,7 @@
 
 #include "MouseEvent.hpp"
 #include "../support/SharedPointer.hpp"
+#include <glm/glm.hpp>
 
 namespace Lattice {
 
@@ -19,6 +20,7 @@ public:
 
     virtual void draw(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
     virtual void drawPickables(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
+    virtual void draw2D(QPainter* painter, const QSize& viewportSize);
 
     virtual void mousePressEvent(const MouseEvent& event);
     virtual void mouseMoveEvent(const MouseEvent& event);

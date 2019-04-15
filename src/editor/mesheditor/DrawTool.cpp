@@ -55,6 +55,7 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
                 selection.vertices.insert(p->vertex());
             }
             appState()->document()->setMeshSelection(selection);
+            emit finished();
 
             return;
         }

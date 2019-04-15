@@ -8,11 +8,23 @@ namespace Lattice {
 namespace Editor {
 namespace MeshEditor {
 
+MoveTool::MoveTool(const SP<State::AppState> &appState, const SP<Document::MeshObject> &object) : Tool(appState, object),
+                                                                                                  _borderSelectTool(appState, object) {
+    connect(&_borderSelectTool, &Tool::overlayUpdated, this, &Tool::overlayUpdated);
+}
+
 void MoveTool::mousePressTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     if (event.originalEvent->button() != Qt::LeftButton) {
         return;
     }
     auto clickedFragment = target.fragment();
+
+    if (clickedFragment.empty()) {
+        _borderSelectMode = true;
+        _borderSelectTool.mousePressTool(target, event);
+        return;
+    }
+
     auto oldSelection = appState()->document()->meshSelection();
 
     bool alreadySelected = !clickedFragment.empty() && oldSelection.contains(clickedFragment);
@@ -50,6 +62,11 @@ void MoveTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
 void MoveTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target);
 
+    if (_borderSelectMode) {
+        _borderSelectTool.mouseMoveTool(target, event);
+        return;
+    }
+
     if (!_dragged) {
         return;
     }
@@ -74,11 +91,22 @@ void MoveTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::Mo
 }
 
 void MoveTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
-    Q_UNUSED(target); Q_UNUSED(event);
+    if (_borderSelectMode) {
+        _borderSelectTool.mouseReleaseTool(target, event);
+        _borderSelectMode = false;
+        return;
+    }
+
     _dragged = false;
     _initPositions.clear();
     if (!_dragStarted) {
         appState()->document()->setMeshSelection(_nextSelection);
+    }
+}
+
+void MoveTool::drawOverlay(QPainter *painter, const QSize &viewportSize) {
+    if (_borderSelectMode) {
+        _borderSelectTool.drawOverlay(painter, viewportSize);
     }
 }
 
