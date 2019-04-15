@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.0.0)
 cmake_policy(SET CMP0071 NEW)
 
 project(Lattice)
+set(OpenSubdiv_PATH "" CACHE STRING "Path to OpenSubdiv")
 
 include(vendor/cmrc/CMakeRC.cmake)
 
@@ -29,9 +30,11 @@ include_directories("vendor/json/include")
 include_directories("vendor/tinyobjloader")
 include_directories("vendor/Catch2/single_include")
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/_cmrc/include)
+include_directories(${OpenSubdiv_PATH}/include)
 
 #set(LIBRARIES Qt5::Widgets Boost::system Boost::filesystem)
-set(LIBRARIES Qt5::Widgets)
+link_directories(${OpenSubdiv_PATH}/lib)
+set(LIBRARIES Qt5::Widgets osdCPU)
 
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.hpp")
 list(APPEND SOURCES "vendor/tinyobjloader/tiny_obj_loader.cc")

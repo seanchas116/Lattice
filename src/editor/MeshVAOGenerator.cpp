@@ -4,6 +4,10 @@
 #include "../gl/VAO.hpp"
 #include "../gl/VertexBuffer.hpp"
 
+#include <opensubdiv/far/topologyDescriptor.h>
+#include <opensubdiv/far/stencilTable.h>
+#include <opensubdiv/far/stencilTableFactory.h>
+
 namespace Lattice {
 namespace Editor {
 
