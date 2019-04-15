@@ -10,7 +10,7 @@ namespace Lattice {
 namespace Editor {
 namespace MeshEditor {
 
-void BorderSelectTool::mousePressEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
+void BorderSelectTool::mousePressTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target);
 
     if (event.originalEvent->button() != Qt::LeftButton) {
@@ -30,10 +30,10 @@ void BorderSelectTool::mousePressEvent(const Tool::EventTarget &target, const Vi
         _vertices.push_back({vertex, screenPos.xy});
     }
 
-    emit overlayUpdated();
+    emit updated();
 }
 
-void BorderSelectTool::mouseMoveEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
+void BorderSelectTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
 
     if (!_dragged) {
@@ -53,19 +53,19 @@ void BorderSelectTool::mouseMoveEvent(const Tool::EventTarget &target, const Vie
     }
 
     appState()->document()->setMeshSelection(selection);
-    emit overlayUpdated();
+    emit updated();
 }
 
-void BorderSelectTool::mouseReleaseEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
+void BorderSelectTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
 
     _dragged = false;
     _vertices.clear();
-    emit overlayUpdated();
+    emit updated();
     emit finished();
 }
 
-void BorderSelectTool::drawOverlay(QPainter *painter, const QSize &viewportSize) {
+void BorderSelectTool::draw2D(QPainter *painter, const QSize &viewportSize) {
     Q_UNUSED(viewportSize);
     if (!_dragged) {
         return;

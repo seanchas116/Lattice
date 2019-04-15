@@ -50,7 +50,6 @@ public:
 
     void draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
     void drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
-    void draw2D(QPainter *painter, const QSize &viewportSize) override;
 
     void mousePressEvent(const Viewport::MouseEvent &event) override;
     void mouseMoveEvent(const Viewport::MouseEvent &event) override;
@@ -75,8 +74,8 @@ private:
     void contextMenuTarget(const Tool::EventTarget& target, const Viewport::ContextMenuEvent& event);
 
     void updateWholeVAOs();
-
     void updateManinpulatorVisibility();
+    void updateChildren();
 
     class EditorPickable;
     class VertexPickable;
@@ -105,6 +104,8 @@ private:
     std::vector<GL::Vertex> _vertexAttributes;
     SP<GL::VAO> _vertexPickVAO;
     std::vector<GL::Vertex> _vertexPickAttributes;
+
+    std::vector<SP<Viewport::Renderable>> _pickables;
 
     SP<Tool> _tool;
 

@@ -5,12 +5,14 @@
 #include "../../mesh/MeshFragment.hpp"
 #include "../../document/MeshObject.hpp"
 #include "../../viewport/MouseEvent.hpp"
+#include "../../viewport/RenderableObject.hpp"
 
 namespace Lattice {
+
 namespace Editor {
 namespace MeshEditor {
 
-class Tool : public QObject {
+class Tool : public Viewport::RenderableObject {
     Q_OBJECT
 public:
     struct EventTarget {
@@ -36,19 +38,16 @@ public:
 
     virtual HitTestExclusion hitTestExclusion() const;
 
-    virtual void mousePressEvent(const EventTarget& target, const Viewport::MouseEvent &event) = 0;
-    virtual void mouseMoveEvent(const EventTarget& target, const Viewport::MouseEvent &event) = 0;
-    virtual void mouseReleaseEvent(const EventTarget& target, const Viewport::MouseEvent &event) = 0;
-    virtual void hoverEnterEvent(const EventTarget& target, const Viewport::MouseEvent &event);
-    virtual void hoverLeaveEvent(const EventTarget& target);
-    virtual void keyPressEvent(QKeyEvent* event);
-    virtual void keyReleaseEvent(QKeyEvent* event);
-
-    virtual void drawOverlay(QPainter* painter, const QSize& viewportSize);
+    virtual void mousePressTool(const EventTarget& target, const Viewport::MouseEvent &event) = 0;
+    virtual void mouseMoveTool(const EventTarget& target, const Viewport::MouseEvent &event) = 0;
+    virtual void mouseReleaseTool(const EventTarget& target, const Viewport::MouseEvent &event) = 0;
+    virtual void hoverEnterTool(const EventTarget& target, const Viewport::MouseEvent &event);
+    virtual void hoverLeaveTool(const EventTarget& target);
+    virtual void keyPressTool(QKeyEvent* event);
+    virtual void keyReleaseTool(QKeyEvent* event);
 
 signals:
     void finished();
-    void overlayUpdated();
 
 private:
     SP<State::AppState> _appState;

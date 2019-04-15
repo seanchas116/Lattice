@@ -9,11 +9,12 @@ namespace Editor {
 namespace MeshEditor {
 
 MoveTool::MoveTool(const SP<State::AppState> &appState, const SP<Document::MeshObject> &object) : Tool(appState, object),
-                                                                                                  _borderSelectTool(appState, object) {
-    connect(&_borderSelectTool, &Tool::overlayUpdated, this, &Tool::overlayUpdated);
+                                                                                                  _borderSelectTool(makeShared<BorderSelectTool>(appState, object)) {
+    setChildRenderables({_borderSelectTool});
+    _borderSelectTool->setVisible(false);
 }
 
-void MoveTool::mousePressEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
+void MoveTool::mousePressTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     if (event.originalEvent->button() != Qt::LeftButton) {
         return;
     }
@@ -21,7 +22,8 @@ void MoveTool::mousePressEvent(const Tool::EventTarget &target, const Viewport::
 
     if (clickedFragment.empty()) {
         _borderSelectMode = true;
-        _borderSelectTool.mousePressEvent(target, event);
+        _borderSelectTool->setVisible(true);
+        _borderSelectTool->mousePressTool(target, event);
         return;
     }
 
@@ -59,11 +61,11 @@ void MoveTool::mousePressEvent(const Tool::EventTarget &target, const Viewport::
     _dragStarted = false;
 }
 
-void MoveTool::mouseMoveEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
+void MoveTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target);
 
     if (_borderSelectMode) {
-        _borderSelectTool.mouseMoveEvent(target, event);
+        _borderSelectTool->mouseMoveTool(target, event);
         return;
     }
 
@@ -90,10 +92,11 @@ void MoveTool::mouseMoveEvent(const Tool::EventTarget &target, const Viewport::M
     mesh->setPosition(positions);
 }
 
-void MoveTool::mouseReleaseEvent(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
+void MoveTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     if (_borderSelectMode) {
-        _borderSelectTool.mouseReleaseEvent(target, event);
+        _borderSelectTool->mouseReleaseTool(target, event);
         _borderSelectMode = false;
+        _borderSelectTool->setVisible(false);
         return;
     }
 
@@ -101,12 +104,6 @@ void MoveTool::mouseReleaseEvent(const Tool::EventTarget &target, const Viewport
     _initPositions.clear();
     if (!_dragStarted) {
         appState()->document()->setMeshSelection(_nextSelection);
-    }
-}
-
-void MoveTool::drawOverlay(QPainter *painter, const QSize &viewportSize) {
-    if (_borderSelectMode) {
-        _borderSelectTool.drawOverlay(painter, viewportSize);
     }
 }
 

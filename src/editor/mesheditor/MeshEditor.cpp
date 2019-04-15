@@ -156,10 +156,6 @@ void MeshEditor::drawPickables(const SP<Draw::Operations> &operations, const SP<
     }
 }
 
-void MeshEditor::draw2D(QPainter *painter, const QSize &viewportSize) {
-    _tool->drawOverlay(painter, viewportSize);
-}
-
 void MeshEditor::mousePressEvent(const Viewport::MouseEvent &event) {
     mousePressTarget({}, event);
 }
@@ -177,11 +173,11 @@ void MeshEditor::contextMenuEvent(const Viewport::ContextMenuEvent &event) {
 }
 
 void MeshEditor::keyPressEvent(QKeyEvent *event) {
-    _tool->keyPressEvent(event);
+    _tool->keyPressTool(event);
 }
 
 void MeshEditor::keyReleaseEvent(QKeyEvent *event) {
-    _tool->keyReleaseEvent(event);
+    _tool->keyReleaseTool(event);
 }
 
 void MeshEditor::handleToolChange(State::Tool tool) {
@@ -202,10 +198,10 @@ void MeshEditor::handleToolChange(State::Tool tool) {
         _tool = makeShared<MoveTool>(_appState, _object);
         break;
     }
-    connect(_tool.get(), &Tool::overlayUpdated, this, &MeshEditor::updated);
     connect(_tool.get(), &Tool::finished, _appState.get(), [appState = _appState] {
         appState->setTool(State::Tool::None);
     });
+    updateChildren();
 }
 
 void MeshEditor::handleMeshChange() {
@@ -224,7 +220,6 @@ void MeshEditor::updateWholeVAOs() {
     auto hitTestExclusion = _tool->hitTestExclusion();
 
     std::vector<SP<Viewport::Renderable>> childPickables;
-    childPickables.push_back(_manipulator);
 
     {
         _vertexAttributes.clear();
@@ -367,7 +362,8 @@ void MeshEditor::updateWholeVAOs() {
         _facePickVAO = makeShared<GL::VAO>(pickVertexBuffer, pickIndexBuffer);
     }
 
-    setChildRenderables(childPickables);
+    _pickables = childPickables;
+    updateChildren();
 
     _isVAOsDirty = false;
 }
@@ -376,16 +372,23 @@ void MeshEditor::updateManinpulatorVisibility() {
     _manipulator->setVisible(!_appState->document()->meshSelection().empty() && _appState->tool() == State::Tool::None);
 }
 
+void MeshEditor::updateChildren() {
+    auto children = _pickables;
+    children.push_back(_manipulator);
+    children.push_back(_tool);
+    setChildRenderables(children);
+}
+
 void MeshEditor::mousePressTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
-    _tool->mousePressEvent(target, event);
+    _tool->mousePressTool(target, event);
 }
 
 void MeshEditor::mouseMoveTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
-    _tool->mouseMoveEvent(target, event);
+    _tool->mouseMoveTool(target, event);
 }
 
 void MeshEditor::mouseReleaseTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
-    _tool->mouseReleaseEvent(target, event);
+    _tool->mouseReleaseTool(target, event);
 }
 
 void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -404,7 +407,7 @@ void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Viewpor
         _isVAOsDirty = true;
         emit updated();
     }
-    _tool->hoverEnterEvent(target, event);
+    _tool->hoverEnterTool(target, event);
 }
 
 void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
@@ -422,7 +425,7 @@ void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
         _isVAOsDirty = true;
         emit updated();
     }
-    _tool->hoverLeaveEvent(target);
+    _tool->hoverLeaveTool(target);
 }
 
 void MeshEditor::contextMenuTarget(const Tool::EventTarget &target, const Viewport::ContextMenuEvent &event) {
