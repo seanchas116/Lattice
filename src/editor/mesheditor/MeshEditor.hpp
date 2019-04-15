@@ -50,7 +50,6 @@ public:
 
     void draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
     void drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
-    void draw2D(QPainter *painter, const QSize &viewportSize) override;
 
     void mousePressEvent(const Viewport::MouseEvent &event) override;
     void mouseMoveEvent(const Viewport::MouseEvent &event) override;

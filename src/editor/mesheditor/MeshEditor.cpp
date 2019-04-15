@@ -158,10 +158,6 @@ void MeshEditor::drawPickables(const SP<Draw::Operations> &operations, const SP<
     }
 }
 
-void MeshEditor::draw2D(QPainter *painter, const QSize &viewportSize) {
-    _tool->drawOverlay(painter, viewportSize);
-}
-
 void MeshEditor::mousePressEvent(const Viewport::MouseEvent &event) {
     mousePressTarget({}, event);
 }

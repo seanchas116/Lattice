@@ -14,10 +14,9 @@ public:
     void mousePressTool(const EventTarget &target, const Viewport::MouseEvent &event) override;
     void mouseMoveTool(const EventTarget &target, const Viewport::MouseEvent &event) override;
     void mouseReleaseTool(const EventTarget &target, const Viewport::MouseEvent &event) override;
-    void drawOverlay(QPainter *painter, const QSize &viewportSize) override;
 
 private:
-    BorderSelectTool _borderSelectTool;
+    SP<BorderSelectTool> _borderSelectTool;
     Mesh::MeshFragment _nextSelection;
     std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _initPositions;
     glm::dvec3 _initObjectPos {0};

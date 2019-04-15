@@ -30,7 +30,7 @@ void BorderSelectTool::mousePressTool(const Tool::EventTarget &target, const Vie
         _vertices.push_back({vertex, screenPos.xy});
     }
 
-    emit overlayUpdated();
+    emit updated();
 }
 
 void BorderSelectTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -53,7 +53,7 @@ void BorderSelectTool::mouseMoveTool(const Tool::EventTarget &target, const View
     }
 
     appState()->document()->setMeshSelection(selection);
-    emit overlayUpdated();
+    emit updated();
 }
 
 void BorderSelectTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -61,11 +61,11 @@ void BorderSelectTool::mouseReleaseTool(const Tool::EventTarget &target, const V
 
     _dragged = false;
     _vertices.clear();
-    emit overlayUpdated();
+    emit updated();
     emit finished();
 }
 
-void BorderSelectTool::drawOverlay(QPainter *painter, const QSize &viewportSize) {
+void BorderSelectTool::draw2D(QPainter *painter, const QSize &viewportSize) {
     Q_UNUSED(viewportSize);
     if (!_dragged) {
         return;
