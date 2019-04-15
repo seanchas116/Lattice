@@ -6,6 +6,9 @@ project(Lattice)
 
 include(vendor/cmrc/CMakeRC.cmake)
 
+set(NO_EXAMPLES ON)
+add_subdirectory(vendor/OpenSubdiv)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
