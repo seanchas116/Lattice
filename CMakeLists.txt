@@ -35,7 +35,7 @@ include_directories("vendor/OpenSubdiv")
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/_cmrc/include)
 
 #set(LIBRARIES Qt5::Widgets Boost::system Boost::filesystem)
-set(LIBRARIES Qt5::Widgets)
+set(LIBRARIES Qt5::Widgets ${CMAKE_CURRENT_BINARY_DIR}/vendor/OpenSubdiv/lib/libosdCPU.a)
 
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.hpp")
 list(APPEND SOURCES "vendor/tinyobjloader/tiny_obj_loader.cc")
