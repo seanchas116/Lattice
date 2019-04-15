@@ -8,13 +8,45 @@
 #include <opensubdiv/far/stencilTable.h>
 #include <opensubdiv/far/stencilTableFactory.h>
 
+using namespace OpenSubdiv;
+
 namespace Lattice {
 namespace Editor {
+
+namespace {
+
+// Test for opensubdiv
+Far::TopologyRefiner *createTopologyRefiner() {
+    typedef Far::TopologyDescriptor Descriptor;
+
+    Sdc::SchemeType type = OpenSubdiv::Sdc::SCHEME_CATMARK;
+
+    Sdc::Options options;
+    options.SetVtxBoundaryInterpolation(Sdc::Options::VTX_BOUNDARY_EDGE_ONLY);
+
+    Descriptor desc;
+    desc.numVertices = 0;
+    desc.numFaces = 0;
+    desc.numVertsPerFace = nullptr;
+    desc.vertIndicesPerFace = nullptr;
+
+    // Instantiate a FarTopologyRefiner from the descriptor.
+    Far::TopologyRefiner * refiner =
+        Far::TopologyRefinerFactory<Descriptor>::Create(desc,
+                                                        Far::TopologyRefinerFactory<Descriptor>::Options(type, options));
+
+    return refiner;
+}
+
+
+}
 
 MeshVAOGenerator::MeshVAOGenerator(const SP<Mesh::Mesh> &mesh) :
     _mesh(mesh),
     _vertexBuffer(makeShared<GL::VertexBuffer<GL::Vertex>>())
 {
+    Q_UNUSED(createTopologyRefiner);
+
     std::vector<GL::Vertex> vertices;
     for (auto& vertex : mesh->vertices()) {
         for (auto& uvPos : vertex->uvPoints()) {
