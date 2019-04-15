@@ -31,6 +31,7 @@ include_directories("vendor/glm")
 include_directories("vendor/json/include")
 include_directories("vendor/tinyobjloader")
 include_directories("vendor/Catch2/single_include")
+include_directories("vendor/OpenSubdiv")
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/_cmrc/include)
 
 #set(LIBRARIES Qt5::Widgets Boost::system Boost::filesystem)
