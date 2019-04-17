@@ -47,7 +47,7 @@ signals:
     void onContextMenu(const Viewport::ContextMenuEvent& event);
 
 private:
-    void updateChildren();
+    void updateHandles();
 
     SP<CenterHandle> _centerHandle;
     std::vector<SP<ArrowHandle>> _translateHandles;

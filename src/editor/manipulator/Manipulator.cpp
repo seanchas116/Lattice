@@ -89,10 +89,10 @@ Manipulator::Manipulator() :
         _rotateHandles.push_back(std::move(handle));
     }
 
-    connect(this, &Manipulator::translateHandleVisibleChanged, this, &Manipulator::updateChildren);
-    connect(this, &Manipulator::rotateHandleVisibleChanged, this, &Manipulator::updateChildren);
-    connect(this, &Manipulator::scaleHandleVisibleChanged, this, &Manipulator::updateChildren);
-    updateChildren();
+    connect(this, &Manipulator::translateHandleVisibleChanged, this, &Manipulator::updateHandles);
+    connect(this, &Manipulator::rotateHandleVisibleChanged, this, &Manipulator::updateHandles);
+    connect(this, &Manipulator::scaleHandleVisibleChanged, this, &Manipulator::updateHandles);
+    updateHandles();
 }
 
 void Manipulator::setTargetPosition(glm::dvec3 position) {
@@ -127,7 +127,7 @@ void Manipulator::setScaleHandleVisible(bool isScaleHandleVisible) {
     emit scaleHandleVisibleChanged(isScaleHandleVisible);
 }
 
-void Manipulator::updateChildren() {
+void Manipulator::updateHandles() {
     std::vector<SP<Viewport::Renderable>> handles = {_centerHandle};
     if (_isTranslateHandleVisible) {
         handles.insert(handles.end(), _translateHandles.begin(), _translateHandles.end());
