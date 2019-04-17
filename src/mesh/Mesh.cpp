@@ -311,11 +311,18 @@ SP<Edge> Mesh::addEdge(const SortedArray<SP<Vertex>, 2> &vertices) {
     auto change = makeShared<AddEdgeChange>(sharedFromThis(), edge);
     _changeHandler(change);
 
+    std::unordered_set<SP<Face>> facesToCheckSplit;
+    for (auto& v : edge->vertices()) {
+        for (auto& face : v->faces()) {
+            facesToCheckSplit.insert(face->sharedFromThis());
+        }
+    }
+
     std::vector<SP<Face>> facesToRemove;
     std::vector<std::tuple<std::vector<SP<UVPoint>>, std::vector<SP<UVPoint>>, SP<Material>>> faceAdditions;
 
-    // cut faces that includes newly added edge
-    for (auto& [_, face] : _faces) {
+    // split faces that includes newly added edge
+    for (auto& face : facesToCheckSplit) {
         auto& faceUVPoints = face->uvPoints();
         auto uv0It = std::find_if(faceUVPoints.begin(), faceUVPoints.end(), [&](auto& uv) { return uv->vertex() == vertices[0]; });
         auto uv1It = std::find_if(faceUVPoints.begin(), faceUVPoints.end(), [&](auto& uv) { return uv->vertex() == vertices[1]; });
