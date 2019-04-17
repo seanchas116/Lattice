@@ -87,7 +87,7 @@ void Document::insertObjectToCurrentPosition(const SP<Object> &object) {
 }
 
 void Document::deleteSelectedObjects() {
-    auto& objects = _selectedObjects;
+    auto objects = _selectedObjects;
     for (auto& object : objects) {
         LATTICE_OPTIONAL_GUARD(parent, object->parentObject(), continue;)
         parent->removeChildObject(object);
