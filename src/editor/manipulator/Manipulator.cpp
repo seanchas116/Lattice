@@ -138,6 +138,17 @@ void Manipulator::updateChildren() {
     if (_isScaleHandleVisible) {
         handles.insert(handles.end(), _scaleHandles.begin(), _scaleHandles.end());
     }
+
+    double translateHandleLength = _isRotateHandleVisible ? 2.3 : 2.0;
+    double scaleHandleLength = (_isTranslateHandleVisible || _isRotateHandleVisible) ? 1.7 : 2.0;
+
+    for (auto& translateHandle : _translateHandles) {
+        translateHandle->setLength(translateHandleLength);
+    }
+    for (auto& scaleHandle : _scaleHandles) {
+        scaleHandle->setLength(scaleHandleLength);
+    }
+
     setChildRenderables(handles);
 }
 
