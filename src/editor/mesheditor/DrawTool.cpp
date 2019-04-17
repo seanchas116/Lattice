@@ -157,6 +157,7 @@ void DrawTool::keyPressTool(QKeyEvent *event) {
         }
         _drawnUVPoints.clear();
         _previewUVPoint = std::nullopt;
+        emit finished();
     }
 }
 
