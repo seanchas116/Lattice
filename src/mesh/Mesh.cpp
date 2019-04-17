@@ -705,8 +705,8 @@ SP<Mesh> Mesh::clone() const {
 }
 
 Box<float> Mesh::boundingBox() const {
-    dvec3 minPos(INFINITY);
-    dvec3 maxPos(-INFINITY);
+    dvec3 minPos(std::numeric_limits<double>::infinity());
+    dvec3 maxPos(-std::numeric_limits<double>::infinity());
     for (auto& v : _vertices) {
         dvec3 p = v->position();
         minPos = min(p, minPos);
