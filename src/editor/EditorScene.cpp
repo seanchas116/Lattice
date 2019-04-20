@@ -54,9 +54,6 @@ void EditorScene::updateRenderables() {
     _appState->document()->rootObject()->forEachDescendant([&] (auto& object) {
         LATTICE_OPTIONAL_GUARD(meshObject, dynamicPointerCast<Document::MeshObject>(object), return;)
         connect(meshObject.get(), &Document::MeshObject::locationChanged, this, [this] { emit updated(); });
-        if (object == _appState->document()->editedObject()) {
-            return;
-        }
 
         auto it = _meshRenderers.find(meshObject);
         if (it != _meshRenderers.end()) {
