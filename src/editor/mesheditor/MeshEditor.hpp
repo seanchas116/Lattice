@@ -31,6 +31,7 @@ class Material;
 namespace GL {
 struct Vertex;
 template <typename T> class VertexBuffer;
+class IndexBuffer;
 class VAO;
 }
 
@@ -62,6 +63,7 @@ public:
 
 private:
     void handleToolChange(State::Tool tool);
+    void handleMeshTopologyChange();
     void handleMeshChange();
 
     void mousePressTarget(const Tool::EventTarget& target, const Viewport::MouseEvent &event);
@@ -72,6 +74,9 @@ private:
     void hoverLeaveTarget(const Tool::EventTarget& target);
 
     void contextMenuTarget(const Tool::EventTarget& target, const Viewport::ContextMenuEvent& event);
+
+    void updateVAOTopology();
+    void updateVAOAttributes();
 
     void updateWholeVAOs();
     void updateManinpulatorVisibility();
@@ -87,22 +92,43 @@ private:
 
     SP<Manipulator::MeshManipulator> _manipulator;
 
-    bool _isVAOsDirty = true;
+    bool _isVAOTopologyDirty = true;
+    bool _isVAOAttributesDirty = true;
 
-    SP<GL::VAO> _faceVAO;
+    std::vector<SP<Mesh::Face>> _faces;
+    std::vector<SP<FacePickable>> _facePickables;
+
+    SP<GL::IndexBuffer> _faceIndexBuffer;
+
     std::vector<GL::Vertex> _faceAttributes;
-    SP<GL::VAO> _facePickVAO;
+    SP<GL::VertexBuffer<GL::Vertex>> _faceVertexBuffer;
+    SP<GL::VAO> _faceVAO;
+
     std::vector<GL::Vertex> _facePickAttributes;
+    SP<GL::VertexBuffer<GL::Vertex>> _facePickVertexBuffer;
+    SP<GL::VAO> _facePickVAO;
 
-    SP<GL::VAO> _edgeVAO;
+    std::vector<SP<Mesh::Edge>> _edges;
+    std::vector<SP<EdgePickable>> _edgePickables;
+
     std::vector<GL::Vertex> _edgeAttributes;
-    SP<GL::VAO> _edgePickVAO;
-    std::vector<GL::Vertex> _edgePickAttributes;
+    SP<GL::VertexBuffer<GL::Vertex>> _edgeVertexBuffer;
+    SP<GL::VAO> _edgeVAO;
 
-    SP<GL::VAO> _vertexVAO;
+    std::vector<GL::Vertex> _edgePickAttributes;
+    SP<GL::VertexBuffer<GL::Vertex>> _edgePickVertexBuffer;
+    SP<GL::VAO> _edgePickVAO;
+
+    std::vector<SP<Mesh::Vertex>> _vertices;
+    std::vector<SP<VertexPickable>> _vertexPickables;
+
     std::vector<GL::Vertex> _vertexAttributes;
-    SP<GL::VAO> _vertexPickVAO;
+    SP<GL::VertexBuffer<GL::Vertex>> _vertexVertexBuffer;
+    SP<GL::VAO> _vertexVAO;
+
     std::vector<GL::Vertex> _vertexPickAttributes;
+    SP<GL::VertexBuffer<GL::Vertex>> _vertexPickVertexBuffer;
+    SP<GL::VAO> _vertexPickVAO;
 
     std::vector<SP<Viewport::Renderable>> _pickables;
 

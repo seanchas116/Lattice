@@ -95,17 +95,29 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     _appState(appState),
     _object(object),
     _manipulator(makeShared<Manipulator::MeshManipulator>(appState, object)),
-    _faceVAO(makeShared<GL::VAO>()),
-    _facePickVAO(makeShared<GL::VAO>()),
-    _edgeVAO(makeShared<GL::VAO>()),
-    _edgePickVAO(makeShared<GL::VAO>()),
-    _vertexVAO(makeShared<GL::VAO>()),
-    _vertexPickVAO(makeShared<GL::VAO>()),
+
+    _faceIndexBuffer(makeShared<GL::IndexBuffer>()),
+    _faceVertexBuffer(makeShared<GL::VertexBuffer<GL::Vertex>>()),
+    _faceVAO(makeShared<GL::VAO>(_faceVertexBuffer, _faceIndexBuffer)),
+    _facePickVertexBuffer(makeShared<GL::VertexBuffer<GL::Vertex>>()),
+    _facePickVAO(makeShared<GL::VAO>(_facePickVertexBuffer, _faceIndexBuffer)),
+
+    _edgeVertexBuffer(makeShared<GL::VertexBuffer<GL::Vertex>>()),
+    _edgeVAO(makeShared<GL::VAO>(_edgeVertexBuffer, GL::Primitive::Line)),
+    _edgePickVertexBuffer(makeShared<GL::VertexBuffer<GL::Vertex>>()),
+    _edgePickVAO(makeShared<GL::VAO>(_edgePickVertexBuffer, GL::Primitive::Line)),
+
+    _vertexVertexBuffer(makeShared<GL::VertexBuffer<GL::Vertex>>()),
+    _vertexVAO(makeShared<GL::VAO>(_vertexVertexBuffer, GL::Primitive::Point)),
+    _vertexPickVertexBuffer(makeShared<GL::VertexBuffer<GL::Vertex>>()),
+    _vertexPickVAO(makeShared<GL::VAO>(_vertexPickVertexBuffer, GL::Primitive::Point)),
+
     _tool(makeShared<MoveTool>(appState, object))
 {
     initializeOpenGLFunctions();
     updateWholeVAOs();
 
+    connect(object->mesh().get(), &Mesh::Mesh::topologyChanged, this, &MeshEditor::handleMeshTopologyChange);
     connect(object->mesh().get(), &Mesh::Mesh::changed, this, &MeshEditor::handleMeshChange);
     connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::handleMeshChange);
 
@@ -143,6 +155,8 @@ void MeshEditor::drawPickables(const SP<Draw::Operations> &operations, const SP<
     glClearColor(idColor.r, idColor.g, idColor.b, idColor.a);
     glClearDepthf(1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // FIXME: Use Tool::hitTestExclusion to skip pickable rendering
 
     if (_appState->isFaceSelectable()) {
         operations->drawUnicolor.draw(_facePickVAO, _object->location().matrixToWorld(), camera, vec4(0), true);
@@ -203,156 +217,19 @@ void MeshEditor::handleToolChange(State::Tool tool) {
     updateChildren();
 }
 
+void MeshEditor::handleMeshTopologyChange() {
+    _isVAOTopologyDirty = true;
+    emit updated();
+}
+
 void MeshEditor::handleMeshChange() {
-    _isVAOsDirty = true;
+    _isVAOAttributesDirty = true;
     emit updated();
 }
 
 void MeshEditor::updateWholeVAOs() {
-    if (!_isVAOsDirty) {
-        return;
-    }
-
-    auto& mesh = _object->mesh();
-
-    auto& selectedVertices = _appState->document()->meshSelection().vertices;
-    auto selectedFaces = _appState->document()->meshSelection().faces();
-
-    auto hitTestExclusion = _tool->hitTestExclusion();
-
-    std::vector<SP<Viewport::Renderable>> childPickables;
-    childPickables.reserve(mesh->vertices().size() + mesh->edges().size() + mesh->faces().size());
-
-    {
-        _vertexAttributes.clear();
-        _vertexAttributes.reserve(mesh->vertices().size());
-        _vertexPickAttributes.clear();
-        _vertexPickAttributes.reserve(mesh->vertices().size());
-
-        for (auto& v : mesh->vertices()) {
-            bool selected = selectedVertices.find(v) != selectedVertices.end();
-            bool hovered = v == _hoveredVertex;
-
-            GL::Vertex attrib;
-            attrib.position = v->position();
-            attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
-            _vertexAttributes.push_back(attrib);
-
-            bool hitTestExcluded = std::find(hitTestExclusion.vertices.begin(), hitTestExclusion.vertices.end(), v) != hitTestExclusion.vertices.end();
-
-            if (!hitTestExcluded) {
-                auto pickable = makeShared<VertexPickable>(this, v);
-                childPickables.push_back(pickable);
-                GL::Vertex pickAttrib;
-                pickAttrib.position = v->position();
-                pickAttrib.color = pickable->toIDColor();
-
-                _vertexPickAttributes.push_back(pickAttrib);
-            }
-        }
-
-        auto vertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
-        vertexBuffer->setVertices(_vertexAttributes);
-        _vertexVAO = makeShared<GL::VAO>(vertexBuffer, GL::Primitive::Point);
-
-        auto pickVertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
-        pickVertexBuffer->setVertices(_vertexPickAttributes);
-        _vertexPickVAO = makeShared<GL::VAO>(pickVertexBuffer, GL::Primitive::Point);
-    }
-
-    {
-        _edgeAttributes.clear();
-        _edgeAttributes.reserve(mesh->edges().size() * 2);
-        _edgePickAttributes.clear();
-        _edgePickAttributes.reserve(mesh->edges().size() * 2);
-
-        for (auto& [_, e] : mesh->edges()) {
-            bool hovered = e == _hoveredEdge;
-
-            auto pickable = makeShared<EdgePickable>(this, e);
-            childPickables.push_back(pickable);
-
-            bool hitTestExcluded = std::find(hitTestExclusion.edges.begin(), hitTestExclusion.edges.end(), e) != hitTestExclusion.edges.end();
-
-            for (auto& v : e->vertices()) {
-                bool selected = selectedVertices.find(v) != selectedVertices.end();
-
-                GL::Vertex attrib;
-                attrib.position = v->position();
-                attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
-                _edgeAttributes.push_back(attrib);
-
-                if (!hitTestExcluded) {
-                    GL::Vertex pickAttrib;
-                    pickAttrib.position = v->position();
-                     pickAttrib.color = pickable->toIDColor();
-                    _edgePickAttributes.push_back(pickAttrib);
-                }
-            }
-        }
-
-        auto vertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
-        vertexBuffer->setVertices(_edgeAttributes);
-        _edgeVAO = makeShared<GL::VAO>(vertexBuffer, GL::Primitive::Line);
-
-        auto pickVertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
-        pickVertexBuffer->setVertices(_edgePickAttributes);
-        _edgePickVAO = makeShared<GL::VAO>(pickVertexBuffer, GL::Primitive::Line);
-    }
-
-    {
-        _faceAttributes.clear();
-        _facePickAttributes.clear();
-
-        auto addPoint = [&](const SP<Mesh::UVPoint>& p, bool hovered, bool selected, glm::vec4 idColor) {
-            GL::Vertex attrib;
-            attrib.position = p->vertex()->position();
-            attrib.texCoord = p->position();
-            attrib.color = hovered ? hoveredFaceHighlight : selected ? selectedFaceHighlight : unselectedFaceHighlight;
-
-            GL::Vertex pickAttrib;
-            pickAttrib.position = p->vertex()->position();
-            pickAttrib.color = idColor;
-
-            auto index = uint32_t(_faceAttributes.size());
-            _faceAttributes.push_back(attrib);
-            _facePickAttributes.push_back(pickAttrib);
-            return index;
-        };
-
-        std::vector<GL::IndexBuffer::Triangle> triangles;
-        for (auto& [_, face] : mesh->faces()) {
-            bool hovered = _hoveredFace == face;
-            bool selected = selectedFaces.find(face) != selectedFaces.end();
-
-            auto pickable = makeShared<FacePickable>(this, face);
-            childPickables.push_back(pickable);
-            auto idColor = pickable->toIDColor();
-
-            auto i0 = addPoint(face->uvPoints()[0], hovered, selected, idColor);
-            for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
-                auto i1 = addPoint(face->uvPoints()[i - 1], hovered, selected, idColor);
-                auto i2 = addPoint(face->uvPoints()[i], hovered, selected, idColor);
-                triangles.push_back({i0, i1, i2});
-            }
-        }
-
-        auto indexBuffer = makeShared<GL::IndexBuffer>();
-        indexBuffer->setTriangles(triangles);
-
-        auto vertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
-        vertexBuffer->setVertices(_faceAttributes);
-        _faceVAO = makeShared<GL::VAO>(vertexBuffer, indexBuffer);
-
-        auto pickVertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
-        pickVertexBuffer->setVertices(_facePickAttributes);
-        _facePickVAO = makeShared<GL::VAO>(pickVertexBuffer, indexBuffer);
-    }
-
-    _pickables = childPickables;
-    updateChildren();
-
-    _isVAOsDirty = false;
+    updateVAOTopology();
+    updateVAOAttributes();
 }
 
 void MeshEditor::updateManinpulatorVisibility() {
@@ -383,15 +260,15 @@ void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Viewpor
     // TODO: update partially
     if (target.vertex) {
         _hoveredVertex = target.vertex;
-        _isVAOsDirty = true;
+        _isVAOAttributesDirty = true;
         emit updated();
     } else if (target.edge) {
         _hoveredEdge = target.edge;
-        _isVAOsDirty = true;
+        _isVAOAttributesDirty = true;
         emit updated();
     } else if (target.face) {
         _hoveredFace = target.face;
-        _isVAOsDirty = true;
+        _isVAOAttributesDirty = true;
         emit updated();
     }
     _tool->hoverEnterTool(target, event);
@@ -401,15 +278,15 @@ void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
     // TODO: update partially
     if (target.vertex) {
         _hoveredVertex = {};
-        _isVAOsDirty = true;
+        _isVAOAttributesDirty = true;
         emit updated();
     } else if (target.edge) {
         _hoveredEdge = {};
-        _isVAOsDirty = true;
+        _isVAOAttributesDirty = true;
         emit updated();
     } else if (target.face) {
         _hoveredFace = {};
-        _isVAOsDirty = true;
+        _isVAOAttributesDirty = true;
         emit updated();
     }
     _tool->hoverLeaveTool(target);
@@ -423,6 +300,172 @@ void MeshEditor::contextMenuTarget(const Tool::EventTarget &target, const Viewpo
     contextMenu.addAction(tr("Delete Edges"), _appState.get(), &State::AppState::deleteEdges);
     contextMenu.addAction(tr("Delete Faces"), _appState.get(), &State::AppState::deleteFaces);
     contextMenu.exec(event.originalEvent->globalPos());
+}
+
+void MeshEditor::updateVAOTopology() {
+    if (!_isVAOTopologyDirty) {
+        return;
+    }
+    qDebug() << "topology change";
+    _isVAOTopologyDirty = false;
+    _isVAOAttributesDirty = true;
+
+    auto& mesh = _object->mesh();
+
+    auto hitTestExclusion = _tool->hitTestExclusion();
+
+    {
+        _facePickables.clear();
+        _vertexAttributes.resize(mesh->vertices().size());
+        _vertexPickAttributes.resize(mesh->vertices().size());
+
+        _vertices.clear();
+        _vertices.reserve(mesh->vertices().size());
+        _vertexPickables.clear();
+        _vertexPickables.reserve(mesh->vertices().size());
+
+        for (auto& v : mesh->vertices()) {
+            _vertices.push_back(v);
+            auto pickable = makeShared<VertexPickable>(this, v);
+            _vertexPickables.push_back(pickable);
+        }
+    }
+
+    {
+        _edgeAttributes.resize(mesh->edges().size() * 2);
+        _edgePickAttributes.resize(mesh->edges().size() * 2);
+
+        _edges.clear();
+        _edges.reserve(mesh->edges().size());
+        _edgePickables.clear();
+        _edgePickables.reserve(mesh->edges().size());
+
+        for (auto& [_, e] : mesh->edges()) {
+            _edges.push_back(e);
+            auto pickable = makeShared<EdgePickable>(this, e);
+            _edgePickables.push_back(pickable);
+        }
+    }
+
+    {
+        _faces.clear();
+        _faces.reserve(mesh->edges().size());
+        _facePickables.clear();
+        _facePickables.reserve(mesh->edges().size());
+
+        std::vector<GL::IndexBuffer::Triangle> triangles;
+        uint32_t vertexCount = 0;
+
+        for (auto& [_, face] : mesh->faces()) {
+            _faces.push_back(face);
+
+            auto pickable = makeShared<FacePickable>(this, face);
+            _facePickables.push_back(pickable);
+
+            auto i0 = vertexCount;
+            for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
+                auto i1 = vertexCount + i - 1;
+                auto i2 = vertexCount + i;
+                triangles.push_back({i0, i1, i2});
+            }
+            vertexCount += face->vertices().size();
+        }
+
+        _faceAttributes.resize(vertexCount);
+        _facePickAttributes.resize(vertexCount);
+
+        _faceIndexBuffer->setTriangles(triangles);
+    }
+
+    _pickables.clear();
+    _pickables.insert(_pickables.end(), _vertexPickables.begin(), _vertexPickables.end());
+    _pickables.insert(_pickables.end(), _edgePickables.begin(), _edgePickables.end());
+    _pickables.insert(_pickables.end(), _facePickables.begin(), _facePickables.end());
+
+    updateChildren();
+}
+
+void MeshEditor::updateVAOAttributes() {
+    if (!_isVAOAttributesDirty) {
+        return;
+    }
+    qDebug() << "attributes change";
+    _isVAOAttributesDirty = false;
+
+    auto& selectedVertices = _appState->document()->meshSelection().vertices;
+    auto selectedFaces = _appState->document()->meshSelection().faces();
+
+    auto hitTestExclusion = _tool->hitTestExclusion();
+
+    for (size_t i = 0; i < _vertices.size(); ++i) {
+        auto& v = _vertices[i];
+        bool selected = selectedVertices.find(v) != selectedVertices.end();
+        bool hovered = v == _hoveredVertex;
+
+        GL::Vertex attrib;
+        attrib.position = v->position();
+        attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
+        _vertexAttributes[i] = attrib;
+
+        GL::Vertex pickAttrib;
+        pickAttrib.position = v->position();
+        pickAttrib.color = _vertexPickables[i]->toIDColor();
+        _vertexPickAttributes[i] = pickAttrib;
+    }
+    _vertexVertexBuffer->setVertices(_vertexAttributes);
+    _vertexPickVertexBuffer->setVertices(_vertexPickAttributes);
+
+    for (size_t edgeIndex = 0; edgeIndex < _edges.size(); ++edgeIndex) {
+        auto& e = _edges[edgeIndex];
+        bool hovered = e == _hoveredEdge;
+
+        for (size_t vertexInEdgeIndex = 0; vertexInEdgeIndex < 2; ++vertexInEdgeIndex) {
+            auto& v = e->vertices()[vertexInEdgeIndex];
+            bool selected = selectedVertices.find(v) != selectedVertices.end();
+
+            GL::Vertex attrib;
+            attrib.position = v->position();
+            attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
+            _edgeAttributes[edgeIndex * 2 + vertexInEdgeIndex] = attrib;
+
+            GL::Vertex pickAttrib;
+            pickAttrib.position = v->position();
+            pickAttrib.color = _edgePickables[edgeIndex]->toIDColor();
+            _edgePickAttributes[edgeIndex * 2 + vertexInEdgeIndex] = pickAttrib;
+        }
+    }
+    _edgeVertexBuffer->setVertices(_edgeAttributes);
+    _edgePickVertexBuffer->setVertices(_edgePickAttributes);
+
+    {
+        size_t vertexIndex = 0;
+
+        for (size_t faceIndex = 0; faceIndex < _faces.size(); ++faceIndex) {
+            auto& face = _faces[faceIndex];
+
+            bool hovered = _hoveredFace == face;
+            bool selected = selectedFaces.find(face) != selectedFaces.end();
+
+            auto idColor = _facePickables[faceIndex]->toIDColor();
+
+            for (auto& p : face->uvPoints()) {
+                GL::Vertex attrib;
+                attrib.position = p->vertex()->position();
+                attrib.texCoord = p->position();
+                attrib.color = hovered ? hoveredFaceHighlight : selected ? selectedFaceHighlight : unselectedFaceHighlight;
+
+                GL::Vertex pickAttrib;
+                pickAttrib.position = p->vertex()->position();
+                pickAttrib.color = idColor;
+
+                _faceAttributes[vertexIndex] = attrib;
+                _facePickAttributes[vertexIndex] = pickAttrib;
+                ++vertexIndex;
+            }
+        }
+        _faceVertexBuffer->setVertices(_faceAttributes);
+        _facePickVertexBuffer->setVertices(_facePickAttributes);
+    }
 }
 
 }
