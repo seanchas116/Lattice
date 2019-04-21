@@ -23,30 +23,30 @@ void Camera::lookFront() {
 }
 
 std::pair<dvec3, bool> Camera::mapModelToViewport(const dmat4 &modelMatrix, dvec3 worldPos) const {
-    return mapWorldToViewport((modelMatrix * dvec4(worldPos, 1)).xyz());
+    return mapWorldToViewport((modelMatrix * dvec4(worldPos, 1)).xyz);
 }
 
 dvec3 Camera::mapViewportToModel(const dmat4 &modelMatrix, dvec3 viewportPosWithDepth) const {
     dmat4 worldToModelMatrix = inverse(modelMatrix);
-    return (worldToModelMatrix * dvec4(mapViewportToWorld(viewportPosWithDepth), 1)).xyz();
+    return (worldToModelMatrix * dvec4(mapViewportToWorld(viewportPosWithDepth), 1)).xyz;
 }
 
 std::pair<glm::dvec3, bool> Camera::mapWorldToViewport(dvec3 worldPos) const {
-    dvec3 pos_cameraSpace = (_worldToCameraMatrix * dvec4(worldPos, 1)).xyz();
+    dvec3 pos_cameraSpace = (_worldToCameraMatrix * dvec4(worldPos, 1)).xyz;
     return mapCameraToViewport(pos_cameraSpace);
 }
 
 glm::dvec3 Camera::mapViewportToWorld(dvec3 viewportPosWithDepth) const {
     auto cameraPos = mapViewportToCamera(viewportPosWithDepth);
     auto cameraToWorldMatrix = _location.matrixToWorld();
-    return (cameraToWorldMatrix * vec4(cameraPos, 1)).xyz();
+    return (cameraToWorldMatrix * vec4(cameraPos, 1)).xyz;
 }
 
 std::pair<dvec3, bool> Camera::mapCameraToViewport(dvec3 cameraPos) const {
     vec4 pos_clipSpace = _cameraToViewportMatrix * vec4(cameraPos, 1);
     if (fabs(pos_clipSpace.x) <= pos_clipSpace.w && fabs(pos_clipSpace.y) <= pos_clipSpace.w && fabs(pos_clipSpace.z) <= pos_clipSpace.w) {
-        vec3 ndc = vec3(pos_clipSpace.xyz()) / pos_clipSpace.w;
-        return {vec3((ndc.xy() + 1.f) * 0.5f * vec2(_viewportSize), ndc.z * 0.5f + 0.5f), true};
+        vec3 ndc = vec3(pos_clipSpace.xyz) / pos_clipSpace.w;
+        return {vec3((vec2(ndc.xy) + 1.f) * 0.5f * vec2(_viewportSize), ndc.z * 0.5f + 0.5f), true};
     }
     return {vec3(0), false};
 }

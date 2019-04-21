@@ -13,15 +13,15 @@ dmat4 Location::matrixToWorld() const {
 }
 
 glm::dvec3 Location::right() const {
-    return matrixToWorld()[0].xyz();
+    return matrixToWorld()[0].xyz;
 }
 
 glm::dvec3 Location::up() const {
-    return matrixToWorld()[1].xyz();
+    return matrixToWorld()[1].xyz;
 }
 
 glm::dvec3 Location::backward() const {
-    return matrixToWorld()[2].xyz();
+    return matrixToWorld()[2].xyz;
 }
 
 bool Location::operator==(const Location &other) const {

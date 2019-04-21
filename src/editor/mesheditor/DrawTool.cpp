@@ -92,7 +92,7 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
             if (!isInViewport) {
                 return;
             }
-            auto pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos.xy(), prevPosInViewport.z));
+            auto pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos.xy, prevPosInViewport.z));
 
             mesh->setPosition({{previewUVPoint->vertex(), pos}});
             _drawnUVPoints.push_back(previewUVPoint);
@@ -102,7 +102,7 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
             if (!isCenterInViewport) {
                 return;
             }
-            auto pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos.xy(), centerInViewport.z));
+            auto pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos.xy, centerInViewport.z));
             _drawnUVPoints.push_back(mesh->addUVPoint(mesh->addVertex(pos), vec2(0)));
         }
     }
@@ -140,7 +140,7 @@ void DrawTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::Mo
         if (!isInViewport) {
             return;
         }
-        pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos.xy(), prevPosInViewport.z));
+        pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos.xy, prevPosInViewport.z));
     }
 
     mesh->setPosition({{previewUVPoint->vertex(), pos}});

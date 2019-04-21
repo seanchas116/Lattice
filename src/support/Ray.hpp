@@ -57,7 +57,7 @@ public:
          glm::tvec3<T> p0 = origin;
          glm::tvec3<T> p1 = direction + origin;
 
-         glm::tvec2<T> yz = (p1.x * p0.yz() - p0.x * p1.yz()) / (p1.x - p0.x);
+         glm::tvec2<T> yz = (p1.x * p0.yz - p0.x * p1.yz) / (p1.x - p0.x);
          return {0, yz};
     }
 
@@ -68,8 +68,8 @@ public:
 template <typename T>
 Ray<T> operator*(const glm::tmat4x4<T>& mat, const Ray<T>& ray) {
      return {
-         (mat * glm::dvec4(ray.origin, 1)).xyz(),
-         (mat * glm::dvec4(ray.direction, 0)).xyz(),
+         (mat * glm::dvec4(ray.origin, 1)).xyz,
+         (mat * glm::dvec4(ray.direction, 0)).xyz,
      };
 }
 

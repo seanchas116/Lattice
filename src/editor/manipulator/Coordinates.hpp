@@ -20,7 +20,7 @@ public:
 
         // TODO: calculate scale from desired arrow length in viewport space
         if (camera->projection() == Camera::Projection::Perspective) {
-            dvec3 viewportPosFixedDepth(viewportPos.xy(), Constants::fixedDepth);
+            dvec3 viewportPosFixedDepth(viewportPos.xy, Constants::fixedDepth);
             dvec3 positionFixedDepth_worldSpace = camera->mapViewportToWorld(viewportPosFixedDepth);
 
             scale = 1.0 / double(camera->viewportSize().y) * 20.0;
@@ -36,8 +36,8 @@ public:
         dmat4 targetToCamera = worldToCamera * glm::translate(targetPos);
 
         for (int axis = 0; axis < 3; ++axis) {
-            arrowRaysInManipulatorSpace[axis] = {manipulatorToCamera[3].xyz(), manipulatorToCamera[axis].xyz()};
-            axisRaysInCameraSpace[axis] = {targetToCamera[3].xyz(), targetToCamera[axis].xyz()};
+            arrowRaysInManipulatorSpace[axis] = {manipulatorToCamera[3].xyz, manipulatorToCamera[axis].xyz};
+            axisRaysInCameraSpace[axis] = {targetToCamera[3].xyz, targetToCamera[axis].xyz};
         }
     }
 
