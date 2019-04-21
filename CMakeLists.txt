@@ -18,6 +18,7 @@ else(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
 endif()
 
+add_definitions(-DGLM_FORCE_INTRINSICS)
 add_definitions(-DGLM_FORCE_SWIZZLE)
 add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
 add_definitions(-D_USE_MATH_DEFINES)
