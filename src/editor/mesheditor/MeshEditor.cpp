@@ -304,9 +304,7 @@ void MeshEditor::updateWholeVAOs() {
         _faceAttributes.clear();
         _facePickAttributes.clear();
 
-        auto addPoint = [&](const SP<Mesh::Face>& face, const SP<FacePickable>& pickable, const SP<Mesh::UVPoint>& p, bool hovered, bool selected) {
-            Q_UNUSED(face);
-
+        auto addPoint = [&](const SP<Mesh::UVPoint>& p, bool hovered, bool selected, glm::vec4 idColor) {
             GL::Vertex attrib;
             attrib.position = p->vertex()->position();
             attrib.texCoord = p->position();
@@ -314,7 +312,7 @@ void MeshEditor::updateWholeVAOs() {
 
             GL::Vertex pickAttrib;
             pickAttrib.position = p->vertex()->position();
-            pickAttrib.color = pickable->toIDColor();
+            pickAttrib.color = idColor;
 
             auto index = uint32_t(_faceAttributes.size());
             _faceAttributes.push_back(attrib);
@@ -329,11 +327,12 @@ void MeshEditor::updateWholeVAOs() {
 
             auto pickable = makeShared<FacePickable>(this, face);
             childPickables.push_back(pickable);
+            auto idColor = pickable->toIDColor();
 
-            auto i0 = addPoint(face, pickable, face->uvPoints()[0], hovered, selected);
+            auto i0 = addPoint(face->uvPoints()[0], hovered, selected, idColor);
             for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
-                auto i1 = addPoint(face, pickable, face->uvPoints()[i - 1], hovered, selected);
-                auto i2 = addPoint(face, pickable, face->uvPoints()[i], hovered, selected);
+                auto i1 = addPoint(face->uvPoints()[i - 1], hovered, selected, idColor);
+                auto i2 = addPoint(face->uvPoints()[i], hovered, selected, idColor);
                 triangles.push_back({i0, i1, i2});
             }
         }
