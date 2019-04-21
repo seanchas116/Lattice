@@ -23,7 +23,7 @@ public:
     void draw(const SP<Draw::Operations>& operations, const SP<Camera>& camera) override;
 
 private:
-    SP<GL::VertexBuffer<Draw::Vertex>> _vbo;
+    SP<GL::VertexBuffer<Draw::PointLineVertex>> _vbo;
     SP<GL::IndexBuffer> _indexBuffer;
     SP<GL::VAO> _vao;
     SP<GL::IndexBuffer> _xAxisIndexBuffer;
