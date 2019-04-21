@@ -337,17 +337,18 @@ void MeshEditor::updateWholeVAOs() {
 
         for (auto& material : _object->mesh()->materials()) {
             std::vector<GL::IndexBuffer::Triangle> triangles;
-            for (auto& face : material->faces()) {
-                bool hovered = _hoveredFace == face->sharedFromThis();
-                bool selected = selectedFaces.find(face->sharedFromThis()) != selectedFaces.end();
+            for (auto& facePtr : material->faces()) {
+                auto face = facePtr->sharedFromThis();
+                bool hovered = _hoveredFace == face;
+                bool selected = selectedFaces.find(face) != selectedFaces.end();
 
-                auto pickable = makeShared<FacePickable>(this, face->sharedFromThis());
+                auto pickable = makeShared<FacePickable>(this, face);
                 childPickables.push_back(pickable);
 
-                auto i0 = addPoint(face->sharedFromThis(), pickable, face->uvPoints()[0], hovered, selected);
+                auto i0 = addPoint(face, pickable, face->uvPoints()[0], hovered, selected);
                 for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
-                    auto i1 = addPoint(face->sharedFromThis(), pickable, face->uvPoints()[i - 1], hovered, selected);
-                    auto i2 = addPoint(face->sharedFromThis(), pickable, face->uvPoints()[i], hovered, selected);
+                    auto i1 = addPoint(face, pickable, face->uvPoints()[i - 1], hovered, selected);
+                    auto i2 = addPoint(face, pickable, face->uvPoints()[i], hovered, selected);
                     triangles.push_back({i0, i1, i2});
                     pickTriangles.push_back({i0, i1, i2});
                 }

@@ -71,11 +71,12 @@ std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> MeshVAOGenerator::generateFa
 
     for (auto& material : _mesh->materials()) {
         std::vector<GL::IndexBuffer::Triangle> triangles;
-        for (auto& face : material->faces()) {
-            auto i0 = addPoint(face->sharedFromThis(), 0);
+        for (auto& facePtr : material->faces()) {
+            auto face = facePtr->sharedFromThis();
+            auto i0 = addPoint(face, 0);
             for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
-                auto i1 = addPoint(face->sharedFromThis(), i - 1);
-                auto i2 = addPoint(face->sharedFromThis(), i);
+                auto i1 = addPoint(face, i - 1);
+                auto i2 = addPoint(face, i);
                 triangles.push_back({i0, i1, i2});
                 pickTriangles.push_back({i0, i1, i2});
             }
