@@ -216,20 +216,23 @@ void MeshEditor::updateWholeVAOs() {
         return;
     }
 
+    auto& mesh = _object->mesh();
+
     auto& selectedVertices = _appState->document()->meshSelection().vertices;
     auto selectedFaces = _appState->document()->meshSelection().faces();
 
     auto hitTestExclusion = _tool->hitTestExclusion();
 
     std::vector<SP<Viewport::Renderable>> childPickables;
+    childPickables.reserve(mesh->vertices().size() + mesh->edges().size() + mesh->faces().size());
 
     {
         _vertexAttributes.clear();
-        _vertexAttributes.reserve(_object->mesh()->vertices().size());
+        _vertexAttributes.reserve(mesh->vertices().size());
         _vertexPickAttributes.clear();
-        _vertexPickAttributes.reserve(_object->mesh()->vertices().size());
+        _vertexPickAttributes.reserve(mesh->vertices().size());
 
-        for (auto& v : _object->mesh()->vertices()) {
+        for (auto& v : mesh->vertices()) {
             bool selected = selectedVertices.find(v) != selectedVertices.end();
             bool hovered = v == _hoveredVertex;
 
@@ -262,12 +265,12 @@ void MeshEditor::updateWholeVAOs() {
 
     {
         _edgeAttributes.clear();
-        _edgeAttributes.reserve(_object->mesh()->edges().size() * 2);
+        _edgeAttributes.reserve(mesh->edges().size() * 2);
         _edgePickAttributes.clear();
-        _edgePickAttributes.reserve(_object->mesh()->edges().size() * 2);
+        _edgePickAttributes.reserve(mesh->edges().size() * 2);
 
         std::vector<GL::IndexBuffer::Line> indices;
-        for (auto& [_, e] : _object->mesh()->edges()) {
+        for (auto& [_, e] : mesh->edges()) {
             bool hovered = e == _hoveredEdge;
 
             auto pickable = makeShared<EdgePickable>(this, e);
@@ -335,7 +338,7 @@ void MeshEditor::updateWholeVAOs() {
 
         std::vector<GL::IndexBuffer::Triangle> pickTriangles;
 
-        for (auto& material : _object->mesh()->materials()) {
+        for (auto& material : mesh->materials()) {
             std::vector<GL::IndexBuffer::Triangle> triangles;
             for (auto& facePtr : material->faces()) {
                 auto face = facePtr->sharedFromThis();
