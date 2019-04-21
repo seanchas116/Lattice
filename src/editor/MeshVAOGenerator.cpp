@@ -48,16 +48,19 @@ SP<GL::VAO> MeshVAOGenerator::generateEdgeVAO() const {
 }
 
 std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() const {
+    _mesh->updateNormals();
+
     // TODO: build more efficient VBO
     std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> faceVAOs;
     auto faceVBO = makeShared<GL::VertexBuffer<GL::Vertex>>();
     std::vector<GL::Vertex> faceAttributes;
 
-    auto addPoint = [&](const SP<Mesh::Face>& face, const SP<Mesh::UVPoint>& p) {
+    auto addPoint = [&](const SP<Mesh::Face>& face, int indexInFace) {
+        auto& p = face->uvPoints()[indexInFace];
         GL::Vertex attrib;
         attrib.position = p->vertex()->position();
         attrib.texCoord = p->position();
-        attrib.normal = p->vertex()->normal(face);
+        attrib.normal = face->vertexNormals()[indexInFace];
 
         auto index = uint32_t(faceAttributes.size());
         faceAttributes.push_back(attrib);
@@ -69,10 +72,10 @@ std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> MeshVAOGenerator::generateFa
     for (auto& material : _mesh->materials()) {
         std::vector<GL::IndexBuffer::Triangle> triangles;
         for (auto& face : material->faces()) {
-            auto i0 = addPoint(face->sharedFromThis(), face->uvPoints()[0]);
+            auto i0 = addPoint(face->sharedFromThis(), 0);
             for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
-                auto i1 = addPoint(face->sharedFromThis(), face->uvPoints()[i - 1]);
-                auto i2 = addPoint(face->sharedFromThis(), face->uvPoints()[i]);
+                auto i1 = addPoint(face->sharedFromThis(), i - 1);
+                auto i2 = addPoint(face->sharedFromThis(), i);
                 triangles.push_back({i0, i1, i2});
                 pickTriangles.push_back({i0, i1, i2});
             }

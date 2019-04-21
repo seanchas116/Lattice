@@ -11,34 +11,6 @@ SP<UVPoint> Vertex::firstUVPoint() const {
     return (*_uvPoints.begin())->sharedFromThis();
 }
 
-dvec3 Vertex::normal(const SP<Face> &face) const {
-    std::unordered_set<SP<Face>> connectedFaces {face};
-
-    while (true) {
-        bool added = false;
-        for (auto& edge : _edges) {
-            if (!edge->isSmooth()) {
-                continue;
-            }
-            for (auto& face : edge->faces()) {
-                auto [it, inserted] = connectedFaces.insert(face->sharedFromThis());
-                if (inserted) {
-                    added = true;
-                }
-            }
-        }
-        if (!added) {
-            break;
-        }
-    }
-
-    glm::dvec3 normalSum(0);
-    for (auto& face : connectedFaces) {
-        normalSum += face->normal();
-    }
-    return normalize(normalSum / double(connectedFaces.size()));
-}
-
 std::vector<SP<Face> > UVPoint::faces() const {
     std::vector<SP<Face>> faces;
     for (auto& f : _faces) {
@@ -55,9 +27,10 @@ std::vector<SP<Face> > Edge::faces() const {
     return faces;
 }
 
-dvec3 Face::normal() const {
+void Face::updateNormal() {
     if (_vertices.size() == 3) {
-        return normalize(cross(_vertices[1]->position() - _vertices[0]->position(), _vertices[2]->position() - _vertices[0]->position()));
+        _normal = normalize(cross(_vertices[1]->position() - _vertices[0]->position(), _vertices[2]->position() - _vertices[0]->position()));
+        return;
     }
 
     // find average vertex normal
@@ -78,9 +51,40 @@ dvec3 Face::normal() const {
         ++sumCount;
     }
     if (sumCount == 0) {
-        return dvec3(0); // TODO: what should we do?
+        _normal = dvec3(0); // TODO: what should we do?
+        return;
     }
-    return normalize(normalSum);
+    _normal = normalize(normalSum);
+}
+
+void Face::updateVertexNormals() {
+    for (size_t i = 0; i < _vertices.size(); ++i) {
+        std::unordered_set<SP<Face>> connectedFaces {sharedFromThis()};
+
+        while (true) {
+            bool added = false;
+            for (auto& edge : _vertices[i]->edges()){
+                if (!edge->isSmooth()) {
+                    continue;
+                }
+                for (auto& face : edge->faces()) {
+                    auto [it, inserted] = connectedFaces.insert(face->sharedFromThis());
+                    if (inserted) {
+                        added = true;
+                    }
+                }
+            }
+            if (!added) {
+                break;
+            }
+        }
+
+        glm::dvec3 normalSum(0);
+        for (auto& face : connectedFaces) {
+            normalSum += face->_normal;
+        }
+        _vertexNormals[i] = normalize(normalSum / double(connectedFaces.size()));
+    }
 }
 
 class Mesh::AddVertexChange : public Change {
@@ -721,6 +725,17 @@ Box<float> Mesh::boundingBox() const {
     }
 
     return {minPos, maxPos};
+}
+
+void Mesh::updateNormals() {
+    for (auto& [_, face] : _faces) {
+        Q_UNUSED(_);
+        face->updateNormal();
+    }
+    for (auto& [_, face] : _faces) {
+        Q_UNUSED(_);
+        face->updateVertexNormals();
+    }
 }
 
 } // namespace Lattice

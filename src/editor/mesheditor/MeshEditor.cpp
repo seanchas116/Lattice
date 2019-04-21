@@ -318,7 +318,9 @@ void MeshEditor::updateWholeVAOs() {
 
             attrib.position = p->vertex()->position();
             attrib.texCoord = p->position();
-            attrib.normal = p->vertex()->normal(face);
+            Q_UNUSED(face);
+            attrib.normal = vec3(0);
+            //attrib.normal = p->vertex()->normal(face); // FIXME
             attrib.color = hovered ? hoveredFaceHighlight : selected ? selectedFaceHighlight : unselectedFaceHighlight;
 
             GL::Vertex pickAttrib;

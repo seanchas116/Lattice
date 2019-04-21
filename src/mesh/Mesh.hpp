@@ -35,8 +35,6 @@ public:
 
     SP<UVPoint> firstUVPoint() const;
 
-    glm::dvec3 normal(const SP<Face>& face) const;
-
 private:
     friend class Mesh;
     glm::dvec3 _position {0};
@@ -94,23 +92,30 @@ public:
         _vertices(vertices),
         _edges(edges),
         _uvPoints(uvPoints),
+        _vertexNormals(vertices.size()),
         _material(material)
     {}
 
     auto& vertices() const { return _vertices; }
     auto& edges() const { return _edges; }
     auto& uvPoints() const { return _uvPoints; }
+    auto& vertexNormals() const { return _vertexNormals; }
 
-    glm::dvec3 normal() const;
+    auto normal() const { return _normal; }
 
     auto& material() const { return _material; }
     void setMaterial(const SP<Material>& material);
 
 private:
+    void updateNormal();
+    void updateVertexNormals();
+
     friend class Mesh;
     std::vector<SP<Vertex>> _vertices;
     std::vector<SP<Edge>> _edges;
     std::vector<SP<UVPoint>> _uvPoints;
+    std::vector<glm::dvec3> _vertexNormals;
+    glm::dvec3 _normal {0};
     SP<Material> _material;
 };
 
@@ -212,6 +217,8 @@ public:
     SP<Mesh> clone() const;
 
     Box<float> boundingBox() const;
+
+    void updateNormals();
 
 signals:
     void vertexAdded(const SP<Vertex>& vertex);
