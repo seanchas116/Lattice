@@ -2,7 +2,7 @@
 
 #include "Tool.hpp"
 #include "../../viewport/RenderableObject.hpp"
-#include "../../gl/Vertex.hpp"
+#include "../../draw/Vertex.hpp"
 #include "../../support/Shorthands.hpp"
 #include "../../support/Box.hpp"
 #include "../../support/Location.hpp"
@@ -100,34 +100,34 @@ private:
 
     SP<GL::IndexBuffer> _faceIndexBuffer;
 
-    std::vector<GL::Vertex> _faceAttributes;
-    SP<GL::VertexBuffer<GL::Vertex>> _faceVertexBuffer;
+    std::vector<Draw::Vertex> _faceAttributes;
+    SP<GL::VertexBuffer<Draw::Vertex>> _faceVertexBuffer;
     SP<GL::VAO> _faceVAO;
 
-    std::vector<GL::Vertex> _facePickAttributes;
-    SP<GL::VertexBuffer<GL::Vertex>> _facePickVertexBuffer;
+    std::vector<Draw::Vertex> _facePickAttributes;
+    SP<GL::VertexBuffer<Draw::Vertex>> _facePickVertexBuffer;
     SP<GL::VAO> _facePickVAO;
 
     std::vector<SP<Mesh::Edge>> _edges;
     std::vector<SP<EdgePickable>> _edgePickables;
 
-    std::vector<GL::Vertex> _edgeAttributes;
-    SP<GL::VertexBuffer<GL::Vertex>> _edgeVertexBuffer;
+    std::vector<Draw::PointLineVertex> _edgeAttributes;
+    SP<GL::VertexBuffer<Draw::PointLineVertex>> _edgeVertexBuffer;
     SP<GL::VAO> _edgeVAO;
 
-    std::vector<GL::Vertex> _edgePickAttributes;
-    SP<GL::VertexBuffer<GL::Vertex>> _edgePickVertexBuffer;
+    std::vector<Draw::PointLineVertex> _edgePickAttributes;
+    SP<GL::VertexBuffer<Draw::PointLineVertex>> _edgePickVertexBuffer;
     SP<GL::VAO> _edgePickVAO;
 
     std::vector<SP<Mesh::Vertex>> _vertices;
     std::vector<SP<VertexPickable>> _vertexPickables;
 
-    std::vector<GL::Vertex> _vertexAttributes;
-    SP<GL::VertexBuffer<GL::Vertex>> _vertexVertexBuffer;
+    std::vector<Draw::PointLineVertex> _vertexAttributes;
+    SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexVertexBuffer;
     SP<GL::VAO> _vertexVAO;
 
-    std::vector<GL::Vertex> _vertexPickAttributes;
-    SP<GL::VertexBuffer<GL::Vertex>> _vertexPickVertexBuffer;
+    std::vector<Draw::PointLineVertex> _vertexPickAttributes;
+    SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexPickVertexBuffer;
     SP<GL::VAO> _vertexPickVAO;
 
     std::vector<SP<Viewport::Renderable>> _pickables;

@@ -1,7 +1,7 @@
 #include "GridFloor.hpp"
 #include "../gl/VAO.hpp"
 #include "../gl/VertexBuffer.hpp"
-#include "../gl/Vertex.hpp"
+#include "../draw/Vertex.hpp"
 #include "../support/Camera.hpp"
 
 using namespace glm;
@@ -10,7 +10,7 @@ namespace Lattice {
 namespace Editor {
 
 GridFloor::GridFloor() :
-    _vbo(makeShared<GL::VertexBuffer<GL::Vertex>>()),
+    _vbo(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
     _indexBuffer(makeShared<GL::IndexBuffer>()),
     _vao(makeShared<GL::VAO>(_vbo, _indexBuffer)),
     _xAxisIndexBuffer(makeShared<GL::IndexBuffer>()),
@@ -22,7 +22,7 @@ GridFloor::GridFloor() :
     constexpr int count = 200;
     constexpr double unit = 1;
 
-    std::vector<GL::Vertex> vertices;
+    std::vector<Draw::PointLineVertex> vertices;
     std::vector<std::vector<uint32_t>> lineStrips;
     std::vector<uint32_t> xLineStrip;
     std::vector<uint32_t> zLineStrip;
@@ -31,9 +31,9 @@ GridFloor::GridFloor() :
         dvec3 v1(-count*unit, 0, z*unit);
         dvec3 v2(count*unit, 0, z*unit);
         auto i1 = uint32_t(vertices.size());
-        vertices.push_back({v1, {}, {}});
+        vertices.push_back({v1, vec4(0), 1});
         auto i2 = uint32_t(vertices.size());
-        vertices.push_back({v2, {}, {}});
+        vertices.push_back({v2, vec4(0), 1});
 
         if (z == 0) {
             xLineStrip = {i1, i2};
@@ -45,9 +45,9 @@ GridFloor::GridFloor() :
         dvec3 v1(x*unit, 0, -count*unit);
         dvec3 v2(x*unit, 0, count*unit);
         auto i1 = uint32_t(vertices.size());
-        vertices.push_back({v1, {}, {}});
+        vertices.push_back({v1, vec4(0), 1});
         auto i2 = uint32_t(vertices.size());
-        vertices.push_back({v2, {}, {}});
+        vertices.push_back({v2, vec4(0), 1});
 
         if (x == 0) {
             zLineStrip = {i1, i2};

@@ -2,13 +2,13 @@
 
 #include "../support/Shorthands.hpp"
 #include "../viewport/RenderableObject.hpp"
+#include "../draw/Vertex.hpp"
 #include <glm/glm.hpp>
 
 namespace Lattice {
 class Camera;
 
 namespace GL {
-struct Vertex;
 template <typename T> class VertexBuffer;
 class IndexBuffer;
 }
@@ -23,7 +23,7 @@ public:
     void draw(const SP<Draw::Operations>& operations, const SP<Camera>& camera) override;
 
 private:
-    SP<GL::VertexBuffer<GL::Vertex>> _vbo;
+    SP<GL::VertexBuffer<Draw::PointLineVertex>> _vbo;
     SP<GL::IndexBuffer> _indexBuffer;
     SP<GL::VAO> _vao;
     SP<GL::IndexBuffer> _xAxisIndexBuffer;
