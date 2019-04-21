@@ -537,6 +537,8 @@ void MeshEditor::updateVAOAttributes() {
         pickAttrib.color = _vertexPickables[i]->toIDColor();
         _vertexPickAttributes[i] = pickAttrib;
     }
+    _vertexVertexBuffer->setVertices(_vertexAttributes);
+    _vertexPickVertexBuffer->setVertices(_vertexPickAttributes);
 
     for (size_t edgeIndex = 0; edgeIndex < _edges.size(); ++edgeIndex) {
         auto& e = _edges[edgeIndex];
@@ -557,6 +559,8 @@ void MeshEditor::updateVAOAttributes() {
             _edgePickAttributes[edgeIndex * 2 + vertexInEdgeIndex] = pickAttrib;
         }
     }
+    _edgeVertexBuffer->setVertices(_edgeAttributes);
+    _edgePickVertexBuffer->setVertices(_edgePickAttributes);
 
     {
         size_t vertexIndex = 0;
@@ -584,6 +588,8 @@ void MeshEditor::updateVAOAttributes() {
                 ++vertexIndex;
             }
         }
+        _faceVertexBuffer->setVertices(_faceAttributes);
+        _facePickVertexBuffer->setVertices(_facePickAttributes);
     }
 }
 
