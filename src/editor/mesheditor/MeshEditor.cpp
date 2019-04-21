@@ -388,7 +388,7 @@ void MeshEditor::updateVAOAttributes() {
         return;
     }
     qDebug() << "attributes change";
-    _isVAOTopologyDirty = false;
+    _isVAOAttributesDirty = false;
 
     auto& selectedVertices = _appState->document()->meshSelection().vertices;
     auto selectedFaces = _appState->document()->meshSelection().faces();
