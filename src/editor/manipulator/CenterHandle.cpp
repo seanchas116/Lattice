@@ -22,7 +22,7 @@ void CenterHandle::drawPickables(const SP<Draw::Operations> &operations, const S
     if (!isInViewport) {
         return;
     }
-    dvec3 frontPos(viewportPos.xy, 0);
+    dvec3 frontPos(viewportPos.xy(), 0);
 
     GL::Vertex vertex { frontPos };
     auto vbo = makeShared<GL::VertexBuffer<GL::Vertex>>();

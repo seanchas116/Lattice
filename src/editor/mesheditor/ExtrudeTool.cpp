@@ -41,7 +41,7 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
     }
 
     if (!_dragStarted) {
-        if (distance(_initViewportPos, dvec2(event.viewportPos.xy)) < appState()->preferences()->moveThreshold()) {
+        if (distance(_initViewportPos, event.viewportPos.xy()) < appState()->preferences()->moveThreshold()) {
             return;
         }
 

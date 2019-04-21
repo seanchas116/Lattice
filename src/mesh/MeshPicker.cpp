@@ -33,8 +33,8 @@ bool mapLineToViewport(const mat4& P, vec2 viewportSize, float zNear, vec4 p0_ca
     vec4 p0_clipSpace = P * p0_cameraSpace;
     vec4 p1_clipSpace = P * p1_cameraSpace;
 
-    vec2 p0 = (vec2(p0_clipSpace.xy) / p0_clipSpace.w + 1.f) * (0.5f * viewportSize);
-    vec2 p1 = (vec2(p1_clipSpace.xy) / p1_clipSpace.w + 1.f) * (0.5f * viewportSize);
+    vec2 p0 = (p0_clipSpace.xy() / p0_clipSpace.w + 1.f) * (0.5f * viewportSize);
+    vec2 p1 = (p1_clipSpace.xy() / p1_clipSpace.w + 1.f) * (0.5f * viewportSize);
     float d0 = p0_clipSpace.z / p0_clipSpace.w * 0.5f + 0.5f;
     float d1 = p1_clipSpace.z / p1_clipSpace.w * 0.5f + 0.5f;
 
@@ -62,7 +62,7 @@ Opt<std::pair<SP<Mesh::Face>, double> > MeshPicker::pickFace(const dmat4 &modelT
             auto [intersects, t] = ray.intersectsTriangle({v0, v1, v2});
             if (intersects) {
                 dvec3 intersectingPos = ray.at(t);
-                auto [intersectingPosViewport, isInViewport] = camera->mapWorldToViewport((modelToWorld * dvec4(intersectingPos, 1)).xyz);
+                auto [intersectingPosViewport, isInViewport] = camera->mapWorldToViewport((modelToWorld * dvec4(intersectingPos, 1)).xyz());
                 intersectings.insert({intersectingPosViewport.z, f});
             }
         }
@@ -78,10 +78,10 @@ Opt<std::pair<SP<Mesh::Vertex>, double> > MeshPicker::pickVertex(const dmat4 &mo
     std::map<double, SP<Mesh::Vertex>> intersectings;
 
     for (auto& v : _mesh->vertices()) {
-        auto [viewportVertexPos, isInViewport] = camera->mapWorldToViewport((modelToWorld * vec4(v->position(), 1)).xyz);
+        auto [viewportVertexPos, isInViewport] = camera->mapWorldToViewport((modelToWorld * vec4(v->position(), 1)).xyz());
         if (!isInViewport) { continue; }
 
-        if (glm::distance(dvec2(viewportVertexPos.xy), viewportPos) <= distance) {
+        if (glm::distance(viewportVertexPos.xy(), viewportPos) <= distance) {
             intersectings.insert({viewportVertexPos.z, v});
         }
     }
@@ -108,8 +108,8 @@ Opt<std::pair<SP<Mesh::Edge>, double> > MeshPicker::pickEdge(const dmat4 &modelT
             continue;
         }
 
-        vec2 ab = p1_viewportSpace.xy - p0_viewportSpace.xy;
-        vec2 w = vec2(viewportPos) - p0_viewportSpace.xy;
+        vec2 ab = p1_viewportSpace.xy() - p0_viewportSpace.xy();
+        vec2 w = vec2(viewportPos) - p0_viewportSpace.xy();
         vec2 v = normalize(ab);
         float d = abs(cross(vec3(w, 0), vec3(v, 0)).z);
         float t = dot(ab, w) / dot(ab, ab);

@@ -56,7 +56,7 @@ void MoveTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
     for (auto& v : dragVertices) {
         _initPositions[v] = v->position();
     }
-    _initObjectPos = (object()->location().matrixToModel() * dvec4(event.worldPos(), 1)).xyz;
+    _initObjectPos = (object()->location().matrixToModel() * dvec4(event.worldPos(), 1)).xyz();
     _initViewportPos = event.viewportPos;
     _dragStarted = false;
 }
@@ -73,11 +73,11 @@ void MoveTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::Mo
         return;
     }
 
-    dvec3 objectPos = (object()->location().matrixToModel() * dvec4(event.worldPos(), 1)).xyz;
+    dvec3 objectPos = (object()->location().matrixToModel() * dvec4(event.worldPos(), 1)).xyz();
     dvec3 offset = objectPos - _initObjectPos;
 
     if (!_dragStarted) {
-        if (distance(_initViewportPos, dvec2(event.viewportPos.xy)) < appState()->preferences()->moveThreshold()) {
+        if (distance(_initViewportPos, event.viewportPos.xy()) < appState()->preferences()->moveThreshold()) {
             return;
         }
         appState()->document()->history()->beginChange(tr("Move Vertex"));

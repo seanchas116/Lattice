@@ -32,9 +32,9 @@ void MeshManipulator::handleOnDragBegin(ValueType type, dvec3 values) {
     dmat4 objectToWorld = _object->location().matrixToWorld();
 
     for (auto& v : _appState->document()->meshSelection().vertices) {
-        _initialPositions[v] = (objectToWorld * dvec4(v->position(), 1)).xyz;
+        _initialPositions[v] = (objectToWorld * dvec4(v->position(), 1)).xyz();
     }
-    _initialMedianPos = (objectToWorld * dvec4(_appState->document()->meshSelection().medianPosition(), 1)).xyz;
+    _initialMedianPos = (objectToWorld * dvec4(_appState->document()->meshSelection().medianPosition(), 1)).xyz();
 }
 
 void MeshManipulator::handleOnDragMove(ValueType type, dvec3 values) {
@@ -47,7 +47,7 @@ void MeshManipulator::handleOnDragMove(ValueType type, dvec3 values) {
         std::unordered_map<SP<Mesh::Vertex>, dvec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
             auto newPos = initialPos + offset;
-            positions[vertex] = (worldToObject * dvec4(newPos, 1)).xyz;
+            positions[vertex] = (worldToObject * dvec4(newPos, 1)).xyz();
         }
         mesh->setPosition(positions);
         break;
@@ -58,7 +58,7 @@ void MeshManipulator::handleOnDragMove(ValueType type, dvec3 values) {
         for (auto& [vertex, initialPos] : _initialPositions) {
             dvec3 initialOffset = initialPos - _initialMedianPos;
             auto newPos = _initialMedianPos + initialOffset * ratio;
-            positions[vertex] = (worldToObject * dvec4(newPos, 1)).xyz;
+            positions[vertex] = (worldToObject * dvec4(newPos, 1)).xyz();
         }
         mesh->setPosition(positions);
         break;
@@ -70,9 +70,9 @@ void MeshManipulator::handleOnDragMove(ValueType type, dvec3 values) {
         std::unordered_map<SP<Mesh::Vertex>, dvec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
             dvec3 initialOffset = initialPos - _initialMedianPos;
-            dvec3 offset = (matrix * dvec4(initialOffset, 0)).xyz;
+            dvec3 offset = (matrix * dvec4(initialOffset, 0)).xyz();
             auto newPos = _initialMedianPos + offset;
-            positions[vertex] = (worldToObject * dvec4(newPos, 1)).xyz;
+            positions[vertex] = (worldToObject * dvec4(newPos, 1)).xyz();
         }
         mesh->setPosition(positions);
         break;
@@ -88,7 +88,7 @@ void MeshManipulator::handleOnDragEnd(ValueType type) {
 void MeshManipulator::updatePosition() {
     auto median = _appState->document()->meshSelection().medianPosition();
     auto matrix = _object->location().matrixToWorld();
-    setTargetPosition((matrix * dvec4(median, 1)).xyz);
+    setTargetPosition((matrix * dvec4(median, 1)).xyz());
 }
 
 }

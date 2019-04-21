@@ -27,7 +27,7 @@ void BorderSelectTool::mousePressTool(const Tool::EventTarget &target, const Vie
         if (!isInScreen) {
             continue;
         }
-        _vertices.push_back({vertex, screenPos.xy});
+        _vertices.push_back({vertex, screenPos.xy()});
     }
 
     emit updated();
