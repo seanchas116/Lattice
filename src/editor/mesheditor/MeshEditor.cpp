@@ -156,6 +156,8 @@ void MeshEditor::drawPickables(const SP<Draw::Operations> &operations, const SP<
     glClearDepthf(1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // TODO: Use Tool::hitTestExclusion to skip pickable rendering
+
     if (_appState->isFaceSelectable()) {
         operations->drawUnicolor.draw(_facePickVAO, _object->location().matrixToWorld(), camera, vec4(0), true);
     }
