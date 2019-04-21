@@ -128,11 +128,8 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
 void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     updateWholeVAOs();
 
-    /*
-    for (auto& [material, vao] : _faceVAOs) {
-        operations->drawMaterial.draw(vao, _object->location().matrixToWorld(), camera, material);
-    }
-    */
+    // TODO: Render faces
+
     operations->drawLine.draw(_edgeVAO, _object->location().matrixToWorld(), camera, 1.0, vec4(0), true);
     if (_appState->isVertexSelectable()) {
         operations->drawCircle.draw(_vertexVAO, _object->location().matrixToWorld(), camera, 6.0, vec4(0), true);
