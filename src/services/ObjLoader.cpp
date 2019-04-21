@@ -22,7 +22,7 @@ std::vector<SP<Document::MeshObject>> ObjLoader::load(const QString &filePathStr
 
     std::string warn;
     std::string err;
-    bool ret = tinyobj::LoadObj(&attrib, &objShapes, &objMaterials, &warn, &err, filePathString.toUtf8().data(), parentPathString.toUtf8().data());
+    bool ret = tinyobj::LoadObj(&attrib, &objShapes, &objMaterials, &warn, &err, filePathString.toUtf8().data(), parentPathString.toUtf8().data(), false);
 
     if (!warn.empty()) {
         qWarning() << warn.c_str();
