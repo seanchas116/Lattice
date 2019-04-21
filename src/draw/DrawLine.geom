@@ -40,6 +40,7 @@ uniform mat4 MV;
 uniform vec2 viewportSize;
 uniform float zNear;
 uniform float zOffset;
+uniform float width;
 
 layout(lines) in;
 layout(triangle_strip, max_vertices = 4) out;
@@ -73,8 +74,8 @@ void main(void) {
 
     vec2 direction = p1.xy - p0.xy;
     vec2 offsetDirection = normalize(vec2(-direction.y, direction.x));
-    vec2 offset0 = offsetDirection * (width_vert[0] * 0.5);
-    vec2 offset1 = offsetDirection * (width_vert[1] * 0.5);
+    vec2 offset0 = offsetDirection * (width_vert[0] * width * 0.5);
+    vec2 offset1 = offsetDirection * (width_vert[1] * width * 0.5);
 
     gl_Position = vec4((p0.xy + offset0) / (viewportSize * 0.5) - 1.0, p0.z + zOffset, 1);
     vertexColor_geom = color0;
