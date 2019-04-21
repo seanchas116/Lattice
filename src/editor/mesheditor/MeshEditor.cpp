@@ -269,14 +269,11 @@ void MeshEditor::updateWholeVAOs() {
         _edgePickAttributes.clear();
         _edgePickAttributes.reserve(mesh->edges().size() * 2);
 
-        std::vector<GL::IndexBuffer::Line> indices;
         for (auto& [_, e] : mesh->edges()) {
             bool hovered = e == _hoveredEdge;
 
             auto pickable = makeShared<EdgePickable>(this, e);
             childPickables.push_back(pickable);
-
-            auto offset = uint32_t(_edgeAttributes.size());
 
             bool hitTestExcluded = std::find(hitTestExclusion.edges.begin(), hitTestExclusion.edges.end(), e) != hitTestExclusion.edges.end();
 
@@ -295,18 +292,15 @@ void MeshEditor::updateWholeVAOs() {
                     _edgePickAttributes.push_back(pickAttrib);
                 }
             }
-            indices.push_back({offset, offset+1});
         }
 
         auto vertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
-        auto indexBuffer = makeShared<GL::IndexBuffer>();
         vertexBuffer->setVertices(_edgeAttributes);
-        indexBuffer->setLines(indices);
-        _edgeVAO = makeShared<GL::VAO>(vertexBuffer, indexBuffer);
+        _edgeVAO = makeShared<GL::VAO>(vertexBuffer, GL::Primitive::Line);
 
         auto pickVertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
         pickVertexBuffer->setVertices(_edgePickAttributes);
-        _edgePickVAO = makeShared<GL::VAO>(pickVertexBuffer, indexBuffer);
+        _edgePickVAO = makeShared<GL::VAO>(pickVertexBuffer, GL::Primitive::Line);
     }
 
     {
