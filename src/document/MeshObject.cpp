@@ -11,7 +11,6 @@ namespace Document {
 
 MeshObject::MeshObject() : _mesh(makeShared<Mesh::Mesh>()) {
     connect(_mesh.get(), &Mesh::Mesh::changed, this, &MeshObject::handleMeshChange);
-    connect(this, &MeshObject::meshChangedInLastTick, this, &Object::changed);
     _mesh->setChangeHandler([this](const auto& change) {
         addChange(change);
     });

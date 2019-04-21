@@ -27,15 +27,11 @@ public:
     int index() const;
     std::vector<int> indexPath() const;
 
-    void setName(const std::string& name);
     auto& name() const { return _name; }
+    void setName(const std::string& name);
 
-    Location location() const { return _location; }
+    auto& location() const { return _location; }
     void setLocation(const Location &location);
-
-    // TODO: provide better way to notify changes
-    void notifyChanged() { emit changed(); }
-    void notifyChangeFinished() { emit changeFinished(); }
 
     void forEachDescendant(const Fn<void(const SP<Object> &)> &callback);
 
@@ -49,9 +45,6 @@ protected:
     void addChange(const SP<Change>& change);
 
 signals:
-    void changed();
-    void changeFinished();
-
     void nameChanged(const std::string& name);
     void locationChanged(const Location &location);
 
