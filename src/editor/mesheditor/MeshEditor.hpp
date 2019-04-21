@@ -63,6 +63,7 @@ public:
 
 private:
     void handleToolChange(State::Tool tool);
+    void handleMeshTopologyChange();
     void handleMeshChange();
 
     void mousePressTarget(const Tool::EventTarget& target, const Viewport::MouseEvent &event);
@@ -91,7 +92,8 @@ private:
 
     SP<Manipulator::MeshManipulator> _manipulator;
 
-    bool _isVAOsDirty = true;
+    bool _isVAOTopologyDirty = true;
+    bool _isVAOAttributesDirty = true;
 
     std::vector<SP<Mesh::Face>> _faces;
     std::vector<SP<FacePickable>> _facePickables;
