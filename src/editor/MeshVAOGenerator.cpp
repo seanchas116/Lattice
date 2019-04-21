@@ -13,25 +13,25 @@ namespace Editor {
 
 MeshVAOGenerator::MeshVAOGenerator(const SP<Mesh::Mesh> &mesh) :
     _mesh(mesh),
-    _vertexBuffer(makeShared<GL::VertexBuffer<Draw::Vertex>>())
+    _vertexEdgeVertexBuffer(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>())
 {
-    std::vector<Draw::Vertex> vertices;
+    std::vector<Draw::PointLineVertex> vertices;
     for (auto& vertex : mesh->vertices()) {
         for (auto& uvPos : vertex->uvPoints()) {
             _indices[uvPos] = uint32_t(vertices.size());
-            Draw::Vertex foreVertexData = {
+            Draw::PointLineVertex foreVertexData = {
                 vertex->position(),
-                glm::vec2(0),
-                glm::vec3(0)
+                glm::vec4(0),
+                1,
             };
             vertices.push_back(foreVertexData);
         }
     }
-    _vertexBuffer->setVertices(vertices);
+    _vertexEdgeVertexBuffer->setVertices(vertices);
 }
 
 SP<GL::VAO> MeshVAOGenerator::generateVertexVAO() const {
-    return makeShared<GL::VAO>(_vertexBuffer, GL::Primitive::Point);
+    return makeShared<GL::VAO>(_vertexEdgeVertexBuffer, GL::Primitive::Point);
 }
 
 SP<GL::VAO> MeshVAOGenerator::generateEdgeVAO() const {
@@ -43,7 +43,7 @@ SP<GL::VAO> MeshVAOGenerator::generateEdgeVAO() const {
     }
     auto edgeIndexBuffer = makeShared<GL::IndexBuffer>();
     edgeIndexBuffer->setLines(lines);
-    auto edgeVAO = makeShared<GL::VAO>(_vertexBuffer, edgeIndexBuffer);
+    auto edgeVAO = makeShared<GL::VAO>(_vertexEdgeVertexBuffer, edgeIndexBuffer);
     return edgeVAO;
 }
 

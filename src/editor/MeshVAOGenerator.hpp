@@ -27,7 +27,7 @@ public:
 
 private:
     SP<Mesh::Mesh> _mesh;
-    SP<GL::VertexBuffer<Draw::Vertex>> _vertexBuffer;
+    SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexEdgeVertexBuffer;
     std::unordered_map<Mesh::UVPoint*, uint32_t> _indices;
 };
 
