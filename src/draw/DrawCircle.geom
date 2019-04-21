@@ -2,7 +2,6 @@
 
 const float M_PI = 3.1415926535897932384626433832795;
 
-uniform float width;
 uniform vec2 viewportSize;
 uniform float zOffset;
 
@@ -10,11 +9,12 @@ layout(points) in;
 layout(triangle_strip, max_vertices = 16) out;
 
 in vec4 vertexColor_vert[];
+in float width_vert[];
 out vec4 vertexColor_geom;
 
 void emitForAngle(vec2 center, float depth, float angle) {
     vec2 direction = vec2(cos(angle), sin(angle));
-    vec2 pos = direction * (width * 0.5) + center;
+    vec2 pos = direction * (width_vert[0] * 0.5) + center;
     gl_Position = vec4(pos / (viewportSize * 0.5) - 1.0, depth, 1);
     vertexColor_geom = vertexColor_vert[0];
     EmitVertex();

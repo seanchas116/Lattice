@@ -37,7 +37,6 @@ bool mapLineToViewport(mat4 P, vec2 viewportSize, float zNear, vec4 p0_cameraSpa
 
 uniform mat4 P;
 uniform mat4 MV;
-uniform float width;
 uniform vec2 viewportSize;
 uniform float zNear;
 uniform float zOffset;
@@ -46,6 +45,7 @@ layout(lines) in;
 layout(triangle_strip, max_vertices = 4) out;
 
 in vec4 vertexColor_vert[];
+in float width_vert[];
 out vec4 vertexColor_geom;
 
 void main(void) {
@@ -72,21 +72,23 @@ void main(void) {
     }
 
     vec2 direction = p1.xy - p0.xy;
-    vec2 offset = normalize(vec2(-direction.y, direction.x)) * (width * 0.5);
+    vec2 offsetDirection = normalize(vec2(-direction.y, direction.x));
+    vec2 offset0 = offsetDirection * (width_vert[0] * 0.5);
+    vec2 offset1 = offsetDirection * (width_vert[1] * 0.5);
 
-    gl_Position = vec4((p0.xy + offset) / (viewportSize * 0.5) - 1.0, p0.z + zOffset, 1);
+    gl_Position = vec4((p0.xy + offset0) / (viewportSize * 0.5) - 1.0, p0.z + zOffset, 1);
     vertexColor_geom = color0;
     EmitVertex();
 
-    gl_Position = vec4((p0.xy - offset) / (viewportSize * 0.5) - 1.0, p0.z + zOffset, 1);
+    gl_Position = vec4((p0.xy - offset0) / (viewportSize * 0.5) - 1.0, p0.z + zOffset, 1);
     vertexColor_geom = color0;
     EmitVertex();
 
-    gl_Position = vec4((p1.xy + offset) / (viewportSize * 0.5) - 1.0, p1.z + zOffset, 1);
+    gl_Position = vec4((p1.xy + offset1) / (viewportSize * 0.5) - 1.0, p1.z + zOffset, 1);
     vertexColor_geom = color1;
     EmitVertex();
 
-    gl_Position = vec4((p1.xy - offset) / (viewportSize * 0.5) - 1.0, p1.z + zOffset, 1);
+    gl_Position = vec4((p1.xy - offset1) / (viewportSize * 0.5) - 1.0, p1.z + zOffset, 1);
     vertexColor_geom = color1;
     EmitVertex();
 
