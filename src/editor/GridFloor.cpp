@@ -1,7 +1,7 @@
 #include "GridFloor.hpp"
 #include "../gl/VAO.hpp"
 #include "../gl/VertexBuffer.hpp"
-#include "../gl/Vertex.hpp"
+#include "../draw/Vertex.hpp"
 #include "../support/Camera.hpp"
 
 using namespace glm;
@@ -10,7 +10,7 @@ namespace Lattice {
 namespace Editor {
 
 GridFloor::GridFloor() :
-    _vbo(makeShared<GL::VertexBuffer<GL::Vertex>>()),
+    _vbo(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
     _indexBuffer(makeShared<GL::IndexBuffer>()),
     _vao(makeShared<GL::VAO>(_vbo, _indexBuffer)),
     _xAxisIndexBuffer(makeShared<GL::IndexBuffer>()),
@@ -22,7 +22,7 @@ GridFloor::GridFloor() :
     constexpr int count = 200;
     constexpr double unit = 1;
 
-    std::vector<GL::Vertex> vertices;
+    std::vector<Draw::Vertex> vertices;
     std::vector<std::vector<uint32_t>> lineStrips;
     std::vector<uint32_t> xLineStrip;
     std::vector<uint32_t> zLineStrip;

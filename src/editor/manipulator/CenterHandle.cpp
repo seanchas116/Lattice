@@ -1,6 +1,6 @@
 #include "CenterHandle.hpp"
 #include "../../gl/VAO.hpp"
-#include "../../gl/Vertex.hpp"
+#include "../../draw/Vertex.hpp"
 #include "../../gl/VertexBuffer.hpp"
 #include "../../support/Debug.hpp"
 
@@ -24,8 +24,8 @@ void CenterHandle::drawPickables(const SP<Draw::Operations> &operations, const S
     }
     dvec3 frontPos(viewportPos.xy, 0);
 
-    GL::Vertex vertex { frontPos };
-    auto vbo = makeShared<GL::VertexBuffer<GL::Vertex>>();
+    Draw::Vertex vertex { frontPos };
+    auto vbo = makeShared<GL::VertexBuffer<Draw::Vertex>>();
     vbo->setVertices({vertex});
     auto vao = makeShared<GL::VAO>(vbo, GL::Primitive::Point);
     operations->drawCircle.draw2D(vao, dmat4(1), camera->viewportSize(), 32, toIDColor());

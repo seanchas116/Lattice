@@ -97,19 +97,19 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     _manipulator(makeShared<Manipulator::MeshManipulator>(appState, object)),
 
     _faceIndexBuffer(makeShared<GL::IndexBuffer>()),
-    _faceVertexBuffer(makeShared<GL::VertexBuffer<GL::Vertex>>()),
+    _faceVertexBuffer(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
     _faceVAO(makeShared<GL::VAO>(_faceVertexBuffer, _faceIndexBuffer)),
-    _facePickVertexBuffer(makeShared<GL::VertexBuffer<GL::Vertex>>()),
+    _facePickVertexBuffer(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
     _facePickVAO(makeShared<GL::VAO>(_facePickVertexBuffer, _faceIndexBuffer)),
 
-    _edgeVertexBuffer(makeShared<GL::VertexBuffer<GL::Vertex>>()),
+    _edgeVertexBuffer(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
     _edgeVAO(makeShared<GL::VAO>(_edgeVertexBuffer, GL::Primitive::Line)),
-    _edgePickVertexBuffer(makeShared<GL::VertexBuffer<GL::Vertex>>()),
+    _edgePickVertexBuffer(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
     _edgePickVAO(makeShared<GL::VAO>(_edgePickVertexBuffer, GL::Primitive::Line)),
 
-    _vertexVertexBuffer(makeShared<GL::VertexBuffer<GL::Vertex>>()),
+    _vertexVertexBuffer(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
     _vertexVAO(makeShared<GL::VAO>(_vertexVertexBuffer, GL::Primitive::Point)),
-    _vertexPickVertexBuffer(makeShared<GL::VertexBuffer<GL::Vertex>>()),
+    _vertexPickVertexBuffer(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
     _vertexPickVAO(makeShared<GL::VAO>(_vertexPickVertexBuffer, GL::Primitive::Point)),
 
     _tool(makeShared<MoveTool>(appState, object))
@@ -400,12 +400,12 @@ void MeshEditor::updateVAOAttributes() {
         bool selected = selectedVertices.find(v) != selectedVertices.end();
         bool hovered = v == _hoveredVertex;
 
-        GL::Vertex attrib;
+        Draw::Vertex attrib;
         attrib.position = v->position();
         attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
         _vertexAttributes[i] = attrib;
 
-        GL::Vertex pickAttrib;
+        Draw::Vertex pickAttrib;
         pickAttrib.position = v->position();
         pickAttrib.color = _vertexPickables[i]->toIDColor();
         _vertexPickAttributes[i] = pickAttrib;
@@ -421,12 +421,12 @@ void MeshEditor::updateVAOAttributes() {
             auto& v = e->vertices()[vertexInEdgeIndex];
             bool selected = selectedVertices.find(v) != selectedVertices.end();
 
-            GL::Vertex attrib;
+            Draw::Vertex attrib;
             attrib.position = v->position();
             attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
             _edgeAttributes[edgeIndex * 2 + vertexInEdgeIndex] = attrib;
 
-            GL::Vertex pickAttrib;
+            Draw::Vertex pickAttrib;
             pickAttrib.position = v->position();
             pickAttrib.color = _edgePickables[edgeIndex]->toIDColor();
             _edgePickAttributes[edgeIndex * 2 + vertexInEdgeIndex] = pickAttrib;
@@ -447,12 +447,12 @@ void MeshEditor::updateVAOAttributes() {
             auto idColor = _facePickables[faceIndex]->toIDColor();
 
             for (auto& p : face->uvPoints()) {
-                GL::Vertex attrib;
+                Draw::Vertex attrib;
                 attrib.position = p->vertex()->position();
                 attrib.texCoord = p->position();
                 attrib.color = hovered ? hoveredFaceHighlight : selected ? selectedFaceHighlight : unselectedFaceHighlight;
 
-                GL::Vertex pickAttrib;
+                Draw::Vertex pickAttrib;
                 pickAttrib.position = p->vertex()->position();
                 pickAttrib.color = idColor;
 

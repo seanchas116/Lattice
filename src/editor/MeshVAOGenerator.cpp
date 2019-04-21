@@ -13,13 +13,13 @@ namespace Editor {
 
 MeshVAOGenerator::MeshVAOGenerator(const SP<Mesh::Mesh> &mesh) :
     _mesh(mesh),
-    _vertexBuffer(makeShared<GL::VertexBuffer<GL::Vertex>>())
+    _vertexBuffer(makeShared<GL::VertexBuffer<Draw::Vertex>>())
 {
-    std::vector<GL::Vertex> vertices;
+    std::vector<Draw::Vertex> vertices;
     for (auto& vertex : mesh->vertices()) {
         for (auto& uvPos : vertex->uvPoints()) {
             _indices[uvPos] = uint32_t(vertices.size());
-            GL::Vertex foreVertexData = {
+            Draw::Vertex foreVertexData = {
                 vertex->position(),
                 glm::vec2(0),
                 glm::vec3(0)
@@ -52,12 +52,12 @@ std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> MeshVAOGenerator::generateFa
 
     // TODO: build more efficient VBO
     std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> faceVAOs;
-    auto faceVBO = makeShared<GL::VertexBuffer<GL::Vertex>>();
-    std::vector<GL::Vertex> faceAttributes;
+    auto faceVBO = makeShared<GL::VertexBuffer<Draw::Vertex>>();
+    std::vector<Draw::Vertex> faceAttributes;
 
     auto addPoint = [&](const SP<Mesh::Face>& face, int indexInFace) {
         auto& p = face->uvPoints()[indexInFace];
-        GL::Vertex attrib;
+        Draw::Vertex attrib;
         attrib.position = p->vertex()->position();
         attrib.texCoord = p->position();
         attrib.normal = face->vertexNormals()[indexInFace];

@@ -124,7 +124,7 @@ SP<GL::VAO> ArrowHandle::createHandleVAO() {
 SP<GL::VAO> ArrowHandle::createBodyVAO(double length) {
     auto indexBuffer = makeShared<GL::IndexBuffer>();
     indexBuffer->setLineStrips({{0, 1}});
-    auto vertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
+    auto vertexBuffer = makeShared<GL::VertexBuffer<Draw::Vertex>>();
     vertexBuffer->setVertices({{vec3(Constants::bodyBegin, 0, 0), {}, {}}, {vec3(length, 0, 0), {}, {}}});
     auto bodyVAO = makeShared<GL::VAO>(vertexBuffer, indexBuffer);
     return bodyVAO;

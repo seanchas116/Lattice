@@ -1,5 +1,4 @@
 #include "VAO.hpp"
-#include "Vertex.hpp"
 #include "VertexBuffer.hpp"
 #include "IndexBuffer.hpp"
 #include <array>
@@ -55,7 +54,9 @@ VAO::VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>> &buffers,
     }
 }
 
-VAO::VAO() : VAO(makeShared<VertexBuffer<Vertex>>(), Primitive::Triangle) {
+struct EmptyVertex {};
+
+VAO::VAO() : VAO(makeShared<VertexBuffer<EmptyVertex>>(), Primitive::Triangle) {
 }
 
 VAO::VAO(const SP<AnyVertexBuffer> &buffer, const SP<IndexBuffer> &indexBuffer) : VAO({{buffer, BufferType::PerVertex}}, indexBuffer) {

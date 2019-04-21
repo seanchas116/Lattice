@@ -2,7 +2,7 @@
 #include <glm/glm.hpp>
 
 namespace Lattice {
-namespace GL {
+namespace Draw {
 
 struct Vertex {
     glm::vec3 position {0};
