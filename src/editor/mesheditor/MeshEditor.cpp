@@ -399,6 +399,7 @@ void MeshEditor::updateVAOAttributes() {
         auto& v = _vertices[i];
         bool selected = selectedVertices.find(v) != selectedVertices.end();
         bool hovered = v == _hoveredVertex;
+        bool hitTestExcluded = std::find(hitTestExclusion.vertices.begin(), hitTestExclusion.vertices.end(), v) != hitTestExclusion.vertices.end();
 
         Draw::PointLineVertex attrib;
         attrib.position = v->position();
@@ -408,6 +409,7 @@ void MeshEditor::updateVAOAttributes() {
         Draw::PointLineVertex pickAttrib;
         pickAttrib.position = v->position();
         pickAttrib.color = _vertexPickables[i]->toIDColor();
+        pickAttrib.width = hitTestExcluded ? 0 : 1;
         _vertexPickAttributes[i] = pickAttrib;
     }
     _vertexVertexBuffer->setVertices(_vertexAttributes);
@@ -416,6 +418,7 @@ void MeshEditor::updateVAOAttributes() {
     for (size_t edgeIndex = 0; edgeIndex < _edges.size(); ++edgeIndex) {
         auto& e = _edges[edgeIndex];
         bool hovered = e == _hoveredEdge;
+        bool hitTestExcluded = std::find(hitTestExclusion.edges.begin(), hitTestExclusion.edges.end(), e) != hitTestExclusion.edges.end();
 
         for (size_t vertexInEdgeIndex = 0; vertexInEdgeIndex < 2; ++vertexInEdgeIndex) {
             auto& v = e->vertices()[vertexInEdgeIndex];
@@ -429,6 +432,7 @@ void MeshEditor::updateVAOAttributes() {
             Draw::PointLineVertex pickAttrib;
             pickAttrib.position = v->position();
             pickAttrib.color = _edgePickables[edgeIndex]->toIDColor();
+            pickAttrib.width = hitTestExcluded ? 0 : 1;
             _edgePickAttributes[edgeIndex * 2 + vertexInEdgeIndex] = pickAttrib;
         }
     }
