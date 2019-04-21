@@ -95,7 +95,7 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     _appState(appState),
     _object(object),
     _manipulator(makeShared<Manipulator::MeshManipulator>(appState, object)),
-    _faceVBO(makeShared<GL::VertexBuffer<GL::Vertex>>()),
+    _faceVAO(makeShared<GL::VAO>()),
     _facePickVAO(makeShared<GL::VAO>()),
     _edgeVAO(makeShared<GL::VAO>()),
     _edgePickVAO(makeShared<GL::VAO>()),
@@ -304,20 +304,15 @@ void MeshEditor::updateWholeVAOs() {
     }
 
     {
-        _faceVBO = makeShared<GL::VertexBuffer<GL::Vertex>>();
-
-        _faceVAOs.clear();
         _faceAttributes.clear();
         _facePickAttributes.clear();
 
         auto addPoint = [&](const SP<Mesh::Face>& face, const SP<FacePickable>& pickable, const SP<Mesh::UVPoint>& p, bool hovered, bool selected) {
-            GL::Vertex attrib;
+            Q_UNUSED(face);
 
+            GL::Vertex attrib;
             attrib.position = p->vertex()->position();
             attrib.texCoord = p->position();
-            Q_UNUSED(face);
-            attrib.normal = vec3(0);
-            //attrib.normal = p->vertex()->normal(face); // FIXME
             attrib.color = hovered ? hoveredFaceHighlight : selected ? selectedFaceHighlight : unselectedFaceHighlight;
 
             GL::Vertex pickAttrib;
@@ -330,38 +325,32 @@ void MeshEditor::updateWholeVAOs() {
             return index;
         };
 
-        std::vector<GL::IndexBuffer::Triangle> pickTriangles;
+        std::vector<GL::IndexBuffer::Triangle> triangles;
+        for (auto& [_, face] : mesh->faces()) {
+            bool hovered = _hoveredFace == face;
+            bool selected = selectedFaces.find(face) != selectedFaces.end();
 
-        for (auto& material : mesh->materials()) {
-            std::vector<GL::IndexBuffer::Triangle> triangles;
-            for (auto& facePtr : material->faces()) {
-                auto face = facePtr->sharedFromThis();
-                bool hovered = _hoveredFace == face;
-                bool selected = selectedFaces.find(face) != selectedFaces.end();
+            auto pickable = makeShared<FacePickable>(this, face);
+            childPickables.push_back(pickable);
 
-                auto pickable = makeShared<FacePickable>(this, face);
-                childPickables.push_back(pickable);
-
-                auto i0 = addPoint(face, pickable, face->uvPoints()[0], hovered, selected);
-                for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
-                    auto i1 = addPoint(face, pickable, face->uvPoints()[i - 1], hovered, selected);
-                    auto i2 = addPoint(face, pickable, face->uvPoints()[i], hovered, selected);
-                    triangles.push_back({i0, i1, i2});
-                    pickTriangles.push_back({i0, i1, i2});
-                }
+            auto i0 = addPoint(face, pickable, face->uvPoints()[0], hovered, selected);
+            for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
+                auto i1 = addPoint(face, pickable, face->uvPoints()[i - 1], hovered, selected);
+                auto i2 = addPoint(face, pickable, face->uvPoints()[i], hovered, selected);
+                triangles.push_back({i0, i1, i2});
             }
-            auto indexBuffer = makeShared<GL::IndexBuffer>();
-            indexBuffer->setTriangles(triangles);
-            auto vao = makeShared<GL::VAO>(_faceVBO, indexBuffer);
-            _faceVAOs.insert({material, vao});
         }
-        _faceVBO->setVertices(_faceAttributes);
 
-        auto pickIndexBuffer = makeShared<GL::IndexBuffer>();
-        pickIndexBuffer->setTriangles(pickTriangles);
+        auto indexBuffer = makeShared<GL::IndexBuffer>();
+        indexBuffer->setTriangles(triangles);
+
+        auto vertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
+        vertexBuffer->setVertices(_faceAttributes);
+        _faceVAO = makeShared<GL::VAO>(vertexBuffer, indexBuffer);
+
         auto pickVertexBuffer = makeShared<GL::VertexBuffer<GL::Vertex>>();
         pickVertexBuffer->setVertices(_facePickAttributes);
-        _facePickVAO = makeShared<GL::VAO>(pickVertexBuffer, pickIndexBuffer);
+        _facePickVAO = makeShared<GL::VAO>(pickVertexBuffer, indexBuffer);
     }
 
     _pickables = childPickables;

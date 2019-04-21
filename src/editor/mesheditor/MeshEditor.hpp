@@ -89,8 +89,7 @@ private:
 
     bool _isVAOsDirty = true;
 
-    std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> _faceVAOs;
-    SP<GL::VertexBuffer<GL::Vertex>> _faceVBO;
+    SP<GL::VAO> _faceVAO;
     std::vector<GL::Vertex> _faceAttributes;
     SP<GL::VAO> _facePickVAO;
     std::vector<GL::Vertex> _facePickAttributes;
