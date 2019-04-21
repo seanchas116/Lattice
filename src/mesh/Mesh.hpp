@@ -57,7 +57,7 @@ public:
         return Ray<float>(p0, p1 - p0);
     }
 
-    std::vector<SP<Face>> faces() const;
+    auto& faces() const { return _faces; }
 
 private:
     friend class Mesh;
@@ -74,7 +74,7 @@ public:
     glm::dvec2 position() const { return _position; }
 
     auto& vertex() const { return _vertex; }
-    std::vector<SP<Face>> faces() const;
+    auto& faces() const { return _faces; }
 
 private:
     friend class Mesh;

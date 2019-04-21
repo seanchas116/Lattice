@@ -11,22 +11,6 @@ SP<UVPoint> Vertex::firstUVPoint() const {
     return (*_uvPoints.begin())->sharedFromThis();
 }
 
-std::vector<SP<Face> > UVPoint::faces() const {
-    std::vector<SP<Face>> faces;
-    for (auto& f : _faces) {
-        faces.push_back(f->sharedFromThis());
-    }
-    return faces;
-}
-
-std::vector<SP<Face> > Edge::faces() const {
-    std::vector<SP<Face>> faces;
-    for (auto& f : _faces) {
-        faces.push_back(f->sharedFromThis());
-    }
-    return faces;
-}
-
 void Face::updateNormal() {
     if (_vertices.size() == 3) {
         _normal = normalize(cross(_vertices[1]->position() - _vertices[0]->position(), _vertices[2]->position() - _vertices[0]->position()));
@@ -451,7 +435,7 @@ void Mesh::removeEdge(const SP<Edge> &edge) {
 
     auto faces = edge->faces();
     for (auto& face : faces) {
-        removeFace(face);
+        removeFace(face->sharedFromThis());
     }
     auto change = makeShared<RemoveEdgeChange>(sharedFromThis(), edge);
     _changeHandler(change);
@@ -702,7 +686,7 @@ SP<Vertex> Mesh::cutEdge(const SP<Edge> &edge, float t) {
         addFace(newFaceUVPoints, face->material());
     }
     for (auto& face : faces) {
-        removeFace(face);
+        removeFace(face->sharedFromThis());
     }
     removeEdge(edge);
 

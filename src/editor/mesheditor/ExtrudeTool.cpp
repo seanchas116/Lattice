@@ -57,7 +57,7 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
         for (auto& edge : edges) {
             int faceCount = 0;
             for (auto& face : edge->faces()) {
-                if (faces.find(face) != faces.end()) {
+                if (faces.find(face->sharedFromThis()) != faces.end()) {
                     ++faceCount;
                 }
             }
@@ -86,7 +86,7 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
             SP<Mesh::Material> material = mesh->materials()[0];
 
             for (auto& face : openEdge->faces()) {
-                if (faces.find(face) != faces.end()) {
+                if (faces.find(face->sharedFromThis()) != faces.end()) {
                     material = face->material();
                     continue;
                 }
