@@ -111,23 +111,23 @@ private:
     std::vector<SP<Mesh::Edge>> _edges;
     std::vector<SP<EdgePickable>> _edgePickables;
 
-    std::vector<Draw::Vertex> _edgeAttributes;
-    SP<GL::VertexBuffer<Draw::Vertex>> _edgeVertexBuffer;
+    std::vector<Draw::PointLineVertex> _edgeAttributes;
+    SP<GL::VertexBuffer<Draw::PointLineVertex>> _edgeVertexBuffer;
     SP<GL::VAO> _edgeVAO;
 
-    std::vector<Draw::Vertex> _edgePickAttributes;
-    SP<GL::VertexBuffer<Draw::Vertex>> _edgePickVertexBuffer;
+    std::vector<Draw::PointLineVertex> _edgePickAttributes;
+    SP<GL::VertexBuffer<Draw::PointLineVertex>> _edgePickVertexBuffer;
     SP<GL::VAO> _edgePickVAO;
 
     std::vector<SP<Mesh::Vertex>> _vertices;
     std::vector<SP<VertexPickable>> _vertexPickables;
 
-    std::vector<Draw::Vertex> _vertexAttributes;
-    SP<GL::VertexBuffer<Draw::Vertex>> _vertexVertexBuffer;
+    std::vector<Draw::PointLineVertex> _vertexAttributes;
+    SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexVertexBuffer;
     SP<GL::VAO> _vertexVAO;
 
-    std::vector<Draw::Vertex> _vertexPickAttributes;
-    SP<GL::VertexBuffer<Draw::Vertex>> _vertexPickVertexBuffer;
+    std::vector<Draw::PointLineVertex> _vertexPickAttributes;
+    SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexPickVertexBuffer;
     SP<GL::VAO> _vertexPickVAO;
 
     std::vector<SP<Viewport::Renderable>> _pickables;

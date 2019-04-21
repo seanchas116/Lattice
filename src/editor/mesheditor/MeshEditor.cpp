@@ -102,14 +102,14 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     _facePickVertexBuffer(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
     _facePickVAO(makeShared<GL::VAO>(_facePickVertexBuffer, _faceIndexBuffer)),
 
-    _edgeVertexBuffer(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
+    _edgeVertexBuffer(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
     _edgeVAO(makeShared<GL::VAO>(_edgeVertexBuffer, GL::Primitive::Line)),
-    _edgePickVertexBuffer(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
+    _edgePickVertexBuffer(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
     _edgePickVAO(makeShared<GL::VAO>(_edgePickVertexBuffer, GL::Primitive::Line)),
 
-    _vertexVertexBuffer(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
+    _vertexVertexBuffer(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
     _vertexVAO(makeShared<GL::VAO>(_vertexVertexBuffer, GL::Primitive::Point)),
-    _vertexPickVertexBuffer(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
+    _vertexPickVertexBuffer(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
     _vertexPickVAO(makeShared<GL::VAO>(_vertexPickVertexBuffer, GL::Primitive::Point)),
 
     _tool(makeShared<MoveTool>(appState, object))
@@ -400,12 +400,12 @@ void MeshEditor::updateVAOAttributes() {
         bool selected = selectedVertices.find(v) != selectedVertices.end();
         bool hovered = v == _hoveredVertex;
 
-        Draw::Vertex attrib;
+        Draw::PointLineVertex attrib;
         attrib.position = v->position();
         attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
         _vertexAttributes[i] = attrib;
 
-        Draw::Vertex pickAttrib;
+        Draw::PointLineVertex pickAttrib;
         pickAttrib.position = v->position();
         pickAttrib.color = _vertexPickables[i]->toIDColor();
         _vertexPickAttributes[i] = pickAttrib;
@@ -421,12 +421,12 @@ void MeshEditor::updateVAOAttributes() {
             auto& v = e->vertices()[vertexInEdgeIndex];
             bool selected = selectedVertices.find(v) != selectedVertices.end();
 
-            Draw::Vertex attrib;
+            Draw::PointLineVertex attrib;
             attrib.position = v->position();
             attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
             _edgeAttributes[edgeIndex * 2 + vertexInEdgeIndex] = attrib;
 
-            Draw::Vertex pickAttrib;
+            Draw::PointLineVertex pickAttrib;
             pickAttrib.position = v->position();
             pickAttrib.color = _edgePickables[edgeIndex]->toIDColor();
             _edgePickAttributes[edgeIndex * 2 + vertexInEdgeIndex] = pickAttrib;
