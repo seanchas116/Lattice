@@ -65,7 +65,7 @@ void Face::updateNormal() {
 
 void Face::updateVertexNormals() {
     for (size_t i = 0; i < _vertices.size(); ++i) {
-        std::unordered_set<SP<Face>> connectedFaces {sharedFromThis()};
+        std::vector<Face*> connectedFaces = {this};
 
         while (true) {
             bool added = false;
@@ -74,8 +74,8 @@ void Face::updateVertexNormals() {
                     continue;
                 }
                 for (auto& face : edge->faces()) {
-                    auto [it, inserted] = connectedFaces.insert(face->sharedFromThis());
-                    if (inserted) {
+                    if (std::find(connectedFaces.begin(), connectedFaces.end(), face) == connectedFaces.end()) {
+                        connectedFaces.push_back(face);
                         added = true;
                     }
                 }
@@ -89,7 +89,7 @@ void Face::updateVertexNormals() {
         for (auto& face : connectedFaces) {
             normalSum += face->_normal;
         }
-        _vertexNormals[i] = normalize(normalSum / double(connectedFaces.size()));
+        _vertexNormals[i] = normalize(normalSum);
     }
 }
 
