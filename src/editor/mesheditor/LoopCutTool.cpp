@@ -31,12 +31,10 @@ void LoopCutTool::mousePressTool(const Tool::EventTarget &target, const Viewport
     while (true) {
         edges.push_back({edge, isEdgeReverse});
 
-        std::vector<Mesh::Face*> edgeFaces(edge->faces().begin(), edge->faces().end());
-
-        if (edgeFaces.size() != 2) {
+        if (edge->faces().size() != 2) {
             return;
         }
-        auto nextFace = (lastFace->get() == edgeFaces[0]) ? edgeFaces[1] : edgeFaces[0];
+        auto nextFace = (lastFace->get() == edge->faces()[0]) ? edge->faces()[1] : edge->faces()[0];
         lastFace = nextFace->sharedFromThis();
 
         if (nextFace->edges().size() != 4) {

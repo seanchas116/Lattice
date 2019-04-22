@@ -5,6 +5,28 @@
 
 using namespace glm;
 
+namespace {
+
+template <typename T>
+void insertElement(std::vector<T>& vector, T&& value) {
+    for (auto&& v : vector) {
+        if (v == value) {
+            return;
+        }
+    }
+    vector.push_back(value);
+}
+
+template <typename T>
+void eraseElement(std::vector<T>& vector, T&& value) {
+    auto it = std::find(vector.begin(), vector.end(), value);
+    if (it != vector.end()) {
+        vector.erase(it);
+    }
+}
+
+}
+
 namespace Lattice::Mesh {
 
 SP<UVPoint> Vertex::firstUVPoint() const {
@@ -113,7 +135,7 @@ public:
     }
 
     void apply() override {
-        uvPoint->vertex()->_uvPoints.insert(uvPoint.get());
+        insertElement(uvPoint->vertex()->_uvPoints, uvPoint.get());
         emit mesh->uvPointAdded(uvPoint);
     }
     SP<Change> invert() const override;
@@ -128,7 +150,7 @@ public:
     }
 
     void apply() override {
-        uvPoint->vertex()->_uvPoints.erase(uvPoint.get());
+        eraseElement(uvPoint->vertex()->_uvPoints, uvPoint.get());
         emit mesh->uvPointRemoved(uvPoint);
     }
     SP<Change> invert() const override;
@@ -154,8 +176,8 @@ public:
     }
 
     void apply() override {
-        edge->_vertices[0]->_edges.insert(edge.get());
-        edge->_vertices[1]->_edges.insert(edge.get());
+        insertElement(edge->_vertices[0]->_edges, edge.get());
+        insertElement(edge->_vertices[1]->_edges, edge.get());
         mesh->_edges.insert({edge->_vertices, edge});
         emit mesh->edgeAdded(edge);
     }
@@ -174,8 +196,8 @@ public:
     }
 
     void apply() override {
-        edge->_vertices[0]->_edges.erase(edge.get());
-        edge->_vertices[1]->_edges.erase(edge.get());
+        eraseElement(edge->_vertices[0]->_edges, edge.get());
+        eraseElement(edge->_vertices[1]->_edges, edge.get());
         mesh->_edges.erase(edge->_vertices);
         emit mesh->edgeRemoved(edge);
     }
@@ -204,13 +226,13 @@ public:
 
     void apply() override {
         for (auto& v : face->vertices()) {
-            v->_faces.insert(face.get());
+            insertElement(v->_faces, face.get());
         }
         for (auto& e : face->edges()) {
-            e->_faces.insert(face.get());
+            insertElement(e->_faces, face.get());
         }
         for (auto& uv : face->uvPoints()) {
-            uv->_faces.insert(face.get());
+            insertElement(uv->_faces, face.get());
         }
         face->material()->_faces.insert(face.get());
 
@@ -234,13 +256,13 @@ public:
 
     void apply() override {
         for (auto& v : face->_vertices) {
-            v->_faces.erase(face.get());
+            eraseElement(v->_faces, face.get());
         }
         for (auto& e : face->_edges) {
-            e->_faces.erase(face.get());
+            eraseElement(e->_faces, face.get());
         }
         for (auto& uv : face->_uvPoints) {
-            uv->_faces.erase(face.get());
+            eraseElement(uv->_faces, face.get());
         }
         face->_material->_faces.erase(face.get());
 

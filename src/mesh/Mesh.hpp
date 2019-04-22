@@ -38,9 +38,9 @@ public:
 private:
     friend class Mesh;
     glm::dvec3 _position {0};
-    std::unordered_set<Edge*> _edges;
-    std::unordered_set<Face*> _faces;
-    std::unordered_set<UVPoint*> _uvPoints;
+    std::vector<Edge*> _edges;
+    std::vector<Face*> _faces;
+    std::vector<UVPoint*> _uvPoints;
 };
 
 class Edge final : public EnableSharedFromThis<Edge> {
@@ -63,7 +63,7 @@ private:
     friend class Mesh;
     bool _isSmooth = true;
     SortedArray<SP<Vertex>, 2> _vertices;
-    std::unordered_set<Face*> _faces;
+    std::vector<Face*> _faces;
 };
 
 class UVPoint final : public EnableSharedFromThis<UVPoint> {
@@ -80,7 +80,7 @@ private:
     friend class Mesh;
     glm::dvec2 _position {0};
     SP<Vertex> _vertex;
-    std::unordered_set<Face*> _faces;
+    std::vector<Face*> _faces;
 };
 
 class Face final : public EnableSharedFromThis<Face> {
