@@ -83,7 +83,7 @@ public:
     EdgeHandle addEdge(VertexHandle v0, VertexHandle v1);
     FaceHandle addFace(const std::vector<UVPointHandle>& uvPoints);
 
-    auto uvPoints(VertexHandle v) {
+    auto uvPoints(VertexHandle v) const {
         return boost::adaptors::transform(_vertices[v.index()].uvPoints, [] (uint32_t index) {
             return UVPointHandle(index);
         });
