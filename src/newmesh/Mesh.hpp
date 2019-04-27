@@ -97,6 +97,22 @@ public:
         _vertices[v.index()].position = pos;
     }
 
+    glm::vec2 uv(UVPointHandle uv) const {
+        return _uvPoints[uv.index()].position;
+    }
+
+    void setUV(UVPointHandle uv, glm::vec2 pos) {
+        _uvPoints[uv.index()].position = pos;
+    }
+
+    bool isSmooth(EdgeHandle edge) {
+        return _edges[edge.index()].isSmooth;
+    }
+
+    void setIsSmooth(EdgeHandle edge, bool smooth) {
+       _edges[edge.index()].isSmooth = smooth;
+    }
+
 private:
     friend class VertexHandle;
 
