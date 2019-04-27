@@ -37,8 +37,24 @@ public:
     int material;
 };
 
-template <typename T>
-class Handle {
+class VertexHandle {
+public:
+    glm::vec3 position() const;
+    void setPosition(glm::vec3 position);
+    uint32_t index() const;
+};
+
+class UVPointHandle {
+public:
+    glm::vec2 position() const;
+    void setPosition(glm::vec2 position);
+    uint32_t index() const;
+};
+
+class EdgeHandle {
+};
+
+class FaceHandle {
 };
 
 class Mesh {
@@ -47,10 +63,10 @@ public:
 
     void collectGarbage();
 
-    Handle<Vertex> addVertex();
-    Handle<UVPoint> addUVPoint(Handle<Vertex> v);
-    Handle<Edge> addEdge(Handle<Vertex> v0, Handle<Vertex> v1);
-    Handle<Face> addFace(const std::vector<Handle<UVPoint>>& uvPoints);
+    VertexHandle addVertex();
+    UVPointHandle addUVPoint(VertexHandle v);
+    EdgeHandle addEdge(VertexHandle v0, VertexHandle v1);
+    FaceHandle addFace(const std::vector<UVPointHandle>& uvPoints);
 
     std::vector<Vertex> vertices;
     std::vector<UVPoint> uvPoints;
