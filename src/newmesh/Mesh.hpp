@@ -89,6 +89,14 @@ public:
         });
     }
 
+    glm::vec3 position(VertexHandle v) const {
+        return _vertices[v.index()].position;
+    }
+
+    void setPosition(VertexHandle v, glm::vec3 pos) {
+        _vertices[v.index()].position = pos;
+    }
+
 private:
     friend class VertexHandle;
 
