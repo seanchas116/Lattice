@@ -43,30 +43,17 @@ public:
 
 class VertexHandle {
 public:
-    VertexHandle(Mesh* mesh, uint32_t index) : _mesh(mesh), _index(index) {}
-
-    glm::vec3 position() const;
-    void setPosition(glm::vec3 position);
+    VertexHandle(uint32_t index) : _index(index) {}
     uint32_t index() const;
-
-    auto uvPoints() const;
-
 private:
-
-    Mesh* _mesh;
     uint32_t _index;
 };
 
 class UVPointHandle {
 public:
-    UVPointHandle(Mesh* mesh, uint32_t index) : _mesh(mesh), _index(index) {}
-
-    glm::vec2 position() const;
-    void setPosition(glm::vec2 position);
+    UVPointHandle(uint32_t index) :  _index(index) {}
     uint32_t index() const;
-
 private:
-    Mesh* _mesh;
     uint32_t _index;
 };
 
@@ -96,6 +83,12 @@ public:
     EdgeHandle addEdge(VertexHandle v0, VertexHandle v1);
     FaceHandle addFace(const std::vector<UVPointHandle>& uvPoints);
 
+    auto uvPoints(VertexHandle v) {
+        return boost::adaptors::transform(_vertices[v.index()].uvPoints, [] (uint32_t index) {
+            return UVPointHandle(index);
+        });
+    }
+
 private:
     friend class VertexHandle;
 
@@ -104,12 +97,6 @@ private:
     std::vector<Edge> _edges;
     std::vector<Face> _faces;
 };
-
-auto VertexHandle::uvPoints() const {
-    return boost::adaptors::transform(_mesh->_vertices[_index].uvPoints, [mesh = _mesh] (uint32_t index) {
-        return UVPointHandle(mesh, index);
-    });
-}
 
 } // namespace NewMesh
 } // namespace Lattice
