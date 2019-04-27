@@ -2,58 +2,72 @@
 #include <vector>
 #include <array>
 #include <glm/glm.hpp>
+#include <boost/range.hpp>
+#include <boost/range/adaptor/transformed.hpp>
 
 namespace Lattice {
 namespace NewMesh {
+
+class Mesh;
 
 class Vertex {
 public:
     bool isDeleted = false;
     glm::vec3 position;
-    std::vector<int> uvPoints;
-    std::vector<int> edges;
+    std::vector<uint32_t> uvPoints;
+    std::vector<uint32_t> edges;
 };
 
 class UVPoint {
 public:
     glm::vec2 position;
-    int vertex;
-    std::vector<int> faces;
+    uint32_t vertex;
+    std::vector<uint32_t> faces;
 };
 
 class Edge {
 public:
     bool isDeleted = false;
     bool isSmooth = true;
-    std::array<int, 2> vertices;
-    std::vector<int> faces;
+    std::array<uint32_t, 2> vertices;
+    std::vector<uint32_t> faces;
 };
 
 class Face {
 public:
     bool isDeleted = false;
-    std::vector<int> uvPoints;
-    std::vector<int> edges;
+    std::vector<uint32_t> uvPoints;
+    std::vector<uint32_t> edges;
     int material;
 };
 
 class VertexHandle {
 public:
-    VertexHandle(uint32_t index) : _index(index) {}
+    VertexHandle(Mesh* mesh, uint32_t index) : _mesh(mesh), _index(index) {}
 
     glm::vec3 position() const;
     void setPosition(glm::vec3 position);
     uint32_t index() const;
 
+    auto uvPoints() const;
+
 private:
+
+    Mesh* _mesh;
     uint32_t _index;
 };
 
 class UVPointHandle {
 public:
+    UVPointHandle(Mesh* mesh, uint32_t index) : _mesh(mesh), _index(index) {}
+
     glm::vec2 position() const;
     void setPosition(glm::vec2 position);
     uint32_t index() const;
+
+private:
+    Mesh* _mesh;
+    uint32_t _index;
 };
 
 class EdgeHandle {
@@ -83,11 +97,19 @@ public:
     FaceHandle addFace(const std::vector<UVPointHandle>& uvPoints);
 
 private:
+    friend class VertexHandle;
+
     std::vector<Vertex> _vertices;
     std::vector<UVPoint> _uvPoints;
     std::vector<Edge> _edges;
     std::vector<Face> _faces;
 };
+
+auto VertexHandle::uvPoints() const {
+    return boost::adaptors::transform(_mesh->_vertices[_index].uvPoints, [mesh = _mesh] (uint32_t index) {
+        return UVPointHandle(mesh, index);
+    });
+}
 
 } // namespace NewMesh
 } // namespace Lattice

@@ -11,7 +11,7 @@ Mesh::Mesh()
 VertexHandle Mesh::addVertex() {
     uint32_t index = _vertices.size();
     _vertices.push_back(Vertex{});
-    return VertexHandle(index);
+    return VertexHandle(this, index);
 }
 
 } // namespace NewMesh
