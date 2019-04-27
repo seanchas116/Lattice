@@ -46,7 +46,7 @@ public:
     explicit Handle(uint32_t index) : index(index) {}
     bool operator==(const TDerived& other) const { return index == other.index; }
     bool operator!=(const TDerived& other) const { return !operator==(other); }
-    const uint32_t index;
+    uint32_t index;
 };
 
 class VertexHandle : public Handle<VertexHandle> {
