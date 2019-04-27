@@ -96,6 +96,12 @@ public:
         });
     }
 
+    auto faces(VertexHandle v) const {
+        return _vertices[v.index].uvPoints | ranges::view::transform([this] (uint32_t index) {
+            return faces(UVPointHandle(index));
+        }) | ranges::action::join;
+    }
+
     auto vertices(FaceHandle f) const {
         return _faces[f.index].uvPoints | ranges::view::transform([this] (uint32_t index) {
             return VertexHandle(_uvPoints[index].vertex);
