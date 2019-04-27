@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <boost/range.hpp>
 #include <boost/range/adaptor/transformed.hpp>
+#include <range/v3/algorithm.hpp>
 
 namespace Lattice {
 namespace NewMesh {
