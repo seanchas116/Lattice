@@ -3,11 +3,6 @@
 namespace Lattice {
 namespace NewMesh {
 
-Mesh::Mesh()
-{
-
-}
-
 VertexHandle Mesh::addVertex() {
     auto index = uint32_t(_vertices.size());
     _vertices.push_back(Vertex{});

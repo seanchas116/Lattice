@@ -72,8 +72,6 @@ public:
 
 class Mesh {
 public:
-    Mesh();
-
     void collectGarbage();
 
     VertexHandle addVertex();
