@@ -39,9 +39,14 @@ public:
 
 class VertexHandle {
 public:
+    VertexHandle(uint32_t index) : _index(index) {}
+
     glm::vec3 position() const;
     void setPosition(glm::vec3 position);
     uint32_t index() const;
+
+private:
+    uint32_t _index;
 };
 
 class UVPointHandle {
