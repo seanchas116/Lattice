@@ -91,6 +91,12 @@ public:
         });
     }
 
+    auto faces(UVPointHandle p) const {
+        return boost::adaptors::transform(_uvPoints[p.index].faces, [] (uint32_t index) {
+            return FaceHandle(index);
+        });
+    }
+
     std::array<VertexHandle, 2> vertices(EdgeHandle e) const {
         auto& edge = _edges[e.index];
         return {VertexHandle(edge.vertices[0]), VertexHandle(edge.vertices[1])};
