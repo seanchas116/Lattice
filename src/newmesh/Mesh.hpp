@@ -52,9 +52,18 @@ public:
 };
 
 class EdgeHandle {
+public:
+    bool isSmooth() const;
+    void setSmooth(bool smooth);
+    uint32_t index() const;
 };
 
 class FaceHandle {
+public:
+};
+
+class MaterialHandle {
+public:
 };
 
 class Mesh {
@@ -68,10 +77,11 @@ public:
     EdgeHandle addEdge(VertexHandle v0, VertexHandle v1);
     FaceHandle addFace(const std::vector<UVPointHandle>& uvPoints);
 
-    std::vector<Vertex> vertices;
-    std::vector<UVPoint> uvPoints;
-    std::vector<Edge> edges;
-    std::vector<Face> faces;
+private:
+    std::vector<Vertex> _vertices;
+    std::vector<UVPoint> _uvPoints;
+    std::vector<Edge> _edges;
+    std::vector<Face> _faces;
 };
 
 } // namespace NewMesh
