@@ -37,16 +37,8 @@ public:
     int material;
 };
 
-class VertexHandle {
-};
-
-class UVPointHandle {
-};
-
-class EdgeHandle {
-};
-
-class FaceHandle {
+template <typename T>
+class Handle {
 };
 
 class Mesh {
@@ -55,10 +47,10 @@ public:
 
     void collectGarbage();
 
-    VertexHandle addVertex();
-    UVPoint addUVPoint(VertexHandle v);
-    EdgeHandle addEdge(VertexHandle v0, VertexHandle v1);
-    FaceHandle addFace(const std::vector<UVPointHandle>& uvPoints);
+    Handle<Vertex> addVertex();
+    Handle<UVPoint> addUVPoint(Handle<Vertex> v);
+    Handle<Edge> addEdge(Handle<Vertex> v0, Handle<Vertex> v1);
+    Handle<Face> addFace(const std::vector<Handle<UVPoint>>& uvPoints);
 
     std::vector<Vertex> vertices;
     std::vector<UVPoint> uvPoints;
