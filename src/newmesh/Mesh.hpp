@@ -2,9 +2,7 @@
 #include <vector>
 #include <array>
 #include <glm/glm.hpp>
-#include <boost/range.hpp>
-#include <boost/range/adaptor/transformed.hpp>
-#include <range/v3/algorithm.hpp>
+#include <range/v3/all.hpp>
 
 namespace Lattice {
 namespace NewMesh {
@@ -81,37 +79,37 @@ public:
     FaceHandle addFace(const std::vector<UVPointHandle>& uvPoints);
 
     auto uvPoints(VertexHandle v) const {
-        return boost::adaptors::transform(_vertices[v.index].uvPoints, [] (uint32_t index) {
+        return  _vertices[v.index].uvPoints | ranges::view::transform([] (uint32_t index) {
             return UVPointHandle(index);
         });
     }
 
     auto edges(VertexHandle v) const {
-        return boost::adaptors::transform(_vertices[v.index].edges, [] (uint32_t index) {
+        return _vertices[v.index].edges | ranges::view::transform([] (uint32_t index) {
             return EdgeHandle(index);
         });
     }
 
     auto faces(UVPointHandle p) const {
-        return boost::adaptors::transform(_uvPoints[p.index].faces, [] (uint32_t index) {
+        return _uvPoints[p.index].faces | ranges::view::transform([] (uint32_t index) {
             return FaceHandle(index);
         });
     }
 
     auto vertices(FaceHandle f) const {
-        return boost::adaptors::transform(_faces[f.index].uvPoints, [this] (uint32_t index) {
+        return _faces[f.index].uvPoints | ranges::view::transform([this] (uint32_t index) {
             return VertexHandle(_uvPoints[index].vertex);
         });
     }
 
     auto uvPoints(FaceHandle f) const {
-        return boost::adaptors::transform(_faces[f.index].uvPoints, [] (uint32_t index) {
+        return _faces[f.index].uvPoints | ranges::view::transform([] (uint32_t index) {
             return UVPointHandle(index);
         });
     }
 
     auto edges(FaceHandle f) const {
-        return boost::adaptors::transform(_faces[f.index].edges, [] (uint32_t index) {
+        return _faces[f.index].edges | ranges::view::transform([] (uint32_t index) {
             return EdgeHandle(index);
         });
     }
