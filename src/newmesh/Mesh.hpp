@@ -41,35 +41,33 @@ public:
     int material;
 };
 
-class VertexHandle {
+template <typename TDerived>
+class Handle {
 public:
-    VertexHandle(uint32_t index) : _index(index) {}
-    uint32_t index() const;
-private:
-    uint32_t _index;
+    explicit Handle(uint32_t index) : index(index) {}
+    bool operator==(const TDerived& other) const { return index == other.index; }
+    bool operator!=(const TDerived& other) const { return !operator==(other); }
+    const uint32_t index;
 };
 
-class UVPointHandle {
+class VertexHandle : public Handle<VertexHandle> {
 public:
-    UVPointHandle(uint32_t index) :  _index(index) {}
-    uint32_t index() const;
-private:
-    uint32_t _index;
+    explicit VertexHandle(uint32_t index) : Handle(index) {}
 };
 
-class EdgeHandle {
+class UVPointHandle : public Handle<UVPointHandle> {
 public:
-    bool isSmooth() const;
-    void setSmooth(bool smooth);
-    uint32_t index() const;
+    explicit UVPointHandle(uint32_t index) : Handle(index) {}
 };
 
-class FaceHandle {
+class EdgeHandle : public Handle<EdgeHandle> {
 public:
+    EdgeHandle(uint32_t index) : Handle(index) {}
 };
 
-class MaterialHandle {
+class FaceHandle : public Handle<FaceHandle> {
 public:
+    FaceHandle(uint32_t index) : Handle(index) {}
 };
 
 class Mesh {
@@ -84,33 +82,44 @@ public:
     FaceHandle addFace(const std::vector<UVPointHandle>& uvPoints);
 
     auto uvPoints(VertexHandle v) const {
-        return boost::adaptors::transform(_vertices[v.index()].uvPoints, [] (uint32_t index) {
+        return boost::adaptors::transform(_vertices[v.index].uvPoints, [] (uint32_t index) {
             return UVPointHandle(index);
         });
     }
 
+    auto edges(VertexHandle v) const {
+        return boost::adaptors::transform(_vertices[v.index].edges, [] (uint32_t index) {
+            return EdgeHandle(index);
+        });
+    }
+
+    std::array<VertexHandle, 2> vertices(EdgeHandle e) const {
+        auto& edge = _edges[e.index];
+        return {VertexHandle(edge.vertices[0]), VertexHandle(edge.vertices[1])};
+    }
+
     glm::vec3 position(VertexHandle v) const {
-        return _vertices[v.index()].position;
+        return _vertices[v.index].position;
     }
 
     void setPosition(VertexHandle v, glm::vec3 pos) {
-        _vertices[v.index()].position = pos;
+        _vertices[v.index].position = pos;
     }
 
     glm::vec2 uv(UVPointHandle uv) const {
-        return _uvPoints[uv.index()].position;
+        return _uvPoints[uv.index].position;
     }
 
     void setUV(UVPointHandle uv, glm::vec2 pos) {
-        _uvPoints[uv.index()].position = pos;
+        _uvPoints[uv.index].position = pos;
     }
 
     bool isSmooth(EdgeHandle edge) {
-        return _edges[edge.index()].isSmooth;
+        return _edges[edge.index].isSmooth;
     }
 
     void setIsSmooth(EdgeHandle edge, bool smooth) {
-       _edges[edge.index()].isSmooth = smooth;
+       _edges[edge.index].isSmooth = smooth;
     }
 
 private:
