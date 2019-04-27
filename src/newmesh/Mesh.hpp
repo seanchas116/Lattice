@@ -97,6 +97,24 @@ public:
         });
     }
 
+    auto vertices(FaceHandle f) const {
+        return boost::adaptors::transform(_faces[f.index].uvPoints, [this] (uint32_t index) {
+            return VertexHandle(_uvPoints[index].vertex);
+        });
+    }
+
+    auto uvPoints(FaceHandle f) const {
+        return boost::adaptors::transform(_faces[f.index].uvPoints, [] (uint32_t index) {
+            return UVPointHandle(index);
+        });
+    }
+
+    auto edges(FaceHandle f) const {
+        return boost::adaptors::transform(_faces[f.index].edges, [] (uint32_t index) {
+            return EdgeHandle(index);
+        });
+    }
+
     std::array<VertexHandle, 2> vertices(EdgeHandle e) const {
         auto& edge = _edges[e.index];
         return {VertexHandle(edge.vertices[0]), VertexHandle(edge.vertices[1])};
