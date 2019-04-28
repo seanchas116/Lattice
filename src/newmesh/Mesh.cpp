@@ -32,8 +32,8 @@ EdgeHandle Mesh::addEdge(VertexHandle v0, VertexHandle v1) {
     edgeData.vertices = {v0, v1};
     auto edge = EdgeHandle(uint32_t(_edges.size()));
     _edges.push_back(edgeData);
-    _vertices[v0.index].edges.push_back(edge);
-    _vertices[v1.index].edges.push_back(edge);
+    vertexData(v0).edges.push_back(edge);
+    vertexData(v1).edges.push_back(edge);
     return edge;
 }
 
@@ -71,24 +71,24 @@ FaceHandle Mesh::addFace(const std::vector<UVPointHandle> &uvPoints) {
     auto face = FaceHandle(uint32_t(_faces.size()));
     _faces.push_back(faceData);
     for (auto uvPoint : faceData.uvPoints) {
-        _uvPoints[uvPoint.index].faces.push_back(face);
+        uvPointData(uvPoint).faces.push_back(face);
     }
     for (auto edge : faceData.edges) {
-        _edges[edge.index].faces.push_back(face);
+        edgeData(edge).faces.push_back(face);
     }
     return face;
 }
 
 void Mesh::removeVertex(VertexHandle v) {
-    _vertices[v.index].isDeleted = true;
+    vertexData(v).isDeleted = true;
 }
 
 void Mesh::removeEdge(EdgeHandle e) {
-    _edges[e.index].isDeleted = true;
+    edgeData(e).isDeleted = true;
 }
 
 void Mesh::removeFace(FaceHandle f) {
-    _faces[f.index].isDeleted = true;
+    faceData(f).isDeleted = true;
 }
 
 } // namespace NewMesh
