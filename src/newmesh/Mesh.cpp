@@ -11,7 +11,7 @@ VertexHandle Mesh::addVertex() {
 
 UVPointHandle Mesh::addUVPoint(VertexHandle v) {
     UVPoint uvPoint;
-    uvPoint.vertex = v.index;
+    uvPoint.vertex = v;
     auto index = uint32_t(_uvPoints.size());
     _uvPoints.push_back(uvPoint);
     return UVPointHandle(index);
@@ -28,7 +28,7 @@ EdgeHandle Mesh::addEdge(VertexHandle v0, VertexHandle v1) {
     }
 
     Edge edge;
-    edge.vertices = {v0.index, v1.index};
+    edge.vertices = {v0, v1};
     auto index = uint32_t(_edges.size());
     _edges.push_back(edge);
     return EdgeHandle(index);
@@ -57,8 +57,14 @@ FaceHandle Mesh::addFace(const std::vector<UVPointHandle> &uvPoints) {
     }
 
     Face face;
-    face.uvPoints = uvPoints | ranges::view::transform([](auto it) { return it.index; }) | ranges::to_vector;
-    // TODO: set edge
+    face.uvPoints = uvPoints;
+
+    for (size_t i = 0; i < uvPoints.size(); ++i) {
+        auto uv0 = uvPoints[i];
+        auto uv1 = uvPoints[(i + 1) % uvPoints.size()];
+        face.edges.push_back(addEdge(vertex(uv0), vertex(uv1)));
+    }
+
     auto index = uint32_t(_faces.size());
     _faces.push_back(face);
     return FaceHandle(index);

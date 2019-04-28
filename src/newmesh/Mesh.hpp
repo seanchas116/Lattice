@@ -9,37 +9,6 @@ namespace NewMesh {
 
 class Mesh;
 
-class Vertex {
-public:
-    bool isDeleted = false;
-    glm::vec3 position;
-    std::vector<uint32_t> uvPoints;
-    std::vector<uint32_t> edges;
-};
-
-class UVPoint {
-public:
-    glm::vec2 position;
-    uint32_t vertex;
-    std::vector<uint32_t> faces;
-};
-
-class Edge {
-public:
-    bool isDeleted = false;
-    bool isSmooth = true;
-    std::array<uint32_t, 2> vertices;
-    std::vector<uint32_t> faces;
-};
-
-class Face {
-public:
-    bool isDeleted = false;
-    std::vector<uint32_t> uvPoints;
-    std::vector<uint32_t> edges;
-    int material;
-};
-
 template <typename TDerived>
 class Handle {
 public:
@@ -51,23 +20,60 @@ public:
 
 class VertexHandle : public Handle<VertexHandle> {
 public:
+    VertexHandle() : Handle(0) {}
     explicit VertexHandle(uint32_t index) : Handle(index) {}
 };
 
 class UVPointHandle : public Handle<UVPointHandle> {
 public:
+    UVPointHandle() : Handle(0) {}
     explicit UVPointHandle(uint32_t index) : Handle(index) {}
 };
 
 class EdgeHandle : public Handle<EdgeHandle> {
 public:
+    EdgeHandle() : Handle(0) {}
     EdgeHandle(uint32_t index) : Handle(index) {}
 };
 
 class FaceHandle : public Handle<FaceHandle> {
 public:
+    FaceHandle() : Handle(0) {}
     FaceHandle(uint32_t index) : Handle(index) {}
 };
+
+
+class Vertex {
+public:
+    bool isDeleted = false;
+    glm::vec3 position;
+    std::vector<UVPointHandle> uvPoints;
+    std::vector<EdgeHandle> edges;
+};
+
+class UVPoint {
+public:
+    glm::vec2 position;
+    VertexHandle vertex;
+    std::vector<FaceHandle> faces;
+};
+
+class Edge {
+public:
+    bool isDeleted = false;
+    bool isSmooth = true;
+    std::array<VertexHandle, 2> vertices;
+    std::vector<FaceHandle> faces;
+};
+
+class Face {
+public:
+    bool isDeleted = false;
+    std::vector<UVPointHandle> uvPoints;
+    std::vector<EdgeHandle> edges;
+    int material;
+};
+
 
 class Mesh {
 public:
@@ -79,50 +85,43 @@ public:
     FaceHandle addFace(const std::vector<UVPointHandle>& uvPoints);
 
     auto uvPoints(VertexHandle v) const {
-        return  _vertices[v.index].uvPoints | ranges::view::transform([] (uint32_t index) {
-            return UVPointHandle(index);
-        });
+        return  _vertices[v.index].uvPoints;
     }
 
     auto edges(VertexHandle v) const {
-        return _vertices[v.index].edges | ranges::view::transform([] (uint32_t index) {
-            return EdgeHandle(index);
-        });
+        return _vertices[v.index].edges;
+    }
+
+    auto vertex(UVPointHandle p) const {
+        return _uvPoints[p.index].vertex;
     }
 
     auto faces(UVPointHandle p) const {
-        return _uvPoints[p.index].faces | ranges::view::transform([] (uint32_t index) {
-            return FaceHandle(index);
-        });
+        return _uvPoints[p.index].faces;
     }
 
     auto faces(VertexHandle v) const {
-        return _vertices[v.index].uvPoints | ranges::view::transform([this] (uint32_t index) {
-            return faces(UVPointHandle(index));
+        return _vertices[v.index].uvPoints | ranges::view::transform([this] (UVPointHandle uvPoint) {
+            return faces(uvPoint);
         }) | ranges::action::join;
     }
 
     auto vertices(FaceHandle f) const {
-        return _faces[f.index].uvPoints | ranges::view::transform([this] (uint32_t index) {
-            return VertexHandle(_uvPoints[index].vertex);
+        return _faces[f.index].uvPoints | ranges::view::transform([this] (UVPointHandle uvPoint) {
+            return _uvPoints[uvPoint.index].vertex;
         });
     }
 
     auto uvPoints(FaceHandle f) const {
-        return _faces[f.index].uvPoints | ranges::view::transform([] (uint32_t index) {
-            return UVPointHandle(index);
-        });
+        return _faces[f.index].uvPoints;
     }
 
     auto edges(FaceHandle f) const {
-        return _faces[f.index].edges | ranges::view::transform([] (uint32_t index) {
-            return EdgeHandle(index);
-        });
+        return _faces[f.index].edges;
     }
 
     std::array<VertexHandle, 2> vertices(EdgeHandle e) const {
-        auto& edge = _edges[e.index];
-        return {VertexHandle(edge.vertices[0]), VertexHandle(edge.vertices[1])};
+        return _edges[e.index].vertices;
     }
 
     glm::vec3 position(VertexHandle v) const {
