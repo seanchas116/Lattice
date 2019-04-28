@@ -77,53 +77,6 @@ public:
 
 
 class Mesh {
-public:
-    void collectGarbage();
-
-    VertexHandle addVertex();
-    UVPointHandle addUVPoint(VertexHandle v);
-    EdgeHandle addEdge(VertexHandle v0, VertexHandle v1);
-    FaceHandle addFace(const std::vector<UVPointHandle>& uvPoints);
-
-    void removeVertex(VertexHandle v);
-    void removeEdge(EdgeHandle e);
-    void removeFace(FaceHandle f);
-
-    auto uvPoints(VertexHandle v) const { return  _vertices[v.index].uvPoints; }
-    auto edges(VertexHandle v) const { return _vertices[v.index].edges; }
-
-    auto vertex(UVPointHandle p) const { return _uvPoints[p.index].vertex; }
-    auto faces(UVPointHandle p) const { return _uvPoints[p.index].faces; }
-
-    auto faces(VertexHandle v) const {
-        return _vertices[v.index].uvPoints | ranges::view::transform([this] (UVPointHandle uvPoint) {
-            return faces(uvPoint);
-        }) | ranges::action::join;
-    }
-
-    std::array<VertexHandle, 2> vertices(EdgeHandle e) const { return _edges[e.index].vertices; }
-
-    auto vertices(FaceHandle f) const {
-        return _faces[f.index].uvPoints | ranges::view::transform([this] (UVPointHandle uvPoint) {
-            return _uvPoints[uvPoint.index].vertex;
-        });
-    }
-
-    auto uvPoints(FaceHandle f) const { return _faces[f.index].uvPoints; }
-    auto edges(FaceHandle f) const { return _faces[f.index].edges; }
-
-    glm::vec3 position(VertexHandle v) const { return _vertices[v.index].position; }
-    void setPosition(VertexHandle v, glm::vec3 pos) { _vertices[v.index].position = pos; }
-
-    glm::vec2 uv(UVPointHandle uv) const { return _uvPoints[uv.index].position; }
-    void setUV(UVPointHandle uv, glm::vec2 pos) { _uvPoints[uv.index].position = pos; }
-
-    bool isSmooth(EdgeHandle edge) { return _edges[edge.index].isSmooth; }
-    void setIsSmooth(EdgeHandle edge, bool smooth) { _edges[edge.index].isSmooth = smooth; }
-
-private:
-    friend class VertexHandle;
-
     auto& vertexData(VertexHandle handle) { return _vertices[handle.index]; }
     auto& vertexData(VertexHandle handle) const { return _vertices[handle.index]; }
 
@@ -140,6 +93,50 @@ private:
     std::vector<UVPointData> _uvPoints;
     std::vector<EdgeData> _edges;
     std::vector<FaceData> _faces;
+
+public:
+    void collectGarbage();
+
+    VertexHandle addVertex();
+    UVPointHandle addUVPoint(VertexHandle v);
+    EdgeHandle addEdge(VertexHandle v0, VertexHandle v1);
+    FaceHandle addFace(const std::vector<UVPointHandle>& uvPoints);
+
+    void removeVertex(VertexHandle v);
+    void removeEdge(EdgeHandle e);
+    void removeFace(FaceHandle f);
+
+    auto& uvPoints(VertexHandle v) const { return  vertexData(v).uvPoints; }
+    auto& edges(VertexHandle v) const { return vertexData(v).edges; }
+
+    auto& vertex(UVPointHandle p) const { return uvPointData(p).vertex; }
+    auto& faces(UVPointHandle p) const { return uvPointData(p).faces; }
+
+    auto faces(VertexHandle v) const {
+        return vertexData(v).uvPoints | ranges::view::transform([this] (UVPointHandle uvPoint) {
+            return faces(uvPoint);
+        }) | ranges::action::join;
+    }
+
+    auto& vertices(EdgeHandle e) const { return _edges[e.index].vertices; }
+
+    auto vertices(FaceHandle f) const {
+        return faceData(f).uvPoints | ranges::view::transform([this] (UVPointHandle uvPoint) {
+            return vertex(uvPoint);
+        });
+    }
+
+    auto& uvPoints(FaceHandle f) const { return faceData(f).uvPoints; }
+    auto& edges(FaceHandle f) const { return faceData(f).edges; }
+
+    glm::vec3 position(VertexHandle v) const { return vertexData(v).position; }
+    void setPosition(VertexHandle v, glm::vec3 pos) { vertexData(v).position = pos; }
+
+    glm::vec2 uv(UVPointHandle uv) const { return uvPointData(uv).position; }
+    void setUV(UVPointHandle uv, glm::vec2 pos) { uvPointData(uv).position = pos; }
+
+    bool isSmooth(EdgeHandle edge) { return edgeData(edge).isSmooth; }
+    void setIsSmooth(EdgeHandle edge, bool smooth) { edgeData(edge).isSmooth = smooth; }
 };
 
 } // namespace NewMesh
