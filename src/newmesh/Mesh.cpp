@@ -80,10 +80,16 @@ FaceHandle Mesh::addFace(const std::vector<UVPointHandle> &uvPoints) {
 }
 
 void Mesh::removeVertex(VertexHandle v) {
+    for (auto e : vertexData(v).edges) {
+        removeEdge(e);
+    }
     vertexData(v).isDeleted = true;
 }
 
 void Mesh::removeEdge(EdgeHandle e) {
+    for (auto f : edgeData(e).faces) {
+        removeFace(f);
+    }
     edgeData(e).isDeleted = true;
 }
 
