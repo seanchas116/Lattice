@@ -12,9 +12,10 @@ VertexHandle Mesh::addVertex() {
 UVPointHandle Mesh::addUVPoint(VertexHandle v) {
     UVPoint uvPoint;
     uvPoint.vertex = v;
-    auto index = uint32_t(_uvPoints.size());
+    auto handle = UVPointHandle(uint32_t(_uvPoints.size()));
     _uvPoints.push_back(uvPoint);
-    return UVPointHandle(index);
+    _vertices[v.index].uvPoints.push_back(handle);
+    return handle;
 }
 
 EdgeHandle Mesh::addEdge(VertexHandle v0, VertexHandle v1) {
@@ -29,9 +30,11 @@ EdgeHandle Mesh::addEdge(VertexHandle v0, VertexHandle v1) {
 
     Edge edge;
     edge.vertices = {v0, v1};
-    auto index = uint32_t(_edges.size());
+    auto handle = EdgeHandle(uint32_t(_edges.size()));
     _edges.push_back(edge);
-    return EdgeHandle(index);
+    _vertices[v0.index].edges.push_back(handle);
+    _vertices[v1.index].edges.push_back(handle);
+    return handle;
 }
 
 FaceHandle Mesh::addFace(const std::vector<UVPointHandle> &uvPoints) {
@@ -65,9 +68,15 @@ FaceHandle Mesh::addFace(const std::vector<UVPointHandle> &uvPoints) {
         face.edges.push_back(addEdge(vertex(uv0), vertex(uv1)));
     }
 
-    auto index = uint32_t(_faces.size());
+    auto handle = FaceHandle(uint32_t(_faces.size()));
     _faces.push_back(face);
-    return FaceHandle(index);
+    for (auto uvPoint : face.uvPoints) {
+        _uvPoints[uvPoint.index].faces.push_back(handle);
+    }
+    for (auto edge : face.edges) {
+        _edges[edge.index].faces.push_back(handle);
+    }
+    return handle;
 }
 
 } // namespace NewMesh
