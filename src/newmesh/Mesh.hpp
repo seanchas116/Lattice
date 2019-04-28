@@ -85,6 +85,10 @@ public:
     EdgeHandle addEdge(VertexHandle v0, VertexHandle v1);
     FaceHandle addFace(const std::vector<UVPointHandle>& uvPoints);
 
+    void removeVertex(VertexHandle v);
+    void removeEdge(EdgeHandle e);
+    void removeFace(FaceHandle f);
+
     auto uvPoints(VertexHandle v) const { return  _vertices[v.index].uvPoints; }
     auto edges(VertexHandle v) const { return _vertices[v.index].edges; }
 

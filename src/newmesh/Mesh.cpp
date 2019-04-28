@@ -79,5 +79,17 @@ FaceHandle Mesh::addFace(const std::vector<UVPointHandle> &uvPoints) {
     return handle;
 }
 
+void Mesh::removeVertex(VertexHandle v) {
+    _vertices[v.index].isDeleted = true;
+}
+
+void Mesh::removeEdge(EdgeHandle e) {
+    _edges[e.index].isDeleted = true;
+}
+
+void Mesh::removeFace(FaceHandle f) {
+    _faces[f.index].isDeleted = true;
+}
+
 } // namespace NewMesh
 } // namespace Lattice
