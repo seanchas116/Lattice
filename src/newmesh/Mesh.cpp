@@ -4,18 +4,18 @@ namespace Lattice {
 namespace NewMesh {
 
 VertexHandle Mesh::addVertex() {
-    auto index = uint32_t(_vertices.size());
-    _vertices.push_back(Vertex{});
-    return VertexHandle(index);
+    auto vertex = VertexHandle(uint32_t(_vertices.size()));
+    _vertices.push_back(VertexData{});
+    return vertex;
 }
 
 UVPointHandle Mesh::addUVPoint(VertexHandle v) {
-    UVPoint uvPoint;
-    uvPoint.vertex = v;
-    auto handle = UVPointHandle(uint32_t(_uvPoints.size()));
-    _uvPoints.push_back(uvPoint);
-    _vertices[v.index].uvPoints.push_back(handle);
-    return handle;
+    UVPointData uvPointData;
+    uvPointData.vertex = v;
+    auto uvPoint = UVPointHandle(uint32_t(_uvPoints.size()));
+    _uvPoints.push_back(uvPointData);
+    _vertices[v.index].uvPoints.push_back(uvPoint);
+    return uvPoint;
 }
 
 EdgeHandle Mesh::addEdge(VertexHandle v0, VertexHandle v1) {
@@ -28,13 +28,13 @@ EdgeHandle Mesh::addEdge(VertexHandle v0, VertexHandle v1) {
         }
     }
 
-    Edge edge;
-    edge.vertices = {v0, v1};
-    auto handle = EdgeHandle(uint32_t(_edges.size()));
-    _edges.push_back(edge);
-    _vertices[v0.index].edges.push_back(handle);
-    _vertices[v1.index].edges.push_back(handle);
-    return handle;
+    EdgeData edgeData;
+    edgeData.vertices = {v0, v1};
+    auto edge = EdgeHandle(uint32_t(_edges.size()));
+    _edges.push_back(edgeData);
+    _vertices[v0.index].edges.push_back(edge);
+    _vertices[v1.index].edges.push_back(edge);
+    return edge;
 }
 
 FaceHandle Mesh::addFace(const std::vector<UVPointHandle> &uvPoints) {
@@ -59,24 +59,24 @@ FaceHandle Mesh::addFace(const std::vector<UVPointHandle> &uvPoints) {
         }
     }
 
-    Face face;
-    face.uvPoints = uvPoints;
+    FaceData faceData;
+    faceData.uvPoints = uvPoints;
 
     for (size_t i = 0; i < uvPoints.size(); ++i) {
         auto uv0 = uvPoints[i];
         auto uv1 = uvPoints[(i + 1) % uvPoints.size()];
-        face.edges.push_back(addEdge(vertex(uv0), vertex(uv1)));
+        faceData.edges.push_back(addEdge(vertex(uv0), vertex(uv1)));
     }
 
-    auto handle = FaceHandle(uint32_t(_faces.size()));
-    _faces.push_back(face);
-    for (auto uvPoint : face.uvPoints) {
-        _uvPoints[uvPoint.index].faces.push_back(handle);
+    auto face = FaceHandle(uint32_t(_faces.size()));
+    _faces.push_back(faceData);
+    for (auto uvPoint : faceData.uvPoints) {
+        _uvPoints[uvPoint.index].faces.push_back(face);
     }
-    for (auto edge : face.edges) {
-        _edges[edge.index].faces.push_back(handle);
+    for (auto edge : faceData.edges) {
+        _edges[edge.index].faces.push_back(face);
     }
-    return handle;
+    return face;
 }
 
 void Mesh::removeVertex(VertexHandle v) {

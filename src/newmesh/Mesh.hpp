@@ -43,7 +43,7 @@ public:
 };
 
 
-class Vertex {
+class VertexData {
 public:
     bool isDeleted = false;
     glm::vec3 position;
@@ -51,7 +51,7 @@ public:
     std::vector<EdgeHandle> edges;
 };
 
-class UVPoint {
+class UVPointData {
 public:
     bool isDeleted = false;
     glm::vec2 position;
@@ -59,7 +59,7 @@ public:
     std::vector<FaceHandle> faces;
 };
 
-class Edge {
+class EdgeData {
 public:
     bool isDeleted = false;
     bool isSmooth = true;
@@ -67,7 +67,7 @@ public:
     std::vector<FaceHandle> faces;
 };
 
-class Face {
+class FaceData {
 public:
     bool isDeleted = false;
     std::vector<UVPointHandle> uvPoints;
@@ -124,10 +124,22 @@ public:
 private:
     friend class VertexHandle;
 
-    std::vector<Vertex> _vertices;
-    std::vector<UVPoint> _uvPoints;
-    std::vector<Edge> _edges;
-    std::vector<Face> _faces;
+    auto& vertexData(VertexHandle handle) { return _vertices[handle.index]; }
+    auto& vertexData(VertexHandle handle) const { return _vertices[handle.index]; }
+
+    auto& uvPointData(UVPointHandle handle) { return _uvPoints[handle.index]; }
+    auto& uvPointData(UVPointHandle handle) const { return _uvPoints[handle.index]; }
+
+    auto& edgeData(EdgeHandle handle) { return _edges[handle.index]; }
+    auto& edgeData(EdgeHandle handle) const { return _edges[handle.index]; }
+
+    auto& faceData(FaceHandle handle) { return _faces[handle.index]; }
+    auto& faceData(FaceHandle handle) const { return _faces[handle.index]; }
+
+    std::vector<VertexData> _vertices;
+    std::vector<UVPointData> _uvPoints;
+    std::vector<EdgeData> _edges;
+    std::vector<FaceData> _faces;
 };
 
 } // namespace NewMesh
