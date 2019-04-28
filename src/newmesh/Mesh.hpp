@@ -53,6 +53,7 @@ public:
 
 class UVPoint {
 public:
+    bool isDeleted = false;
     glm::vec2 position;
     VertexHandle vertex;
     std::vector<FaceHandle> faces;
