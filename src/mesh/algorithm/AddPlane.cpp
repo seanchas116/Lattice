@@ -7,10 +7,9 @@ namespace Lattice {
 namespace Mesh {
 
 void AddPlane::redo(Mesh &mesh) {
+    vertices.clear();
     std::vector<UVPointHandle> uvPoints;
     std::array<vec2, 4> uvs = {vec2(0, 0), vec2(1, 0), vec2(1, 1), vec2(0, 1)};
-
-    vertices.clear();
 
     for (vec2 uv : uvs) {
         vec3 pos = center;
