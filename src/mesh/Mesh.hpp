@@ -46,7 +46,7 @@ public:
 class VertexData {
 public:
     bool isDeleted = false;
-    glm::vec3 position;
+    glm::vec3 position = glm::vec3(0);
     std::vector<UVPointHandle> uvPoints;
     std::vector<EdgeHandle> edges;
 };
@@ -54,7 +54,7 @@ public:
 class UVPointData {
 public:
     bool isDeleted = false;
-    glm::vec2 position;
+    glm::vec2 position = glm::vec2(0);
     VertexHandle vertex;
     std::vector<FaceHandle> faces;
 };
@@ -72,7 +72,7 @@ public:
     bool isDeleted = false;
     std::vector<UVPointHandle> uvPoints;
     std::vector<EdgeHandle> edges;
-    int material;
+    int material = 0;
 };
 
 
