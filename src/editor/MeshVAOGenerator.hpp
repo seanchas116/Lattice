@@ -6,7 +6,7 @@
 
 namespace Lattice {
 
-namespace Mesh {
+namespace OldMesh {
 class Mesh;
 class UVPoint;
 class Material;
@@ -19,16 +19,16 @@ namespace Editor {
 
 class MeshVAOGenerator {
 public:
-    MeshVAOGenerator(const SP<Mesh::Mesh>& mesh);
+    MeshVAOGenerator(const SP<OldMesh::Mesh>& mesh);
 
     SP<GL::VAO> generateVertexVAO() const;
     SP<GL::VAO> generateEdgeVAO() const;
-    std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> generateFaceVAOs() const;
+    std::unordered_map<SP<OldMesh::Material>, SP<GL::VAO>> generateFaceVAOs() const;
 
 private:
-    SP<Mesh::Mesh> _mesh;
+    SP<OldMesh::Mesh> _mesh;
     SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexEdgeVertexBuffer;
-    std::unordered_map<Mesh::UVPoint*, uint32_t> _indices;
+    std::unordered_map<OldMesh::UVPoint*, uint32_t> _indices;
 };
 
 } // namespace Viewport

@@ -23,7 +23,7 @@ namespace Document {
 class MeshObject;
 }
 
-namespace Mesh {
+namespace OldMesh {
 class Mesh;
 class Material;
 }
@@ -95,7 +95,7 @@ private:
     bool _isVAOTopologyDirty = true;
     bool _isVAOAttributesDirty = true;
 
-    std::vector<SP<Mesh::Face>> _faces;
+    std::vector<SP<OldMesh::Face>> _faces;
     std::vector<SP<FacePickable>> _facePickables;
 
     SP<GL::IndexBuffer> _faceIndexBuffer;
@@ -108,7 +108,7 @@ private:
     SP<GL::VertexBuffer<Draw::Vertex>> _facePickVertexBuffer;
     SP<GL::VAO> _facePickVAO;
 
-    std::vector<SP<Mesh::Edge>> _edges;
+    std::vector<SP<OldMesh::Edge>> _edges;
     std::vector<SP<EdgePickable>> _edgePickables;
 
     std::vector<Draw::PointLineVertex> _edgeAttributes;
@@ -119,7 +119,7 @@ private:
     SP<GL::VertexBuffer<Draw::PointLineVertex>> _edgePickVertexBuffer;
     SP<GL::VAO> _edgePickVAO;
 
-    std::vector<SP<Mesh::Vertex>> _vertices;
+    std::vector<SP<OldMesh::Vertex>> _vertices;
     std::vector<SP<VertexPickable>> _vertexPickables;
 
     std::vector<Draw::PointLineVertex> _vertexAttributes;
@@ -135,9 +135,9 @@ private:
     SP<Tool> _tool;
 
     // vertex hover
-    Opt<SP<Mesh::Vertex>> _hoveredVertex;
-    Opt<SP<Mesh::Edge>> _hoveredEdge;
-    Opt<SP<Mesh::Face>> _hoveredFace;
+    Opt<SP<OldMesh::Vertex>> _hoveredVertex;
+    Opt<SP<OldMesh::Edge>> _hoveredEdge;
+    Opt<SP<OldMesh::Face>> _hoveredFace;
 };
 
 }

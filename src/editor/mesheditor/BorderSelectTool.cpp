@@ -44,7 +44,7 @@ void BorderSelectTool::mouseMoveTool(const Tool::EventTarget &target, const View
     auto minPos = min(_initViewportPos, _currentViewportPos);
     auto maxPos = max(_initViewportPos, _currentViewportPos);
 
-    Mesh::MeshFragment selection;
+    OldMesh::MeshFragment selection;
 
     for (auto& [vertex, screenPos] : _vertices) {
         if (minPos.x <= screenPos.x && minPos.y <= screenPos.y && screenPos.x <= maxPos.x && screenPos.y <= maxPos.y) {

@@ -15,7 +15,7 @@ Tool::HitTestExclusion DrawTool::hitTestExclusion() const {
         return {};
     }
     auto uvPoint = *_previewUVPoint;
-    std::vector<SP<Mesh::Edge>> edges;
+    std::vector<SP<OldMesh::Edge>> edges;
     for (auto& e : uvPoint->vertex()->edges()) {
         edges.push_back(e->sharedFromThis());
     }
@@ -40,7 +40,7 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
         auto closingPointIt = std::find(_drawnUVPoints.begin(), _drawnUVPoints.end(), vertex->firstUVPoint());
         if (closingPointIt != _drawnUVPoints.end()) {
             // create face
-            std::vector<SP<Mesh::UVPoint>> points(closingPointIt, _drawnUVPoints.end());
+            std::vector<SP<OldMesh::UVPoint>> points(closingPointIt, _drawnUVPoints.end());
             auto face = mesh->addFace(points, mesh->materials()[0]);
 
             bool isFaceFore = dot(face->normal(), event.camera->location().backward()) > 0;
@@ -50,7 +50,7 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
             _drawnUVPoints.clear();
             _previewUVPoint = std::nullopt;
 
-            Mesh::MeshFragment selection;
+            OldMesh::MeshFragment selection;
             for (auto& p : points) {
                 selection.vertices.insert(p->vertex());
             }

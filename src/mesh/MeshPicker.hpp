@@ -4,7 +4,7 @@
 #include "../support/Camera.hpp"
 
 namespace Lattice {
-namespace Mesh {
+namespace OldMesh {
 
 class MeshPicker {
 public:

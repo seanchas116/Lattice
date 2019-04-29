@@ -5,7 +5,7 @@ using namespace Lattice;
 using namespace glm;
 
 TEST_CASE("Mesh") {
-    auto mesh = makeShared<Mesh::Mesh>();
+    auto mesh = makeShared<OldMesh::Mesh>();
     SECTION("addVertex") {
         SECTION("adds verted at specified position") {
             dvec3 p(1, 2, 3);

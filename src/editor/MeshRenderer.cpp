@@ -23,7 +23,7 @@ MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Documen
     _vertexVAO(makeShared<GL::VAO>())
 {
     updateVAOs();
-    connect(object->mesh().get(), &Mesh::Mesh::changed, this, [this] {
+    connect(object->mesh().get(), &OldMesh::Mesh::changed, this, [this] {
         _isVAOsDirty = true;
         emit updated();
     });

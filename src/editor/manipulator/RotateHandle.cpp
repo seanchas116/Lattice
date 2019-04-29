@@ -101,10 +101,10 @@ void RotateHandle::contextMenuEvent(const Viewport::ContextMenuEvent &event) {
     emit onContextMenu(event);
 }
 
-SP<Mesh::Mesh> RotateHandle::createMesh() {
-    auto mesh = makeShared<Mesh::Mesh>();
+SP<OldMesh::Mesh> RotateHandle::createMesh() {
+    auto mesh = makeShared<OldMesh::Mesh>();
     auto material = mesh->addMaterial();
-    mesh->addCircle(dvec3(0), 2.0, 64, Mesh::Mesh::CircleFill::None, 0, material);
+    mesh->addCircle(dvec3(0), 2.0, 64, OldMesh::Mesh::CircleFill::None, 0, material);
     return mesh;
 }
 

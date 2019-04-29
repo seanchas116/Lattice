@@ -9,8 +9,8 @@ using namespace glm;
 namespace Lattice {
 namespace Document {
 
-MeshObject::MeshObject() : _mesh(makeShared<Mesh::Mesh>()) {
-    connect(_mesh.get(), &Mesh::Mesh::changed, this, &MeshObject::handleMeshChange);
+MeshObject::MeshObject() : _mesh(makeShared<OldMesh::Mesh>()) {
+    connect(_mesh.get(), &OldMesh::Mesh::changed, this, &MeshObject::handleMeshChange);
     _mesh->setChangeHandler([this](const auto& change) {
         addChange(change);
     });

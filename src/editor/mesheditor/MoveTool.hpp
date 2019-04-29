@@ -17,8 +17,8 @@ public:
 
 private:
     SP<BorderSelectTool> _borderSelectTool;
-    Mesh::MeshFragment _nextSelection;
-    std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _initPositions;
+    OldMesh::MeshFragment _nextSelection;
+    std::unordered_map<SP<OldMesh::Vertex>, glm::dvec3> _initPositions;
     glm::dvec3 _initObjectPos {0};
     glm::dvec2 _initViewportPos {0};
     bool _dragged {false};

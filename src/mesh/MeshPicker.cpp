@@ -6,7 +6,7 @@
 using namespace glm;
 
 namespace Lattice {
-namespace Mesh {
+namespace OldMesh {
 
 namespace {
 

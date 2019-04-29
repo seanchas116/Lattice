@@ -14,7 +14,7 @@ MeshManipulator::MeshManipulator(const SP<State::AppState> &appState, const SP<D
     _appState(appState),
     _object(object)
 {
-    connect(object->mesh().get(), &Mesh::Mesh::changed, this, &MeshManipulator::updatePosition);
+    connect(object->mesh().get(), &OldMesh::Mesh::changed, this, &MeshManipulator::updatePosition);
     connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshManipulator::updatePosition);
     updatePosition();
 
@@ -44,7 +44,7 @@ void MeshManipulator::handleOnDragMove(ValueType type, dvec3 values) {
     switch (type) {
     case ValueType::Translate: {
         dvec3 offset = values - _initialValues;
-        std::unordered_map<SP<Mesh::Vertex>, dvec3> positions;
+        std::unordered_map<SP<OldMesh::Vertex>, dvec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
             auto newPos = initialPos + offset;
             positions[vertex] = (worldToObject * dvec4(newPos, 1)).xyz;
@@ -54,7 +54,7 @@ void MeshManipulator::handleOnDragMove(ValueType type, dvec3 values) {
     }
     case ValueType::Scale: {
         dvec3 ratio = values / _initialValues;
-        std::unordered_map<SP<Mesh::Vertex>, dvec3> positions;
+        std::unordered_map<SP<OldMesh::Vertex>, dvec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
             dvec3 initialOffset = initialPos - _initialMedianPos;
             auto newPos = _initialMedianPos + initialOffset * ratio;
@@ -67,7 +67,7 @@ void MeshManipulator::handleOnDragMove(ValueType type, dvec3 values) {
         dvec3 eulerAngles = values - _initialValues;
         auto matrix = mat4_cast(dquat(eulerAngles));
 
-        std::unordered_map<SP<Mesh::Vertex>, dvec3> positions;
+        std::unordered_map<SP<OldMesh::Vertex>, dvec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
             dvec3 initialOffset = initialPos - _initialMedianPos;
             dvec3 offset = (matrix * dvec4(initialOffset, 0)).xyz;

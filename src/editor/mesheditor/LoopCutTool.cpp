@@ -25,8 +25,8 @@ void LoopCutTool::mousePressTool(const Tool::EventTarget &target, const Viewport
     double cutPosition = distanceSolver.t0;
 
     bool isEdgeReverse = false;
-    std::vector<std::pair<SP<Mesh::Edge>, bool>> edges;
-    Opt<SP<Mesh::Face>> lastFace;
+    std::vector<std::pair<SP<OldMesh::Edge>, bool>> edges;
+    Opt<SP<OldMesh::Face>> lastFace;
 
     while (true) {
         edges.push_back({edge, isEdgeReverse});
@@ -62,7 +62,7 @@ void LoopCutTool::mousePressTool(const Tool::EventTarget &target, const Viewport
         edge = nextEdge;
     }
 
-    std::vector<SP<Mesh::Vertex>> vertices;
+    std::vector<SP<OldMesh::Vertex>> vertices;
     vertices.reserve(edges.size());
     for (auto& [edge, isReverse] : edges) {
         auto v = mesh->cutEdge(edge, isReverse ? (1.0 - cutPosition) : cutPosition);
@@ -74,7 +74,7 @@ void LoopCutTool::mousePressTool(const Tool::EventTarget &target, const Viewport
         mesh->addEdge({v0, v1});
     }
 
-    Mesh::MeshFragment selection;
+    OldMesh::MeshFragment selection;
     for (auto& v : vertices) {
         selection.vertices.insert(v);
     }

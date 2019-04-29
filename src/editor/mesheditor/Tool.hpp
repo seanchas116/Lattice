@@ -16,18 +16,18 @@ class Tool : public Viewport::RenderableObject {
     Q_OBJECT
 public:
     struct EventTarget {
-        Opt<SP<Mesh::Vertex>> vertex;
-        Opt<SP<Mesh::Edge>> edge;
-        Opt<SP<Mesh::Face>> face;
+        Opt<SP<OldMesh::Vertex>> vertex;
+        Opt<SP<OldMesh::Edge>> edge;
+        Opt<SP<OldMesh::Face>> face;
 
-        std::unordered_set<SP<Mesh::Vertex>> vertices() const;
-        Mesh::MeshFragment fragment() const;
+        std::unordered_set<SP<OldMesh::Vertex>> vertices() const;
+        OldMesh::MeshFragment fragment() const;
     };
 
     struct HitTestExclusion {
-        std::vector<SP<Mesh::Vertex>> vertices;
-        std::vector<SP<Mesh::Edge>> edges;
-        std::vector<SP<Mesh::Face>> faces;
+        std::vector<SP<OldMesh::Vertex>> vertices;
+        std::vector<SP<OldMesh::Edge>> edges;
+        std::vector<SP<OldMesh::Face>> faces;
     };
 
     Tool(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object) : _appState(appState), _object(object) {}

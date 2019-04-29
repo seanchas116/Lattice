@@ -53,7 +53,7 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
         auto edges = _fragment.edges();
         auto faces = _fragment.faces();
 
-        std::unordered_set<SP<Mesh::Edge>> openEdges;
+        std::unordered_set<SP<OldMesh::Edge>> openEdges;
         for (auto& edge : edges) {
             int faceCount = 0;
             for (auto& face : edge->faces()) {
@@ -83,7 +83,7 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
 
         for (auto& openEdge : openEdges) {
             bool isReverse = true;
-            SP<Mesh::Material> material = mesh->materials()[0];
+            SP<OldMesh::Material> material = mesh->materials()[0];
 
             for (auto& face : openEdge->faces()) {
                 if (faces.find(face->sharedFromThis()) != faces.end()) {
@@ -113,7 +113,7 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
         }
 
         for (auto& face : faces) {
-            std::vector<SP<Mesh::UVPoint>> newUVPoints;
+            std::vector<SP<OldMesh::UVPoint>> newUVPoints;
             for (auto& uv : face->uvPoints()) {
                 auto newUV = _oldToNewUVPoints.at(uv);
                 newUVPoints.push_back(newUV);
@@ -133,7 +133,7 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
             _guideDirection = glm::normalize(normal);
         }
 
-        Mesh::MeshFragment selection;
+        OldMesh::MeshFragment selection;
         for (auto& [oldUV, newUV] : _oldToNewUVPoints) {
             selection.vertices.insert(newUV->vertex());
         }
@@ -148,7 +148,7 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
         offset = glm::dot(offset, _guideDirection) * _guideDirection;
     }
 
-    std::unordered_map<SP<Mesh::Vertex>, dvec3> newPositions;
+    std::unordered_map<SP<OldMesh::Vertex>, dvec3> newPositions;
 
     for (auto& [oldUV, newUV] : _oldToNewUVPoints) {
         newPositions[newUV->vertex()] = _initPositions[oldUV->vertex()] + offset;

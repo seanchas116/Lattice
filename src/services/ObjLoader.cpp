@@ -49,10 +49,10 @@ std::vector<SP<Document::MeshObject>> ObjLoader::load(const QString &filePathStr
         object->setName(objShape.name);
 
         // TODO: use index_t as key
-        std::unordered_map<int, SP<Mesh::Vertex>> vertexForIndices;
-        std::unordered_map<std::pair<int, int>, SP<Mesh::UVPoint>> uvPointForIndices;
+        std::unordered_map<int, SP<OldMesh::Vertex>> vertexForIndices;
+        std::unordered_map<std::pair<int, int>, SP<OldMesh::UVPoint>> uvPointForIndices;
 
-        std::vector<SP<Mesh::Material>> materials;
+        std::vector<SP<OldMesh::Material>> materials;
 
         // Add materials
         for (auto& objMaterial : objMaterials) {
@@ -72,7 +72,7 @@ std::vector<SP<Document::MeshObject>> ObjLoader::load(const QString &filePathStr
         for (size_t f = 0; f < objShape.mesh.num_face_vertices.size(); f++) {
             size_t fv = objShape.mesh.num_face_vertices[f];
 
-            std::vector<SP<Mesh::UVPoint>> uvPoints;
+            std::vector<SP<OldMesh::UVPoint>> uvPoints;
 
             // Loop over vertices in the face.
             for (size_t v = 0; v < fv; v++) {

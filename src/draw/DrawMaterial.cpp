@@ -13,7 +13,7 @@ DrawMaterial::DrawMaterial() : _shader(Resource::read("src/draw/DrawMaterial.ver
     initializeOpenGLFunctions();
 }
 
-void DrawMaterial::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<Camera> &camera, const SP<Mesh::Material> &material) {
+void DrawMaterial::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<Camera> &camera, const SP<OldMesh::Material> &material) {
     _shader.bind();
     _shader.setUniform("diffuse", material->baseColor());
     _shader.setUniform("ambient", glm::vec3(0));

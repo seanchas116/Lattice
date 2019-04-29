@@ -11,7 +11,7 @@
 namespace Lattice {
 namespace Editor {
 
-MeshVAOGenerator::MeshVAOGenerator(const SP<Mesh::Mesh> &mesh) :
+MeshVAOGenerator::MeshVAOGenerator(const SP<OldMesh::Mesh> &mesh) :
     _mesh(mesh),
     _vertexEdgeVertexBuffer(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>())
 {
@@ -47,15 +47,15 @@ SP<GL::VAO> MeshVAOGenerator::generateEdgeVAO() const {
     return edgeVAO;
 }
 
-std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() const {
+std::unordered_map<SP<OldMesh::Material>, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() const {
     _mesh->updateNormals();
 
     // TODO: build more efficient VBO
-    std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> faceVAOs;
+    std::unordered_map<SP<OldMesh::Material>, SP<GL::VAO>> faceVAOs;
     auto faceVBO = makeShared<GL::VertexBuffer<Draw::Vertex>>();
     std::vector<Draw::Vertex> faceAttributes;
 
-    auto addPoint = [&](const SP<Mesh::Face>& face, int indexInFace) {
+    auto addPoint = [&](const SP<OldMesh::Face>& face, int indexInFace) {
         auto& p = face->uvPoints()[indexInFace];
         Draw::Vertex attrib;
         attrib.position = p->vertex()->position();

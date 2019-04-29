@@ -4,7 +4,7 @@ namespace Lattice {
 namespace Editor {
 namespace MeshEditor {
 
-std::unordered_set<SP<Mesh::Vertex> > Tool::EventTarget::vertices() const {
+std::unordered_set<SP<OldMesh::Vertex> > Tool::EventTarget::vertices() const {
     if (this->vertex) {
         auto& vertex = *this->vertex;
         return {vertex};
@@ -13,7 +13,7 @@ std::unordered_set<SP<Mesh::Vertex> > Tool::EventTarget::vertices() const {
         return {edge->vertices()[0], edge->vertices()[1]};
     } else if (this->face) {
         auto& face = *this->face;
-        std::unordered_set<SP<Mesh::Vertex>> vertices;
+        std::unordered_set<SP<OldMesh::Vertex>> vertices;
         for (auto& v : face->vertices()) {
             vertices.insert(v);
         }
@@ -22,8 +22,8 @@ std::unordered_set<SP<Mesh::Vertex> > Tool::EventTarget::vertices() const {
     return {};
 }
 
-Mesh::MeshFragment Tool::EventTarget::fragment() const {
-    return Mesh::MeshFragment{vertices()};
+OldMesh::MeshFragment Tool::EventTarget::fragment() const {
+    return OldMesh::MeshFragment{vertices()};
 }
 
 Tool::~Tool() {

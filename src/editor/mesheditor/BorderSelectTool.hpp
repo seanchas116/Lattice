@@ -4,7 +4,7 @@
 
 namespace Lattice {
 
-namespace Mesh {
+namespace OldMesh {
 class Vertex;
 }
 
@@ -23,7 +23,7 @@ public:
 
 private:
     struct VertexWithScreenPos {
-        SP<Mesh::Vertex> vertex;
+        SP<OldMesh::Vertex> vertex;
         glm::dvec2 screenPos;
     };
 

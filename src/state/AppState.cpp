@@ -49,7 +49,7 @@ void AppState::addCircle() {
     _document->history()->beginChange(tr("Add Circle"));
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Circle").toStdString());
-    object->mesh()->addCircle(glm::vec3(0), 1.0, 16, Mesh::Mesh::CircleFill::Ngon, 1, object->mesh()->addMaterial());
+    object->mesh()->addCircle(glm::vec3(0), 1.0, 16, OldMesh::Mesh::CircleFill::Ngon, 1, object->mesh()->addMaterial());
     _document->insertObjectToCurrentPosition(object);
 }
 
@@ -151,7 +151,7 @@ void AppState::selectAll() {
     auto maybeEditedObject = _document->editedObject();
     if (maybeEditedObject) {
         auto editedObject = *maybeEditedObject;
-        Mesh::MeshFragment selection;
+        OldMesh::MeshFragment selection;
         selection.vertices = editedObject->mesh()->vertices();
         _document->setMeshSelection(selection);
     } else {
@@ -167,7 +167,7 @@ void AppState::deselectAll() {
     auto maybeEditedObject = _document->editedObject();
     if (maybeEditedObject) {
         auto editedObject = *maybeEditedObject;
-        Mesh::MeshFragment selection;
+        OldMesh::MeshFragment selection;
         _document->setMeshSelection(selection);
     } else {
         _document->setSelectedObjects({});

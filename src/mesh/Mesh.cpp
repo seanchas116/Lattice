@@ -27,7 +27,7 @@ void eraseElement(std::vector<T>& vector, T&& value) {
 
 }
 
-namespace Lattice::Mesh {
+namespace Lattice::OldMesh {
 
 SP<UVPoint> Vertex::firstUVPoint() const {
     return (*_uvPoints.begin())->sharedFromThis();

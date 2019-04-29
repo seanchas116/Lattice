@@ -31,7 +31,7 @@ void MoveTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
 
     bool alreadySelected = !clickedFragment.empty() && oldSelection.contains(clickedFragment);
 
-    Mesh::MeshFragment selection;
+    OldMesh::MeshFragment selection;
     if (event.originalEvent->modifiers() & Qt::ShiftModifier) {
         selection = oldSelection;
 
@@ -85,7 +85,7 @@ void MoveTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::Mo
     }
 
     auto& mesh = object()->mesh();
-    std::unordered_map<SP<Mesh::Vertex>, dvec3> positions;
+    std::unordered_map<SP<OldMesh::Vertex>, dvec3> positions;
     for (auto& [v, initialPos] : _initPositions) {
         positions[v] = initialPos + offset;
     }

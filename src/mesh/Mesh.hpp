@@ -14,7 +14,7 @@
 #include <set>
 #include <functional>
 
-namespace Lattice::Mesh {
+namespace Lattice::OldMesh {
 
 class Vertex;
 class Edge;

@@ -3,7 +3,7 @@
 using namespace glm;
 
 namespace Lattice {
-namespace Mesh {
+namespace OldMesh {
 
 bool MeshFragment::contains(const MeshFragment &other) const {
     for (auto& v : other.vertices) {

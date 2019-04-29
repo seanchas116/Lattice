@@ -40,14 +40,14 @@ public:
     auto& history() const { return _history; }
 
     auto& meshSelection() const { return _meshSelection; }
-    void setMeshSelection(const Mesh::MeshFragment &meshSelection);
+    void setMeshSelection(const OldMesh::MeshFragment &meshSelection);
 
 signals:
     void currentObjectChanged(const Opt<SP<Object>>& object);
     void editedObjectChanged(const Opt<SP<MeshObject>>& object);
     void isEditingChanged(bool isEditing);
     void selectedObjectsChanged(const std::unordered_set<SP<Object>>& objects);
-    void meshSelectionChanged(const Mesh::MeshFragment &meshSelection);
+    void meshSelectionChanged(const OldMesh::MeshFragment &meshSelection);
 
     void objectAboutToBeInserted(const SP<Object>& object);
     void objectInserted(const SP<Object>& object);
@@ -62,7 +62,7 @@ private:
     Opt<SP<Object>> _currentObject;
     Opt<SP<MeshObject>> _editedObject;
     std::unordered_set<SP<Object>> _selectedObjects;
-    Mesh::MeshFragment _meshSelection;
+    OldMesh::MeshFragment _meshSelection;
 
     SP<History> _history;
 };

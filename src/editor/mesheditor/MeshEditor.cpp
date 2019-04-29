@@ -63,32 +63,32 @@ private:
 
 class MeshEditor::VertexPickable : public MeshEditor::EditorPickable {
 public:
-    VertexPickable(MeshEditor* editor, const SP<Mesh::Vertex>& vertex) : EditorPickable(editor), _vertex(vertex) {}
+    VertexPickable(MeshEditor* editor, const SP<OldMesh::Vertex>& vertex) : EditorPickable(editor), _vertex(vertex) {}
     Tool::EventTarget target() const override {
         return {_vertex, {}, {}};
     }
 private:
-    SP<Mesh::Vertex> _vertex;
+    SP<OldMesh::Vertex> _vertex;
 };
 
 class MeshEditor::EdgePickable : public MeshEditor::EditorPickable {
 public:
-    EdgePickable(MeshEditor* editor, const SP<Mesh::Edge>& edge) : EditorPickable(editor), _edge(edge) {}
+    EdgePickable(MeshEditor* editor, const SP<OldMesh::Edge>& edge) : EditorPickable(editor), _edge(edge) {}
     Tool::EventTarget target() const override {
         return {{}, _edge, {}};
     }
 private:
-    SP<Mesh::Edge> _edge;
+    SP<OldMesh::Edge> _edge;
 };
 
 class MeshEditor::FacePickable : public MeshEditor::EditorPickable {
 public:
-    FacePickable(MeshEditor* editor, const SP<Mesh::Face>& face) : EditorPickable(editor), _face(face) {}
+    FacePickable(MeshEditor* editor, const SP<OldMesh::Face>& face) : EditorPickable(editor), _face(face) {}
     Tool::EventTarget target() const override {
         return {{}, {}, _face};
     }
 private:
-    SP<Mesh::Face> _face;
+    SP<OldMesh::Face> _face;
 };
 
 MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::MeshObject> &object) :
@@ -117,8 +117,8 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     initializeOpenGLFunctions();
     updateWholeVAOs();
 
-    connect(object->mesh().get(), &Mesh::Mesh::topologyChanged, this, &MeshEditor::handleMeshTopologyChange);
-    connect(object->mesh().get(), &Mesh::Mesh::changed, this, &MeshEditor::handleMeshChange);
+    connect(object->mesh().get(), &OldMesh::Mesh::topologyChanged, this, &MeshEditor::handleMeshTopologyChange);
+    connect(object->mesh().get(), &OldMesh::Mesh::changed, this, &MeshEditor::handleMeshChange);
     connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::handleMeshChange);
 
     connect(appState.get(), &State::AppState::toolChanged, this, &MeshEditor::handleToolChange);

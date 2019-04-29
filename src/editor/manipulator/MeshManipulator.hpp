@@ -10,7 +10,7 @@ class AppState;
 namespace Document {
 class MeshObject;
 }
-namespace Mesh {
+namespace OldMesh {
 class Vertex;
 }
 
@@ -31,7 +31,7 @@ private:
 
     SP<State::AppState> _appState;
     SP<Document::MeshObject> _object;
-    std::unordered_map<SP<Mesh::Vertex>, glm::dvec3> _initialPositions;
+    std::unordered_map<SP<OldMesh::Vertex>, glm::dvec3> _initialPositions;
     glm::dvec3 _initialMedianPos;
     glm::dvec3 _initialValues;
     QMetaObject::Connection _connection;
