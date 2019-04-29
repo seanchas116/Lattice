@@ -1,5 +1,5 @@
 #include "MeshObject.hpp"
-#include "../mesh/Mesh.hpp"
+#include "../oldmesh/Mesh.hpp"
 #include "../support/Debug.hpp"
 #include <nlohmann/json.hpp>
 #include <QTimer>

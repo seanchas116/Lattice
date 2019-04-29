@@ -1,6 +1,6 @@
 #pragma once
 #include "Tool.hpp"
-#include "../../mesh/MeshFragment.hpp"
+#include "../../oldmesh/MeshFragment.hpp"
 
 namespace Lattice {
 

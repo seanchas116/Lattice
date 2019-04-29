@@ -1,10 +1,10 @@
 #include <catch2/catch.hpp>
-#include "../../src/mesh/Mesh.hpp"
+#include "../../src/oldmesh/Mesh.hpp"
 
 using namespace Lattice;
 using namespace glm;
 
-TEST_CASE("Mesh") {
+TEST_CASE("OldMesh::Mesh") {
     auto mesh = makeShared<OldMesh::Mesh>();
     SECTION("addVertex") {
         SECTION("adds verted at specified position") {

@@ -1,5 +1,5 @@
 #include "MeshVAOGenerator.hpp"
-#include "../mesh/Mesh.hpp"
+#include "../oldmesh/Mesh.hpp"
 #include "../document/MeshObject.hpp"
 #include "../gl/VAO.hpp"
 #include "../gl/VertexBuffer.hpp"

@@ -1,8 +1,8 @@
 #pragma once
 #include <QObject>
 #include "../../state/AppState.hpp"
-#include "../../mesh/Mesh.hpp"
-#include "../../mesh/MeshFragment.hpp"
+#include "../../oldmesh/Mesh.hpp"
+#include "../../oldmesh/MeshFragment.hpp"
 #include "../../document/MeshObject.hpp"
 #include "../../viewport/MouseEvent.hpp"
 #include "../../viewport/RenderableObject.hpp"

@@ -1,7 +1,7 @@
 #pragma once
 #include "Tool.hpp"
 #include "BorderSelectTool.hpp"
-#include "../../mesh/MeshFragment.hpp"
+#include "../../oldmesh/MeshFragment.hpp"
 
 namespace Lattice {
 namespace Editor {
