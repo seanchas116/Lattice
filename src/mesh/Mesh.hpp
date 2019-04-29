@@ -70,9 +70,9 @@ public:
 class FaceData {
 public:
     bool isDeleted = false;
+    uint32_t material = 0;
     std::vector<UVPointHandle> uvPoints;
     std::vector<EdgeHandle> edges;
-    int material = 0;
 };
 
 
