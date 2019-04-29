@@ -1,5 +1,5 @@
 #include "MeshRenderer.hpp"
-#include "MeshVAOGenerator.hpp"
+#include "OldMeshVAOGenerator.hpp"
 #include "../state/AppState.hpp"
 #include "../gl/VAO.hpp"
 #include "../document/Document.hpp"
@@ -106,7 +106,7 @@ void MeshRenderer::updateVAOs() {
         return;
     }
 
-    MeshVAOGenerator generator(_object->mesh());
+    OldMeshVAOGenerator generator(_object->mesh());
     _vertexVAO = generator.generateVertexVAO();
     _edgeVAO = generator.generateEdgeVAO();
     _faceVAOs= generator.generateFaceVAOs();

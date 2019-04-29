@@ -1,4 +1,4 @@
-#include "MeshVAOGenerator.hpp"
+#include "OldMeshVAOGenerator.hpp"
 #include "../oldmesh/Mesh.hpp"
 #include "../document/MeshObject.hpp"
 #include "../gl/VAO.hpp"
@@ -11,7 +11,7 @@
 namespace Lattice {
 namespace Editor {
 
-MeshVAOGenerator::MeshVAOGenerator(const SP<OldMesh::Mesh> &mesh) :
+OldMeshVAOGenerator::OldMeshVAOGenerator(const SP<OldMesh::Mesh> &mesh) :
     _mesh(mesh),
     _vertexEdgeVertexBuffer(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>())
 {
@@ -30,11 +30,11 @@ MeshVAOGenerator::MeshVAOGenerator(const SP<OldMesh::Mesh> &mesh) :
     _vertexEdgeVertexBuffer->setVertices(vertices);
 }
 
-SP<GL::VAO> MeshVAOGenerator::generateVertexVAO() const {
+SP<GL::VAO> OldMeshVAOGenerator::generateVertexVAO() const {
     return makeShared<GL::VAO>(_vertexEdgeVertexBuffer, GL::Primitive::Point);
 }
 
-SP<GL::VAO> MeshVAOGenerator::generateEdgeVAO() const {
+SP<GL::VAO> OldMeshVAOGenerator::generateEdgeVAO() const {
     std::vector<GL::IndexBuffer::Line> lines;
     for (auto& [_, edge] : _mesh->edges()) {
         auto i0 = _indices.at(*edge->vertices()[0]->uvPoints().begin());
@@ -47,7 +47,7 @@ SP<GL::VAO> MeshVAOGenerator::generateEdgeVAO() const {
     return edgeVAO;
 }
 
-std::unordered_map<SP<OldMesh::Material>, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() const {
+std::unordered_map<SP<OldMesh::Material>, SP<GL::VAO>> OldMeshVAOGenerator::generateFaceVAOs() const {
     _mesh->updateNormals();
 
     // TODO: build more efficient VBO

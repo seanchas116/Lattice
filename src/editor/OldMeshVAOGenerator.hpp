@@ -17,9 +17,9 @@ class VAO;
 
 namespace Editor {
 
-class MeshVAOGenerator {
+class OldMeshVAOGenerator {
 public:
-    MeshVAOGenerator(const SP<OldMesh::Mesh>& mesh);
+    OldMeshVAOGenerator(const SP<OldMesh::Mesh>& mesh);
 
     SP<GL::VAO> generateVertexVAO() const;
     SP<GL::VAO> generateEdgeVAO() const;

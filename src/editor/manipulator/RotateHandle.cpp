@@ -1,7 +1,7 @@
 #include "RotateHandle.hpp"
 #include "Constants.hpp"
 #include "Coordinates.hpp"
-#include "../MeshVAOGenerator.hpp"
+#include "../OldMeshVAOGenerator.hpp"
 #include "../../draw/Operations.hpp"
 #include "../../oldmesh/Mesh.hpp"
 #include "../../gl/VAO.hpp"
@@ -19,7 +19,7 @@ namespace Manipulator {
 RotateHandle::RotateHandle(int axis) :
     _axis(axis),
     _handleMesh(createMesh()),
-    _handleVAO(MeshVAOGenerator(_handleMesh).generateEdgeVAO())
+    _handleVAO(OldMeshVAOGenerator(_handleMesh).generateEdgeVAO())
 {
     initializeOpenGLFunctions();
 }
