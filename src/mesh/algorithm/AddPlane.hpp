@@ -6,7 +6,10 @@ namespace Mesh {
 
 class AddPlane {
 public:
-    AddPlane(glm::vec3 center, glm::vec2 size, int normalAxis, uint32_t material) : center(center), size(size), normalAxis(normalAxis), material(material) {}
+    AddPlane(glm::vec3 center, glm::vec2 size, int normalAxis, uint32_t material) :center(center),
+                                                                                    size(size),
+                                                                                    normalAxis(normalAxis),
+                                                                                    material(material) {}
 
     void redo(Mesh& mesh);
     void undo(Mesh& mesh);
