@@ -137,6 +137,9 @@ public:
 
     bool isSmooth(EdgeHandle edge) { return edgeData(edge).isSmooth; }
     void setIsSmooth(EdgeHandle edge, bool smooth) { edgeData(edge).isSmooth = smooth; }
+
+    uint32_t material(FaceHandle face) { return faceData(face).material; }
+    void setMaterial(FaceHandle face, uint32_t material) { faceData(face).material = material; }
 };
 
 } // namespace NewMesh
