@@ -5,7 +5,7 @@
 #include <range/v3/all.hpp>
 
 namespace Lattice {
-namespace NewMesh {
+namespace Mesh {
 
 class Mesh;
 

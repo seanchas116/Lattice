@@ -1,7 +1,7 @@
 #include "Mesh.hpp"
 
 namespace Lattice {
-namespace NewMesh {
+namespace Mesh {
 
 VertexHandle Mesh::addVertex() {
     auto vertex = VertexHandle(uint32_t(_vertices.size()));
