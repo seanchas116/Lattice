@@ -86,10 +86,10 @@ class Mesh {
     std::vector<FaceData> _faces;
 
 public:
-    VertexHandle addVertex();
-    UVPointHandle addUVPoint(VertexHandle v);
-    EdgeHandle addEdge(VertexHandle v0, VertexHandle v1);
-    FaceHandle addFace(const std::vector<UVPointHandle>& uvPoints);
+    VertexHandle addVertex(glm::vec3 position);
+    UVPointHandle addUVPoint(VertexHandle v, glm::vec2 position);
+    EdgeHandle addEdge(VertexHandle v0, VertexHandle v1, bool isSmooth);
+    FaceHandle addFace(const std::vector<UVPointHandle>& uvPoints, uint32_t material);
 
     void removeVertex(VertexHandle v);
     void removeEdge(EdgeHandle e);

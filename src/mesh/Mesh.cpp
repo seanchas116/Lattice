@@ -3,14 +3,17 @@
 namespace Lattice {
 namespace Mesh {
 
-VertexHandle Mesh::addVertex() {
+VertexHandle Mesh::addVertex(glm::vec3 position) {
+    VertexData vertexData;
+    vertexData.position = position;
     auto vertex = VertexHandle(uint32_t(_vertices.size()));
-    _vertices.push_back(VertexData{});
+    _vertices.push_back(vertexData);
     return vertex;
 }
 
-UVPointHandle Mesh::addUVPoint(VertexHandle v) {
+UVPointHandle Mesh::addUVPoint(VertexHandle v, glm::vec2 position) {
     UVPointData uvPointData;
+    uvPointData.position = position;
     uvPointData.vertex = v;
     auto uvPoint = UVPointHandle(uint32_t(_uvPoints.size()));
     _uvPoints.push_back(uvPointData);
@@ -18,7 +21,7 @@ UVPointHandle Mesh::addUVPoint(VertexHandle v) {
     return uvPoint;
 }
 
-EdgeHandle Mesh::addEdge(VertexHandle v0, VertexHandle v1) {
+EdgeHandle Mesh::addEdge(VertexHandle v0, VertexHandle v1, bool isSmooth) {
     // check if edge already exists
     for (auto edge : edges(v0)) {
         auto edgeVertices = vertices(edge);
@@ -29,6 +32,7 @@ EdgeHandle Mesh::addEdge(VertexHandle v0, VertexHandle v1) {
     }
 
     EdgeData edgeData;
+    edgeData.isSmooth = isSmooth;
     edgeData.vertices = {v0, v1};
     auto edge = EdgeHandle(uint32_t(_edges.size()));
     _edges.push_back(edgeData);
@@ -37,7 +41,7 @@ EdgeHandle Mesh::addEdge(VertexHandle v0, VertexHandle v1) {
     return edge;
 }
 
-FaceHandle Mesh::addFace(const std::vector<UVPointHandle> &uvPoints) {
+FaceHandle Mesh::addFace(const std::vector<UVPointHandle> &uvPoints, uint32_t material) {
     // check if face already exists
     for (auto face : faces(uvPoints[0])) {
         auto faceUVPoints = this->uvPoints(face) | ranges::to_vector;
@@ -60,6 +64,7 @@ FaceHandle Mesh::addFace(const std::vector<UVPointHandle> &uvPoints) {
     }
 
     FaceData faceData;
+    faceData.material = material;
     faceData.uvPoints = uvPoints;
 
     for (size_t i = 0; i < uvPoints.size(); ++i) {
