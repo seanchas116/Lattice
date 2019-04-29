@@ -10,65 +10,56 @@ namespace Mesh {
 class Mesh;
 
 template <typename TDerived>
-class Handle {
-public:
+struct Handle {
     explicit Handle(uint32_t index) : index(index) {}
     bool operator==(const TDerived& other) const { return index == other.index; }
     bool operator!=(const TDerived& other) const { return !operator==(other); }
     uint32_t index;
 };
 
-class VertexHandle : public Handle<VertexHandle> {
-public:
+struct VertexHandle : public Handle<VertexHandle> {
     VertexHandle() : Handle(0) {}
     explicit VertexHandle(uint32_t index) : Handle(index) {}
 };
 
-class UVPointHandle : public Handle<UVPointHandle> {
-public:
+struct UVPointHandle : public Handle<UVPointHandle> {
     UVPointHandle() : Handle(0) {}
     explicit UVPointHandle(uint32_t index) : Handle(index) {}
 };
 
-class EdgeHandle : public Handle<EdgeHandle> {
-public:
+struct EdgeHandle : public Handle<EdgeHandle> {
     EdgeHandle() : Handle(0) {}
     EdgeHandle(uint32_t index) : Handle(index) {}
 };
 
-class FaceHandle : public Handle<FaceHandle> {
-public:
+struct FaceHandle : public Handle<FaceHandle> {
     FaceHandle() : Handle(0) {}
     FaceHandle(uint32_t index) : Handle(index) {}
 };
 
 
-class VertexData {
-public:
+struct VertexData {
     bool isDeleted = false;
     glm::vec3 position = glm::vec3(0);
     std::vector<UVPointHandle> uvPoints;
     std::vector<EdgeHandle> edges;
 };
 
-class UVPointData {
-public:
+struct UVPointData {
     bool isDeleted = false;
     glm::vec2 position = glm::vec2(0);
     VertexHandle vertex;
     std::vector<FaceHandle> faces;
 };
 
-class EdgeData {
-public:
+struct EdgeData {
     bool isDeleted = false;
     bool isSmooth = true;
     std::array<VertexHandle, 2> vertices;
     std::vector<FaceHandle> faces;
 };
 
-class FaceData {
-public:
+struct FaceData {
     bool isDeleted = false;
     uint32_t material = 0;
     std::vector<UVPointHandle> uvPoints;
