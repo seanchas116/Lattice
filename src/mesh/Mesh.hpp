@@ -98,16 +98,16 @@ public:
     void collectGarbage();
 
     auto vertices() const {
-        return ranges::view::iota(0, _vertices.size()) | ranges::view::transform([](int index) { return VertexHandle(uint32_t(index)); });
+        return ranges::view::iota(0U, _vertices.size()) | ranges::view::transform([](uint32_t index) { return VertexHandle(index); });
     }
     auto uvPoints() const {
-        return ranges::view::iota(0, _uvPoints.size()) | ranges::view::transform([](int index) { return UVPointHandle(uint32_t(index)); });
+        return ranges::view::iota(0U, _uvPoints.size()) | ranges::view::transform([](uint32_t index) { return UVPointHandle(index); });
     }
     auto edges() const {
-        return ranges::view::iota(0, _edges.size()) | ranges::view::transform([](int index) { return EdgeHandle(uint32_t(index)); });
+        return ranges::view::iota(0U, _edges.size()) | ranges::view::transform([](uint32_t index) { return EdgeHandle(index); });
     }
     auto faces() const {
-        return ranges::view::iota(0, _faces.size()) | ranges::view::transform([](int index) { return FaceHandle(uint32_t(index)); });
+        return ranges::view::iota(0U, _faces.size()) | ranges::view::transform([](uint32_t index) { return FaceHandle(index); });
     }
 
     auto& uvPoints(VertexHandle v) const { return  vertexData(v).uvPoints; }
