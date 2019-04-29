@@ -1,0 +1,34 @@
+#include "AddPlane.hpp"
+#include <QtGlobal>
+
+using namespace glm;
+
+namespace Lattice {
+namespace Mesh {
+
+void AddPlane::redo(Mesh &mesh) {
+    std::vector<UVPointHandle> uvPoints;
+    std::array<vec2, 4> uvs = {vec2(0, 0), vec2(1, 0), vec2(1, 1), vec2(0, 1)};
+
+    vertices.clear();
+
+    for (vec2 uv : uvs) {
+        vec3 pos = center;
+        pos[(normalAxis + 1) % 3] += size.x * (uv.x - 0.5f);
+        pos[(normalAxis + 2) % 3] += size.y * (uv.y - 0.5f);
+        auto v = mesh.addVertex(pos);
+        vertices.push_back(v);
+        auto uvPoint = mesh.addUVPoint(v, uv);
+        uvPoints.push_back(uvPoint);
+    }
+    mesh.addFace(uvPoints, material);
+}
+
+void AddPlane::undo(Mesh &mesh) {
+    for (auto v : vertices) {
+        mesh.removeVertex(v);
+    }
+}
+
+} // namespace Mesh
+} // namespace Lattice
