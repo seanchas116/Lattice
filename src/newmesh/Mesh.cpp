@@ -97,5 +97,109 @@ void Mesh::removeFace(FaceHandle f) {
     faceData(f).isDeleted = true;
 }
 
+void Mesh::collectGarbage() {
+    {
+        std::vector<VertexData> newVertices;
+        for (size_t i = 0; i < _vertices.size(); ++i) {
+            auto& vertexData = _vertices[i];
+            if (vertexData.isDeleted) {
+                continue;
+            }
+            size_t newIndex = newVertices.size();
+            for (auto p : vertexData.uvPoints) {
+                if (uvPointData(p).vertex.index == i) {
+                    uvPointData(p).vertex.index = uint32_t(newIndex);
+                }
+            }
+            for (auto e : vertexData.edges) {
+                for (auto& v : edgeData(e).vertices) {
+                    if (v.index == i) {
+                        v.index = uint32_t(newIndex);
+                    }
+                }
+            }
+
+            newVertices.push_back(vertexData);
+        }
+        _vertices = std::move(newVertices);
+    }
+
+    {
+        std::vector<UVPointData> newUVPoints;
+        for (size_t i = 0; i < _uvPoints.size(); ++i) {
+            auto& uvPointData = _uvPoints[i];
+            if (uvPointData.isDeleted) {
+                continue;
+            }
+            size_t newIndex = newUVPoints.size();
+            for (auto& p : vertexData(uvPointData.vertex).uvPoints) {
+                if (p.index == i) {
+                    p.index = uint32_t(newIndex);
+                }
+            }
+            for (auto f : uvPointData.faces) {
+                for (auto& p : faceData(f).uvPoints) {
+                    if (p.index == i) {
+                        p.index = uint32_t(newIndex);
+                    }
+                }
+            }
+        }
+        _uvPoints = std::move(newUVPoints);
+    }
+
+    {
+        std::vector<EdgeData> newEdges;
+        for (size_t i = 0; i < _edges.size(); ++i) {
+            auto& edgeData = _edges[i];
+            if (edgeData.isDeleted) {
+                continue;
+            }
+            size_t newIndex = newEdges.size();
+            for (auto& v : edgeData.vertices) {
+                for (auto& e : vertexData(v).edges) {
+                    if (e.index == i) {
+                        e.index = uint32_t(newIndex);
+                    }
+                }
+            }
+            for (auto& f : edgeData.faces) {
+                for (auto& e : faceData(f).edges) {
+                    if (e.index == i) {
+                        e.index = uint32_t(newIndex);
+                    }
+                }
+            }
+        }
+        _edges = std::move(newEdges);
+    }
+
+    {
+        std::vector<FaceData> newFaces;
+        for (size_t i = 0; i < _faces.size(); ++i) {
+            auto& faceData = _faces[i];
+            if (faceData.isDeleted) {
+                continue;
+            }
+            size_t newIndex = newFaces.size();
+            for (auto& uv : faceData.uvPoints) {
+                for (auto& f : uvPointData(uv).faces) {
+                    if (f.index == i) {
+                        f.index = uint32_t(newIndex);
+                    }
+                }
+            }
+            for (auto& e : faceData.edges) {
+                for (auto& f : edgeData(e).faces) {
+                    if (f.index == i) {
+                        f.index = uint32_t(newIndex);
+                    }
+                }
+            }
+        }
+        _faces = std::move(newFaces);
+    }
+}
+
 } // namespace NewMesh
 } // namespace Lattice

@@ -95,8 +95,6 @@ class Mesh {
     std::vector<FaceData> _faces;
 
 public:
-    void collectGarbage();
-
     VertexHandle addVertex();
     UVPointHandle addUVPoint(VertexHandle v);
     EdgeHandle addEdge(VertexHandle v0, VertexHandle v1);
@@ -105,6 +103,8 @@ public:
     void removeVertex(VertexHandle v);
     void removeEdge(EdgeHandle e);
     void removeFace(FaceHandle f);
+
+    void collectGarbage();
 
     auto& uvPoints(VertexHandle v) const { return  vertexData(v).uvPoints; }
     auto& edges(VertexHandle v) const { return vertexData(v).edges; }
