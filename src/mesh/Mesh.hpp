@@ -98,16 +98,16 @@ public:
     void collectGarbage();
 
     auto vertices() const {
-        return ranges::view::iota(0, _vertices.size()) | ranges::view::transform([](int index) { return VertexHandle(index); });
+        return ranges::view::iota(0, _vertices.size()) | ranges::view::transform([](int index) { return VertexHandle(uint32_t(index)); });
     }
     auto uvPoints() const {
-        return ranges::view::iota(0, _uvPoints.size()) | ranges::view::transform([](int index) { return UVPointHandle(index); });
+        return ranges::view::iota(0, _uvPoints.size()) | ranges::view::transform([](int index) { return UVPointHandle(uint32_t(index)); });
     }
     auto edges() const {
-        return ranges::view::iota(0, _edges.size()) | ranges::view::transform([](int index) { return EdgeHandle(index); });
+        return ranges::view::iota(0, _edges.size()) | ranges::view::transform([](int index) { return EdgeHandle(uint32_t(index)); });
     }
     auto faces() const {
-        return ranges::view::iota(0, _faces.size()) | ranges::view::transform([](int index) { return FaceHandle(index); });
+        return ranges::view::iota(0, _faces.size()) | ranges::view::transform([](int index) { return FaceHandle(uint32_t(index)); });
     }
 
     auto& uvPoints(VertexHandle v) const { return  vertexData(v).uvPoints; }
