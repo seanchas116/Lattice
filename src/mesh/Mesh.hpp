@@ -97,6 +97,19 @@ public:
 
     void collectGarbage();
 
+    auto vertices() const {
+        return ranges::view::iota(0, _vertices.size()) | ranges::view::transform([](int index) { return VertexHandle(index); });
+    }
+    auto uvPoints() const {
+        return ranges::view::iota(0, _uvPoints.size()) | ranges::view::transform([](int index) { return UVPointHandle(index); });
+    }
+    auto edges() const {
+        return ranges::view::iota(0, _edges.size()) | ranges::view::transform([](int index) { return EdgeHandle(index); });
+    }
+    auto faces() const {
+        return ranges::view::iota(0, _faces.size()) | ranges::view::transform([](int index) { return FaceHandle(index); });
+    }
+
     auto& uvPoints(VertexHandle v) const { return  vertexData(v).uvPoints; }
     auto& edges(VertexHandle v) const { return vertexData(v).edges; }
 
