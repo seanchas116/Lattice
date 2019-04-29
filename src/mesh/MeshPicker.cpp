@@ -6,7 +6,7 @@
 using namespace glm;
 
 namespace Lattice {
-namespace Editor {
+namespace Mesh {
 
 namespace {
 
@@ -45,14 +45,14 @@ bool mapLineToViewport(const mat4& P, vec2 viewportSize, float zNear, vec4 p0_ca
 
 }
 
-MeshPicker::MeshPicker(const SP<Mesh::Mesh> &mesh) : _mesh(mesh) {
+MeshPicker::MeshPicker(const SP<Mesh> &mesh) : _mesh(mesh) {
 }
 
-Opt<std::pair<SP<Mesh::Face>, double> > MeshPicker::pickFace(const dmat4 &modelToWorld, const SP<Camera> &camera, dvec2 viewportPos) const {
+Opt<std::pair<SP<Face>, double> > MeshPicker::pickFace(const dmat4 &modelToWorld, const SP<Camera> &camera, dvec2 viewportPos) const {
     Ray<float> ray = inverse(modelToWorld) * camera->worldMouseRay(viewportPos);
     // TODO: Use Bounding Volume Hierarchy to do faster
     //ScopedTimer timer("MeshPicker::pickFace");
-    std::map<double, SP<Mesh::Face>> intersectings;
+    std::map<double, SP<Face>> intersectings;
     for (auto& [_, f] : _mesh->faces()) {
         auto v0 = f->vertices()[0]->position();
         for (uint32_t i = 2; i < uint32_t(f->vertices().size()); ++i) {
@@ -74,8 +74,8 @@ Opt<std::pair<SP<Mesh::Face>, double> > MeshPicker::pickFace(const dmat4 &modelT
     return {{nearest->second, nearest->first}};
 }
 
-Opt<std::pair<SP<Mesh::Vertex>, double> > MeshPicker::pickVertex(const dmat4 &modelToWorld, const SP<Camera> &camera, dvec2 viewportPos, double distance) const {
-    std::map<double, SP<Mesh::Vertex>> intersectings;
+Opt<std::pair<SP<Vertex>, double> > MeshPicker::pickVertex(const dmat4 &modelToWorld, const SP<Camera> &camera, dvec2 viewportPos, double distance) const {
+    std::map<double, SP<Vertex>> intersectings;
 
     for (auto& v : _mesh->vertices()) {
         auto [viewportVertexPos, isInViewport] = camera->mapWorldToViewport((modelToWorld * vec4(v->position(), 1)).xyz);
@@ -93,8 +93,8 @@ Opt<std::pair<SP<Mesh::Vertex>, double> > MeshPicker::pickVertex(const dmat4 &mo
     return {{nearest->second, nearest->first}};
 }
 
-Opt<std::pair<SP<Mesh::Edge>, double> > MeshPicker::pickEdge(const dmat4 &modelToWorld, const SP<Camera> &camera, dvec2 viewportPos, double distance) const {
-    std::map<double, SP<Mesh::Edge>> intersectings;
+Opt<std::pair<SP<Edge>, double> > MeshPicker::pickEdge(const dmat4 &modelToWorld, const SP<Camera> &camera, dvec2 viewportPos, double distance) const {
+    std::map<double, SP<Edge>> intersectings;
 
     for (auto& [_, e] : _mesh->edges()) {
         vec4 p0_modelSpace = vec4(e->vertices()[0]->position(), 1);
@@ -127,5 +127,5 @@ Opt<std::pair<SP<Mesh::Edge>, double> > MeshPicker::pickEdge(const dmat4 &modelT
     return {{nearest->second, nearest->first}};
 }
 
-} // namespace Viewport
+} // namespace Mesh
 } // namespace Lattice

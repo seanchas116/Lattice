@@ -4,19 +4,19 @@
 #include "../support/Camera.hpp"
 
 namespace Lattice {
-namespace Editor {
+namespace Mesh {
 
 class MeshPicker {
 public:
-    MeshPicker(const SP<Mesh::Mesh>& mesh);
+    MeshPicker(const SP<Mesh>& mesh);
 
-    Opt<std::pair<SP<Mesh::Face>, double>> pickFace(const glm::dmat4 &modelToWorld, const SP<Camera>& camera, glm::dvec2 viewportPos) const;
-    Opt<std::pair<SP<Mesh::Vertex>, double>> pickVertex(const glm::dmat4 &modelToWorld, const SP<Camera> &camera, glm::dvec2 viewportPos, double distance) const;
-    Opt<std::pair<SP<Mesh::Edge>, double>> pickEdge(const glm::dmat4 &modelToWorld, const SP<Camera> &camera, glm::dvec2 viewportPos, double distance) const;
+    Opt<std::pair<SP<Face>, double>> pickFace(const glm::dmat4 &modelToWorld, const SP<Camera>& camera, glm::dvec2 viewportPos) const;
+    Opt<std::pair<SP<Vertex>, double>> pickVertex(const glm::dmat4 &modelToWorld, const SP<Camera> &camera, glm::dvec2 viewportPos, double distance) const;
+    Opt<std::pair<SP<Edge>, double>> pickEdge(const glm::dmat4 &modelToWorld, const SP<Camera> &camera, glm::dvec2 viewportPos, double distance) const;
 
 private:
-    SP<Mesh::Mesh> _mesh;
+    SP<Mesh> _mesh;
 };
 
-} // namespace Viewport
+} // namespace Mesh
 } // namespace Lattice
