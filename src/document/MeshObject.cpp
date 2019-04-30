@@ -1,4 +1,5 @@
 #include "MeshObject.hpp"
+#include "../mesh/Mesh.hpp"
 #include "../oldmesh/Mesh.hpp"
 #include "../support/Debug.hpp"
 #include <nlohmann/json.hpp>
@@ -9,15 +10,16 @@ using namespace glm;
 namespace Lattice {
 namespace Document {
 
-MeshObject::MeshObject() : _oldMesh(makeShared<OldMesh::Mesh>()) {
+MeshObject::MeshObject() : _mesh(makeShared<Mesh::Mesh>()),
+                           _oldMesh(makeShared<OldMesh::Mesh>()) {
     connect(_oldMesh.get(), &OldMesh::Mesh::changed, this, &MeshObject::handleOldMeshChange);
     _oldMesh->setChangeHandler([this](const auto& change) {
         addChange(change);
     });
 }
 
-void MeshObject::setMesh(Mesh::Mesh &&mesh) {
-    _mesh = std::move(mesh);
+void MeshObject::setMesh(const SP<Mesh::Mesh> mesh) {
+    _mesh = mesh;
     emit meshChanged(_mesh);
 }
 

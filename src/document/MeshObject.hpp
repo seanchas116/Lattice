@@ -1,10 +1,12 @@
 #pragma once
 #include "Object.hpp"
-#include "../mesh/Mesh.hpp"
 #include <glm/glm.hpp>
 
 namespace Lattice {
 
+namespace Mesh {
+class Mesh;
+}
 namespace OldMesh {
 class Mesh;
 }
@@ -16,7 +18,7 @@ class MeshObject final : public Object {
 public:
     MeshObject();
 
-    void setMesh(Mesh::Mesh&& mesh);
+    void setMesh(const SP<Mesh::Mesh> mesh);
     auto& mesh() const { return _mesh; }
 
     auto& oldMesh() const { return _oldMesh; }
@@ -26,13 +28,13 @@ public:
     void fromJSON(const nlohmann::json& json) override;
 
 signals:
-    void meshChanged(const Mesh::Mesh& mesh);
+    void meshChanged(const SP<Mesh::Mesh>& mesh);
     void oldMeshChangedInLastTick();
 
 private:
     void handleOldMeshChange();
 
-    Mesh::Mesh _mesh;
+    SP<Mesh::Mesh> _mesh;
     SP<OldMesh::Mesh> _oldMesh;
     bool _oldMeshChangedInTick = false;
 };
