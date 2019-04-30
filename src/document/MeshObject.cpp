@@ -9,9 +9,9 @@ using namespace glm;
 namespace Lattice {
 namespace Document {
 
-MeshObject::MeshObject() : _mesh(makeShared<OldMesh::Mesh>()) {
-    connect(_mesh.get(), &OldMesh::Mesh::changed, this, &MeshObject::handleMeshChange);
-    _mesh->setChangeHandler([this](const auto& change) {
+MeshObject::MeshObject() : _oldMesh(makeShared<OldMesh::Mesh>()) {
+    connect(_oldMesh.get(), &OldMesh::Mesh::changed, this, &MeshObject::handleMeshChange);
+    _oldMesh->setChangeHandler([this](const auto& change) {
         addChange(change);
     });
 }
@@ -19,7 +19,7 @@ MeshObject::MeshObject() : _mesh(makeShared<OldMesh::Mesh>()) {
 SP<Object> MeshObject::clone() const {
     auto cloned = makeShared<MeshObject>();
     // FIXME: object name is not copied
-    cloned->_mesh = _mesh->clone();
+    cloned->_oldMesh = _oldMesh->clone();
     return cloned;
 }
 

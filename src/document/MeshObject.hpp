@@ -15,7 +15,7 @@ class MeshObject final : public Object {
 public:
     MeshObject();
 
-    const SP<OldMesh::Mesh>& oldMesh() const { return _mesh; }
+    auto& oldMesh() const { return _oldMesh; }
 
     SP<Object> clone() const override;
     void toJSON(nlohmann::json& json) const override;
@@ -27,7 +27,7 @@ signals:
 private:
     void handleMeshChange();
 
-    SP<OldMesh::Mesh> _mesh;
+    SP<OldMesh::Mesh> _oldMesh;
     bool _meshChangedInTick = false;
 };
 
