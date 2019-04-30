@@ -30,6 +30,16 @@ public:
     QImage roughnessImage() const { return _roughnessImage; }
     void setRoughnessImage(const QImage &roughnessImage) { _roughnessImage = roughnessImage; }
 
+    bool operator==(const Material& other) const {
+        return _baseColor == other._baseColor
+            && _baseColorImage == other._baseColorImage
+            && _metallic == other._metallic
+            && _metallicImage == other._metallicImage
+            && _roughness == other._roughness
+            && _roughnessImage == other._roughnessImage;
+    }
+    bool operator!=(const Material& other) { return !operator==(other); }
+
 private:
     glm::dvec3 _baseColor {1, 0, 0};
     QImage _baseColorImage;
