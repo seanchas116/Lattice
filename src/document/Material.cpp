@@ -3,7 +3,7 @@
 namespace Lattice {
 namespace Document {
 
-Material::Material(QObject *parent) : QObject(parent) {
+Material::Material() {
 }
 
 } // namespace Document
