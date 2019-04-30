@@ -139,10 +139,10 @@ public:
     glm::vec2 uv(UVPointHandle uv) const { return uvPointData(uv).position; }
     void setUV(UVPointHandle uv, glm::vec2 pos) { uvPointData(uv).position = pos; }
 
-    bool isSmooth(EdgeHandle edge) { return edgeData(edge).isSmooth; }
+    bool isSmooth(EdgeHandle edge) const { return edgeData(edge).isSmooth; }
     void setIsSmooth(EdgeHandle edge, bool smooth) { edgeData(edge).isSmooth = smooth; }
 
-    uint32_t material(FaceHandle face) { return faceData(face).material; }
+    uint32_t material(FaceHandle face) const { return faceData(face).material; }
     void setMaterial(FaceHandle face, uint32_t material) { faceData(face).material = material; }
 };
 
