@@ -3,7 +3,7 @@
 
 namespace Lattice {
 
-namespace OldMesh {
+namespace Mesh {
 class Mesh;
 }
 
@@ -39,11 +39,11 @@ signals:
     void onContextMenu(const Viewport::ContextMenuEvent& event);
 
 private:
-    SP<OldMesh::Mesh> createMesh();
+    SP<Mesh::Mesh> createMesh();
 
     int _axis;
     glm::dvec3 _targetPosition {0};
-    SP<OldMesh::Mesh> _handleMesh;
+    SP<Mesh::Mesh> _handleMesh;
     SP<GL::VAO> _handleVAO;
     glm::dvec3 _initialTargetPosition {0};
     bool _dragged = false;
