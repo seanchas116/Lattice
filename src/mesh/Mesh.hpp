@@ -40,6 +40,7 @@ struct FaceHandle : public Handle<FaceHandle> {
 
 struct VertexData {
     bool isDeleted = false;
+    bool isSelected = false;
     glm::vec3 position = glm::vec3(0);
     std::vector<UVPointHandle> uvPoints;
     std::vector<EdgeHandle> edges;
@@ -132,6 +133,9 @@ public:
 
     auto& uvPoints(FaceHandle f) const { return faceData(f).uvPoints; }
     auto& edges(FaceHandle f) const { return faceData(f).edges; }
+
+    bool isSelected(VertexHandle v) const { return vertexData(v).isSelected; }
+    void setIsSelected(VertexHandle v, bool selected) { vertexData(v).isSelected = selected; }
 
     glm::vec3 position(VertexHandle v) const { return vertexData(v).position; }
     void setPosition(VertexHandle v, glm::vec3 pos) { vertexData(v).position = pos; }
