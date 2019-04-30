@@ -45,52 +45,47 @@ SP<GL::VAO> MeshVAOGenerator::generateEdgeVAO() const {
 }
 
 std::unordered_map<uint32_t, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() const {
-    // TODO
-    return {};
+    std::vector<Draw::Vertex> vertexAttributes;
+    std::unordered_map<uint32_t, std::vector<GL::IndexBuffer::Triangle>> trianglesMap;
 
-    /*
-    _mesh->updateNormals();
+    for (auto face : _mesh->faces()) {
 
-    // TODO: build more efficient VBO
-    std::unordered_map<SP<OldMesh::Material>, SP<GL::VAO>> faceVAOs;
-    auto faceVBO = makeShared<GL::VertexBuffer<Draw::Vertex>>();
-    std::vector<Draw::Vertex> faceAttributes;
+        auto addPoint = [&](Mesh::FaceHandle face, uint32_t indexInFace) {
+            auto p = _mesh->uvPoints(face)[indexInFace];
+            Draw::Vertex attrib;
+            attrib.position = _mesh->position(_mesh->vertex(p));
+            attrib.texCoord = _mesh->uv(p);
+            // TODO: set normal
+            //attrib.normal = face->vertexNormals()[indexInFace];
 
-    auto addPoint = [&](const SP<OldMesh::Face>& face, int indexInFace) {
-        auto& p = face->uvPoints()[indexInFace];
-        Draw::Vertex attrib;
-        attrib.position = p->vertex()->position();
-        attrib.texCoord = p->position();
-        attrib.normal = face->vertexNormals()[indexInFace];
+            auto index = uint32_t(vertexAttributes.size());
+            vertexAttributes.push_back(attrib);
+            return index;
+        };
 
-        auto index = uint32_t(faceAttributes.size());
-        faceAttributes.push_back(attrib);
-        return index;
-    };
+        auto& triangles = trianglesMap[_mesh->material(face)];
 
-    std::vector<GL::IndexBuffer::Triangle> pickTriangles;
-
-    for (auto& material : _mesh->materials()) {
-        std::vector<GL::IndexBuffer::Triangle> triangles;
-        for (auto& facePtr : material->faces()) {
-            auto face = facePtr->sharedFromThis();
-            auto i0 = addPoint(face, 0);
-            for (uint32_t i = 2; i < uint32_t(face->vertices().size()); ++i) {
-                auto i1 = addPoint(face, i - 1);
-                auto i2 = addPoint(face, i);
-                triangles.push_back({i0, i1, i2});
-                pickTriangles.push_back({i0, i1, i2});
-            }
+        auto i0 = addPoint(face, 0);
+        auto vertexCount = _mesh->uvPoints(face).size();
+        for (uint32_t i = 2; i < vertexCount; ++i) {
+            auto i1 = addPoint(face, i - 1);
+            auto i2 = addPoint(face, i);
+            triangles.push_back({i0, i1, i2});
         }
+    }
+
+    auto vbo = makeShared<GL::VertexBuffer<Draw::Vertex>>();
+    vbo->setVertices(vertexAttributes);
+
+    std::unordered_map<uint32_t, SP<GL::VAO>> vaos;
+    vaos.reserve(trianglesMap.size());
+    for (auto [material, triangles] : trianglesMap) {
         auto indexBuffer = makeShared<GL::IndexBuffer>();
         indexBuffer->setTriangles(triangles);
-        auto vao = makeShared<GL::VAO>(faceVBO, indexBuffer);
-        faceVAOs.insert({material, vao});
+        auto vao = makeShared<GL::VAO>(vbo, indexBuffer);
+        vaos.insert({material, vao});
     }
-    faceVBO->setVertices(faceAttributes);
-
-    return faceVAOs;
-    */
+    return vaos;
 }
 
 } // namespace Viewport
