@@ -16,6 +16,11 @@ MeshObject::MeshObject() : _oldMesh(makeShared<OldMesh::Mesh>()) {
     });
 }
 
+void MeshObject::setMesh(Mesh::Mesh &&mesh) {
+    _mesh = std::move(mesh);
+    emit meshChanged(_mesh);
+}
+
 SP<Object> MeshObject::clone() const {
     auto cloned = makeShared<MeshObject>();
     // FIXME: object name is not copied
