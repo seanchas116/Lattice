@@ -23,6 +23,14 @@ void MeshObject::setMesh(const SP<Mesh::Mesh> mesh) {
     emit meshChanged(_mesh);
 }
 
+void MeshObject::setMaterials(const std::vector<Material> &materials) {
+    if (_materials == materials) {
+        return;
+    }
+    _materials = materials;
+    emit materialsChanged(_materials);
+}
+
 SP<Object> MeshObject::clone() const {
     auto cloned = makeShared<MeshObject>();
     // FIXME: object name is not copied
