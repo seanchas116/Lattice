@@ -172,7 +172,7 @@ void MeshPropertyView::handlePositionValueChange(int index, double value) {
     }
 
     _appState->document()->history()->beginChange(tr("Set Vertex Position"));
-    object->mesh()->setPosition(newPositions);
+    object->oldMesh()->setPosition(newPositions);
 }
 
 void MeshPropertyView::handleEdgeSmoothChange(bool smooth) {
@@ -192,7 +192,7 @@ void MeshPropertyView::handleEdgeSmoothChange(bool smooth) {
     for (auto& edge : edges) {
         values[edge] = smooth;
     }
-    object->mesh()->setSmooth(values);
+    object->oldMesh()->setSmooth(values);
 }
 
 } // namespace UI

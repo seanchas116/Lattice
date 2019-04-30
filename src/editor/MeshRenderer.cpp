@@ -23,7 +23,7 @@ MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Documen
     _vertexVAO(makeShared<GL::VAO>())
 {
     updateVAOs();
-    connect(object->mesh().get(), &OldMesh::Mesh::changed, this, [this] {
+    connect(object->oldMesh().get(), &OldMesh::Mesh::changed, this, [this] {
         _isVAOsDirty = true;
         emit updated();
     });
@@ -106,7 +106,7 @@ void MeshRenderer::updateVAOs() {
         return;
     }
 
-    OldMeshVAOGenerator generator(_object->mesh());
+    OldMeshVAOGenerator generator(_object->oldMesh());
     _vertexVAO = generator.generateVertexVAO();
     _edgeVAO = generator.generateEdgeVAO();
     _faceVAOs= generator.generateFaceVAOs();

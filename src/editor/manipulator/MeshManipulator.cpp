@@ -14,7 +14,7 @@ MeshManipulator::MeshManipulator(const SP<State::AppState> &appState, const SP<D
     _appState(appState),
     _object(object)
 {
-    connect(object->mesh().get(), &OldMesh::Mesh::changed, this, &MeshManipulator::updatePosition);
+    connect(object->oldMesh().get(), &OldMesh::Mesh::changed, this, &MeshManipulator::updatePosition);
     connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshManipulator::updatePosition);
     updatePosition();
 
@@ -38,7 +38,7 @@ void MeshManipulator::handleOnDragBegin(ValueType type, dvec3 values) {
 }
 
 void MeshManipulator::handleOnDragMove(ValueType type, dvec3 values) {
-    auto& mesh = _object->mesh();
+    auto& mesh = _object->oldMesh();
     auto worldToObject = _object->location().matrixToModel();
 
     switch (type) {

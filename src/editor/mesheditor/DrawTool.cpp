@@ -24,7 +24,7 @@ Tool::HitTestExclusion DrawTool::hitTestExclusion() const {
 }
 
 void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
-    auto mesh = object()->mesh();
+    auto mesh = object()->oldMesh();
     auto modelMatrix = object()->location().matrixToWorld();
 
     if (_drawnUVPoints.empty()) {
@@ -116,7 +116,7 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
 void DrawTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target);
 
-    auto mesh = object()->mesh();
+    auto mesh = object()->oldMesh();
     auto modelMatrix = object()->location().matrixToWorld();
 
     if (!_previewUVPoint) {
@@ -153,7 +153,7 @@ void DrawTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport:
 void DrawTool::keyPressTool(QKeyEvent *event) {
     if (event->key() == Qt::Key_Escape || event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
         if (_previewUVPoint) {
-            object()->mesh()->removeVertex((*_previewUVPoint)->vertex());
+            object()->oldMesh()->removeVertex((*_previewUVPoint)->vertex());
         }
         _drawnUVPoints.clear();
         _previewUVPoint = std::nullopt;

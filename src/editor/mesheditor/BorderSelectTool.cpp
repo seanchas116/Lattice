@@ -20,8 +20,8 @@ void BorderSelectTool::mousePressTool(const Tool::EventTarget &target, const Vie
     _initViewportPos = _currentViewportPos = event.viewportPos;
 
     _vertices.clear();
-    _vertices.reserve(object()->mesh()->vertices().size());
-    for (auto& vertex : object()->mesh()->vertices()) {
+    _vertices.reserve(object()->oldMesh()->vertices().size());
+    for (auto& vertex : object()->oldMesh()->vertices()) {
         // TODO: optimize
         auto [screenPos, isInScreen] = event.camera->mapModelToViewport(object()->location().matrixToWorld(), vertex->position());
         if (!isInScreen) {

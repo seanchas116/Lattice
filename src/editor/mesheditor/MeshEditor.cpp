@@ -117,8 +117,8 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     initializeOpenGLFunctions();
     updateWholeVAOs();
 
-    connect(object->mesh().get(), &OldMesh::Mesh::topologyChanged, this, &MeshEditor::handleMeshTopologyChange);
-    connect(object->mesh().get(), &OldMesh::Mesh::changed, this, &MeshEditor::handleMeshChange);
+    connect(object->oldMesh().get(), &OldMesh::Mesh::topologyChanged, this, &MeshEditor::handleMeshTopologyChange);
+    connect(object->oldMesh().get(), &OldMesh::Mesh::changed, this, &MeshEditor::handleMeshChange);
     connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::handleMeshChange);
 
     connect(appState.get(), &State::AppState::toolChanged, this, &MeshEditor::handleToolChange);
@@ -307,7 +307,7 @@ void MeshEditor::updateVAOTopology() {
     _isVAOTopologyDirty = false;
     _isVAOAttributesDirty = true;
 
-    auto& mesh = _object->mesh();
+    auto& mesh = _object->oldMesh();
 
     auto hitTestExclusion = _tool->hitTestExclusion();
 

@@ -15,7 +15,7 @@ class MeshObject final : public Object {
 public:
     MeshObject();
 
-    const SP<OldMesh::Mesh>& mesh() const { return _mesh; }
+    const SP<OldMesh::Mesh>& oldMesh() const { return _mesh; }
 
     SP<Object> clone() const override;
     void toJSON(nlohmann::json& json) const override;

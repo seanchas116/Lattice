@@ -33,7 +33,7 @@ void AppState::addPlane() {
     _document->history()->beginChange(tr("Add Plane"));
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Plane").toStdString());
-    object->mesh()->addPlane(dvec3(0), dvec2(2), 1, object->mesh()->addMaterial());
+    object->oldMesh()->addPlane(dvec3(0), dvec2(2), 1, object->oldMesh()->addMaterial());
     _document->insertObjectToCurrentPosition(object);
 }
 
@@ -41,7 +41,7 @@ void AppState::addCube() {
     _document->history()->beginChange(tr("Add Cube"));
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Cube").toStdString());
-    object->mesh()->addCube(glm::vec3(-1), glm::vec3(1), object->mesh()->addMaterial());
+    object->oldMesh()->addCube(glm::vec3(-1), glm::vec3(1), object->oldMesh()->addMaterial());
     _document->insertObjectToCurrentPosition(object);
 }
 
@@ -49,7 +49,7 @@ void AppState::addCircle() {
     _document->history()->beginChange(tr("Add Circle"));
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Circle").toStdString());
-    object->mesh()->addCircle(glm::vec3(0), 1.0, 16, OldMesh::Mesh::CircleFill::Ngon, 1, object->mesh()->addMaterial());
+    object->oldMesh()->addCircle(glm::vec3(0), 1.0, 16, OldMesh::Mesh::CircleFill::Ngon, 1, object->oldMesh()->addMaterial());
     _document->insertObjectToCurrentPosition(object);
 }
 
@@ -57,7 +57,7 @@ void AppState::addSphere() {
     _document->history()->beginChange(tr("Add Sphere"));
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Sphere").toStdString());
-    object->mesh()->addSphere(glm::vec3(0), 1.0, 16, 8, 1, object->mesh()->addMaterial());
+    object->oldMesh()->addSphere(glm::vec3(0), 1.0, 16, 8, 1, object->oldMesh()->addMaterial());
     _document->insertObjectToCurrentPosition(object);
 }
 
@@ -65,7 +65,7 @@ void AppState::addCone() {
     _document->history()->beginChange(tr("Add Cone"));
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Cone").toStdString());
-    object->mesh()->addCone(glm::vec3(0), 1.0, 1.0, 16, 1, object->mesh()->addMaterial());
+    object->oldMesh()->addCone(glm::vec3(0), 1.0, 1.0, 16, 1, object->oldMesh()->addMaterial());
     _document->insertObjectToCurrentPosition(object);
 }
 
@@ -73,7 +73,7 @@ void AppState::addCylinder() {
     _document->history()->beginChange(tr("Add Cylinder"));
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Cylinder").toStdString());
-    object->mesh()->addCylinder(glm::vec3(0), 1.0, 1.0, 16, 1, object->mesh()->addMaterial());
+    object->oldMesh()->addCylinder(glm::vec3(0), 1.0, 1.0, 16, 1, object->oldMesh()->addMaterial());
     _document->insertObjectToCurrentPosition(object);
 }
 
@@ -111,7 +111,7 @@ void AppState::deleteVertices() {
 
     auto vertices = _document->meshSelection().vertices;
     for (auto& v : vertices) {
-        editedObject->mesh()->removeVertex(v);
+        editedObject->oldMesh()->removeVertex(v);
     }
 
     _document->setMeshSelection({});
@@ -128,7 +128,7 @@ void AppState::deleteEdges() {
 
     auto edges = _document->meshSelection().edges();
     for (auto& e : edges) {
-        editedObject->mesh()->removeEdge(e);
+        editedObject->oldMesh()->removeEdge(e);
     }
 }
 
@@ -143,7 +143,7 @@ void AppState::deleteFaces() {
 
     auto faces = _document->meshSelection().faces();
     for (auto& f : faces) {
-        editedObject->mesh()->removeFace(f);
+        editedObject->oldMesh()->removeFace(f);
     }
 }
 
@@ -152,7 +152,7 @@ void AppState::selectAll() {
     if (maybeEditedObject) {
         auto editedObject = *maybeEditedObject;
         OldMesh::MeshFragment selection;
-        selection.vertices = editedObject->mesh()->vertices();
+        selection.vertices = editedObject->oldMesh()->vertices();
         _document->setMeshSelection(selection);
     } else {
         std::unordered_set<SP<Document::Object>> allObjects;
