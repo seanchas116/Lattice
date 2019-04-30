@@ -1,13 +1,11 @@
 #pragma once
-#include <QObject>
 #include <QImage>
 #include <glm/glm.hpp>
 
 namespace Lattice {
 namespace Document {
 
-class Material : public QObject {
-    Q_OBJECT
+class Material {
 public:
     Material();
 
