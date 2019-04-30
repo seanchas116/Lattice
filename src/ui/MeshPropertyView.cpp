@@ -78,7 +78,7 @@ void MeshPropertyView::setObject(const Opt<SP<Document::MeshObject>> &object) {
         return;
     }
 
-    _connection = connect(object->get(), &Document::MeshObject::meshChangedInLastTick, this, &MeshPropertyView::setViewValues);
+    _connection = connect(object->get(), &Document::MeshObject::oldMeshChangedInLastTick, this, &MeshPropertyView::setViewValues);
     setViewValues();
 }
 

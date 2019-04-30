@@ -22,13 +22,13 @@ public:
     void fromJSON(const nlohmann::json& json) override;
 
 signals:
-    void meshChangedInLastTick();
+    void oldMeshChangedInLastTick();
 
 private:
-    void handleMeshChange();
+    void handleOldMeshChange();
 
     SP<OldMesh::Mesh> _oldMesh;
-    bool _meshChangedInTick = false;
+    bool _oldMeshChangedInTick = false;
 };
 
 }

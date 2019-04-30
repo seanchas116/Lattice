@@ -10,7 +10,7 @@ namespace Lattice {
 namespace Document {
 
 MeshObject::MeshObject() : _oldMesh(makeShared<OldMesh::Mesh>()) {
-    connect(_oldMesh.get(), &OldMesh::Mesh::changed, this, &MeshObject::handleMeshChange);
+    connect(_oldMesh.get(), &OldMesh::Mesh::changed, this, &MeshObject::handleOldMeshChange);
     _oldMesh->setChangeHandler([this](const auto& change) {
         addChange(change);
     });
@@ -37,12 +37,12 @@ void MeshObject::fromJSON(const nlohmann::json &json) {
     //_shape->fomJSON(json["shape"]);
 }
 
-void MeshObject::handleMeshChange() {
-    if (!_meshChangedInTick) {
-        _meshChangedInTick = true;
+void MeshObject::handleOldMeshChange() {
+    if (!_oldMeshChangedInTick) {
+        _oldMeshChangedInTick = true;
         QTimer::singleShot(0, this, [this] {
-            _meshChangedInTick = false;
-            emit meshChangedInLastTick();
+            _oldMeshChangedInTick = false;
+            emit oldMeshChangedInLastTick();
         });
     }
 }
