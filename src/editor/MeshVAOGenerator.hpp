@@ -17,14 +17,14 @@ namespace Editor {
 
 class MeshVAOGenerator {
 public:
-    MeshVAOGenerator(const SP<Mesh::Mesh>& mesh);
+    MeshVAOGenerator(const Mesh::Mesh& mesh);
 
     SP<GL::VAO> generateVertexVAO() const;
     SP<GL::VAO> generateEdgeVAO() const;
     std::unordered_map<uint32_t, SP<GL::VAO>> generateFaceVAOs() const;
 
 private:
-    SP<Mesh::Mesh> _mesh;
+    const Mesh::Mesh& _mesh;
     SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexEdgeVertexBuffer;
 };
 

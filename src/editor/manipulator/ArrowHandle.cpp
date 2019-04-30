@@ -113,12 +113,12 @@ void ArrowHandle::setLength(double length) {
 }
 
 SP<GL::VAO> ArrowHandle::createHandleVAO() {
-    auto mesh = makeShared<Mesh::Mesh>();
+    Mesh::Mesh mesh;
     uint32_t material = 0;
     if (_handleType == HandleType::Translate) {
-        Mesh::AddCone(vec3(0), Constants::translateHandleWidth * 0.5, Constants::translateHandleLength, 8, 0, material).redo(*mesh);
+        Mesh::AddCone(vec3(0), Constants::translateHandleWidth * 0.5, Constants::translateHandleLength, 8, 0, material).redo(mesh);
     } else {
-        Mesh::AddCube(-vec3(Constants::scaleHandleSize*0.5), vec3(Constants::scaleHandleSize*0.5), material).redo(*mesh);
+        Mesh::AddCube(-vec3(Constants::scaleHandleSize*0.5), vec3(Constants::scaleHandleSize*0.5), material).redo(mesh);
     }
     return MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
 }
@@ -133,9 +133,9 @@ SP<GL::VAO> ArrowHandle::createBodyVAO(double length) {
 }
 
 SP<GL::VAO> ArrowHandle::createBodyPickVAO(double length) {
-    auto mesh = makeShared<Mesh::Mesh>();
+    Mesh::Mesh mesh;
     uint32_t material = 0;
-    Mesh::AddCylinder(vec3(Constants::bodyBegin, 0, 0), Constants::hitRadius, length - Constants::bodyBegin + Constants::translateHandleLength, 8, 0, material).redo(*mesh);
+    Mesh::AddCylinder(vec3(Constants::bodyBegin, 0, 0), Constants::hitRadius, length - Constants::bodyBegin + Constants::translateHandleLength, 8, 0, material).redo(mesh);
     return MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
 }
 

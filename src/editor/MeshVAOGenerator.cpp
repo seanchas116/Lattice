@@ -13,14 +13,14 @@ using namespace glm;
 namespace Lattice {
 namespace Editor {
 
-MeshVAOGenerator::MeshVAOGenerator(const SP<Mesh::Mesh> &mesh) :
+MeshVAOGenerator::MeshVAOGenerator(const Mesh::Mesh &mesh) :
     _mesh(mesh),
     _vertexEdgeVertexBuffer(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>())
 {
     std::vector<Draw::PointLineVertex> vertexAttributes;
-    for (auto vertex : mesh->vertices()) {
+    for (auto vertex : mesh.vertices()) {
         Draw::PointLineVertex vertexAttribute = {
-            mesh->position(vertex),
+            mesh.position(vertex),
             glm::vec4(0),
             1,
         };
@@ -35,9 +35,9 @@ SP<GL::VAO> MeshVAOGenerator::generateVertexVAO() const {
 
 SP<GL::VAO> MeshVAOGenerator::generateEdgeVAO() const {
     std::vector<GL::IndexBuffer::Line> lines;
-    for (auto edge : _mesh->edges()) {
-        auto i0 = _mesh->vertices(edge)[0].index;
-        auto i1 = _mesh->vertices(edge)[1].index;
+    for (auto edge : _mesh.edges()) {
+        auto i0 = _mesh.vertices(edge)[0].index;
+        auto i1 = _mesh.vertices(edge)[1].index;
         lines.push_back({i0, i1});
     }
     auto edgeIndexBuffer = makeShared<GL::IndexBuffer>();
@@ -84,14 +84,14 @@ std::unordered_map<uint32_t, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() c
     std::vector<Draw::Vertex> vertexAttributes;
     std::unordered_map<uint32_t, std::vector<GL::IndexBuffer::Triangle>> trianglesMap;
 
-    for (auto face : _mesh->faces()) {
-        auto faceNormal = calculateFaceNormal(*_mesh, face);
+    for (auto face : _mesh.faces()) {
+        auto faceNormal = calculateFaceNormal(_mesh, face);
 
         auto addPoint = [&](Mesh::FaceHandle face, uint32_t indexInFace) {
-            auto p = _mesh->uvPoints(face)[indexInFace];
+            auto p = _mesh.uvPoints(face)[indexInFace];
             Draw::Vertex attrib;
-            attrib.position = _mesh->position(_mesh->vertex(p));
-            attrib.texCoord = _mesh->uv(p);
+            attrib.position = _mesh.position(_mesh.vertex(p));
+            attrib.texCoord = _mesh.uv(p);
             attrib.normal = faceNormal; // TODO: calculate smooth edge normals
 
             auto index = uint32_t(vertexAttributes.size());
@@ -99,10 +99,10 @@ std::unordered_map<uint32_t, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() c
             return index;
         };
 
-        auto& triangles = trianglesMap[_mesh->material(face)];
+        auto& triangles = trianglesMap[_mesh.material(face)];
 
         auto i0 = addPoint(face, 0);
-        auto vertexCount = _mesh->uvPoints(face).size();
+        auto vertexCount = _mesh.uvPoints(face).size();
         for (uint32_t i = 2; i < vertexCount; ++i) {
             auto i1 = addPoint(face, i - 1);
             auto i2 = addPoint(face, i);

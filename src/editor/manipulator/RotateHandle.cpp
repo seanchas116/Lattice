@@ -20,7 +20,7 @@ namespace Manipulator {
 RotateHandle::RotateHandle(int axis) :
     _axis(axis),
     _handleMesh(createMesh()),
-    _handleVAO(MeshVAOGenerator(_handleMesh).generateEdgeVAO())
+    _handleVAO(MeshVAOGenerator(*_handleMesh).generateEdgeVAO())
 {
     initializeOpenGLFunctions();
 }
