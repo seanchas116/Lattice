@@ -3,6 +3,7 @@
 #include "../../document/History.hpp"
 #include "../../support/Distance.hpp"
 #include "../../support/Debug.hpp"
+#include "../../mesh/algorithm/CutEdge.hpp"
 
 using namespace glm;
 
@@ -73,30 +74,32 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
         }
 
         auto edge = *target.edge;
-        Ray<double> edgeRay = edge->ray();
+        auto pos0 = mesh.position(mesh.vertices(edge)[0]);
+        auto pos1 = mesh.position(mesh.vertices(edge)[1]);
+        Ray<double> edgeRay(pos0, pos1 - pos0);
         Ray<double> mouseRay = event.camera->modelMouseRay(modelMatrix, event.viewportPos);
         RayRayDistanceSolver distanceSolver(edgeRay, mouseRay);
-        auto vertex = mesh->cutEdge(edge, distanceSolver.t0);
+        auto vertex = Mesh::CutEdge(edge, distanceSolver.t0).redo(mesh);
 
         if (_drawnUVPoints.size() >= 1) {
             auto prevUVPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];
-            mesh->addEdge({prevUVPoint->vertex(), vertex});
+            mesh.addEdge(mesh.vertex(prevUVPoint), vertex, false);
         }
 
-        _drawnUVPoints.push_back(vertex->firstUVPoint());
+        _drawnUVPoints.push_back(mesh.uvPoints(vertex).front());
     } else {
         if (_previewUVPoint) {
             // confirm preview point
 
             auto previewUVPoint = *_previewUVPoint;
             _previewUVPoint = std::nullopt;
-            auto [prevPosInViewport, isInViewport] = event.camera->mapModelToViewport(modelMatrix, previewUVPoint->vertex()->position());
+            auto [prevPosInViewport, isInViewport] = event.camera->mapModelToViewport(modelMatrix, mesh.position(mesh.vertex(previewUVPoint)));
             if (!isInViewport) {
                 return;
             }
             auto pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos.xy, prevPosInViewport.z));
 
-            mesh->setPosition({{previewUVPoint->vertex(), pos}});
+            mesh.setPosition(mesh.vertex(previewUVPoint), pos);
             _drawnUVPoints.push_back(previewUVPoint);
         } else {
             // add new point
@@ -105,20 +108,20 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
                 return;
             }
             auto pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos.xy, centerInViewport.z));
-            _drawnUVPoints.push_back(mesh->addUVPoint(mesh->addVertex(pos), vec2(0)));
+            _drawnUVPoints.push_back(mesh.addUVPoint(mesh.addVertex(pos), vec2(0)));
         }
     }
 
     auto latestPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];
-    auto previewPoint = mesh->addUVPoint(mesh->addVertex(latestPoint->vertex()->position()), vec2(0));
-    mesh->addEdge({latestPoint->vertex(), previewPoint->vertex()});
+    auto previewPoint = mesh.addUVPoint(mesh.addVertex(mesh.position(mesh.vertex(latestPoint))), vec2(0));
+    mesh.addEdge(mesh.vertex(latestPoint), mesh.vertex(previewPoint), false);
     _previewUVPoint = previewPoint;
 }
 
 void DrawTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target);
 
-    auto mesh = object()->oldMesh();
+    auto& mesh = *this->mesh();
     auto modelMatrix = object()->location().matrixToWorld();
 
     if (!_previewUVPoint) {
@@ -130,7 +133,7 @@ void DrawTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::Mo
 
     if (target.vertex) {
         auto snapVertex = *target.vertex;
-        pos = snapVertex->position();
+        pos = mesh.position(snapVertex);
     } else if (target.edge) {
         auto snapEdge = *target.edge;
         Ray<double> edgeRay = snapEdge->ray();
