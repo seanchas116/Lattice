@@ -7,19 +7,19 @@ namespace Viewport {
 class PickableID {
     struct Data {
         struct {
-            int renderableID;
-            int fragmentID;
+            int32_t renderableID;
+            int32_t fragmentID;
         };
         glm::u16vec4 color;
     };
 
 public:
-    int renderableID;
-    int fragmentID;
+    int32_t renderableID;
+    int32_t fragmentID;
 
-    PickableID(int renderableID, int fragmentID = 0) : renderableID(renderableID), fragmentID(fragmentID) {}
+    PickableID(int32_t renderableID, int32_t fragmentID = 0) : renderableID(renderableID), fragmentID(fragmentID) {}
 
-    PickableID withFragmentID(int fragmentID) const {
+    PickableID withFragmentID(int32_t fragmentID) const {
         return PickableID(renderableID, fragmentID);
     }
 
@@ -27,12 +27,12 @@ public:
         Data data;
         data.renderableID = renderableID;
         data.fragmentID = fragmentID;
-        return data.color;
+        return glm::vec4(data.color) / float(0xFFFF);
     }
 
     static PickableID fromIDColor(glm::vec4 color) {
         Data data;
-        data.color = color;
+        data.color = glm::u16vec4(glm::round(color * float(0xFFFF)));
         return PickableID(data.renderableID, data.fragmentID);
     }
 };
