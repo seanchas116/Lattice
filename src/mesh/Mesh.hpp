@@ -146,9 +146,11 @@ public:
     }
 
     auto& vertices(EdgeHandle e) const { return edgeData(e).vertices; }
+    auto faces(EdgeHandle e) const {
+        return edgeData(e).faces | ranges::view::filter([this](auto handle) { return !faceData(handle).isDeleted; });
+    }
 
     auto& uvPoints(FaceHandle f) const { return faceData(f).uvPoints; }
-
     auto vertices(FaceHandle f) const {
         return uvPoints(f) | ranges::view::transform([this] (UVPointHandle uvPoint) {
             return vertex(uvPoint);
