@@ -106,7 +106,7 @@ void MeshRenderer::updateVAOs() {
         return;
     }
 
-    MeshVAOGenerator generator(*_object->mesh());
+    MeshVAOGenerator generator(_object->mesh());
     _vertexVAO = generator.generateVertexVAO();
     _edgeVAO = generator.generateEdgeVAO();
     _faceVAOs = generator.generateFaceVAOs();

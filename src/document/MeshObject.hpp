@@ -18,9 +18,10 @@ class MeshObject final : public Object {
     Q_OBJECT
 public:
     MeshObject();
+    ~MeshObject();
 
-    void setMesh(const SP<Mesh::Mesh>& mesh);
-    auto& mesh() const { return _mesh; }
+    void setMesh(const Mesh::Mesh& mesh);
+    auto& mesh() const { return *_mesh; }
 
     void setMaterials(const std::vector<Material>& materials);
     auto& materials() const { return _materials; }
@@ -32,14 +33,14 @@ public:
     void fromJSON(const nlohmann::json& json) override;
 
 signals:
-    void meshChanged(const SP<Mesh::Mesh>& mesh);
+    void meshChanged(const Mesh::Mesh& mesh);
     void materialsChanged(const std::vector<Material>& materials);
     void oldMeshChangedInLastTick();
 
 private:
     void handleOldMeshChange();
 
-    SP<Mesh::Mesh> _mesh;
+    std::unique_ptr<Mesh::Mesh> _mesh;
     std::vector<Material> _materials;
 
     SP<OldMesh::Mesh> _oldMesh;

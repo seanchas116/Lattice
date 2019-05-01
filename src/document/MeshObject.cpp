@@ -10,7 +10,7 @@ using namespace glm;
 namespace Lattice {
 namespace Document {
 
-MeshObject::MeshObject() : _mesh(makeShared<Mesh::Mesh>()),
+MeshObject::MeshObject() : _mesh(std::make_unique<Mesh::Mesh>()),
                            _materials({Material()}),
                            _oldMesh(makeShared<OldMesh::Mesh>()) {
     connect(_oldMesh.get(), &OldMesh::Mesh::changed, this, &MeshObject::handleOldMeshChange);
@@ -19,9 +19,12 @@ MeshObject::MeshObject() : _mesh(makeShared<Mesh::Mesh>()),
     });
 }
 
-void MeshObject::setMesh(const SP<Mesh::Mesh> &mesh) {
-    _mesh = mesh;
-    emit meshChanged(_mesh);
+MeshObject::~MeshObject() {
+}
+
+void MeshObject::setMesh(const Mesh::Mesh &mesh) {
+    *_mesh = mesh;
+    emit meshChanged(*_mesh);
 }
 
 void MeshObject::setMaterials(const std::vector<Material> &materials) {

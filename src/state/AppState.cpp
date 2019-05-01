@@ -43,9 +43,9 @@ void AppState::addCube() {
     _document->history()->beginChange(tr("Add Cube"));
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Cube").toStdString());
-    auto mesh = makeShared<Mesh::Mesh>();
-    Mesh::AddCube(glm::vec3(-1), glm::vec3(1), 0).redo(*mesh);
-    object->setMesh(mesh);
+    Mesh::Mesh mesh;
+    Mesh::AddCube(glm::vec3(-1), glm::vec3(1), 0).redo(mesh);
+    object->setMesh(std::move(mesh));
     _document->insertObjectToCurrentPosition(object);
 }
 
