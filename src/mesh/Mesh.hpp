@@ -98,6 +98,12 @@ public:
 
     void collectGarbage();
 
+    // TODO: exclude deleted items
+    size_t vertexCount() const { return _vertices.size(); }
+    size_t uvPointCount() const { return _uvPoints.size(); }
+    size_t edgeCount() const { return _edges.size(); }
+    size_t faceCount() const { return _faces.size(); }
+
     auto vertices() const {
         return ranges::view::iota(0U, _vertices.size()) | ranges::view::transform([](uint32_t index) { return VertexHandle(index); });
     }
