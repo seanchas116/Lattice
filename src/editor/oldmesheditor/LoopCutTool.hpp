@@ -3,7 +3,7 @@
 
 namespace Lattice {
 namespace Editor {
-namespace MeshEditor {
+namespace OldMeshEditor {
 
 class LoopCutTool : public Tool {
 public:

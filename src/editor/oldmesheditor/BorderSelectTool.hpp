@@ -1,29 +1,37 @@
 #pragma once
 #include "Tool.hpp"
-#include "BorderSelectTool.hpp"
 #include "../../oldmesh/MeshFragment.hpp"
 
 namespace Lattice {
-namespace Editor {
-namespace MeshEditor {
 
-class MoveTool : public Tool {
+namespace OldMesh {
+class Vertex;
+}
+
+namespace Editor {
+namespace OldMeshEditor {
+
+class BorderSelectTool : public Tool {
 public:
-    MoveTool(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object, const SP<Mesh::Mesh>& mesh);
+    BorderSelectTool(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object, const SP<Mesh::Mesh>& mesh) : Tool(appState, object, mesh) {}
 
     void mousePressTool(const EventTarget &target, const Viewport::MouseEvent &event) override;
     void mouseMoveTool(const EventTarget &target, const Viewport::MouseEvent &event) override;
     void mouseReleaseTool(const EventTarget &target, const Viewport::MouseEvent &event) override;
 
+    void draw2D(QPainter *painter, const QSize &viewportSize) override;
+
 private:
-    SP<BorderSelectTool> _borderSelectTool;
-    OldMesh::MeshFragment _nextSelection;
-    std::unordered_map<SP<OldMesh::Vertex>, glm::dvec3> _initPositions;
-    glm::dvec3 _initObjectPos {0};
+    struct VertexWithScreenPos {
+        SP<OldMesh::Vertex> vertex;
+        glm::dvec2 screenPos;
+    };
+
+    std::vector<VertexWithScreenPos> _vertices;
     glm::dvec2 _initViewportPos {0};
+    glm::dvec2 _currentViewportPos {0};
     bool _dragged {false};
-    bool _dragStarted {false};
-    bool _borderSelectMode {false};
+
 };
 
 } // namespace MeshEditor

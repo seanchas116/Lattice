@@ -40,7 +40,7 @@ namespace Manipulator {
 class MeshManipulator;
 }
 
-namespace MeshEditor {
+namespace OldMeshEditor {
 
 class MeshEditor final : public Viewport::RenderableObject, protected QOpenGLExtraFunctions {
     Q_OBJECT

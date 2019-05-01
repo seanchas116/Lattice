@@ -21,7 +21,7 @@
 
 using namespace glm;
 
-namespace Lattice::Editor::MeshEditor {
+namespace Lattice::Editor::OldMeshEditor {
 
 namespace {
 

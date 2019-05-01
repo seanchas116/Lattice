@@ -2,7 +2,7 @@
 #include "Background.hpp"
 #include "GridFloor.hpp"
 #include "MeshRenderer.hpp"
-#include "./mesheditor/MeshEditor.hpp"
+#include "./oldmesheditor/MeshEditor.hpp"
 #include "./manipulator/ObjectManipulator.hpp"
 #include "./manipulator/MeshManipulator.hpp"
 #include "../state/AppState.hpp"
@@ -45,7 +45,7 @@ void EditorScene::updateRenderables() {
     auto editedObject = _appState->document()->editedObject();
     if (editedObject) {
         if (!_meshEditor || (*_meshEditor)->object() != editedObject) {
-            _meshEditor = makeShared<MeshEditor::MeshEditor>(_appState, *editedObject);
+            _meshEditor = makeShared<OldMeshEditor::MeshEditor>(_appState, *editedObject);
         }
     } else {
         _meshEditor = std::nullopt;

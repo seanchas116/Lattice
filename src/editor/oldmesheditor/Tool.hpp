@@ -10,7 +10,7 @@
 namespace Lattice {
 
 namespace Editor {
-namespace MeshEditor {
+namespace OldMeshEditor {
 
 class Tool : public Viewport::RenderableObject {
     Q_OBJECT

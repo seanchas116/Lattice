@@ -8,7 +8,7 @@ using namespace glm;
 
 namespace Lattice {
 namespace Editor {
-namespace MeshEditor {
+namespace OldMeshEditor {
 
 void BorderSelectTool::mousePressTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target);

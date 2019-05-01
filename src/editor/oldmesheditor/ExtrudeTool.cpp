@@ -7,7 +7,7 @@ using namespace glm;
 
 namespace Lattice {
 namespace Editor {
-namespace MeshEditor {
+namespace OldMeshEditor {
 
 Tool::HitTestExclusion ExtrudeTool::hitTestExclusion() const {
     return {};

@@ -2,7 +2,7 @@
 
 namespace Lattice {
 namespace Editor {
-namespace MeshEditor {
+namespace OldMeshEditor {
 
 std::unordered_set<SP<OldMesh::Vertex> > Tool::EventTarget::vertices() const {
     if (this->vertex) {

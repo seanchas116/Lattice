@@ -6,7 +6,7 @@ using namespace glm;
 
 namespace Lattice {
 namespace Editor {
-namespace MeshEditor {
+namespace OldMeshEditor {
 
 MoveTool::MoveTool(const SP<State::AppState> &appState, const SP<Document::MeshObject> &object, const SP<Mesh::Mesh> &mesh) : Tool(appState, object, mesh),
                                                                                                                               _borderSelectTool(makeShared<BorderSelectTool>(appState, object, mesh)) {

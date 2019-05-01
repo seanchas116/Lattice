@@ -8,7 +8,7 @@ using namespace glm;
 
 namespace Lattice {
 namespace Editor {
-namespace MeshEditor {
+namespace OldMeshEditor {
 
 Tool::HitTestExclusion DrawTool::hitTestExclusion() const {
     if (!_previewUVPoint) {
