@@ -4,6 +4,8 @@
 #include "../document/History.hpp"
 #include "../document/MeshObject.hpp"
 #include "../oldmesh/Mesh.hpp"
+#include "../mesh/Mesh.hpp"
+#include "../mesh/algorithm/AddCube.hpp"
 #include <QFileDialog>
 #include <QtDebug>
 #include <QFileInfo>
@@ -41,7 +43,9 @@ void AppState::addCube() {
     _document->history()->beginChange(tr("Add Cube"));
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Cube").toStdString());
-    object->oldMesh()->addCube(glm::vec3(-1), glm::vec3(1), object->oldMesh()->addMaterial());
+    auto mesh = makeShared<Mesh::Mesh>();
+    Mesh::AddCube(glm::vec3(-1), glm::vec3(1), 0).redo(*mesh);
+    object->setMesh(mesh);
     _document->insertObjectToCurrentPosition(object);
 }
 
