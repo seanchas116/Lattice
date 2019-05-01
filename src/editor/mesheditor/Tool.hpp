@@ -30,7 +30,9 @@ public:
         std::vector<SP<OldMesh::Face>> faces;
     };
 
-    Tool(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object) : _appState(appState), _object(object) {}
+    Tool(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object, const SP<Mesh::Mesh>& mesh) : _appState(appState),
+                                                                                                                    _object(object),
+                                                                                                                    _mesh(mesh) {}
     ~Tool();
 
     auto& appState() const { return _appState; }
@@ -52,6 +54,7 @@ signals:
 private:
     SP<State::AppState> _appState;
     SP<Document::MeshObject> _object;
+    SP<Mesh::Mesh> _mesh;
 };
 
 } // namespace MeshEditor

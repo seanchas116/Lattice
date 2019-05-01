@@ -8,8 +8,8 @@ namespace Lattice {
 namespace Editor {
 namespace MeshEditor {
 
-MoveTool::MoveTool(const SP<State::AppState> &appState, const SP<Document::MeshObject> &object) : Tool(appState, object),
-                                                                                                  _borderSelectTool(makeShared<BorderSelectTool>(appState, object)) {
+MoveTool::MoveTool(const SP<State::AppState> &appState, const SP<Document::MeshObject> &object, const SP<Mesh::Mesh> &mesh) : Tool(appState, object, mesh),
+                                                                                                                              _borderSelectTool(makeShared<BorderSelectTool>(appState, object, mesh)) {
     setChildRenderables({_borderSelectTool});
     _borderSelectTool->setVisible(false);
 }
