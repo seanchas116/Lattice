@@ -19,7 +19,7 @@ MeshObject::MeshObject() : _mesh(makeShared<Mesh::Mesh>()),
     });
 }
 
-void MeshObject::setMesh(const SP<Mesh::Mesh> mesh) {
+void MeshObject::setMesh(const SP<Mesh::Mesh> &mesh) {
     _mesh = mesh;
     emit meshChanged(_mesh);
 }

@@ -19,7 +19,7 @@ class MeshObject final : public Object {
 public:
     MeshObject();
 
-    void setMesh(const SP<Mesh::Mesh> mesh);
+    void setMesh(const SP<Mesh::Mesh>& mesh);
     auto& mesh() const { return _mesh; }
 
     void setMaterials(const std::vector<Material>& materials);
