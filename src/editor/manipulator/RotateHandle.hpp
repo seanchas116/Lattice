@@ -21,7 +21,7 @@ public:
     RotateHandle(int axis);
 
     void draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
-    void drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
+    void drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera, const Viewport::PickableID &pickableID) override;
 
     void mousePressEvent(const Viewport::MouseEvent &event) override;
     void mouseMoveEvent(const Viewport::MouseEvent &event) override;

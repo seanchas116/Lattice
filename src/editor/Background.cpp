@@ -21,10 +21,10 @@ void Background::draw(const SP<Draw::Operations> &operations, const SP<Camera> &
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Background::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void Background::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera, const Viewport::PickableID &pickableID) {
     Q_UNUSED(operations); Q_UNUSED(camera);
 
-    auto color = toIDColor();
+    auto color = pickableID.toColor();
     glClearColor(color.r, color.g, color.b, color.a);
     glClear(GL_COLOR_BUFFER_BIT);
 }

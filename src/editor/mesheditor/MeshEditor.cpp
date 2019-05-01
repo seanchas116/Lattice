@@ -148,10 +148,10 @@ void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &
     }
 }
 
-void MeshEditor::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void MeshEditor::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera, const Viewport::PickableID &pickableID) {
     updateWholeVAOs();
 
-    auto idColor = toIDColor();
+    auto idColor = pickableID.toColor();
     glClearColor(idColor.r, idColor.g, idColor.b, idColor.a);
     glClearDepthf(1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -406,7 +406,7 @@ void MeshEditor::updateVAOAttributes() {
 
         Draw::PointLineVertex pickAttrib;
         pickAttrib.position = v->position();
-        pickAttrib.color = _vertexPickables[i]->toIDColor();
+        pickAttrib.color = Viewport::PickableID(-1, 0).toColor(); // TODO
         pickAttrib.width = hitTestExcluded ? 0 : 1;
         _vertexPickAttributes[i] = pickAttrib;
     }
@@ -429,7 +429,7 @@ void MeshEditor::updateVAOAttributes() {
 
             Draw::PointLineVertex pickAttrib;
             pickAttrib.position = v->position();
-            pickAttrib.color = _edgePickables[edgeIndex]->toIDColor();
+            pickAttrib.color = Viewport::PickableID(-1, 0).toColor(); // TODO
             pickAttrib.width = hitTestExcluded ? 0 : 1;
             _edgePickAttributes[edgeIndex * 2 + vertexInEdgeIndex] = pickAttrib;
         }
@@ -446,7 +446,7 @@ void MeshEditor::updateVAOAttributes() {
             bool hovered = _hoveredFace == face;
             bool selected = selectedFaces.find(face) != selectedFaces.end();
 
-            auto idColor = _facePickables[faceIndex]->toIDColor();
+            auto idColor = Viewport::PickableID(-1, 0).toColor(); // TODO
 
             for (auto& p : face->uvPoints()) {
                 Draw::Vertex attrib;

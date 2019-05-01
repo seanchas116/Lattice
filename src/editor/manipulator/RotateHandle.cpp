@@ -37,7 +37,7 @@ void RotateHandle::draw(const SP<Draw::Operations> &operations, const SP<Camera>
     glClear(GL_DEPTH_BUFFER_BIT);
 }
 
-void RotateHandle::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void RotateHandle::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera, const Viewport::PickableID &pickableID) {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInViewport){
         return;
@@ -45,7 +45,7 @@ void RotateHandle::drawPickables(const SP<Draw::Operations> &operations, const S
 
     glClearDepthf(Constants::fixedDepth);
     glClear(GL_DEPTH_BUFFER_BIT);
-    operations->drawLine.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, toIDColor());
+    operations->drawLine.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, pickableID.toColor());
     glClearDepthf(1);
     glClear(GL_DEPTH_BUFFER_BIT);
 }

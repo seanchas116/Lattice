@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MouseEvent.hpp"
+#include "PickableID.hpp"
 #include "../support/SharedPointer.hpp"
 #include <glm/glm.hpp>
 
@@ -19,7 +20,7 @@ public:
     virtual ~Renderable();
 
     virtual void draw(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
-    virtual void drawPickables(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
+    virtual void drawPickables(const SP<Draw::Operations>& operations, const SP<Camera>& camera, const PickableID& pickableID);
     virtual void draw2D(QPainter* painter, const QSize& viewportSize);
 
     virtual void mousePressEvent(const MouseEvent& event);
@@ -29,9 +30,6 @@ public:
     virtual void contextMenuEvent(const ContextMenuEvent& event);
     virtual void hoverEnterEvent(const MouseEvent& event);
     virtual void hoverLeaveEvent();
-
-    glm::vec4 toIDColor() const;
-    static Opt<SP<Renderable>> fromIDColor(glm::vec4 color);
 };
 
 } // namespace Render

@@ -36,13 +36,13 @@ void ArrowHandle::draw(const SP<Draw::Operations> &operations, const SP<Camera> 
     operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
 }
 
-void ArrowHandle::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void ArrowHandle::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera, const Viewport::PickableID &pickableID) {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInViewport){
         return;
     }
 
-    operations->drawUnicolor.draw(_bodyPickVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, toIDColor());
+    operations->drawUnicolor.draw(_bodyPickVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, pickableID.toColor());
 }
 
 void ArrowHandle::mousePressEvent(const Viewport::MouseEvent &event) {

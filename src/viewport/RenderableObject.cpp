@@ -30,16 +30,17 @@ void RenderableObject::drawPickablesRecursive(const SP<Draw::Operations> &operat
     if (!_isVisible) {
         return;
     }
-    drawPickables(operations, camera);
+    drawPickables(operations, camera, PickableID(renderedChildren.size()));
+    renderedChildren.push_back(sharedFromThis());
     for (auto& c : childRenderables()) {
         auto childObj = dynamicPointerCast<RenderableObject>(c);
         if (childObj) {
             (*childObj)->drawPickablesRecursive(operations, camera, renderedChildren);
         } else {
-            c->drawPickables(operations, camera);
+            c->drawPickables(operations, camera, PickableID(renderedChildren.size()));
+            renderedChildren.push_back(sharedFromThis());
         }
     }
-    renderedChildren.insert(renderedChildren.end(), _childRenderables.begin(), _childRenderables.end());
 }
 
 void RenderableObject::draw2DRecursive(QPainter *painter, const QSize &viewportSize) {

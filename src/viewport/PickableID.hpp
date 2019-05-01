@@ -13,20 +13,20 @@ class PickableID {
         glm::u16vec4 color;
     };
 
-    int _renderableID;
-    int _fragmentID;
-
 public:
-    PickableID(int renderableID, int fragmentID = 0) : _renderableID(renderableID), _fragmentID(fragmentID) {}
+    int renderableID;
+    int fragmentID;
+
+    PickableID(int renderableID, int fragmentID = 0) : renderableID(renderableID), fragmentID(fragmentID) {}
 
     PickableID withFragmentID(int fragmentID) const {
-        return PickableID(_renderableID, fragmentID);
+        return PickableID(renderableID, fragmentID);
     }
 
     glm::vec4 toColor() const {
         Data data;
-        data.renderableID = _renderableID;
-        data.fragmentID = _fragmentID;
+        data.renderableID = renderableID;
+        data.fragmentID = fragmentID;
         return data.color;
     }
 

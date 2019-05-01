@@ -17,7 +17,7 @@ void CenterHandle::draw(const SP<Draw::Operations> &operations, const SP<Camera>
     Q_UNUSED(operations); Q_UNUSED(camera);
 }
 
-void CenterHandle::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void CenterHandle::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera, const Viewport::PickableID &pickableID) {
     auto [viewportPos, isInViewport] = camera->mapWorldToViewport(_targetPosition);
     if (!isInViewport) {
         return;
@@ -28,7 +28,7 @@ void CenterHandle::drawPickables(const SP<Draw::Operations> &operations, const S
     auto vbo = makeShared<GL::VertexBuffer<Draw::Vertex>>();
     vbo->setVertices({vertex});
     auto vao = makeShared<GL::VAO>(vbo, GL::Primitive::Point);
-    operations->drawCircle.draw2D(vao, dmat4(1), camera->viewportSize(), 32, toIDColor());
+    operations->drawCircle.draw2D(vao, dmat4(1), camera->viewportSize(), 32, pickableID.toColor());
 }
 
 void CenterHandle::mousePressEvent(const Viewport::MouseEvent &event) {

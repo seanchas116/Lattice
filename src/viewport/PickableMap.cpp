@@ -30,20 +30,25 @@ Opt<std::pair<SP<Renderable>, double>> PickableMap::pick(vec2 physicalPos) {
     recallContext();
     PixelData<vec4> pixels(glm::ivec2(1));
     _framebuffer->readPixels(physicalPos, pixels);
-    auto renderable = Renderable::fromIDColor(pixels.data()[0]);
-
-    if (!renderable) {
+    auto id = PickableID::fromIDColor(pixels.data()[0]);
+    if (id.renderableID < 0 || int(_lastRenderables.size()) <= id.renderableID) {
         return {};
     }
+
+    auto& renderable = _lastRenderables[id.renderableID];
+
     float depth = _framebuffer->readDepth(physicalPos);
-    return {{*renderable, depth}};
+    return {{renderable, depth}};
 }
 
 void PickableMap::draw(const SP<RenderableObject> &renderable, const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     resize(camera->viewportSize());
 
     GL::Binder binder(*_framebuffer);
-    glClearColor(0, 0, 0, 0);
+    PickableID backgroundID(-1, 0);
+    auto backgroundColor = backgroundID.toColor();
+
+    glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
     glClearDepthf(1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
