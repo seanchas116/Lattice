@@ -5,7 +5,7 @@ namespace Lattice {
 namespace Viewport {
 
 class PickableID {
-    struct Data {
+    union Data {
         struct {
             int32_t renderableID;
             int32_t fragmentID;
