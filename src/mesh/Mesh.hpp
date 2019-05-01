@@ -141,7 +141,7 @@ public:
     auto& edges(FaceHandle f) const { return faceData(f).edges; }
 
     bool isSelected(VertexHandle v) const { return vertexData(v).isSelected; }
-    void setIsSelected(VertexHandle v, bool selected) { vertexData(v).isSelected = selected; }
+    void setSelected(VertexHandle v, bool selected) { vertexData(v).isSelected = selected; }
 
     glm::vec3 position(VertexHandle v) const { return vertexData(v).position; }
     void setPosition(VertexHandle v, glm::vec3 pos) { vertexData(v).position = pos; }
@@ -150,10 +150,12 @@ public:
     void setUV(UVPointHandle uv, glm::vec2 pos) { uvPointData(uv).position = pos; }
 
     bool isSmooth(EdgeHandle edge) const { return edgeData(edge).isSmooth; }
-    void setIsSmooth(EdgeHandle edge, bool smooth) { edgeData(edge).isSmooth = smooth; }
+    void setSmooth(EdgeHandle edge, bool smooth) { edgeData(edge).isSmooth = smooth; }
 
     uint32_t material(FaceHandle face) const { return faceData(face).material; }
     void setMaterial(FaceHandle face, uint32_t material) { faceData(face).material = material; }
+
+    void clearSelections();
 };
 
 } // namespace NewMesh

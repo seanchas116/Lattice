@@ -206,5 +206,11 @@ void Mesh::collectGarbage() {
     }
 }
 
+void Mesh::clearSelections() {
+    for (auto v : vertices()) {
+        setSelected(v, false);
+    }
+}
+
 } // namespace NewMesh
 } // namespace Lattice
