@@ -1,6 +1,7 @@
 #pragma once
 #include <QImage>
 #include <glm/glm.hpp>
+#include "../draw/Material.hpp"
 
 namespace Lattice {
 namespace Document {
@@ -30,15 +31,10 @@ public:
     QImage roughnessImage() const { return _roughnessImage; }
     void setRoughnessImage(const QImage &roughnessImage) { _roughnessImage = roughnessImage; }
 
-    bool operator==(const Material& other) const {
-        return _baseColor == other._baseColor
-            && _baseColorImage == other._baseColorImage
-            && _metallic == other._metallic
-            && _metallicImage == other._metallicImage
-            && _roughness == other._roughness
-            && _roughnessImage == other._roughnessImage;
-    }
-    bool operator!=(const Material& other) { return !operator==(other); }
+    Draw::Material toDrawMaterial() const;
+
+    bool operator==(const Material& other) const;
+    bool operator!=(const Material& other) const { return !operator==(other); }
 
 private:
     glm::dvec3 _baseColor {1, 0, 0};
