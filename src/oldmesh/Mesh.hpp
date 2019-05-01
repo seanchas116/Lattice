@@ -5,6 +5,7 @@
 #include "../support/SortedArray.hpp"
 #include "../support/Change.hpp"
 #include "../support/Ray.hpp"
+#include "../draw/Material.hpp"
 #include <QObject>
 #include <QImage>
 #include <glm/glm.hpp>
@@ -147,6 +148,17 @@ public:
 
     // returning container of raw pointers for performance
     auto& faces() const { return _faces; }
+
+    Draw::Material toDrawMaterial() const {
+        Draw::Material material;
+        material.baseColor = _baseColor;
+        material.baseColorImage = _baseColorImage;
+        material.metallic = _metallic;
+        material.metallicImage = _metallicImage;
+        material.roughness = _roughness;
+        material.roughnessImage = _roughnessImage;
+        return material;
+    }
 
 private:
     friend class Mesh;

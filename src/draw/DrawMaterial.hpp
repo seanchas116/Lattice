@@ -1,6 +1,7 @@
 #pragma once
 #include "../gl/Shader.hpp"
 #include "../oldmesh/Mesh.hpp"
+#include "Material.hpp"
 #include <unordered_map>
 #include <QOpenGLExtraFunctions>
 
@@ -18,7 +19,7 @@ class DrawMaterial final : protected QOpenGLExtraFunctions {
 public:
     DrawMaterial();
 
-    void draw(const SP<GL::VAO>& vao, const glm::dmat4& matrix, const SP<Camera>& camera, const SP<OldMesh::Material>& material);
+    void draw(const SP<GL::VAO>& vao, const glm::dmat4& matrix, const SP<Camera>& camera, const Material& material);
 
     SP<GL::Texture> getTexture(const QImage& image);
 

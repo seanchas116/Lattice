@@ -32,7 +32,7 @@ MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Documen
 void MeshRenderer::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     updateVAOs();
     for (auto& [material, vao] : _faceVAOs) {
-        operations->drawMaterial.draw(vao, _object->location().matrixToWorld(), camera, material);
+        operations->drawMaterial.draw(vao, _object->location().matrixToWorld(), camera, material->toDrawMaterial());
     }
 }
 

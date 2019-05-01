@@ -13,15 +13,15 @@ DrawMaterial::DrawMaterial() : _shader(Resource::read("src/draw/DrawMaterial.ver
     initializeOpenGLFunctions();
 }
 
-void DrawMaterial::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<Camera> &camera, const SP<OldMesh::Material> &material) {
+void DrawMaterial::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<Camera> &camera, const Material &material) {
     _shader.bind();
-    _shader.setUniform("diffuse", material->baseColor());
+    _shader.setUniform("diffuse", material.baseColor);
     _shader.setUniform("ambient", glm::vec3(0));
     _shader.setUniform("MV", camera->worldToCameraMatrix() * matrix);
     _shader.setUniform("MVP", camera->worldToViewportMatrix() * matrix);
 
-    if (!material->baseColorImage().isNull()) {
-        auto texture = getTexture(material->baseColorImage());
+    if (!material.baseColorImage.isNull()) {
+        auto texture = getTexture(material.baseColorImage);
         glActiveTexture(GL_TEXTURE0);
         texture->bind();
         _shader.setUniform("diffuseTexture", 0.0);
