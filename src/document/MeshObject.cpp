@@ -11,6 +11,7 @@ namespace Lattice {
 namespace Document {
 
 MeshObject::MeshObject() : _mesh(makeShared<Mesh::Mesh>()),
+                           _materials({Material()}),
                            _oldMesh(makeShared<OldMesh::Mesh>()) {
     connect(_oldMesh.get(), &OldMesh::Mesh::changed, this, &MeshObject::handleOldMeshChange);
     _oldMesh->setChangeHandler([this](const auto& change) {
