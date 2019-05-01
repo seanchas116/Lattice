@@ -89,6 +89,7 @@ private:
 
     SP<State::AppState> _appState;
     SP<Document::MeshObject> _object;
+    SP<Mesh::Mesh> _mesh;
 
     SP<Manipulator::MeshManipulator> _manipulator;
 

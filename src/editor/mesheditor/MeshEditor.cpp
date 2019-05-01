@@ -11,6 +11,7 @@
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
 #include "../../document/MeshObject.hpp"
+#include "../../mesh/Mesh.hpp"
 #include "../../oldmesh/Mesh.hpp"
 #include "../../support/Debug.hpp"
 #include "../../support/Camera.hpp"
@@ -94,6 +95,7 @@ private:
 MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::MeshObject> &object) :
     _appState(appState),
     _object(object),
+    _mesh(makeShared<Mesh::Mesh>(object->mesh())),
     _manipulator(makeShared<Manipulator::MeshManipulator>(appState, object)),
 
     _faceIndexBuffer(makeShared<GL::IndexBuffer>()),
