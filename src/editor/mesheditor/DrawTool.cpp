@@ -135,19 +135,19 @@ void DrawTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::Mo
         pos = mesh.position(snapVertex);
     } else if (target.edge) {
         auto snapEdge = *target.edge;
-        Ray<double> edgeRay = snapEdge->ray();
+        Ray<double> edgeRay = mesh.ray(snapEdge);
         Ray<double> mouseRay = event.camera->modelMouseRay(modelMatrix, event.viewportPos);
         RayRayDistanceSolver distanceSolver(edgeRay, mouseRay);
         pos = edgeRay.at(distanceSolver.t0);
     } else {
-        auto [prevPosInViewport, isInViewport] = event.camera->mapModelToViewport(modelMatrix, previewUVPoint->vertex()->position());
+        auto [prevPosInViewport, isInViewport] = event.camera->mapModelToViewport(modelMatrix, mesh.position(mesh.vertex(previewUVPoint)));
         if (!isInViewport) {
             return;
         }
         pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos.xy, prevPosInViewport.z));
     }
 
-    mesh->setPosition({{previewUVPoint->vertex(), pos}});
+    mesh.setPosition(mesh.vertex(previewUVPoint), pos);
 }
 
 void DrawTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -155,9 +155,11 @@ void DrawTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport:
 }
 
 void DrawTool::keyPressTool(QKeyEvent *event) {
+    auto& mesh = *this->mesh();
+
     if (event->key() == Qt::Key_Escape || event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
         if (_previewUVPoint) {
-            object()->oldMesh()->removeVertex((*_previewUVPoint)->vertex());
+            mesh.removeVertex(mesh.vertex(*_previewUVPoint));
         }
         _drawnUVPoints.clear();
         _previewUVPoint = std::nullopt;
