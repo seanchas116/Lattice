@@ -42,6 +42,7 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
             std::vector<Mesh::UVPointHandle> points(closingPointIt, _drawnUVPoints.end());
             auto face = mesh.addFace(points, 0); // TODO: use better material
 
+            Q_UNUSED(face);
             // TODO: flip face (or use two-sided faces)
             /*
             bool isFaceFore = dot(face->normal(), event.camera->location().backward()) > 0;
