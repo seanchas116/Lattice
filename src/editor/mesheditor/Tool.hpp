@@ -1,12 +1,16 @@
 #pragma once
 #include <QObject>
 #include "../../state/AppState.hpp"
-#include "../../mesh/Mesh.hpp"
+#include "../../mesh/Handle.hpp"
 #include "../../document/MeshObject.hpp"
 #include "../../viewport/MouseEvent.hpp"
 #include "../../viewport/RenderableObject.hpp"
 
 namespace Lattice {
+
+namespace Mesh {
+class Mesh;
+}
 
 namespace Editor {
 namespace MeshEditor {
