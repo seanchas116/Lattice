@@ -50,6 +50,7 @@ public:
     virtual void keyReleaseTool(QKeyEvent* event);
 
 signals:
+    void meshChanged();
     void finished();
 
 private:

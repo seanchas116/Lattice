@@ -32,6 +32,7 @@ void BorderSelectTool::mousePressTool(const Tool::EventTarget &target, const Vie
     }
 
     emit updated();
+    emit meshChanged();
 }
 
 void BorderSelectTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -54,6 +55,7 @@ void BorderSelectTool::mouseMoveTool(const Tool::EventTarget &target, const View
     }
 
     emit updated();
+    emit meshChanged();
 }
 
 void BorderSelectTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {

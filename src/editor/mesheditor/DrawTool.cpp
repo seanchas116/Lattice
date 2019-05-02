@@ -115,6 +115,8 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
     auto previewPoint = mesh.addUVPoint(mesh.addVertex(mesh.position(mesh.vertex(latestPoint))), vec2(0));
     mesh.addEdge(mesh.vertex(latestPoint), mesh.vertex(previewPoint), false);
     _previewUVPoint = previewPoint;
+
+    emit meshChanged();
 }
 
 void DrawTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -148,6 +150,8 @@ void DrawTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::Mo
     }
 
     mesh.setPosition(mesh.vertex(previewUVPoint), pos);
+
+    emit meshChanged();
 }
 
 void DrawTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
