@@ -13,8 +13,8 @@ VertexHandle CutEdge::redo(Mesh &mesh) {
 
     auto uv = mesh.addUVPoint(mesh.addVertex(pos), dvec2(0)); // TODO: Use better UV position
 
-    auto edge1 = mesh.addEdge(mesh.vertices(edge)[0], mesh.vertex(uv), false);
-    auto edge2 = mesh.addEdge(mesh.vertex(uv), mesh.vertices(edge)[1], false);
+    mesh.addEdge(mesh.vertices(edge)[0], mesh.vertex(uv), false);
+    mesh.addEdge(mesh.vertex(uv), mesh.vertices(edge)[1], false);
 
     auto faces = mesh.faces(edge) | ranges::to_vector;
     for (auto& face : faces) {
