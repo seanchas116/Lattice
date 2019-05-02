@@ -75,9 +75,7 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
         }
 
         auto edge = *target.edge;
-        auto pos0 = mesh.position(mesh.vertices(edge)[0]);
-        auto pos1 = mesh.position(mesh.vertices(edge)[1]);
-        Ray<double> edgeRay(pos0, pos1 - pos0);
+        Ray<double> edgeRay = mesh.ray(edge);
         Ray<double> mouseRay = event.camera->modelMouseRay(modelMatrix, event.viewportPos);
         RayRayDistanceSolver distanceSolver(edgeRay, mouseRay);
         auto vertex = Mesh::CutEdge(edge, distanceSolver.t0).redo(mesh);

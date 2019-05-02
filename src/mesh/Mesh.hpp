@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <range/v3/all.hpp>
 #include "Handle.hpp"
+#include "../support/Ray.hpp"
 
 namespace Lattice {
 namespace Mesh {
@@ -137,6 +138,12 @@ public:
 
     glm::vec2 uv(UVPointHandle uv) const { return uvPointData(uv).position; }
     void setUV(UVPointHandle uv, glm::vec2 pos) { uvPointData(uv).position = pos; }
+
+    Ray<float> ray(EdgeHandle edge) const {
+        auto pos0 = position(vertices(edge)[0]);
+        auto pos1 = position(vertices(edge)[1]);
+        return Ray<float>(pos0, pos1 - pos0);
+    }
 
     bool isSmooth(EdgeHandle edge) const { return edgeData(edge).isSmooth; }
     void setSmooth(EdgeHandle edge, bool smooth) { edgeData(edge).isSmooth = smooth; }

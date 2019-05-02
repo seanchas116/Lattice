@@ -7,9 +7,7 @@ namespace Lattice {
 namespace Mesh {
 
 VertexHandle CutEdge::redo(Mesh &mesh) {
-    auto pos0 = mesh.position(mesh.vertices(edge)[0]);
-    auto pos1 = mesh.position(mesh.vertices(edge)[1]);
-    auto pos = mix(pos0, pos1, t);
+    auto pos = mesh.ray(edge).at(t);
 
     auto uv = mesh.addUVPoint(mesh.addVertex(pos), dvec2(0)); // TODO: Use better UV position
 
