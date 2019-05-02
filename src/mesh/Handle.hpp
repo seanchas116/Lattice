@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <functional>
 
 namespace Lattice {
 namespace Mesh {
@@ -35,3 +36,14 @@ struct FaceHandle : public Handle<FaceHandle> {
 
 } // namespace NewMesh
 } // namespace Lattice
+
+namespace std {
+
+template <>
+struct hash<Lattice::Mesh::VertexHandle> {
+    size_t operator()(const Lattice::Mesh::VertexHandle& value) const {
+        return std::hash<uint32_t>()(value.index);
+    }
+};
+
+}

@@ -4,6 +4,11 @@ namespace Lattice {
 namespace Editor {
 namespace MeshEditor {
 
+std::unordered_set<Mesh::VertexHandle> Tool::EventTarget::vertices() const {
+    // TODO
+    return {};
+}
+
 Tool::~Tool() {
 }
 

@@ -22,6 +22,8 @@ public:
         Opt<Mesh::VertexHandle> vertex;
         Opt<Mesh::EdgeHandle> edge;
         Opt<Mesh::FaceHandle> face;
+
+        std::unordered_set<Mesh::VertexHandle> vertices() const;
     };
 
     struct HitTestExclusion {
