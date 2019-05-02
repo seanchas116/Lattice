@@ -1,4 +1,5 @@
 #include "BorderSelectTool.hpp"
+#include "../../mesh/Mesh.hpp"
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
 #include "../../support/Debug.hpp"
