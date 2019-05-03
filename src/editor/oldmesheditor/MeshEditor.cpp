@@ -4,7 +4,7 @@
 #include "ExtrudeTool.hpp"
 #include "LoopCutTool.hpp"
 #include "BorderSelectTool.hpp"
-#include "../manipulator/MeshManipulator.hpp"
+#include "../manipulator/OldMeshManipulator.hpp"
 #include "../../state/AppState.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
@@ -96,7 +96,7 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     _appState(appState),
     _object(object),
     _mesh(makeShared<Mesh::Mesh>(object->mesh())),
-    _manipulator(makeShared<Manipulator::MeshManipulator>(appState, object)),
+    _manipulator(makeShared<Manipulator::OldMeshManipulator>(appState, object)),
 
     _faceIndexBuffer(makeShared<GL::IndexBuffer>()),
     _faceVertexBuffer(makeShared<GL::VertexBuffer<Draw::Vertex>>()),

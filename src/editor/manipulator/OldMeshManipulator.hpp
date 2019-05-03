@@ -17,10 +17,10 @@ class Vertex;
 namespace Editor {
 namespace Manipulator {
 
-class MeshManipulator : public Manipulator {
+class OldMeshManipulator : public Manipulator {
     Q_OBJECT
 public:
-    MeshManipulator(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object);
+    OldMeshManipulator(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object);
 
 private:
     void handleOnDragBegin(ValueType type, glm::dvec3 values);

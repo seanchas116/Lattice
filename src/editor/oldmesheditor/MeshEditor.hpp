@@ -37,7 +37,7 @@ class VAO;
 
 namespace Editor {
 namespace Manipulator {
-class MeshManipulator;
+class OldMeshManipulator;
 }
 
 namespace OldMeshEditor {
@@ -91,7 +91,7 @@ private:
     SP<Document::MeshObject> _object;
     SP<Mesh::Mesh> _mesh;
 
-    SP<Manipulator::MeshManipulator> _manipulator;
+    SP<Manipulator::OldMeshManipulator> _manipulator;
 
     bool _isVAOTopologyDirty = true;
     bool _isVAOAttributesDirty = true;

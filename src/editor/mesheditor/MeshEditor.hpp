@@ -32,7 +32,7 @@ class VAO;
 
 namespace Editor {
 namespace Manipulator {
-class MeshManipulator;
+class OldMeshManipulator;
 }
 
 namespace MeshEditor {
@@ -81,7 +81,7 @@ private:
     SP<Document::MeshObject> _object;
     SP<Mesh::Mesh> _mesh;
 
-    SP<Manipulator::MeshManipulator> _manipulator;
+    SP<Manipulator::OldMeshManipulator> _manipulator;
 
     bool _isVAOsDirty = true;
     SP<GL::VertexBuffer<Draw::Vertex>> _facePickVBO;

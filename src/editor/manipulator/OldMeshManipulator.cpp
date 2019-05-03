@@ -1,4 +1,4 @@
-#include "MeshManipulator.hpp"
+#include "OldMeshManipulator.hpp"
 #include "../../state/AppState.hpp"
 #include "../../document/Document.hpp"
 #include "../../document/MeshObject.hpp"
@@ -10,20 +10,20 @@ namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
-MeshManipulator::MeshManipulator(const SP<State::AppState> &appState, const SP<Document::MeshObject> &object) :
+OldMeshManipulator::OldMeshManipulator(const SP<State::AppState> &appState, const SP<Document::MeshObject> &object) :
     _appState(appState),
     _object(object)
 {
-    connect(object->oldMesh().get(), &OldMesh::Mesh::changed, this, &MeshManipulator::updatePosition);
-    connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshManipulator::updatePosition);
+    connect(object->oldMesh().get(), &OldMesh::Mesh::changed, this, &OldMeshManipulator::updatePosition);
+    connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &OldMeshManipulator::updatePosition);
     updatePosition();
 
-    connect(this, &Manipulator::onDragBegin, this, &MeshManipulator::handleOnDragBegin);
-    connect(this, &Manipulator::onDragMove, this, &MeshManipulator::handleOnDragMove);
-    connect(this, &Manipulator::onDragEnd, this, &MeshManipulator::handleOnDragEnd);
+    connect(this, &Manipulator::onDragBegin, this, &OldMeshManipulator::handleOnDragBegin);
+    connect(this, &Manipulator::onDragMove, this, &OldMeshManipulator::handleOnDragMove);
+    connect(this, &Manipulator::onDragEnd, this, &OldMeshManipulator::handleOnDragEnd);
 }
 
-void MeshManipulator::handleOnDragBegin(ValueType type, dvec3 values) {
+void OldMeshManipulator::handleOnDragBegin(ValueType type, dvec3 values) {
     Q_UNUSED(type);
     _appState->document()->history()->beginChange(tr("Move Vertex"));
 
@@ -37,7 +37,7 @@ void MeshManipulator::handleOnDragBegin(ValueType type, dvec3 values) {
     _initialMedianPos = (objectToWorld * dvec4(_appState->document()->meshSelection().medianPosition(), 1)).xyz;
 }
 
-void MeshManipulator::handleOnDragMove(ValueType type, dvec3 values) {
+void OldMeshManipulator::handleOnDragMove(ValueType type, dvec3 values) {
     auto& mesh = _object->oldMesh();
     auto worldToObject = _object->location().matrixToModel();
 
@@ -80,12 +80,12 @@ void MeshManipulator::handleOnDragMove(ValueType type, dvec3 values) {
     }
 }
 
-void MeshManipulator::handleOnDragEnd(ValueType type) {
+void OldMeshManipulator::handleOnDragEnd(ValueType type) {
     Q_UNUSED(type);
     _initialPositions.clear();
 }
 
-void MeshManipulator::updatePosition() {
+void OldMeshManipulator::updatePosition() {
     auto median = _appState->document()->meshSelection().medianPosition();
     auto matrix = _object->location().matrixToWorld();
     setTargetPosition((matrix * dvec4(median, 1)).xyz);
