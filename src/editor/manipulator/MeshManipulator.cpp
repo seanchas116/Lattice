@@ -95,6 +95,8 @@ void MeshManipulator::handleOnDragMove(ValueType type, dvec3 values) {
 void MeshManipulator::handleOnDragEnd(ValueType type) {
     Q_UNUSED(type);
     _initialPositions.clear();
+
+    emit meshChangeFinished();
 }
 
 void MeshManipulator::updatePosition() {
