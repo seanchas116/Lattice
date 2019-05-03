@@ -17,6 +17,8 @@ class MeshManipulator : public Manipulator {
 public:
     MeshManipulator(const glm::dmat4& objectToWorldMatrix, const SP<Mesh::Mesh>& mesh);
 
+    void updatePosition();
+
 signals:
     void meshChanged();
     void meshChangeFinished();
@@ -26,7 +28,6 @@ private:
     void handleOnDragMove(ValueType type, glm::dvec3 values);
     void handleOnDragEnd(ValueType type);
 
-    void updatePosition();
 
     glm::dmat4 _objectToWorld;
     glm::dmat4 _worldToObject;
