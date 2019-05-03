@@ -207,7 +207,7 @@ void MeshEditor::handleToolChange(State::Tool tool) {
         break;
     }
     connect(_tool.get(), &Tool::meshChanged, this, [this] {
-        updateManinpulatorVisibility();
+        updateManipulatorVisibility();
         _manipulator->updatePosition();
         _isVAOsDirty = true;
         emit updated();
@@ -216,11 +216,11 @@ void MeshEditor::handleToolChange(State::Tool tool) {
         commitMeshChange(title);
         _appState->setTool(State::Tool::None);
     });
-    updateManinpulatorVisibility();
+    updateManipulatorVisibility();
     updateChildren();
 }
 
-void MeshEditor::updateManinpulatorVisibility() {
+void MeshEditor::updateManipulatorVisibility() {
     _manipulator->setVisible(!_appState->document()->meshSelection().empty() && _appState->tool() == State::Tool::None);
 }
 

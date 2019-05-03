@@ -70,7 +70,7 @@ private:
     void contextMenuTarget(const Tool::EventTarget& target, const Viewport::ContextMenuEvent& event);
 
     void updateVAOs();
-    void updateManinpulatorVisibility();
+    void updateManipulatorVisibility();
     void updateChildren();
 
     void commitMeshChange(const QString& title);
