@@ -55,46 +55,41 @@ void MeshManipulator::handleOnDragBegin(ValueType type, dvec3 values) {
 }
 
 void MeshManipulator::handleOnDragMove(ValueType type, dvec3 values) {
-    auto& mesh = _object->oldMesh();
-    auto worldToObject = _object->location().matrixToModel();
+    auto& mesh = *_mesh;
 
     switch (type) {
     case ValueType::Translate: {
         dvec3 offset = values - _initialValues;
-        std::unordered_map<SP<OldMesh::Vertex>, dvec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
             auto newPos = initialPos + offset;
-            positions[vertex] = (worldToObject * dvec4(newPos, 1)).xyz;
+            mesh.setPosition(vertex, dvec3((_worldToObject * dvec4(newPos, 1)).xyz));
         }
-        mesh->setPosition(positions);
         break;
     }
     case ValueType::Scale: {
         dvec3 ratio = values / _initialValues;
-        std::unordered_map<SP<OldMesh::Vertex>, dvec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
             dvec3 initialOffset = initialPos - _initialMedianPos;
             auto newPos = _initialMedianPos + initialOffset * ratio;
-            positions[vertex] = (worldToObject * dvec4(newPos, 1)).xyz;
+            mesh.setPosition(vertex, dvec3((_worldToObject * dvec4(newPos, 1)).xyz));
         }
-        mesh->setPosition(positions);
         break;
     }
     case ValueType::Rotate: {
         dvec3 eulerAngles = values - _initialValues;
         auto matrix = mat4_cast(dquat(eulerAngles));
 
-        std::unordered_map<SP<OldMesh::Vertex>, dvec3> positions;
         for (auto& [vertex, initialPos] : _initialPositions) {
             dvec3 initialOffset = initialPos - _initialMedianPos;
             dvec3 offset = (matrix * dvec4(initialOffset, 0)).xyz;
             auto newPos = _initialMedianPos + offset;
-            positions[vertex] = (worldToObject * dvec4(newPos, 1)).xyz;
+            mesh.setPosition(vertex, dvec3((_worldToObject * dvec4(newPos, 1)).xyz));
         }
-        mesh->setPosition(positions);
         break;
     }
     }
+
+    emit meshChanged();
 }
 
 void MeshManipulator::handleOnDragEnd(ValueType type) {
