@@ -98,7 +98,9 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     _mesh(makeShared<Mesh::Mesh>(object->mesh())),
     _manipulator(makeShared<Manipulator::MeshManipulator>(appState, object)),
 
-    _facePickVAO(makeShared<GL::VAO>()),
+    _facePickVBO(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
+    _faceIBO(makeShared<GL::IndexBuffer>()),
+    _facePickVAO(makeShared<GL::VAO>(_facePickVBO, _faceIBO)),
     _edgeVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
     _edgeVAO(makeShared<GL::VAO>(_edgeVBO, GL::Primitive::Line)),
     _edgePickVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
@@ -325,8 +327,8 @@ void MeshEditor::updateVAOs() {
         std::vector<Draw::PointLineVertex> edgeAttributes;
         std::vector<Draw::PointLineVertex> edgePickAttributes;
 
-        edgeAttributes.reserve(mesh.edgeCount());
-        edgePickAttributes.reserve(mesh.edgeCount());
+        edgeAttributes.reserve(mesh.edgeCount() * 2);
+        edgePickAttributes.reserve(mesh.edgeCount() * 2);
 
         for (auto e : mesh.edges()) {
             bool hovered = e == _hoveredEdge;
@@ -355,6 +357,36 @@ void MeshEditor::updateVAOs() {
         _edgeVBO->setVertices(edgeAttributes);
         _edgePickVBO->setVertices(edgePickAttributes);
     }
+
+    {
+        std::vector<Draw::Vertex> facePickAttributes;
+        std::vector<GL::IndexBuffer::Triangle> faceTriangles;
+
+        for (auto f : mesh.faces()) {
+            auto pickable = makeShared<FacePickable>(this, f);
+            _pickables.push_back(pickable);
+
+            auto idColor = pickable->toIDColor();
+
+            auto i0 = uint32_t(facePickAttributes.size());
+            for (uint32_t i = 2; i < uint32_t(mesh.vertices(f).size()); ++i) {
+                auto i1 = i0 + i - 1;
+                auto i2 = i0 + i;
+                faceTriangles.push_back({i0, i1, i2});
+            }
+
+            for (auto& p : mesh.uvPoints(f)) {
+                Draw::Vertex pickAttrib;
+                pickAttrib.position = mesh.position(mesh.vertex(p));
+                pickAttrib.color = idColor;
+                facePickAttributes.push_back(pickAttrib);
+            }
+        }
+        _facePickVBO->setVertices(facePickAttributes);
+        _faceIBO->setTriangles(faceTriangles);
+    }
+
+    updateChildren();
 }
 
 }

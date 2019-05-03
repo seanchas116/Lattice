@@ -84,6 +84,8 @@ private:
     SP<Manipulator::MeshManipulator> _manipulator;
 
     bool _isVAOsDirty = true;
+    SP<GL::VertexBuffer<Draw::Vertex>> _facePickVBO;
+    SP<GL::IndexBuffer> _faceIBO;
     SP<GL::VAO> _facePickVAO;
     SP<GL::VertexBuffer<Draw::PointLineVertex>> _edgeVBO;
     SP<GL::VAO> _edgeVAO;
