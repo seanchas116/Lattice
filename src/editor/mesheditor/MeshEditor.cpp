@@ -4,7 +4,7 @@
 #include "ExtrudeTool.hpp"
 #include "LoopCutTool.hpp"
 #include "BorderSelectTool.hpp"
-#include "../manipulator/OldMeshManipulator.hpp"
+#include "../manipulator/MeshManipulator.hpp"
 #include "../../state/AppState.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
@@ -96,7 +96,7 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     _appState(appState),
     _object(object),
     _mesh(makeShared<Mesh::Mesh>(object->mesh())),
-    _manipulator(makeShared<Manipulator::OldMeshManipulator>(appState, object)),
+    _manipulator(makeShared<Manipulator::MeshManipulator>(object->location().matrixToWorld(), _mesh)),
 
     _facePickVBO(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
     _faceIBO(makeShared<GL::IndexBuffer>()),
@@ -118,12 +118,15 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     connect(appState.get(), &State::AppState::toolChanged, this, &MeshEditor::handleToolChange);
     handleToolChange(appState->tool());
 
-    connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshEditor::updateManinpulatorVisibility);
-    connect(appState.get(), &State::AppState::toolChanged, this, &MeshEditor::updateManinpulatorVisibility);
-    updateManinpulatorVisibility();
-
     connect(_manipulator.get(), &Manipulator::Manipulator::onContextMenu, this, [this](auto& event) {
         contextMenuTarget({}, event);
+    });
+    connect(_manipulator.get(), &Manipulator::MeshManipulator::meshChanged, this, [this] {
+        _isVAOsDirty = true;
+        emit updated();
+    });
+    connect(_manipulator.get(), &Manipulator::MeshManipulator::meshChangeFinished, this, [this] {
+        commitMeshChange(tr("Move Vertices"));
     });
 
     connect(appState.get(), &State::AppState::isTranslateHandleVisibleChanged, _manipulator.get(), &Manipulator::Manipulator::setTranslateHandleVisible);
@@ -204,14 +207,16 @@ void MeshEditor::handleToolChange(State::Tool tool) {
         break;
     }
     connect(_tool.get(), &Tool::meshChanged, this, [this] {
+        updateManinpulatorVisibility();
+        _manipulator->updatePosition();
         _isVAOsDirty = true;
         emit updated();
     });
     connect(_tool.get(), &Tool::meshChangeFinished, this, [this] (const QString& title) {
-        _appState->document()->history()->beginChange(title);
-        _object->setMesh(*_mesh);
+        commitMeshChange(title);
         _appState->setTool(State::Tool::None);
     });
+    updateManinpulatorVisibility();
     updateChildren();
 }
 
@@ -224,6 +229,11 @@ void MeshEditor::updateChildren() {
     children.push_back(_manipulator);
     children.push_back(_tool);
     setChildRenderables(children);
+}
+
+void MeshEditor::commitMeshChange(const QString &title) {
+    _appState->document()->history()->beginChange(title);
+    _object->setMesh(*_mesh);
 }
 
 void MeshEditor::mousePressTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {

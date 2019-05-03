@@ -31,8 +31,9 @@ class VAO;
 }
 
 namespace Editor {
+
 namespace Manipulator {
-class OldMeshManipulator;
+class MeshManipulator;
 }
 
 namespace MeshEditor {
@@ -72,6 +73,8 @@ private:
     void updateManinpulatorVisibility();
     void updateChildren();
 
+    void commitMeshChange(const QString& title);
+
     class EditorPickable;
     class VertexPickable;
     class EdgePickable;
@@ -81,7 +84,7 @@ private:
     SP<Document::MeshObject> _object;
     SP<Mesh::Mesh> _mesh;
 
-    SP<Manipulator::OldMeshManipulator> _manipulator;
+    SP<Manipulator::MeshManipulator> _manipulator;
 
     bool _isVAOsDirty = true;
     SP<GL::VertexBuffer<Draw::Vertex>> _facePickVBO;
