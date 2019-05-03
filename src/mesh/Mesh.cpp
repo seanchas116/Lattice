@@ -13,7 +13,7 @@ VertexHandle Mesh::addVertex(glm::vec3 position) {
 
 UVPointHandle Mesh::addUVPoint(VertexHandle v, glm::vec2 position) {
     UVPointData uvPointData;
-    uvPointData.position = position;
+    uvPointData.uvPosition = position;
     uvPointData.vertex = v;
     auto uvPoint = UVPointHandle(uint32_t(_uvPoints.size()));
     _uvPoints.push_back(uvPointData);

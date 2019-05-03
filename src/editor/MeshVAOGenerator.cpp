@@ -57,7 +57,7 @@ std::unordered_map<uint32_t, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() c
             auto p = _mesh.uvPoints(face)[indexInFace];
             Draw::Vertex attrib;
             attrib.position = _mesh.position(_mesh.vertex(p));
-            attrib.texCoord = _mesh.uv(p);
+            attrib.texCoord = _mesh.uvPosition(p);
             attrib.normal = faceNormal; // TODO: calculate smooth edge normals
 
             auto index = uint32_t(vertexAttributes.size());

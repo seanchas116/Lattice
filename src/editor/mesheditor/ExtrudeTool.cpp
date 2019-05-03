@@ -97,7 +97,7 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
 
         for (auto vertex : _vertices) {
             auto uv = mesh.uvPoints(vertex).front(); // TODO: find best uv
-            auto newUVPoint = mesh.addUVPoint(mesh.addVertex(mesh.position(vertex)), mesh.uv(uv));
+            auto newUVPoint = mesh.addUVPoint(mesh.addVertex(mesh.position(vertex)), mesh.uvPosition(uv));
             mesh.addEdge(vertex, mesh.vertex(newUVPoint), false);
             _vertexToUV.insert({vertex, uv});
             _vertexToUV.insert({mesh.vertex(newUVPoint), newUVPoint});

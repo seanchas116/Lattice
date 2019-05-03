@@ -19,7 +19,7 @@ struct VertexData {
 
 struct UVPointData {
     bool isDeleted = false;
-    glm::vec2 position = glm::vec2(0);
+    glm::vec2 uvPosition = glm::vec2(0);
     VertexHandle vertex;
     std::vector<FaceHandle> faces;
 };
@@ -136,8 +136,8 @@ public:
     glm::vec3 position(VertexHandle v) const { return vertexData(v).position; }
     void setPosition(VertexHandle v, glm::vec3 pos) { vertexData(v).position = pos; }
 
-    glm::vec2 uv(UVPointHandle uv) const { return uvPointData(uv).position; }
-    void setUV(UVPointHandle uv, glm::vec2 pos) { uvPointData(uv).position = pos; }
+    glm::vec2 uvPosition(UVPointHandle uv) const { return uvPointData(uv).uvPosition ; }
+    void setUVPosition(UVPointHandle uv, glm::vec2 pos) { uvPointData(uv).uvPosition = pos; }
 
     Ray<float> ray(EdgeHandle edge) const {
         auto pos0 = position(vertices(edge)[0]);
