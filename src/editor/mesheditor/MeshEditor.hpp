@@ -85,7 +85,9 @@ private:
 
     bool _isVAOsDirty = true;
     SP<GL::VAO> _facePickVAO;
+    SP<GL::VertexBuffer<Draw::PointLineVertex>> _edgeVBO;
     SP<GL::VAO> _edgeVAO;
+    SP<GL::VertexBuffer<Draw::PointLineVertex>> _edgePickVBO;
     SP<GL::VAO> _edgePickVAO;
     SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexVBO;
     SP<GL::VAO> _vertexVAO;

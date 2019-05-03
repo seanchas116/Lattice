@@ -99,8 +99,10 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     _manipulator(makeShared<Manipulator::MeshManipulator>(appState, object)),
 
     _facePickVAO(makeShared<GL::VAO>()),
-    _edgeVAO(makeShared<GL::VAO>()),
-    _edgePickVAO(makeShared<GL::VAO>()),
+    _edgeVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
+    _edgeVAO(makeShared<GL::VAO>(_edgeVBO, GL::Primitive::Line)),
+    _edgePickVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
+    _edgePickVAO(makeShared<GL::VAO>(_edgePickVBO, GL::Primitive::Line)),
     _vertexVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
     _vertexVAO(makeShared<GL::VAO>(_vertexVBO, GL::Primitive::Point)),
     _vertexPickVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
@@ -285,6 +287,8 @@ void MeshEditor::updateVAOs() {
     auto& mesh = *_mesh;
     auto hitTestExclusion = _tool->hitTestExclusion();
 
+    _pickables.clear();
+
     {
         std::vector<Draw::PointLineVertex> vertexAttributes;
         std::vector<Draw::PointLineVertex> vertexPickAttributes;
@@ -304,7 +308,7 @@ void MeshEditor::updateVAOs() {
             vertexAttributes.push_back(attrib);
 
             auto pickable = makeShared<VertexPickable>(this, v);
-            vertexPickables.push_back(pickable);
+            _pickables.push_back(pickable);
 
             Draw::PointLineVertex pickAttrib;
             pickAttrib.position = mesh.position(v);
@@ -315,6 +319,41 @@ void MeshEditor::updateVAOs() {
 
         _vertexVBO->setVertices(vertexAttributes);
         _vertexPickVBO->setVertices(vertexPickAttributes);
+    }
+
+    {
+        std::vector<Draw::PointLineVertex> edgeAttributes;
+        std::vector<Draw::PointLineVertex> edgePickAttributes;
+
+        edgeAttributes.reserve(mesh.edgeCount());
+        edgePickAttributes.reserve(mesh.edgeCount());
+
+        for (auto e : mesh.edges()) {
+            bool hovered = e == _hoveredEdge;
+            bool hitTestExcluded = ranges::find(hitTestExclusion.edges, e) != hitTestExclusion.edges.end();
+
+            auto pickable = makeShared<EdgePickable>(this, e);
+            _pickables.push_back(pickable);
+
+            for (size_t vertexInEdgeIndex = 0; vertexInEdgeIndex < 2; ++vertexInEdgeIndex) {
+                auto& v = mesh.vertices(e)[vertexInEdgeIndex];
+                bool selected = mesh.isSelected(v);
+
+                Draw::PointLineVertex attrib;
+                attrib.position = mesh.position(v);
+                attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
+                edgeAttributes.push_back(attrib);
+
+                Draw::PointLineVertex pickAttrib;
+                pickAttrib.position = mesh.position(v);
+                pickAttrib.color = pickable->toIDColor();
+                pickAttrib.width = hitTestExcluded ? 0 : 1;
+                edgePickAttributes.push_back(pickAttrib);
+            }
+        }
+
+        _edgeVBO->setVertices(edgeAttributes);
+        _edgePickVBO->setVertices(edgePickAttributes);
     }
 }
 
