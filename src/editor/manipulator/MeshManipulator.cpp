@@ -98,10 +98,10 @@ void MeshManipulator::handleOnDragEnd(ValueType type) {
 }
 
 void MeshManipulator::updatePosition() {
-
-    auto median = _appState->document()->meshSelection().medianPosition();
-    auto matrix = _object->location().matrixToWorld();
-    setTargetPosition((matrix * dvec4(median, 1)).xyz);
+    auto& mesh = *_mesh;
+    auto selectedVertices = mesh.selectedVertices() | ranges::to_vector;
+    auto medianPos = medianPosition(selectedVertices | ranges::view::transform([&](auto v) { return mesh.position(v); }));
+    setTargetPosition((_objectToWorld * dvec4(medianPos, 1)).xyz);
 }
 
 }
