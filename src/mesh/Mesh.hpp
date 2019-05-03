@@ -154,6 +154,10 @@ public:
     glm::vec3 calculateNormal(FaceHandle face) const;
 
     void clearSelections();
+
+    auto selectedVertices() const {
+        return vertices() | ranges::view::filter([this] (auto handle) { return isSelected(handle); });
+    }
 };
 
 } // namespace NewMesh
