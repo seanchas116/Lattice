@@ -88,42 +88,11 @@ private:
 
     SP<Manipulator::MeshManipulator> _manipulator;
 
-    bool _isVAOTopologyDirty = true;
-    bool _isVAOAttributesDirty = true;
-
-    std::vector<SP<OldMesh::Face>> _faces;
-    std::vector<SP<FacePickable>> _facePickables;
-
-    SP<GL::IndexBuffer> _faceIndexBuffer;
-
-    std::vector<Draw::Vertex> _faceAttributes;
-    SP<GL::VertexBuffer<Draw::Vertex>> _faceVertexBuffer;
-    SP<GL::VAO> _faceVAO;
-
-    std::vector<Draw::Vertex> _facePickAttributes;
-    SP<GL::VertexBuffer<Draw::Vertex>> _facePickVertexBuffer;
+    bool _isVAODirty = true;
     SP<GL::VAO> _facePickVAO;
-
-    std::vector<SP<OldMesh::Edge>> _edges;
-    std::vector<SP<EdgePickable>> _edgePickables;
-
-    std::vector<Draw::PointLineVertex> _edgeAttributes;
-    SP<GL::VertexBuffer<Draw::PointLineVertex>> _edgeVertexBuffer;
     SP<GL::VAO> _edgeVAO;
-
-    std::vector<Draw::PointLineVertex> _edgePickAttributes;
-    SP<GL::VertexBuffer<Draw::PointLineVertex>> _edgePickVertexBuffer;
     SP<GL::VAO> _edgePickVAO;
-
-    std::vector<SP<OldMesh::Vertex>> _vertices;
-    std::vector<SP<VertexPickable>> _vertexPickables;
-
-    std::vector<Draw::PointLineVertex> _vertexAttributes;
-    SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexVertexBuffer;
     SP<GL::VAO> _vertexVAO;
-
-    std::vector<Draw::PointLineVertex> _vertexPickAttributes;
-    SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexPickVertexBuffer;
     SP<GL::VAO> _vertexPickVAO;
 
     std::vector<SP<Viewport::Renderable>> _pickables;
@@ -131,9 +100,9 @@ private:
     SP<Tool> _tool;
 
     // vertex hover
-    Opt<SP<OldMesh::Vertex>> _hoveredVertex;
-    Opt<SP<OldMesh::Edge>> _hoveredEdge;
-    Opt<SP<OldMesh::Face>> _hoveredFace;
+    Opt<Mesh::VertexHandle> _hoveredVertex;
+    Opt<Mesh::EdgeHandle> _hoveredEdge;
+    Opt<Mesh::FaceHandle> _hoveredFace;
 };
 
 }

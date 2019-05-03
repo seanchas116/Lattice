@@ -64,32 +64,32 @@ private:
 
 class MeshEditor::VertexPickable : public MeshEditor::EditorPickable {
 public:
-    VertexPickable(MeshEditor* editor, const SP<OldMesh::Vertex>& vertex) : EditorPickable(editor), _vertex(vertex) {}
+    VertexPickable(MeshEditor* editor, Mesh::VertexHandle vertex) : EditorPickable(editor), _vertex(vertex) {}
     Tool::EventTarget target() const override {
         return {_vertex, {}, {}};
     }
 private:
-    SP<OldMesh::Vertex> _vertex;
+    Mesh::VertexHandle _vertex;
 };
 
 class MeshEditor::EdgePickable : public MeshEditor::EditorPickable {
 public:
-    EdgePickable(MeshEditor* editor, const SP<OldMesh::Edge>& edge) : EditorPickable(editor), _edge(edge) {}
+    EdgePickable(MeshEditor* editor, Mesh::EdgeHandle edge) : EditorPickable(editor), _edge(edge) {}
     Tool::EventTarget target() const override {
         return {{}, _edge, {}};
     }
 private:
-    SP<OldMesh::Edge> _edge;
+    Mesh::EdgeHandle _edge;
 };
 
 class MeshEditor::FacePickable : public MeshEditor::EditorPickable {
 public:
-    FacePickable(MeshEditor* editor, const SP<OldMesh::Face>& face) : EditorPickable(editor), _face(face) {}
+    FacePickable(MeshEditor* editor, Mesh::FaceHandle face) : EditorPickable(editor), _face(face) {}
     Tool::EventTarget target() const override {
         return {{}, {}, _face};
     }
 private:
-    SP<OldMesh::Face> _face;
+    Mesh::FaceHandle _face;
 };
 
 MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::MeshObject> &object) :
