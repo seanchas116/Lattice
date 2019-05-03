@@ -25,10 +25,6 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
     auto& mesh = *this->mesh();
     auto modelMatrix = object()->location().matrixToWorld();
 
-    if (_drawnUVPoints.empty()) {
-        appState()->document()->history()->beginChange(tr("Draw"));
-    }
-
     if (target.vertex) {
         if (_previewUVPoint) {
             mesh.removeVertex(mesh.vertex(*_previewUVPoint));
@@ -59,7 +55,7 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
             for (auto& p : points) {
                 mesh.setSelected(mesh.vertex(p), true);
             }
-            emit finished();
+            emit meshChangeFinished(tr("Draw"));
 
             return;
         }
@@ -167,7 +163,7 @@ void DrawTool::keyPressTool(QKeyEvent *event) {
         }
         _drawnUVPoints.clear();
         _previewUVPoint = std::nullopt;
-        emit finished();
+        emit meshChangeFinished(tr("Draw"));
     }
 }
 

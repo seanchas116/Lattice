@@ -65,8 +65,6 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
             return;
         }
 
-        appState()->document()->history()->beginChange(tr("Extrude"));
-
         _oldToNewUVPoints.clear();
 
         std::unordered_set<Mesh::EdgeHandle> edges;
@@ -199,7 +197,7 @@ void ExtrudeTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewpo
 
     if (_dragStarted) {
         _dragStarted = false;
-        emit finished();
+        emit meshChangeFinished(tr("Extrude"));
     }
 }
 

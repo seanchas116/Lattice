@@ -83,7 +83,7 @@ void LoopCutTool::mousePressTool(const Tool::EventTarget &target, const Viewport
     for (auto& v : vertices) {
         mesh.setSelected(v, true);
     }
-    emit finished();
+    emit meshChangeFinished(tr("Loop Cut"));
 }
 
 void LoopCutTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {

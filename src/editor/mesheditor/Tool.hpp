@@ -53,7 +53,7 @@ public:
 
 signals:
     void meshChanged();
-    void finished();
+    void meshChangeFinished(const QString& text);
 
 private:
     SP<State::AppState> _appState;
