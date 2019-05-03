@@ -98,21 +98,11 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     _mesh(makeShared<Mesh::Mesh>(object->mesh())),
     _manipulator(makeShared<Manipulator::MeshManipulator>(appState, object)),
 
-    _faceIndexBuffer(makeShared<GL::IndexBuffer>()),
-    _faceVertexBuffer(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
-    _faceVAO(makeShared<GL::VAO>(_faceVertexBuffer, _faceIndexBuffer)),
-    _facePickVertexBuffer(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
-    _facePickVAO(makeShared<GL::VAO>(_facePickVertexBuffer, _faceIndexBuffer)),
-
-    _edgeVertexBuffer(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
-    _edgeVAO(makeShared<GL::VAO>(_edgeVertexBuffer, GL::Primitive::Line)),
-    _edgePickVertexBuffer(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
-    _edgePickVAO(makeShared<GL::VAO>(_edgePickVertexBuffer, GL::Primitive::Line)),
-
-    _vertexVertexBuffer(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
-    _vertexVAO(makeShared<GL::VAO>(_vertexVertexBuffer, GL::Primitive::Point)),
-    _vertexPickVertexBuffer(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
-    _vertexPickVAO(makeShared<GL::VAO>(_vertexPickVertexBuffer, GL::Primitive::Point)),
+    _facePickVAO(makeShared<GL::VAO>()),
+    _edgeVAO(makeShared<GL::VAO>()),
+    _edgePickVAO(makeShared<GL::VAO>()),
+    _vertexVAO(makeShared<GL::VAO>()),
+    _vertexPickVAO(makeShared<GL::VAO>()),
 
     _tool(makeShared<MoveTool>(appState, object, _mesh))
 {
