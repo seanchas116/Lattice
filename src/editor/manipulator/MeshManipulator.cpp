@@ -10,12 +10,9 @@ namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
-MeshManipulator::MeshManipulator(const SP<State::AppState> &appState, const SP<Document::MeshObject> &object) :
-    _appState(appState),
-    _object(object)
-{
-    connect(object->oldMesh().get(), &OldMesh::Mesh::changed, this, &MeshManipulator::updatePosition);
-    connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshManipulator::updatePosition);
+MeshManipulator::MeshManipulator(const glm::dmat4& objectToWorldMatrix, const SP<Mesh::Mesh> &mesh) : _objectToWorld(objectToWorldMatrix),
+                                                                                                      _worldToObject(inverse(objectToWorldMatrix)),
+                                                                                                      _mesh(mesh) {
     updatePosition();
 
     connect(this, &Manipulator::onDragBegin, this, &MeshManipulator::handleOnDragBegin);
@@ -25,16 +22,12 @@ MeshManipulator::MeshManipulator(const SP<State::AppState> &appState, const SP<D
 
 void MeshManipulator::handleOnDragBegin(ValueType type, dvec3 values) {
     Q_UNUSED(type);
-    _appState->document()->history()->beginChange(tr("Move Vertex"));
-
     _initialValues = values;
 
-    dmat4 objectToWorld = _object->location().matrixToWorld();
-
     for (auto& v : _appState->document()->meshSelection().vertices) {
-        _initialPositions[v] = (objectToWorld * dvec4(v->position(), 1)).xyz;
+        _initialPositions[v] = (_objectToWorld * dvec4(v->position(), 1)).xyz;
     }
-    _initialMedianPos = (objectToWorld * dvec4(_appState->document()->meshSelection().medianPosition(), 1)).xyz;
+    _initialMedianPos = (_objectToWorld * dvec4(_appState->document()->meshSelection().medianPosition(), 1)).xyz;
 }
 
 void MeshManipulator::handleOnDragMove(ValueType type, dvec3 values) {
@@ -86,6 +79,7 @@ void MeshManipulator::handleOnDragEnd(ValueType type) {
 }
 
 void MeshManipulator::updatePosition() {
+
     auto median = _appState->document()->meshSelection().medianPosition();
     auto matrix = _object->location().matrixToWorld();
     setTargetPosition((matrix * dvec4(median, 1)).xyz);
