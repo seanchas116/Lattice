@@ -151,6 +151,8 @@ public:
     uint32_t material(FaceHandle face) const { return faceData(face).material; }
     void setMaterial(FaceHandle face, uint32_t material) { faceData(face).material = material; }
 
+    glm::vec3 calculateNormal(FaceHandle face) const;
+
     void clearSelections();
 };
 

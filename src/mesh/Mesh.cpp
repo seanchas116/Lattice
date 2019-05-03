@@ -206,6 +206,36 @@ void Mesh::collectGarbage() {
     }
 }
 
+glm::vec3 Mesh::calculateNormal(FaceHandle face) const {
+    auto vertices = this->vertices(face);
+
+    if (vertices.size() == 3) {
+        return normalize(cross(position(vertices[1]) - position(vertices[0]), position(vertices[2]) - position(vertices[0])));
+    }
+
+    // find average vertex normal
+    glm::vec3 normalSum(0);
+    int sumCount = 0;
+    int vertexCount = int(vertices.size());
+
+    for (int i = 0; i < vertexCount; ++i) {
+        auto prev = position(vertices[i]);
+        auto curr = position(vertices[(i + 1) % vertexCount]);
+        auto next = position(vertices[(i + 2) % vertexCount]);
+        auto crossValue = cross(next- curr, prev - curr);
+        if (crossValue == glm::vec3(0)) {
+            continue;
+        }
+        auto normal = normalize(crossValue);
+        normalSum += normal;
+        ++sumCount;
+    }
+    if (sumCount == 0) {
+        return glm::vec3(0); // TODO: what should we do?
+    }
+    return normalize(normalSum);
+}
+
 void Mesh::clearSelections() {
     for (auto v : vertices()) {
         setSelected(v, false);

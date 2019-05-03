@@ -46,46 +46,12 @@ SP<GL::VAO> MeshVAOGenerator::generateEdgeVAO() const {
     return edgeVAO;
 }
 
-namespace {
-
-glm::vec3 calculateFaceNormal(const Mesh::Mesh& mesh, Mesh::FaceHandle face) {
-    auto vertices = mesh.vertices(face);
-
-    if (vertices.size() == 3) {
-        return normalize(cross(mesh.position(vertices[1]) - mesh.position(vertices[0]), mesh.position(vertices[2]) - mesh.position(vertices[0])));
-    }
-
-    // find average vertex normal
-    glm::vec3 normalSum(0);
-    int sumCount = 0;
-    int vertexCount = int(vertices.size());
-
-    for (int i = 0; i < vertexCount; ++i) {
-        auto prev = mesh.position(vertices[i]);
-        auto curr = mesh.position(vertices[(i + 1) % vertexCount]);
-        auto next = mesh.position(vertices[(i + 2) % vertexCount]);
-        auto crossValue = cross(next- curr, prev - curr);
-        if (crossValue == vec3(0)) {
-            continue;
-        }
-        auto normal = normalize(crossValue);
-        normalSum += normal;
-        ++sumCount;
-    }
-    if (sumCount == 0) {
-        return vec3(0); // TODO: what should we do?
-    }
-    return normalize(normalSum);
-}
-
-}
-
 std::unordered_map<uint32_t, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() const {
     std::vector<Draw::Vertex> vertexAttributes;
     std::unordered_map<uint32_t, std::vector<GL::IndexBuffer::Triangle>> trianglesMap;
 
     for (auto face : _mesh.faces()) {
-        auto faceNormal = calculateFaceNormal(_mesh, face);
+        auto faceNormal = _mesh.calculateNormal(face);
 
         auto addPoint = [&](Mesh::FaceHandle face, uint32_t indexInFace) {
             auto p = _mesh.uvPoints(face)[indexInFace];

@@ -151,18 +151,16 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
             mesh.removeFace(face);
         }
 
-        // TODO: calculate normal
-        /*
         if (faces.empty()) {
             _useGuide = false;
         } else {
             _useGuide = true;
             glm::dvec3 normal {0};
             for (auto& face : faces) {
-                normal += face->normal();
+                normal += mesh.calculateNormal(face);
             }
             _guideDirection = glm::normalize(normal);
-        }*/
+        }
 
         mesh.clearSelections();
 
