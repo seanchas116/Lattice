@@ -101,8 +101,10 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     _facePickVAO(makeShared<GL::VAO>()),
     _edgeVAO(makeShared<GL::VAO>()),
     _edgePickVAO(makeShared<GL::VAO>()),
-    _vertexVAO(makeShared<GL::VAO>()),
-    _vertexPickVAO(makeShared<GL::VAO>()),
+    _vertexVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
+    _vertexVAO(makeShared<GL::VAO>(_vertexVBO, GL::Primitive::Point)),
+    _vertexPickVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
+    _vertexPickVAO(makeShared<GL::VAO>(_vertexPickVBO, GL::Primitive::Point)),
 
     _tool(makeShared<MoveTool>(appState, object, _mesh))
 {
@@ -277,6 +279,43 @@ void MeshEditor::contextMenuTarget(const Tool::EventTarget &target, const Viewpo
     contextMenu.addAction(tr("Delete Edges"), _appState.get(), &State::AppState::deleteEdges);
     contextMenu.addAction(tr("Delete Faces"), _appState.get(), &State::AppState::deleteFaces);
     contextMenu.exec(event.originalEvent->globalPos());
+}
+
+void MeshEditor::updateVAOs() {
+    auto& mesh = *_mesh;
+    auto hitTestExclusion = _tool->hitTestExclusion();
+
+    {
+        std::vector<Draw::PointLineVertex> vertexAttributes;
+        std::vector<Draw::PointLineVertex> vertexPickAttributes;
+        std::vector<SP<VertexPickable>> vertexPickables;
+
+        vertexAttributes.reserve(mesh.vertexCount());
+        vertexPickAttributes.reserve(mesh.vertexCount());
+
+        for (auto v : mesh.vertices()) {
+            bool selected = mesh.isSelected(v);
+            bool hovered = v == _hoveredVertex;
+            bool hitTestExcluded = ranges::find(hitTestExclusion.vertices, v) != hitTestExclusion.vertices.end();
+
+            Draw::PointLineVertex attrib;
+            attrib.position = mesh.position(v);
+            attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
+            vertexAttributes.push_back(attrib);
+
+            auto pickable = makeShared<VertexPickable>(this, v);
+            vertexPickables.push_back(pickable);
+
+            Draw::PointLineVertex pickAttrib;
+            pickAttrib.position = mesh.position(v);
+            pickAttrib.color = pickable->toIDColor();
+            pickAttrib.width = hitTestExcluded ? 0 : 1;
+            vertexPickAttributes.push_back(pickAttrib);
+        }
+
+        _vertexVBO->setVertices(vertexAttributes);
+        _vertexPickVBO->setVertices(vertexPickAttributes);
+    }
 }
 
 }

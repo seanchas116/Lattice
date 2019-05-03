@@ -87,7 +87,9 @@ private:
     SP<GL::VAO> _facePickVAO;
     SP<GL::VAO> _edgeVAO;
     SP<GL::VAO> _edgePickVAO;
+    SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexVBO;
     SP<GL::VAO> _vertexVAO;
+    SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexPickVBO;
     SP<GL::VAO> _vertexPickVAO;
 
     std::vector<SP<Viewport::Renderable>> _pickables;
