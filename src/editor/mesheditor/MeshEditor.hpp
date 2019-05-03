@@ -58,8 +58,6 @@ public:
 
 private:
     void handleToolChange(State::Tool tool);
-    void handleMeshTopologyChange();
-    void handleMeshChange();
 
     void mousePressTarget(const Tool::EventTarget& target, const Viewport::MouseEvent &event);
     void mouseMoveTarget(const Tool::EventTarget& target, const Viewport::MouseEvent &event);
@@ -70,10 +68,7 @@ private:
 
     void contextMenuTarget(const Tool::EventTarget& target, const Viewport::ContextMenuEvent& event);
 
-    void updateVAOTopology();
-    void updateVAOAttributes();
-
-    void updateWholeVAOs();
+    void updateVAOs();
     void updateManinpulatorVisibility();
     void updateChildren();
 
@@ -88,7 +83,7 @@ private:
 
     SP<Manipulator::MeshManipulator> _manipulator;
 
-    bool _isVAODirty = true;
+    bool _isVAOsDirty = true;
     SP<GL::VAO> _facePickVAO;
     SP<GL::VAO> _edgeVAO;
     SP<GL::VAO> _edgePickVAO;
