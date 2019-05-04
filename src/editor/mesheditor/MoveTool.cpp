@@ -37,7 +37,7 @@ void MoveTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
 
     auto& mesh = *this->mesh();
 
-    auto clickedVertices = target.vertices();
+    auto clickedVertices = target.vertices(mesh);
     if (clickedVertices.empty()) {
         _borderSelectMode = true;
         _borderSelectTool->setVisible(true);

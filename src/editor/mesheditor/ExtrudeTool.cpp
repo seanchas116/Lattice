@@ -31,7 +31,7 @@ Tool::HitTestExclusion ExtrudeTool::hitTestExclusion() const {
 void ExtrudeTool::mousePressTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     auto& mesh = *this->mesh();
 
-    auto clickedVertices = target.vertices();
+    auto clickedVertices = target.vertices(mesh);
     if (clickedVertices.empty()) {
         return;
     }

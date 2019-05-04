@@ -1,12 +1,26 @@
 #include "Tool.hpp"
+#include "../../mesh/Mesh.hpp"
 
 namespace Lattice {
 namespace Editor {
 namespace MeshEditor {
 
-std::unordered_set<Mesh::VertexHandle> Tool::EventTarget::vertices() const {
-    // TODO
-    return {};
+std::unordered_set<Mesh::VertexHandle> Tool::EventTarget::vertices(const Mesh::Mesh &mesh) const {
+    std::unordered_set<Mesh::VertexHandle> vertices;
+    if (vertex) {
+        vertices.insert(*vertex);
+    }
+    if (edge) {
+        vertices.insert(mesh.vertices(*edge)[0]);
+        vertices.insert(mesh.vertices(*edge)[1]);
+    }
+    if (face) {
+        for (auto v : mesh.vertices(*face)) {
+            vertices.insert(v);
+        }
+    }
+
+    return vertices;
 }
 
 Tool::~Tool() {

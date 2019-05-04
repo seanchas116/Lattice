@@ -23,7 +23,7 @@ public:
         Opt<Mesh::EdgeHandle> edge;
         Opt<Mesh::FaceHandle> face;
 
-        std::unordered_set<Mesh::VertexHandle> vertices() const;
+        std::unordered_set<Mesh::VertexHandle> vertices(const Mesh::Mesh& mesh) const;
     };
 
     struct HitTestExclusion {
