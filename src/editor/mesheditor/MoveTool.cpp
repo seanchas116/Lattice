@@ -26,6 +26,7 @@ bool set_includes(const std::unordered_set<T>& set, const std::unordered_set<T>&
 
 MoveTool::MoveTool(const SP<State::AppState> &appState, const SP<Document::MeshObject> &object, const SP<Mesh::Mesh> &mesh) : Tool(appState, object, mesh),
                                                                                                                               _borderSelectTool(makeShared<BorderSelectTool>(appState, object, mesh)) {
+    connect(_borderSelectTool.get(), &Tool::meshChanged, this, &Tool::meshChanged);
     setChildRenderables({_borderSelectTool});
     _borderSelectTool->setVisible(false);
 }

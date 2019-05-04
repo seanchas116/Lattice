@@ -64,7 +64,6 @@ void BorderSelectTool::mouseReleaseTool(const Tool::EventTarget &target, const V
     _dragged = false;
     _vertices.clear();
     emit updated();
-    emit meshChangeFinished(QString());
 }
 
 void BorderSelectTool::draw2D(QPainter *painter, const QSize &viewportSize) {
