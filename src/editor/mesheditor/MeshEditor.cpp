@@ -121,12 +121,9 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     connect(_manipulator.get(), &Manipulator::Manipulator::onContextMenu, this, [this](auto& event) {
         contextMenuTarget({}, event);
     });
-    connect(_manipulator.get(), &Manipulator::MeshManipulator::meshChanged, this, [this] {
-        _isVAOsDirty = true;
-        emit updated();
-    });
+    connect(_manipulator.get(), &Manipulator::MeshManipulator::meshChanged, this, &MeshEditor::handleMeshChanged);
     connect(_manipulator.get(), &Manipulator::MeshManipulator::meshChangeFinished, this, [this] {
-        commitMeshChange(tr("Move Vertices"));
+        handleMeshChangeFinished(tr("Move Vertices"));
     });
 
     connect(appState.get(), &State::AppState::isTranslateHandleVisibleChanged, _manipulator.get(), &Manipulator::Manipulator::setTranslateHandleVisible);
@@ -206,14 +203,9 @@ void MeshEditor::handleToolChange(State::Tool tool) {
         _tool = makeShared<MoveTool>(_appState, _object, _mesh);
         break;
     }
-    connect(_tool.get(), &Tool::meshChanged, this, [this] {
-        updateManipulatorVisibility();
-        _manipulator->updatePosition();
-        _isVAOsDirty = true;
-        emit updated();
-    });
+    connect(_tool.get(), &Tool::meshChanged, this, &MeshEditor::handleMeshChanged);
     connect(_tool.get(), &Tool::meshChangeFinished, this, [this] (const QString& title) {
-        commitMeshChange(title);
+        handleMeshChangeFinished(title);
         _appState->setTool(State::Tool::None);
     });
     updateManipulatorVisibility();
@@ -232,7 +224,14 @@ void MeshEditor::updateChildren() {
     setChildRenderables(children);
 }
 
-void MeshEditor::commitMeshChange(const QString &title) {
+void MeshEditor::handleMeshChanged() {
+    updateManipulatorVisibility();
+    _manipulator->updatePosition();
+    _isVAOsDirty = true;
+    emit updated();
+}
+
+void MeshEditor::handleMeshChangeFinished(const QString &title) {
     _appState->document()->history()->beginChange(title);
     _object->setMesh(*_mesh);
 }

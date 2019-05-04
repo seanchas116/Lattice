@@ -73,7 +73,8 @@ private:
     void updateManipulatorVisibility();
     void updateChildren();
 
-    void commitMeshChange(const QString& title);
+    void handleMeshChanged();
+    void handleMeshChangeFinished(const QString& title);
 
     class EditorPickable;
     class VertexPickable;
