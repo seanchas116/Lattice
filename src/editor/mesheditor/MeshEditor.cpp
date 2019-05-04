@@ -221,7 +221,8 @@ void MeshEditor::handleToolChange(State::Tool tool) {
 }
 
 void MeshEditor::updateManipulatorVisibility() {
-    _manipulator->setVisible(!_appState->document()->meshSelection().empty() && _appState->tool() == State::Tool::None);
+    bool isVertexSelected = ranges::any_of(_mesh->vertices(), [&] (auto v) { return _mesh->isSelected(v); });
+    _manipulator->setVisible(isVertexSelected  && _appState->tool() == State::Tool::None);
 }
 
 void MeshEditor::updateChildren() {
