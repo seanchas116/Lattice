@@ -67,18 +67,8 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
 
         _oldToNewUVPoints.clear();
 
-        std::unordered_set<Mesh::EdgeHandle> edges;
-        for (auto v : _vertices) {
-            for (auto e : mesh.edges(v)) {
-                edges.insert(e);
-            }
-        }
-        std::unordered_set<Mesh::FaceHandle> faces;
-        for (auto v : _vertices) {
-            for (auto f : mesh.faces(v)) {
-                faces.insert(f);
-            }
-        }
+        auto edges = mesh.edges(_vertices);
+        auto faces = mesh.faces(_vertices);
 
         std::unordered_set<Mesh::EdgeHandle> openEdges;
         for (auto& edge : edges) {
