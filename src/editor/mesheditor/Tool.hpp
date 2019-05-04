@@ -1,10 +1,11 @@
 #pragma once
-#include <QObject>
 #include "../../state/AppState.hpp"
 #include "../../mesh/Handle.hpp"
 #include "../../document/MeshObject.hpp"
 #include "../../viewport/MouseEvent.hpp"
 #include "../../viewport/RenderableObject.hpp"
+#include <QObject>
+#include <unordered_set>
 
 namespace Lattice {
 

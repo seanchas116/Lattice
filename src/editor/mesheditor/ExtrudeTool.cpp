@@ -166,14 +166,11 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
         offset = glm::dot(offset, _guideDirection) * _guideDirection;
     }
 
-    std::unordered_map<SP<OldMesh::Vertex>, dvec3> newPositions;
-
     for (auto& [oldUV, newUV] : _oldToNewUVPoints) {
         auto newPos = _initPositions[mesh.vertex(oldUV)] + offset;
         mesh.setPosition(mesh.vertex(newUV), newPos);
     }
 
-    object()->oldMesh()->setPosition(newPositions);
      emit meshChanged();
 }
 

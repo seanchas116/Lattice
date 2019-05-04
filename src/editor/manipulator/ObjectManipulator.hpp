@@ -1,6 +1,8 @@
 #pragma once
 #include "Manipulator.hpp"
 #include "../../support/Location.hpp"
+#include <unordered_set>
+#include <unordered_map>
 
 namespace Lattice {
 

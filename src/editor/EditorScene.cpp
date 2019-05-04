@@ -4,7 +4,6 @@
 #include "MeshRenderer.hpp"
 #include "./mesheditor/MeshEditor.hpp"
 #include "./manipulator/ObjectManipulator.hpp"
-#include "./manipulator/OldMeshManipulator.hpp"
 #include "../state/AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/Object.hpp"
