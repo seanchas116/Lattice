@@ -12,7 +12,6 @@
 #include "../../document/History.hpp"
 #include "../../document/MeshObject.hpp"
 #include "../../mesh/Mesh.hpp"
-#include "../../oldmesh/Mesh.hpp"
 #include "../../support/Debug.hpp"
 #include "../../support/Camera.hpp"
 #include <QMouseEvent>

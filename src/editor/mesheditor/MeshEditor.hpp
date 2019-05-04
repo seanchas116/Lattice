@@ -9,11 +9,7 @@
 #include <glm/glm.hpp>
 #include <unordered_map>
 
-class QMouseEvent;
-
 namespace Lattice {
-
-class Camera;
 
 namespace State {
 class AppState;
