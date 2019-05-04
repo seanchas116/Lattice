@@ -98,7 +98,6 @@ void MoveTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::Mo
         if (distance(_initViewportPos, dvec2(event.viewportPos.xy)) < appState()->preferences()->moveThreshold()) {
             return;
         }
-        appState()->document()->history()->beginChange(tr("Move Vertex"));
         _dragStarted = true;
     }
 
