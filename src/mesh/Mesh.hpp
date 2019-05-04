@@ -3,6 +3,8 @@
 #include <array>
 #include <glm/glm.hpp>
 #include <range/v3/all.hpp>
+#include <unordered_map>
+#include <unordered_set>
 #include "Handle.hpp"
 #include "../support/Ray.hpp"
 
@@ -157,6 +159,54 @@ public:
 
     auto selectedVertices() const {
         return vertices() | ranges::view::filter([this] (auto handle) { return isSelected(handle); });
+    }
+
+    template <typename TVertices, CONCEPT_REQUIRES_(ranges::Range<TVertices>())>
+    auto edges(const TVertices& vertices) const {
+        std::unordered_map<EdgeHandle, size_t> edgeCounts;
+
+        for (auto v : vertices) {
+            for (auto e : edges(v)) {
+                if (edgeCounts.find(e) != edgeCounts.end()) {
+                    ++edgeCounts[e];
+                } else {
+                    edgeCounts[e] = 1;
+                }
+            }
+        }
+        std::unordered_set<EdgeHandle> edges;
+
+        for (auto [edge, count] : edgeCounts) {
+            if (count == 2) {
+                edges.insert(edge);
+            }
+        }
+
+        return edges;
+    }
+
+    template <typename TVertices, CONCEPT_REQUIRES_(ranges::Range<TVertices>())>
+    auto faces(const TVertices& vertices) const {
+        std::unordered_map<FaceHandle, size_t> faceCounts;
+
+        for (auto& v : vertices) {
+            for (auto& f : faces(v)) {
+                if (faceCounts.find(f) != faceCounts.end()) {
+                    ++faceCounts[f];
+                } else {
+                    faceCounts[f] = 1;
+                }
+            }
+        }
+        std::unordered_set<FaceHandle> faces;
+
+        for (auto [face, count] : faceCounts) {
+            if (count == this->vertices(face).size()) {
+                faces.insert(face);
+            }
+        }
+
+        return faces;
     }
 };
 
