@@ -9,11 +9,7 @@
 #include <glm/glm.hpp>
 #include <unordered_map>
 
-class QMouseEvent;
-
 namespace Lattice {
-
-class Camera;
 
 namespace State {
 class AppState;
@@ -21,11 +17,6 @@ class AppState;
 
 namespace Document {
 class MeshObject;
-}
-
-namespace Mesh {
-class Mesh;
-class Material;
 }
 
 namespace GL {
@@ -36,6 +27,7 @@ class VAO;
 }
 
 namespace Editor {
+
 namespace Manipulator {
 class MeshManipulator;
 }
@@ -63,8 +55,6 @@ public:
 
 private:
     void handleToolChange(State::Tool tool);
-    void handleMeshTopologyChange();
-    void handleMeshChange();
 
     void mousePressTarget(const Tool::EventTarget& target, const Viewport::MouseEvent &event);
     void mouseMoveTarget(const Tool::EventTarget& target, const Viewport::MouseEvent &event);
@@ -75,12 +65,12 @@ private:
 
     void contextMenuTarget(const Tool::EventTarget& target, const Viewport::ContextMenuEvent& event);
 
-    void updateVAOTopology();
-    void updateVAOAttributes();
-
-    void updateWholeVAOs();
-    void updateManinpulatorVisibility();
+    void updateVAOs();
+    void updateManipulatorVisibility();
     void updateChildren();
+
+    void handleMeshChanged();
+    void handleMeshChangeFinished(const QString& title);
 
     class EditorPickable;
     class VertexPickable;
@@ -89,45 +79,21 @@ private:
 
     SP<State::AppState> _appState;
     SP<Document::MeshObject> _object;
+    SP<Mesh::Mesh> _mesh;
 
     SP<Manipulator::MeshManipulator> _manipulator;
 
-    bool _isVAOTopologyDirty = true;
-    bool _isVAOAttributesDirty = true;
-
-    std::vector<SP<Mesh::Face>> _faces;
-    std::vector<SP<FacePickable>> _facePickables;
-
-    SP<GL::IndexBuffer> _faceIndexBuffer;
-
-    std::vector<Draw::Vertex> _faceAttributes;
-    SP<GL::VertexBuffer<Draw::Vertex>> _faceVertexBuffer;
-    SP<GL::VAO> _faceVAO;
-
-    std::vector<Draw::Vertex> _facePickAttributes;
-    SP<GL::VertexBuffer<Draw::Vertex>> _facePickVertexBuffer;
+    bool _isVAOsDirty = true;
+    SP<GL::VertexBuffer<Draw::Vertex>> _facePickVBO;
+    SP<GL::IndexBuffer> _faceIBO;
     SP<GL::VAO> _facePickVAO;
-
-    std::vector<SP<Mesh::Edge>> _edges;
-    std::vector<SP<EdgePickable>> _edgePickables;
-
-    std::vector<Draw::PointLineVertex> _edgeAttributes;
-    SP<GL::VertexBuffer<Draw::PointLineVertex>> _edgeVertexBuffer;
+    SP<GL::VertexBuffer<Draw::PointLineVertex>> _edgeVBO;
     SP<GL::VAO> _edgeVAO;
-
-    std::vector<Draw::PointLineVertex> _edgePickAttributes;
-    SP<GL::VertexBuffer<Draw::PointLineVertex>> _edgePickVertexBuffer;
+    SP<GL::VertexBuffer<Draw::PointLineVertex>> _edgePickVBO;
     SP<GL::VAO> _edgePickVAO;
-
-    std::vector<SP<Mesh::Vertex>> _vertices;
-    std::vector<SP<VertexPickable>> _vertexPickables;
-
-    std::vector<Draw::PointLineVertex> _vertexAttributes;
-    SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexVertexBuffer;
+    SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexVBO;
     SP<GL::VAO> _vertexVAO;
-
-    std::vector<Draw::PointLineVertex> _vertexPickAttributes;
-    SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexPickVertexBuffer;
+    SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexPickVBO;
     SP<GL::VAO> _vertexPickVAO;
 
     std::vector<SP<Viewport::Renderable>> _pickables;
@@ -135,9 +101,9 @@ private:
     SP<Tool> _tool;
 
     // vertex hover
-    Opt<SP<Mesh::Vertex>> _hoveredVertex;
-    Opt<SP<Mesh::Edge>> _hoveredEdge;
-    Opt<SP<Mesh::Face>> _hoveredFace;
+    Opt<Mesh::VertexHandle> _hoveredVertex;
+    Opt<Mesh::EdgeHandle> _hoveredEdge;
+    Opt<Mesh::FaceHandle> _hoveredFace;
 };
 
 }

@@ -1,4 +1,5 @@
 #include "BorderSelectTool.hpp"
+#include "../../mesh/Mesh.hpp"
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
 #include "../../support/Debug.hpp"
@@ -20,10 +21,10 @@ void BorderSelectTool::mousePressTool(const Tool::EventTarget &target, const Vie
     _initViewportPos = _currentViewportPos = event.viewportPos;
 
     _vertices.clear();
-    _vertices.reserve(object()->mesh()->vertices().size());
-    for (auto& vertex : object()->mesh()->vertices()) {
+    _vertices.reserve(mesh()->vertexCount());
+    for (auto vertex : mesh()->vertices()) {
         // TODO: optimize
-        auto [screenPos, isInScreen] = event.camera->mapModelToViewport(object()->location().matrixToWorld(), vertex->position());
+        auto [screenPos, isInScreen] = event.camera->mapModelToViewport(object()->location().matrixToWorld(), mesh()->position(vertex));
         if (!isInScreen) {
             continue;
         }
@@ -31,6 +32,7 @@ void BorderSelectTool::mousePressTool(const Tool::EventTarget &target, const Vie
     }
 
     emit updated();
+    emit meshChanged();
 }
 
 void BorderSelectTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -44,16 +46,16 @@ void BorderSelectTool::mouseMoveTool(const Tool::EventTarget &target, const View
     auto minPos = min(_initViewportPos, _currentViewportPos);
     auto maxPos = max(_initViewportPos, _currentViewportPos);
 
-    Mesh::MeshFragment selection;
+    mesh()->clearSelections();
 
     for (auto& [vertex, screenPos] : _vertices) {
         if (minPos.x <= screenPos.x && minPos.y <= screenPos.y && screenPos.x <= maxPos.x && screenPos.y <= maxPos.y) {
-            selection.vertices.insert(vertex);
+            mesh()->setSelected(vertex, true);
         }
     }
 
-    appState()->document()->setMeshSelection(selection);
     emit updated();
+    emit meshChanged();
 }
 
 void BorderSelectTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -62,7 +64,6 @@ void BorderSelectTool::mouseReleaseTool(const Tool::EventTarget &target, const V
     _dragged = false;
     _vertices.clear();
     emit updated();
-    emit finished();
 }
 
 void BorderSelectTool::draw2D(QPainter *painter, const QSize &viewportSize) {

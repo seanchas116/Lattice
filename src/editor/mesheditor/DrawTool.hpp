@@ -7,7 +7,7 @@ namespace MeshEditor {
 
 class DrawTool : public Tool {
 public:
-    DrawTool(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object) : Tool(appState, object) {}
+    DrawTool(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object, const SP<Mesh::Mesh>& mesh) : Tool(appState, object, mesh) {}
 
     HitTestExclusion hitTestExclusion() const override;
 
@@ -18,8 +18,8 @@ public:
 
 private:
     // draw
-    std::vector<SP<Mesh::UVPoint>> _drawnUVPoints;
-    Opt<SP<Mesh::UVPoint>> _previewUVPoint;
+    std::vector<Mesh::UVPointHandle> _drawnUVPoints;
+    Opt<Mesh::UVPointHandle> _previewUVPoint;
 };
 
 } // namespace MeshEditor

@@ -1,6 +1,8 @@
 #include "MeshObject.hpp"
 #include "../mesh/Mesh.hpp"
+#include "../oldmesh/Mesh.hpp"
 #include "../support/Debug.hpp"
+#include "../support/PropertyChange.hpp"
 #include <nlohmann/json.hpp>
 #include <QTimer>
 
@@ -9,17 +11,41 @@ using namespace glm;
 namespace Lattice {
 namespace Document {
 
-MeshObject::MeshObject() : _mesh(makeShared<Mesh::Mesh>()) {
-    connect(_mesh.get(), &Mesh::Mesh::changed, this, &MeshObject::handleMeshChange);
-    _mesh->setChangeHandler([this](const auto& change) {
+MeshObject::MeshObject() : _mesh(std::make_unique<Mesh::Mesh>()),
+                           _materials({Material()}),
+                           _oldMesh(makeShared<OldMesh::Mesh>()) {
+    connect(_oldMesh.get(), &OldMesh::Mesh::changed, this, &MeshObject::handleOldMeshChange);
+    _oldMesh->setChangeHandler([this](const auto& change) {
         addChange(change);
     });
+}
+
+MeshObject::~MeshObject() {
+}
+
+void MeshObject::setMesh(Mesh::Mesh mesh) {
+    auto self = *dynamicPointerCast<MeshObject>(sharedFromThis());
+    auto change = makeShared<PropertyChange<MeshObject, Mesh::Mesh>>(self, std::move(mesh), &MeshObject::mesh, &MeshObject::setMeshInternal);
+    addChange(change);
+}
+
+void MeshObject::setMeshInternal(Mesh::Mesh mesh) {
+    *_mesh = std::move(mesh);
+    emit meshChanged(*_mesh);
+}
+
+void MeshObject::setMaterials(std::vector<Material> materials) {
+    if (_materials == materials) {
+        return;
+    }
+    _materials = std::move(materials);
+    emit materialsChanged(_materials);
 }
 
 SP<Object> MeshObject::clone() const {
     auto cloned = makeShared<MeshObject>();
     // FIXME: object name is not copied
-    cloned->_mesh = _mesh->clone();
+    cloned->_oldMesh = _oldMesh->clone();
     return cloned;
 }
 
@@ -37,12 +63,12 @@ void MeshObject::fromJSON(const nlohmann::json &json) {
     //_shape->fomJSON(json["shape"]);
 }
 
-void MeshObject::handleMeshChange() {
-    if (!_meshChangedInTick) {
-        _meshChangedInTick = true;
+void MeshObject::handleOldMeshChange() {
+    if (!_oldMeshChangedInTick) {
+        _oldMeshChangedInTick = true;
         QTimer::singleShot(0, this, [this] {
-            _meshChangedInTick = false;
-            emit meshChangedInLastTick();
+            _oldMeshChangedInTick = false;
+            emit oldMeshChangedInLastTick();
         });
     }
 }

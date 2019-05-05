@@ -4,6 +4,7 @@
 #include "../MeshVAOGenerator.hpp"
 #include "../../draw/Operations.hpp"
 #include "../../mesh/Mesh.hpp"
+#include "../../mesh/algorithm/AddCircle.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
 #include "../../support/Debug.hpp"
@@ -19,7 +20,7 @@ namespace Manipulator {
 RotateHandle::RotateHandle(int axis) :
     _axis(axis),
     _handleMesh(createMesh()),
-    _handleVAO(MeshVAOGenerator(_handleMesh).generateEdgeVAO())
+    _handleVAO(MeshVAOGenerator(*_handleMesh).generateEdgeVAO())
 {
     initializeOpenGLFunctions();
 }
@@ -103,8 +104,8 @@ void RotateHandle::contextMenuEvent(const Viewport::ContextMenuEvent &event) {
 
 SP<Mesh::Mesh> RotateHandle::createMesh() {
     auto mesh = makeShared<Mesh::Mesh>();
-    auto material = mesh->addMaterial();
-    mesh->addCircle(dvec3(0), 2.0, 64, Mesh::Mesh::CircleFill::None, 0, material);
+    uint32_t material = 0;
+    Mesh::AddCircle(vec3(0), 2.f, 64, 0, material).redo(*mesh);
     return mesh;
 }
 

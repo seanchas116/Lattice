@@ -21,11 +21,6 @@ namespace Document {
 class MeshObject;
 }
 
-namespace Mesh {
-class Mesh;
-class Material;
-}
-
 namespace GL {
 class VAO;
 }
@@ -53,7 +48,7 @@ private:
     SP<State::AppState> _appState;
     SP<Document::MeshObject> _object;
 
-    std::unordered_map<SP<Mesh::Material>, SP<GL::VAO>> _faceVAOs;
+    std::unordered_map<uint32_t, SP<GL::VAO>> _faceVAOs;
     SP<GL::VAO> _edgeVAO;
     SP<GL::VAO> _vertexVAO;
     bool _isVAOsDirty = true;

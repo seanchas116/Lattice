@@ -1,6 +1,7 @@
 #pragma once
 #include "Change.hpp"
 #include "Shorthands.hpp"
+#include <unordered_map>
 
 namespace Lattice {
 
@@ -11,14 +12,12 @@ public:
     using Getter = std::function<TValue(const SP<TObject>&)>;
     using Setter = std::function<void(const SP<TObject>&, TValue)>;
 
-    PropertyChange(const Values& values, const Getter& getter, const Setter& setter) :
-        _newValues(values), _getter(getter), _setter(setter)
-    {
+    PropertyChange(Values values, Getter getter, Setter setter) : _newValues(std::move(values)), _getter(std::move(getter)), _setter(std::move(setter)) {
     }
 
-    PropertyChange(const SP<TObject>& object, const TValue& value, const Getter& getter, const Setter& setter) :
-        _newValues{{object, value}}, _getter(getter), _setter(setter)
-    {
+    PropertyChange(SP<TObject> object, TValue value, Getter getter, Setter setter) : _newValues{{std::move(object), std::move(value)}},
+                                                                                     _getter(std::move(getter)),
+                                                                                     _setter(std::move(setter)) {
     }
 
     void apply() override {

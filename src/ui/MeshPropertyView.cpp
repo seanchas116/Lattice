@@ -78,7 +78,7 @@ void MeshPropertyView::setObject(const Opt<SP<Document::MeshObject>> &object) {
         return;
     }
 
-    _connection = connect(object->get(), &Document::MeshObject::meshChangedInLastTick, this, &MeshPropertyView::setViewValues);
+    _connection = connect(object->get(), &Document::MeshObject::oldMeshChangedInLastTick, this, &MeshPropertyView::setViewValues);
     setViewValues();
 }
 
@@ -111,7 +111,7 @@ void MeshPropertyView::setViewValues() {
 
     {
         auto edgeSet = selection.edges();
-        std::vector<SP<Mesh::Edge>> edges(edgeSet.begin(), edgeSet.end());
+        std::vector<SP<OldMesh::Edge>> edges(edgeSet.begin(), edgeSet.end());
         if (edges.empty()) {
             _smoothEdgeCheckBox->setEnabled(false);
         } else {
@@ -155,7 +155,7 @@ void MeshPropertyView::handlePositionValueChange(int index, double value) {
         return;
     }
 
-    std::unordered_map<SP<Mesh::Vertex>, dvec3> newPositions;
+    std::unordered_map<SP<OldMesh::Vertex>, dvec3> newPositions;
     bool changed = false;
 
     for (auto& vertex : selection.vertices) {
@@ -172,7 +172,7 @@ void MeshPropertyView::handlePositionValueChange(int index, double value) {
     }
 
     _appState->document()->history()->beginChange(tr("Set Vertex Position"));
-    object->mesh()->setPosition(newPositions);
+    object->oldMesh()->setPosition(newPositions);
 }
 
 void MeshPropertyView::handleEdgeSmoothChange(bool smooth) {
@@ -188,11 +188,11 @@ void MeshPropertyView::handleEdgeSmoothChange(bool smooth) {
 
     _appState->document()->history()->beginChange(tr("Set Edge Smooth"));
 
-    std::unordered_map<SP<Mesh::Edge>, bool> values;
+    std::unordered_map<SP<OldMesh::Edge>, bool> values;
     for (auto& edge : edges) {
         values[edge] = smooth;
     }
-    object->mesh()->setSmooth(values);
+    object->oldMesh()->setSmooth(values);
 }
 
 } // namespace UI

@@ -2,6 +2,7 @@
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
 #include "../../support/Debug.hpp"
+#include "../../mesh/Mesh.hpp"
 
 using namespace glm;
 
@@ -9,18 +10,35 @@ namespace Lattice {
 namespace Editor {
 namespace MeshEditor {
 
+namespace {
+
+template <typename T>
+bool set_includes(const std::unordered_set<T>& set, const std::unordered_set<T>& otherSet) {
+    for (auto& value : otherSet) {
+        if (set.find(value) == set.end()) {
+            return false;
+        }
+    }
+    return true;
+}
+
+}
+
 Tool::HitTestExclusion ExtrudeTool::hitTestExclusion() const {
     return {};
 }
 
 void ExtrudeTool::mousePressTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
-    auto clickedFragment = target.fragment();
-    if (clickedFragment.empty()) {
+    auto& mesh = *this->mesh();
+
+    auto clickedVertices = target.vertices(mesh);
+    if (clickedVertices.empty()) {
         return;
     }
-    _fragment = appState()->document()->meshSelection();
-    if (!_fragment.contains(clickedFragment)) {
-        _fragment = clickedFragment;
+    _vertices = mesh.selectedVertices() | ranges::to_<std::unordered_set<Mesh::VertexHandle>>();
+
+    if (!set_includes(_vertices, clickedVertices)) {
+        _vertices = clickedVertices;
     }
     _dragStarted = false;
 
@@ -28,15 +46,17 @@ void ExtrudeTool::mousePressTool(const Tool::EventTarget &target, const Viewport
     _initViewportPos = event.viewportPos;
 
     _initPositions.clear();
-    for (auto& v : _fragment.vertices) {
-        _initPositions[v] = v->position();
+    for (auto& v : _vertices) {
+        _initPositions[v] = mesh.position(v);
     }
 }
 
 void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target);
 
-    if (_fragment.empty()) {
+    auto& mesh = *this->mesh();
+
+    if (_vertices.empty()) {
         return;
     }
 
@@ -45,19 +65,16 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
             return;
         }
 
-        appState()->document()->history()->beginChange(tr("Extrude"));
-        auto& mesh = object()->mesh();
-
         _oldToNewUVPoints.clear();
 
-        auto edges = _fragment.edges();
-        auto faces = _fragment.faces();
+        auto edges = mesh.edges(_vertices);
+        auto faces = mesh.faces(_vertices);
 
-        std::unordered_set<SP<Mesh::Edge>> openEdges;
+        std::unordered_set<Mesh::EdgeHandle> openEdges;
         for (auto& edge : edges) {
             int faceCount = 0;
-            for (auto& face : edge->faces()) {
-                if (faces.find(face->sharedFromThis()) != faces.end()) {
+            for (auto& face : mesh.faces(edge)) {
+                if (faces.find(face) != faces.end()) {
                     ++faceCount;
                 }
             }
@@ -66,60 +83,60 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
             }
         }
 
-        for (auto& vertex : _fragment.vertices) {
-            auto uv = vertex->firstUVPoint(); // TODO: find best uv
-            auto newUVPoint = mesh->addUVPoint(mesh->addVertex(vertex->position()), uv->position());
-            mesh->addEdge({vertex, newUVPoint->vertex()});
+        for (auto vertex : _vertices) {
+            auto uv = mesh.uvPoints(vertex).front(); // TODO: find best uv
+            auto newUVPoint = mesh.addUVPoint(mesh.addVertex(mesh.position(vertex)), mesh.uvPosition(uv));
+            mesh.addEdge(vertex, mesh.vertex(newUVPoint), false);
             _vertexToUV.insert({vertex, uv});
-            _vertexToUV.insert({newUVPoint->vertex(), newUVPoint});
+            _vertexToUV.insert({mesh.vertex(newUVPoint), newUVPoint});
             _oldToNewUVPoints.insert({uv, newUVPoint});
         }
 
         for (auto& edge : edges) {
-            auto uv0 = _oldToNewUVPoints.at(_vertexToUV.at(edge->vertices()[0]));
-            auto uv1 = _oldToNewUVPoints.at(_vertexToUV.at(edge->vertices()[1]));
-            mesh->addEdge({uv0->vertex(), uv1->vertex()});
+            auto uv0 = _oldToNewUVPoints.at(_vertexToUV.at(mesh.vertices(edge)[0]));
+            auto uv1 = _oldToNewUVPoints.at(_vertexToUV.at(mesh.vertices(edge)[1]));
+            mesh.addEdge(mesh.vertex(uv0), mesh.vertex(uv1), false);
         }
 
         for (auto& openEdge : openEdges) {
             bool isReverse = true;
-            SP<Mesh::Material> material = mesh->materials()[0];
+            uint32_t material = 0;
 
-            for (auto& face : openEdge->faces()) {
-                if (faces.find(face->sharedFromThis()) != faces.end()) {
-                    material = face->material();
+            for (auto& face : mesh.faces(openEdge)) {
+                if (faces.find(face) != faces.end()) {
+                    material = mesh.material(face);
                     continue;
                 }
 
-                for (size_t i = 0; i < face->vertices().size(); ++i) {
-                    size_t i2 = (i + 1) % face->vertices().size();
-                    if (face->vertices()[i] == openEdge->vertices()[0] && face->vertices()[i2] == openEdge->vertices()[1]) {
+                for (size_t i = 0; i < mesh.vertices(face).size(); ++i) {
+                    size_t i2 = (i + 1) % mesh.vertices(face).size();
+                    if (mesh.vertices(face)[i] == mesh.vertices(openEdge)[0] && mesh.vertices(face)[i2] == mesh.vertices(openEdge)[1]) {
                         isReverse = false;
                         break;
                     }
                 }
             }
 
-            auto uv0 = _vertexToUV.at(openEdge->vertices()[0]);
-            auto uv1 = _vertexToUV.at(openEdge->vertices()[1]);
+            auto uv0 = _vertexToUV.at(mesh.vertices(openEdge)[0]);
+            auto uv1 = _vertexToUV.at(mesh.vertices(openEdge)[1]);
             auto uv2 = _oldToNewUVPoints.at(uv1);
             auto uv3 = _oldToNewUVPoints.at(uv0);
 
             if (isReverse) {
-                mesh->addFace({uv0, uv1, uv2, uv3}, material);
+                mesh.addFace({uv0, uv1, uv2, uv3}, material);
             } else {
-                mesh->addFace({uv3, uv2, uv1, uv0}, material);
+                mesh.addFace({uv3, uv2, uv1, uv0}, material);
             }
         }
 
         for (auto& face : faces) {
-            std::vector<SP<Mesh::UVPoint>> newUVPoints;
-            for (auto& uv : face->uvPoints()) {
+            std::vector<Mesh::UVPointHandle> newUVPoints;
+            for (auto& uv : mesh.uvPoints(face)) {
                 auto newUV = _oldToNewUVPoints.at(uv);
                 newUVPoints.push_back(newUV);
             }
-            mesh->addFace(newUVPoints, face->material());
-            mesh->removeFace(face);
+            mesh.addFace(newUVPoints, mesh.material(face));
+            mesh.removeFace(face);
         }
 
         if (faces.empty()) {
@@ -128,18 +145,19 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
             _useGuide = true;
             glm::dvec3 normal {0};
             for (auto& face : faces) {
-                normal += face->normal();
+                normal += mesh.calculateNormal(face);
             }
             _guideDirection = glm::normalize(normal);
         }
 
-        Mesh::MeshFragment selection;
+        mesh.clearSelections();
+
         for (auto& [oldUV, newUV] : _oldToNewUVPoints) {
-            selection.vertices.insert(newUV->vertex());
+            mesh.setSelected(mesh.vertex(newUV), true);
         }
-        appState()->document()->setMeshSelection(selection);
 
         _dragStarted = true;
+        emit meshChanged();
         return;
     }
 
@@ -148,26 +166,25 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
         offset = glm::dot(offset, _guideDirection) * _guideDirection;
     }
 
-    std::unordered_map<SP<Mesh::Vertex>, dvec3> newPositions;
-
     for (auto& [oldUV, newUV] : _oldToNewUVPoints) {
-        newPositions[newUV->vertex()] = _initPositions[oldUV->vertex()] + offset;
+        auto newPos = _initPositions[mesh.vertex(oldUV)] + offset;
+        mesh.setPosition(mesh.vertex(newUV), newPos);
     }
 
-    object()->mesh()->setPosition(newPositions);
+     emit meshChanged();
 }
 
 void ExtrudeTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
 
-    _fragment = {};
+    _vertices.clear();
     _initPositions.clear();
     _vertexToUV.clear();
     _oldToNewUVPoints.clear();
 
     if (_dragStarted) {
         _dragStarted = false;
-        emit finished();
+        emit meshChangeFinished(tr("Extrude"));
     }
 }
 

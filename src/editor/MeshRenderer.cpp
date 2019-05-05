@@ -5,7 +5,6 @@
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
 #include "../document/MeshObject.hpp"
-#include "../mesh/Mesh.hpp"
 #include "../support/Debug.hpp"
 #include "../support/Camera.hpp"
 #include <QMouseEvent>
@@ -23,7 +22,7 @@ MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Documen
     _vertexVAO(makeShared<GL::VAO>())
 {
     updateVAOs();
-    connect(object->mesh().get(), &Mesh::Mesh::changed, this, [this] {
+    connect(object.get(), &Document::MeshObject::meshChanged, this, [this] {
         _isVAOsDirty = true;
         emit updated();
     });
@@ -31,7 +30,8 @@ MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Documen
 
 void MeshRenderer::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     updateVAOs();
-    for (auto& [material, vao] : _faceVAOs) {
+    for (auto& [materialID, vao] : _faceVAOs) {
+        auto material = _object->materials().at(materialID).toDrawMaterial();
         operations->drawMaterial.draw(vao, _object->location().matrixToWorld(), camera, material);
     }
 }
@@ -109,7 +109,7 @@ void MeshRenderer::updateVAOs() {
     MeshVAOGenerator generator(_object->mesh());
     _vertexVAO = generator.generateVertexVAO();
     _edgeVAO = generator.generateEdgeVAO();
-    _faceVAOs= generator.generateFaceVAOs();
+    _faceVAOs = generator.generateFaceVAOs();
 
     _isVAOsDirty = false;
 }

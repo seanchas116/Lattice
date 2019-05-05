@@ -3,6 +3,7 @@
 #include "../../document/History.hpp"
 #include "../../support/Distance.hpp"
 #include "../../support/Debug.hpp"
+#include "../../mesh/algorithm/CutEdge.hpp"
 
 using namespace glm;
 
@@ -15,86 +16,84 @@ Tool::HitTestExclusion DrawTool::hitTestExclusion() const {
         return {};
     }
     auto uvPoint = *_previewUVPoint;
-    std::vector<SP<Mesh::Edge>> edges;
-    for (auto& e : uvPoint->vertex()->edges()) {
-        edges.push_back(e->sharedFromThis());
-    }
-
-    return {{uvPoint->vertex()}, edges, {}};
+    auto& mesh = *this->mesh();
+    std::vector<Mesh::EdgeHandle> edges = mesh.edges(mesh.vertex(uvPoint)) | ranges::to_vector;
+    return {{mesh.vertex(uvPoint)}, edges, {}};
 }
 
 void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
-    auto mesh = object()->mesh();
+    auto& mesh = *this->mesh();
     auto modelMatrix = object()->location().matrixToWorld();
-
-    if (_drawnUVPoints.empty()) {
-        appState()->document()->history()->beginChange(tr("Draw"));
-    }
 
     if (target.vertex) {
         if (_previewUVPoint) {
-            mesh->removeVertex((*_previewUVPoint)->vertex());
+            mesh.removeVertex(mesh.vertex(*_previewUVPoint));
         }
 
         auto vertex = *target.vertex;
-        auto closingPointIt = std::find(_drawnUVPoints.begin(), _drawnUVPoints.end(), vertex->firstUVPoint());
+        auto uvPoint = mesh.uvPoints(vertex).front();
+        auto closingPointIt = ranges::find(_drawnUVPoints, uvPoint);
         if (closingPointIt != _drawnUVPoints.end()) {
             // create face
-            std::vector<SP<Mesh::UVPoint>> points(closingPointIt, _drawnUVPoints.end());
-            auto face = mesh->addFace(points, mesh->materials()[0]);
+            std::vector<Mesh::UVPointHandle> points(closingPointIt, _drawnUVPoints.end());
+            auto face = mesh.addFace(points, 0); // TODO: use better material
 
+            Q_UNUSED(face);
+            // TODO: flip face (or use two-sided faces)
+            /*
             bool isFaceFore = dot(face->normal(), event.camera->location().backward()) > 0;
             if (!isFaceFore) {
-                mesh->flipFace(face);
+                //mesh->flipFace(face);
             }
+            */
+
             _drawnUVPoints.clear();
             _previewUVPoint = std::nullopt;
 
-            Mesh::MeshFragment selection;
+            mesh.clearSelections();
             for (auto& p : points) {
-                selection.vertices.insert(p->vertex());
+                mesh.setSelected(mesh.vertex(p), true);
             }
-            appState()->document()->setMeshSelection(selection);
-            emit finished();
+            emit meshChangeFinished(tr("Draw"));
 
             return;
         }
 
         if (_drawnUVPoints.size() >= 1) {
             auto prevUVPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];
-            mesh->addEdge({prevUVPoint->vertex(), vertex});
+            mesh.addEdge(mesh.vertex(prevUVPoint), vertex, false);
         }
-        _drawnUVPoints.push_back(vertex->firstUVPoint());
+        _drawnUVPoints.push_back(uvPoint);
     } else if (target.edge) {
         if (_previewUVPoint) {
-            mesh->removeVertex((*_previewUVPoint)->vertex());
+            mesh.removeVertex(mesh.vertex(*_previewUVPoint));
         }
 
         auto edge = *target.edge;
-        Ray<double> edgeRay = edge->ray();
+        Ray<double> edgeRay = mesh.ray(edge);
         Ray<double> mouseRay = event.camera->modelMouseRay(modelMatrix, event.viewportPos);
         RayRayDistanceSolver distanceSolver(edgeRay, mouseRay);
-        auto vertex = mesh->cutEdge(edge, distanceSolver.t0);
+        auto vertex = Mesh::CutEdge(edge, distanceSolver.t0).redo(mesh);
 
         if (_drawnUVPoints.size() >= 1) {
             auto prevUVPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];
-            mesh->addEdge({prevUVPoint->vertex(), vertex});
+            mesh.addEdge(mesh.vertex(prevUVPoint), vertex, false);
         }
 
-        _drawnUVPoints.push_back(vertex->firstUVPoint());
+        _drawnUVPoints.push_back(mesh.uvPoints(vertex).front());
     } else {
         if (_previewUVPoint) {
             // confirm preview point
 
             auto previewUVPoint = *_previewUVPoint;
             _previewUVPoint = std::nullopt;
-            auto [prevPosInViewport, isInViewport] = event.camera->mapModelToViewport(modelMatrix, previewUVPoint->vertex()->position());
+            auto [prevPosInViewport, isInViewport] = event.camera->mapModelToViewport(modelMatrix, mesh.position(mesh.vertex(previewUVPoint)));
             if (!isInViewport) {
                 return;
             }
             auto pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos.xy, prevPosInViewport.z));
 
-            mesh->setPosition({{previewUVPoint->vertex(), pos}});
+            mesh.setPosition(mesh.vertex(previewUVPoint), pos);
             _drawnUVPoints.push_back(previewUVPoint);
         } else {
             // add new point
@@ -103,20 +102,22 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
                 return;
             }
             auto pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos.xy, centerInViewport.z));
-            _drawnUVPoints.push_back(mesh->addUVPoint(mesh->addVertex(pos), vec2(0)));
+            _drawnUVPoints.push_back(mesh.addUVPoint(mesh.addVertex(pos), vec2(0)));
         }
     }
 
     auto latestPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];
-    auto previewPoint = mesh->addUVPoint(mesh->addVertex(latestPoint->vertex()->position()), vec2(0));
-    mesh->addEdge({latestPoint->vertex(), previewPoint->vertex()});
+    auto previewPoint = mesh.addUVPoint(mesh.addVertex(mesh.position(mesh.vertex(latestPoint))), vec2(0));
+    mesh.addEdge(mesh.vertex(latestPoint), mesh.vertex(previewPoint), false);
     _previewUVPoint = previewPoint;
+
+    emit meshChanged();
 }
 
 void DrawTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target);
 
-    auto mesh = object()->mesh();
+    auto& mesh = *this->mesh();
     auto modelMatrix = object()->location().matrixToWorld();
 
     if (!_previewUVPoint) {
@@ -128,22 +129,24 @@ void DrawTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::Mo
 
     if (target.vertex) {
         auto snapVertex = *target.vertex;
-        pos = snapVertex->position();
+        pos = mesh.position(snapVertex);
     } else if (target.edge) {
         auto snapEdge = *target.edge;
-        Ray<double> edgeRay = snapEdge->ray();
+        Ray<double> edgeRay = mesh.ray(snapEdge);
         Ray<double> mouseRay = event.camera->modelMouseRay(modelMatrix, event.viewportPos);
         RayRayDistanceSolver distanceSolver(edgeRay, mouseRay);
         pos = edgeRay.at(distanceSolver.t0);
     } else {
-        auto [prevPosInViewport, isInViewport] = event.camera->mapModelToViewport(modelMatrix, previewUVPoint->vertex()->position());
+        auto [prevPosInViewport, isInViewport] = event.camera->mapModelToViewport(modelMatrix, mesh.position(mesh.vertex(previewUVPoint)));
         if (!isInViewport) {
             return;
         }
         pos = event.camera->mapViewportToModel(modelMatrix, dvec3(event.viewportPos.xy, prevPosInViewport.z));
     }
 
-    mesh->setPosition({{previewUVPoint->vertex(), pos}});
+    mesh.setPosition(mesh.vertex(previewUVPoint), pos);
+
+    emit meshChanged();
 }
 
 void DrawTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -151,13 +154,15 @@ void DrawTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport:
 }
 
 void DrawTool::keyPressTool(QKeyEvent *event) {
+    auto& mesh = *this->mesh();
+
     if (event->key() == Qt::Key_Escape || event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
         if (_previewUVPoint) {
-            object()->mesh()->removeVertex((*_previewUVPoint)->vertex());
+            mesh.removeVertex(mesh.vertex(*_previewUVPoint));
         }
         _drawnUVPoints.clear();
         _previewUVPoint = std::nullopt;
-        emit finished();
+        emit meshChangeFinished(tr("Draw"));
     }
 }
 

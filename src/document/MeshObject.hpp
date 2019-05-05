@@ -1,10 +1,14 @@
 #pragma once
 #include "Object.hpp"
 #include <glm/glm.hpp>
+#include "Material.hpp"
 
 namespace Lattice {
 
 namespace Mesh {
+class Mesh;
+}
+namespace OldMesh {
 class Mesh;
 }
 
@@ -14,21 +18,34 @@ class MeshObject final : public Object {
     Q_OBJECT
 public:
     MeshObject();
+    ~MeshObject() override;
 
-    const SP<Mesh::Mesh>& mesh() const { return _mesh; }
+    void setMesh(Mesh::Mesh mesh);
+    auto& mesh() const { return *_mesh; }
+
+    void setMaterials(std::vector<Material> materials);
+    auto& materials() const { return _materials; }
+
+    auto& oldMesh() const { return _oldMesh; }
 
     SP<Object> clone() const override;
     void toJSON(nlohmann::json& json) const override;
     void fromJSON(const nlohmann::json& json) override;
 
 signals:
-    void meshChangedInLastTick();
+    void meshChanged(const Mesh::Mesh& mesh);
+    void materialsChanged(const std::vector<Material>& materials);
+    void oldMeshChangedInLastTick();
 
 private:
-    void handleMeshChange();
+    void setMeshInternal(Mesh::Mesh mesh);
+    void handleOldMeshChange();
 
-    SP<Mesh::Mesh> _mesh;
-    bool _meshChangedInTick = false;
+    std::unique_ptr<Mesh::Mesh> _mesh;
+    std::vector<Material> _materials;
+
+    SP<OldMesh::Mesh> _oldMesh;
+    bool _oldMeshChangedInTick = false;
 };
 
 }

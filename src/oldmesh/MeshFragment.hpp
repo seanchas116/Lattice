@@ -2,7 +2,7 @@
 #include "Mesh.hpp"
 
 namespace Lattice {
-namespace Mesh {
+namespace OldMesh {
 
 class MeshFragment {
 public:

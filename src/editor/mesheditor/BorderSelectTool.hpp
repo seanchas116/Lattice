@@ -1,19 +1,13 @@
 #pragma once
 #include "Tool.hpp"
-#include "../../mesh/MeshFragment.hpp"
 
 namespace Lattice {
-
-namespace Mesh {
-class Vertex;
-}
-
 namespace Editor {
 namespace MeshEditor {
 
 class BorderSelectTool : public Tool {
 public:
-    BorderSelectTool(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object) : Tool(appState, object) {}
+    BorderSelectTool(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object, const SP<Mesh::Mesh>& mesh) : Tool(appState, object, mesh) {}
 
     void mousePressTool(const EventTarget &target, const Viewport::MouseEvent &event) override;
     void mouseMoveTool(const EventTarget &target, const Viewport::MouseEvent &event) override;
@@ -23,7 +17,7 @@ public:
 
 private:
     struct VertexWithScreenPos {
-        SP<Mesh::Vertex> vertex;
+        Mesh::VertexHandle vertex;
         glm::dvec2 screenPos;
     };
 
@@ -31,7 +25,6 @@ private:
     glm::dvec2 _initViewportPos {0};
     glm::dvec2 _currentViewportPos {0};
     bool _dragged {false};
-
 };
 
 } // namespace MeshEditor

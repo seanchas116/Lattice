@@ -1,6 +1,8 @@
 #include "LoopCutTool.hpp"
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
+#include "../../mesh/Mesh.hpp"
+#include "../../mesh/algorithm/CutEdge.hpp"
 #include "../../support/Debug.hpp"
 #include "../../support/Distance.hpp"
 
@@ -18,35 +20,38 @@ void LoopCutTool::mousePressTool(const Tool::EventTarget &target, const Viewport
         return;
     }
     auto edge = *target.edge;
-    auto mesh = object()->mesh();
+    auto& mesh = *this->mesh();
 
     Ray<double> mouseRay = event.camera->modelMouseRay(object()->location().matrixToWorld(), event.viewportPos);
-    RayRayDistanceSolver distanceSolver(Ray<double>(edge->ray()), mouseRay);
+    RayRayDistanceSolver distanceSolver(Ray<double>(mesh.ray(edge)), mouseRay);
     double cutPosition = distanceSolver.t0;
 
     bool isEdgeReverse = false;
-    std::vector<std::pair<SP<Mesh::Edge>, bool>> edges;
-    Opt<SP<Mesh::Face>> lastFace;
+    std::vector<std::pair<Mesh::EdgeHandle, bool>> edges;
+    Opt<Mesh::FaceHandle> lastFace;
 
     while (true) {
         edges.push_back({edge, isEdgeReverse});
 
-        if (edge->faces().size() != 2) {
-            return;
-        }
-        auto nextFace = (lastFace->get() == edge->faces()[0]) ? edge->faces()[1] : edge->faces()[0];
-        lastFace = nextFace->sharedFromThis();
+        auto edgeFaces = mesh.faces(edge) | ranges::to_vector;
 
-        if (nextFace->edges().size() != 4) {
+        if (edgeFaces.size() != 2) {
             return;
         }
-        auto& nextFaceEdges = nextFace->edges();
-        size_t edgeIndex = std::find(nextFaceEdges.begin(), nextFaceEdges.end(), edge) - nextFaceEdges.begin();
+        auto nextFace = (lastFace && *lastFace == edgeFaces[0]) ? edgeFaces[1] : edgeFaces[0];
+        lastFace = nextFace;
+
+        auto& nextFaceEdges = mesh.edges(nextFace);
+
+        if (nextFaceEdges.size() != 4) {
+            return;
+        }
+        size_t edgeIndex = ranges::find(nextFaceEdges, edge) - nextFaceEdges.begin();
         size_t nextEdgeIndex = (edgeIndex + 2) % nextFaceEdges.size();
         auto nextEdge = nextFaceEdges[nextEdgeIndex];
 
-        bool edgeDirection = nextFace->vertices()[edgeIndex] == edge->vertices()[0];
-        bool nextEdgeDirection = nextFace->vertices()[nextEdgeIndex] == nextEdge->vertices()[0];
+        bool edgeDirection = mesh.vertices(nextFace)[edgeIndex] == mesh.vertices(edge)[0];
+        bool nextEdgeDirection = mesh.vertices(nextFace)[nextEdgeIndex] == mesh.vertices(nextEdge)[0];
         if (edgeDirection == nextEdgeDirection) {
             isEdgeReverse = !isEdgeReverse;
         }
@@ -55,31 +60,30 @@ void LoopCutTool::mousePressTool(const Tool::EventTarget &target, const Viewport
             // loop found
             break;
         }
-        if (std::find_if(edges.begin(), edges.end(), [&](auto& pair) { return pair.first == nextEdge; }) != edges.end()) {
+        if (ranges::find_if(edges, [&](auto& pair) { return pair.first == nextEdge; }) != edges.end()) {
             // 9-like loop
             return;
         }
         edge = nextEdge;
     }
 
-    std::vector<SP<Mesh::Vertex>> vertices;
+    std::vector<Mesh::VertexHandle> vertices;
     vertices.reserve(edges.size());
     for (auto& [edge, isReverse] : edges) {
-        auto v = mesh->cutEdge(edge, isReverse ? (1.0 - cutPosition) : cutPosition);
+        auto v = Mesh::CutEdge(edge, isReverse ? (1.0 - cutPosition) : cutPosition).redo(mesh);
         vertices.push_back(v);
     }
     for (size_t i = 0; i < vertices.size(); ++i) {
         auto v0 = vertices[i];
         auto v1 = vertices[(i + 1) % vertices.size()];
-        mesh->addEdge({v0, v1});
+        mesh.addEdge(v0, v1, false);
     }
 
-    Mesh::MeshFragment selection;
+    mesh.clearSelections();
     for (auto& v : vertices) {
-        selection.vertices.insert(v);
+        mesh.setSelected(v, true);
     }
-    appState()->document()->setMeshSelection(selection);
-    emit finished();
+    emit meshChangeFinished(tr("Loop Cut"));
 }
 
 void LoopCutTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {

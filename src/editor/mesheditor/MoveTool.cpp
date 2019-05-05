@@ -1,6 +1,7 @@
 #include "MoveTool.hpp"
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
+#include "../../mesh/Mesh.hpp"
 
 using namespace glm;
 
@@ -8,8 +9,24 @@ namespace Lattice {
 namespace Editor {
 namespace MeshEditor {
 
-MoveTool::MoveTool(const SP<State::AppState> &appState, const SP<Document::MeshObject> &object) : Tool(appState, object),
-                                                                                                  _borderSelectTool(makeShared<BorderSelectTool>(appState, object)) {
+namespace {
+
+// TODO: move to support
+template <typename T>
+bool set_includes(const std::unordered_set<T>& set, const std::unordered_set<T>& otherSet) {
+    for (auto& value : otherSet) {
+        if (set.find(value) == set.end()) {
+            return false;
+        }
+    }
+    return true;
+}
+
+}
+
+MoveTool::MoveTool(const SP<State::AppState> &appState, const SP<Document::MeshObject> &object, const SP<Mesh::Mesh> &mesh) : Tool(appState, object, mesh),
+                                                                                                                              _borderSelectTool(makeShared<BorderSelectTool>(appState, object, mesh)) {
+    connect(_borderSelectTool.get(), &Tool::meshChanged, this, &Tool::meshChanged);
     setChildRenderables({_borderSelectTool});
     _borderSelectTool->setVisible(false);
 }
@@ -18,43 +35,45 @@ void MoveTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
     if (event.originalEvent->button() != Qt::LeftButton) {
         return;
     }
-    auto clickedFragment = target.fragment();
 
-    if (clickedFragment.empty()) {
+    auto& mesh = *this->mesh();
+
+    auto clickedVertices = target.vertices(mesh);
+    if (clickedVertices.empty()) {
         _borderSelectMode = true;
         _borderSelectTool->setVisible(true);
         _borderSelectTool->mousePressTool(target, event);
         return;
     }
 
-    auto oldSelection = appState()->document()->meshSelection();
+    auto oldSelection = mesh.selectedVertices() | ranges::to_<std::unordered_set<Mesh::VertexHandle>>();
 
-    bool alreadySelected = !clickedFragment.empty() && oldSelection.contains(clickedFragment);
+    bool alreadySelected = !clickedVertices.empty() && set_includes(oldSelection, clickedVertices);
 
-    Mesh::MeshFragment selection;
+    std::unordered_set<Mesh::VertexHandle> selection;
     if (event.originalEvent->modifiers() & Qt::ShiftModifier) {
         selection = oldSelection;
 
         if (alreadySelected) {
-            for (auto& v : clickedFragment.vertices) {
-                selection.vertices.erase(v);
+            for (auto& v : clickedVertices) {
+                selection.erase(v);
             }
         } else {
-            for (auto& v: clickedFragment.vertices) {
-                selection.vertices.insert(v);
+            for (auto& v: clickedVertices) {
+                selection.insert(v);
             }
         }
     } else {
-        selection = clickedFragment;
+        selection = clickedVertices;
     }
     _nextSelection = selection;
 
-    auto& dragVertices = alreadySelected ? oldSelection.vertices : clickedFragment.vertices;
+    auto& dragVertices = alreadySelected ? oldSelection : clickedVertices;
 
     _dragged = true;
     _initPositions.clear();
     for (auto& v : dragVertices) {
-        _initPositions[v] = v->position();
+        _initPositions[v] = mesh.position(v);
     }
     _initObjectPos = (object()->location().matrixToModel() * dvec4(event.worldPos(), 1)).xyz;
     _initViewportPos = event.viewportPos;
@@ -80,16 +99,13 @@ void MoveTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::Mo
         if (distance(_initViewportPos, dvec2(event.viewportPos.xy)) < appState()->preferences()->moveThreshold()) {
             return;
         }
-        appState()->document()->history()->beginChange(tr("Move Vertex"));
         _dragStarted = true;
     }
 
-    auto& mesh = object()->mesh();
-    std::unordered_map<SP<Mesh::Vertex>, dvec3> positions;
     for (auto& [v, initialPos] : _initPositions) {
-        positions[v] = initialPos + offset;
+        mesh()->setPosition(v, initialPos + offset);
     }
-    mesh->setPosition(positions);
+    emit meshChanged();
 }
 
 void MoveTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -102,8 +118,14 @@ void MoveTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport:
 
     _dragged = false;
     _initPositions.clear();
-    if (!_dragStarted) {
-        appState()->document()->setMeshSelection(_nextSelection);
+    if (_dragStarted) {
+        emit meshChangeFinished(tr("Move Vertices"));
+    } else {
+        mesh()->clearSelections();
+        for (auto& v : _nextSelection) {
+            mesh()->setSelected(v, true);
+        }
+        emit meshChanged();
     }
 }
 

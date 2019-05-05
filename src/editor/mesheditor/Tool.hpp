@@ -1,13 +1,17 @@
 #pragma once
-#include <QObject>
 #include "../../state/AppState.hpp"
-#include "../../mesh/Mesh.hpp"
-#include "../../mesh/MeshFragment.hpp"
+#include "../../mesh/Handle.hpp"
 #include "../../document/MeshObject.hpp"
 #include "../../viewport/MouseEvent.hpp"
 #include "../../viewport/RenderableObject.hpp"
+#include <QObject>
+#include <unordered_set>
 
 namespace Lattice {
+
+namespace Mesh {
+class Mesh;
+}
 
 namespace Editor {
 namespace MeshEditor {
@@ -16,25 +20,27 @@ class Tool : public Viewport::RenderableObject {
     Q_OBJECT
 public:
     struct EventTarget {
-        Opt<SP<Mesh::Vertex>> vertex;
-        Opt<SP<Mesh::Edge>> edge;
-        Opt<SP<Mesh::Face>> face;
+        Opt<Mesh::VertexHandle> vertex;
+        Opt<Mesh::EdgeHandle> edge;
+        Opt<Mesh::FaceHandle> face;
 
-        std::unordered_set<SP<Mesh::Vertex>> vertices() const;
-        Mesh::MeshFragment fragment() const;
+        std::unordered_set<Mesh::VertexHandle> vertices(const Mesh::Mesh& mesh) const;
     };
 
     struct HitTestExclusion {
-        std::vector<SP<Mesh::Vertex>> vertices;
-        std::vector<SP<Mesh::Edge>> edges;
-        std::vector<SP<Mesh::Face>> faces;
+        std::vector<Mesh::VertexHandle> vertices;
+        std::vector<Mesh::EdgeHandle> edges;
+        std::vector<Mesh::FaceHandle> faces;
     };
 
-    Tool(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object) : _appState(appState), _object(object) {}
+    Tool(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object, const SP<Mesh::Mesh>& mesh) : _appState(appState),
+                                                                                                                    _object(object),
+                                                                                                                    _mesh(mesh) {}
     ~Tool();
 
     auto& appState() const { return _appState; }
     auto& object() const { return _object; }
+    auto& mesh() const { return _mesh; }
 
     virtual HitTestExclusion hitTestExclusion() const;
 
@@ -47,11 +53,13 @@ public:
     virtual void keyReleaseTool(QKeyEvent* event);
 
 signals:
-    void finished();
+    void meshChanged();
+    void meshChangeFinished(const QString& text);
 
 private:
     SP<State::AppState> _appState;
     SP<Document::MeshObject> _object;
+    SP<Mesh::Mesh> _mesh;
 };
 
 } // namespace MeshEditor
