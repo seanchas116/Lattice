@@ -16,13 +16,13 @@ struct MeshData {
     std::vector<uint32_t> uvVertexArray;
 
     std::vector<uint8_t> edgeSmoothArray;
-    std::vector<std::pair<uint32_t, uint32_t>> edgeVerticesArray;
+    std::vector<std::array<uint32_t, 2>> edgeVerticesArray;
 
     std::vector<uint32_t> faceMaterialArray;
     std::vector<uint32_t> faceVertexCountArray;
     std::vector<uint32_t> faceUVPointArray;
 
-    explicit MeshData(const Mesh& mesh);
+    explicit MeshData(Mesh &mesh);
     Mesh toMesh() const;
 };
 

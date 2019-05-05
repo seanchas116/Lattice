@@ -23,7 +23,9 @@ std::vector<T> fromDataString(const std::string& dataString) {
 namespace Lattice {
 namespace Mesh {
 
-MeshData::MeshData(const Mesh &mesh) {
+MeshData::MeshData(Mesh &mesh) {
+    mesh.collectGarbage();
+
     for (auto v : mesh.vertices()) {
         vertexPositionArray.push_back(mesh.position(v));
         vertexSelectedArray.push_back(mesh.isSelected(v));
@@ -45,6 +47,49 @@ MeshData::MeshData(const Mesh &mesh) {
             faceUVPointArray.push_back(uv.index);
         }
     }
+}
+
+Mesh MeshData::toMesh() const {
+    Mesh mesh;
+
+    auto vertexCount = vertexPositionArray.size();
+    for (size_t i = 0; i < vertexCount; ++i) {
+        auto pos = vertexPositionArray[i];
+        auto selected = vertexSelectedArray[i];
+
+        auto v = mesh.addVertex(pos);
+        mesh.setSelected(v, selected);
+    }
+
+    auto uvPointCount = uvPositionArray.size();
+    for (size_t i = 0; i < uvPointCount; ++i) {
+        auto pos = uvPositionArray[i];
+        mesh.addUVPoint(VertexHandle(uvVertexArray[i]), pos);
+    }
+
+    auto edgeCount = edgeVerticesArray.size();
+    for (size_t i = 0; i < edgeCount; ++i) {
+        auto vertices = edgeVerticesArray[i];
+        auto smooth = edgeSmoothArray[i];
+        mesh.addEdge(VertexHandle(vertices[0]), VertexHandle(vertices[1]), smooth);
+    }
+
+    auto faceCount = faceVertexCountArray.size();
+    size_t uvPointOffset = 0;
+
+    for (size_t i = 0; i < faceCount; ++i) {
+        auto vertexCount = faceVertexCountArray[i];
+        auto material = faceMaterialArray[i];
+
+        std::vector<UVPointHandle> uvPoints;
+        for (size_t j = 0; j < vertexCount; ++j) {
+            uvPoints.push_back(UVPointHandle(faceUVPointArray[uvPointOffset + j]));
+        }
+        uvPointOffset += vertexCount;
+        mesh.addFace(uvPoints, material);
+    }
+
+    return mesh;
 }
 
 void to_json(nlohmann::json &json, const MeshData &meshData) {
@@ -70,7 +115,7 @@ void from_json(const nlohmann::json &json, MeshData &meshData) {
     meshData.uvVertexArray = fromDataString<uint32_t>(json["uvPoint"]["vertex"]);
 
     meshData.edgeSmoothArray = fromDataString<uint8_t>(json["edge"]["smooth"]);
-    meshData.edgeVerticesArray = fromDataString<std::pair<uint32_t, uint32_t>>(json["edge"]["vertices"]);
+    meshData.edgeVerticesArray = fromDataString<std::array<uint32_t, 2>>(json["edge"]["vertices"]);
 
     meshData.faceMaterialArray = fromDataString<uint32_t>(json["face"]["material"]);
     meshData.faceVertexCountArray = fromDataString<uint32_t>(json["face"]["vertexCount"]);
