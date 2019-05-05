@@ -149,6 +149,8 @@ void Mesh::collectGarbage() {
                     }
                 }
             }
+
+            newUVPoints.push_back(uvPointData);
         }
         _uvPoints = std::move(newUVPoints);
     }
@@ -175,6 +177,8 @@ void Mesh::collectGarbage() {
                     }
                 }
             }
+
+            newEdges.push_back(edgeData);
         }
         _edges = std::move(newEdges);
     }
@@ -201,6 +205,7 @@ void Mesh::collectGarbage() {
                     }
                 }
             }
+            newFaces.push_back(faceData);
         }
         _faces = std::move(newFaces);
     }

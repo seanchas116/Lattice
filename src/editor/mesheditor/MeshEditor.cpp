@@ -231,6 +231,7 @@ void MeshEditor::handleMeshChanged() {
 }
 
 void MeshEditor::handleMeshChangeFinished(const QString &title) {
+    _mesh->collectGarbage();
     _appState->document()->history()->beginChange(title);
     _object->setMesh(*_mesh);
 }
