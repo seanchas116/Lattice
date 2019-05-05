@@ -15,6 +15,8 @@ class Document;
 
 namespace State {
 
+class MeshEditState;
+
 class AppState final : public QObject {
     Q_OBJECT
 
@@ -32,8 +34,9 @@ class AppState final : public QObject {
 public:
     AppState();
 
-    const auto& document() const { return _document; }
-    const auto& preferences() const { return _preferences; }
+    auto& document() const { return _document; }
+    auto& preferences() const { return _preferences; }
+    auto& meshEditState() const { return _meshEditState; }
 
     void deleteObjects();
 
@@ -58,6 +61,7 @@ public:
 private:
     SP<Document::Document> _document;
     SP<Preferences> _preferences;
+    SP<MeshEditState> _meshEditState;
 };
 
 }

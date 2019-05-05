@@ -1,4 +1,5 @@
 #include "AppState.hpp"
+#include "MeshEditState.hpp"
 #include "../services/ObjLoader.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
@@ -23,7 +24,8 @@ namespace State {
 
 AppState::AppState() :
     _document(makeShared<Document::Document>()),
-    _preferences(makeShared<Preferences>())
+    _preferences(makeShared<Preferences>()),
+    _meshEditState(makeShared<MeshEditState>())
 {
     addCube();
     auto object = _document->rootObject()->childObjects()[0];
