@@ -128,6 +128,11 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     connect(appState.get(), &State::AppState::isTranslateHandleVisibleChanged, _manipulator.get(), &Manipulator::Manipulator::setTranslateHandleVisible);
     connect(appState.get(), &State::AppState::isRotateHandleVisibleChanged, _manipulator.get(), &Manipulator::Manipulator::setRotateHandleVisible);
     connect(appState.get(), &State::AppState::isScaleHandleVisibleChanged, _manipulator.get(), &Manipulator::Manipulator::setScaleHandleVisible);
+
+    connect(object.get(), &Document::MeshObject::meshChanged, this, [this](auto& mesh) {
+        *_mesh = mesh;
+        handleMeshChanged();
+    });
 }
 
 void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
