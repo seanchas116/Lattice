@@ -20,10 +20,10 @@ public:
     MeshObject();
     ~MeshObject();
 
-    void setMesh(const Mesh::Mesh& mesh);
+    void setMesh(Mesh::Mesh mesh);
     auto& mesh() const { return *_mesh; }
 
-    void setMaterials(const std::vector<Material>& materials);
+    void setMaterials(std::vector<Material> materials);
     auto& materials() const { return _materials; }
 
     auto& oldMesh() const { return _oldMesh; }
@@ -38,7 +38,7 @@ signals:
     void oldMeshChangedInLastTick();
 
 private:
-    void setMeshInternal(const Mesh::Mesh& mesh);
+    void setMeshInternal(Mesh::Mesh mesh);
     void handleOldMeshChange();
 
     std::unique_ptr<Mesh::Mesh> _mesh;

@@ -23,22 +23,22 @@ MeshObject::MeshObject() : _mesh(std::make_unique<Mesh::Mesh>()),
 MeshObject::~MeshObject() {
 }
 
-void MeshObject::setMesh(const Mesh::Mesh &mesh) {
+void MeshObject::setMesh(Mesh::Mesh mesh) {
     auto self = *dynamicPointerCast<MeshObject>(sharedFromThis());
-    auto change = makeShared<PropertyChange<MeshObject, Mesh::Mesh>>(self, mesh, &MeshObject::mesh, &MeshObject::setMeshInternal);
+    auto change = makeShared<PropertyChange<MeshObject, Mesh::Mesh>>(self, std::move(mesh), &MeshObject::mesh, &MeshObject::setMeshInternal);
     addChange(change);
 }
 
-void MeshObject::setMeshInternal(const Mesh::Mesh &mesh) {
-    *_mesh = mesh;
+void MeshObject::setMeshInternal(Mesh::Mesh mesh) {
+    *_mesh = std::move(mesh);
     emit meshChanged(*_mesh);
 }
 
-void MeshObject::setMaterials(const std::vector<Material> &materials) {
+void MeshObject::setMaterials(std::vector<Material> materials) {
     if (_materials == materials) {
         return;
     }
-    _materials = materials;
+    _materials = std::move(materials);
     emit materialsChanged(_materials);
 }
 
