@@ -66,6 +66,7 @@ public:
     FaceHandle addFace(const std::vector<UVPointHandle>& uvPoints, uint32_t material);
 
     void removeVertex(VertexHandle v);
+    void removeUVPoint(UVPointHandle v);
     void removeEdge(EdgeHandle e);
     void removeFace(FaceHandle f);
 
