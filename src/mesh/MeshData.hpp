@@ -22,7 +22,7 @@ struct MeshData {
     std::vector<uint32_t> faceVertexCountArray;
     std::vector<uint32_t> faceUVPointArray;
 
-    explicit MeshData(Mesh &mesh);
+    explicit MeshData(const Mesh &mesh);
     Mesh toMesh() const;
 };
 

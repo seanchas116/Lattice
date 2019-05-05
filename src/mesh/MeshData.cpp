@@ -23,7 +23,8 @@ std::vector<T> fromDataString(const std::string& dataString) {
 namespace Lattice {
 namespace Mesh {
 
-MeshData::MeshData(Mesh &mesh) {
+MeshData::MeshData(const Mesh &origMesh) {
+    auto mesh = origMesh;
     mesh.collectGarbage();
 
     for (auto v : mesh.vertices()) {
