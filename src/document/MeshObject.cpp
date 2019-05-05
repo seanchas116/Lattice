@@ -2,6 +2,7 @@
 #include "../mesh/Mesh.hpp"
 #include "../oldmesh/Mesh.hpp"
 #include "../support/Debug.hpp"
+#include "../support/PropertyChange.hpp"
 #include <nlohmann/json.hpp>
 #include <QTimer>
 
@@ -23,6 +24,12 @@ MeshObject::~MeshObject() {
 }
 
 void MeshObject::setMesh(const Mesh::Mesh &mesh) {
+    auto self = *dynamicPointerCast<MeshObject>(sharedFromThis());
+    auto change = makeShared<PropertyChange<MeshObject, Mesh::Mesh>>(self, mesh, &MeshObject::mesh, &MeshObject::setMeshInternal);
+    addChange(change);
+}
+
+void MeshObject::setMeshInternal(const Mesh::Mesh &mesh) {
     *_mesh = mesh;
     emit meshChanged(*_mesh);
 }

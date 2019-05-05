@@ -38,6 +38,7 @@ signals:
     void oldMeshChangedInLastTick();
 
 private:
+    void setMeshInternal(const Mesh::Mesh& mesh);
     void handleOldMeshChange();
 
     std::unique_ptr<Mesh::Mesh> _mesh;

@@ -1,6 +1,7 @@
 #pragma once
 #include "Change.hpp"
 #include "Shorthands.hpp"
+#include <unordered_map>
 
 namespace Lattice {
 
