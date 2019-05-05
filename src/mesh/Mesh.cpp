@@ -1,4 +1,5 @@
 #include "Mesh.hpp"
+#include <nlohmann/json.hpp>
 
 namespace Lattice {
 namespace Mesh {
@@ -247,6 +248,68 @@ void Mesh::clearSelections() {
     for (auto v : vertices()) {
         setSelected(v, false);
     }
+}
+
+namespace {
+
+template <typename T>
+std::string toDataString(const std::vector<T>& data) {
+    size_t size = data.size() * sizeof(T);
+    std::string dataString(size, 0);
+    memcpy(dataString.data(), data.data(), size);
+    return dataString;
+}
+
+}
+
+void to_json(nlohmann::json &json, const Mesh &mesh) {
+    std::vector<glm::vec3> vertexPositionArray;
+    std::vector<uint8_t> vertexSelectedArray;
+
+    std::vector<glm::vec2> uvPositionArray;
+    std::vector<uint32_t> uvVertexArray;
+
+    std::vector<std::pair<uint32_t, uint32_t>> edgeVerticesArray;
+    std::vector<uint8_t> edgeSmoothArray;
+
+    std::vector<uint32_t> faceVertexCountArray;
+    std::vector<uint32_t> faceMaterialArray;
+    std::vector<uint32_t> faceUVPointArray;
+
+    for (auto v : mesh.vertices()) {
+        vertexPositionArray.push_back(mesh.position(v));
+        vertexSelectedArray.push_back(mesh.isSelected(v));
+    }
+    for (auto uv : mesh.uvPoints()) {
+        uvPositionArray.push_back(mesh.uvPosition(uv));
+        uvVertexArray.push_back(mesh.vertex(uv).index);
+    }
+    for (auto e : mesh.edges()) {
+        auto& vertices = mesh.vertices(e);
+        edgeVerticesArray.push_back({vertices[0].index, vertices[1].index});
+        edgeSmoothArray.push_back(mesh.isSmooth(e));
+    }
+    for (auto f : mesh.faces()) {
+        auto& uvPoints = mesh.uvPoints(f);
+        faceVertexCountArray.push_back(uvPoints.size());
+        faceMaterialArray.push_back(mesh.material(f));
+        for (auto uv : uvPoints) {
+            faceUVPointArray.push_back(uv.index);
+        }
+    }
+
+    json["vertex"]["position"] = toDataString(vertexPositionArray);
+    json["vertex"]["selected"] = toDataString(vertexSelectedArray);
+    json["uvPoint"]["position"] = toDataString(uvPositionArray);
+    json["uvPoint"]["vertex"] = toDataString(uvVertexArray);
+    json["edge"]["vertices"] = toDataString(edgeVerticesArray);
+    json["edge"]["smooth"] = toDataString(edgeSmoothArray);
+    json["face"]["vertexCount"] = toDataString(faceVertexCountArray);
+    json["face"]["material"] = toDataString(faceMaterialArray);
+    json["face"]["uvPoint"] = toDataString(faceUVPointArray);
+}
+
+void from_json(const nlohmann::json &json, Mesh &mesh) {
 }
 
 } // namespace NewMesh

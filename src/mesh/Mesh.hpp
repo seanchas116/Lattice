@@ -1,6 +1,7 @@
 #pragma once
 #include "Handle.hpp"
 #include "../support/Ray.hpp"
+#include <nlohmann/json_fwd.hpp>
 #include <glm/glm.hpp>
 #include <range/v3/all.hpp>
 #include <vector>
@@ -211,6 +212,9 @@ public:
         return faces;
     }
 };
+
+void to_json(nlohmann::json& json, const Mesh& mesh);
+void from_json(const nlohmann::json& json, Mesh& mesh);
 
 } // namespace NewMesh
 } // namespace Lattice
