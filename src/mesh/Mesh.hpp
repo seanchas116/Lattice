@@ -1,12 +1,12 @@
 #pragma once
-#include <vector>
-#include <array>
-#include <glm/glm.hpp>
-#include <range/v3/all.hpp>
-#include <unordered_map>
-#include <unordered_set>
 #include "Handle.hpp"
 #include "../support/Ray.hpp"
+#include <glm/glm.hpp>
+#include <range/v3/all.hpp>
+#include <vector>
+#include <array>
+#include <unordered_map>
+#include <unordered_set>
 
 namespace Lattice {
 namespace Mesh {
@@ -70,6 +70,8 @@ public:
     void removeFace(FaceHandle f);
 
     void collectGarbage();
+
+    void clear();
 
     // TODO: exclude deleted items
     size_t vertexCount() const { return _vertices.size(); }

@@ -206,6 +206,13 @@ void Mesh::collectGarbage() {
     }
 }
 
+void Mesh::clear() {
+    _vertices.clear();
+    _uvPoints.clear();
+    _edges.clear();
+    _faces.clear();
+}
+
 glm::vec3 Mesh::calculateNormal(FaceHandle face) const {
     auto vertices = this->vertices(face);
 
