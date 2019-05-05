@@ -18,7 +18,7 @@ class MeshObject final : public Object {
     Q_OBJECT
 public:
     MeshObject();
-    ~MeshObject();
+    ~MeshObject() override;
 
     void setMesh(Mesh::Mesh mesh);
     auto& mesh() const { return *_mesh; }
