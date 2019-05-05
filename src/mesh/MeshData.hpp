@@ -15,11 +15,11 @@ struct MeshData {
     std::vector<glm::vec2> uvPositionArray;
     std::vector<uint32_t> uvVertexArray;
 
-    std::vector<std::pair<uint32_t, uint32_t>> edgeVerticesArray;
     std::vector<uint8_t> edgeSmoothArray;
+    std::vector<std::pair<uint32_t, uint32_t>> edgeVerticesArray;
 
-    std::vector<uint32_t> faceVertexCountArray;
     std::vector<uint32_t> faceMaterialArray;
+    std::vector<uint32_t> faceVertexCountArray;
     std::vector<uint32_t> faceUVPointArray;
 
     explicit MeshData(const Mesh& mesh);
