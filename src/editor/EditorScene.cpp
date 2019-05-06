@@ -5,6 +5,7 @@
 #include "./mesheditor/MeshEditor.hpp"
 #include "./manipulator/ObjectManipulator.hpp"
 #include "../state/AppState.hpp"
+#include "../state/MeshEditState.hpp"
 #include "../document/Document.hpp"
 #include "../document/Object.hpp"
 #include "../document/MeshObject.hpp"
@@ -51,6 +52,9 @@ void EditorScene::updateRenderables() {
 
     _appState->document()->rootObject()->forEachDescendant([&] (auto& object) {
         LATTICE_OPTIONAL_GUARD(meshObject, dynamicPointerCast<Document::MeshObject>(object), return;)
+        if (meshEditState && meshObject == (*meshEditState)->targetObject()) {
+            return;
+        }
         connect(meshObject.get(), &Document::MeshObject::locationChanged, this, [this] { emit updated(); });
 
         auto it = _meshRenderers.find(meshObject);
