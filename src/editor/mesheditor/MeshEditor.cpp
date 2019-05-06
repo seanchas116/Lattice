@@ -54,8 +54,12 @@ uint64_t decodeColorToValue(glm::vec4 color) {
 
 Tool::EventTarget eventTargetFromAdditionalInfo(glm::vec4 additionalInfo) {
     uint64_t value = decodeColorToValue(additionalInfo);
-    uint64_t type = value % 3;
-    uint64_t index = value / 3;
+    if (value == 0) {
+        return {};
+    }
+
+    uint64_t type = (value - 1) % 3;
+    uint64_t index = (value - 1) / 3;
     switch (type) {
     case 0:
         return {Mesh::VertexHandle(index), {}, {}};
@@ -67,15 +71,15 @@ Tool::EventTarget eventTargetFromAdditionalInfo(glm::vec4 additionalInfo) {
 }
 
 vec4 additionalInfoVertex(Mesh::VertexHandle v) {
-    return encodeValueToColor(v.index * 3);
+    return encodeValueToColor(v.index * 3 + 1);
 }
 
 vec4 additionalInfoEdge(Mesh::EdgeHandle e) {
-    return encodeValueToColor(e.index * 3 + 1);
+    return encodeValueToColor(e.index * 3 + 2);
 }
 
 vec4 additionalInfoFace(Mesh::FaceHandle f) {
-    return encodeValueToColor(f.index * 3 + 2);
+    return encodeValueToColor(f.index * 3 + 3);
 }
 
 }
@@ -142,6 +146,11 @@ void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const SP<Ca
 void MeshEditor::drawHitAreaAdditionalInfo(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     updateVAOs();
 
+    auto background = encodeValueToColor(0);
+    glClearColor(background.r, background.g, background.b, background.a);
+    glClearDepthf(1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     auto matrixToWorld = _meshEditState->targetObject()->location().matrixToWorld();
 
     if (_appState->isFaceSelectable()) {
@@ -156,19 +165,19 @@ void MeshEditor::drawHitAreaAdditionalInfo(const SP<Draw::Operations> &operation
 }
 
 void MeshEditor::mousePressEvent(const Viewport::MouseEvent &event) {
-    mousePressTarget({}, event);
+    mousePressTarget(eventTargetFromAdditionalInfo(event.additionalHitInfo), event);
 }
 
 void MeshEditor::mouseMoveEvent(const Viewport::MouseEvent &event) {
-    mouseMoveTarget({}, event);
+    mouseMoveTarget(eventTargetFromAdditionalInfo(event.additionalHitInfo), event);
 }
 
 void MeshEditor::mouseReleaseEvent(const Viewport::MouseEvent &event) {
-    mouseReleaseTarget({}, event);
+    mouseReleaseTarget(eventTargetFromAdditionalInfo(event.additionalHitInfo), event);
 }
 
 void MeshEditor::contextMenuEvent(const Viewport::ContextMenuEvent &event) {
-    contextMenuTarget({}, event);
+    contextMenuTarget(eventTargetFromAdditionalInfo(event.additionalHitInfo), event);
 }
 
 void MeshEditor::keyPressEvent(QKeyEvent *event) {
