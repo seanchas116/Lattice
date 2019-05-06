@@ -23,6 +23,11 @@ public:
     void notifyMeshChange();
     void commitMeshChange(const QString& changeTitle);
 
+    void deleteVertices();
+    void deleteEdges();
+    void deleteFaces();
+    void selectAll();
+
 signals:
     void meshChanged(const Mesh::Mesh& mesh);
     void targetObjectChanged(const Opt<SP<Document::MeshObject>>& target);

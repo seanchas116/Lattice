@@ -37,5 +37,39 @@ void MeshEditState::commitMeshChange(const QString &changeTitle) {
     _targetObject->setMesh(*_mesh);
 }
 
+void MeshEditState::deleteVertices() {
+    auto& mesh = *_mesh;
+    auto vertices = mesh.selectedVertices() | ranges::to_vector;
+    for (auto v : vertices) {
+        mesh.removeVertex(v);
+    }
+    mesh.collectGarbage();
+    commitMeshChange(tr("Delete Vertices"));
+}
+
+void MeshEditState::deleteEdges() {
+    auto& mesh = *_mesh;
+    auto edges = mesh.edges(mesh.selectedVertices());
+    for (auto e : edges) {
+        mesh.removeEdge(e);
+    }
+    mesh.collectGarbage();
+    commitMeshChange(tr("Delete Edges"));
+}
+
+void MeshEditState::deleteFaces() {
+    auto& mesh = *_mesh;
+    auto faces = mesh.faces(mesh.selectedVertices());
+    for (auto f : faces) {
+        mesh.removeFace(f);
+    }
+    mesh.collectGarbage();
+    commitMeshChange(tr("Delete Faces"));
+}
+
+void MeshEditState::selectAll() {
+
+}
+
 } // namespace State
 } // namespace Lattice

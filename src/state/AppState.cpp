@@ -139,55 +139,21 @@ void AppState::import() {
 }
 
 void AppState::deleteVertices() {
-    /*
-    auto maybeEditedObject = _document->editedObject();
-    if (!maybeEditedObject) {
-        return;
+    if (_meshEditState) {
+        (*_meshEditState)->deleteVertices();
     }
-    auto editedObject = *maybeEditedObject;
-
-    _document->history()->beginChange(tr("Delete Vertices"));
-
-    auto vertices = _document->meshSelection().vertices;
-    for (auto& v : vertices) {
-        editedObject->oldMesh()->removeVertex(v);
-    }
-
-    _document->setMeshSelection({});
-    */
 }
 
 void AppState::deleteEdges() {
-    /*
-    auto maybeEditedObject = _document->editedObject();
-    if (!maybeEditedObject) {
-        return;
+    if (_meshEditState) {
+        (*_meshEditState)->deleteEdges();
     }
-    auto editedObject = *maybeEditedObject;
-
-    _document->history()->beginChange(tr("Delete Edges"));
-
-    auto edges = _document->meshSelection().edges();
-    for (auto& e : edges) {
-        editedObject->oldMesh()->removeEdge(e);
-    }
-    */
 }
 
 void AppState::deleteFaces() {
-    /*
-    auto maybeEditedObject = _document->editedObject();
-    if (!maybeEditedObject) {
-        return;
+    if (_meshEditState) {
+        (*_meshEditState)->deleteFaces();
     }
-    auto editedObject = *maybeEditedObject;
-
-    _document->history()->beginChange(tr("Delete Faces"));
-
-    auto faces = _document->meshSelection().faces();
-    for (auto& f : faces) {
-        editedObject->oldMesh()->removeFace(f);
-    }*/
 }
 
 void AppState::selectAll() {
