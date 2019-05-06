@@ -165,7 +165,7 @@ public:
     }
 
     template <typename TVertices, CONCEPT_REQUIRES_(ranges::Range<TVertices>())>
-    auto edges(const TVertices& vertices) const {
+    auto edges(TVertices&& vertices) const {
         std::unordered_map<EdgeHandle, size_t> edgeCounts;
 
         for (auto v : vertices) {
@@ -189,10 +189,10 @@ public:
     }
 
     template <typename TVertices, CONCEPT_REQUIRES_(ranges::Range<TVertices>())>
-    auto faces(const TVertices& vertices) const {
+    auto faces(TVertices&& vertices) const {
         std::unordered_map<FaceHandle, size_t> faceCounts;
 
-        for (auto& v : vertices) {
+        for (auto v : vertices) {
             for (auto& f : faces(v)) {
                 if (faceCounts.find(f) != faceCounts.end()) {
                     ++faceCounts[f];
