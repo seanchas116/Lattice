@@ -35,61 +35,67 @@ const vec4 hoveredFaceHighlight = vec4(1, 1, 0.5, 0.5);
 
 }
 
-class MeshEditor::EditorPickable : public Viewport::Renderable {
-public:
-    EditorPickable(MeshEditor* editor) : _editor(editor) {}
-    void mousePressEvent(const Viewport::MouseEvent &event) override {
-        _editor->mousePressTarget(target(), event);
-    }
-    void mouseMoveEvent(const Viewport::MouseEvent &event) override {
-        _editor->mouseMoveTarget(target(), event);
-    }
-    void mouseReleaseEvent(const Viewport::MouseEvent &event) override {
-        _editor->mouseReleaseTarget(target(), event);
-    }
-    void contextMenuEvent(const Viewport::ContextMenuEvent &event) override {
-        _editor->contextMenuTarget(target(), event);
-    }
-    void hoverEnterEvent(const Viewport::MouseEvent &event) override {
-        _editor->hoverEnterTarget(target(), event);
-    }
-    void hoverLeaveEvent() override {
-        _editor->hoverLeaveTarget(target());
-    }
-protected:
-    virtual Tool::EventTarget target() const = 0;
-private:
-    MeshEditor* _editor;
-};
+// TODO: find beteter name
+class EventTargetValue {
+    static glm::vec4 encodeValueToColor(uint64_t value) {
+        union {
+            uint64_t value;
+            glm::u16vec4 color;
+        } valueColor;
+        valueColor.value = value;
 
-class MeshEditor::VertexPickable : public MeshEditor::EditorPickable {
-public:
-    VertexPickable(MeshEditor* editor, Mesh::VertexHandle vertex) : EditorPickable(editor), _vertex(vertex) {}
-    Tool::EventTarget target() const override {
-        return {_vertex, {}, {}};
+        return glm::vec4(valueColor.color) / float(0xFFFF);
     }
-private:
-    Mesh::VertexHandle _vertex;
-};
 
-class MeshEditor::EdgePickable : public MeshEditor::EditorPickable {
-public:
-    EdgePickable(MeshEditor* editor, Mesh::EdgeHandle edge) : EditorPickable(editor), _edge(edge) {}
-    Tool::EventTarget target() const override {
-        return {{}, _edge, {}};
+    static uint64_t decodeColorToValue(glm::vec4 color) {
+        union {
+            uint64_t value;
+            glm::u16vec4 color;
+        } valueColor;
+        valueColor.color = glm::u16vec4(glm::round(color * float(0xFFFF)));
+        return valueColor.value;
     }
-private:
-    Mesh::EdgeHandle _edge;
-};
 
-class MeshEditor::FacePickable : public MeshEditor::EditorPickable {
+    uint64_t value;
+
 public:
-    FacePickable(MeshEditor* editor, Mesh::FaceHandle face) : EditorPickable(editor), _face(face) {}
-    Tool::EventTarget target() const override {
-        return {{}, {}, _face};
+    EventTargetValue(glm::vec4 hitUserColor) {
+        value = decodeColorToValue(hitUserColor);
     }
-private:
-    Mesh::FaceHandle _face;
+    EventTargetValue() {
+        value = 0;
+    }
+    EventTargetValue(Mesh::VertexHandle v) {
+        value = v.index * 3 + 1;
+    }
+    EventTargetValue(Mesh::EdgeHandle e) {
+        value = e.index * 3 + 2;
+    }
+    EventTargetValue(Mesh::FaceHandle f) {
+        value = f.index * 3 + 3;
+    }
+
+    glm::vec4 hitUserColor() const {
+        return encodeValueToColor(value);
+    }
+
+    Tool::EventTarget eventTarget() const {
+        if (value == 0) {
+            return {};
+        }
+
+        uint64_t type = (value - 1) % 3;
+        uint64_t index = (value - 1) / 3;
+        switch (type) {
+        case 0:
+            return {Mesh::VertexHandle(index), {}, {}};
+        case 1:
+            return {{}, Mesh::EdgeHandle(index), {}};
+        case 2:
+            return {{}, {}, Mesh::FaceHandle(index)};
+        }
+        return {};
+    }
 };
 
 MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::MeshEditState> &meshEditState) :
@@ -145,10 +151,17 @@ void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &
 }
 
 void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
-    updateVAOs();
-
     auto idColor = toIDColor();
     glClearColor(idColor.r, idColor.g, idColor.b, idColor.a);
+    glClearDepthf(1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void MeshEditor::drawHitUserColor(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+    updateVAOs();
+
+    auto background = EventTargetValue().hitUserColor();
+    glClearColor(background.r, background.g, background.b, background.a);
     glClearDepthf(1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -166,19 +179,19 @@ void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const SP<Ca
 }
 
 void MeshEditor::mousePressEvent(const Viewport::MouseEvent &event) {
-    mousePressTarget({}, event);
+    mousePressTarget(EventTargetValue(event.hitUserColor).eventTarget(), event);
 }
 
 void MeshEditor::mouseMoveEvent(const Viewport::MouseEvent &event) {
-    mouseMoveTarget({}, event);
+    mouseMoveTarget(EventTargetValue(event.hitUserColor).eventTarget(), event);
 }
 
 void MeshEditor::mouseReleaseEvent(const Viewport::MouseEvent &event) {
-    mouseReleaseTarget({}, event);
+    mouseReleaseTarget(EventTargetValue(event.hitUserColor).eventTarget(), event);
 }
 
 void MeshEditor::contextMenuEvent(const Viewport::ContextMenuEvent &event) {
-    contextMenuTarget({}, event);
+    contextMenuTarget(EventTargetValue(event.hitUserColor).eventTarget(), event);
 }
 
 void MeshEditor::keyPressEvent(QKeyEvent *event) {
@@ -226,10 +239,7 @@ void MeshEditor::updateManipulatorVisibility() {
 }
 
 void MeshEditor::updateChildren() {
-    auto children = _pickables;
-    children.push_back(_manipulator);
-    children.push_back(_tool);
-    setChildRenderables(children);
+    setChildRenderables({_manipulator, _tool});
 }
 
 void MeshEditor::handleMeshChanged() {
@@ -244,6 +254,10 @@ void MeshEditor::mousePressTarget(const Tool::EventTarget &target, const Viewpor
 }
 
 void MeshEditor::mouseMoveTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
+    if (_lastMouseMoveTarget != target) {
+        hoverLeaveTarget(_lastMouseMoveTarget);
+        hoverEnterTarget(target, event);
+    }
     _tool->mouseMoveTool(target, event);
 }
 
@@ -252,39 +266,22 @@ void MeshEditor::mouseReleaseTarget(const Tool::EventTarget &target, const Viewp
 }
 
 void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
-    Q_UNUSED(event);
-    // TODO: update partially
-    if (target.vertex) {
-        _hoveredVertex = target.vertex;
-        _isVAOsDirty = true;
-        emit updated();
-    } else if (target.edge) {
-        _hoveredEdge = target.edge;
-        _isVAOsDirty = true;
-        emit updated();
-    } else if (target.face) {
-        _hoveredFace = target.face;
-        _isVAOsDirty = true;
-        emit updated();
-    }
+    _hoveredVertex = target.vertex;
+    _hoveredEdge = target.edge;
+    _hoveredFace = target.face;
+    _isVAOsDirty = true;
+    emit updated();
+
     _tool->hoverEnterTool(target, event);
 }
 
 void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
-    // TODO: update partially
-    if (target.vertex) {
-        _hoveredVertex = {};
-        _isVAOsDirty = true;
-        emit updated();
-    } else if (target.edge) {
-        _hoveredEdge = {};
-        _isVAOsDirty = true;
-        emit updated();
-    } else if (target.face) {
-        _hoveredFace = {};
-        _isVAOsDirty = true;
-        emit updated();
-    }
+    _hoveredVertex = {};
+    _hoveredEdge = {};
+    _hoveredFace = {};
+    _isVAOsDirty = true;
+    emit updated();
+
     _tool->hoverLeaveTool(target);
 }
 
@@ -302,12 +299,9 @@ void MeshEditor::updateVAOs() {
     auto& mesh = *_meshEditState->mesh();
     auto hitTestExclusion = _tool->hitTestExclusion();
 
-    _pickables.clear();
-
     {
         std::vector<Draw::PointLineVertex> vertexAttributes;
         std::vector<Draw::PointLineVertex> vertexPickAttributes;
-        std::vector<SP<VertexPickable>> vertexPickables;
 
         vertexAttributes.reserve(mesh.vertexCount());
         vertexPickAttributes.reserve(mesh.vertexCount());
@@ -322,12 +316,9 @@ void MeshEditor::updateVAOs() {
             attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
             vertexAttributes.push_back(attrib);
 
-            auto pickable = makeShared<VertexPickable>(this, v);
-            _pickables.push_back(pickable);
-
             Draw::PointLineVertex pickAttrib;
             pickAttrib.position = mesh.position(v);
-            pickAttrib.color = pickable->toIDColor();
+            pickAttrib.color = EventTargetValue(v).hitUserColor();
             pickAttrib.width = hitTestExcluded ? 0 : 1;
             vertexPickAttributes.push_back(pickAttrib);
         }
@@ -347,9 +338,6 @@ void MeshEditor::updateVAOs() {
             bool hovered = e == _hoveredEdge;
             bool hitTestExcluded = ranges::find(hitTestExclusion.edges, e) != hitTestExclusion.edges.end();
 
-            auto pickable = makeShared<EdgePickable>(this, e);
-            _pickables.push_back(pickable);
-
             for (size_t vertexInEdgeIndex = 0; vertexInEdgeIndex < 2; ++vertexInEdgeIndex) {
                 auto& v = mesh.vertices(e)[vertexInEdgeIndex];
                 bool selected = mesh.isSelected(v);
@@ -361,7 +349,7 @@ void MeshEditor::updateVAOs() {
 
                 Draw::PointLineVertex pickAttrib;
                 pickAttrib.position = mesh.position(v);
-                pickAttrib.color = pickable->toIDColor();
+                pickAttrib.color = EventTargetValue(e).hitUserColor();
                 pickAttrib.width = hitTestExcluded ? 0 : 1;
                 edgePickAttributes.push_back(pickAttrib);
             }
@@ -376,11 +364,6 @@ void MeshEditor::updateVAOs() {
         std::vector<GL::IndexBuffer::Triangle> faceTriangles;
 
         for (auto f : mesh.faces()) {
-            auto pickable = makeShared<FacePickable>(this, f);
-            _pickables.push_back(pickable);
-
-            auto idColor = pickable->toIDColor();
-
             auto i0 = uint32_t(facePickAttributes.size());
             for (uint32_t i = 2; i < uint32_t(mesh.vertices(f).size()); ++i) {
                 auto i1 = i0 + i - 1;
@@ -391,7 +374,7 @@ void MeshEditor::updateVAOs() {
             for (auto& p : mesh.uvPoints(f)) {
                 Draw::Vertex pickAttrib;
                 pickAttrib.position = mesh.position(mesh.vertex(p));
-                pickAttrib.color = idColor;
+                pickAttrib.color = EventTargetValue(f).hitUserColor();
                 facePickAttributes.push_back(pickAttrib);
             }
         }

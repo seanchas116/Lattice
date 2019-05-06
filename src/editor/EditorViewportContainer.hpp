@@ -10,6 +10,10 @@ namespace State {
 class AppState;
 }
 
+namespace Viewport {
+class Renderable;
+}
+
 namespace Editor {
 
 class KeyObserver;
@@ -24,12 +28,12 @@ public:
 
 private:
     void setSplitMode(State::ViewportSplitMode split);
-    void setRenderable(const Opt<SP<Viewport::RenderableObject>>& renderable);
+    void setRenderable(const Opt<SP<Lattice::Viewport::Renderable>> &renderable);
 
     SP<State::AppState> _appState;
     SP<KeyObserver> _keyObserver;
     Opt<SP<EditorScene>> _scene;
-    Opt<SP<Viewport::RenderableObject>> _renderable;
+    Opt<SP<Viewport::Renderable>> _renderable;
 };
 
 }

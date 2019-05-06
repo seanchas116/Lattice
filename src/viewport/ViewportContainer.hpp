@@ -7,7 +7,6 @@
 namespace Lattice {
 namespace Viewport {
 
-class RenderableObject;
 class Viewport;
 
 class ViewportContainer : public QOpenGLWidget, protected QOpenGLExtraFunctions {

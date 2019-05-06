@@ -6,11 +6,81 @@ namespace Viewport {
 Renderable::~Renderable() {
 }
 
+void Renderable::setVisible(bool visible) {
+    if (_isVisible == visible) {
+        return;
+    }
+    _isVisible = visible;
+    emit updated();
+}
+
+void Renderable::setChildRenderables(const std::vector<SP<Renderable> > &children) {
+    for (auto& child : _childRenderables) {
+        disconnect(child.get(), &Renderable::updated, this, &Renderable::updated);
+    }
+    _childRenderables = children;
+    for (auto& child : _childRenderables) {
+        connect(child.get(), &Renderable::updated, this, &Renderable::updated);
+    }
+    emit updated();
+}
+
+void Renderable::drawRecursive(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+    if (!_isVisible) {
+        return;
+    }
+    draw(operations, camera);
+    for (auto& c : childRenderables()) {
+        c->drawRecursive(operations, camera);
+    }
+}
+
+void Renderable::drawHitAreaRecursive(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+    if (!_isVisible) {
+        return;
+    }
+    drawHitArea(operations, camera);
+    for (auto& c : childRenderables()) {
+        c->drawHitAreaRecursive(operations, camera);
+    }
+}
+
+void Renderable::drawHitUserColorRecursive(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+    if (!_isVisible) {
+        return;
+    }
+    drawHitUserColor(operations, camera);
+    for (auto& c : childRenderables()) {
+        c->drawHitUserColorRecursive(operations, camera);
+    }
+}
+
+void Renderable::draw2DRecursive(QPainter *painter, const QSize &viewportSize) {
+    if (!_isVisible) {
+        return;
+    }
+    draw2D(painter, viewportSize);
+    for (auto& c : childRenderables()) {
+        c->draw2DRecursive(painter, viewportSize);
+    }
+}
+
+void Renderable::getDescendants(std::vector<SP<Renderable>> &descendants) {
+    descendants.push_back(sharedFromThis());
+    for (auto& c : _childRenderables) {
+        c->getDescendants(descendants);
+    }
+}
+
 void Renderable::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     Q_UNUSED(operations); Q_UNUSED(camera);
 }
 
 void Renderable::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+    Q_UNUSED(operations); Q_UNUSED(camera);
+}
+
+void Renderable::drawHitUserColor(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     Q_UNUSED(operations); Q_UNUSED(camera);
 }
 

@@ -1,5 +1,5 @@
 #include "Viewport.hpp"
-#include "RenderableObject.hpp"
+#include "Renderable.hpp"
 #include "Util.hpp"
 #include "HitAreaMap.hpp"
 #include "../support/Debug.hpp"
@@ -15,9 +15,9 @@ Viewport::Viewport(QWidget *parent) : QWidget(parent), _camera(makeShared<Camera
     setMouseTracking(true);
 }
 
-void Viewport::setRenderable(const Opt<SP<RenderableObject> > &renderable) {
+void Viewport::setRenderable(const Opt<SP<Renderable> > &renderable) {
     if (renderable) {
-        connect(renderable->get(), &RenderableObject::updated, this, &Viewport::updateRequested);
+        connect(renderable->get(), &Renderable::updated, this, &Viewport::updateRequested);
     }
     _renderable = renderable;
 }
@@ -35,43 +35,42 @@ void Viewport::mousePressEvent(QMouseEvent *event) {
     auto maybeHitResult = hitTest(pos, _camera);
     if (!maybeHitResult) { return; }
 
-    auto [renderable, hitDepth] = *maybeHitResult;
+    auto hitResult = *maybeHitResult;
 
-    MouseEvent renderMouseEvent(event, glm::dvec3(pos, hitDepth), _camera);
-    renderable->mousePressEvent(renderMouseEvent);
-    _draggedRenderable = renderable;
-    _hitDepth = hitDepth;
+    MouseEvent renderMouseEvent(event, glm::dvec3(pos, hitResult.depth), hitResult.userColor, _camera);
+    hitResult.renderable->mousePressEvent(renderMouseEvent);
+    _draggedHitResult = hitResult;
 }
 
 void Viewport::mouseMoveEvent(QMouseEvent *event) {
     auto pos = mapQtToGL(this, event->pos());
 
-    if (_draggedRenderable) {
+    if (_draggedHitResult) {
         // drag
-        auto renderable = *_draggedRenderable;
-        MouseEvent renderMouseEvent(event, glm::dvec3(pos, _hitDepth), _camera);
-        renderable->mouseMoveEvent(renderMouseEvent);
+        auto hitResult = *_draggedHitResult;
+        MouseEvent renderMouseEvent(event, glm::dvec3(pos, hitResult.depth), hitResult.userColor, _camera);
+        hitResult.renderable->mouseMoveEvent(renderMouseEvent);
         return;
     } else {
         // hover
         auto maybeHitResult = hitTest(pos, _camera);
         if (!maybeHitResult) {
-            if (_hoveredRenderable) {
-                (*_hoveredRenderable)->hoverLeaveEvent();
+            if (_hoveredHitResult) {
+                (*_hoveredHitResult).renderable->hoverLeaveEvent();
             }
             return;
         }
-        auto [renderable, hitDepth] = *maybeHitResult;
-        MouseEvent renderMouseEvent(event, glm::dvec3(pos, hitDepth), _camera);
-        if (_hoveredRenderable == renderable) {
-            renderable->mouseMoveEvent(renderMouseEvent);
+        auto hitResult = *maybeHitResult;
+        MouseEvent renderMouseEvent(event, glm::dvec3(pos, hitResult.depth), hitResult.userColor, _camera);
+        if (_hoveredHitResult && _hoveredHitResult->renderable == hitResult.renderable) {
+            hitResult.renderable->mouseMoveEvent(renderMouseEvent);
         } else {
-            if (_hoveredRenderable) {
-                (*_hoveredRenderable)->hoverLeaveEvent();
+            if (_hoveredHitResult) {
+                _hoveredHitResult->renderable->hoverLeaveEvent();
             }
-            renderable->hoverEnterEvent(renderMouseEvent);
-            renderable->mouseMoveEvent(renderMouseEvent);
-            _hoveredRenderable = renderable;
+            hitResult.renderable->hoverEnterEvent(renderMouseEvent);
+            hitResult.renderable->mouseMoveEvent(renderMouseEvent);
+            _hoveredHitResult = hitResult;
         }
     }
 }
@@ -82,9 +81,9 @@ void Viewport::mouseDoubleClickEvent(QMouseEvent *event) {
     auto maybeHitResult = hitTest(pos, _camera);
     if (!maybeHitResult) { return; }
 
-    auto [renderable, hitDepth] = *maybeHitResult;
+    auto [renderable, hitDepth, additionalInfo] = *maybeHitResult;
 
-    MouseEvent renderMouseEvent(event, glm::dvec3(pos, hitDepth), _camera);
+    MouseEvent renderMouseEvent(event, glm::dvec3(pos, hitDepth), additionalInfo, _camera);
     renderable->mouseDoubleClickEvent(renderMouseEvent);
 }
 
@@ -94,9 +93,9 @@ void Viewport::contextMenuEvent(QContextMenuEvent *event) {
     auto maybeHitResult = hitTest(pos, _camera);
     if (!maybeHitResult) { return; }
 
-    auto [renderable, hitDepth] = *maybeHitResult;
+    auto [renderable, hitDepth, additionalInfo] = *maybeHitResult;
 
-    ContextMenuEvent renderContextMenuEvent(event, glm::dvec3(pos, hitDepth), _camera);
+    ContextMenuEvent renderContextMenuEvent(event, glm::dvec3(pos, hitDepth), additionalInfo, _camera);
     renderable->contextMenuEvent(renderContextMenuEvent);
 }
 
@@ -112,13 +111,17 @@ void Viewport::resizeEvent(QResizeEvent *event) {
 }
 
 void Viewport::mouseReleaseEvent(QMouseEvent *event) {
-    LATTICE_OPTIONAL_GUARD(renderable, _draggedRenderable, return;)
-    MouseEvent renderMouseEvent(event, glm::dvec3(mapQtToGL(this, event->pos()), _hitDepth), _camera);
-    renderable->mouseReleaseEvent(renderMouseEvent);
-    _draggedRenderable = {};
+    if (!_draggedHitResult) {
+        return;
+    }
+    auto hitResult = *_draggedHitResult;
+
+    MouseEvent renderMouseEvent(event, glm::dvec3(mapQtToGL(this, event->pos()), hitResult.depth), hitResult.userColor, _camera);
+    hitResult.renderable->mouseReleaseEvent(renderMouseEvent);
+    _draggedHitResult = {};
 }
 
-Opt<std::pair<SP<Renderable>, double> > Viewport::hitTest(glm::dvec2 pos, const SP<Camera> &camera) {
+Opt<HitResult> Viewport::hitTest(glm::dvec2 pos, const SP<Camera> &camera) {
     Q_UNUSED(camera);
 
     if (!_hitAreaMap) {

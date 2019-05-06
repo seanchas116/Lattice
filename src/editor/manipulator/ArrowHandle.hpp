@@ -1,12 +1,12 @@
 #pragma once
-#include "../../viewport/RenderableObject.hpp"
+#include "../../viewport/Renderable.hpp"
 
 namespace Lattice {
 
 namespace Editor {
 namespace Manipulator {
 
-class ArrowHandle : public Viewport::RenderableObject {
+class ArrowHandle : public Viewport::Renderable {
     Q_OBJECT
 public:
     enum class HandleType {

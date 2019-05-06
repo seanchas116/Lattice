@@ -3,7 +3,7 @@
 #include "../../mesh/Handle.hpp"
 #include "../../document/MeshObject.hpp"
 #include "../../viewport/MouseEvent.hpp"
-#include "../../viewport/RenderableObject.hpp"
+#include "../../viewport/Renderable.hpp"
 #include <QObject>
 #include <unordered_set>
 
@@ -16,7 +16,7 @@ class Mesh;
 namespace Editor {
 namespace MeshEditor {
 
-class Tool : public Viewport::RenderableObject {
+class Tool : public Viewport::Renderable {
     Q_OBJECT
 public:
     struct EventTarget {
@@ -25,6 +25,8 @@ public:
         Opt<Mesh::FaceHandle> face;
 
         std::unordered_set<Mesh::VertexHandle> vertices(const Mesh::Mesh& mesh) const;
+        bool operator==(const EventTarget& other) const;
+        bool operator!=(const EventTarget& other) const { return !operator==(other); }
     };
 
     struct HitTestExclusion {

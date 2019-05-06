@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Tool.hpp"
-#include "../../viewport/RenderableObject.hpp"
+#include "../../viewport/Renderable.hpp"
 #include "../../draw/Vertex.hpp"
 #include "../../support/Shorthands.hpp"
 #include "../../support/Box.hpp"
@@ -35,7 +35,7 @@ class MeshManipulator;
 
 namespace MeshEditor {
 
-class MeshEditor final : public Viewport::RenderableObject, protected QOpenGLExtraFunctions {
+class MeshEditor final : public Viewport::Renderable, protected QOpenGLExtraFunctions {
     Q_OBJECT
 public:
     MeshEditor(const SP<State::AppState>& appState, const SP<State::MeshEditState>& meshEditState);
@@ -44,6 +44,7 @@ public:
 
     void draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
     void drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
+    void drawHitUserColor(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
 
     void mousePressEvent(const Viewport::MouseEvent &event) override;
     void mouseMoveEvent(const Viewport::MouseEvent &event) override;
@@ -72,11 +73,6 @@ private:
 
     void handleMeshChanged();
 
-    class EditorPickable;
-    class VertexPickable;
-    class EdgePickable;
-    class FacePickable;
-
     SP<State::AppState> _appState;
     SP<State::MeshEditState> _meshEditState;
 
@@ -95,11 +91,9 @@ private:
     SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexPickVBO;
     SP<GL::VAO> _vertexPickVAO;
 
-    std::vector<SP<Viewport::Renderable>> _pickables;
-
     SP<Tool> _tool;
 
-    // vertex hover
+    Tool::EventTarget _lastMouseMoveTarget;
     Opt<Mesh::VertexHandle> _hoveredVertex;
     Opt<Mesh::EdgeHandle> _hoveredEdge;
     Opt<Mesh::FaceHandle> _hoveredFace;

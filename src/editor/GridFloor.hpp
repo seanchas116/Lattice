@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../support/Shorthands.hpp"
-#include "../viewport/RenderableObject.hpp"
+#include "../viewport/Renderable.hpp"
 #include "../draw/Vertex.hpp"
 #include <glm/glm.hpp>
 
@@ -15,7 +15,7 @@ class IndexBuffer;
 
 namespace Editor {
 
-class GridFloor final : public Viewport::RenderableObject {
+class GridFloor final : public Viewport::Renderable {
     Q_OBJECT
 public:
     GridFloor();

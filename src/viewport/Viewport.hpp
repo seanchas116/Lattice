@@ -3,6 +3,7 @@
 #include "../support/Shorthands.hpp"
 #include "../draw/Operations.hpp"
 #include "MouseEvent.hpp"
+#include "HitResult.hpp"
 
 namespace Lattice {
 namespace Viewport {
@@ -18,7 +19,7 @@ class Viewport : public QWidget {
 public:
     Viewport(QWidget* parent = nullptr);
 
-    void setRenderable(const Opt<SP<RenderableObject>>& renderable);
+    void setRenderable(const Opt<SP<Renderable> > &renderable);
 
     auto& camera() const { return _camera; }
 
@@ -39,13 +40,12 @@ private:
 
     const SP<HitAreaMap>& hitAreaMap();
 
-    Opt<std::pair<SP<Renderable>, double>> hitTest(glm::dvec2 pos, const SP<Camera>& camera);
+    Opt<HitResult> hitTest(glm::dvec2 pos, const SP<Camera>& camera);
 
-    Opt<SP<RenderableObject>> _renderable;
-    Opt<SP<Renderable>> _draggedRenderable;
-    Opt<SP<Renderable>> _hoveredRenderable;
+    Opt<SP<Renderable>> _renderable;
+    Opt<HitResult> _draggedHitResult;
+    Opt<HitResult> _hoveredHitResult;
     Opt<SP<HitAreaMap>> _hitAreaMap;
-    double _hitDepth;
     SP<Camera> _camera;
 };
 
