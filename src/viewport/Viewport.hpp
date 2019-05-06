@@ -3,6 +3,7 @@
 #include "../support/Shorthands.hpp"
 #include "../draw/Operations.hpp"
 #include "MouseEvent.hpp"
+#include "HitResult.hpp"
 
 namespace Lattice {
 namespace Viewport {
@@ -39,7 +40,7 @@ private:
 
     const SP<HitAreaMap>& hitAreaMap();
 
-    Opt<std::pair<SP<Renderable>, double>> hitTest(glm::dvec2 pos, const SP<Camera>& camera);
+    Opt<HitResult> hitTest(glm::dvec2 pos, const SP<Camera>& camera);
 
     Opt<SP<Renderable>> _renderable;
     Opt<SP<Renderable>> _draggedRenderable;

@@ -35,7 +35,7 @@ void Viewport::mousePressEvent(QMouseEvent *event) {
     auto maybeHitResult = hitTest(pos, _camera);
     if (!maybeHitResult) { return; }
 
-    auto [renderable, hitDepth] = *maybeHitResult;
+    auto [renderable, hitDepth, additionalInfo] = *maybeHitResult;
 
     MouseEvent renderMouseEvent(event, glm::dvec3(pos, hitDepth), _camera);
     renderable->mousePressEvent(renderMouseEvent);
@@ -61,7 +61,7 @@ void Viewport::mouseMoveEvent(QMouseEvent *event) {
             }
             return;
         }
-        auto [renderable, hitDepth] = *maybeHitResult;
+        auto [renderable, hitDepth, additionalInfo] = *maybeHitResult;
         MouseEvent renderMouseEvent(event, glm::dvec3(pos, hitDepth), _camera);
         if (_hoveredRenderable == renderable) {
             renderable->mouseMoveEvent(renderMouseEvent);
@@ -82,7 +82,7 @@ void Viewport::mouseDoubleClickEvent(QMouseEvent *event) {
     auto maybeHitResult = hitTest(pos, _camera);
     if (!maybeHitResult) { return; }
 
-    auto [renderable, hitDepth] = *maybeHitResult;
+    auto [renderable, hitDepth, additionalInfo] = *maybeHitResult;
 
     MouseEvent renderMouseEvent(event, glm::dvec3(pos, hitDepth), _camera);
     renderable->mouseDoubleClickEvent(renderMouseEvent);
@@ -94,7 +94,7 @@ void Viewport::contextMenuEvent(QContextMenuEvent *event) {
     auto maybeHitResult = hitTest(pos, _camera);
     if (!maybeHitResult) { return; }
 
-    auto [renderable, hitDepth] = *maybeHitResult;
+    auto [renderable, hitDepth, additionalInfo] = *maybeHitResult;
 
     ContextMenuEvent renderContextMenuEvent(event, glm::dvec3(pos, hitDepth), _camera);
     renderable->contextMenuEvent(renderContextMenuEvent);
@@ -118,7 +118,7 @@ void Viewport::mouseReleaseEvent(QMouseEvent *event) {
     _draggedRenderable = {};
 }
 
-Opt<std::pair<SP<Renderable>, double> > Viewport::hitTest(glm::dvec2 pos, const SP<Camera> &camera) {
+Opt<HitResult> Viewport::hitTest(glm::dvec2 pos, const SP<Camera> &camera) {
     Q_UNUSED(camera);
 
     if (!_hitAreaMap) {

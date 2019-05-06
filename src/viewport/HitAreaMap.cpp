@@ -31,17 +31,21 @@ void HitAreaMap::resize(glm::ivec2 size) {
     _framebufferSize = size;
 }
 
-Opt<std::pair<SP<Renderable>, double>> HitAreaMap::pick(vec2 physicalPos) {
+Opt<HitResult> HitAreaMap::pick(vec2 physicalPos) {
     recallContext();
     PixelData<vec4> pixels(glm::ivec2(1));
     _framebuffer->readPixels(physicalPos, pixels);
+
+    PixelData<vec4> additionalInfoPixels(glm::ivec2(1));
+    _additionalInfoFramebuffer->readPixels(physicalPos, additionalInfoPixels);
+
     auto renderable = Renderable::fromIDColor(pixels.data()[0]);
 
     if (!renderable) {
         return {};
     }
     float depth = _framebuffer->readDepth(physicalPos);
-    return {{*renderable, depth}};
+    return {{*renderable, depth, additionalInfoPixels.data()[0]}};
 }
 
 void HitAreaMap::draw(const SP<Renderable> &renderable, const SP<Draw::Operations> &operations, const SP<Camera> &camera) {

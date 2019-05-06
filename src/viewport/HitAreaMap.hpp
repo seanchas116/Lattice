@@ -1,5 +1,6 @@
 #pragma once
 
+#include "HitResult.hpp"
 #include "../support/Shorthands.hpp"
 #include "../gl/ContextRecallable.hpp"
 #include <QtGlobal>
@@ -27,7 +28,7 @@ class HitAreaMap final : protected QOpenGLExtraFunctions, protected GL::ContextR
 public:
     HitAreaMap();
 
-    Opt<std::pair<SP<Renderable>, double>> pick(glm::vec2 physicalPos);
+    Opt<HitResult> pick(glm::vec2 physicalPos);
     void draw(const SP<Renderable> &renderable, const SP<Draw::Operations>& operations, const SP<Camera>& camera);
 
 private:
