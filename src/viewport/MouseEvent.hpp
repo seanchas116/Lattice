@@ -16,9 +16,9 @@ namespace Viewport {
 struct LocatedEvent {
     Q_DISABLE_COPY(LocatedEvent)
 public:
-    LocatedEvent(glm::dvec3 viewportPos, glm::vec4 additionalHitInfo, const SP<Camera>& camera) :
+    LocatedEvent(glm::dvec3 viewportPos, glm::vec4 hitUserColor, const SP<Camera>& camera) :
         viewportPos(viewportPos),
-        additionalHitInfo(additionalHitInfo),
+        hitUserColor(hitUserColor),
         camera(camera)
     {}
     virtual ~LocatedEvent();
@@ -26,14 +26,14 @@ public:
     glm::dvec3 worldPos() const;
 
     glm::dvec3 viewportPos;
-    glm::vec4 additionalHitInfo;
+    glm::vec4 hitUserColor;
     const SP<Camera>& camera;
 };
 
 struct MouseEvent : public LocatedEvent {
 public:
-    MouseEvent(QMouseEvent* originalEvent, glm::dvec3 viewportPos, glm::vec4 additionalHitInfo, const SP<Camera>& camera) :
-        LocatedEvent(viewportPos, additionalHitInfo, camera),
+    MouseEvent(QMouseEvent* originalEvent, glm::dvec3 viewportPos, glm::vec4 hitUserColor, const SP<Camera>& camera) :
+        LocatedEvent(viewportPos, hitUserColor, camera),
         originalEvent(originalEvent)
     {}
 
@@ -42,8 +42,8 @@ public:
 
 struct ContextMenuEvent : public LocatedEvent {
 public:
-    ContextMenuEvent(QContextMenuEvent* originalEvent, glm::dvec3 viewportPos, glm::vec4 additionalHitInfo, const SP<Camera>& camera) :
-        LocatedEvent(viewportPos, additionalHitInfo, camera),
+    ContextMenuEvent(QContextMenuEvent* originalEvent, glm::dvec3 viewportPos, glm::vec4 hitUserColor, const SP<Camera>& camera) :
+        LocatedEvent(viewportPos, hitUserColor, camera),
         originalEvent(originalEvent)
     {}
 

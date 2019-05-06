@@ -66,7 +66,7 @@ void HitAreaMap::draw(const SP<Renderable> &renderable, const SP<Draw::Operation
         glClearDepthf(1.f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        renderable->drawHitAreaAdditionalInfoRecursive(operations, camera);
+        renderable->drawHitUserColorRecursive(operations, camera);
     }
 
     _lastRenderables.clear();

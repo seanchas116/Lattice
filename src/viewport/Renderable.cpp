@@ -45,13 +45,13 @@ void Renderable::drawHitAreaRecursive(const SP<Draw::Operations> &operations, co
     }
 }
 
-void Renderable::drawHitAreaAdditionalInfoRecursive(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void Renderable::drawHitUserColorRecursive(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     if (!_isVisible) {
         return;
     }
-    drawHitAreaAdditionalInfo(operations, camera);
+    drawHitUserColor(operations, camera);
     for (auto& c : childRenderables()) {
-        c->drawHitAreaAdditionalInfoRecursive(operations, camera);
+        c->drawHitUserColorRecursive(operations, camera);
     }
 }
 
@@ -80,7 +80,7 @@ void Renderable::drawHitArea(const SP<Draw::Operations> &operations, const SP<Ca
     Q_UNUSED(operations); Q_UNUSED(camera);
 }
 
-void Renderable::drawHitAreaAdditionalInfo(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void Renderable::drawHitUserColor(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     Q_UNUSED(operations); Q_UNUSED(camera);
 }
 

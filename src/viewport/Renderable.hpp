@@ -28,14 +28,14 @@ public:
 
     void drawRecursive(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
     void drawHitAreaRecursive(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
-    void drawHitAreaAdditionalInfoRecursive(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
+    void drawHitUserColorRecursive(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
     void draw2DRecursive(QPainter* painter, const QSize& viewportSize);
 
     void getDescendants(std::vector<SP<Renderable>>& descendants);
 
     virtual void draw(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
     virtual void drawHitArea(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
-    virtual void drawHitAreaAdditionalInfo(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
+    virtual void drawHitUserColor(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
     virtual void draw2D(QPainter* painter, const QSize& viewportSize);
 
     virtual void mousePressEvent(const MouseEvent& event);

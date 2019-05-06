@@ -143,7 +143,7 @@ void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const SP<Ca
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void MeshEditor::drawHitAreaAdditionalInfo(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void MeshEditor::drawHitUserColor(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     updateVAOs();
 
     auto background = encodeValueToColor(0);
@@ -165,19 +165,19 @@ void MeshEditor::drawHitAreaAdditionalInfo(const SP<Draw::Operations> &operation
 }
 
 void MeshEditor::mousePressEvent(const Viewport::MouseEvent &event) {
-    mousePressTarget(eventTargetFromAdditionalInfo(event.additionalHitInfo), event);
+    mousePressTarget(eventTargetFromAdditionalInfo(event.hitUserColor), event);
 }
 
 void MeshEditor::mouseMoveEvent(const Viewport::MouseEvent &event) {
-    mouseMoveTarget(eventTargetFromAdditionalInfo(event.additionalHitInfo), event);
+    mouseMoveTarget(eventTargetFromAdditionalInfo(event.hitUserColor), event);
 }
 
 void MeshEditor::mouseReleaseEvent(const Viewport::MouseEvent &event) {
-    mouseReleaseTarget(eventTargetFromAdditionalInfo(event.additionalHitInfo), event);
+    mouseReleaseTarget(eventTargetFromAdditionalInfo(event.hitUserColor), event);
 }
 
 void MeshEditor::contextMenuEvent(const Viewport::ContextMenuEvent &event) {
-    contextMenuTarget(eventTargetFromAdditionalInfo(event.additionalHitInfo), event);
+    contextMenuTarget(eventTargetFromAdditionalInfo(event.hitUserColor), event);
 }
 
 void MeshEditor::keyPressEvent(QKeyEvent *event) {

@@ -37,7 +37,7 @@ void Viewport::mousePressEvent(QMouseEvent *event) {
 
     auto hitResult = *maybeHitResult;
 
-    MouseEvent renderMouseEvent(event, glm::dvec3(pos, hitResult.depth), hitResult.additionalInfo, _camera);
+    MouseEvent renderMouseEvent(event, glm::dvec3(pos, hitResult.depth), hitResult.userColor, _camera);
     hitResult.renderable->mousePressEvent(renderMouseEvent);
     _draggedHitResult = hitResult;
 }
@@ -48,7 +48,7 @@ void Viewport::mouseMoveEvent(QMouseEvent *event) {
     if (_draggedHitResult) {
         // drag
         auto hitResult = *_draggedHitResult;
-        MouseEvent renderMouseEvent(event, glm::dvec3(pos, hitResult.depth), hitResult.additionalInfo, _camera);
+        MouseEvent renderMouseEvent(event, glm::dvec3(pos, hitResult.depth), hitResult.userColor, _camera);
         hitResult.renderable->mouseMoveEvent(renderMouseEvent);
         return;
     } else {
@@ -61,7 +61,7 @@ void Viewport::mouseMoveEvent(QMouseEvent *event) {
             return;
         }
         auto hitResult = *maybeHitResult;
-        MouseEvent renderMouseEvent(event, glm::dvec3(pos, hitResult.depth), hitResult.additionalInfo, _camera);
+        MouseEvent renderMouseEvent(event, glm::dvec3(pos, hitResult.depth), hitResult.userColor, _camera);
         if (_hoveredHitResult && _hoveredHitResult->renderable == hitResult.renderable) {
             hitResult.renderable->mouseMoveEvent(renderMouseEvent);
         } else {
@@ -116,7 +116,7 @@ void Viewport::mouseReleaseEvent(QMouseEvent *event) {
     }
     auto hitResult = *_draggedHitResult;
 
-    MouseEvent renderMouseEvent(event, glm::dvec3(mapQtToGL(this, event->pos()), hitResult.depth), hitResult.additionalInfo, _camera);
+    MouseEvent renderMouseEvent(event, glm::dvec3(mapQtToGL(this, event->pos()), hitResult.depth), hitResult.userColor, _camera);
     hitResult.renderable->mouseReleaseEvent(renderMouseEvent);
     _draggedHitResult = {};
 }

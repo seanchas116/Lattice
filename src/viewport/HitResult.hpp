@@ -10,7 +10,7 @@ class Renderable;
 struct HitResult {
     SP<Renderable> renderable;
     float depth;
-    glm::vec4 additionalInfo;
+    glm::vec4 userColor;
 };
 
 }
