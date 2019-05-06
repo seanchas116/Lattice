@@ -1,5 +1,5 @@
 #pragma once
-#include "../../viewport/RenderableObject.hpp"
+#include "../../viewport/Renderable.hpp"
 
 namespace Lattice {
 
@@ -15,7 +15,7 @@ namespace Editor {
 class MeshPicker;
 namespace Manipulator {
 
-class RotateHandle : public Viewport::RenderableObject, protected QOpenGLExtraFunctions {
+class RotateHandle : public Viewport::Renderable, protected QOpenGLExtraFunctions {
     Q_OBJECT
 public:
     RotateHandle(int axis);

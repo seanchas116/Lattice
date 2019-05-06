@@ -21,7 +21,6 @@ class Operations;
 namespace Viewport {
 
 class Renderable;
-class RenderableObject;
 
 class HitAreaMap final : protected QOpenGLExtraFunctions, protected GL::ContextRecallable {
     Q_DISABLE_COPY(HitAreaMap)
@@ -29,7 +28,7 @@ public:
     HitAreaMap();
 
     Opt<std::pair<SP<Renderable>, double>> pick(glm::vec2 physicalPos);
-    void draw(const SP<RenderableObject> &renderable, const SP<Draw::Operations>& operations, const SP<Camera>& camera);
+    void draw(const SP<Renderable> &renderable, const SP<Draw::Operations>& operations, const SP<Camera>& camera);
 
 private:
     void resize(glm::ivec2 size);

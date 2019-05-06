@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Tool.hpp"
-#include "../../viewport/RenderableObject.hpp"
+#include "../../viewport/Renderable.hpp"
 #include "../../draw/Vertex.hpp"
 #include "../../support/Shorthands.hpp"
 #include "../../support/Box.hpp"
@@ -35,7 +35,7 @@ class MeshManipulator;
 
 namespace MeshEditor {
 
-class MeshEditor final : public Viewport::RenderableObject, protected QOpenGLExtraFunctions {
+class MeshEditor final : public Viewport::Renderable, protected QOpenGLExtraFunctions {
     Q_OBJECT
 public:
     MeshEditor(const SP<State::AppState>& appState, const SP<State::MeshEditState>& meshEditState);

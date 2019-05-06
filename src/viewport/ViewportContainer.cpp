@@ -1,6 +1,6 @@
 #include "ViewportContainer.hpp"
 #include "Viewport.hpp"
-#include "RenderableObject.hpp"
+#include "Renderable.hpp"
 #include "Util.hpp"
 #include "HitAreaMap.hpp"
 #include "../support/Debug.hpp"

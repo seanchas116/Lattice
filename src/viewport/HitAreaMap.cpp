@@ -1,5 +1,5 @@
 #include "HitAreaMap.hpp"
-#include "RenderableObject.hpp"
+#include "Renderable.hpp"
 #include "../gl/Framebuffer.hpp"
 #include "../gl/Texture.hpp"
 #include "../gl/Binder.hpp"
@@ -39,7 +39,7 @@ Opt<std::pair<SP<Renderable>, double>> HitAreaMap::pick(vec2 physicalPos) {
     return {{*renderable, depth}};
 }
 
-void HitAreaMap::draw(const SP<RenderableObject> &renderable, const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void HitAreaMap::draw(const SP<Renderable> &renderable, const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     resize(camera->viewportSize());
 
     GL::Binder binder(*_framebuffer);
@@ -47,8 +47,9 @@ void HitAreaMap::draw(const SP<RenderableObject> &renderable, const SP<Draw::Ope
     glClearDepthf(1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    renderable->drawHitAreaRecursive(operations, camera);
     _lastRenderables.clear();
-    renderable->drawHitAreaRecursive(operations, camera, _lastRenderables);
+    renderable->getDescendants(_lastRenderables);
 }
 
 }

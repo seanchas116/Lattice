@@ -1,11 +1,11 @@
 #pragma once
-#include "../../viewport/RenderableObject.hpp"
+#include "../../viewport/Renderable.hpp"
 
 namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
-class CenterHandle : public Viewport::RenderableObject {
+class CenterHandle : public Viewport::Renderable {
     Q_OBJECT
 public:
     CenterHandle();

@@ -18,7 +18,7 @@ class Viewport : public QWidget {
 public:
     Viewport(QWidget* parent = nullptr);
 
-    void setRenderable(const Opt<SP<RenderableObject>>& renderable);
+    void setRenderable(const Opt<SP<Renderable> > &renderable);
 
     auto& camera() const { return _camera; }
 
@@ -41,7 +41,7 @@ private:
 
     Opt<std::pair<SP<Renderable>, double>> hitTest(glm::dvec2 pos, const SP<Camera>& camera);
 
-    Opt<SP<RenderableObject>> _renderable;
+    Opt<SP<Renderable>> _renderable;
     Opt<SP<Renderable>> _draggedRenderable;
     Opt<SP<Renderable>> _hoveredRenderable;
     Opt<SP<HitAreaMap>> _hitAreaMap;

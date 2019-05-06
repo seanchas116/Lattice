@@ -1,6 +1,6 @@
 #pragma once
 #include <QObject>
-#include "../../viewport/RenderableObject.hpp"
+#include "../../viewport/Renderable.hpp"
 
 namespace Lattice {
 
@@ -11,7 +11,7 @@ class CenterHandle;
 class ArrowHandle;
 class RotateHandle;
 
-class Manipulator : public Viewport::RenderableObject {
+class Manipulator : public Viewport::Renderable {
     Q_OBJECT
 
 public:

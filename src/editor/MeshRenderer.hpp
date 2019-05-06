@@ -3,7 +3,7 @@
 #include "../support/Shorthands.hpp"
 #include "../support/Box.hpp"
 #include "../support/Location.hpp"
-#include "../viewport/RenderableObject.hpp"
+#include "../viewport/Renderable.hpp"
 #include <glm/glm.hpp>
 #include <unordered_map>
 
@@ -29,7 +29,7 @@ namespace Editor {
 
 class MeshPicker;
 
-class MeshRenderer final : public Viewport::RenderableObject {
+class MeshRenderer final : public Viewport::Renderable {
     Q_OBJECT
 public:
     MeshRenderer(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object);

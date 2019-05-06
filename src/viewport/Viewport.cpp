@@ -1,5 +1,5 @@
 #include "Viewport.hpp"
-#include "RenderableObject.hpp"
+#include "Renderable.hpp"
 #include "Util.hpp"
 #include "HitAreaMap.hpp"
 #include "../support/Debug.hpp"
@@ -15,9 +15,9 @@ Viewport::Viewport(QWidget *parent) : QWidget(parent), _camera(makeShared<Camera
     setMouseTracking(true);
 }
 
-void Viewport::setRenderable(const Opt<SP<RenderableObject> > &renderable) {
+void Viewport::setRenderable(const Opt<SP<Renderable> > &renderable) {
     if (renderable) {
-        connect(renderable->get(), &RenderableObject::updated, this, &Viewport::updateRequested);
+        connect(renderable->get(), &Renderable::updated, this, &Viewport::updateRequested);
     }
     _renderable = renderable;
 }
