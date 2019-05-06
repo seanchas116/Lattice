@@ -79,7 +79,7 @@ void LoopCutTool::mousePressTool(const Tool::EventTarget &target, const Viewport
         mesh.addEdge(v0, v1, false);
     }
 
-    mesh.clearSelections();
+    mesh.deselectAll();
     for (auto& v : vertices) {
         mesh.setSelected(v, true);
     }

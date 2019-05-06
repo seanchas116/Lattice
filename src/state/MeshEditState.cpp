@@ -64,18 +64,12 @@ void MeshEditState::deleteFaces() {
 }
 
 void MeshEditState::selectAll() {
-    auto& mesh = *_mesh;
-    for (auto v : mesh.vertices()) {
-        mesh.setSelected(v, true);
-    }
+    _mesh->selectAll();
     notifyMeshChange();
 }
 
 void MeshEditState::deselectAll() {
-    auto& mesh = *_mesh;
-    for (auto v : mesh.vertices()) {
-        mesh.setSelected(v, false);
-    }
+    _mesh->deselectAll();
     notifyMeshChange();
 }
 

@@ -158,7 +158,8 @@ public:
 
     glm::vec3 calculateNormal(FaceHandle face) const;
 
-    void clearSelections();
+    void selectAll();
+    void deselectAll();
 
     auto selectedVertices() const {
         return vertices() | ranges::view::filter([this] (auto handle) { return isSelected(handle); });

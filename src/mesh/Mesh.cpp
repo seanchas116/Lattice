@@ -234,7 +234,13 @@ glm::vec3 Mesh::calculateNormal(FaceHandle face) const {
     return normalize(normalSum);
 }
 
-void Mesh::clearSelections() {
+void Mesh::selectAll() {
+    for (auto v : vertices()) {
+        setSelected(v, true);
+    }
+}
+
+void Mesh::deselectAll() {
     for (auto v : vertices()) {
         setSelected(v, false);
     }

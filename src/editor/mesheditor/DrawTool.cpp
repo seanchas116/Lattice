@@ -50,7 +50,7 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
             _drawnUVPoints.clear();
             _previewUVPoint = std::nullopt;
 
-            mesh.clearSelections();
+            mesh.deselectAll();
             for (auto& p : points) {
                 mesh.setSelected(mesh.vertex(p), true);
             }

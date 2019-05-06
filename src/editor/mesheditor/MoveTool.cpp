@@ -121,7 +121,7 @@ void MoveTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport:
     if (_dragStarted) {
         emit meshChangeFinished(tr("Move Vertices"));
     } else {
-        mesh()->clearSelections();
+        mesh()->deselectAll();
         for (auto& v : _nextSelection) {
             mesh()->setSelected(v, true);
         }

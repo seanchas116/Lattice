@@ -150,7 +150,7 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
             _guideDirection = glm::normalize(normal);
         }
 
-        mesh.clearSelections();
+        mesh.deselectAll();
 
         for (auto& [oldUV, newUV] : _oldToNewUVPoints) {
             mesh.setSelected(mesh.vertex(newUV), true);
