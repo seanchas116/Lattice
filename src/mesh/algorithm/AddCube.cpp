@@ -6,7 +6,9 @@ using namespace glm;
 namespace Lattice {
 namespace Mesh {
 
-void AddCube::redo(Mesh &mesh) {
+Mesh AddCube::perform(const Mesh &original) {
+    auto mesh = original;
+
     //   2    3
     // 6    7
     //   0    1
@@ -20,7 +22,6 @@ void AddCube::redo(Mesh &mesh) {
     auto v5 = mesh.addVertex(vec3(maxPos.x, minPos.y, maxPos.z));
     auto v6 = mesh.addVertex(vec3(minPos.x, maxPos.y, maxPos.z));
     auto v7 = mesh.addVertex(vec3(maxPos.x, maxPos.y, maxPos.z));
-    vertices = {v0, v1, v2, v3, v4, v5, v6, v7};
 
     auto uv0 = mesh.addUVPoint(v0, vec2(0));
     auto uv1 = mesh.addUVPoint(v1, vec2(0));
@@ -37,12 +38,8 @@ void AddCube::redo(Mesh &mesh) {
     mesh.addFace({uv2, uv6, uv7, uv3}, material);
     mesh.addFace({uv0, uv2, uv3, uv1}, material);
     mesh.addFace({uv4, uv5, uv7, uv6}, material);
-}
 
-void AddCube::undo(Mesh &mesh) {
-    for (auto v : vertices) {
-        mesh.removeVertex(v);
-    }
+    return mesh;
 }
 
 } // namespace Mesh

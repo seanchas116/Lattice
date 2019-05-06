@@ -42,8 +42,7 @@ void AppState::addPlane() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Plane").toStdString());
 
-    Mesh::Mesh mesh;
-    Mesh::AddPlane(dvec3(0), dvec2(2), 1, 0).redo(mesh);
+    auto mesh = Mesh::AddPlane(dvec3(0), dvec2(2), 1, 0).perform({});
     object->setMesh(std::move(mesh));
 
     _document->insertObjectToCurrentPosition(object);
@@ -55,8 +54,7 @@ void AppState::addCube() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Cube").toStdString());
 
-    Mesh::Mesh mesh;
-    Mesh::AddCube(glm::vec3(-1), glm::vec3(1), 0).redo(mesh);
+    auto mesh = Mesh::AddCube(glm::vec3(-1), glm::vec3(1), 0).perform({});
     object->setMesh(std::move(mesh));
 
     _document->insertObjectToCurrentPosition(object);
@@ -68,8 +66,7 @@ void AppState::addCircle() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Circle").toStdString());
 
-    Mesh::Mesh mesh;
-    Mesh::AddCircle(glm::vec3(0), 1.0, 16, 1, 0).redo(mesh);
+    auto mesh = Mesh::AddCircle(glm::vec3(0), 1.0, 16, 1, 0).perform({});
     object->setMesh(std::move(mesh));
 
     _document->insertObjectToCurrentPosition(object);
@@ -81,8 +78,7 @@ void AppState::addSphere() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Sphere").toStdString());
 
-    Mesh::Mesh mesh;
-    Mesh::AddSphere(glm::vec3(0), 1.0, 16, 8, 1, 0).redo(mesh);
+    auto mesh = Mesh::AddSphere(glm::vec3(0), 1.0, 16, 8, 1, 0).perform({});
     object->setMesh(std::move(mesh));
 
     _document->insertObjectToCurrentPosition(object);
@@ -94,8 +90,7 @@ void AppState::addCone() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Cone").toStdString());
 
-    Mesh::Mesh mesh;
-    Mesh::AddCone(glm::vec3(0), 1.0, 1.0, 16, 1, 0).redo(mesh);
+    auto mesh = Mesh::AddCone(glm::vec3(0), 1.0, 1.0, 16, 1, 0).perform({});
     object->setMesh(std::move(mesh));
 
     _document->insertObjectToCurrentPosition(object);
@@ -107,8 +102,7 @@ void AppState::addCylinder() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Cylinder").toStdString());
 
-    Mesh::Mesh mesh;
-    Mesh::AddCylinder(glm::vec3(0), 1.0, 1.0, 16, 1, 0).redo(mesh);
+    auto mesh = Mesh::AddCylinder(glm::vec3(0), 1.0, 1.0, 16, 1, 0).perform({});
     object->setMesh(std::move(mesh));
 
     _document->insertObjectToCurrentPosition(object);

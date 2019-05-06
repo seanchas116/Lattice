@@ -6,7 +6,9 @@ using namespace glm;
 namespace Lattice {
 namespace Mesh {
 
-void AddSphere::redo(Mesh &mesh) {
+Mesh AddSphere::perform(const Mesh& original) {
+    auto mesh = original;
+
     std::vector<std::vector<UVPointHandle>> uvPointMatrix;
 
     for (int ring = 0; ring < ringCount - 1; ++ring) {
@@ -41,20 +43,7 @@ void AddSphere::redo(Mesh &mesh) {
         mesh.addFace({uvPointMatrix[ringCount - 2][i], uvPointMatrix[ringCount - 2][next], top}, material);
     }
 
-    vertices.clear();
-    vertices.push_back(mesh.vertex(bottom));
-    for (auto& uvPoints : uvPointMatrix) {
-        for (auto uvPoint : uvPoints) {
-            vertices.push_back(mesh.vertex(uvPoint));
-        }
-    }
-    vertices.push_back(mesh.vertex(top));
-}
-
-void AddSphere::undo(Mesh &mesh) {
-    for (auto v : vertices) {
-        mesh.removeVertex(v);
-    }
+    return mesh;
 }
 
 } // namespace Mesh

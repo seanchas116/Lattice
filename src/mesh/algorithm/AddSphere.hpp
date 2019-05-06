@@ -13,8 +13,7 @@ public:
                                                                                                               axis(axis),
                                                                                                               material(material) {}
 
-    void redo(Mesh& mesh);
-    void undo(Mesh& mesh);
+    Mesh perform(const Mesh& original);
 
     glm::vec3 center;
     float radius;
@@ -22,7 +21,6 @@ public:
     int ringCount;
     int axis;
     uint32_t material;
-    std::vector<VertexHandle> vertices;
 };
 
 } // namespace Mesh

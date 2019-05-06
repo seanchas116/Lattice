@@ -6,7 +6,9 @@ using namespace glm;
 namespace Lattice {
 namespace Mesh {
 
-void AddCone::redo(Mesh &mesh) {
+Mesh AddCone::perform(const Mesh &original) {
+    auto mesh = original;
+
     std::vector<UVPointHandle> uvPoints;
 
     float angleStep = float(M_PI) * 2 / segmentCount;
@@ -34,17 +36,7 @@ void AddCone::redo(Mesh &mesh) {
         mesh.addFace({v0, v1, top}, material);
     }
 
-    vertices.clear();
-    for (auto uvPoint : uvPoints) {
-        vertices.push_back(mesh.vertex(uvPoint));
-    }
-    vertices.push_back(mesh.vertex(top));
-}
-
-void AddCone::undo(Mesh &mesh) {
-    for (auto v : vertices) {
-        mesh.removeVertex(v);
-    }
+    return mesh;
 }
 
 } // namespace Mesh

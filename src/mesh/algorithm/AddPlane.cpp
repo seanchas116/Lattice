@@ -6,8 +6,9 @@ using namespace glm;
 namespace Lattice {
 namespace Mesh {
 
-void AddPlane::redo(Mesh &mesh) {
-    vertices.clear();
+Mesh AddPlane::perform(const Mesh &original) {
+    auto mesh = original;
+
     std::vector<UVPointHandle> uvPoints;
     std::array<vec2, 4> uvs = {vec2(0, 0), vec2(1, 0), vec2(1, 1), vec2(0, 1)};
 
@@ -16,17 +17,12 @@ void AddPlane::redo(Mesh &mesh) {
         pos[(normalAxis + 1) % 3] += size.x * (uv.x - 0.5f);
         pos[(normalAxis + 2) % 3] += size.y * (uv.y - 0.5f);
         auto v = mesh.addVertex(pos);
-        vertices.push_back(v);
         auto uvPoint = mesh.addUVPoint(v, uv);
         uvPoints.push_back(uvPoint);
     }
     mesh.addFace(uvPoints, material);
-}
 
-void AddPlane::undo(Mesh &mesh) {
-    for (auto v : vertices) {
-        mesh.removeVertex(v);
-    }
+    return mesh;
 }
 
 } // namespace Mesh

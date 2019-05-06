@@ -6,8 +6,8 @@ using namespace glm;
 namespace Lattice {
 namespace Mesh {
 
-void AddCircle::redo(Mesh &mesh) {
-    vertices.clear();
+Mesh AddCircle::perform(const Mesh &original) {
+    auto mesh = original;
 
     std::vector<UVPointHandle> uvPoints;
 
@@ -19,18 +19,13 @@ void AddCircle::redo(Mesh &mesh) {
         offset[(normalAxis + 2) % 3] = sin(angle);
         vec3 pos = center + offset * radius;
         auto v = mesh.addVertex(pos);
-        vertices.push_back(v);
         auto uv = mesh.addUVPoint(v, vec2(0));
         uvPoints.push_back(uv);
     }
 
     mesh.addFace(uvPoints, material);
-}
 
-void AddCircle::undo(Mesh &mesh) {
-    for (auto v : vertices) {
-        mesh.removeVertex(v);
-    }
+    return mesh;
 }
 
 } // namespace Mesh

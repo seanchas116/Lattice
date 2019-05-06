@@ -6,7 +6,9 @@ using namespace glm;
 namespace Lattice {
 namespace Mesh {
 
-void AddCylinder::redo(Mesh &mesh) {
+Mesh AddCylinder::perform(const Mesh &original) {
+    auto mesh = original;
+
     float angleStep = M_PI * 2 / segmentCount;
 
     std::vector<UVPointHandle> bottomUVPoints;
@@ -49,19 +51,7 @@ void AddCylinder::redo(Mesh &mesh) {
         mesh.addFace({v0, v1, v2, v3}, material);
     }
 
-    vertices.clear();
-    for (auto uvPoint : bottomUVPoints) {
-        vertices.push_back(mesh.vertex(uvPoint));
-    }
-    for (auto uvPoint : topUVPoints) {
-        vertices.push_back(mesh.vertex(uvPoint));
-    }
-}
-
-void AddCylinder::undo(Mesh &mesh) {
-    for (auto v : vertices) {
-        mesh.removeVertex(v);
-    }
+    return mesh;
 }
 
 } // namespace Mesh

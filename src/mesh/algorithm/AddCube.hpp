@@ -10,13 +10,11 @@ public:
                                                                      maxPos(maxPos),
                                                                      material(material) {}
 
-    void redo(Mesh& mesh);
-    void undo(Mesh& mesh);
+    Mesh perform(const Mesh& original);
 
     glm::vec3 minPos;
     glm::vec3 maxPos;
     uint32_t material;
-    std::vector<VertexHandle> vertices;
 };
 
 } // namespace Mesh
