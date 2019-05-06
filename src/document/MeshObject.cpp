@@ -1,6 +1,5 @@
 #include "MeshObject.hpp"
 #include "../mesh/Mesh.hpp"
-#include "../oldmesh/Mesh.hpp"
 #include "../support/Debug.hpp"
 #include "../support/PropertyChange.hpp"
 #include <nlohmann/json.hpp>
@@ -11,13 +10,9 @@ using namespace glm;
 namespace Lattice {
 namespace Document {
 
-MeshObject::MeshObject() : _mesh(std::make_unique<Mesh::Mesh>()),
-                           _materials({Material()}),
-                           _oldMesh(makeShared<OldMesh::Mesh>()) {
-    connect(_oldMesh.get(), &OldMesh::Mesh::changed, this, &MeshObject::handleOldMeshChange);
-    _oldMesh->setChangeHandler([this](const auto& change) {
-        addChange(change);
-    });
+MeshObject::MeshObject() :
+    _mesh(std::make_unique<Mesh::Mesh>()),
+    _materials({Material()}) {
 }
 
 MeshObject::~MeshObject() {
@@ -45,7 +40,7 @@ void MeshObject::setMaterials(std::vector<Material> materials) {
 SP<Object> MeshObject::clone() const {
     auto cloned = makeShared<MeshObject>();
     // FIXME: object name is not copied
-    cloned->_oldMesh = _oldMesh->clone();
+    *cloned->_mesh = *_mesh;
     return cloned;
 }
 
@@ -61,16 +56,6 @@ void MeshObject::fromJSON(const nlohmann::json &json) {
     throw std::runtime_error("TODO");
     // TODO
     //_shape->fomJSON(json["shape"]);
-}
-
-void MeshObject::handleOldMeshChange() {
-    if (!_oldMeshChangedInTick) {
-        _oldMeshChangedInTick = true;
-        QTimer::singleShot(0, this, [this] {
-            _oldMeshChangedInTick = false;
-            emit oldMeshChangedInLastTick();
-        });
-    }
 }
 
 }
