@@ -36,31 +36,12 @@ Document::Document() :
     _history(makeShared<History>())
 {
     watchChildrenInsertRemove(_rootObject);
-    connect(this, &Document::editedObjectChanged, this, [this] {
-        emit isEditingChanged(isEditing());
-    });
 }
 
 void Document::setCurrentObject(const Opt<SP<Object> > &object) {
     if (object != _currentObject) {
         _currentObject = object;
         emit currentObjectChanged(object);
-    }
-}
-
-void Document::setEditedObject(const Opt<SP<MeshObject> > &object) {
-    if (object != _editedObject) {
-        _editedObject = object;
-        emit editedObjectChanged(object);
-    }
-}
-
-void Document::setIsEditing(bool isEditing) {
-    if (isEditing) {
-        auto object = dynamicPointerCast<MeshObject>(_currentObject);
-        setEditedObject(object);
-    } else {
-        setEditedObject(std::nullopt);
     }
 }
 

@@ -1,4 +1,5 @@
 #include "AppState.hpp"
+#include "MeshEditState.hpp"
 #include "../services/ObjLoader.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
@@ -138,6 +139,7 @@ void AppState::import() {
 }
 
 void AppState::deleteVertices() {
+    /*
     auto maybeEditedObject = _document->editedObject();
     if (!maybeEditedObject) {
         return;
@@ -152,9 +154,11 @@ void AppState::deleteVertices() {
     }
 
     _document->setMeshSelection({});
+    */
 }
 
 void AppState::deleteEdges() {
+    /*
     auto maybeEditedObject = _document->editedObject();
     if (!maybeEditedObject) {
         return;
@@ -167,9 +171,11 @@ void AppState::deleteEdges() {
     for (auto& e : edges) {
         editedObject->oldMesh()->removeEdge(e);
     }
+    */
 }
 
 void AppState::deleteFaces() {
+    /*
     auto maybeEditedObject = _document->editedObject();
     if (!maybeEditedObject) {
         return;
@@ -181,10 +187,11 @@ void AppState::deleteFaces() {
     auto faces = _document->meshSelection().faces();
     for (auto& f : faces) {
         editedObject->oldMesh()->removeFace(f);
-    }
+    }*/
 }
 
 void AppState::selectAll() {
+    /*
     auto maybeEditedObject = _document->editedObject();
     if (maybeEditedObject) {
         auto editedObject = *maybeEditedObject;
@@ -198,9 +205,11 @@ void AppState::selectAll() {
         });
         _document->setSelectedObjects(allObjects);
     }
+    */
 }
 
 void AppState::deselectAll() {
+    /*
     auto maybeEditedObject = _document->editedObject();
     if (maybeEditedObject) {
         auto editedObject = *maybeEditedObject;
@@ -209,6 +218,22 @@ void AppState::deselectAll() {
     } else {
         _document->setSelectedObjects({});
     }
+    */
+}
+
+void AppState::startEditing() {
+    auto currentMeshObject = dynamicPointerCast<Document::MeshObject>(_document->currentObject());
+    if (currentMeshObject) {
+        startEditing(*currentMeshObject);
+    }
+}
+
+void AppState::endEditing() {
+    setMeshEditState({});
+}
+
+void AppState::startEditing(const SP<Document::MeshObject> &object) {
+    setMeshEditState(makeShared<MeshEditState>(object));
 }
 
 }

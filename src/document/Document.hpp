@@ -23,12 +23,6 @@ public:
     auto& currentObject() const { return _currentObject; }
     void setCurrentObject(const Opt<SP<Object>>& object);
 
-    auto& editedObject() const { return _editedObject; }
-    void setEditedObject(const Opt<SP<MeshObject>>& object);
-
-    bool isEditing() const { return bool(_editedObject); }
-    void setIsEditing(bool isEditing);
-
     auto& selectedObjects() const { return _selectedObjects; }
     void setSelectedObjects(const std::unordered_set<SP<Object>>& objects);
 
@@ -44,8 +38,6 @@ public:
 
 signals:
     void currentObjectChanged(const Opt<SP<Object>>& object);
-    void editedObjectChanged(const Opt<SP<MeshObject>>& object);
-    void isEditingChanged(bool isEditing);
     void selectedObjectsChanged(const std::unordered_set<SP<Object>>& objects);
     void meshSelectionChanged(const OldMesh::MeshFragment &meshSelection);
 
@@ -60,7 +52,6 @@ private:
     SP<Object> _rootObject;
 
     Opt<SP<Object>> _currentObject;
-    Opt<SP<MeshObject>> _editedObject;
     std::unordered_set<SP<Object>> _selectedObjects;
     OldMesh::MeshFragment _meshSelection;
 

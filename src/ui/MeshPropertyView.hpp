@@ -10,6 +10,7 @@ namespace Lattice {
 
 namespace State {
 class AppState;
+class MeshEditState;
 }
 namespace Document {
 class MeshObject;
@@ -26,6 +27,7 @@ public:
     explicit MeshPropertyView(const SP<State::AppState> &appState, QWidget *parent = nullptr);
 
     void setObject(const Opt<SP<Document::MeshObject>>& object);
+    void setMeshEditState(const Opt<SP<State::MeshEditState>>& meshEditState);
 
 private:
     void setViewValues();
@@ -33,7 +35,7 @@ private:
     void handleEdgeSmoothChange(bool smooth);
 
     SP<State::AppState> _appState;
-    Opt<SP<Document::MeshObject>> _object;
+    Opt<SP<State::MeshEditState>> _meshEditState;
     QMetaObject::Connection _connection;
     std::array<Widget::DoubleSpinBox*, 3> _positionSpinBoxes;
     QCheckBox* _smoothEdgeCheckBox = nullptr;

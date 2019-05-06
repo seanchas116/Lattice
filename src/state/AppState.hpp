@@ -11,6 +11,7 @@ namespace Lattice {
 
 namespace Document {
 class Document;
+class MeshObject;
 }
 
 namespace State {
@@ -39,6 +40,10 @@ public:
 
     auto& document() const { return _document; }
     auto& preferences() const { return _preferences; }
+
+    void startEditing();
+    void startEditing(const SP<Document::MeshObject>& object);
+    void endEditing();
 
     void deleteObjects();
 

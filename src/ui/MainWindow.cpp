@@ -81,9 +81,9 @@ void MainWindow::setupToolBar() {
         connect(appState, &State::AppState::toolChanged, action, [action, tool = tool] (State::Tool newTool) {
             action->setChecked(newTool == tool);
         });
-        action->setVisible(appState->document()->isEditing());
-        connect(appState->document().get(), &Document::Document::isEditingChanged, action, [action] (bool isEditing) {
-            action->setVisible(isEditing);
+        action->setVisible(!!appState->meshEditState());
+        connect(appState, &State::AppState::meshEditStateChanged, action, [action] (auto meshEditState) {
+            action->setVisible(!!meshEditState);
         });
     }
 
@@ -93,8 +93,16 @@ void MainWindow::setupToolBar() {
 
     auto isEditingAction = toolBar->addAction(tr("Edit"));
     isEditingAction->setCheckable(true);
-    connect(_appState->document().get(), &Document::Document::isEditingChanged, isEditingAction, &QAction::setChecked);
-    connect(isEditingAction, &QAction::toggled, _appState->document().get(), &Document::Document::setIsEditing);
+    connect(appState, &State::AppState::meshEditStateChanged, isEditingAction, [isEditingAction] (auto meshEditState) {
+        isEditingAction->setChecked(!!meshEditState);
+    });
+    connect(isEditingAction, &QAction::toggled, this, [this](bool isEditing) {
+        if (isEditing) {
+            _appState->startEditing();
+        } else {
+            _appState->endEditing();
+        }
+    });
     toolBar->addSeparator();
 
     // toggle manipulator handles

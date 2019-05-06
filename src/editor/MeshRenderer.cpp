@@ -98,7 +98,7 @@ void MeshRenderer::mouseReleaseEvent(const Viewport::MouseEvent &event) {
 
 void MeshRenderer::mouseDoubleClickEvent(const Viewport::MouseEvent &event) {
     Q_UNUSED(event);
-    _appState->document()->setEditedObject(_object);
+    _appState->startEditing(_object);
 }
 
 void MeshRenderer::updateVAOs() {

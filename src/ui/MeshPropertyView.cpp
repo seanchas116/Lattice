@@ -3,6 +3,7 @@
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
 #include "../state/AppState.hpp"
+#include "../state/MeshEditState.hpp"
 #include "../widget/DoubleSpinBox.hpp"
 #include <QVBoxLayout>
 #include <QGridLayout>
@@ -18,8 +19,8 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
     QWidget(parent),
     _appState(appState)
 {
-    setObject(appState->document()->editedObject());
-    connect(appState->document().get(), &Document::Document::editedObjectChanged, this, &MeshPropertyView::setObject);
+    setMeshEditState(appState->meshEditState());
+    connect(appState.get(), &State::AppState::meshEditStateChanged, this, &MeshPropertyView::setMeshEditState);
     connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &MeshPropertyView::setViewValues);
 
     auto layout = new QVBoxLayout();
@@ -71,14 +72,14 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
     setLayout(layout);
 }
 
-void MeshPropertyView::setObject(const Opt<SP<Document::MeshObject>> &object) {
+void MeshPropertyView::setMeshEditState(const Opt<SP<State::MeshEditState> > &meshEditState) {
     disconnect(_connection);
-    _object = object;
-    if (!object) {
+    _meshEditState = meshEditState;
+    if (!meshEditState) {
         return;
     }
 
-    _connection = connect(object->get(), &Document::MeshObject::oldMeshChangedInLastTick, this, &MeshPropertyView::setViewValues);
+    _connection = connect(meshEditState->get(), &State::MeshEditState::meshChanged, this, &MeshPropertyView::setViewValues);
     setViewValues();
 }
 
@@ -140,10 +141,10 @@ void MeshPropertyView::setViewValues() {
 }
 
 void MeshPropertyView::handlePositionValueChange(int index, double value) {
-    if (!_object) {
+    if (!_meshEditState) {
         return;
     }
-    auto object = *_object;
+    auto object = (*_meshEditState)->targetObject();
 
     auto selection = _appState->document()->meshSelection();
     if (selection.vertices.empty()) {
@@ -176,10 +177,10 @@ void MeshPropertyView::handlePositionValueChange(int index, double value) {
 }
 
 void MeshPropertyView::handleEdgeSmoothChange(bool smooth) {
-    if (!_object) {
+    if (!_meshEditState) {
         return;
     }
-    auto object = *_object;
+    auto object = (*_meshEditState)->targetObject();
 
     auto edges = _appState->document()->meshSelection().edges();
     if (edges.empty()) {
