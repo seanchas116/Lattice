@@ -93,7 +93,7 @@ private:
 
     SP<Tool> _tool;
 
-    // vertex hover
+    Tool::EventTarget _lastMouseMoveTarget;
     Opt<Mesh::VertexHandle> _hoveredVertex;
     Opt<Mesh::EdgeHandle> _hoveredEdge;
     Opt<Mesh::FaceHandle> _hoveredFace;
