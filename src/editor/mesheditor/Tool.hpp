@@ -26,7 +26,7 @@ public:
 
         std::unordered_set<Mesh::VertexHandle> vertices(const Mesh::Mesh& mesh) const;
         bool operator==(const EventTarget& other) const;
-        bool operator!=(const EventTarget& other) const { return !operator==(other); };
+        bool operator!=(const EventTarget& other) const { return !operator==(other); }
     };
 
     struct HitTestExclusion {
