@@ -157,34 +157,23 @@ void AppState::deleteFaces() {
 }
 
 void AppState::selectAll() {
-    /*
-    auto maybeEditedObject = _document->editedObject();
-    if (maybeEditedObject) {
-        auto editedObject = *maybeEditedObject;
-        OldMesh::MeshFragment selection;
-        selection.vertices = editedObject->oldMesh()->vertices();
-        _document->setMeshSelection(selection);
+    if (_meshEditState) {
+        (*_meshEditState)->selectAll();
     } else {
         std::unordered_set<SP<Document::Object>> allObjects;
         _document->rootObject()->forEachDescendant([&] (auto& object) {
             allObjects.insert(object);
         });
-        _document->setSelectedObjects(allObjects);
+        _document->setSelectedObjects(std::move(allObjects));
     }
-    */
 }
 
 void AppState::deselectAll() {
-    /*
-    auto maybeEditedObject = _document->editedObject();
-    if (maybeEditedObject) {
-        auto editedObject = *maybeEditedObject;
-        OldMesh::MeshFragment selection;
-        _document->setMeshSelection(selection);
+    if (_meshEditState) {
+        (*_meshEditState)->deselectAll();
     } else {
         _document->setSelectedObjects({});
     }
-    */
 }
 
 void AppState::startEditing() {

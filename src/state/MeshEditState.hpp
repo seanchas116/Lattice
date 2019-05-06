@@ -27,6 +27,7 @@ public:
     void deleteEdges();
     void deleteFaces();
     void selectAll();
+    void deselectAll();
 
 signals:
     void meshChanged(const Mesh::Mesh& mesh);

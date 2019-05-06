@@ -68,7 +68,19 @@ void MeshEditState::deleteFaces() {
 }
 
 void MeshEditState::selectAll() {
+    auto& mesh = *_mesh;
+    for (auto v : mesh.vertices()) {
+        mesh.setSelected(v, true);
+    }
+    notifyMeshChange();
+}
 
+void MeshEditState::deselectAll() {
+    auto& mesh = *_mesh;
+    for (auto v : mesh.vertices()) {
+        mesh.setSelected(v, false);
+    }
+    notifyMeshChange();
 }
 
 } // namespace State
