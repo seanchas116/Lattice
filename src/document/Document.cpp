@@ -102,13 +102,5 @@ void Document::watchChildrenInsertRemove(const SP<Object> &object) {
     });
 }
 
-void Document::setMeshSelection(const OldMesh::MeshFragment &meshSelection) {
-    if (_meshSelection == meshSelection) {
-        return;
-    }
-    _meshSelection = meshSelection;
-    emit meshSelectionChanged(meshSelection);
-}
-
 }
 } // namespace Lattice

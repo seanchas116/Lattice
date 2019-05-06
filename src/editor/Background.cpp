@@ -31,8 +31,7 @@ void Background::drawPickables(const SP<Draw::Operations> &operations, const SP<
 
 void Background::mousePressEvent(const Viewport::MouseEvent &event) {
     Q_UNUSED(event);
-    _appState->document()->setSelectedObjects({});
-    _appState->document()->setMeshSelection({});
+    _appState->deselectAll();
 }
 
 } // namespace Editor

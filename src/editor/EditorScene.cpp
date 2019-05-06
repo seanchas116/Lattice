@@ -31,7 +31,6 @@ EditorScene::EditorScene(const SP<State::AppState> &appState) :
     connect(appState->document().get(), &Document::Document::objectInserted, this, &EditorScene::updateRenderables);
     connect(appState->document().get(), &Document::Document::objectRemoved, this, &EditorScene::updateRenderables);
     connect(appState->document().get(), &Document::Document::selectedObjectsChanged, this, &EditorScene::updateRenderables);
-    connect(appState->document().get(), &Document::Document::meshSelectionChanged, this, &EditorScene::updateRenderables);
 
     updateRenderables();
 }

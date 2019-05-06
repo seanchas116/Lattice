@@ -30,7 +30,6 @@ PropertyView::PropertyView(const SP<State::AppState> &appState, QWidget *parent)
     };
     connect(document.get(), &Document::Document::selectedObjectsChanged, this, update);
     connect(appState.get(), &State::AppState::meshEditStateChanged, this, update);
-    connect(document.get(), &Document::Document::meshSelectionChanged, this, update);
     update();
 
     setLayout(layout);
