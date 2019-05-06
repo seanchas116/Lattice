@@ -4,10 +4,6 @@
 
 namespace Lattice {
 
-namespace Mesh {
-class Mesh;
-}
-
 namespace State {
 
 class MeshEditState : public QObject {
@@ -31,7 +27,6 @@ public:
 
 signals:
     void meshChanged(const Mesh::Mesh& mesh);
-    void targetObjectChanged(const Opt<SP<Document::MeshObject>>& target);
 
 private:
     SP<Document::MeshObject> _object;
