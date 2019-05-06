@@ -5,6 +5,7 @@
 #include "../state/AppState.hpp"
 #include "../state/MeshEditState.hpp"
 #include "../widget/DoubleSpinBox.hpp"
+#include "../mesh/Mesh.hpp"
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QLabel>
@@ -84,18 +85,22 @@ void MeshPropertyView::setMeshEditState(const Opt<SP<State::MeshEditState> > &me
 }
 
 void MeshPropertyView::setViewValues() {
-    auto selection = _appState->document()->meshSelection();
-    if (selection.vertices.empty()) {
+    if (!_meshEditState) {
+        return;
+    }
+    auto meshEditState = *_meshEditState;
+    auto& mesh = *meshEditState->mesh();
+    auto selection = mesh.selectedVertices() | ranges::to_vector;
+    if (selection.empty()) {
         return;
     }
 
     {
         glm::bvec3 isPositionSame {true};
+        auto position = mesh.position(selection[0]);
 
-        auto position = (*selection.vertices.begin())->position();
-
-        for (auto& vertex : selection.vertices) {
-            auto otherPosition = vertex->position();
+        for (auto vertex : selection) {
+            auto otherPosition = mesh.position(vertex);
             for (int i = 0; i < 3; ++i) {
                 if (position[i] != otherPosition[i]) {
                     isPositionSame[i] = false;
@@ -111,18 +116,17 @@ void MeshPropertyView::setViewValues() {
     }
 
     {
-        auto edgeSet = selection.edges();
-        std::vector<SP<OldMesh::Edge>> edges(edgeSet.begin(), edgeSet.end());
+        auto edges = mesh.edges(selection) | ranges::to_vector;
         if (edges.empty()) {
             _smoothEdgeCheckBox->setEnabled(false);
         } else {
             _smoothEdgeCheckBox->setEnabled(true);
 
             bool isSmoothEdgeSame = true;
-            bool isSmooth = edges[0]->isSmooth();
+            bool isSmooth = mesh.isSmooth(edges[0]);
 
             for (size_t i = 1; i < edges.size(); ++i) {
-                if (edges[i]->isSmooth() != isSmooth) {
+                if (mesh.isSmooth(edges[i]) != isSmooth) {
                     isSmoothEdgeSame = false;
                 }
             }
@@ -144,10 +148,10 @@ void MeshPropertyView::handlePositionValueChange(int index, double value) {
     if (!_meshEditState) {
         return;
     }
-    auto object = (*_meshEditState)->targetObject();
-
-    auto selection = _appState->document()->meshSelection();
-    if (selection.vertices.empty()) {
+    auto meshEditState = *_meshEditState;
+    auto& mesh = *meshEditState->mesh();
+    auto selection = mesh.selectedVertices() | ranges::to_vector;
+    if (selection.empty()) {
         return;
     }
 
@@ -156,44 +160,40 @@ void MeshPropertyView::handlePositionValueChange(int index, double value) {
         return;
     }
 
-    std::unordered_map<SP<OldMesh::Vertex>, dvec3> newPositions;
     bool changed = false;
 
-    for (auto& vertex : selection.vertices) {
-        auto position = vertex->position();
+    for (auto vertex : selection) {
+        auto position = mesh.position(vertex);
         if (position[index] == value) {
             continue;
         }
         changed = true;
         position[index] = value;
-        newPositions[vertex] = position;
+        mesh.setPosition(vertex, position);
     }
     if (!changed) {
         return;
     }
 
-    _appState->document()->history()->beginChange(tr("Set Vertex Position"));
-    object->oldMesh()->setPosition(newPositions);
+    meshEditState->commitMeshChange(tr("Set Vertex Position"));
 }
 
 void MeshPropertyView::handleEdgeSmoothChange(bool smooth) {
     if (!_meshEditState) {
         return;
     }
-    auto object = (*_meshEditState)->targetObject();
-
-    auto edges = _appState->document()->meshSelection().edges();
+    auto meshEditState = *_meshEditState;
+    auto& mesh = *meshEditState->mesh();
+    auto edges = mesh.edges(mesh.selectedVertices()) | ranges::to_vector;
     if (edges.empty()) {
         return;
     }
 
-    _appState->document()->history()->beginChange(tr("Set Edge Smooth"));
-
-    std::unordered_map<SP<OldMesh::Edge>, bool> values;
-    for (auto& edge : edges) {
-        values[edge] = smooth;
+    for (auto edge : edges) {
+        mesh.setSmooth(edge, smooth);
     }
-    object->oldMesh()->setSmooth(values);
+
+    meshEditState->commitMeshChange(tr("Set Edge Smooth"));
 }
 
 } // namespace UI
