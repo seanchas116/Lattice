@@ -44,6 +44,7 @@ public:
 
     void draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
     void drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
+    void drawHitAreaAdditionalInfo(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
 
     void mousePressEvent(const Viewport::MouseEvent &event) override;
     void mouseMoveEvent(const Viewport::MouseEvent &event) override;

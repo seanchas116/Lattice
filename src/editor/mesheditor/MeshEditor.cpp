@@ -33,6 +33,51 @@ const vec4 unselectedFaceHighlight = vec4(0, 0, 0, 0);
 const vec4 selectedFaceHighlight = vec4(1, 1, 1, 0.5);
 const vec4 hoveredFaceHighlight = vec4(1, 1, 0.5, 0.5);
 
+glm::vec4 encodeValueToColor(uint64_t value) {
+    union {
+        uint64_t value;
+        glm::u16vec4 color;
+    } valueColor;
+    valueColor.value = value;
+
+    return glm::vec4(valueColor.color) / float(0xFFFF);
+}
+
+uint64_t decodeColorToValue(glm::vec4 color) {
+    union {
+        uint64_t value;
+        glm::u16vec4 color;
+    } valueColor;
+    valueColor.color = glm::u16vec4(glm::round(color * float(0xFFFF)));
+    return valueColor.value;
+}
+
+Tool::EventTarget eventTargetFromAdditionalInfo(glm::vec4 additionalInfo) {
+    uint64_t value = decodeColorToValue(additionalInfo);
+    uint64_t type = value % 3;
+    uint64_t index = value / 3;
+    switch (type) {
+    case 0:
+        return {Mesh::VertexHandle(index), {}, {}};
+    case 1:
+        return {{}, Mesh::EdgeHandle(index), {}};
+    case 2:
+        return {{}, {}, Mesh::FaceHandle(index)};
+    }
+}
+
+vec4 additionalInfoVertex(Mesh::VertexHandle v) {
+    return encodeValueToColor(v.index * 3);
+}
+
+vec4 additionalInfoEdge(Mesh::EdgeHandle e) {
+    return encodeValueToColor(e.index * 3 + 1);
+}
+
+vec4 additionalInfoFace(Mesh::FaceHandle f) {
+    return encodeValueToColor(f.index * 3 + 2);
+}
+
 }
 
 class MeshEditor::EditorPickable : public Viewport::Renderable {
@@ -145,12 +190,14 @@ void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &
 }
 
 void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
-    updateVAOs();
-
     auto idColor = toIDColor();
     glClearColor(idColor.r, idColor.g, idColor.b, idColor.a);
     glClearDepthf(1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void MeshEditor::drawHitAreaAdditionalInfo(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+    updateVAOs();
 
     auto matrixToWorld = _meshEditState->targetObject()->location().matrixToWorld();
 
@@ -322,12 +369,9 @@ void MeshEditor::updateVAOs() {
             attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
             vertexAttributes.push_back(attrib);
 
-            auto pickable = makeShared<VertexPickable>(this, v);
-            _pickables.push_back(pickable);
-
             Draw::PointLineVertex pickAttrib;
             pickAttrib.position = mesh.position(v);
-            pickAttrib.color = pickable->toIDColor();
+            pickAttrib.color = additionalInfoVertex(v);
             pickAttrib.width = hitTestExcluded ? 0 : 1;
             vertexPickAttributes.push_back(pickAttrib);
         }
@@ -347,9 +391,6 @@ void MeshEditor::updateVAOs() {
             bool hovered = e == _hoveredEdge;
             bool hitTestExcluded = ranges::find(hitTestExclusion.edges, e) != hitTestExclusion.edges.end();
 
-            auto pickable = makeShared<EdgePickable>(this, e);
-            _pickables.push_back(pickable);
-
             for (size_t vertexInEdgeIndex = 0; vertexInEdgeIndex < 2; ++vertexInEdgeIndex) {
                 auto& v = mesh.vertices(e)[vertexInEdgeIndex];
                 bool selected = mesh.isSelected(v);
@@ -361,7 +402,7 @@ void MeshEditor::updateVAOs() {
 
                 Draw::PointLineVertex pickAttrib;
                 pickAttrib.position = mesh.position(v);
-                pickAttrib.color = pickable->toIDColor();
+                pickAttrib.color = additionalInfoEdge(e);
                 pickAttrib.width = hitTestExcluded ? 0 : 1;
                 edgePickAttributes.push_back(pickAttrib);
             }
@@ -376,11 +417,6 @@ void MeshEditor::updateVAOs() {
         std::vector<GL::IndexBuffer::Triangle> faceTriangles;
 
         for (auto f : mesh.faces()) {
-            auto pickable = makeShared<FacePickable>(this, f);
-            _pickables.push_back(pickable);
-
-            auto idColor = pickable->toIDColor();
-
             auto i0 = uint32_t(facePickAttributes.size());
             for (uint32_t i = 2; i < uint32_t(mesh.vertices(f).size()); ++i) {
                 auto i1 = i0 + i - 1;
@@ -391,7 +427,7 @@ void MeshEditor::updateVAOs() {
             for (auto& p : mesh.uvPoints(f)) {
                 Draw::Vertex pickAttrib;
                 pickAttrib.position = mesh.position(mesh.vertex(p));
-                pickAttrib.color = idColor;
+                pickAttrib.color = additionalInfoFace(f);
                 facePickAttributes.push_back(pickAttrib);
             }
         }
