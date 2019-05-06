@@ -70,7 +70,7 @@ public:
     void removeEdge(EdgeHandle e);
     void removeFace(FaceHandle f);
 
-    void collectGarbage();
+    Mesh collectGarbage() const;
 
     void clear();
 

@@ -24,8 +24,7 @@ namespace Lattice {
 namespace Mesh {
 
 MeshData::MeshData(const Mesh &origMesh) {
-    auto mesh = origMesh;
-    mesh.collectGarbage();
+    auto mesh = origMesh.collectGarbage();
 
     for (auto v : mesh.vertices()) {
         vertexPositionArray.push_back(mesh.position(v));

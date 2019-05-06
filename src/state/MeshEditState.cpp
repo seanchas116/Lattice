@@ -32,9 +32,8 @@ void MeshEditState::commitMeshChange(const QString &changeTitle) {
     }
     auto document = *maybeDocument;
 
-    _mesh->collectGarbage();
     document->history()->beginChange(changeTitle);
-    _targetObject->setMesh(*_mesh);
+    _targetObject->setMesh(_mesh->collectGarbage());
 }
 
 void MeshEditState::deleteVertices() {
@@ -43,7 +42,6 @@ void MeshEditState::deleteVertices() {
     for (auto v : vertices) {
         mesh.removeVertex(v);
     }
-    mesh.collectGarbage();
     commitMeshChange(tr("Delete Vertices"));
 }
 
@@ -53,7 +51,6 @@ void MeshEditState::deleteEdges() {
     for (auto e : edges) {
         mesh.removeEdge(e);
     }
-    mesh.collectGarbage();
     commitMeshChange(tr("Delete Edges"));
 }
 
@@ -63,7 +60,6 @@ void MeshEditState::deleteFaces() {
     for (auto f : faces) {
         mesh.removeFace(f);
     }
-    mesh.collectGarbage();
     commitMeshChange(tr("Delete Faces"));
 }
 

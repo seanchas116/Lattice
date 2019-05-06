@@ -112,113 +112,89 @@ void Mesh::removeFace(FaceHandle f) {
     faceData(f).isDeleted = true;
 }
 
-void Mesh::collectGarbage() {
-    {
-        std::vector<VertexData> newVertices;
-        for (size_t i = 0; i < _vertices.size(); ++i) {
-            auto& vertexData = _vertices[i];
-            if (vertexData.isDeleted) {
-                continue;
-            }
-            size_t newIndex = newVertices.size();
-            for (auto p : vertexData.uvPoints) {
-                if (uvPointData(p).vertex.index == i) {
-                    uvPointData(p).vertex.index = uint32_t(newIndex);
-                }
-            }
-            for (auto e : vertexData.edges) {
-                for (auto& v : edgeData(e).vertices) {
-                    if (v.index == i) {
-                        v.index = uint32_t(newIndex);
-                    }
-                }
-            }
+Mesh Mesh::collectGarbage() const {
+    std::vector<VertexData> newVertices;
+    std::vector<uint32_t> newVertexIndices(_vertices.size());
 
-            newVertices.push_back(vertexData);
+    for (size_t i = 0; i < _vertices.size(); ++i) {
+        auto& vertexData = _vertices[i];
+        if (vertexData.isDeleted) {
+            continue;
         }
-        _vertices = std::move(newVertices);
+        newVertexIndices[i] = uint32_t(newVertices.size());
+        newVertices.push_back(vertexData);
     }
 
-    {
-        std::vector<UVPointData> newUVPoints;
-        for (size_t i = 0; i < _uvPoints.size(); ++i) {
-            auto& uvPointData = _uvPoints[i];
-            if (uvPointData.isDeleted) {
-                continue;
-            }
-            size_t newIndex = newUVPoints.size();
-            for (auto& p : vertexData(uvPointData.vertex).uvPoints) {
-                if (p.index == i) {
-                    p.index = uint32_t(newIndex);
-                }
-            }
-            for (auto f : uvPointData.faces) {
-                for (auto& p : faceData(f).uvPoints) {
-                    if (p.index == i) {
-                        p.index = uint32_t(newIndex);
-                    }
-                }
-            }
-
-            newUVPoints.push_back(uvPointData);
+    std::vector<UVPointData> newUVPoints;
+    std::vector<uint32_t> newUVPointIndices(_uvPoints.size());
+    for (size_t i = 0; i < _uvPoints.size(); ++i) {
+        auto& uvPointData = _uvPoints[i];
+        if (uvPointData.isDeleted) {
+            continue;
         }
-        _uvPoints = std::move(newUVPoints);
+        newUVPointIndices[i] = uint32_t(newUVPoints.size());
+        newUVPoints.push_back(uvPointData);
     }
 
-    {
-        std::vector<EdgeData> newEdges;
-        for (size_t i = 0; i < _edges.size(); ++i) {
-            auto& edgeData = _edges[i];
-            if (edgeData.isDeleted) {
-                continue;
-            }
-            size_t newIndex = newEdges.size();
-            for (auto& v : edgeData.vertices) {
-                for (auto& e : vertexData(v).edges) {
-                    if (e.index == i) {
-                        e.index = uint32_t(newIndex);
-                    }
-                }
-            }
-            for (auto& f : edgeData.faces) {
-                for (auto& e : faceData(f).edges) {
-                    if (e.index == i) {
-                        e.index = uint32_t(newIndex);
-                    }
-                }
-            }
-
-            newEdges.push_back(edgeData);
+    std::vector<EdgeData> newEdges;
+    std::vector<uint32_t> newEdgeIndices(_edges.size());
+    for (size_t i = 0; i < _edges.size(); ++i) {
+        auto& edgeData = _edges[i];
+        if (edgeData.isDeleted) {
+            continue;
         }
-        _edges = std::move(newEdges);
+        newEdgeIndices[i] = uint32_t(newEdges.size());
+        newEdges.push_back(edgeData);
     }
 
-    {
-        std::vector<FaceData> newFaces;
-        for (size_t i = 0; i < _faces.size(); ++i) {
-            auto& faceData = _faces[i];
-            if (faceData.isDeleted) {
-                continue;
-            }
-            size_t newIndex = newFaces.size();
-            for (auto& uv : faceData.uvPoints) {
-                for (auto& f : uvPointData(uv).faces) {
-                    if (f.index == i) {
-                        f.index = uint32_t(newIndex);
-                    }
-                }
-            }
-            for (auto& e : faceData.edges) {
-                for (auto& f : edgeData(e).faces) {
-                    if (f.index == i) {
-                        f.index = uint32_t(newIndex);
-                    }
-                }
-            }
-            newFaces.push_back(faceData);
+    std::vector<FaceData> newFaces;
+    std::vector<uint32_t> newFaceIndices(_faces.size());
+    for (size_t i = 0; i < _faces.size(); ++i) {
+        auto& faceData = _faces[i];
+        if (faceData.isDeleted) {
+            continue;
         }
-        _faces = std::move(newFaces);
+        newFaceIndices[i] = uint32_t(newFaces.size());
+        newFaces.push_back(faceData);
     }
+
+    for (auto& vertexData : newVertices) {
+        for (auto& uvPoint : vertexData.uvPoints) {
+            uvPoint.index = newUVPointIndices[uvPoint.index];
+        }
+        for (auto& edge : vertexData.edges) {
+            edge.index = newEdgeIndices[edge.index];
+        }
+    }
+    for (auto& uvPointData : newUVPoints) {
+        uvPointData.vertex.index = newVertexIndices[uvPointData.vertex.index];
+        for (auto& face : uvPointData.faces) {
+            face.index = newFaceIndices[face.index];
+        }
+    }
+    for (auto& edgeData  : newEdges) {
+        for (auto& vertex : edgeData.vertices) {
+            vertex.index = newVertexIndices[vertex.index];
+        }
+        for (auto& face : edgeData.faces) {
+            face.index = newFaceIndices[face.index];
+        }
+    }
+    for (auto& faceData : newFaces) {
+        for (auto& uvPoint : faceData.uvPoints) {
+            uvPoint.index = newUVPointIndices[uvPoint.index];
+        }
+        for (auto& edge : faceData.edges) {
+            edge.index = newEdgeIndices[edge.index];
+        }
+    }
+
+    Mesh mesh;
+    mesh._vertices = std::move(newVertices);
+    mesh._uvPoints = std::move(newUVPoints);
+    mesh._edges = std::move(newEdges);
+    mesh._faces = std::move(newFaces);
+    return mesh;
 }
 
 void Mesh::clear() {
