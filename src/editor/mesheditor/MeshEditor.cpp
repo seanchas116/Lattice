@@ -102,7 +102,7 @@ public:
 MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::MeshEditState> &meshEditState) :
     _appState(appState),
     _meshEditState(meshEditState),
-    _manipulator(makeShared<Manipulator::MeshManipulator>(meshEditState->targetObject()->location().matrixToWorld(), meshEditState->mesh())),
+    _manipulator(makeShared<Manipulator::MeshManipulator>(meshEditState->object()->location().matrixToWorld(), meshEditState->mesh())),
 
     _facePickVBO(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
     _faceIBO(makeShared<GL::IndexBuffer>()),
@@ -116,7 +116,7 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::Mesh
     _vertexPickVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
     _vertexPickVAO(makeShared<GL::VAO>(_vertexPickVBO, GL::Primitive::Point)),
 
-    _tool(makeShared<MoveTool>(appState, meshEditState->targetObject(), meshEditState->mesh()))
+    _tool(makeShared<MoveTool>(appState, meshEditState->object(), meshEditState->mesh()))
 {
     initializeOpenGLFunctions();
     updateVAOs();
@@ -143,8 +143,8 @@ void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &
     updateVAOs();
 
     // TODO: Render faces
-    auto matrixToWorld = _meshEditState->targetObject()->location().matrixToWorld();
-    auto& materials = _meshEditState->targetObject()->materials();
+    auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
+    auto& materials = _meshEditState->object()->materials();
 
     for (auto& [materialID, vao] : _finalShapeVAOs) {
         auto material = materials.at(materialID).toDrawMaterial();
@@ -172,7 +172,7 @@ void MeshEditor::drawHitUserColor(const SP<Draw::Operations> &operations, const 
     glClearDepthf(1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    auto matrixToWorld = _meshEditState->targetObject()->location().matrixToWorld();
+    auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
 
     if (_appState->isFaceSelectable()) {
         operations->drawUnicolor.draw(_facePickVAO, matrixToWorld, camera, vec4(0), true);
@@ -210,7 +210,7 @@ void MeshEditor::keyReleaseEvent(QKeyEvent *event) {
 }
 
 void MeshEditor::handleToolChange(State::Tool tool) {
-    auto& object = _meshEditState->targetObject();
+    auto& object = _meshEditState->object();
     auto& mesh = _meshEditState->mesh();
 
     switch (tool) {

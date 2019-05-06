@@ -7,7 +7,7 @@ namespace Lattice {
 namespace State {
 
 MeshEditState::MeshEditState(const SP<Document::MeshObject> &targetObject) :
-    _targetObject(targetObject),
+    _object(targetObject),
     _mesh(makeShared<Mesh::Mesh>(targetObject->mesh())) {
 
     connect(targetObject.get(), &Document::MeshObject::meshChanged, this, [this](auto& mesh) {
@@ -26,14 +26,14 @@ void MeshEditState::notifyMeshChange() {
 }
 
 void MeshEditState::commitMeshChange(const QString &changeTitle) {
-    auto maybeDocument = _targetObject->document();
+    auto maybeDocument = _object->document();
     if (!maybeDocument) {
         return;
     }
     auto document = *maybeDocument;
 
     document->history()->beginChange(changeTitle);
-    _targetObject->setMesh(_mesh->collectGarbage());
+    _object->setMesh(_mesh->collectGarbage());
 }
 
 void MeshEditState::deleteVertices() {

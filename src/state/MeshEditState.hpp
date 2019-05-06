@@ -13,9 +13,9 @@ namespace State {
 class MeshEditState : public QObject {
     Q_OBJECT
 public:
-    MeshEditState(const SP<Document::MeshObject>& targetObject);
+    MeshEditState(const SP<Document::MeshObject>& object);
 
-    auto& targetObject() const { return _targetObject; }
+    auto& object() const { return _object; }
 
     auto& mesh() const { return _mesh; }
     void setMesh(Mesh::Mesh mesh);
@@ -34,7 +34,7 @@ signals:
     void targetObjectChanged(const Opt<SP<Document::MeshObject>>& target);
 
 private:
-    SP<Document::MeshObject> _targetObject;
+    SP<Document::MeshObject> _object;
     SP<Mesh::Mesh> _mesh;
 };
 
