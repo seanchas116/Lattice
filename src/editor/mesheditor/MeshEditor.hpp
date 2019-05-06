@@ -79,6 +79,7 @@ private:
     SP<Manipulator::MeshManipulator> _manipulator;
 
     bool _isVAOsDirty = true;
+    std::unordered_map<uint32_t, SP<GL::VAO>> _finalShapeVAOs;
     SP<GL::VertexBuffer<Draw::Vertex>> _facePickVBO;
     SP<GL::IndexBuffer> _faceIBO;
     SP<GL::VAO> _facePickVAO;

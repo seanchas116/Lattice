@@ -5,6 +5,7 @@
 #include "LoopCutTool.hpp"
 #include "BorderSelectTool.hpp"
 #include "../manipulator/MeshManipulator.hpp"
+#include "../MeshVAOGenerator.hpp"
 #include "../../state/AppState.hpp"
 #include "../../state/MeshEditState.hpp"
 #include "../../gl/VAO.hpp"
@@ -143,6 +144,12 @@ void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &
 
     // TODO: Render faces
     auto matrixToWorld = _meshEditState->targetObject()->location().matrixToWorld();
+    auto& materials = _meshEditState->targetObject()->materials();
+
+    for (auto& [materialID, vao] : _finalShapeVAOs) {
+        auto material = materials.at(materialID).toDrawMaterial();
+        operations->drawMaterial.draw(vao, matrixToWorld, camera, material);
+    }
 
     operations->drawLine.draw(_edgeVAO, matrixToWorld, camera, 1.0, vec4(0), true);
     if (_appState->isVertexSelectable()) {
@@ -298,6 +305,8 @@ void MeshEditor::contextMenuTarget(const Tool::EventTarget &target, const Viewpo
 void MeshEditor::updateVAOs() {
     auto& mesh = *_meshEditState->mesh();
     auto hitTestExclusion = _tool->hitTestExclusion();
+
+    _finalShapeVAOs = MeshVAOGenerator(mesh).generateFaceVAOs();
 
     {
         std::vector<Draw::PointLineVertex> vertexAttributes;
