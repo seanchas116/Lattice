@@ -35,7 +35,7 @@ const vec4 hoveredFaceHighlight = vec4(1, 1, 0.5, 0.5);
 
 }
 
-class HitColor {
+class EventTargetValue {
     static glm::vec4 encodeValueToColor(uint64_t value) {
         union {
             uint64_t value;
@@ -58,19 +58,19 @@ class HitColor {
     uint64_t value;
 
 public:
-    HitColor(glm::vec4 hitUserColor) {
+    EventTargetValue(glm::vec4 hitUserColor) {
         value = decodeColorToValue(hitUserColor);
     }
-    HitColor() {
+    EventTargetValue() {
         value = 0;
     }
-    HitColor(Mesh::VertexHandle v) {
+    EventTargetValue(Mesh::VertexHandle v) {
         value = v.index * 3 + 1;
     }
-    HitColor(Mesh::EdgeHandle e) {
+    EventTargetValue(Mesh::EdgeHandle e) {
         value = e.index * 3 + 2;
     }
-    HitColor(Mesh::FaceHandle f) {
+    EventTargetValue(Mesh::FaceHandle f) {
         value = f.index * 3 + 3;
     }
 
@@ -159,7 +159,7 @@ void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const SP<Ca
 void MeshEditor::drawHitUserColor(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     updateVAOs();
 
-    auto background = HitColor().hitUserColor();
+    auto background = EventTargetValue().hitUserColor();
     glClearColor(background.r, background.g, background.b, background.a);
     glClearDepthf(1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -178,19 +178,19 @@ void MeshEditor::drawHitUserColor(const SP<Draw::Operations> &operations, const 
 }
 
 void MeshEditor::mousePressEvent(const Viewport::MouseEvent &event) {
-    mousePressTarget(HitColor(event.hitUserColor).eventTarget(), event);
+    mousePressTarget(EventTargetValue(event.hitUserColor).eventTarget(), event);
 }
 
 void MeshEditor::mouseMoveEvent(const Viewport::MouseEvent &event) {
-    mouseMoveTarget(HitColor(event.hitUserColor).eventTarget(), event);
+    mouseMoveTarget(EventTargetValue(event.hitUserColor).eventTarget(), event);
 }
 
 void MeshEditor::mouseReleaseEvent(const Viewport::MouseEvent &event) {
-    mouseReleaseTarget(HitColor(event.hitUserColor).eventTarget(), event);
+    mouseReleaseTarget(EventTargetValue(event.hitUserColor).eventTarget(), event);
 }
 
 void MeshEditor::contextMenuEvent(const Viewport::ContextMenuEvent &event) {
-    contextMenuTarget(HitColor(event.hitUserColor).eventTarget(), event);
+    contextMenuTarget(EventTargetValue(event.hitUserColor).eventTarget(), event);
 }
 
 void MeshEditor::keyPressEvent(QKeyEvent *event) {
@@ -317,7 +317,7 @@ void MeshEditor::updateVAOs() {
 
             Draw::PointLineVertex pickAttrib;
             pickAttrib.position = mesh.position(v);
-            pickAttrib.color = HitColor(v).hitUserColor();
+            pickAttrib.color = EventTargetValue(v).hitUserColor();
             pickAttrib.width = hitTestExcluded ? 0 : 1;
             vertexPickAttributes.push_back(pickAttrib);
         }
@@ -348,7 +348,7 @@ void MeshEditor::updateVAOs() {
 
                 Draw::PointLineVertex pickAttrib;
                 pickAttrib.position = mesh.position(v);
-                pickAttrib.color = HitColor(e).hitUserColor();
+                pickAttrib.color = EventTargetValue(e).hitUserColor();
                 pickAttrib.width = hitTestExcluded ? 0 : 1;
                 edgePickAttributes.push_back(pickAttrib);
             }
@@ -373,7 +373,7 @@ void MeshEditor::updateVAOs() {
             for (auto& p : mesh.uvPoints(f)) {
                 Draw::Vertex pickAttrib;
                 pickAttrib.position = mesh.position(mesh.vertex(p));
-                pickAttrib.color = HitColor(f).hitUserColor();
+                pickAttrib.color = EventTargetValue(f).hitUserColor();
                 facePickAttributes.push_back(pickAttrib);
             }
         }
