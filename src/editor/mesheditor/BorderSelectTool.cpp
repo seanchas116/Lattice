@@ -31,6 +31,8 @@ void BorderSelectTool::mousePressTool(const Tool::EventTarget &target, const Vie
         _vertices.push_back({vertex, screenPos.xy});
     }
 
+    mesh()->deselectAll();
+
     emit updated();
     emit meshChanged();
 }
