@@ -23,6 +23,10 @@ std::unordered_set<Mesh::VertexHandle> Tool::EventTarget::vertices(const Mesh::M
     return vertices;
 }
 
+bool Tool::EventTarget::operator==(const Tool::EventTarget &other) const {
+    return vertex == other.vertex && edge == other.edge && face == other.face;
+}
+
 Tool::~Tool() {
 }
 
