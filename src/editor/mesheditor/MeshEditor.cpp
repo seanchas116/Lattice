@@ -35,6 +35,7 @@ const vec4 hoveredFaceHighlight = vec4(1, 1, 0.5, 0.5);
 
 }
 
+// TODO: find beteter name
 class EventTargetValue {
     static glm::vec4 encodeValueToColor(uint64_t value) {
         union {
