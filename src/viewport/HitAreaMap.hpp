@@ -34,6 +34,7 @@ private:
     void resize(glm::ivec2 size);
 
     SP<GL::Framebuffer> _framebuffer;
+    SP<GL::Framebuffer> _additionalInfoFramebuffer;
     glm::ivec2 _framebufferSize = {0, 0};
     std::vector<SP<Renderable>> _lastRenderables;
 };

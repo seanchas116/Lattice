@@ -12,7 +12,8 @@ using namespace glm;
 namespace Lattice {
 namespace Viewport {
 
-HitAreaMap::HitAreaMap() : _framebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))) {
+HitAreaMap::HitAreaMap() : _framebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))),
+                           _additionalInfoFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))) {
     initializeOpenGLFunctions();
 }
 
@@ -20,9 +21,13 @@ void HitAreaMap::resize(glm::ivec2 size) {
     if (size == _framebufferSize) {
         return;
     }
-    auto texture = makeShared<GL::Texture>(size, GL::Texture::Format::RGBA32F);
-    auto depthTexture = makeShared<GL::Texture>(size, GL::Texture::Format::Depth24Stencil8);
-    _framebuffer = makeShared<GL::Framebuffer>(size, std::vector{texture}, depthTexture);
+    _framebuffer = makeShared<GL::Framebuffer>(size,
+                                               std::vector{makeShared<GL::Texture>(size, GL::Texture::Format::RGBA32F)},
+                                               makeShared<GL::Texture>(size, GL::Texture::Format::Depth24Stencil8));
+    _additionalInfoFramebuffer = makeShared<GL::Framebuffer>(size,
+                                                              std::vector{makeShared<GL::Texture>(size, GL::Texture::Format::RGBA32F)},
+                                                             makeShared<GL::Texture>(size, GL::Texture::Format::Depth24Stencil8));
+
     _framebufferSize = size;
 }
 
