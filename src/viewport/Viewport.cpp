@@ -55,22 +55,22 @@ void Viewport::mouseMoveEvent(QMouseEvent *event) {
         // hover
         auto maybeHitResult = hitTest(pos, _camera);
         if (!maybeHitResult) {
-            if (_hoveredRenderable) {
-                (*_hoveredRenderable)->hoverLeaveEvent();
+            if (_hoveredHitResult) {
+                (*_hoveredHitResult).renderable->hoverLeaveEvent();
             }
             return;
         }
-        auto [renderable, hitDepth, additionalInfo] = *maybeHitResult;
-        MouseEvent renderMouseEvent(event, glm::dvec3(pos, hitDepth), additionalInfo, _camera);
-        if (_hoveredRenderable == renderable) {
-            renderable->mouseMoveEvent(renderMouseEvent);
+        auto hitResult = *maybeHitResult;
+        MouseEvent renderMouseEvent(event, glm::dvec3(pos, hitResult.depth), hitResult.additionalInfo, _camera);
+        if (_hoveredHitResult && _hoveredHitResult->renderable == hitResult.renderable) {
+            hitResult.renderable->mouseMoveEvent(renderMouseEvent);
         } else {
-            if (_hoveredRenderable) {
-                (*_hoveredRenderable)->hoverLeaveEvent();
+            if (_hoveredHitResult) {
+                _hoveredHitResult->renderable->hoverLeaveEvent();
             }
-            renderable->hoverEnterEvent(renderMouseEvent);
-            renderable->mouseMoveEvent(renderMouseEvent);
-            _hoveredRenderable = renderable;
+            hitResult.renderable->hoverEnterEvent(renderMouseEvent);
+            hitResult.renderable->mouseMoveEvent(renderMouseEvent);
+            _hoveredHitResult = hitResult;
         }
     }
 }

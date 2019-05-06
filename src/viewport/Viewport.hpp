@@ -44,7 +44,7 @@ private:
 
     Opt<SP<Renderable>> _renderable;
     Opt<HitResult> _draggedHitResult;
-    Opt<SP<Renderable>> _hoveredRenderable;
+    Opt<HitResult> _hoveredHitResult;
     Opt<SP<HitAreaMap>> _hitAreaMap;
     SP<Camera> _camera;
 };
