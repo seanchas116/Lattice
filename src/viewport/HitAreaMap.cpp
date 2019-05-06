@@ -47,12 +47,24 @@ Opt<std::pair<SP<Renderable>, double>> HitAreaMap::pick(vec2 physicalPos) {
 void HitAreaMap::draw(const SP<Renderable> &renderable, const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     resize(camera->viewportSize());
 
-    GL::Binder binder(*_framebuffer);
-    glClearColor(0, 0, 0, 0);
-    glClearDepthf(1.f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    {
+        GL::Binder binder(*_framebuffer);
+        glClearColor(0, 0, 0, 0);
+        glClearDepthf(1.f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    renderable->drawHitAreaRecursive(operations, camera);
+        renderable->drawHitAreaRecursive(operations, camera);
+    }
+
+    {
+        GL::Binder binder(*_additionalInfoFramebuffer);
+        glClearColor(0, 0, 0, 0);
+        glClearDepthf(1.f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        renderable->drawHitAreaAdditionalInfoRecursive(operations, camera);
+    }
+
     _lastRenderables.clear();
     renderable->getDescendants(_lastRenderables);
 }

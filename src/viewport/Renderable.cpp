@@ -45,6 +45,16 @@ void Renderable::drawHitAreaRecursive(const SP<Draw::Operations> &operations, co
     }
 }
 
+void Renderable::drawHitAreaAdditionalInfoRecursive(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+    if (!_isVisible) {
+        return;
+    }
+    drawHitAreaAdditionalInfo(operations, camera);
+    for (auto& c : childRenderables()) {
+        c->drawHitAreaAdditionalInfoRecursive(operations, camera);
+    }
+}
+
 void Renderable::draw2DRecursive(QPainter *painter, const QSize &viewportSize) {
     if (!_isVisible) {
         return;
@@ -67,6 +77,10 @@ void Renderable::draw(const SP<Draw::Operations> &operations, const SP<Camera> &
 }
 
 void Renderable::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+    Q_UNUSED(operations); Q_UNUSED(camera);
+}
+
+void Renderable::drawHitAreaAdditionalInfo(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     Q_UNUSED(operations); Q_UNUSED(camera);
 }
 
