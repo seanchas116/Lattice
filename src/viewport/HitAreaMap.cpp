@@ -1,4 +1,4 @@
-#include "PickableMap.hpp"
+#include "HitAreaMap.hpp"
 #include "RenderableObject.hpp"
 #include "../gl/Framebuffer.hpp"
 #include "../gl/Texture.hpp"
@@ -12,11 +12,11 @@ using namespace glm;
 namespace Lattice {
 namespace Viewport {
 
-PickableMap::PickableMap() : _framebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))) {
+HitAreaMap::HitAreaMap() : _framebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))) {
     initializeOpenGLFunctions();
 }
 
-void PickableMap::resize(glm::ivec2 size) {
+void HitAreaMap::resize(glm::ivec2 size) {
     if (size == _framebufferSize) {
         return;
     }
@@ -26,7 +26,7 @@ void PickableMap::resize(glm::ivec2 size) {
     _framebufferSize = size;
 }
 
-Opt<std::pair<SP<Renderable>, double>> PickableMap::pick(vec2 physicalPos) {
+Opt<std::pair<SP<Renderable>, double>> HitAreaMap::pick(vec2 physicalPos) {
     recallContext();
     PixelData<vec4> pixels(glm::ivec2(1));
     _framebuffer->readPixels(physicalPos, pixels);
@@ -39,7 +39,7 @@ Opt<std::pair<SP<Renderable>, double>> PickableMap::pick(vec2 physicalPos) {
     return {{*renderable, depth}};
 }
 
-void PickableMap::draw(const SP<RenderableObject> &renderable, const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void HitAreaMap::draw(const SP<RenderableObject> &renderable, const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     resize(camera->viewportSize());
 
     GL::Binder binder(*_framebuffer);

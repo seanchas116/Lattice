@@ -2,7 +2,7 @@
 #include "Viewport.hpp"
 #include "RenderableObject.hpp"
 #include "Util.hpp"
-#include "PickableMap.hpp"
+#include "HitAreaMap.hpp"
 #include "../support/Debug.hpp"
 #include <QMouseEvent>
 #include <QOpenGLDebugLogger>
@@ -77,7 +77,7 @@ void ViewportContainer::paintGL() {
         glDisable(GL_SCISSOR_TEST);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-        viewport->pickableMap()->draw(*viewport->_renderable, operations, viewport->camera());
+        viewport->hitAreaMap()->draw(*viewport->_renderable, operations, viewport->camera());
     }
 
     glDisable(GL_CULL_FACE);

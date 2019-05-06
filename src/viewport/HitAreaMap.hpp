@@ -23,10 +23,10 @@ namespace Viewport {
 class Renderable;
 class RenderableObject;
 
-class PickableMap final : protected QOpenGLExtraFunctions, protected GL::ContextRecallable {
-    Q_DISABLE_COPY(PickableMap)
+class HitAreaMap final : protected QOpenGLExtraFunctions, protected GL::ContextRecallable {
+    Q_DISABLE_COPY(HitAreaMap)
 public:
-    PickableMap();
+    HitAreaMap();
 
     Opt<std::pair<SP<Renderable>, double>> pick(glm::vec2 physicalPos);
     void draw(const SP<RenderableObject> &renderable, const SP<Draw::Operations>& operations, const SP<Camera>& camera);

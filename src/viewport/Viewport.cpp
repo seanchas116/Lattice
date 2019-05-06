@@ -1,7 +1,7 @@
 #include "Viewport.hpp"
 #include "RenderableObject.hpp"
 #include "Util.hpp"
-#include "PickableMap.hpp"
+#include "HitAreaMap.hpp"
 #include "../support/Debug.hpp"
 #include <QMouseEvent>
 #include <QOpenGLDebugLogger>
@@ -22,11 +22,11 @@ void Viewport::setRenderable(const Opt<SP<RenderableObject> > &renderable) {
     _renderable = renderable;
 }
 
-const SP<PickableMap> &Viewport::pickableMap() {
-    if (!_pickableMap) {
-        _pickableMap = makeShared<PickableMap>();
+const SP<HitAreaMap> &Viewport::hitAreaMap() {
+    if (!_hitAreaMap) {
+        _hitAreaMap = makeShared<HitAreaMap>();
     }
-    return *_pickableMap;
+    return *_hitAreaMap;
 }
 
 void Viewport::mousePressEvent(QMouseEvent *event) {
@@ -121,10 +121,10 @@ void Viewport::mouseReleaseEvent(QMouseEvent *event) {
 Opt<std::pair<SP<Renderable>, double> > Viewport::hitTest(glm::dvec2 pos, const SP<Camera> &camera) {
     Q_UNUSED(camera);
 
-    if (!_pickableMap) {
+    if (!_hitAreaMap) {
         return {};
     }
-    return _pickableMap->get()->pick(pos);
+    return _hitAreaMap->get()->pick(pos);
 }
 
 } // namespace Render

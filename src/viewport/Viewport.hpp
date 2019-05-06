@@ -10,7 +10,7 @@ namespace Viewport {
 class Renderable;
 class RenderableObject;
 class RenderWidget;
-class PickableMap;
+class HitAreaMap;
 
 class Viewport : public QWidget {
     Q_OBJECT
@@ -37,14 +37,14 @@ protected:
 private:
     friend class ViewportContainer;
 
-    const SP<PickableMap>& pickableMap();
+    const SP<HitAreaMap>& hitAreaMap();
 
     Opt<std::pair<SP<Renderable>, double>> hitTest(glm::dvec2 pos, const SP<Camera>& camera);
 
     Opt<SP<RenderableObject>> _renderable;
     Opt<SP<Renderable>> _draggedRenderable;
     Opt<SP<Renderable>> _hoveredRenderable;
-    Opt<SP<PickableMap>> _pickableMap;
+    Opt<SP<HitAreaMap>> _hitAreaMap;
     double _hitDepth;
     SP<Camera> _camera;
 };
