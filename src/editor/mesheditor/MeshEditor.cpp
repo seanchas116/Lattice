@@ -252,39 +252,22 @@ void MeshEditor::mouseReleaseTarget(const Tool::EventTarget &target, const Viewp
 }
 
 void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
-    Q_UNUSED(event);
-    // TODO: update partially
-    if (target.vertex) {
-        _hoveredVertex = target.vertex;
-        _isVAOsDirty = true;
-        emit updated();
-    } else if (target.edge) {
-        _hoveredEdge = target.edge;
-        _isVAOsDirty = true;
-        emit updated();
-    } else if (target.face) {
-        _hoveredFace = target.face;
-        _isVAOsDirty = true;
-        emit updated();
-    }
+    _hoveredVertex = target.vertex;
+    _hoveredEdge = target.edge;
+    _hoveredFace = target.face;
+    _isVAOsDirty = true;
+    emit updated();
+
     _tool->hoverEnterTool(target, event);
 }
 
 void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
-    // TODO: update partially
-    if (target.vertex) {
-        _hoveredVertex = {};
-        _isVAOsDirty = true;
-        emit updated();
-    } else if (target.edge) {
-        _hoveredEdge = {};
-        _isVAOsDirty = true;
-        emit updated();
-    } else if (target.face) {
-        _hoveredFace = {};
-        _isVAOsDirty = true;
-        emit updated();
-    }
+    _hoveredVertex = {};
+    _hoveredEdge = {};
+    _hoveredFace = {};
+    _isVAOsDirty = true;
+    emit updated();
+
     _tool->hoverLeaveTool(target);
 }
 
