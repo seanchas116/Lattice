@@ -22,6 +22,7 @@ EditorScene::EditorScene(const SP<State::AppState> &appState) :
     connect(appState.get(), &State::AppState::isEdgeSelectableChanged, this, &EditorScene::updateRenderables);
     connect(appState.get(), &State::AppState::isFaceSelectableChanged, this, &EditorScene::updateRenderables);
     connect(appState.get(), &State::AppState::toolChanged, this, &EditorScene::updateRenderables);
+    connect(appState.get(), &State::AppState::meshEditStateChanged, this, &EditorScene::updateRenderables);
 
     connect(appState.get(), &State::AppState::isTranslateHandleVisibleChanged, _objectManipulator.get(), &Manipulator::Manipulator::setTranslateHandleVisible);
     connect(appState.get(), &State::AppState::isRotateHandleVisibleChanged, _objectManipulator.get(), &Manipulator::Manipulator::setRotateHandleVisible);
@@ -41,10 +42,10 @@ void EditorScene::updateRenderables() {
 
     std::unordered_map<SP<Document::MeshObject>, SP<MeshRenderer>> newMeshRenderers;
 
-    auto editedObject = _appState->document()->editedObject();
-    if (editedObject) {
-        if (!_meshEditor || (*_meshEditor)->object() != editedObject) {
-            _meshEditor = makeShared<MeshEditor::MeshEditor>(_appState, *editedObject);
+    auto meshEditState = _appState->meshEditState();
+    if (meshEditState) {
+        if (!_meshEditor || (*_meshEditor)->meshEditState() != meshEditState) {
+            _meshEditor = makeShared<MeshEditor::MeshEditor>(_appState, *meshEditState);
         }
     } else {
         _meshEditor = std::nullopt;

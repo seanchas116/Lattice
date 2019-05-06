@@ -6,6 +6,7 @@
 #include "BorderSelectTool.hpp"
 #include "../manipulator/MeshManipulator.hpp"
 #include "../../state/AppState.hpp"
+#include "../../state/MeshEditState.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
 #include "../../document/Document.hpp"
@@ -91,11 +92,10 @@ private:
     Mesh::FaceHandle _face;
 };
 
-MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::MeshObject> &object) :
+MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::MeshEditState> &meshEditState) :
     _appState(appState),
-    _object(object),
-    _mesh(makeShared<Mesh::Mesh>(object->mesh())),
-    _manipulator(makeShared<Manipulator::MeshManipulator>(object->location().matrixToWorld(), _mesh)),
+    _meshEditState(meshEditState),
+    _manipulator(makeShared<Manipulator::MeshManipulator>(meshEditState->targetObject()->location().matrixToWorld(), meshEditState->mesh())),
 
     _facePickVBO(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
     _faceIBO(makeShared<GL::IndexBuffer>()),
@@ -109,7 +109,7 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     _vertexPickVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
     _vertexPickVAO(makeShared<GL::VAO>(_vertexPickVBO, GL::Primitive::Point)),
 
-    _tool(makeShared<MoveTool>(appState, object, _mesh))
+    _tool(makeShared<MoveTool>(appState, meshEditState->targetObject(), meshEditState->mesh()))
 {
     initializeOpenGLFunctions();
     updateVAOs();
@@ -120,29 +120,27 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<Document::M
     connect(_manipulator.get(), &Manipulator::Manipulator::onContextMenu, this, [this](auto& event) {
         contextMenuTarget({}, event);
     });
-    connect(_manipulator.get(), &Manipulator::MeshManipulator::meshChanged, this, &MeshEditor::handleMeshChanged);
+    connect(_manipulator.get(), &Manipulator::MeshManipulator::meshChanged, _meshEditState.get(), &State::MeshEditState::notifyMeshChange);
     connect(_manipulator.get(), &Manipulator::MeshManipulator::meshChangeFinished, this, [this] {
-        handleMeshChangeFinished(tr("Move Vertices"));
+        _meshEditState->commitMeshChange(tr("Move Vertices"));
     });
 
     connect(appState.get(), &State::AppState::isTranslateHandleVisibleChanged, _manipulator.get(), &Manipulator::Manipulator::setTranslateHandleVisible);
     connect(appState.get(), &State::AppState::isRotateHandleVisibleChanged, _manipulator.get(), &Manipulator::Manipulator::setRotateHandleVisible);
     connect(appState.get(), &State::AppState::isScaleHandleVisibleChanged, _manipulator.get(), &Manipulator::Manipulator::setScaleHandleVisible);
 
-    connect(object.get(), &Document::MeshObject::meshChanged, this, [this](auto& mesh) {
-        *_mesh = mesh;
-        handleMeshChanged();
-    });
+    connect(meshEditState.get(), &State::MeshEditState::meshChanged, this, &MeshEditor::handleMeshChanged);
 }
 
 void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     updateVAOs();
 
     // TODO: Render faces
+    auto matrixToWorld = _meshEditState->targetObject()->location().matrixToWorld();
 
-    operations->drawLine.draw(_edgeVAO, _object->location().matrixToWorld(), camera, 1.0, vec4(0), true);
+    operations->drawLine.draw(_edgeVAO, matrixToWorld, camera, 1.0, vec4(0), true);
     if (_appState->isVertexSelectable()) {
-        operations->drawCircle.draw(_vertexVAO, _object->location().matrixToWorld(), camera, 6.0, vec4(0), true);
+        operations->drawCircle.draw(_vertexVAO, matrixToWorld, camera, 6.0, vec4(0), true);
     }
 }
 
@@ -154,14 +152,16 @@ void MeshEditor::drawPickables(const SP<Draw::Operations> &operations, const SP<
     glClearDepthf(1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    auto matrixToWorld = _meshEditState->targetObject()->location().matrixToWorld();
+
     if (_appState->isFaceSelectable()) {
-        operations->drawUnicolor.draw(_facePickVAO, _object->location().matrixToWorld(), camera, vec4(0), true);
+        operations->drawUnicolor.draw(_facePickVAO, matrixToWorld, camera, vec4(0), true);
     }
     if (_appState->isEdgeSelectable()) {
-        operations->drawLine.draw(_edgePickVAO, _object->location().matrixToWorld(), camera, 12.0, vec4(0), true);
+        operations->drawLine.draw(_edgePickVAO, matrixToWorld, camera, 12.0, vec4(0), true);
     }
     if (_appState->isVertexSelectable()) {
-        operations->drawCircle.draw(_vertexPickVAO, _object->location().matrixToWorld(), camera, 24.0, vec4(0), true);
+        operations->drawCircle.draw(_vertexPickVAO, matrixToWorld, camera, 24.0, vec4(0), true);
     }
 }
 
@@ -190,26 +190,29 @@ void MeshEditor::keyReleaseEvent(QKeyEvent *event) {
 }
 
 void MeshEditor::handleToolChange(State::Tool tool) {
+    auto& object = _meshEditState->targetObject();
+    auto& mesh = _meshEditState->mesh();
+
     switch (tool) {
     case State::Tool::Draw:
-        _tool = makeShared<DrawTool>(_appState, _object, _mesh);
+        _tool = makeShared<DrawTool>(_appState, object, mesh);
         break;
     case State::Tool::Extrude:
-        _tool = makeShared<ExtrudeTool>(_appState, _object, _mesh);
+        _tool = makeShared<ExtrudeTool>(_appState, object, mesh);
         break;
     case State::Tool::LoopCut:
-        _tool = makeShared<LoopCutTool>(_appState, _object, _mesh);
+        _tool = makeShared<LoopCutTool>(_appState, object, mesh);
         break;
     case State::Tool::BorderSelect:
-        _tool = makeShared<BorderSelectTool>(_appState, _object, _mesh);
+        _tool = makeShared<BorderSelectTool>(_appState, object, mesh);
         break;
     default:
-        _tool = makeShared<MoveTool>(_appState, _object, _mesh);
+        _tool = makeShared<MoveTool>(_appState, object, mesh);
         break;
     }
     connect(_tool.get(), &Tool::meshChanged, this, &MeshEditor::handleMeshChanged);
     connect(_tool.get(), &Tool::meshChangeFinished, this, [this] (const QString& title) {
-        handleMeshChangeFinished(title);
+        _meshEditState->commitMeshChange(title);
         _appState->setTool(State::Tool::None);
     });
     updateManipulatorVisibility();
@@ -217,7 +220,8 @@ void MeshEditor::handleToolChange(State::Tool tool) {
 }
 
 void MeshEditor::updateManipulatorVisibility() {
-    bool isVertexSelected = ranges::any_of(_mesh->vertices(), [&] (auto v) { return _mesh->isSelected(v); });
+    auto& mesh = *_meshEditState->mesh();
+    bool isVertexSelected = ranges::any_of(mesh.vertices(), [&] (auto v) { return mesh.isSelected(v); });
     _manipulator->setVisible(isVertexSelected  && _appState->tool() == State::Tool::None);
 }
 
@@ -233,12 +237,6 @@ void MeshEditor::handleMeshChanged() {
     _manipulator->updatePosition();
     _isVAOsDirty = true;
     emit updated();
-}
-
-void MeshEditor::handleMeshChangeFinished(const QString &title) {
-    _mesh->collectGarbage();
-    _appState->document()->history()->beginChange(title);
-    _object->setMesh(*_mesh);
 }
 
 void MeshEditor::mousePressTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -301,7 +299,7 @@ void MeshEditor::contextMenuTarget(const Tool::EventTarget &target, const Viewpo
 }
 
 void MeshEditor::updateVAOs() {
-    auto& mesh = *_mesh;
+    auto& mesh = *_meshEditState->mesh();
     auto hitTestExclusion = _tool->hitTestExclusion();
 
     _pickables.clear();

@@ -9,6 +9,11 @@ namespace State {
 MeshEditState::MeshEditState(const SP<Document::MeshObject> &targetObject) :
     _targetObject(targetObject),
     _mesh(makeShared<Mesh::Mesh>(targetObject->mesh())) {
+
+    connect(targetObject.get(), &Document::MeshObject::meshChanged, this, [this](auto& mesh) {
+        *_mesh = mesh;
+        notifyMeshChange();
+    });
 }
 
 void MeshEditState::setMesh(Mesh::Mesh mesh) {

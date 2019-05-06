@@ -16,7 +16,6 @@ public:
     MeshEditState(const SP<Document::MeshObject>& targetObject);
 
     auto& targetObject() const { return _targetObject; }
-    void setTargetObject(Opt<SP<Document::MeshObject>> target);
 
     auto& mesh() const { return _mesh; }
     void setMesh(Mesh::Mesh mesh);

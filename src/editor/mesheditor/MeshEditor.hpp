@@ -13,6 +13,7 @@ namespace Lattice {
 
 namespace State {
 class AppState;
+class MeshEditState;
 }
 
 namespace Document {
@@ -37,9 +38,9 @@ namespace MeshEditor {
 class MeshEditor final : public Viewport::RenderableObject, protected QOpenGLExtraFunctions {
     Q_OBJECT
 public:
-    MeshEditor(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object);
+    MeshEditor(const SP<State::AppState>& appState, const SP<State::MeshEditState>& meshEditState);
 
-    auto& object() const { return _object; }
+    auto& meshEditState() const { return _meshEditState; }
 
     void draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
     void drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
@@ -70,7 +71,6 @@ private:
     void updateChildren();
 
     void handleMeshChanged();
-    void handleMeshChangeFinished(const QString& title);
 
     class EditorPickable;
     class VertexPickable;
@@ -78,8 +78,7 @@ private:
     class FacePickable;
 
     SP<State::AppState> _appState;
-    SP<Document::MeshObject> _object;
-    SP<Mesh::Mesh> _mesh;
+    SP<State::MeshEditState> _meshEditState;
 
     SP<Manipulator::MeshManipulator> _manipulator;
 
