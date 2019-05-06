@@ -33,56 +33,69 @@ const vec4 unselectedFaceHighlight = vec4(0, 0, 0, 0);
 const vec4 selectedFaceHighlight = vec4(1, 1, 1, 0.5);
 const vec4 hoveredFaceHighlight = vec4(1, 1, 0.5, 0.5);
 
-glm::vec4 encodeValueToColor(uint64_t value) {
-    union {
-        uint64_t value;
-        glm::u16vec4 color;
-    } valueColor;
-    valueColor.value = value;
-
-    return glm::vec4(valueColor.color) / float(0xFFFF);
 }
 
-uint64_t decodeColorToValue(glm::vec4 color) {
-    union {
-        uint64_t value;
-        glm::u16vec4 color;
-    } valueColor;
-    valueColor.color = glm::u16vec4(glm::round(color * float(0xFFFF)));
-    return valueColor.value;
-}
+class HitColor {
+    static glm::vec4 encodeValueToColor(uint64_t value) {
+        union {
+            uint64_t value;
+            glm::u16vec4 color;
+        } valueColor;
+        valueColor.value = value;
 
-Tool::EventTarget eventTargetFromAdditionalInfo(glm::vec4 additionalInfo) {
-    uint64_t value = decodeColorToValue(additionalInfo);
-    if (value == 0) {
+        return glm::vec4(valueColor.color) / float(0xFFFF);
+    }
+
+    static uint64_t decodeColorToValue(glm::vec4 color) {
+        union {
+            uint64_t value;
+            glm::u16vec4 color;
+        } valueColor;
+        valueColor.color = glm::u16vec4(glm::round(color * float(0xFFFF)));
+        return valueColor.value;
+    }
+
+    uint64_t value;
+
+public:
+    HitColor(glm::vec4 hitUserColor) {
+        value = decodeColorToValue(hitUserColor);
+    }
+    HitColor() {
+        value = 0;
+    }
+    HitColor(Mesh::VertexHandle v) {
+        value = v.index * 3 + 1;
+    }
+    HitColor(Mesh::EdgeHandle e) {
+        value = e.index * 3 + 2;
+    }
+    HitColor(Mesh::FaceHandle f) {
+        value = f.index * 3 + 3;
+    }
+
+    glm::vec4 hitUserColor() const {
+        return encodeValueToColor(value);
+    }
+
+    Tool::EventTarget eventTarget() const {
+        if (value == 0) {
+            return {};
+        }
+
+        uint64_t type = (value - 1) % 3;
+        uint64_t index = (value - 1) / 3;
+        switch (type) {
+        case 0:
+            return {Mesh::VertexHandle(index), {}, {}};
+        case 1:
+            return {{}, Mesh::EdgeHandle(index), {}};
+        case 2:
+            return {{}, {}, Mesh::FaceHandle(index)};
+        }
         return {};
     }
-
-    uint64_t type = (value - 1) % 3;
-    uint64_t index = (value - 1) / 3;
-    switch (type) {
-    case 0:
-        return {Mesh::VertexHandle(index), {}, {}};
-    case 1:
-        return {{}, Mesh::EdgeHandle(index), {}};
-    case 2:
-        return {{}, {}, Mesh::FaceHandle(index)};
-    }
-}
-
-vec4 additionalInfoVertex(Mesh::VertexHandle v) {
-    return encodeValueToColor(v.index * 3 + 1);
-}
-
-vec4 additionalInfoEdge(Mesh::EdgeHandle e) {
-    return encodeValueToColor(e.index * 3 + 2);
-}
-
-vec4 additionalInfoFace(Mesh::FaceHandle f) {
-    return encodeValueToColor(f.index * 3 + 3);
-}
-
-}
+};
 
 MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::MeshEditState> &meshEditState) :
     _appState(appState),
@@ -146,7 +159,7 @@ void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const SP<Ca
 void MeshEditor::drawHitUserColor(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     updateVAOs();
 
-    auto background = encodeValueToColor(0);
+    auto background = HitColor().hitUserColor();
     glClearColor(background.r, background.g, background.b, background.a);
     glClearDepthf(1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -165,19 +178,19 @@ void MeshEditor::drawHitUserColor(const SP<Draw::Operations> &operations, const 
 }
 
 void MeshEditor::mousePressEvent(const Viewport::MouseEvent &event) {
-    mousePressTarget(eventTargetFromAdditionalInfo(event.hitUserColor), event);
+    mousePressTarget(HitColor(event.hitUserColor).eventTarget(), event);
 }
 
 void MeshEditor::mouseMoveEvent(const Viewport::MouseEvent &event) {
-    mouseMoveTarget(eventTargetFromAdditionalInfo(event.hitUserColor), event);
+    mouseMoveTarget(HitColor(event.hitUserColor).eventTarget(), event);
 }
 
 void MeshEditor::mouseReleaseEvent(const Viewport::MouseEvent &event) {
-    mouseReleaseTarget(eventTargetFromAdditionalInfo(event.hitUserColor), event);
+    mouseReleaseTarget(HitColor(event.hitUserColor).eventTarget(), event);
 }
 
 void MeshEditor::contextMenuEvent(const Viewport::ContextMenuEvent &event) {
-    contextMenuTarget(eventTargetFromAdditionalInfo(event.hitUserColor), event);
+    contextMenuTarget(HitColor(event.hitUserColor).eventTarget(), event);
 }
 
 void MeshEditor::keyPressEvent(QKeyEvent *event) {
@@ -304,7 +317,7 @@ void MeshEditor::updateVAOs() {
 
             Draw::PointLineVertex pickAttrib;
             pickAttrib.position = mesh.position(v);
-            pickAttrib.color = additionalInfoVertex(v);
+            pickAttrib.color = HitColor(v).hitUserColor();
             pickAttrib.width = hitTestExcluded ? 0 : 1;
             vertexPickAttributes.push_back(pickAttrib);
         }
@@ -335,7 +348,7 @@ void MeshEditor::updateVAOs() {
 
                 Draw::PointLineVertex pickAttrib;
                 pickAttrib.position = mesh.position(v);
-                pickAttrib.color = additionalInfoEdge(e);
+                pickAttrib.color = HitColor(e).hitUserColor();
                 pickAttrib.width = hitTestExcluded ? 0 : 1;
                 edgePickAttributes.push_back(pickAttrib);
             }
@@ -360,7 +373,7 @@ void MeshEditor::updateVAOs() {
             for (auto& p : mesh.uvPoints(f)) {
                 Draw::Vertex pickAttrib;
                 pickAttrib.position = mesh.position(mesh.vertex(p));
-                pickAttrib.color = additionalInfoFace(f);
+                pickAttrib.color = HitColor(f).hitUserColor();
                 facePickAttributes.push_back(pickAttrib);
             }
         }
