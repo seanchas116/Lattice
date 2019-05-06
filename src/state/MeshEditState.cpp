@@ -6,16 +6,9 @@
 namespace Lattice {
 namespace State {
 
-MeshEditState::MeshEditState() :
-    _mesh(makeShared<Mesh::Mesh>()) {
-}
-
-void MeshEditState::setTargetObject(Opt<SP<Document::MeshObject>> target) {
-    if (_targetObject == target) {
-        return;
-    }
-    _targetObject = std::move(target);
-    emit targetObjectChanged(target);
+MeshEditState::MeshEditState(const SP<Document::MeshObject> &targetObject) :
+    _targetObject(targetObject),
+    _mesh(makeShared<Mesh::Mesh>(targetObject->mesh())) {
 }
 
 void MeshEditState::setMesh(Mesh::Mesh mesh) {
@@ -28,12 +21,7 @@ void MeshEditState::notifyMeshChange() {
 }
 
 void MeshEditState::commitMeshChange(const QString &changeTitle) {
-    if (!_targetObject) {
-        return;
-    }
-    auto object = *_targetObject;
-
-    auto maybeDocument = object->document();
+    auto maybeDocument = _targetObject->document();
     if (!maybeDocument) {
         return;
     }
@@ -41,7 +29,7 @@ void MeshEditState::commitMeshChange(const QString &changeTitle) {
 
     _mesh->collectGarbage();
     document->history()->beginChange(changeTitle);
-    object->setMesh(*_mesh);
+    _targetObject->setMesh(*_mesh);
 }
 
 } // namespace State

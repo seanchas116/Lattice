@@ -31,12 +31,14 @@ class AppState final : public QObject {
     LATTICE_AUTO_PROPERTY(Tool, tool, setTool, Tool::None)
 
     LATTICE_AUTO_PROPERTY(ViewportSplitMode, viewportSplitMode, setViewportSplit, ViewportSplitMode::Single)
+
+    LATTICE_AUTO_PROPERTY(Opt<SP<MeshEditState>>, meshEditState, setMeshEditState, {})
+
 public:
     AppState();
 
     auto& document() const { return _document; }
     auto& preferences() const { return _preferences; }
-    auto& meshEditState() const { return _meshEditState; }
 
     void deleteObjects();
 
@@ -61,7 +63,6 @@ public:
 private:
     SP<Document::Document> _document;
     SP<Preferences> _preferences;
-    SP<MeshEditState> _meshEditState;
 };
 
 }
