@@ -73,11 +73,6 @@ private:
 
     void handleMeshChanged();
 
-    class EditorPickable;
-    class VertexPickable;
-    class EdgePickable;
-    class FacePickable;
-
     SP<State::AppState> _appState;
     SP<State::MeshEditState> _meshEditState;
 
@@ -95,8 +90,6 @@ private:
     SP<GL::VAO> _vertexVAO;
     SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexPickVBO;
     SP<GL::VAO> _vertexPickVAO;
-
-    std::vector<SP<Viewport::Renderable>> _pickables;
 
     SP<Tool> _tool;
 

@@ -80,63 +80,6 @@ vec4 additionalInfoFace(Mesh::FaceHandle f) {
 
 }
 
-class MeshEditor::EditorPickable : public Viewport::Renderable {
-public:
-    EditorPickable(MeshEditor* editor) : _editor(editor) {}
-    void mousePressEvent(const Viewport::MouseEvent &event) override {
-        _editor->mousePressTarget(target(), event);
-    }
-    void mouseMoveEvent(const Viewport::MouseEvent &event) override {
-        _editor->mouseMoveTarget(target(), event);
-    }
-    void mouseReleaseEvent(const Viewport::MouseEvent &event) override {
-        _editor->mouseReleaseTarget(target(), event);
-    }
-    void contextMenuEvent(const Viewport::ContextMenuEvent &event) override {
-        _editor->contextMenuTarget(target(), event);
-    }
-    void hoverEnterEvent(const Viewport::MouseEvent &event) override {
-        _editor->hoverEnterTarget(target(), event);
-    }
-    void hoverLeaveEvent() override {
-        _editor->hoverLeaveTarget(target());
-    }
-protected:
-    virtual Tool::EventTarget target() const = 0;
-private:
-    MeshEditor* _editor;
-};
-
-class MeshEditor::VertexPickable : public MeshEditor::EditorPickable {
-public:
-    VertexPickable(MeshEditor* editor, Mesh::VertexHandle vertex) : EditorPickable(editor), _vertex(vertex) {}
-    Tool::EventTarget target() const override {
-        return {_vertex, {}, {}};
-    }
-private:
-    Mesh::VertexHandle _vertex;
-};
-
-class MeshEditor::EdgePickable : public MeshEditor::EditorPickable {
-public:
-    EdgePickable(MeshEditor* editor, Mesh::EdgeHandle edge) : EditorPickable(editor), _edge(edge) {}
-    Tool::EventTarget target() const override {
-        return {{}, _edge, {}};
-    }
-private:
-    Mesh::EdgeHandle _edge;
-};
-
-class MeshEditor::FacePickable : public MeshEditor::EditorPickable {
-public:
-    FacePickable(MeshEditor* editor, Mesh::FaceHandle face) : EditorPickable(editor), _face(face) {}
-    Tool::EventTarget target() const override {
-        return {{}, {}, _face};
-    }
-private:
-    Mesh::FaceHandle _face;
-};
-
 MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::MeshEditState> &meshEditState) :
     _appState(appState),
     _meshEditState(meshEditState),
@@ -273,10 +216,7 @@ void MeshEditor::updateManipulatorVisibility() {
 }
 
 void MeshEditor::updateChildren() {
-    auto children = _pickables;
-    children.push_back(_manipulator);
-    children.push_back(_tool);
-    setChildRenderables(children);
+    setChildRenderables({_manipulator, _tool});
 }
 
 void MeshEditor::handleMeshChanged() {
@@ -349,12 +289,9 @@ void MeshEditor::updateVAOs() {
     auto& mesh = *_meshEditState->mesh();
     auto hitTestExclusion = _tool->hitTestExclusion();
 
-    _pickables.clear();
-
     {
         std::vector<Draw::PointLineVertex> vertexAttributes;
         std::vector<Draw::PointLineVertex> vertexPickAttributes;
-        std::vector<SP<VertexPickable>> vertexPickables;
 
         vertexAttributes.reserve(mesh.vertexCount());
         vertexPickAttributes.reserve(mesh.vertexCount());
