@@ -9,7 +9,6 @@ namespace State {
 MeshEditState::MeshEditState(const SP<Document::MeshObject> &targetObject) :
     _targetObject(targetObject),
     _mesh(makeShared<Mesh::Mesh>(targetObject->mesh())) {
-    deselectAll();
 
     connect(targetObject.get(), &Document::MeshObject::meshChanged, this, [this](auto& mesh) {
         *_mesh = mesh;
@@ -23,9 +22,7 @@ void MeshEditState::setMesh(Mesh::Mesh mesh) {
 }
 
 void MeshEditState::notifyMeshChange() {
-    _selectedVertices = _mesh->selectedVertices() | ranges::to_vector;
     emit meshChanged(*_mesh);
-    emit selectedVerticesChanged(_selectedVertices);
 }
 
 void MeshEditState::commitMeshChange(const QString &changeTitle) {

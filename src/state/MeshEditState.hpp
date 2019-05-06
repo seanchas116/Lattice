@@ -1,6 +1,5 @@
 #pragma once
 #include "../document/MeshObject.hpp"
-#include "../mesh/Handle.hpp"
 #include <QObject>
 
 namespace Lattice {
@@ -21,8 +20,6 @@ public:
     auto& mesh() const { return _mesh; }
     void setMesh(Mesh::Mesh mesh);
 
-    auto& selectedVertices() const { return _selectedVertices; }
-
     void notifyMeshChange();
     void commitMeshChange(const QString& changeTitle);
 
@@ -34,13 +31,11 @@ public:
 
 signals:
     void meshChanged(const Mesh::Mesh& mesh);
-    void selectedVerticesChanged(const std::vector<Mesh::VertexHandle>& vertices);
     void targetObjectChanged(const Opt<SP<Document::MeshObject>>& target);
 
 private:
     SP<Document::MeshObject> _targetObject;
     SP<Mesh::Mesh> _mesh;
-    std::vector<Mesh::VertexHandle> _selectedVertices;
 };
 
 } // namespace State
