@@ -38,7 +38,7 @@ void RotateHandle::draw(const SP<Draw::Operations> &operations, const SP<Camera>
     glClear(GL_DEPTH_BUFFER_BIT);
 }
 
-void RotateHandle::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void RotateHandle::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInViewport){
         return;

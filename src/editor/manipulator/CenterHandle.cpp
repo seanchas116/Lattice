@@ -17,7 +17,7 @@ void CenterHandle::draw(const SP<Draw::Operations> &operations, const SP<Camera>
     Q_UNUSED(operations); Q_UNUSED(camera);
 }
 
-void CenterHandle::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void CenterHandle::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     auto [viewportPos, isInViewport] = camera->mapWorldToViewport(_targetPosition);
     if (!isInViewport) {
         return;

@@ -10,7 +10,7 @@ void Renderable::draw(const SP<Draw::Operations> &operations, const SP<Camera> &
     Q_UNUSED(operations); Q_UNUSED(camera);
 }
 
-void Renderable::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void Renderable::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     Q_UNUSED(operations); Q_UNUSED(camera);
 }
 

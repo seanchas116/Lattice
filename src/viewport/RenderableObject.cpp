@@ -26,17 +26,17 @@ void RenderableObject::drawRecursive(const SP<Draw::Operations> &operations, con
     }
 }
 
-void RenderableObject::drawPickablesRecursive(const SP<Draw::Operations> &operations, const SP<Camera> &camera, std::vector<SP<Renderable> > &renderedChildren) {
+void RenderableObject::drawHitAreaRecursive(const SP<Draw::Operations> &operations, const SP<Camera> &camera, std::vector<SP<Renderable> > &renderedChildren) {
     if (!_isVisible) {
         return;
     }
-    drawPickables(operations, camera);
+    drawHitArea(operations, camera);
     for (auto& c : childRenderables()) {
         auto childObj = dynamicPointerCast<RenderableObject>(c);
         if (childObj) {
-            (*childObj)->drawPickablesRecursive(operations, camera, renderedChildren);
+            (*childObj)->drawHitAreaRecursive(operations, camera, renderedChildren);
         } else {
-            c->drawPickables(operations, camera);
+            c->drawHitArea(operations, camera);
         }
     }
     renderedChildren.insert(renderedChildren.end(), _childRenderables.begin(), _childRenderables.end());

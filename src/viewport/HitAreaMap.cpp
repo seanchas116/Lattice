@@ -48,7 +48,7 @@ void HitAreaMap::draw(const SP<RenderableObject> &renderable, const SP<Draw::Ope
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     _lastRenderables.clear();
-    renderable->drawPickablesRecursive(operations, camera, _lastRenderables);
+    renderable->drawHitAreaRecursive(operations, camera, _lastRenderables);
 }
 
 }

@@ -36,7 +36,7 @@ void MeshRenderer::draw(const SP<Draw::Operations> &operations, const SP<Camera>
     }
 }
 
-void MeshRenderer::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void MeshRenderer::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     updateVAOs();
     for (auto& [material, vao] : _faceVAOs) {
         operations->drawUnicolor.draw(vao, _object->location().matrixToWorld(), camera, toIDColor());

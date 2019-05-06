@@ -144,7 +144,7 @@ void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &
     }
 }
 
-void MeshEditor::drawPickables(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     updateVAOs();
 
     auto idColor = toIDColor();
