@@ -24,7 +24,7 @@ PropertyView::PropertyView(const SP<State::AppState> &appState, QWidget *parent)
 
     auto update = [appState, document, objectPropertyView, meshPropertyView] {
         meshPropertyView->setMeshEditState(appState->meshEditState());
-        meshPropertyView->setVisible(!!appState->meshEditState() && !document->meshSelection().vertices.empty());
+        meshPropertyView->setVisible(!!appState->meshEditState()); // TODO: hide when no vertex selected
         objectPropertyView->setObjects(document->selectedObjects());
         objectPropertyView->setVisible(!document->selectedObjects().empty() && !appState->meshEditState());
     };
