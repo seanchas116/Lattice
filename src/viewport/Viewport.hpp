@@ -43,10 +43,9 @@ private:
     Opt<HitResult> hitTest(glm::dvec2 pos, const SP<Camera>& camera);
 
     Opt<SP<Renderable>> _renderable;
-    Opt<SP<Renderable>> _draggedRenderable;
+    Opt<HitResult> _draggedHitResult;
     Opt<SP<Renderable>> _hoveredRenderable;
     Opt<SP<HitAreaMap>> _hitAreaMap;
-    double _hitDepth;
     SP<Camera> _camera;
 };
 

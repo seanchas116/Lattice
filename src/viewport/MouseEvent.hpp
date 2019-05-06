@@ -16,8 +16,9 @@ namespace Viewport {
 struct LocatedEvent {
     Q_DISABLE_COPY(LocatedEvent)
 public:
-    LocatedEvent(glm::dvec3 viewportPos, const SP<Camera>& camera) :
+    LocatedEvent(glm::dvec3 viewportPos, glm::vec4 additionalHitInfo, const SP<Camera>& camera) :
         viewportPos(viewportPos),
+        additionalHitInfo(additionalHitInfo),
         camera(camera)
     {}
     virtual ~LocatedEvent();
@@ -25,13 +26,14 @@ public:
     glm::dvec3 worldPos() const;
 
     glm::dvec3 viewportPos;
+    glm::vec4 additionalHitInfo;
     const SP<Camera>& camera;
 };
 
 struct MouseEvent : public LocatedEvent {
 public:
-    MouseEvent(QMouseEvent* originalEvent, glm::dvec3 viewportPos, const SP<Camera>& camera) :
-        LocatedEvent(viewportPos, camera),
+    MouseEvent(QMouseEvent* originalEvent, glm::dvec3 viewportPos, glm::vec4 additionalHitInfo, const SP<Camera>& camera) :
+        LocatedEvent(viewportPos, additionalHitInfo, camera),
         originalEvent(originalEvent)
     {}
 
@@ -40,8 +42,8 @@ public:
 
 struct ContextMenuEvent : public LocatedEvent {
 public:
-    ContextMenuEvent(QContextMenuEvent* originalEvent, glm::dvec3 viewportPos, const SP<Camera>& camera) :
-        LocatedEvent(viewportPos, camera),
+    ContextMenuEvent(QContextMenuEvent* originalEvent, glm::dvec3 viewportPos, glm::vec4 additionalHitInfo, const SP<Camera>& camera) :
+        LocatedEvent(viewportPos, additionalHitInfo, camera),
         originalEvent(originalEvent)
     {}
 
