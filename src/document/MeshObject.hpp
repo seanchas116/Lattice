@@ -8,9 +8,6 @@ namespace Lattice {
 namespace Mesh {
 class Mesh;
 }
-namespace OldMesh {
-class Mesh;
-}
 
 namespace Document {
 

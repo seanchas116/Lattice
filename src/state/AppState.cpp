@@ -4,7 +4,6 @@
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
 #include "../document/MeshObject.hpp"
-#include "../oldmesh/Mesh.hpp"
 #include "../mesh/Mesh.hpp"
 #include "../mesh/algorithm/AddPlane.hpp"
 #include "../mesh/algorithm/AddCube.hpp"
