@@ -4,16 +4,16 @@
 namespace Lattice {
 namespace Mesh {
 
-class AddCircle {
+class BuildCircle {
 public:
     // TODO: support multiple fill types
-    AddCircle(glm::vec3 center, float radius, int segmentCount, int normalAxis, uint32_t material) : center(center),
+    BuildCircle(glm::vec3 center, float radius, int segmentCount, int normalAxis, uint32_t material) : center(center),
                                                                                                      radius(radius),
                                                                                                      segmentCount(segmentCount),
                                                                                                      normalAxis(normalAxis),
                                                                                                      material(material) {}
 
-    Mesh perform(const Mesh& mesh);
+    Mesh perform() const;
 
     glm::vec3 center;
     float radius;
