@@ -70,7 +70,7 @@ void LoopCutTool::mousePressTool(const Tool::EventTarget &target, const Viewport
     std::vector<Mesh::VertexHandle> vertices;
     vertices.reserve(edges.size());
     for (auto& [edge, isReverse] : edges) {
-        auto v = Mesh::CutEdge(edge, isReverse ? (1.0 - cutPosition) : cutPosition).redo(mesh);
+        auto v = Mesh::CutEdge(edge, isReverse ? (1.0 - cutPosition) : cutPosition).perform(mesh);
         vertices.push_back(v);
     }
     for (size_t i = 0; i < vertices.size(); ++i) {

@@ -6,7 +6,7 @@ using namespace glm;
 namespace Lattice {
 namespace Mesh {
 
-VertexHandle CutEdge::redo(Mesh &mesh) {
+VertexHandle CutEdge::perform(Mesh &mesh) const {
     auto pos = mesh.ray(edge).at(t);
 
     auto uv = mesh.addUVPoint(mesh.addVertex(pos), dvec2(0)); // TODO: Use better UV position

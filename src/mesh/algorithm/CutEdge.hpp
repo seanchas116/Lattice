@@ -8,8 +8,7 @@ class CutEdge {
 public:
     // TODO: use persistent handle
     CutEdge(EdgeHandle edge, float t) : edge(edge), t(t) {}
-
-    VertexHandle redo(Mesh& mesh);
+    VertexHandle perform(Mesh& mesh) const;
 
 private:
     EdgeHandle edge;
