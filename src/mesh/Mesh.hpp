@@ -212,6 +212,8 @@ public:
 
         return faces;
     }
+
+    void merge(const Mesh& other);
 };
 
 } // namespace NewMesh

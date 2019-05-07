@@ -246,5 +246,52 @@ void Mesh::deselectAll() {
     }
 }
 
+void Mesh::merge(const Mesh &other) {
+    auto vertexOffset = uint32_t(_vertices.size());
+    auto uvPointOffset = uint32_t(_uvPoints.size());
+    auto edgeOffset = uint32_t(_edges.size());
+    auto faceOffset = uint32_t(_faces.size());
+
+    _vertices.reserve(_vertices.size() + other._vertices.size());
+    _uvPoints.reserve(_uvPoints.size() + other._uvPoints.size());
+    _edges.reserve(_edges.size() + other._edges.size());
+    _faces.reserve(_faces.size() + other._faces.size());
+
+    for (auto vertexData : other._vertices) {
+        for (auto& uv : vertexData.uvPoints) {
+            uv.index += uvPointOffset;
+        }
+        for (auto& e : vertexData.edges) {
+            e.index += edgeOffset;
+        }
+        _vertices.push_back(vertexData);
+    }
+    for (auto uvPointData : other._uvPoints) {
+        uvPointData.vertex.index += vertexOffset;
+        for (auto& f : uvPointData.faces) {
+            f.index += faceOffset;
+        }
+        _uvPoints.push_back(uvPointData);
+    }
+    for (auto edgeData : other._edges) {
+        for (auto& v : edgeData.vertices) {
+            v.index += vertexOffset;
+        }
+        for (auto& f : edgeData.faces) {
+            f.index += faceOffset;
+        }
+        _edges.push_back(edgeData);
+    }
+    for (auto faceData : other._faces) {
+        for (auto& uv : faceData.uvPoints) {
+            uv.index += uvPointOffset;
+        }
+        for (auto& e : faceData.edges) {
+            e.index += edgeOffset;
+        }
+        _faces.push_back(faceData);
+    }
+}
+
 } // namespace NewMesh
 } // namespace Lattice
