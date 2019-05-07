@@ -4,14 +4,14 @@
 namespace Lattice {
 namespace Mesh {
 
-class AddPlane {
+class BuildPlane {
 public:
-    AddPlane(glm::vec3 center, glm::vec2 size, int normalAxis, uint32_t material) :center(center),
+    BuildPlane(glm::vec3 center, glm::vec2 size, int normalAxis, uint32_t material) :center(center),
                                                                                     size(size),
                                                                                     normalAxis(normalAxis),
                                                                                     material(material) {}
 
-    Mesh perform(const Mesh& original);
+    Mesh perform() const;
 
     glm::vec3 center;
     glm::vec2 size;

@@ -4,13 +4,13 @@
 namespace Lattice {
 namespace Mesh {
 
-class AddCube {
+class BuildCube {
 public:
-    AddCube(glm::vec3 minPos, glm::vec3 maxPos, uint32_t material) : minPos(minPos),
+    BuildCube(glm::vec3 minPos, glm::vec3 maxPos, uint32_t material) : minPos(minPos),
                                                                      maxPos(maxPos),
                                                                      material(material) {}
 
-    Mesh perform(const Mesh& original);
+    Mesh perform() const;
 
     glm::vec3 minPos;
     glm::vec3 maxPos;

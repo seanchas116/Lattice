@@ -4,16 +4,16 @@
 namespace Lattice {
 namespace Mesh {
 
-class AddSphere {
+class BuildSphere {
 public:
-    AddSphere(glm::vec3 center, float radius, int segmentCount, int ringCount, int axis, uint32_t material) : center(center),
+    BuildSphere(glm::vec3 center, float radius, int segmentCount, int ringCount, int axis, uint32_t material) : center(center),
                                                                                                               radius(radius),
                                                                                                               segmentCount(segmentCount),
                                                                                                               ringCount(ringCount),
                                                                                                               axis(axis),
                                                                                                               material(material) {}
 
-    Mesh perform(const Mesh& original);
+    Mesh perform() const;
 
     glm::vec3 center;
     float radius;

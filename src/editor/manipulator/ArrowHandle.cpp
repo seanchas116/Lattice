@@ -4,9 +4,9 @@
 #include "../MeshVAOGenerator.hpp"
 #include "../../draw/Operations.hpp"
 #include "../../mesh/Mesh.hpp"
-#include "../../mesh/algorithm/AddCone.hpp"
-#include "../../mesh/algorithm/AddCube.hpp"
-#include "../../mesh/algorithm/AddCylinder.hpp"
+#include "../../mesh/algorithm/BuildCone.hpp"
+#include "../../mesh/algorithm/BuildCube.hpp"
+#include "../../mesh/algorithm/BuildCylinder.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
 #include "../../support/Debug.hpp"
@@ -116,9 +116,9 @@ SP<GL::VAO> ArrowHandle::createHandleVAO() {
     Mesh::Mesh mesh;
     uint32_t material = 0;
     if (_handleType == HandleType::Translate) {
-        mesh = Mesh::AddCone(vec3(0), Constants::translateHandleWidth * 0.5, Constants::translateHandleLength, 8, 0, material).perform(mesh);
+        mesh = Mesh::BuildCone(vec3(0), Constants::translateHandleWidth * 0.5, Constants::translateHandleLength, 8, 0, material).perform();
     } else {
-        mesh = Mesh::AddCube(-vec3(Constants::scaleHandleSize*0.5), vec3(Constants::scaleHandleSize*0.5), material).perform(mesh);
+        mesh = Mesh::BuildCube(-vec3(Constants::scaleHandleSize*0.5), vec3(Constants::scaleHandleSize*0.5), material).perform();
     }
     return MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
 }
@@ -135,7 +135,7 @@ SP<GL::VAO> ArrowHandle::createBodyVAO(double length) {
 SP<GL::VAO> ArrowHandle::createBodyPickVAO(double length) {
     Mesh::Mesh mesh;
     uint32_t material = 0;
-    mesh = Mesh::AddCylinder(vec3(Constants::bodyBegin, 0, 0), Constants::hitRadius, length - Constants::bodyBegin + Constants::translateHandleLength, 8, 0, material).perform(mesh);
+    mesh = Mesh::BuildCylinder(vec3(Constants::bodyBegin, 0, 0), Constants::hitRadius, length - Constants::bodyBegin + Constants::translateHandleLength, 8, 0, material).perform();
     return MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
 }
 

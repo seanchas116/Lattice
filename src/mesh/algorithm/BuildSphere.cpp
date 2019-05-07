@@ -1,4 +1,4 @@
-#include "AddSphere.hpp"
+#include "BuildSphere.hpp"
 #include <QtGlobal>
 
 using namespace glm;
@@ -6,8 +6,8 @@ using namespace glm;
 namespace Lattice {
 namespace Mesh {
 
-Mesh AddSphere::perform(const Mesh& original) {
-    auto mesh = original;
+Mesh BuildSphere::perform() const {
+    Mesh mesh;
 
     std::vector<std::vector<UVPointHandle>> uvPointMatrix;
 

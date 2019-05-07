@@ -1,4 +1,4 @@
-#include "AddPlane.hpp"
+#include "BuildPlane.hpp"
 #include <QtGlobal>
 
 using namespace glm;
@@ -6,8 +6,8 @@ using namespace glm;
 namespace Lattice {
 namespace Mesh {
 
-Mesh AddPlane::perform(const Mesh &original) {
-    auto mesh = original;
+Mesh BuildPlane::perform() const {
+    Mesh mesh;
 
     std::vector<UVPointHandle> uvPoints;
     std::array<vec2, 4> uvs = {vec2(0, 0), vec2(1, 0), vec2(1, 1), vec2(0, 1)};
