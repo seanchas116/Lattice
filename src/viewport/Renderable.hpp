@@ -42,7 +42,7 @@ public:
     virtual void mouseMoveEvent(const MouseEvent& event);
     virtual void mouseReleaseEvent(const MouseEvent& event);
     virtual void mouseDoubleClickEvent(const MouseEvent& event);
-    virtual void contextMenuEvent(const ContextMenuEvent& event);
+    virtual void contextMenuEvent(const MouseEvent& event);
     virtual void hoverEnterEvent(const MouseEvent& event);
     virtual void hoverLeaveEvent();
 

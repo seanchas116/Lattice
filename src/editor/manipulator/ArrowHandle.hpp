@@ -23,7 +23,7 @@ public:
     void mouseMoveEvent(const Viewport::MouseEvent &event) override;
     void mouseReleaseEvent(const Viewport::MouseEvent &event) override;
 
-    void contextMenuEvent(const Viewport::ContextMenuEvent &event) override;
+    void contextMenuEvent(const Viewport::MouseEvent &event) override;
 
     void hoverEnterEvent(const Viewport::MouseEvent& event) override;
     void hoverLeaveEvent() override;
@@ -36,7 +36,7 @@ signals:
     void onDragMove(double value);
     void onDragEnd();
 
-    void onContextMenu(const Viewport::ContextMenuEvent& event);
+    void onContextMenu(const Viewport::MouseEvent& event);
 
 private:
     SP<GL::VAO> createHandleVAO();

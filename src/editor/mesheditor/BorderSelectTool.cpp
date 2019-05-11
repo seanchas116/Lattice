@@ -14,7 +14,7 @@ namespace MeshEditor {
 void BorderSelectTool::mousePressTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target);
 
-    if (event.originalEvent->button() != Qt::LeftButton) {
+    if (event.originalMouseEvent->button() != Qt::LeftButton) {
         return;
     }
     _dragged = true;

@@ -44,11 +44,11 @@ void MeshRenderer::drawHitArea(const SP<Draw::Operations> &operations, const SP<
 }
 
 void MeshRenderer::mousePressEvent(const Viewport::MouseEvent &event) {
-    switch (event.originalEvent->button()) {
+    switch (event.originalMouseEvent->button()) {
     case Qt::RightButton: {
         QMenu contextMenu;
         contextMenu.addAction(tr("Delete"), _appState.get(), &State::AppState::deleteObjects);
-        contextMenu.exec(event.originalEvent->globalPos());
+        contextMenu.exec(event.originalMouseEvent->globalPos());
         return;
     }
     case Qt::LeftButton: {
@@ -64,7 +64,7 @@ void MeshRenderer::mousePressEvent(const Viewport::MouseEvent &event) {
         _dragInitViewportPos = event.viewportPos;
         _dragStarted = false;
 
-        _appState->document()->selectObject(_object, event.originalEvent->modifiers() & Qt::ShiftModifier);
+        _appState->document()->selectObject(_object, event.originalMouseEvent->modifiers() & Qt::ShiftModifier);
         return;
     }
     default:

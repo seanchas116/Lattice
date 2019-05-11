@@ -32,7 +32,7 @@ void CenterHandle::drawHitArea(const SP<Draw::Operations> &operations, const SP<
 }
 
 void CenterHandle::mousePressEvent(const Viewport::MouseEvent &event) {
-    if (event.originalEvent->button() != Qt::LeftButton) {
+    if (event.originalMouseEvent->button() != Qt::LeftButton) {
         return;
     }
     auto [viewportPos, isInViewport] = event.camera->mapWorldToViewport(_targetPosition);
@@ -63,7 +63,7 @@ void CenterHandle::mouseReleaseEvent(const Viewport::MouseEvent &event) {
     emit onDragEnd();
 }
 
-void CenterHandle::contextMenuEvent(const Viewport::ContextMenuEvent &event) {
+void CenterHandle::contextMenuEvent(const Viewport::MouseEvent &event) {
     emit onContextMenu(event);
 }
 

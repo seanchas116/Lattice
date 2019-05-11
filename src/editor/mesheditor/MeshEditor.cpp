@@ -158,6 +158,8 @@ void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &
 }
 
 void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+    Q_UNUSED(operations);
+    Q_UNUSED(camera);
     auto idColor = toIDColor();
     glClearColor(idColor.r, idColor.g, idColor.b, idColor.a);
     glClearDepthf(1);
@@ -197,7 +199,7 @@ void MeshEditor::mouseReleaseEvent(const Viewport::MouseEvent &event) {
     mouseReleaseTarget(EventTargetValue(event.hitUserColor).eventTarget(), event);
 }
 
-void MeshEditor::contextMenuEvent(const Viewport::ContextMenuEvent &event) {
+void MeshEditor::contextMenuEvent(const Viewport::MouseEvent &event) {
     contextMenuTarget(EventTargetValue(event.hitUserColor).eventTarget(), event);
 }
 
@@ -292,14 +294,14 @@ void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
     _tool->hoverLeaveTool(target);
 }
 
-void MeshEditor::contextMenuTarget(const Tool::EventTarget &target, const Viewport::ContextMenuEvent &event) {
+void MeshEditor::contextMenuTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target);
 
     QMenu contextMenu;
     contextMenu.addAction(tr("Delete Vertices"), _appState.get(), &State::AppState::deleteVertices);
     contextMenu.addAction(tr("Delete Edges"), _appState.get(), &State::AppState::deleteEdges);
     contextMenu.addAction(tr("Delete Faces"), _appState.get(), &State::AppState::deleteFaces);
-    contextMenu.exec(event.originalEvent->globalPos());
+    contextMenu.exec(event.originalContextMenuEvent->globalPos());
 }
 
 void MeshEditor::updateVAOs() {

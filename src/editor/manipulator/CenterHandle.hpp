@@ -15,7 +15,7 @@ public:
     void mousePressEvent(const Viewport::MouseEvent &event) override;
     void mouseMoveEvent(const Viewport::MouseEvent &event) override;
     void mouseReleaseEvent(const Viewport::MouseEvent &event) override;
-    void contextMenuEvent(const Viewport::ContextMenuEvent &event) override;
+    void contextMenuEvent(const Viewport::MouseEvent &event) override;
 
     void setTargetPosition(glm::dvec3 pos) { _targetPosition = pos; }
 
@@ -24,7 +24,7 @@ signals:
     void onDragMove(glm::dvec3 pos);
     void onDragEnd();
 
-    void onContextMenu(const Viewport::ContextMenuEvent& event);
+    void onContextMenu(const Viewport::MouseEvent& event);
 
 private:
     glm::dvec3 _targetPosition {0};

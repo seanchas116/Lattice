@@ -49,7 +49,7 @@ void ArrowHandle::drawHitArea(const SP<Draw::Operations> &operations, const SP<C
 }
 
 void ArrowHandle::mousePressEvent(const Viewport::MouseEvent &event) {
-    if (event.originalEvent->button() != Qt::LeftButton) {
+    if (event.originalMouseEvent->button() != Qt::LeftButton) {
         return;
     }
 
@@ -88,7 +88,7 @@ void ArrowHandle::mouseReleaseEvent(const Viewport::MouseEvent &event) {
     emit onDragEnd();
 }
 
-void ArrowHandle::contextMenuEvent(const Viewport::ContextMenuEvent &event) {
+void ArrowHandle::contextMenuEvent(const Viewport::MouseEvent &event) {
     emit onContextMenu(event);
 }
 

@@ -27,7 +27,7 @@ public:
     void mouseMoveEvent(const Viewport::MouseEvent &event) override;
     void mouseReleaseEvent(const Viewport::MouseEvent &event) override;
 
-    void contextMenuEvent(const Viewport::ContextMenuEvent &event) override;
+    void contextMenuEvent(const Viewport::MouseEvent &event) override;
 
     void setTargetPosition(const glm::dvec3 &targetPosition) { _targetPosition = targetPosition; }
 
@@ -36,7 +36,7 @@ signals:
     void onDragMove(double value);
     void onDragEnd();
 
-    void onContextMenu(const Viewport::ContextMenuEvent& event);
+    void onContextMenu(const Viewport::MouseEvent& event);
 
 private:
     SP<Mesh::Mesh> createMesh();

@@ -44,7 +44,7 @@ signals:
     void onDragMove(ValueType type, glm::dvec3 values);
     void onDragEnd(ValueType type);
 
-    void onContextMenu(const Viewport::ContextMenuEvent& event);
+    void onContextMenu(const Viewport::MouseEvent& event);
 
 private:
     void updateHandles();

@@ -50,7 +50,7 @@ public:
     void mouseMoveEvent(const Viewport::MouseEvent &event) override;
     void mouseReleaseEvent(const Viewport::MouseEvent &event) override;
 
-    void contextMenuEvent(const Viewport::ContextMenuEvent &event) override;
+    void contextMenuEvent(const Viewport::MouseEvent &event) override;
 
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
@@ -65,7 +65,7 @@ private:
     void hoverEnterTarget(const Tool::EventTarget& target, const Viewport::MouseEvent &event);
     void hoverLeaveTarget(const Tool::EventTarget& target);
 
-    void contextMenuTarget(const Tool::EventTarget& target, const Viewport::ContextMenuEvent& event);
+    void contextMenuTarget(const Tool::EventTarget& target, const Viewport::MouseEvent& event);
 
     void updateVAOs();
     void updateManipulatorVisibility();

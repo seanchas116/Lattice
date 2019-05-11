@@ -52,7 +52,7 @@ void RotateHandle::drawHitArea(const SP<Draw::Operations> &operations, const SP<
 }
 
 void RotateHandle::mousePressEvent(const Viewport::MouseEvent &event) {
-    if (event.originalEvent->button() != Qt::LeftButton) {
+    if (event.originalMouseEvent->button() != Qt::LeftButton) {
         return;
     }
 
@@ -98,7 +98,7 @@ void RotateHandle::mouseReleaseEvent(const Viewport::MouseEvent &event) {
     emit onDragEnd();
 }
 
-void RotateHandle::contextMenuEvent(const Viewport::ContextMenuEvent &event) {
+void RotateHandle::contextMenuEvent(const Viewport::MouseEvent &event) {
     emit onContextMenu(event);
 }
 

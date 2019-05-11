@@ -104,7 +104,7 @@ void Renderable::mouseDoubleClickEvent(const MouseEvent &event) {
     Q_UNUSED(event);
 }
 
-void Renderable::contextMenuEvent(const ContextMenuEvent &event) {
+void Renderable::contextMenuEvent(const MouseEvent &event) {
     Q_UNUSED(event);
 }
 

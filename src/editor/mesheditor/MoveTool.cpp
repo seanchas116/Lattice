@@ -32,7 +32,7 @@ MoveTool::MoveTool(const SP<State::AppState> &appState, const SP<Document::MeshO
 }
 
 void MoveTool::mousePressTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
-    if (event.originalEvent->button() != Qt::LeftButton) {
+    if (event.originalMouseEvent->button() != Qt::LeftButton) {
         return;
     }
 
@@ -51,7 +51,7 @@ void MoveTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
     bool alreadySelected = !clickedVertices.empty() && set_includes(oldSelection, clickedVertices);
 
     std::unordered_set<Mesh::VertexHandle> selection;
-    if (event.originalEvent->modifiers() & Qt::ShiftModifier) {
+    if (event.originalMouseEvent->modifiers() & Qt::ShiftModifier) {
         selection = oldSelection;
 
         if (alreadySelected) {
