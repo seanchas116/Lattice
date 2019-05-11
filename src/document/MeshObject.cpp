@@ -37,6 +37,20 @@ void MeshObject::setMaterials(std::vector<Material> materials) {
     emit materialsChanged(_materials);
 }
 
+void MeshObject::setSubdivSettings(SubdivSettings settings) {
+    auto self = *dynamicPointerCast<MeshObject>(sharedFromThis());
+    auto change = makeShared<PropertyChange<MeshObject, SubdivSettings>>(self, std::move(settings), &MeshObject::subdivSettings, &MeshObject::setSubdivSettingsInternal);
+    addChange(change);
+}
+
+void MeshObject::setSubdivSettingsInternal(SubdivSettings settings) {
+    if (_subdivSettings == settings) {
+        return;
+    }
+    _subdivSettings = std::move(settings);
+    emit subdivSettingsChanged(settings);
+}
+
 SP<Object> MeshObject::clone() const {
     auto cloned = makeShared<MeshObject>();
     // FIXME: object name is not copied
