@@ -48,6 +48,7 @@ signals:
 
 private:
     void setMeshInternal(Mesh::Mesh mesh);
+    void setMaterialsInternal(std::vector<Material> materials);
     void setSubdivSettingsInternal(SubdivSettings settings);
 
     std::unique_ptr<Mesh::Mesh> _mesh;

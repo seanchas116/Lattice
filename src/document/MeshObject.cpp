@@ -24,12 +24,18 @@ void MeshObject::setMesh(Mesh::Mesh mesh) {
     addChange(change);
 }
 
+void MeshObject::setMaterials(std::vector<Material> materials) {
+    auto self = *dynamicPointerCast<MeshObject>(sharedFromThis());
+    auto change = makeShared<PropertyChange<MeshObject, std::vector<Material>>>(self, std::move(materials), &MeshObject::materials, &MeshObject::setMaterialsInternal);
+    addChange(change);
+}
+
 void MeshObject::setMeshInternal(Mesh::Mesh mesh) {
     *_mesh = std::move(mesh);
     emit meshChanged(*_mesh);
 }
 
-void MeshObject::setMaterials(std::vector<Material> materials) {
+void MeshObject::setMaterialsInternal(std::vector<Material> materials) {
     if (_materials == materials) {
         return;
     }
