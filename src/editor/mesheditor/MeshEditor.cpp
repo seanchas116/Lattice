@@ -373,6 +373,8 @@ void MeshEditor::updateVAOs() {
     {
         std::vector<Draw::Vertex> facePickAttributes;
         std::vector<GL::IndexBuffer::Triangle> faceTriangles;
+        facePickAttributes.reserve(_facePickVBO->size());
+        faceTriangles.reserve(_faceIBO->size() / 3);
 
         for (auto f : mesh.faces()) {
             auto i0 = uint32_t(facePickAttributes.size());
