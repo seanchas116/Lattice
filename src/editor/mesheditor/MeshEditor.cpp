@@ -305,6 +305,10 @@ void MeshEditor::contextMenuTarget(const Tool::EventTarget &target, const Viewpo
 }
 
 void MeshEditor::updateVAOs() {
+    if (!_isVAOsDirty) {
+        return;
+    }
+
     auto& mesh = *_meshEditState->mesh();
     auto hitTestExclusion = _tool->hitTestExclusion();
 
@@ -394,6 +398,8 @@ void MeshEditor::updateVAOs() {
         _facePickVBO->setVertices(facePickAttributes);
         _faceIBO->setTriangles(faceTriangles);
     }
+
+    _isVAOsDirty = false;
 
     updateChildren();
 }
