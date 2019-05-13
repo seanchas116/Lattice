@@ -30,7 +30,7 @@ public:
     void setMeshEditState(const Opt<SP<State::MeshEditState>>& meshEditState);
 
 private:
-    void setViewValues();
+    void refreshValues();
     void handlePositionValueChange(int index, double value);
     void handleEdgeSmoothChange(bool smooth);
 

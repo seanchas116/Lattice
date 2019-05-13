@@ -34,7 +34,7 @@ private:
         Position, Scale, Rotation,
     };
 
-    void setLocation();
+    void refreshValues();
 
     void handleLocationValueChange(LocationMember member, int index, double value);
 

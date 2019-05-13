@@ -79,11 +79,11 @@ void MeshPropertyView::setMeshEditState(const Opt<SP<State::MeshEditState> > &me
         return;
     }
 
-    _connection = connect(meshEditState->get(), &State::MeshEditState::meshChanged, this, &MeshPropertyView::setViewValues);
-    setViewValues();
+    _connection = connect(meshEditState->get(), &State::MeshEditState::meshChanged, this, &MeshPropertyView::refreshValues);
+    refreshValues();
 }
 
-void MeshPropertyView::setViewValues() {
+void MeshPropertyView::refreshValues() {
     if (!_meshEditState) {
         return;
     }

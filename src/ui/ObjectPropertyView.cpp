@@ -100,13 +100,13 @@ void ObjectPropertyView::setObjects(const std::unordered_set<SP<Document::Object
     _connections.clear();
 
     for (auto& object : objects) {
-        auto c = connect(object.get(), &Document::Object::locationChanged, this, &ObjectPropertyView::setLocation);
+        auto c = connect(object.get(), &Document::Object::locationChanged, this, &ObjectPropertyView::refreshValues);
         _connections.push_back(c);
     }
-    setLocation();
+    refreshValues();
 }
 
-void ObjectPropertyView::setLocation() {
+void ObjectPropertyView::refreshValues() {
     if (_objects.empty()) {
         return;
     }
