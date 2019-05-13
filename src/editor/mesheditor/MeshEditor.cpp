@@ -312,7 +312,13 @@ void MeshEditor::updateVAOs() {
     auto& mesh = *_meshEditState->mesh();
     auto hitTestExclusion = _tool->hitTestExclusion();
 
-    _finalShapeVAOs = MeshVAOGenerator(mesh).generateFaceVAOs();
+    auto& object = _meshEditState->object();
+    MeshVAOGenerator generator(mesh);
+    if (object->subdivSettings().isEnabled) {
+        _finalShapeVAOs = generator.generateSubdivFaceVAOs(object->subdivSettings().segmentCount);
+    } else {
+        _finalShapeVAOs = generator.generateFaceVAOs();
+    }
 
     {
         std::vector<Draw::PointLineVertex> vertexAttributes;

@@ -13,6 +13,7 @@ namespace Document {
 MeshObject::MeshObject() :
     _mesh(std::make_unique<Mesh::Mesh>()),
     _materials({Material()}) {
+    _subdivSettings.isEnabled = true; // test
 }
 
 MeshObject::~MeshObject() {

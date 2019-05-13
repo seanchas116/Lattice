@@ -105,8 +105,11 @@ void MeshRenderer::updateVAOs() {
     }
 
     MeshVAOGenerator generator(_object->mesh());
-    //_faceVAOs = generator.generateFaceVAOs();
-    _faceVAOs = generator.generateSubdivFaceVAOs(4);
+    if (_object->subdivSettings().isEnabled) {
+        _faceVAOs = generator.generateSubdivFaceVAOs(_object->subdivSettings().segmentCount);
+    } else {
+        _faceVAOs = generator.generateFaceVAOs();
+    }
 
     _isVAOsDirty = false;
 }
