@@ -91,8 +91,19 @@ std::unordered_map<uint32_t, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() c
 }
 
 std::unordered_map<uint32_t, SP<GL::VAO> > MeshVAOGenerator::generateSubdivFaceVAOs(int level) const {
-    // create topology refiner
     using namespace OpenSubdiv;
+
+    auto mesh = _mesh.collectGarbage();
+
+    std::vector<glm::vec3> verts = mesh.vertices()
+        | ranges::view::transform([&] (auto v) { return mesh.position(v); })
+        | ranges::to_vector;
+
+    std::vector<int> vertsPerFace = mesh.faces()
+        | ranges::view::transform([&] (auto f) { return int(mesh.vertices(f).size()); })
+        | ranges::to_vector;
+
+    // create topology refiner
 
     Sdc::Options options;
     options.SetVtxBoundaryInterpolation(Sdc::Options::VTX_BOUNDARY_EDGE_ONLY);
