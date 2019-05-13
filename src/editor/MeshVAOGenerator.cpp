@@ -232,8 +232,36 @@ std::unordered_map<uint32_t, SP<GL::VAO> > MeshVAOGenerator::generateSubdivFaceV
     // Create a Far::PtexIndices to help find indices of ptex faces.
     Far::PtexIndices ptexIndices(*refiner);
 
-    // WIP
-    Q_UNUSED(segmentCount);
+    // create mesh grid
+    float pWeights[20], dsWeights[20], dtWeights[20];
+    int faceCount = ptexIndices.GetNumFaces();
+
+    for (int faceIndex = 0; faceIndex < faceCount; ++faceIndex) {
+        for (int tIndex = 0; tIndex <= segmentCount; ++tIndex) {
+            for (int sIndex = 0; sIndex <= segmentCount; ++sIndex) {
+                glm::vec2 st = glm::vec2(sIndex, tIndex) / float(segmentCount);
+
+                // Locate the patch corresponding to the face ptex idx and (s,t)
+                Far::PatchTable::PatchHandle const * handle =
+                    patchmap.FindPatch(faceIndex, st.s, st.t);
+                assert(handle);
+
+                // Evaluate the patch weights, identify the CVs and compute the limit frame:
+                patchTable->EvaluateBasis(*handle, st.s, st.t, pWeights, dsWeights, dtWeights);
+
+                Far::ConstIndexArray cvs = patchTable->GetPatchVertices(*handle);
+
+                LimitFrame dst;
+                dst.Clear();
+                for (int cv=0; cv < cvs.size(); ++cv) {
+                    dst.AddWithWeight(verts[cvs[cv]], pWeights[cv], dsWeights[cv], dtWeights[cv]);
+                }
+
+                // TODO: Add vertex to vertex buffer
+            }
+        }
+    }
+
     return {};
 }
 
