@@ -20,10 +20,8 @@ MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Documen
     _object(object)
 {
     updateVAOs();
-    connect(object.get(), &Document::MeshObject::meshChanged, this, [this] {
-        _isVAOsDirty = true;
-        emit updated();
-    });
+    connect(object.get(), &Document::MeshObject::meshChanged, this, &MeshRenderer::handleMeshUpdated);
+    connect(object.get(), &Document::MeshObject::subdivSettingsChanged, this, &MeshRenderer::handleMeshUpdated);
 }
 
 void MeshRenderer::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
@@ -97,6 +95,11 @@ void MeshRenderer::mouseReleaseEvent(const Viewport::MouseEvent &event) {
 void MeshRenderer::mouseDoubleClickEvent(const Viewport::MouseEvent &event) {
     Q_UNUSED(event);
     _appState->startEditing(_object);
+}
+
+void MeshRenderer::handleMeshUpdated() {
+    _isVAOsDirty = true;
+    emit updated();
 }
 
 void MeshRenderer::updateVAOs() {

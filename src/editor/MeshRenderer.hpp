@@ -43,6 +43,7 @@ public:
     void mouseDoubleClickEvent(const Viewport::MouseEvent &event) override;
 
 private:
+    void handleMeshUpdated();
     void updateVAOs();
 
     SP<State::AppState> _appState;

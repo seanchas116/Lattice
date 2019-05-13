@@ -136,6 +136,7 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::Mesh
     connect(appState.get(), &State::AppState::isScaleHandleVisibleChanged, _manipulator.get(), &Manipulator::Manipulator::setScaleHandleVisible);
 
     connect(meshEditState.get(), &State::MeshEditState::meshChanged, this, &MeshEditor::handleMeshChanged);
+    connect(meshEditState->object().get(), &Document::MeshObject::subdivSettingsChanged, this, &MeshEditor::handleMeshChanged);
 }
 
 void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
