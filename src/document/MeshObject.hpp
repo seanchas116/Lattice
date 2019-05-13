@@ -13,9 +13,10 @@ namespace Document {
 
 struct SubdivSettings {
     bool isEnabled = false;
+    int segmentCount = 4;
 
     bool operator==(const SubdivSettings& other) const {
-        return isEnabled == other.isEnabled;
+        return isEnabled == other.isEnabled && segmentCount == other.segmentCount;
     }
     bool operator!=(const SubdivSettings& other) const {
         return !operator==(other);
