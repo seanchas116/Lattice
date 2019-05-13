@@ -17,9 +17,7 @@ namespace Editor {
 
 MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Document::MeshObject> &object) :
     _appState(appState),
-    _object(object),
-    _edgeVAO(makeShared<GL::VAO>()),
-    _vertexVAO(makeShared<GL::VAO>())
+    _object(object)
 {
     updateVAOs();
     connect(object.get(), &Document::MeshObject::meshChanged, this, [this] {
@@ -107,8 +105,6 @@ void MeshRenderer::updateVAOs() {
     }
 
     MeshVAOGenerator generator(_object->mesh());
-    _vertexVAO = generator.generateVertexVAO();
-    _edgeVAO = generator.generateEdgeVAO();
     //_faceVAOs = generator.generateFaceVAOs();
     _faceVAOs = generator.generateSubdivFaceVAOs(4);
 

@@ -49,8 +49,6 @@ private:
     SP<Document::MeshObject> _object;
 
     std::unordered_map<uint32_t, SP<GL::VAO>> _faceVAOs;
-    SP<GL::VAO> _edgeVAO;
-    SP<GL::VAO> _vertexVAO;
     bool _isVAOsDirty = true;
 
     bool _dragged = false;
