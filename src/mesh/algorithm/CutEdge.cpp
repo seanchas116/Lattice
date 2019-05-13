@@ -11,8 +11,8 @@ VertexHandle CutEdge::perform(Mesh &mesh) const {
 
     auto uv = mesh.addUVPoint(mesh.addVertex(pos), dvec2(0)); // TODO: Use better UV position
 
-    mesh.addEdge(mesh.vertices(edge)[0], mesh.vertex(uv), false);
-    mesh.addEdge(mesh.vertex(uv), mesh.vertices(edge)[1], false);
+    mesh.addEdge(mesh.vertices(edge)[0], mesh.vertex(uv));
+    mesh.addEdge(mesh.vertex(uv), mesh.vertices(edge)[1]);
 
     auto faces = mesh.faces(edge) | ranges::to_vector;
     for (auto& face : faces) {

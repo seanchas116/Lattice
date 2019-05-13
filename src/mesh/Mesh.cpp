@@ -69,7 +69,7 @@ FaceHandle Mesh::addFace(const std::vector<UVPointHandle> &uvPoints, uint32_t ma
     for (size_t i = 0; i < uvPoints.size(); ++i) {
         auto uv0 = uvPoints[i];
         auto uv1 = uvPoints[(i + 1) % uvPoints.size()];
-        faceData.edges.push_back(addEdge(vertex(uv0), vertex(uv1), true));
+        faceData.edges.push_back(addEdge(vertex(uv0), vertex(uv1)));
     }
 
     auto face = FaceHandle(uint32_t(_faces.size()));

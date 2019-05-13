@@ -71,7 +71,8 @@ Mesh MeshData::toMesh() const {
     for (size_t i = 0; i < edgeCount; ++i) {
         auto vertices = edgeVerticesArray[i];
         auto smooth = edgeSmoothArray[i];
-        mesh.addEdge(VertexHandle(vertices[0]), VertexHandle(vertices[1]), smooth);
+        auto edge = mesh.addEdge(VertexHandle(vertices[0]), VertexHandle(vertices[1]));
+        mesh.setSmooth(edge, smooth);
     }
 
     auto faceCount = faceVertexCountArray.size();
