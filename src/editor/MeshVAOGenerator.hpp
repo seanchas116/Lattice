@@ -22,7 +22,7 @@ public:
     SP<GL::VAO> generateVertexVAO() const;
     SP<GL::VAO> generateEdgeVAO() const;
     std::unordered_map<uint32_t, SP<GL::VAO>> generateFaceVAOs() const;
-    std::unordered_map<uint32_t, SP<GL::VAO>> generateSubdivFaceVAOs(int level) const;
+    std::unordered_map<uint32_t, SP<GL::VAO>> generateSubdivFaceVAOs(int segmentCount) const;
 
 private:
     const Mesh::Mesh& _mesh;

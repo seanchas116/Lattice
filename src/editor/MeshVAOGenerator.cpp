@@ -92,7 +92,7 @@ std::unordered_map<uint32_t, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() c
     return vaos;
 }
 
-std::unordered_map<uint32_t, SP<GL::VAO> > MeshVAOGenerator::generateSubdivFaceVAOs(int level) const {
+std::unordered_map<uint32_t, SP<GL::VAO> > MeshVAOGenerator::generateSubdivFaceVAOs(int segmentCount) const {
     using namespace OpenSubdiv;
 
     struct Vertex {
@@ -233,7 +233,7 @@ std::unordered_map<uint32_t, SP<GL::VAO> > MeshVAOGenerator::generateSubdivFaceV
     Far::PtexIndices ptexIndices(*refiner);
 
     // WIP
-    Q_UNUSED(level);
+    Q_UNUSED(segmentCount);
     return {};
 }
 
