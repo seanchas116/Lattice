@@ -2,6 +2,7 @@
 #include "../state/AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/Object.hpp"
+#include "../document/MeshObject.hpp"
 #include "../document/History.hpp"
 #include "../support/Debug.hpp"
 #include "../support/OptionalGuard.hpp"
@@ -70,6 +71,7 @@ ObjectPropertyView::ObjectPropertyView(const SP<State::AppState> &appState, QWid
     auto subdivLayout = new QFormLayout();
 
     _subdivEnabledCheckbox = new QCheckBox(tr("Subdivision Surface"));
+    _subdivEnabledCheckbox->setTristate(true);
     subdivLayout->addRow(_subdivEnabledCheckbox);
 
     _subdivSegmentCountSpinbox = new Widget::SpinBox();
@@ -140,6 +142,34 @@ void ObjectPropertyView::refreshValues() {
         _positionSpinBoxes[i]->setValue(isPositionSame[i] ? location.position[i] : specialValue);
         _scaleSpinBoxes[i]->setValue(isScaleSame[i] ? location.scale[i] : specialValue);
         _rotationSpinBoxes[i]->setValue(isRotationSame[i] ? glm::degrees(eulerAngles[i]) : specialValue);
+    }
+
+    std::vector<SP<Document::MeshObject>> meshObjects;
+    for (auto& object : _objects) {
+        if (auto meshObject = dynamicPointerCast<Document::MeshObject>(object); meshObject) {
+            meshObjects.push_back(*meshObject);
+        }
+    }
+
+    if (!meshObjects.empty()) {
+        _subdivEnabledCheckbox->setVisible(true);
+
+        bool isSubdivEnabledSame = true;
+        bool isSubdivEnabled = meshObjects[0]->subdivSettings().isEnabled;
+        for (size_t i = 1; i < meshObjects.size(); ++i) {
+            if (isSubdivEnabled != meshObjects[i]->subdivSettings().isEnabled) {
+                isSubdivEnabledSame = false;
+                break;
+            }
+        }
+
+        if (isSubdivEnabledSame) {
+            _subdivEnabledCheckbox->setCheckState(isSubdivEnabled ? Qt::Checked : Qt::Unchecked);
+        } else {
+            _subdivEnabledCheckbox->setCheckState(Qt::PartiallyChecked);
+        }
+    } else {
+        _subdivEnabledCheckbox->setVisible(false);
     }
 }
 
