@@ -95,10 +95,13 @@ std::unordered_map<uint32_t, SP<GL::VAO> > MeshVAOGenerator::generateSubdivFaceV
 
     auto mesh = _mesh.collectGarbage();
 
-    std::vector<glm::vec3> verts;
-    verts.reserve(mesh.vertexCount());
+    std::vector<float> verts;
+    verts.reserve(mesh.vertexCount() * 3);
     for (auto v : mesh.vertices()) {
-        verts.push_back(mesh.position(v));
+        auto pos = mesh.position(v);
+        verts.push_back(pos.x);
+        verts.push_back(pos.y);
+        verts.push_back(pos.z);
     }
 
     std::vector<int> vertsPerFace;
@@ -133,15 +136,13 @@ std::unordered_map<uint32_t, SP<GL::VAO> > MeshVAOGenerator::generateSubdivFaceV
     options.SetVtxBoundaryInterpolation(Sdc::Options::VTX_BOUNDARY_EDGE_ONLY);
 
     Far::TopologyDescriptor desc;
-    /*
-    desc.numVertices = g_nverts;
-    desc.numFaces = g_nfaces;
-    desc.numVertsPerFace = g_vertsperface;
-    desc.vertIndicesPerFace = g_faceverts;
-    desc.numCreases = g_ncreases;
-    desc.creaseVertexIndexPairs = g_creaseverts;
-    desc.creaseWeights = g_creaseweights;
-    */
+    desc.numVertices = int(mesh.vertexCount());
+    desc.numFaces = int(mesh.faceCount());
+    desc.numVertsPerFace = vertsPerFace.data();
+    desc.vertIndicesPerFace = faceVerts.data();
+    desc.numCreases = int(mesh.edgeCount());
+    desc.creaseVertexIndexPairs = creaseVerts.data();
+    desc.creaseWeights = creaseWeights.data();
 
     // Instantiate a FarTopologyRefiner from the descriptor.
     auto refiner = Far::TopologyRefinerFactory<Far::TopologyDescriptor>::Create(
