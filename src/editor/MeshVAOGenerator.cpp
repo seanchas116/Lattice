@@ -90,5 +90,10 @@ std::unordered_map<uint32_t, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() c
     return vaos;
 }
 
+std::unordered_map<uint32_t, SP<GL::VAO> > MeshVAOGenerator::generateSubdivFaceVAOs(int level) const {
+    // WIP
+    return {};
+}
+
 } // namespace Viewport
 } // namespace Lattice
