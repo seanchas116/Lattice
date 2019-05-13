@@ -22,7 +22,6 @@ RotateHandle::RotateHandle(int axis) :
     _handleMesh(createMesh()),
     _handleVAO(MeshVAOGenerator(*_handleMesh).generateEdgeVAO())
 {
-    initializeOpenGLFunctions();
 }
 
 void RotateHandle::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
@@ -31,11 +30,9 @@ void RotateHandle::draw(const SP<Draw::Operations> &operations, const SP<Camera>
         return;
     }
 
-    glClearDepthf(Constants::fixedDepth);
-    glClear(GL_DEPTH_BUFFER_BIT);
+    operations->clear.clearDepth(Constants::fixedDepth);
     operations->drawLine.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, Constants::colors[_axis]);
-    glClearDepthf(1);
-    glClear(GL_DEPTH_BUFFER_BIT);
+    operations->clear.clearDepth(1);
 }
 
 void RotateHandle::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
@@ -44,11 +41,9 @@ void RotateHandle::drawHitArea(const SP<Draw::Operations> &operations, const SP<
         return;
     }
 
-    glClearDepthf(Constants::fixedDepth);
-    glClear(GL_DEPTH_BUFFER_BIT);
+    operations->clear.clearDepth(Constants::fixedDepth);
     operations->drawLine.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, toIDColor());
-    glClearDepthf(1);
-    glClear(GL_DEPTH_BUFFER_BIT);
+    operations->clear.clearDepth(1);
 }
 
 void RotateHandle::mousePressEvent(const Viewport::MouseEvent &event) {

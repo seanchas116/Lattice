@@ -23,7 +23,7 @@ namespace Viewport {
 
 class Renderable;
 
-class HitAreaMap final : protected QOpenGLExtraFunctions, protected GL::ContextRecallable {
+class HitAreaMap final : protected GL::ContextRecallable {
     Q_DISABLE_COPY(HitAreaMap)
 public:
     HitAreaMap();

@@ -35,7 +35,7 @@ class MeshManipulator;
 
 namespace MeshEditor {
 
-class MeshEditor final : public Viewport::Renderable, protected QOpenGLExtraFunctions {
+class MeshEditor final : public Viewport::Renderable {
     Q_OBJECT
 public:
     MeshEditor(const SP<State::AppState>& appState, const SP<State::MeshEditState>& meshEditState);

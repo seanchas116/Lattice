@@ -16,17 +16,14 @@ void Background::draw(const SP<Draw::Operations> &operations, const SP<Camera> &
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    glClearDepthf(1.f);
-    glClearColor(0.8f, 0.8f, 0.8f, 1);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    operations->clear.clear(glm::vec4(0.8, 0.8, 0.8, 1), 1);
 }
 
 void Background::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     Q_UNUSED(operations); Q_UNUSED(camera);
 
     auto color = toIDColor();
-    glClearColor(color.r, color.g, color.b, color.a);
-    glClear(GL_COLOR_BUFFER_BIT);
+    operations->clear.clear(color, 1);
 }
 
 void Background::mousePressEvent(const Viewport::MouseEvent &event) {

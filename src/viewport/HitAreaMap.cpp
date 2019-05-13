@@ -14,7 +14,6 @@ namespace Viewport {
 
 HitAreaMap::HitAreaMap() : _framebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))),
                            _additionalInfoFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))) {
-    initializeOpenGLFunctions();
 }
 
 void HitAreaMap::resize(glm::ivec2 size) {
@@ -53,19 +52,13 @@ void HitAreaMap::draw(const SP<Renderable> &renderable, const SP<Draw::Operation
 
     {
         GL::Binder binder(*_framebuffer);
-        glClearColor(0, 0, 0, 0);
-        glClearDepthf(1.f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+        operations->clear.clear(glm::vec4(0), 1);
         renderable->drawHitAreaRecursive(operations, camera);
     }
 
     {
         GL::Binder binder(*_additionalInfoFramebuffer);
-        glClearColor(0, 0, 0, 0);
-        glClearDepthf(1.f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+        operations->clear.clear(glm::vec4(0), 1);
         renderable->drawHitUserColorRecursive(operations, camera);
     }
 

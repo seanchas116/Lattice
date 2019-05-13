@@ -10,7 +10,8 @@ class Clear final : protected QOpenGLExtraFunctions {
 public:
     Clear();
 
-    void draw(glm::vec4 color, float depth);
+    void clear(glm::vec4 color, float depth);
+    void clearDepth(float depth);
 };
 
 } // namespace Draw

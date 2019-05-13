@@ -15,7 +15,7 @@ namespace Editor {
 class MeshPicker;
 namespace Manipulator {
 
-class RotateHandle : public Viewport::Renderable, protected QOpenGLExtraFunctions {
+class RotateHandle : public Viewport::Renderable {
     Q_OBJECT
 public:
     RotateHandle(int axis);

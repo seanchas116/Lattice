@@ -118,7 +118,6 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::Mesh
 
     _tool(makeShared<MoveTool>(appState, meshEditState->object(), meshEditState->mesh()))
 {
-    initializeOpenGLFunctions();
     updateVAOs();
 
     connect(appState.get(), &State::AppState::toolChanged, this, &MeshEditor::handleToolChange);
@@ -158,12 +157,10 @@ void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &
 }
 
 void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
-    Q_UNUSED(operations);
-    Q_UNUSED(camera);
+    updateVAOs();
+
     auto idColor = toIDColor();
-    glClearColor(idColor.r, idColor.g, idColor.b, idColor.a);
-    glClearDepthf(1);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    operations->clear.clear(idColor, 1);
 
     auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
 
@@ -182,9 +179,7 @@ void MeshEditor::drawHitUserColor(const SP<Draw::Operations> &operations, const 
     updateVAOs();
 
     auto background = EventTargetValue().hitUserColor();
-    glClearColor(background.r, background.g, background.b, background.a);
-    glClearDepthf(1);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    operations->clear.clear(background, 1);
 
     auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
 
