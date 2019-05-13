@@ -236,6 +236,8 @@ std::unordered_map<uint32_t, SP<GL::VAO> > MeshVAOGenerator::generateSubdivFaceV
     float pWeights[20], dsWeights[20], dtWeights[20];
     int faceCount = ptexIndices.GetNumFaces();
 
+    std::vector<Draw::Vertex> vertexAttributes;
+
     for (int faceIndex = 0; faceIndex < faceCount; ++faceIndex) {
         for (int tIndex = 0; tIndex <= segmentCount; ++tIndex) {
             for (int sIndex = 0; sIndex <= segmentCount; ++sIndex) {
@@ -257,12 +259,38 @@ std::unordered_map<uint32_t, SP<GL::VAO> > MeshVAOGenerator::generateSubdivFaceV
                     dst.AddWithWeight(verts[cvs[cv]], pWeights[cv], dsWeights[cv], dtWeights[cv]);
                 }
 
-                // TODO: Add vertex to vertex buffer
+                Draw::Vertex attrib;
+                attrib.position = dst.point;
+                attrib.normal = glm::normalize(glm::cross(dst.deriv1, dst.deriv2));
+                // TODO: texcoord
+
+                vertexAttributes.push_back(attrib);
             }
         }
     }
 
-    return {};
+    std::vector<GL::IndexBuffer::Triangle> triangles;
+    int indexStride = segmentCount + 1;
+    for (int faceIndex = 0; faceIndex < faceCount; ++faceIndex) {
+        for (int tIndex = 0; tIndex < segmentCount; ++tIndex) {
+            for (int sIndex = 0; sIndex < segmentCount; ++sIndex) {
+                uint32_t i00 = faceIndex * indexStride * indexStride + tIndex * indexStride + sIndex;
+                uint32_t i01 = i00 + 1;
+                uint32_t i10 = i00 + indexStride;
+                uint32_t i11 = i10 + 1;
+                triangles.push_back({i00, i01, i11});
+                triangles.push_back({i00, i11, i10});
+            }
+        }
+    }
+
+    auto vbo = makeShared<GL::VertexBuffer<Draw::Vertex>>();
+    vbo->setVertices(vertexAttributes);
+    auto ibo = makeShared<GL::IndexBuffer>();
+    ibo->setTriangles(triangles);
+    auto vao = makeShared<GL::VAO>(vbo, ibo);
+
+    return {{0, vao}}; // TODO: support multiple materials
 }
 
 } // namespace Viewport
