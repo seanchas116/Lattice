@@ -5,6 +5,7 @@
 #include "../document/History.hpp"
 #include "../support/Debug.hpp"
 #include "../support/OptionalGuard.hpp"
+#include "../widget/SpinBox.hpp"
 #include "../widget/DoubleSpinBox.hpp"
 #include <QDoubleSpinBox>
 #include <QVBoxLayout>
@@ -68,12 +69,12 @@ ObjectPropertyView::ObjectPropertyView(const SP<State::AppState> &appState, QWid
 
     auto subdivLayout = new QFormLayout();
 
-    auto subdivEnabledCheckbox = new QCheckBox(tr("Subdivision Surface"));
-    subdivLayout->addRow(subdivEnabledCheckbox);
+    _subdivEnabledCheckbox = new QCheckBox(tr("Subdivision Surface"));
+    subdivLayout->addRow(_subdivEnabledCheckbox);
 
-    auto subdivSegmentCountSpinbox = new QSpinBox();
-    subdivSegmentCountSpinbox->setRange(1, 8);
-    subdivLayout->addRow(tr("Segment Count"), subdivSegmentCountSpinbox);
+    _subdivSegmentCountSpinbox = new Widget::SpinBox();
+    _subdivSegmentCountSpinbox->setRange(1, 8);
+    subdivLayout->addRow(tr("Segment Count"), _subdivSegmentCountSpinbox);
 
     layout->addLayout(subdivLayout);
 

@@ -5,6 +5,8 @@
 #include <array>
 #include <unordered_set>
 
+class QCheckBox;
+
 namespace Lattice {
 
 namespace State {
@@ -12,6 +14,7 @@ class AppState;
 }
 
 namespace Widget {
+class SpinBox;
 class DoubleSpinBox;
 }
 
@@ -46,6 +49,9 @@ private:
     std::array<Widget::DoubleSpinBox*, 3> _positionSpinBoxes;
     std::array<Widget::DoubleSpinBox*, 3> _scaleSpinBoxes;
     std::array<Widget::DoubleSpinBox*, 3> _rotationSpinBoxes;
+
+    QCheckBox* _subdivEnabledCheckbox = nullptr;
+    Widget::SpinBox* _subdivSegmentCountSpinbox = nullptr;
 };
 
 }
