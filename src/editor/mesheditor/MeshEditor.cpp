@@ -164,6 +164,18 @@ void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const SP<Ca
     glClearColor(idColor.r, idColor.g, idColor.b, idColor.a);
     glClearDepthf(1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
+
+    if (_appState->isFaceSelectable()) {
+        operations->drawUnicolor.draw(_facePickVAO, matrixToWorld, camera, idColor, false);
+    }
+    if (_appState->isEdgeSelectable()) {
+        operations->drawLine.draw(_edgePickVAO, matrixToWorld, camera, 12.0, idColor, false);
+    }
+    if (_appState->isVertexSelectable()) {
+        operations->drawCircle.draw(_vertexPickVAO, matrixToWorld, camera, 24.0, idColor, false);
+    }
 }
 
 void MeshEditor::drawHitUserColor(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
