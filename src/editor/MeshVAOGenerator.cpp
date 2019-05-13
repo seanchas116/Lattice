@@ -5,8 +5,10 @@
 #include "../gl/VertexBuffer.hpp"
 
 #include <opensubdiv/far/topologyDescriptor.h>
-#include <opensubdiv/far/stencilTable.h>
-#include <opensubdiv/far/stencilTableFactory.h>
+#include <opensubdiv/far/primvarRefiner.h>
+#include <opensubdiv/far/patchTableFactory.h>
+#include <opensubdiv/far/patchMap.h>
+#include <opensubdiv/far/ptexIndices.h>
 
 using namespace glm;
 
@@ -93,15 +95,29 @@ std::unordered_map<uint32_t, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() c
 std::unordered_map<uint32_t, SP<GL::VAO> > MeshVAOGenerator::generateSubdivFaceVAOs(int level) const {
     using namespace OpenSubdiv;
 
+    struct Vertex {
+        // Minimal required interface ----------------------
+        Vertex() {}
+        Vertex(glm::vec3 point) : point(point) {}
+
+        void Clear( void * =0 ) {
+            point = glm::vec3();
+        }
+
+        void AddWithWeight(Vertex const & src, float weight) {
+            point += weight * src.point;
+        }
+
+        glm::vec3 point;
+    };
+
     auto mesh = _mesh.collectGarbage();
 
-    std::vector<float> verts;
-    verts.reserve(mesh.vertexCount() * 3);
+    std::vector<glm::vec3> origVerts;
+    origVerts.reserve(mesh.vertexCount());
     for (auto v : mesh.vertices()) {
         auto pos = mesh.position(v);
-        verts.push_back(pos.x);
-        verts.push_back(pos.y);
-        verts.push_back(pos.z);
+        origVerts.push_back(pos);
     }
 
     std::vector<int> vertsPerFace;
@@ -152,7 +168,51 @@ std::unordered_map<uint32_t, SP<GL::VAO> > MeshVAOGenerator::generateSubdivFaceV
         )
     );
 
-    Q_UNUSED(refiner);
+    // Adaptively refine the topology with an isolation level capped at 3
+    // because the sharpest crease in the shape is 3.0f (in g_creaseweights[])
+    int maxIsolation = 3;
+    refiner->RefineAdaptive(
+        Far::TopologyRefiner::AdaptiveOptions(maxIsolation));
+
+    // Generate a set of Far::PatchTable that we will use to evaluate the
+    // surface limit
+    Far::PatchTableFactory::Options patchOptions;
+    patchOptions.endCapType =
+        Far::PatchTableFactory::Options::ENDCAP_GREGORY_BASIS;
+
+    Far::PatchTable const * patchTable =
+        Far::PatchTableFactory::Create(*refiner, patchOptions);
+
+    // Compute the total number of points we need to evaluate patchtable.
+    // we use local points around extraordinary features.
+    int nRefinerVertices = refiner->GetNumVerticesTotal();
+    int nLocalPoints = patchTable->GetNumLocalPoints();
+
+    // Create a buffer to hold the position of the refined verts and
+    // local points, then copy the coarse positions at the beginning.
+    std::vector<Vertex> verts(nRefinerVertices + nLocalPoints);
+    ranges::copy(origVerts, verts.begin());
+
+    // Adaptive refinement may result in fewer levels than maxIsolation.
+    int nRefinedLevels = refiner->GetNumLevels();
+
+    // Interpolate vertex primvar data : they are the control vertices
+    // of the limit patches (see far_tutorial_0 for details)
+    Vertex* src = &verts[0];
+    for (int level = 1; level < nRefinedLevels; ++level) {
+        Vertex* dst = src + refiner->GetLevel(level-1).GetNumVertices();
+        Far::PrimvarRefiner(*refiner).Interpolate(level, src, dst);
+        src = dst;
+    }
+
+    // Evaluate local points from interpolated vertex primvars.
+    patchTable->ComputeLocalPointValues(&verts[0], &verts[nRefinerVertices]);
+
+    // Create a Far::PatchMap to help locating patches in the table
+    Far::PatchMap patchmap(*patchTable);
+
+    // Create a Far::PtexIndices to help find indices of ptex faces.
+    Far::PtexIndices ptexIndices(*refiner);
 
     // WIP
     Q_UNUSED(level);
