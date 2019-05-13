@@ -10,7 +10,9 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QGridLayout>
+#include <QFormLayout>
 #include <QLabel>
+#include <QCheckBox>
 #include <QtDebug>
 
 namespace Lattice {
@@ -64,6 +66,18 @@ ObjectPropertyView::ObjectPropertyView(const SP<State::AppState> &appState, QWid
     _scaleSpinBoxes = buildVec3SpinBoxes(LocationMember::Scale, "Scale", 3);
 
     layout->addLayout(gridLayout);
+
+    auto subdivLayout = new QFormLayout();
+
+    auto subdivEnabledCheckbox = new QCheckBox(tr("Subdivision Surface"));
+    subdivLayout->addRow(subdivEnabledCheckbox);
+
+    auto subdivSegmentCountSpinbox = new QSpinBox();
+    subdivSegmentCountSpinbox->setRange(1, 8);
+    subdivLayout->addRow(tr("Segment Count"), subdivSegmentCountSpinbox);
+
+    layout->addLayout(subdivLayout);
+
     layout->addStretch();
 
     setLayout(layout);
