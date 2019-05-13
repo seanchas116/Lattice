@@ -114,6 +114,19 @@ std::unordered_map<uint32_t, SP<GL::VAO> > MeshVAOGenerator::generateSubdivFaceV
         }
     }
 
+    std::vector<int> creaseVerts;
+    creaseVerts.reserve(mesh.edgeCount() * 2);
+    for (auto e : mesh.edges()) {
+        creaseVerts.push_back(int(mesh.vertices(e)[0].index));
+        creaseVerts.push_back(int(mesh.vertices(e)[1].index));
+    }
+
+    std::vector<float> creaseWeights;
+    creaseWeights.reserve(mesh.edgeCount());
+    for (auto e : mesh.edges()) {
+        creaseWeights.push_back(mesh.crease(e));
+    }
+
     // create topology refiner
 
     Sdc::Options options;
