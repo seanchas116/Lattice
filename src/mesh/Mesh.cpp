@@ -21,7 +21,7 @@ UVPointHandle Mesh::addUVPoint(VertexHandle v, glm::vec2 position) {
     return uvPoint;
 }
 
-EdgeHandle Mesh::addEdge(VertexHandle v0, VertexHandle v1, bool isSmooth) {
+EdgeHandle Mesh::addEdge(VertexHandle v0, VertexHandle v1) {
     // check if edge already exists
     for (auto edge : edges(v0)) {
         auto edgeVertices = vertices(edge);
@@ -32,7 +32,6 @@ EdgeHandle Mesh::addEdge(VertexHandle v0, VertexHandle v1, bool isSmooth) {
     }
 
     EdgeData edgeData;
-    edgeData.isSmooth = isSmooth;
     edgeData.vertices = {v0, v1};
     auto edge = EdgeHandle(uint32_t(_edges.size()));
     _edges.push_back(edgeData);

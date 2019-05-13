@@ -14,6 +14,7 @@ namespace Mesh {
 struct VertexData {
     bool isDeleted = false;
     bool isSelected = false;
+    float corner = 0;
     glm::vec3 position = glm::vec3(0);
     std::vector<UVPointHandle> uvPoints;
     std::vector<EdgeHandle> edges;
@@ -29,6 +30,7 @@ struct UVPointData {
 struct EdgeData {
     bool isDeleted = false;
     bool isSmooth = true;
+    float crease = 0;
     std::array<VertexHandle, 2> vertices;
     std::vector<FaceHandle> faces;
 };
@@ -62,7 +64,7 @@ class Mesh {
 public:
     VertexHandle addVertex(glm::vec3 position);
     UVPointHandle addUVPoint(VertexHandle v, glm::vec2 position);
-    EdgeHandle addEdge(VertexHandle v0, VertexHandle v1, bool isSmooth);
+    EdgeHandle addEdge(VertexHandle v0, VertexHandle v1);
     FaceHandle addFace(const std::vector<UVPointHandle>& uvPoints, uint32_t material);
 
     void removeVertex(VertexHandle v);
@@ -138,6 +140,9 @@ public:
     bool isSelected(VertexHandle v) const { return vertexData(v).isSelected; }
     void setSelected(VertexHandle v, bool selected) { vertexData(v).isSelected = selected; }
 
+    float corner(VertexHandle v) const { return vertexData(v).corner; }
+    void setCorner(VertexHandle v, float corner) { vertexData(v).corner = corner; }
+
     glm::vec3 position(VertexHandle v) const { return vertexData(v).position; }
     void setPosition(VertexHandle v, glm::vec3 pos) { vertexData(v).position = pos; }
 
@@ -152,6 +157,9 @@ public:
 
     bool isSmooth(EdgeHandle edge) const { return edgeData(edge).isSmooth; }
     void setSmooth(EdgeHandle edge, bool smooth) { edgeData(edge).isSmooth = smooth; }
+
+    float crease(EdgeHandle edge) const { return edgeData(edge).crease; }
+    void setCrease(EdgeHandle edge, float crease) { edgeData(edge).crease = crease; }
 
     uint32_t material(FaceHandle face) const { return faceData(face).material; }
     void setMaterial(FaceHandle face, uint32_t material) { faceData(face).material = material; }
