@@ -100,8 +100,8 @@ std::unordered_map<uint32_t, SP<GL::VAO> > MeshVAOGenerator::generateSubdivFaceV
         Vertex() {}
         Vertex(glm::vec3 point) : point(point) {}
 
-        void Clear( void * =0 ) {
-            point = glm::vec3();
+        void Clear(void* = nullptr) {
+            point = glm::vec3(0);
         }
 
         void AddWithWeight(Vertex const & src, float weight) {
@@ -109,6 +109,24 @@ std::unordered_map<uint32_t, SP<GL::VAO> > MeshVAOGenerator::generateSubdivFaceV
         }
 
         glm::vec3 point;
+    };
+
+    struct LimitFrame {
+        void Clear(void* = nullptr) {
+            point = deriv1 = deriv2 = glm::vec3(0);
+        }
+
+        void AddWithWeight(Vertex const & src,
+                           float weight, float d1Weight, float d2Weight) {
+
+            point += weight * src.point;
+            deriv1 += d1Weight * src.point;
+            deriv2 += d2Weight * src.point;
+        }
+
+        glm::vec3 point;
+        glm::vec3 deriv1;
+        glm::vec3 deriv2;
     };
 
     auto mesh = _mesh.collectGarbage();
