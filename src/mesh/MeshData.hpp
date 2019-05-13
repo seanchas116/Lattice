@@ -11,11 +11,13 @@ class Mesh;
 struct MeshData {
     std::vector<glm::vec3> vertexPositionArray;
     std::vector<uint8_t> vertexSelectedArray;
+    std::vector<float> vertexCornerArray;
 
     std::vector<glm::vec2> uvPositionArray;
     std::vector<uint32_t> uvVertexArray;
 
     std::vector<uint8_t> edgeSmoothArray;
+    std::vector<float> edgeCreaseArray;
     std::vector<std::array<uint32_t, 2>> edgeVerticesArray;
 
     std::vector<uint32_t> faceMaterialArray;

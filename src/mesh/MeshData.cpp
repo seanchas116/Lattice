@@ -29,6 +29,7 @@ MeshData::MeshData(const Mesh &origMesh) {
     for (auto v : mesh.vertices()) {
         vertexPositionArray.push_back(mesh.position(v));
         vertexSelectedArray.push_back(mesh.isSelected(v));
+        vertexCornerArray.push_back(mesh.corner(v));
     }
     for (auto uv : mesh.uvPoints()) {
         uvPositionArray.push_back(mesh.uvPosition(uv));
@@ -38,6 +39,7 @@ MeshData::MeshData(const Mesh &origMesh) {
         auto& vertices = mesh.vertices(e);
         edgeVerticesArray.push_back({vertices[0].index, vertices[1].index});
         edgeSmoothArray.push_back(mesh.isSmooth(e));
+        edgeCreaseArray.push_back(mesh.crease(e));
     }
     for (auto f : mesh.faces()) {
         auto& uvPoints = mesh.uvPoints(f);
@@ -54,11 +56,9 @@ Mesh MeshData::toMesh() const {
 
     auto vertexCount = vertexPositionArray.size();
     for (size_t i = 0; i < vertexCount; ++i) {
-        auto pos = vertexPositionArray[i];
-        auto selected = vertexSelectedArray[i];
-
-        auto v = mesh.addVertex(pos);
-        mesh.setSelected(v, selected);
+        auto v = mesh.addVertex(vertexPositionArray[i]);
+        mesh.setSelected(v, vertexSelectedArray[i]);
+        mesh.setCorner(v, vertexCornerArray[i]);
     }
 
     auto uvPointCount = uvPositionArray.size();
@@ -70,9 +70,9 @@ Mesh MeshData::toMesh() const {
     auto edgeCount = edgeVerticesArray.size();
     for (size_t i = 0; i < edgeCount; ++i) {
         auto vertices = edgeVerticesArray[i];
-        auto smooth = edgeSmoothArray[i];
         auto edge = mesh.addEdge(VertexHandle(vertices[0]), VertexHandle(vertices[1]));
-        mesh.setSmooth(edge, smooth);
+        mesh.setSmooth(edge, edgeSmoothArray[i]);
+        mesh.setCrease(edge, edgeCreaseArray[i]);
     }
 
     auto faceCount = faceVertexCountArray.size();
@@ -96,12 +96,14 @@ Mesh MeshData::toMesh() const {
 void to_json(nlohmann::json &json, const MeshData &meshData) {
     json["vertex"]["position"] = toDataString(meshData.vertexPositionArray);
     json["vertex"]["selected"] = toDataString(meshData.vertexSelectedArray);
+    json["vertex"]["corner"] = toDataString(meshData.vertexCornerArray);
 
     json["uvPoint"]["position"] = toDataString(meshData.uvPositionArray);
     json["uvPoint"]["vertex"] = toDataString(meshData.uvVertexArray);
 
     json["edge"]["smooth"] = toDataString(meshData.edgeSmoothArray);
     json["edge"]["vertices"] = toDataString(meshData.edgeVerticesArray);
+    json["edge"]["crease"] = toDataString(meshData.edgeCreaseArray);
 
     json["face"]["material"] = toDataString(meshData.faceMaterialArray);
     json["face"]["vertexCount"] = toDataString(meshData.faceVertexCountArray);
@@ -111,11 +113,13 @@ void to_json(nlohmann::json &json, const MeshData &meshData) {
 void from_json(const nlohmann::json &json, MeshData &meshData) {
     meshData.vertexPositionArray = fromDataString<glm::vec3>(json["vertex"]["position"]);
     meshData.vertexSelectedArray = fromDataString<uint8_t>(json["vertex"]["selected"]);
+    meshData.vertexCornerArray = fromDataString<float>(json["vertex"]["corner"]);
 
     meshData.uvPositionArray = fromDataString<glm::vec2>(json["uvPoint"]["position"]);
     meshData.uvVertexArray = fromDataString<uint32_t>(json["uvPoint"]["vertex"]);
 
     meshData.edgeSmoothArray = fromDataString<uint8_t>(json["edge"]["smooth"]);
+    meshData.edgeCreaseArray = fromDataString<float>(json["edge"]["crease"]);
     meshData.edgeVerticesArray = fromDataString<std::array<uint32_t, 2>>(json["edge"]["vertices"]);
 
     meshData.faceMaterialArray = fromDataString<uint32_t>(json["face"]["material"]);
