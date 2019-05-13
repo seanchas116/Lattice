@@ -95,17 +95,24 @@ std::unordered_map<uint32_t, SP<GL::VAO> > MeshVAOGenerator::generateSubdivFaceV
 
     auto mesh = _mesh.collectGarbage();
 
-    std::vector<glm::vec3> verts = mesh.vertices()
-        | ranges::view::transform([&] (auto v) { return mesh.position(v); })
-        | ranges::to_vector;
+    std::vector<glm::vec3> verts;
+    verts.reserve(mesh.vertexCount());
+    for (auto v : mesh.vertices()) {
+        verts.push_back(mesh.position(v));
+    }
 
-    std::vector<int> vertsPerFace = mesh.faces()
-        | ranges::view::transform([&] (auto f) { return int(mesh.vertices(f).size()); })
-        | ranges::to_vector;
+    std::vector<int> vertsPerFace;
+    vertsPerFace.reserve(mesh.faceCount());
+    for (auto f : mesh.faces()) {
+        vertsPerFace.push_back(int(mesh.vertices(f).size()));
+    }
 
-    std::vector<int> faceVerts = mesh.faces()
-        | ranges::view::transform([&] (auto f) { return mesh.vertices(f) | ranges::view::transform([](auto v) { return int(v.index); }); })
-        | ranges::action::join;
+    std::vector<int> faceVerts;
+    for (auto f : mesh.faces()) {
+        for (auto v : mesh.vertices(f)) {
+            faceVerts.push_back(int(v.index));
+        }
+    }
 
     // create topology refiner
 
