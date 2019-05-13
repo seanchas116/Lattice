@@ -9,9 +9,6 @@ class DoubleSpinBox : public QDoubleSpinBox {
 public:
     explicit DoubleSpinBox(QWidget *parent = nullptr);
     void stepBy(int steps) override;
-
-signals:
-    void stepped();
 };
 
 } // namespace Widget

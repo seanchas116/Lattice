@@ -56,7 +56,6 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
                 this->handlePositionValueChange(i, spinBox->value());
             };
             connect(spinBox, &Widget::DoubleSpinBox::editingFinished, this, handleValueChange);
-            connect(spinBox, &Widget::DoubleSpinBox::stepped, this, handleValueChange);
         }
 
         layout->addLayout(gridLayout);

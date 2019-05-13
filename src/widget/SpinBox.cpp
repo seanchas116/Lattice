@@ -8,7 +8,7 @@ SpinBox::SpinBox(QWidget *parent) : QSpinBox(parent) {
 
 void SpinBox::stepBy(int steps) {
     QSpinBox::stepBy(steps);
-    emit stepped();
+    emit editingFinished();
 }
 
 } // namespace Widget

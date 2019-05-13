@@ -55,7 +55,6 @@ ObjectPropertyView::ObjectPropertyView(const SP<State::AppState> &appState, QWid
                 this->handleLocationValueChange(member, i, spinBox->value());
             };
             connect(spinBox, &Widget::DoubleSpinBox::editingFinished, this, handleValueChange);
-            connect(spinBox, &Widget::DoubleSpinBox::stepped, this, handleValueChange);
         }
 
         return spinBoxes;
