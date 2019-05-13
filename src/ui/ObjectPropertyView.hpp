@@ -40,6 +40,7 @@ private:
     void refreshValues();
 
     void handleLocationValueChange(LocationMember member, int index, double value);
+    void handleSubdivEnabledChange(bool enabled);
 
     SP<State::AppState> _appState;
 

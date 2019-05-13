@@ -72,6 +72,7 @@ ObjectPropertyView::ObjectPropertyView(const SP<State::AppState> &appState, QWid
 
     _subdivEnabledCheckbox = new QCheckBox(tr("Subdivision Surface"));
     _subdivEnabledCheckbox->setTristate(true);
+    connect(_subdivEnabledCheckbox, &QCheckBox::toggled, this, &ObjectPropertyView::handleSubdivEnabledChange);
     subdivLayout->addRow(_subdivEnabledCheckbox);
 
     _subdivSegmentCountSpinbox = new Widget::SpinBox();
@@ -102,8 +103,11 @@ void ObjectPropertyView::setObjects(const std::unordered_set<SP<Document::Object
     _connections.clear();
 
     for (auto& object : objects) {
-        auto c = connect(object.get(), &Document::Object::locationChanged, this, &ObjectPropertyView::refreshValues);
-        _connections.push_back(c);
+        _connections.push_back(connect(object.get(), &Document::Object::locationChanged, this, &ObjectPropertyView::refreshValues));
+        if (auto maybeMeshObject = dynamicPointerCast<Document::MeshObject>(object); maybeMeshObject) {
+            auto meshObject = *maybeMeshObject;
+            _connections.push_back(connect(meshObject.get(), &Document::MeshObject::subdivSettingsChanged, this, &ObjectPropertyView::refreshValues));
+        }
     }
     refreshValues();
 }
@@ -200,6 +204,25 @@ void ObjectPropertyView::handleLocationValueChange(LocationMember member, int in
         }
         location.rotation = glm::normalize(glm::dquat(eulerAngles));
         object->setLocation(location);
+    }
+}
+
+void ObjectPropertyView::handleSubdivEnabledChange(bool enabled) {
+    std::vector<SP<Document::MeshObject>> meshObjects;
+    for (auto& object : _objects) {
+        if (auto meshObject = dynamicPointerCast<Document::MeshObject>(object); meshObject) {
+            meshObjects.push_back(*meshObject);
+        }
+    }
+    if (meshObjects.empty()) {
+        return;
+    }
+
+    _appState->document()->history()->beginChange(tr("Set Subdiv Enabled"));
+    for (auto& object : meshObjects) {
+        auto settings = object->subdivSettings();
+        settings.isEnabled = enabled;
+        object->setSubdivSettings(settings);
     }
 }
 
