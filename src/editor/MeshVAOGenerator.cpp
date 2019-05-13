@@ -91,6 +91,33 @@ std::unordered_map<uint32_t, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() c
 }
 
 std::unordered_map<uint32_t, SP<GL::VAO> > MeshVAOGenerator::generateSubdivFaceVAOs(int level) const {
+    // create topology refiner
+    using namespace OpenSubdiv;
+
+    Sdc::Options options;
+    options.SetVtxBoundaryInterpolation(Sdc::Options::VTX_BOUNDARY_EDGE_ONLY);
+
+    Far::TopologyDescriptor desc;
+    /*
+    desc.numVertices = g_nverts;
+    desc.numFaces = g_nfaces;
+    desc.numVertsPerFace = g_vertsperface;
+    desc.vertIndicesPerFace = g_faceverts;
+    desc.numCreases = g_ncreases;
+    desc.creaseVertexIndexPairs = g_creaseverts;
+    desc.creaseWeights = g_creaseweights;
+    */
+
+    // Instantiate a FarTopologyRefiner from the descriptor.
+    auto refiner = Far::TopologyRefinerFactory<Far::TopologyDescriptor>::Create(
+        desc,
+        Far::TopologyRefinerFactory<Far::TopologyDescriptor>::Options(
+            OpenSubdiv::Sdc::SCHEME_CATMARK, options
+        )
+    );
+
+    Q_UNUSED(refiner);
+
     // WIP
     Q_UNUSED(level);
     return {};
