@@ -103,6 +103,10 @@ std::unordered_map<uint32_t, SP<GL::VAO> > MeshVAOGenerator::generateSubdivFaceV
         | ranges::view::transform([&] (auto f) { return int(mesh.vertices(f).size()); })
         | ranges::to_vector;
 
+    std::vector<int> faceVerts = mesh.faces()
+        | ranges::view::transform([&] (auto f) { return mesh.vertices(f) | ranges::view::transform([](auto v) { return int(v.index); }); })
+        | ranges::action::join;
+
     // create topology refiner
 
     Sdc::Options options;
