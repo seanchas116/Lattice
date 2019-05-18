@@ -8,6 +8,7 @@
 #include "../support/OptionalGuard.hpp"
 #include "../widget/SpinBox.hpp"
 #include "../widget/DoubleSpinBox.hpp"
+#include "../widget/MultiValueCheckBox.hpp"
 #include <QDoubleSpinBox>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -70,9 +71,8 @@ ObjectPropertyView::ObjectPropertyView(const SP<State::AppState> &appState, QWid
 
     auto subdivLayout = new QFormLayout();
 
-    _subdivEnabledCheckbox = new QCheckBox(tr("Subdivision Surface"));
-    _subdivEnabledCheckbox->setTristate(true);
-    connect(_subdivEnabledCheckbox, &QCheckBox::toggled, this, &ObjectPropertyView::handleSubdivEnabledChange);
+    _subdivEnabledCheckbox = new Widget::MultiValueCheckBox(tr("Subdivision Surface"));
+    connect(_subdivEnabledCheckbox, &Widget::MultiValueCheckBox::clicked, this, &ObjectPropertyView::handleSubdivEnabledChange);
     subdivLayout->addRow(_subdivEnabledCheckbox);
 
     _subdivSegmentCountSpinbox = new Widget::SpinBox();
@@ -158,20 +158,11 @@ void ObjectPropertyView::refreshValues() {
     if (!meshObjects.empty()) {
         _subdivEnabledCheckbox->setVisible(true);
 
-        bool isSubdivEnabledSame = true;
-        bool isSubdivEnabled = meshObjects[0]->subdivSettings().isEnabled;
-        for (size_t i = 1; i < meshObjects.size(); ++i) {
-            if (isSubdivEnabled != meshObjects[i]->subdivSettings().isEnabled) {
-                isSubdivEnabledSame = false;
-                break;
-            }
+        std::vector<bool> subdivEnabledValues;
+        for (auto& meshObject : meshObjects) {
+            subdivEnabledValues.push_back(meshObject->subdivSettings().isEnabled);
         }
-
-        if (isSubdivEnabledSame) {
-            _subdivEnabledCheckbox->setCheckState(isSubdivEnabled ? Qt::Checked : Qt::Unchecked);
-        } else {
-            _subdivEnabledCheckbox->setCheckState(Qt::PartiallyChecked);
-        }
+        _subdivEnabledCheckbox->setValues(subdivEnabledValues);
     } else {
         _subdivEnabledCheckbox->setVisible(false);
     }

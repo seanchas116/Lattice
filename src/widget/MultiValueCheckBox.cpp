@@ -10,7 +10,7 @@ MultiValueCheckBox::MultiValueCheckBox(const QString &title, QWidget *parent) : 
     layout->setMargin(0);
     _checkBox = new QCheckBox(title);
     _checkBox->setTristate(true);
-    connect(_checkBox, &QCheckBox::toggled, this, &MultiValueCheckBox::toggled);
+    connect(_checkBox, &QCheckBox::clicked, this, &MultiValueCheckBox::clicked);
     layout->addWidget(_checkBox);
     setLayout(layout);
 }

@@ -15,7 +15,7 @@ public:
     void setValues(const std::vector<bool>& values);
 
 signals:
-    void toggled(bool value);
+    void clicked(bool value);
 
 private:
     QCheckBox* _checkBox;

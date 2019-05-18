@@ -16,6 +16,7 @@ class AppState;
 namespace Widget {
 class SpinBox;
 class DoubleSpinBox;
+class MultiValueCheckBox;
 }
 
 namespace Document {
@@ -51,7 +52,7 @@ private:
     std::array<Widget::DoubleSpinBox*, 3> _scaleSpinBoxes;
     std::array<Widget::DoubleSpinBox*, 3> _rotationSpinBoxes;
 
-    QCheckBox* _subdivEnabledCheckbox = nullptr;
+    Widget::MultiValueCheckBox* _subdivEnabledCheckbox = nullptr;
     Widget::SpinBox* _subdivSegmentCountSpinbox = nullptr;
 };
 
