@@ -12,6 +12,8 @@ class MultiValueCheckBox : public QWidget {
 public:
     MultiValueCheckBox(const QString& title, QWidget* parent = nullptr);
 
+    auto checkBox() const { return _checkBox; }
+
     void setValues(const std::vector<bool>& values);
 
 signals:
