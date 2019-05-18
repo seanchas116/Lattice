@@ -5,6 +5,7 @@
 #include "../state/AppState.hpp"
 #include "../state/MeshEditState.hpp"
 #include "../widget/DoubleSpinBox.hpp"
+#include "../widget/MultiValueCheckBox.hpp"
 #include "../mesh/Mesh.hpp"
 #include <QVBoxLayout>
 #include <QGridLayout>
@@ -61,9 +62,8 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
         layout->addLayout(gridLayout);
     }
 
-    _smoothEdgeCheckBox = new QCheckBox(tr("Smooth Edge"));
-    _smoothEdgeCheckBox->setTristate(true);
-    connect(_smoothEdgeCheckBox, &QCheckBox::toggled, this, &MeshPropertyView::handleEdgeSmoothChange);
+    _smoothEdgeCheckBox = new Widget::MultiValueCheckBox(tr("Smooth Edge"));
+    connect(_smoothEdgeCheckBox, &Widget::MultiValueCheckBox::clicked, this, &MeshPropertyView::handleEdgeSmoothChange);
     layout->addWidget(_smoothEdgeCheckBox);
 
     layout->addStretch();
@@ -120,24 +120,11 @@ void MeshPropertyView::refreshValues() {
         } else {
             _smoothEdgeCheckBox->setEnabled(true);
 
-            bool isSmoothEdgeSame = true;
-            bool isSmooth = mesh.isSmooth(edges[0]);
-
-            for (size_t i = 1; i < edges.size(); ++i) {
-                if (mesh.isSmooth(edges[i]) != isSmooth) {
-                    isSmoothEdgeSame = false;
-                }
+            std::vector<bool> isSmoothValues;
+            for (auto edge : edges) {
+                isSmoothValues.push_back(mesh.isSmooth(edge));
             }
-
-            if (isSmoothEdgeSame) {
-                if (isSmooth) {
-                    _smoothEdgeCheckBox->setCheckState(Qt::Checked);
-                } else {
-                    _smoothEdgeCheckBox->setCheckState(Qt::Unchecked);
-                }
-            } else {
-                _smoothEdgeCheckBox->setCheckState(Qt::PartiallyChecked);
-            }
+            _smoothEdgeCheckBox->setValues(isSmoothValues);
         }
     }
 }
