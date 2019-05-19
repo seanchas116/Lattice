@@ -13,9 +13,6 @@ namespace Editor {
 namespace MeshEditor {
 
 void LoopCutTool::mousePressTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
-    Q_UNUSED(target); Q_UNUSED(event);
-    // TODO
-
     if (!target.edge) {
         return;
     }
