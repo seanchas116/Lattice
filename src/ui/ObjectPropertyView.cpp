@@ -7,8 +7,8 @@
 #include "../support/Debug.hpp"
 #include "../support/OptionalGuard.hpp"
 #include "../widget/SpinBox.hpp"
-#include "../widget/DoubleSpinBox.hpp"
 #include "../widget/MultiValueCheckBox.hpp"
+#include "../widget/MultiValueDoubleSpinBox.hpp"
 #include <QDoubleSpinBox>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -40,24 +40,21 @@ ObjectPropertyView::ObjectPropertyView(const SP<State::AppState> &appState, QWid
         auto label = new QLabel(title);
         gridLayout->addWidget(label, row, 0);
 
-        std::array<Widget::DoubleSpinBox*, 3> spinBoxes = {
-            new Widget::DoubleSpinBox(),
-            new Widget::DoubleSpinBox(),
-            new Widget::DoubleSpinBox(),
+        std::array<Widget::MultiValueDoubleSpinBox*, 3> spinBoxes = {
+            new Widget::MultiValueDoubleSpinBox(),
+            new Widget::MultiValueDoubleSpinBox(),
+            new Widget::MultiValueDoubleSpinBox(),
         };
 
         for (int i = 0; i < 3; ++i) {
             auto spinBox = spinBoxes[i];
             spinBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-            spinBox->setMinimum(-std::numeric_limits<double>::infinity());
-            spinBox->setMaximum(std::numeric_limits<double>::infinity());
-            spinBox->setSpecialValueText(" ");
             gridLayout->addWidget(spinBox, row, int(i + 1));
 
-            auto handleValueChange = [this, spinBox, member, i] {
-                this->handleLocationValueChange(member, i, spinBox->value());
+            auto handleValueChange = [this, member, i] (double value) {
+                this->handleLocationValueChange(member, i, value);
             };
-            connect(spinBox, &Widget::DoubleSpinBox::editingFinished, this, handleValueChange);
+            connect(spinBox, &Widget::MultiValueDoubleSpinBox::editingFinished, this, handleValueChange);
         }
 
         return spinBoxes;
@@ -117,35 +114,24 @@ void ObjectPropertyView::refreshValues() {
         return;
     }
 
-    auto location = (*_objects.begin())->location();
-
-    glm::bvec3 isPositionSame {true};
-    glm::bvec3 isScaleSame {true};
-    glm::bvec3 isRotationSame {true};
+    std::array<std::vector<double>, 3> positionValueArrays;
+    std::array<std::vector<double>, 3> scaleValueArrays;
+    std::array<std::vector<double>, 3> rotationValueArrays;
 
     for (auto& object : _objects) {
-        auto otherLocation = object->location();
+        auto& location = object->location();
+        auto eulerAngles = glm::eulerAngles(location.rotation);
         for (int i = 0; i < 3; ++i) {
-            if (location.position[i] != otherLocation.position[i]) {
-                isPositionSame[i] = false;
-            }
-            if (location.scale[i] != otherLocation.scale[i]) {
-                isScaleSame[i] = false;
-            }
-            if (glm::eulerAngles(location.rotation)[i] != glm::eulerAngles(otherLocation.rotation)[i]) {
-                isRotationSame[i] = false;
-            }
+            positionValueArrays[i].push_back(location.position[i]);
+            scaleValueArrays[i].push_back(location.scale[i]);
+            rotationValueArrays[i].push_back(glm::degrees(eulerAngles[i]));
         }
     }
 
-    glm::dvec3 eulerAngles = glm::eulerAngles(location.rotation);
-
-    auto specialValue = -std::numeric_limits<double>::infinity();
-
     for (size_t i = 0; i < 3; ++i) {
-        _positionSpinBoxes[i]->setValue(isPositionSame[i] ? location.position[i] : specialValue);
-        _scaleSpinBoxes[i]->setValue(isScaleSame[i] ? location.scale[i] : specialValue);
-        _rotationSpinBoxes[i]->setValue(isRotationSame[i] ? glm::degrees(eulerAngles[i]) : specialValue);
+        _positionSpinBoxes[i]->setValues(positionValueArrays[i]);
+        _scaleSpinBoxes[i]->setValues(scaleValueArrays[i]);
+        _rotationSpinBoxes[i]->setValues(rotationValueArrays[i]);
     }
 
     std::vector<SP<Document::MeshObject>> meshObjects;

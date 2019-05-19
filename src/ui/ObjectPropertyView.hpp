@@ -15,8 +15,8 @@ class AppState;
 
 namespace Widget {
 class SpinBox;
-class DoubleSpinBox;
 class MultiValueCheckBox;
+class MultiValueDoubleSpinBox;
 }
 
 namespace Document {
@@ -48,9 +48,9 @@ private:
     std::unordered_set<SP<Document::Object>> _objects;
     std::vector<QMetaObject::Connection> _connections;
 
-    std::array<Widget::DoubleSpinBox*, 3> _positionSpinBoxes;
-    std::array<Widget::DoubleSpinBox*, 3> _scaleSpinBoxes;
-    std::array<Widget::DoubleSpinBox*, 3> _rotationSpinBoxes;
+    std::array<Widget::MultiValueDoubleSpinBox*, 3> _positionSpinBoxes;
+    std::array<Widget::MultiValueDoubleSpinBox*, 3> _scaleSpinBoxes;
+    std::array<Widget::MultiValueDoubleSpinBox*, 3> _rotationSpinBoxes;
 
     Widget::MultiValueCheckBox* _subdivEnabledCheckbox = nullptr;
     Widget::SpinBox* _subdivSegmentCountSpinbox = nullptr;
