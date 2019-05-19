@@ -50,7 +50,7 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
             spinBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
             gridLayout->addWidget(spinBox, 1, int(i + 1));
 
-            auto handleValueChange = [this, spinBox, i] (double value) {
+            auto handleValueChange = [this, i] (double value) {
                 this->handlePositionValueChange(i, value);
             };
             connect(spinBox, &Widget::MultiValueDoubleSpinBox::editingFinished, this, handleValueChange);
