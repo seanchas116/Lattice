@@ -92,6 +92,9 @@ void MeshPropertyView::refreshValues() {
 
     {
         std::array<std::vector<double>, 3> positionValueArrays;
+        for (size_t i = 0; i < 3; ++i) {
+            positionValueArrays[i].reserve(selection.size());
+        }
 
         for (auto vertex : selection) {
             auto position = mesh.position(vertex);
