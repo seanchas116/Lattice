@@ -7,7 +7,7 @@ namespace MeshEditor {
 
 class BorderSelectTool : public Tool {
 public:
-    BorderSelectTool(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object, const SP<Mesh::Mesh>& mesh) : Tool(appState, object, mesh) {}
+    BorderSelectTool(const SP<Document::MeshObject>& object, const SP<Mesh::Mesh>& mesh) : Tool(object, mesh) {}
 
     void mousePressTool(const EventTarget &target, const Viewport::MouseEvent &event) override;
     void mouseMoveTool(const EventTarget &target, const Viewport::MouseEvent &event) override;

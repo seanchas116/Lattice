@@ -116,7 +116,7 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::Mesh
     _vertexPickVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
     _vertexPickVAO(makeShared<GL::VAO>(_vertexPickVBO, GL::Primitive::Point)),
 
-    _tool(makeShared<MoveTool>(appState, meshEditState->object(), meshEditState->mesh()))
+    _tool(makeShared<MoveTool>(meshEditState->object(), meshEditState->mesh()))
 {
     updateVAOs();
 
@@ -225,19 +225,19 @@ void MeshEditor::handleToolChange(State::Tool tool) {
 
     switch (tool) {
     case State::Tool::Draw:
-        _tool = makeShared<DrawTool>(_appState, object, mesh);
+        _tool = makeShared<DrawTool>(object, mesh);
         break;
     case State::Tool::Extrude:
-        _tool = makeShared<ExtrudeTool>(_appState, object, mesh);
+        _tool = makeShared<ExtrudeTool>(object, mesh);
         break;
     case State::Tool::LoopCut:
-        _tool = makeShared<LoopCutTool>(_appState, object, mesh);
+        _tool = makeShared<LoopCutTool>(object, mesh);
         break;
     case State::Tool::BorderSelect:
-        _tool = makeShared<BorderSelectTool>(_appState, object, mesh);
+        _tool = makeShared<BorderSelectTool>(object, mesh);
         break;
     default:
-        _tool = makeShared<MoveTool>(_appState, object, mesh);
+        _tool = makeShared<MoveTool>(object, mesh);
         break;
     }
     connect(_tool.get(), &Tool::meshChanged, this, &MeshEditor::handleMeshChanged);

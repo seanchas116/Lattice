@@ -8,7 +8,7 @@ namespace MeshEditor {
 
 class MoveTool : public Tool {
 public:
-    MoveTool(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object, const SP<Mesh::Mesh>& mesh);
+    MoveTool(const SP<Document::MeshObject>& object, const SP<Mesh::Mesh>& mesh);
 
     void mousePressTool(const EventTarget &target, const Viewport::MouseEvent &event) override;
     void mouseMoveTool(const EventTarget &target, const Viewport::MouseEvent &event) override;

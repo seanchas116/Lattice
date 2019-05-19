@@ -35,12 +35,11 @@ public:
         std::vector<Mesh::FaceHandle> faces;
     };
 
-    Tool(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object, const SP<Mesh::Mesh>& mesh) : _appState(appState),
-                                                                                                                    _object(object),
-                                                                                                                    _mesh(mesh) {}
+    Tool(const SP<Document::MeshObject>& object, const SP<Mesh::Mesh>& mesh) :
+        _object(object),
+        _mesh(mesh) {}
     ~Tool();
 
-    auto& appState() const { return _appState; }
     auto& object() const { return _object; }
     auto& mesh() const { return _mesh; }
 
@@ -59,7 +58,6 @@ signals:
     void meshChangeFinished(const QString& text);
 
 private:
-    SP<State::AppState> _appState;
     SP<Document::MeshObject> _object;
     SP<Mesh::Mesh> _mesh;
 };
