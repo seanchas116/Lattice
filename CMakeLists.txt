@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.0.0)
 cmake_policy(SET CMP0071 NEW)
 
 project(Lattice)
-set(OpenSubdiv_PATH "" CACHE STRING "Path to OpenSubdiv")
 
 include(vendor/cmrc/CMakeRC.cmake)
 
@@ -31,15 +30,16 @@ include_directories("vendor/glm")
 include_directories("vendor/json/include")
 include_directories("vendor/tinyobjloader")
 include_directories("vendor/Catch2/single_include")
+include_directories("vendor/OpenSubdiv")
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/_cmrc/include)
-include_directories(${OpenSubdiv_PATH}/include)
 
 #set(LIBRARIES Qt5::Widgets Boost::system Boost::filesystem)
-link_directories(${OpenSubdiv_PATH}/lib)
-set(LIBRARIES Qt5::Widgets osdCPU)
+set(LIBRARIES Qt5::Widgets)
 
-file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.hpp")
-list(APPEND SOURCES "vendor/tinyobjloader/tiny_obj_loader.cc")
+file(GLOB_RECURSE SOURCES
+    "src/*.cpp" "src/*.hpp"
+    "vendor/tinyobjloader/tiny_obj_loader.cc"
+    "vendor/OpenSubdiv/opensubdiv/far/*.cpp" "vendor/OpenSubdiv/opensubdiv/sdc/*.cpp" "vendor/OpenSubdiv/opensubdiv/vtr/*.cpp")
 
 file(GLOB_RECURSE SHADERS "src/*.vert" "src/*.geom" "src/*.frag")
 cmrc_add_resource_library(LatticeResources ${SHADERS})
