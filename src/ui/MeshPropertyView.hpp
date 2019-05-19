@@ -14,7 +14,7 @@ namespace Document {
 class MeshObject;
 }
 namespace Widget {
-class DoubleSpinBox;
+class MultiValueDoubleSpinBox;
 class MultiValueCheckBox;
 }
 
@@ -36,7 +36,7 @@ private:
     SP<State::AppState> _appState;
     Opt<SP<State::MeshEditState>> _meshEditState;
     QMetaObject::Connection _connection;
-    std::array<Widget::DoubleSpinBox*, 3> _positionSpinBoxes;
+    std::array<Widget::MultiValueDoubleSpinBox*, 3> _positionSpinBoxes;
     Widget::MultiValueCheckBox* _smoothEdgeCheckBox = nullptr;
 };
 
