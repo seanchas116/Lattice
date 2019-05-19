@@ -70,7 +70,7 @@ Mesh MeshData::toMesh() const {
     auto edgeCount = edgeVerticesArray.size();
     for (size_t i = 0; i < edgeCount; ++i) {
         auto vertices = edgeVerticesArray[i];
-        auto edge = mesh.addEdge(VertexHandle(vertices[0]), VertexHandle(vertices[1]));
+        auto edge = mesh.addEdge({VertexHandle(vertices[0]), VertexHandle(vertices[1])});
         mesh.setSmooth(edge, edgeSmoothArray[i]);
         mesh.setCrease(edge, edgeCreaseArray[i]);
     }

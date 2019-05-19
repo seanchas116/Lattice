@@ -64,7 +64,7 @@ class Mesh {
 public:
     VertexHandle addVertex(glm::vec3 position);
     UVPointHandle addUVPoint(VertexHandle v, glm::vec2 position);
-    EdgeHandle addEdge(VertexHandle v0, VertexHandle v1);
+    EdgeHandle addEdge(const std::array<VertexHandle, 2>& vertices);
     FaceHandle addFace(const std::vector<UVPointHandle>& uvPoints, MaterialHandle material);
 
     void removeVertex(VertexHandle v);

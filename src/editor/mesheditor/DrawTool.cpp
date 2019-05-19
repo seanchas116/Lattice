@@ -62,7 +62,7 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
 
         if (_drawnUVPoints.size() >= 1) {
             auto prevUVPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];
-            mesh.addEdge(mesh.vertex(prevUVPoint), vertex);
+            mesh.addEdge({mesh.vertex(prevUVPoint), vertex});
         }
         _drawnUVPoints.push_back(uvPoint);
     } else if (target.edge) {
@@ -78,7 +78,7 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
 
         if (_drawnUVPoints.size() >= 1) {
             auto prevUVPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];
-            mesh.addEdge(mesh.vertex(prevUVPoint), vertex);
+            mesh.addEdge({mesh.vertex(prevUVPoint), vertex});
         }
 
         _drawnUVPoints.push_back(mesh.uvPoints(vertex).front());
@@ -109,7 +109,7 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
 
     auto latestPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];
     auto previewPoint = mesh.addUVPoint(mesh.addVertex(mesh.position(mesh.vertex(latestPoint))), vec2(0));
-    mesh.addEdge(mesh.vertex(latestPoint), mesh.vertex(previewPoint));
+    mesh.addEdge({mesh.vertex(latestPoint), mesh.vertex(previewPoint)});
     _previewUVPoint = previewPoint;
 
     meshEditState()->notifyMeshChanged();

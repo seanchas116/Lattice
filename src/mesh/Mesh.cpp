@@ -21,22 +21,22 @@ UVPointHandle Mesh::addUVPoint(VertexHandle v, glm::vec2 position) {
     return uvPoint;
 }
 
-EdgeHandle Mesh::addEdge(VertexHandle v0, VertexHandle v1) {
+EdgeHandle Mesh::addEdge(const std::array<VertexHandle, 2>& vertices) {
     // check if edge already exists
-    for (auto edge : edges(v0)) {
-        auto edgeVertices = vertices(edge);
-        if (edgeVertices == std::array{v0, v1} || edgeVertices == std::array{v1, v0}) {
+    for (auto edge : edges(vertices[0])) {
+        auto edgeVertices = this->vertices(edge);
+        if (edgeVertices == vertices || edgeVertices == std::array{vertices[1], vertices[0]}) {
             // same edge found
             return edge;
         }
     }
 
     EdgeData edgeData;
-    edgeData.vertices = {v0, v1};
+    edgeData.vertices = vertices;
     auto edge = EdgeHandle(uint32_t(_edges.size()));
     _edges.push_back(edgeData);
-    vertexData(v0).edges.push_back(edge);
-    vertexData(v1).edges.push_back(edge);
+    vertexData(vertices[0]).edges.push_back(edge);
+    vertexData(vertices[1]).edges.push_back(edge);
     return edge;
 }
 
@@ -69,7 +69,7 @@ FaceHandle Mesh::addFace(const std::vector<UVPointHandle> &uvPoints, MaterialHan
     for (size_t i = 0; i < uvPoints.size(); ++i) {
         auto uv0 = uvPoints[i];
         auto uv1 = uvPoints[(i + 1) % uvPoints.size()];
-        faceData.edges.push_back(addEdge(vertex(uv0), vertex(uv1)));
+        faceData.edges.push_back(addEdge({vertex(uv0), vertex(uv1)}));
     }
 
     auto face = FaceHandle(uint32_t(_faces.size()));
