@@ -103,8 +103,6 @@ void MeshPropertyView::refreshValues() {
             }
         }
 
-        auto specialValue = -std::numeric_limits<double>::infinity();
-
         for (size_t i = 0; i < 3; ++i) {
             _positionSpinBoxes[i]->setValues(positionValueArrays[i]);
         }
