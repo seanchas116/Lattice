@@ -158,10 +158,6 @@ void ObjectPropertyView::handleLocationValueChange(LocationMember member, int in
     if (_objects.empty()) {
         return;
     }
-    auto specialValue = -std::numeric_limits<double>::infinity();
-    if (value == specialValue) {
-        return;
-    }
 
     _appState->document()->history()->beginChange(tr("Set Object Location"));
     for (auto& object : _objects) {

@@ -14,7 +14,12 @@ MultiValueDoubleSpinBox::MultiValueDoubleSpinBox(QWidget *parent) : QWidget(pare
     _doubleSpinBox->setSpecialValueText(" ");
 
     connect(_doubleSpinBox, &DoubleSpinBox::editingFinished, this, [this] {
-        emit editingFinished(_doubleSpinBox->value());
+        auto specialValue = _doubleSpinBox->minimum();
+        auto value = _doubleSpinBox->value();
+        if (value == specialValue) {
+            return;
+        }
+        emit editingFinished(value);
     });
     layout->addWidget(_doubleSpinBox);
     setLayout(layout);
