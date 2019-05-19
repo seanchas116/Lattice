@@ -28,6 +28,8 @@ AppState::AppState() :
     auto object = _document->rootObject()->childObjects()[0];
     _document->setCurrentObject(object);
     _document->history()->clear();
+
+    connect(_document.get(), &Document::Document::currentObjectChanged, this, &AppState::endEditing);
 }
 
 void AppState::deleteObjects() {
