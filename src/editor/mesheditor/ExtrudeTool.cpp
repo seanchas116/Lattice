@@ -158,7 +158,7 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
         }
 
         _dragStarted = true;
-        emit meshChanged();
+        meshEditState()->notifyMeshChange();
         return;
     }
 
@@ -172,7 +172,7 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
         mesh.setPosition(mesh.vertex(newUV), newPos);
     }
 
-     emit meshChanged();
+    meshEditState()->notifyMeshChange();
 }
 
 void ExtrudeTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -185,7 +185,8 @@ void ExtrudeTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewpo
 
     if (_dragStarted) {
         _dragStarted = false;
-        emit meshChangeFinished(tr("Extrude"));
+        meshEditState()->commitMeshChange(tr("Extrude"));
+        emit finished();
     }
 }
 

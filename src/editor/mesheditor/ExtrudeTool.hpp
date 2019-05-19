@@ -7,7 +7,7 @@ namespace MeshEditor {
 
 class ExtrudeTool : public Tool {
 public:
-    ExtrudeTool(const SP<Document::MeshObject>& object, const SP<Mesh::Mesh>& mesh) : Tool(object, mesh) {}
+    ExtrudeTool(const SP<State::MeshEditState>& meshEditState) : Tool(meshEditState) {}
 
     HitTestExclusion hitTestExclusion() const override;
 

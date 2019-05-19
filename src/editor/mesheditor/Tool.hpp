@@ -1,5 +1,5 @@
 #pragma once
-#include "../../state/AppState.hpp"
+#include "../../state/MeshEditState.hpp"
 #include "../../mesh/Handle.hpp"
 #include "../../document/MeshObject.hpp"
 #include "../../viewport/MouseEvent.hpp"
@@ -35,13 +35,12 @@ public:
         std::vector<Mesh::FaceHandle> faces;
     };
 
-    Tool(const SP<Document::MeshObject>& object, const SP<Mesh::Mesh>& mesh) :
-        _object(object),
-        _mesh(mesh) {}
+    Tool(const SP<State::MeshEditState>& meshEditState) : _meshEditState(meshEditState) {}
     ~Tool();
 
-    auto& object() const { return _object; }
-    auto& mesh() const { return _mesh; }
+    auto& meshEditState() const { return _meshEditState; }
+    auto& mesh() const { return _meshEditState->mesh(); }
+    auto& object() const { return _meshEditState->object(); }
 
     virtual HitTestExclusion hitTestExclusion() const;
 
@@ -54,12 +53,10 @@ public:
     virtual void keyReleaseTool(QKeyEvent* event);
 
 signals:
-    void meshChanged();
-    void meshChangeFinished(const QString& text);
+    void finished();
 
 private:
-    SP<Document::MeshObject> _object;
-    SP<Mesh::Mesh> _mesh;
+    SP<State::MeshEditState> _meshEditState;
 };
 
 } // namespace MeshEditor

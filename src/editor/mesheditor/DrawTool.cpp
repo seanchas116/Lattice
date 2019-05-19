@@ -54,7 +54,8 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
             for (auto& p : points) {
                 mesh.setSelected(mesh.vertex(p), true);
             }
-            emit meshChangeFinished(tr("Draw"));
+            meshEditState()->commitMeshChange(tr("Draw"));
+            emit finished();
 
             return;
         }
@@ -111,7 +112,7 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
     mesh.addEdge(mesh.vertex(latestPoint), mesh.vertex(previewPoint));
     _previewUVPoint = previewPoint;
 
-    emit meshChanged();
+    meshEditState()->notifyMeshChange();
 }
 
 void DrawTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -146,7 +147,7 @@ void DrawTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::Mo
 
     mesh.setPosition(mesh.vertex(previewUVPoint), pos);
 
-    emit meshChanged();
+    meshEditState()->notifyMeshChange();
 }
 
 void DrawTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -162,7 +163,8 @@ void DrawTool::keyPressTool(QKeyEvent *event) {
         }
         _drawnUVPoints.clear();
         _previewUVPoint = std::nullopt;
-        emit meshChangeFinished(tr("Draw"));
+        meshEditState()->commitMeshChange(tr("Draw"));
+        emit finished();
     }
 }
 

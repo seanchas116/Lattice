@@ -25,11 +25,10 @@ bool set_includes(const std::unordered_set<T>& set, const std::unordered_set<T>&
 
 }
 
-MoveTool::MoveTool(const SP<Document::MeshObject> &object, const SP<Mesh::Mesh> &mesh) :
-    Tool(object, mesh),
-    _borderSelectTool(makeShared<BorderSelectTool>(object, mesh))
+MoveTool::MoveTool(const SP<State::MeshEditState> &meshEditState) :
+    Tool(meshEditState),
+    _borderSelectTool(makeShared<BorderSelectTool>(meshEditState))
 {
-    connect(_borderSelectTool.get(), &Tool::meshChanged, this, &Tool::meshChanged);
     setChildRenderables({_borderSelectTool});
     _borderSelectTool->setVisible(false);
 }
@@ -108,7 +107,7 @@ void MoveTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::Mo
     for (auto& [v, initialPos] : _initPositions) {
         mesh()->setPosition(v, initialPos + offset);
     }
-    emit meshChanged();
+    meshEditState()->notifyMeshChange();
 }
 
 void MoveTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -122,13 +121,14 @@ void MoveTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport:
     _dragged = false;
     _initPositions.clear();
     if (_dragStarted) {
-        emit meshChangeFinished(tr("Move Vertices"));
+        meshEditState()->commitMeshChange(tr("Move Vertices"));
+        emit finished();
     } else {
         mesh()->deselectAll();
         for (auto& v : _nextSelection) {
             mesh()->setSelected(v, true);
         }
-        emit meshChanged();
+        meshEditState()->notifyMeshChange();
     }
 }
 

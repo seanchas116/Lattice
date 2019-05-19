@@ -116,7 +116,7 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::Mesh
     _vertexPickVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
     _vertexPickVAO(makeShared<GL::VAO>(_vertexPickVBO, GL::Primitive::Point)),
 
-    _tool(makeShared<MoveTool>(meshEditState->object(), meshEditState->mesh()))
+    _tool(makeShared<MoveTool>(meshEditState))
 {
     updateVAOs();
 
@@ -220,29 +220,24 @@ void MeshEditor::keyReleaseEvent(QKeyEvent *event) {
 }
 
 void MeshEditor::handleToolChange(State::Tool tool) {
-    auto& object = _meshEditState->object();
-    auto& mesh = _meshEditState->mesh();
-
     switch (tool) {
     case State::Tool::Draw:
-        _tool = makeShared<DrawTool>(object, mesh);
+        _tool = makeShared<DrawTool>(_meshEditState);
         break;
     case State::Tool::Extrude:
-        _tool = makeShared<ExtrudeTool>(object, mesh);
+        _tool = makeShared<ExtrudeTool>(_meshEditState);
         break;
     case State::Tool::LoopCut:
-        _tool = makeShared<LoopCutTool>(object, mesh);
+        _tool = makeShared<LoopCutTool>(_meshEditState);
         break;
     case State::Tool::BorderSelect:
-        _tool = makeShared<BorderSelectTool>(object, mesh);
+        _tool = makeShared<BorderSelectTool>(_meshEditState);
         break;
     default:
-        _tool = makeShared<MoveTool>(object, mesh);
+        _tool = makeShared<MoveTool>(_meshEditState);
         break;
     }
-    connect(_tool.get(), &Tool::meshChanged, this, &MeshEditor::handleMeshChanged);
-    connect(_tool.get(), &Tool::meshChangeFinished, this, [this] (const QString& title) {
-        _meshEditState->commitMeshChange(title);
+    connect(_tool.get(), &Tool::finished, this, [this] {
         _appState->setTool(State::Tool::None);
     });
     updateManipulatorVisibility();

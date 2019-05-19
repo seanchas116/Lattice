@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Tool.hpp"
+#include "../../state/Tool.hpp"
 #include "../../viewport/Renderable.hpp"
 #include "../../draw/Vertex.hpp"
 #include "../../support/Shorthands.hpp"
