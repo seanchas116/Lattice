@@ -4,7 +4,8 @@
 #include "../document/History.hpp"
 #include "../state/AppState.hpp"
 #include "../state/MeshEditState.hpp"
-#include "../widget/DoubleSpinBox.hpp"
+#include "../widget/MultiValueDoubleSpinBox.hpp"
+#include "../widget/MultiValueCheckBox.hpp"
 #include "../mesh/Mesh.hpp"
 #include <QVBoxLayout>
 #include <QGridLayout>
@@ -39,31 +40,27 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
         gridLayout->addWidget(label, 1, 0);
 
         _positionSpinBoxes = {
-            new Widget::DoubleSpinBox(),
-            new Widget::DoubleSpinBox(),
-            new Widget::DoubleSpinBox(),
+            new Widget::MultiValueDoubleSpinBox(),
+            new Widget::MultiValueDoubleSpinBox(),
+            new Widget::MultiValueDoubleSpinBox(),
         };
 
         for (int i = 0; i < 3; ++i) {
             auto spinBox = _positionSpinBoxes[i];
             spinBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-            spinBox->setMinimum(-std::numeric_limits<double>::infinity());
-            spinBox->setMaximum(std::numeric_limits<double>::infinity());
-            spinBox->setSpecialValueText(" ");
             gridLayout->addWidget(spinBox, 1, int(i + 1));
 
-            auto handleValueChange = [this, spinBox, i] {
-                this->handlePositionValueChange(i, spinBox->value());
+            auto handleValueChange = [this, spinBox, i] (double value) {
+                this->handlePositionValueChange(i, value);
             };
-            connect(spinBox, &Widget::DoubleSpinBox::editingFinished, this, handleValueChange);
+            connect(spinBox, &Widget::MultiValueDoubleSpinBox::editingFinished, this, handleValueChange);
         }
 
         layout->addLayout(gridLayout);
     }
 
-    _smoothEdgeCheckBox = new QCheckBox(tr("Smooth Edge"));
-    _smoothEdgeCheckBox->setTristate(true);
-    connect(_smoothEdgeCheckBox, &QCheckBox::toggled, this, &MeshPropertyView::handleEdgeSmoothChange);
+    _smoothEdgeCheckBox = new Widget::MultiValueCheckBox(tr("Smooth Edge"));
+    connect(_smoothEdgeCheckBox, &Widget::MultiValueCheckBox::clicked, this, &MeshPropertyView::handleEdgeSmoothChange);
     layout->addWidget(_smoothEdgeCheckBox);
 
     layout->addStretch();
@@ -94,22 +91,20 @@ void MeshPropertyView::refreshValues() {
     }
 
     {
-        glm::bvec3 isPositionSame {true};
-        auto position = mesh.position(selection[0]);
+        std::array<std::vector<double>, 3> positionValueArrays;
+        for (size_t i = 0; i < 3; ++i) {
+            positionValueArrays[i].reserve(selection.size());
+        }
 
         for (auto vertex : selection) {
-            auto otherPosition = mesh.position(vertex);
+            auto position = mesh.position(vertex);
             for (int i = 0; i < 3; ++i) {
-                if (position[i] != otherPosition[i]) {
-                    isPositionSame[i] = false;
-                }
+                positionValueArrays[i].push_back(position[i]);
             }
         }
 
-        auto specialValue = -std::numeric_limits<double>::infinity();
-
         for (size_t i = 0; i < 3; ++i) {
-            _positionSpinBoxes[i]->setValue(isPositionSame[i] ? position[i] : specialValue);
+            _positionSpinBoxes[i]->setValues(positionValueArrays[i]);
         }
     }
 
@@ -120,24 +115,11 @@ void MeshPropertyView::refreshValues() {
         } else {
             _smoothEdgeCheckBox->setEnabled(true);
 
-            bool isSmoothEdgeSame = true;
-            bool isSmooth = mesh.isSmooth(edges[0]);
-
-            for (size_t i = 1; i < edges.size(); ++i) {
-                if (mesh.isSmooth(edges[i]) != isSmooth) {
-                    isSmoothEdgeSame = false;
-                }
+            std::vector<bool> isSmoothValues;
+            for (auto edge : edges) {
+                isSmoothValues.push_back(mesh.isSmooth(edge));
             }
-
-            if (isSmoothEdgeSame) {
-                if (isSmooth) {
-                    _smoothEdgeCheckBox->setCheckState(Qt::Checked);
-                } else {
-                    _smoothEdgeCheckBox->setCheckState(Qt::Unchecked);
-                }
-            } else {
-                _smoothEdgeCheckBox->setCheckState(Qt::PartiallyChecked);
-            }
+            _smoothEdgeCheckBox->setValues(isSmoothValues);
         }
     }
 }
@@ -150,11 +132,6 @@ void MeshPropertyView::handlePositionValueChange(int index, double value) {
     auto& mesh = *meshEditState->mesh();
     auto selection = mesh.selectedVertices() | ranges::to_vector;
     if (selection.empty()) {
-        return;
-    }
-
-    auto specialValue = -std::numeric_limits<double>::infinity();
-    if (value == specialValue) {
         return;
     }
 
