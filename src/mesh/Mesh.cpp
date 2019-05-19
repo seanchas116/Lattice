@@ -135,21 +135,38 @@ void Mesh::removeVertex(VertexHandle v) {
     vertexData(v).isDeleted = true;
 }
 
+namespace {
+template <typename R, typename T>
+void eraseValue(R& range, const T& value) {
+    ranges::erase(range, ranges::find(range, value));
+}
+}
+
 void Mesh::removeUVPoint(UVPointHandle uv) {
-    for (auto f : uvPointData(uv).faces) {
+    for (auto f : faces(uv)) {
         removeFace(f);
     }
+    eraseValue(vertexData(vertex(uv)).uvPoints, uv);
     uvPointData(uv).isDeleted = true;
 }
 
 void Mesh::removeEdge(EdgeHandle e) {
-    for (auto f : edgeData(e).faces) {
+    for (auto f : faces(e)) {
         removeFace(f);
+    }
+    for (auto v : vertices(e)) {
+        eraseValue(vertexData(v).edges, e);
     }
     edgeData(e).isDeleted = true;
 }
 
 void Mesh::removeFace(FaceHandle f) {
+    for (auto uv : uvPoints(f)) {
+        eraseValue(uvPointData(uv).faces, f);
+    }
+    for (auto e : edges(f)) {
+        eraseValue(edgeData(e).faces, f);
+    }
     faceData(f).isDeleted = true;
 }
 
