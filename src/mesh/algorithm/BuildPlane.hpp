@@ -6,7 +6,7 @@ namespace Mesh {
 
 class BuildPlane {
 public:
-    BuildPlane(glm::vec3 center, glm::vec2 size, int normalAxis, uint32_t material) :center(center),
+    BuildPlane(glm::vec3 center, glm::vec2 size, int normalAxis, MaterialHandle material) :center(center),
                                                                                     size(size),
                                                                                     normalAxis(normalAxis),
                                                                                     material(material) {}
@@ -16,7 +16,7 @@ public:
     glm::vec3 center;
     glm::vec2 size;
     int normalAxis;
-    uint32_t material;
+    MaterialHandle material;
 };
 
 } // namespace Mesh

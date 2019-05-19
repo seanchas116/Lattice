@@ -37,7 +37,7 @@ struct EdgeData {
 
 struct FaceData {
     bool isDeleted = false;
-    uint32_t material = 0;
+    MaterialHandle material;
     std::vector<UVPointHandle> uvPoints;
     std::vector<EdgeHandle> edges;
 };
@@ -65,7 +65,7 @@ public:
     VertexHandle addVertex(glm::vec3 position);
     UVPointHandle addUVPoint(VertexHandle v, glm::vec2 position);
     EdgeHandle addEdge(VertexHandle v0, VertexHandle v1);
-    FaceHandle addFace(const std::vector<UVPointHandle>& uvPoints, uint32_t material);
+    FaceHandle addFace(const std::vector<UVPointHandle>& uvPoints, MaterialHandle material);
 
     void removeVertex(VertexHandle v);
     void removeUVPoint(UVPointHandle v);
@@ -161,8 +161,8 @@ public:
     float crease(EdgeHandle edge) const { return edgeData(edge).crease; }
     void setCrease(EdgeHandle edge, float crease) { edgeData(edge).crease = crease; }
 
-    uint32_t material(FaceHandle face) const { return faceData(face).material; }
-    void setMaterial(FaceHandle face, uint32_t material) { faceData(face).material = material; }
+    MaterialHandle material(FaceHandle face) const { return faceData(face).material; }
+    void setMaterial(FaceHandle face, MaterialHandle material) { faceData(face).material = material; }
 
     glm::vec3 calculateNormal(FaceHandle face) const;
 

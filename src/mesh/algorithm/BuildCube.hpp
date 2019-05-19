@@ -6,7 +6,7 @@ namespace Mesh {
 
 class BuildCube {
 public:
-    BuildCube(glm::vec3 minPos, glm::vec3 maxPos, uint32_t material) : minPos(minPos),
+    BuildCube(glm::vec3 minPos, glm::vec3 maxPos, MaterialHandle material) : minPos(minPos),
                                                                      maxPos(maxPos),
                                                                      material(material) {}
 
@@ -14,7 +14,7 @@ public:
 
     glm::vec3 minPos;
     glm::vec3 maxPos;
-    uint32_t material;
+    MaterialHandle material;
 };
 
 } // namespace Mesh

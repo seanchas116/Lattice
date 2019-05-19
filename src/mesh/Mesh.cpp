@@ -40,7 +40,7 @@ EdgeHandle Mesh::addEdge(VertexHandle v0, VertexHandle v1) {
     return edge;
 }
 
-FaceHandle Mesh::addFace(const std::vector<UVPointHandle> &uvPoints, uint32_t material) {
+FaceHandle Mesh::addFace(const std::vector<UVPointHandle> &uvPoints, MaterialHandle material) {
     // check if face already exists
     for (auto face : faces(uvPoints[0])) {
         auto faceUVPoints = this->uvPoints(face) | ranges::to_vector;

@@ -6,7 +6,7 @@ namespace Mesh {
 
 class BuildSphere {
 public:
-    BuildSphere(glm::vec3 center, float radius, int segmentCount, int ringCount, int axis, uint32_t material) : center(center),
+    BuildSphere(glm::vec3 center, float radius, int segmentCount, int ringCount, int axis, MaterialHandle material) : center(center),
                                                                                                               radius(radius),
                                                                                                               segmentCount(segmentCount),
                                                                                                               ringCount(ringCount),
@@ -20,7 +20,7 @@ public:
     int segmentCount;
     int ringCount;
     int axis;
-    uint32_t material;
+    MaterialHandle material;
 };
 
 } // namespace Mesh

@@ -19,11 +19,13 @@ struct VertexHandleTag {};
 struct UVPointHandleTag {};
 struct EdgeHandleTag {};
 struct FaceHandleTag {};
+struct MaterialHandleTag {};
 
 using VertexHandle = Handle<VertexHandleTag>;
 using UVPointHandle = Handle<UVPointHandleTag>;
 using EdgeHandle = Handle<EdgeHandleTag>;
 using FaceHandle = Handle<FaceHandleTag>;
+using MaterialHandle = Handle<MaterialHandleTag>;
 
 } // namespace NewMesh
 } // namespace Lattice

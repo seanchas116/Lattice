@@ -101,7 +101,7 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
 
         for (auto& openEdge : openEdges) {
             bool isReverse = true;
-            uint32_t material = 0;
+            Mesh::MaterialHandle material;
 
             for (auto& face : mesh.faces(openEdge)) {
                 if (faces.find(face) != faces.end()) {

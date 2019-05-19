@@ -110,7 +110,7 @@ std::vector<SP<Document::MeshObject>> ObjLoader::load(const QString &filePathStr
 
             auto materialID = objShape.mesh.material_ids[f];
             if (materialID >= 0) {
-                mesh.addFace(uvPoints, materialID);
+                mesh.addFace(uvPoints, Mesh::MaterialHandle(materialID));
             } else {
                 // TODO: add default material
             }

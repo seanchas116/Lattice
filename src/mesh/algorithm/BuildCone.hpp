@@ -6,7 +6,7 @@ namespace Mesh {
 
 class BuildCone {
 public:
-    BuildCone(glm::vec3 center, float radius, float height, int segmentCount, int axis, uint32_t material) : center(center),
+    BuildCone(glm::vec3 center, float radius, float height, int segmentCount, int axis, MaterialHandle material) : center(center),
                                                                                                            radius(radius),
                                                                                                            height(height),
                                                                                                            segmentCount(segmentCount),
@@ -20,7 +20,7 @@ public:
     float height;
     int segmentCount;
     int axis;
-    uint32_t material;
+    MaterialHandle material;
 };
 
 } // namespace Mesh

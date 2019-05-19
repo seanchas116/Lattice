@@ -44,7 +44,7 @@ MeshData::MeshData(const Mesh &origMesh) {
     for (auto f : mesh.faces()) {
         auto& uvPoints = mesh.uvPoints(f);
         faceVertexCountArray.push_back(uvPoints.size());
-        faceMaterialArray.push_back(mesh.material(f));
+        faceMaterialArray.push_back(mesh.material(f).index);
         for (auto uv : uvPoints) {
             faceUVPointArray.push_back(uv.index);
         }
@@ -80,7 +80,7 @@ Mesh MeshData::toMesh() const {
 
     for (size_t i = 0; i < faceCount; ++i) {
         auto vertexCount = faceVertexCountArray[i];
-        auto material = faceMaterialArray[i];
+        auto material = MaterialHandle(faceMaterialArray[i]);
 
         std::vector<UVPointHandle> uvPoints;
         for (size_t j = 0; j < vertexCount; ++j) {

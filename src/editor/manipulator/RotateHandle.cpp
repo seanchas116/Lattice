@@ -99,8 +99,7 @@ void RotateHandle::contextMenuEvent(const Viewport::MouseEvent &event) {
 
 SP<Mesh::Mesh> RotateHandle::createMesh() {
     auto mesh = makeShared<Mesh::Mesh>();
-    uint32_t material = 0;
-    *mesh = Mesh::BuildCircle(vec3(0), 2.f, 64, 0, material).perform();
+    *mesh = Mesh::BuildCircle(vec3(0), 2.f, 64, 0, Mesh::MaterialHandle()).perform();
     return mesh;
 }
 

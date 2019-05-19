@@ -48,9 +48,9 @@ SP<GL::VAO> MeshVAOGenerator::generateEdgeVAO() const {
     return edgeVAO;
 }
 
-std::unordered_map<uint32_t, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() const {
+std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() const {
     std::vector<Draw::Vertex> vertexAttributes;
-    std::unordered_map<uint32_t, std::vector<GL::IndexBuffer::Triangle>> trianglesMap;
+    std::unordered_map<Mesh::MaterialHandle, std::vector<GL::IndexBuffer::Triangle>> trianglesMap;
 
     for (auto face : _mesh.faces()) {
         auto faceNormal = _mesh.calculateNormal(face);
@@ -81,7 +81,7 @@ std::unordered_map<uint32_t, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() c
     auto vbo = makeShared<GL::VertexBuffer<Draw::Vertex>>();
     vbo->setVertices(vertexAttributes);
 
-    std::unordered_map<uint32_t, SP<GL::VAO>> vaos;
+    std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> vaos;
     vaos.reserve(trianglesMap.size());
     for (auto [material, triangles] : trianglesMap) {
         auto indexBuffer = makeShared<GL::IndexBuffer>();
@@ -92,7 +92,7 @@ std::unordered_map<uint32_t, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() c
     return vaos;
 }
 
-std::unordered_map<uint32_t, SP<GL::VAO> > MeshVAOGenerator::generateSubdivFaceVAOs(int segmentCount) const {
+std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generateSubdivFaceVAOs(int segmentCount) const {
     using namespace OpenSubdiv;
 
     struct Vertex {
@@ -290,7 +290,7 @@ std::unordered_map<uint32_t, SP<GL::VAO> > MeshVAOGenerator::generateSubdivFaceV
     ibo->setTriangles(triangles);
     auto vao = makeShared<GL::VAO>(vbo, ibo);
 
-    return {{0, vao}}; // TODO: support multiple materials
+    return {{Mesh::MaterialHandle(), vao}}; // TODO: support multiple materials
 }
 
 } // namespace Viewport

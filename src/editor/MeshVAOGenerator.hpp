@@ -2,6 +2,7 @@
 #include "../support/Shorthands.hpp"
 #include "../gl/VertexBuffer.hpp"
 #include "../draw/Vertex.hpp"
+#include "../mesh/Handle.hpp"
 #include <unordered_map>
 
 namespace Lattice {
@@ -21,8 +22,8 @@ public:
 
     SP<GL::VAO> generateVertexVAO() const;
     SP<GL::VAO> generateEdgeVAO() const;
-    std::unordered_map<uint32_t, SP<GL::VAO>> generateFaceVAOs() const;
-    std::unordered_map<uint32_t, SP<GL::VAO>> generateSubdivFaceVAOs(int segmentCount) const;
+    std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> generateFaceVAOs() const;
+    std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> generateSubdivFaceVAOs(int segmentCount) const;
 
 private:
     const Mesh::Mesh& _mesh;

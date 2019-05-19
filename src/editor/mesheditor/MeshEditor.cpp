@@ -147,7 +147,7 @@ void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &
     auto& materials = _meshEditState->object()->materials();
 
     for (auto& [materialID, vao] : _finalShapeVAOs) {
-        auto material = materials.at(materialID).toDrawMaterial();
+        auto material = materials.at(materialID.index).toDrawMaterial();
         operations->drawMaterial.draw(vao, matrixToWorld, camera, material);
     }
 

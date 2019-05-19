@@ -7,7 +7,7 @@ namespace Mesh {
 class BuildCircle {
 public:
     // TODO: support multiple fill types
-    BuildCircle(glm::vec3 center, float radius, int segmentCount, int normalAxis, uint32_t material) : center(center),
+    BuildCircle(glm::vec3 center, float radius, int segmentCount, int normalAxis, MaterialHandle material) : center(center),
                                                                                                      radius(radius),
                                                                                                      segmentCount(segmentCount),
                                                                                                      normalAxis(normalAxis),
@@ -19,7 +19,7 @@ public:
     float radius;
     int segmentCount;
     int normalAxis;
-    uint32_t material;
+    MaterialHandle material;
 };
 
 } // namespace Mesh

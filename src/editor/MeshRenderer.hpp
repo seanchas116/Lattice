@@ -4,6 +4,7 @@
 #include "../support/Box.hpp"
 #include "../support/Location.hpp"
 #include "../viewport/Renderable.hpp"
+#include "../mesh/Handle.hpp"
 #include <glm/glm.hpp>
 #include <unordered_map>
 
@@ -49,7 +50,7 @@ private:
     SP<State::AppState> _appState;
     SP<Document::MeshObject> _object;
 
-    std::unordered_map<uint32_t, SP<GL::VAO>> _faceVAOs;
+    std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> _faceVAOs;
     bool _isVAOsDirty = true;
 
     bool _dragged = false;
