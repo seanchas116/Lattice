@@ -3,6 +3,7 @@
 #include "../../document/History.hpp"
 #include "../../support/Debug.hpp"
 #include "../../mesh/Mesh.hpp"
+#include "../../state/Preferences.hpp"
 
 using namespace glm;
 
@@ -61,7 +62,7 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
     }
 
     if (!_dragStarted) {
-        if (distance(_initViewportPos, dvec2(event.viewportPos.xy)) < appState()->preferences()->moveThreshold()) {
+        if (distance(_initViewportPos, dvec2(event.viewportPos.xy)) < State::Preferences::shared().moveThreshold()) {
             return;
         }
 

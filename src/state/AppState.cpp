@@ -22,8 +22,7 @@ namespace Lattice {
 namespace State {
 
 AppState::AppState() :
-    _document(makeShared<Document::Document>()),
-    _preferences(makeShared<Preferences>())
+    _document(makeShared<Document::Document>())
 {
     addCube();
     auto object = _document->rootObject()->childObjects()[0];

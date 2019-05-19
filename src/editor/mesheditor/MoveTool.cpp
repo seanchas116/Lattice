@@ -2,6 +2,7 @@
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
 #include "../../mesh/Mesh.hpp"
+#include "../../state/Preferences.hpp"
 
 using namespace glm;
 
@@ -96,7 +97,7 @@ void MoveTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::Mo
     dvec3 offset = objectPos - _initObjectPos;
 
     if (!_dragStarted) {
-        if (distance(_initViewportPos, dvec2(event.viewportPos.xy)) < appState()->preferences()->moveThreshold()) {
+        if (distance(_initViewportPos, dvec2(event.viewportPos.xy)) < State::Preferences::shared().moveThreshold()) {
             return;
         }
         _dragStarted = true;

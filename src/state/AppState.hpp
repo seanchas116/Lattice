@@ -4,7 +4,6 @@
 #include "../support/Shorthands.hpp"
 #include "../support/Property.hpp"
 #include "ViewportSplitMode.hpp"
-#include "Preferences.hpp"
 #include "Tool.hpp"
 
 namespace Lattice {
@@ -39,7 +38,6 @@ public:
     AppState();
 
     auto& document() const { return _document; }
-    auto& preferences() const { return _preferences; }
 
     void startEditing();
     void startEditing(const SP<Document::MeshObject>& object);
@@ -67,7 +65,6 @@ public:
 
 private:
     SP<Document::Document> _document;
-    SP<Preferences> _preferences;
 };
 
 }
