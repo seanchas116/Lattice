@@ -4,25 +4,6 @@ cmake_policy(SET CMP0071 NEW)
 
 project(Lattice)
 
-set(NO_EXAMPLES ON CACHE BOOL "" FORCE)
-set(NO_TUTORIALS ON CACHE BOOL "" FORCE)
-set(NO_REGRESSION ON CACHE BOOL "" FORCE)
-set(NO_PTEX ON CACHE BOOL "" FORCE)
-set(NO_DOC ON CACHE BOOL "" FORCE)
-set(NO_OMP ON CACHE BOOL "" FORCE)
-set(NO_TBB ON CACHE BOOL "" FORCE)
-set(NO_CUDA ON CACHE BOOL "" FORCE)
-set(NO_OPENCL ON CACHE BOOL "" FORCE)
-set(NO_CLEW ON CACHE BOOL "" FORCE)
-set(NO_OPENGL ON CACHE BOOL "" FORCE)
-set(NO_METAL ON CACHE BOOL "" FORCE)
-set(NO_DX ON CACHE BOOL "" FORCE)
-set(NO_TESTS ON CACHE BOOL "" FORCE)
-set(NO_GLTESTS ON CACHE BOOL "" FORCE)
-set(NO_GLFW ON CACHE BOOL "" FORCE)
-set(NO_GLFW_X11 ON CACHE BOOL "" FORCE)
-add_subdirectory(vendor/OpenSubdiv)
-
 include(vendor/cmrc/CMakeRC.cmake)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -53,11 +34,12 @@ include_directories("vendor/OpenSubdiv")
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/_cmrc/include)
 
 #set(LIBRARIES Qt5::Widgets Boost::system Boost::filesystem)
-link_directories(${CMAKE_CURRENT_BINARY_DIR}/vendor/OpenSubdiv/lib)
-set(LIBRARIES Qt5::Widgets osdCPU)
+set(LIBRARIES Qt5::Widgets)
 
-file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.hpp")
-list(APPEND SOURCES "vendor/tinyobjloader/tiny_obj_loader.cc")
+file(GLOB_RECURSE SOURCES
+    "src/*.cpp" "src/*.hpp"
+    "vendor/tinyobjloader/tiny_obj_loader.cc"
+    "vendor/OpenSubdiv/opensubdiv/far/*.cpp" "vendor/OpenSubdiv/opensubdiv/sdc/*.cpp" "vendor/OpenSubdiv/opensubdiv/vtr/*.cpp")
 
 file(GLOB_RECURSE SHADERS "src/*.vert" "src/*.geom" "src/*.frag")
 cmrc_add_resource_library(LatticeResources ${SHADERS})
