@@ -126,9 +126,9 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::Mesh
     connect(_manipulator.get(), &Manipulator::Manipulator::onContextMenu, this, [this](auto& event) {
         contextMenuTarget({}, event);
     });
-    connect(_manipulator.get(), &Manipulator::MeshManipulator::meshChanged, _meshEditState.get(), &State::MeshEditState::notifyMeshChange);
+    connect(_manipulator.get(), &Manipulator::MeshManipulator::meshChanged, _meshEditState.get(), &State::MeshEditState::notifyMeshChanged);
     connect(_manipulator.get(), &Manipulator::MeshManipulator::meshChangeFinished, this, [this] {
-        _meshEditState->commitMeshChange(tr("Move Vertices"));
+        _meshEditState->commitMeshChanged(tr("Move Vertices"));
     });
 
     connect(appState.get(), &State::AppState::isTranslateHandleVisibleChanged, _manipulator.get(), &Manipulator::Manipulator::setTranslateHandleVisible);

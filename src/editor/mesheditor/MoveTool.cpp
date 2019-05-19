@@ -107,7 +107,7 @@ void MoveTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::Mo
     for (auto& [v, initialPos] : _initPositions) {
         mesh()->setPosition(v, initialPos + offset);
     }
-    meshEditState()->notifyMeshChange();
+    meshEditState()->notifyMeshChanged();
 }
 
 void MoveTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -121,14 +121,14 @@ void MoveTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport:
     _dragged = false;
     _initPositions.clear();
     if (_dragStarted) {
-        meshEditState()->commitMeshChange(tr("Move Vertices"));
+        meshEditState()->commitMeshChanged(tr("Move Vertices"));
         emit finished();
     } else {
         mesh()->deselectAll();
         for (auto& v : _nextSelection) {
             mesh()->setSelected(v, true);
         }
-        meshEditState()->notifyMeshChange();
+        meshEditState()->notifyMeshChanged();
     }
 }
 

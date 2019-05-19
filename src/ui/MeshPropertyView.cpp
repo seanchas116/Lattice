@@ -150,7 +150,7 @@ void MeshPropertyView::handlePositionValueChange(int index, double value) {
         return;
     }
 
-    meshEditState->commitMeshChange(tr("Set Vertex Position"));
+    meshEditState->commitMeshChanged(tr("Set Vertex Position"));
 }
 
 void MeshPropertyView::handleEdgeSmoothChange(bool smooth) {
@@ -168,7 +168,7 @@ void MeshPropertyView::handleEdgeSmoothChange(bool smooth) {
         mesh.setSmooth(edge, smooth);
     }
 
-    meshEditState->commitMeshChange(tr("Set Edge Smooth"));
+    meshEditState->commitMeshChanged(tr("Set Edge Smooth"));
 }
 
 } // namespace UI

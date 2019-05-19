@@ -16,8 +16,8 @@ public:
     auto& mesh() const { return _mesh; }
     void setMesh(Mesh::Mesh mesh);
 
-    void notifyMeshChange();
-    void commitMeshChange(const QString& changeTitle);
+    void notifyMeshChanged();
+    void commitMeshChanged(const QString& changeTitle);
 
     void deleteVertices();
     void deleteEdges();

@@ -12,7 +12,7 @@ MeshEditState::MeshEditState(const SP<Document::MeshObject> &targetObject) :
 
     connect(targetObject.get(), &Document::MeshObject::meshChanged, this, [this](auto& mesh) {
         *_mesh = mesh;
-        notifyMeshChange();
+        notifyMeshChanged();
     });
 }
 
@@ -21,11 +21,11 @@ void MeshEditState::setMesh(Mesh::Mesh mesh) {
     emit meshChanged(*_mesh);
 }
 
-void MeshEditState::notifyMeshChange() {
+void MeshEditState::notifyMeshChanged() {
     emit meshChanged(*_mesh);
 }
 
-void MeshEditState::commitMeshChange(const QString &changeTitle) {
+void MeshEditState::commitMeshChanged(const QString &changeTitle) {
     auto maybeDocument = _object->document();
     if (!maybeDocument) {
         return;
@@ -42,7 +42,7 @@ void MeshEditState::deleteVertices() {
     for (auto v : vertices) {
         mesh.removeVertex(v);
     }
-    commitMeshChange(tr("Delete Vertices"));
+    commitMeshChanged(tr("Delete Vertices"));
 }
 
 void MeshEditState::deleteEdges() {
@@ -51,7 +51,7 @@ void MeshEditState::deleteEdges() {
     for (auto e : edges) {
         mesh.removeEdge(e);
     }
-    commitMeshChange(tr("Delete Edges"));
+    commitMeshChanged(tr("Delete Edges"));
 }
 
 void MeshEditState::deleteFaces() {
@@ -60,17 +60,17 @@ void MeshEditState::deleteFaces() {
     for (auto f : faces) {
         mesh.removeFace(f);
     }
-    commitMeshChange(tr("Delete Faces"));
+    commitMeshChanged(tr("Delete Faces"));
 }
 
 void MeshEditState::selectAll() {
     _mesh->selectAll();
-    notifyMeshChange();
+    notifyMeshChanged();
 }
 
 void MeshEditState::deselectAll() {
     _mesh->deselectAll();
-    notifyMeshChange();
+    notifyMeshChanged();
 }
 
 } // namespace State
