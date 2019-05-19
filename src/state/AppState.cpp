@@ -47,6 +47,7 @@ void AppState::addPlane() {
     object->setMesh(std::move(mesh));
 
     _document->insertObjectToCurrentPosition(object);
+    _document->setCurrentObject(object);
 }
 
 void AppState::addCube() {
@@ -59,6 +60,7 @@ void AppState::addCube() {
     object->setMesh(std::move(mesh));
 
     _document->insertObjectToCurrentPosition(object);
+    _document->setCurrentObject(object);
 }
 
 void AppState::addCircle() {
@@ -71,6 +73,7 @@ void AppState::addCircle() {
     object->setMesh(std::move(mesh));
 
     _document->insertObjectToCurrentPosition(object);
+    _document->setCurrentObject(object);
 }
 
 void AppState::addSphere() {
@@ -83,6 +86,7 @@ void AppState::addSphere() {
     object->setMesh(std::move(mesh));
 
     _document->insertObjectToCurrentPosition(object);
+    _document->setCurrentObject(object);
 }
 
 void AppState::addCone() {
@@ -95,6 +99,7 @@ void AppState::addCone() {
     object->setMesh(std::move(mesh));
 
     _document->insertObjectToCurrentPosition(object);
+    _document->setCurrentObject(object);
 }
 
 void AppState::addCylinder() {
@@ -107,6 +112,7 @@ void AppState::addCylinder() {
     object->setMesh(std::move(mesh));
 
     _document->insertObjectToCurrentPosition(object);
+    _document->setCurrentObject(object);
 }
 
 void AppState::addText() {
