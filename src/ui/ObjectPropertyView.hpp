@@ -14,13 +14,14 @@ class AppState;
 }
 
 namespace Widget {
-class SpinBox;
 class MultiValueCheckBox;
 class MultiValueDoubleSpinBox;
+class MultiValueSpinBox;
 }
 
 namespace Document {
 class Object;
+class MeshObject;
 }
 
 namespace UI {
@@ -42,6 +43,9 @@ private:
 
     void handleLocationValueChange(LocationMember member, int index, double value);
     void handleSubdivEnabledChange(bool enabled);
+    void handleSubdivSegmentCountChange(int count);
+
+    std::vector<SP<Document::MeshObject>> meshObjects() const;
 
     SP<State::AppState> _appState;
 
@@ -53,7 +57,7 @@ private:
     std::array<Widget::MultiValueDoubleSpinBox*, 3> _rotationSpinBoxes;
 
     Widget::MultiValueCheckBox* _subdivEnabledCheckbox = nullptr;
-    Widget::SpinBox* _subdivSegmentCountSpinbox = nullptr;
+    Widget::MultiValueSpinBox* _subdivSegmentCountSpinbox = nullptr;
 };
 
 }

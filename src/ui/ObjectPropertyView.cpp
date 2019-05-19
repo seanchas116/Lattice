@@ -9,6 +9,7 @@
 #include "../widget/SpinBox.hpp"
 #include "../widget/MultiValueCheckBox.hpp"
 #include "../widget/MultiValueDoubleSpinBox.hpp"
+#include "../widget/MultiValueSpinBox.hpp"
 #include <QDoubleSpinBox>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -72,8 +73,9 @@ ObjectPropertyView::ObjectPropertyView(const SP<State::AppState> &appState, QWid
     connect(_subdivEnabledCheckbox, &Widget::MultiValueCheckBox::clicked, this, &ObjectPropertyView::handleSubdivEnabledChange);
     subdivLayout->addRow(_subdivEnabledCheckbox);
 
-    _subdivSegmentCountSpinbox = new Widget::SpinBox();
-    _subdivSegmentCountSpinbox->setRange(1, 8);
+    _subdivSegmentCountSpinbox = new Widget::MultiValueSpinBox();
+    _subdivSegmentCountSpinbox->spinBox()->setRange(0, 8);
+    connect(_subdivSegmentCountSpinbox, &Widget::MultiValueSpinBox::editingFinished, this, &ObjectPropertyView::handleSubdivSegmentCountChange);
     subdivLayout->addRow(tr("Segment Count"), _subdivSegmentCountSpinbox);
 
     layout->addLayout(subdivLayout);
@@ -134,23 +136,22 @@ void ObjectPropertyView::refreshValues() {
         _rotationSpinBoxes[i]->setValues(rotationValueArrays[i]);
     }
 
-    std::vector<SP<Document::MeshObject>> meshObjects;
-    for (auto& object : _objects) {
-        if (auto meshObject = dynamicPointerCast<Document::MeshObject>(object); meshObject) {
-            meshObjects.push_back(*meshObject);
-        }
-    }
-
+    auto meshObjects = this->meshObjects();
     if (!meshObjects.empty()) {
         _subdivEnabledCheckbox->setVisible(true);
+        _subdivSegmentCountSpinbox->setVisible(true);
 
         std::vector<bool> subdivEnabledValues;
+        std::vector<int> subdivSegmentCountValues;
         for (auto& meshObject : meshObjects) {
             subdivEnabledValues.push_back(meshObject->subdivSettings().isEnabled);
+            subdivSegmentCountValues.push_back(meshObject->subdivSettings().segmentCount);
         }
         _subdivEnabledCheckbox->setValues(subdivEnabledValues);
+        _subdivSegmentCountSpinbox->setValues(subdivSegmentCountValues);
     } else {
         _subdivEnabledCheckbox->setVisible(false);
+        _subdivSegmentCountSpinbox->setVisible(false);
     }
 }
 
@@ -181,12 +182,7 @@ void ObjectPropertyView::handleLocationValueChange(LocationMember member, int in
 }
 
 void ObjectPropertyView::handleSubdivEnabledChange(bool enabled) {
-    std::vector<SP<Document::MeshObject>> meshObjects;
-    for (auto& object : _objects) {
-        if (auto meshObject = dynamicPointerCast<Document::MeshObject>(object); meshObject) {
-            meshObjects.push_back(*meshObject);
-        }
-    }
+    auto meshObjects = this->meshObjects();
     if (meshObjects.empty()) {
         return;
     }
@@ -197,6 +193,30 @@ void ObjectPropertyView::handleSubdivEnabledChange(bool enabled) {
         settings.isEnabled = enabled;
         object->setSubdivSettings(settings);
     }
+}
+
+void ObjectPropertyView::handleSubdivSegmentCountChange(int count) {
+    auto meshObjects = this->meshObjects();
+    if (meshObjects.empty()) {
+        return;
+    }
+
+    _appState->document()->history()->beginChange(tr("Set Subdiv Segment Count"));
+    for (auto& object : meshObjects) {
+        auto settings = object->subdivSettings();
+        settings.segmentCount = count;
+        object->setSubdivSettings(settings);
+    }
+}
+
+std::vector<SP<Document::MeshObject> > ObjectPropertyView::meshObjects() const {
+    std::vector<SP<Document::MeshObject>> meshObjects;
+    for (auto& object : _objects) {
+        if (auto meshObject = dynamicPointerCast<Document::MeshObject>(object); meshObject) {
+            meshObjects.push_back(*meshObject);
+        }
+    }
+    return meshObjects;
 }
 
 }

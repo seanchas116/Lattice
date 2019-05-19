@@ -11,7 +11,7 @@ class MultiValueSpinBox : public QWidget {
 public:
     MultiValueSpinBox(QWidget* parent = nullptr);
 
-    auto doubleSpinBox() const { return _spinBox; }
+    auto spinBox() const { return _spinBox; }
 
     void setValues(const std::vector<int>& values);
 
