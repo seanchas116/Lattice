@@ -37,6 +37,48 @@ EdgeHandle Mesh::addEdge(const std::array<VertexHandle, 2>& vertices) {
     _edges.push_back(edgeData);
     vertexData(vertices[0]).edges.push_back(edge);
     vertexData(vertices[1]).edges.push_back(edge);
+
+    // split faces
+    {
+        std::unordered_set<FaceHandle> facesToCheckSplit;
+        for (auto v : vertices) {
+            for (auto face : faces(v)) {
+                facesToCheckSplit.insert(face);
+            }
+        }
+
+        std::vector<FaceHandle> facesToRemove;
+        std::vector<std::tuple<std::vector<UVPointHandle>, std::vector<UVPointHandle>, MaterialHandle>> faceAdditions;
+
+        // split faces that includes newly added edge
+        for (auto& face : facesToCheckSplit) {
+            auto& faceUVPoints = uvPoints(face);
+            auto uv0It = ranges::find_if(faceUVPoints, [&](auto& uv) { return vertex(uv) == vertices[0]; });
+            auto uv1It = ranges::find_if(faceUVPoints, [&](auto& uv) { return vertex(uv) == vertices[1]; });
+            if (uv0It != faceUVPoints.end() && uv1It != faceUVPoints.end()) {
+                // face includes edge
+                if (uv1It < uv0It) {
+                    std::swap(uv0It, uv1It);
+                }
+
+                std::vector<UVPointHandle> uvPoints0;
+                uvPoints0.insert(uvPoints0.end(), uv1It, faceUVPoints.end());
+                uvPoints0.insert(uvPoints0.end(), faceUVPoints.begin(), uv0It + 1);
+                std::vector<UVPointHandle> uvPoints1(uv0It, uv1It + 1);
+
+                faceAdditions.push_back({uvPoints0, uvPoints1, material(face)});
+                facesToRemove.push_back(face);
+            }
+        }
+        for (auto& [uvPoints0, uvPoints1, material] : faceAdditions) {
+            addFace(uvPoints0, material);
+            addFace(uvPoints1, material);
+        }
+        for (auto& f : facesToRemove) {
+            removeFace(f);
+        }
+    }
+
     return edge;
 }
 
