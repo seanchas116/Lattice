@@ -7,7 +7,7 @@
 #include "../widget/MultiValueDoubleSpinBox.hpp"
 #include "../widget/MultiValueCheckBox.hpp"
 #include "../mesh/Mesh.hpp"
-#include <QVBoxLayout>
+#include <QFormLayout>
 #include <QGridLayout>
 #include <QLabel>
 #include <QCheckBox>
@@ -24,7 +24,7 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
     setMeshEditState(appState->meshEditState());
     connect(appState.get(), &State::AppState::meshEditStateChanged, this, &MeshPropertyView::setMeshEditState);
 
-    auto layout = new QVBoxLayout();
+    auto layout = new QFormLayout();
 
     {
         auto gridLayout = new QGridLayout();
@@ -56,14 +56,12 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
             connect(spinBox, &Widget::MultiValueDoubleSpinBox::editingFinished, this, handleValueChange);
         }
 
-        layout->addLayout(gridLayout);
+        layout->addRow(gridLayout);
     }
 
     _smoothEdgeCheckBox = new Widget::MultiValueCheckBox(tr("Smooth Edge"));
     connect(_smoothEdgeCheckBox, &Widget::MultiValueCheckBox::clicked, this, &MeshPropertyView::handleEdgeSmoothChange);
-    layout->addWidget(_smoothEdgeCheckBox);
-
-    layout->addStretch();
+    layout->addRow(_smoothEdgeCheckBox);
 
     setLayout(layout);
 }

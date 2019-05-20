@@ -11,8 +11,6 @@
 #include "../widget/MultiValueDoubleSpinBox.hpp"
 #include "../widget/MultiValueSpinBox.hpp"
 #include <QDoubleSpinBox>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QGridLayout>
 #include <QFormLayout>
 #include <QLabel>
@@ -26,7 +24,7 @@ ObjectPropertyView::ObjectPropertyView(const SP<State::AppState> &appState, QWid
     QWidget(parent),
     _appState(appState)
 {
-    auto layout = new QVBoxLayout();
+    auto layout = new QFormLayout();
 
     auto gridLayout = new QGridLayout();
 
@@ -65,22 +63,16 @@ ObjectPropertyView::ObjectPropertyView(const SP<State::AppState> &appState, QWid
     _rotationSpinBoxes = buildVec3SpinBoxes(LocationMember::Rotation, "Rotation", 2);
     _scaleSpinBoxes = buildVec3SpinBoxes(LocationMember::Scale, "Scale", 3);
 
-    layout->addLayout(gridLayout);
-
-    auto subdivLayout = new QFormLayout();
+    layout->addRow(gridLayout);
 
     _subdivEnabledCheckbox = new Widget::MultiValueCheckBox(tr("Subdivision Surface"));
     connect(_subdivEnabledCheckbox, &Widget::MultiValueCheckBox::clicked, this, &ObjectPropertyView::handleSubdivEnabledChange);
-    subdivLayout->addRow(_subdivEnabledCheckbox);
+    layout->addRow(_subdivEnabledCheckbox);
 
     _subdivSegmentCountSpinbox = new Widget::MultiValueSpinBox();
     _subdivSegmentCountSpinbox->spinBox()->setRange(0, 8);
     connect(_subdivSegmentCountSpinbox, &Widget::MultiValueSpinBox::editingFinished, this, &ObjectPropertyView::handleSubdivSegmentCountChange);
-    subdivLayout->addRow(tr("Segment Count"), _subdivSegmentCountSpinbox);
-
-    layout->addLayout(subdivLayout);
-
-    layout->addStretch();
+    layout->addRow(tr("Segment Count"), _subdivSegmentCountSpinbox);
 
     setLayout(layout);
 }
