@@ -188,7 +188,7 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
 
     // Adaptively refine the topology with an isolation level capped at 3
     // because the sharpest crease in the shape is 3.0f (in g_creaseweights[])
-    int maxIsolation = 3;
+    int maxIsolation = 10;
     refiner->RefineAdaptive(
         Far::TopologyRefiner::AdaptiveOptions(maxIsolation));
 
