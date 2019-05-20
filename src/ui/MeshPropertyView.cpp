@@ -166,11 +166,10 @@ void MeshPropertyView::handleEdgeSmoothChange(bool smooth) {
     }
     auto meshEditState = *_meshEditState;
     auto& mesh = *meshEditState->mesh();
-    auto edges = mesh.edges(mesh.selectedVertices()) | ranges::to_vector;
+    auto edges = mesh.selectedEdges() | ranges::to_vector;
     if (edges.empty()) {
         return;
     }
-
     for (auto edge : edges) {
         mesh.setSmooth(edge, smooth);
     }
@@ -184,7 +183,7 @@ void MeshPropertyView::handleEdgeCreaseChange(double crease) {
     }
     auto meshEditState = *_meshEditState;
     auto& mesh = *meshEditState->mesh();
-    auto edges = mesh.edges(mesh.selectedVertices()) | ranges::to_vector;
+    auto edges = mesh.selectedEdges() | ranges::to_vector;
     if (edges.empty()) {
         return;
     }

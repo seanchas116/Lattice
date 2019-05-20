@@ -140,42 +140,6 @@ public:
 
     auto& edges(FaceHandle f) const { return faceData(f).edges; }
 
-    bool isSelected(VertexHandle v) const { return vertexData(v).isSelected; }
-    void setSelected(VertexHandle v, bool selected) { vertexData(v).isSelected = selected; }
-
-    float corner(VertexHandle v) const { return vertexData(v).corner; }
-    void setCorner(VertexHandle v, float corner) { vertexData(v).corner = corner; }
-
-    glm::vec3 position(VertexHandle v) const { return vertexData(v).position; }
-    void setPosition(VertexHandle v, glm::vec3 pos) { vertexData(v).position = pos; }
-
-    glm::vec2 uvPosition(UVPointHandle uv) const { return uvPointData(uv).uvPosition ; }
-    void setUVPosition(UVPointHandle uv, glm::vec2 pos) { uvPointData(uv).uvPosition = pos; }
-
-    Ray<float> ray(EdgeHandle edge) const {
-        auto pos0 = position(vertices(edge)[0]);
-        auto pos1 = position(vertices(edge)[1]);
-        return Ray<float>(pos0, pos1 - pos0);
-    }
-
-    bool isSmooth(EdgeHandle edge) const { return edgeData(edge).isSmooth; }
-    void setSmooth(EdgeHandle edge, bool smooth) { edgeData(edge).isSmooth = smooth; }
-
-    float crease(EdgeHandle edge) const { return edgeData(edge).crease; }
-    void setCrease(EdgeHandle edge, float crease) { edgeData(edge).crease = crease; }
-
-    MaterialHandle material(FaceHandle face) const { return faceData(face).material; }
-    void setMaterial(FaceHandle face, MaterialHandle material) { faceData(face).material = material; }
-
-    glm::vec3 calculateNormal(FaceHandle face) const;
-
-    void selectAll();
-    void deselectAll();
-
-    auto selectedVertices() const {
-        return vertices() | ranges::view::filter([this] (auto handle) { return isSelected(handle); });
-    }
-
     template <typename TVertices, CONCEPT_REQUIRES_(ranges::Range<TVertices>())>
     auto edges(TVertices&& vertices) const {
         std::unordered_map<EdgeHandle, size_t> edgeCounts;
@@ -222,6 +186,48 @@ public:
         }
 
         return faces;
+    }
+
+    bool isSelected(VertexHandle v) const { return vertexData(v).isSelected; }
+    void setSelected(VertexHandle v, bool selected) { vertexData(v).isSelected = selected; }
+
+    float corner(VertexHandle v) const { return vertexData(v).corner; }
+    void setCorner(VertexHandle v, float corner) { vertexData(v).corner = corner; }
+
+    glm::vec3 position(VertexHandle v) const { return vertexData(v).position; }
+    void setPosition(VertexHandle v, glm::vec3 pos) { vertexData(v).position = pos; }
+
+    glm::vec2 uvPosition(UVPointHandle uv) const { return uvPointData(uv).uvPosition ; }
+    void setUVPosition(UVPointHandle uv, glm::vec2 pos) { uvPointData(uv).uvPosition = pos; }
+
+    Ray<float> ray(EdgeHandle edge) const {
+        auto pos0 = position(vertices(edge)[0]);
+        auto pos1 = position(vertices(edge)[1]);
+        return Ray<float>(pos0, pos1 - pos0);
+    }
+
+    bool isSmooth(EdgeHandle edge) const { return edgeData(edge).isSmooth; }
+    void setSmooth(EdgeHandle edge, bool smooth) { edgeData(edge).isSmooth = smooth; }
+
+    float crease(EdgeHandle edge) const { return edgeData(edge).crease; }
+    void setCrease(EdgeHandle edge, float crease) { edgeData(edge).crease = crease; }
+
+    MaterialHandle material(FaceHandle face) const { return faceData(face).material; }
+    void setMaterial(FaceHandle face, MaterialHandle material) { faceData(face).material = material; }
+
+    glm::vec3 calculateNormal(FaceHandle face) const;
+
+    void selectAll();
+    void deselectAll();
+
+    auto selectedVertices() const {
+        return vertices() | ranges::view::filter([this] (auto handle) { return isSelected(handle); });
+    }
+    auto selectedEdges() const {
+        return edges(selectedVertices());
+    }
+    auto selectedFaces() const {
+        return faces(selectedVertices());
     }
 
     void merge(const Mesh& other);
