@@ -83,7 +83,6 @@ void LoopCutTool::mousePressTool(const Tool::EventTarget &target, const Viewport
         mesh.setSelected(v, true);
     }
     meshEditState()->commitMeshChanged(tr("Loop Cut"));
-    emit finished();
 }
 
 void LoopCutTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
@@ -93,7 +92,7 @@ void LoopCutTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
 
 void LoopCutTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
-    // TODO
+    emit finished();
 }
 
 } // namespace MeshEditor
