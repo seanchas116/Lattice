@@ -3,12 +3,12 @@
 #include "../document/MeshObject.hpp"
 #include "../gl/VAO.hpp"
 #include "../gl/VertexBuffer.hpp"
-
 #include <opensubdiv/far/topologyDescriptor.h>
 #include <opensubdiv/far/primvarRefiner.h>
 #include <opensubdiv/far/patchTableFactory.h>
 #include <opensubdiv/far/patchMap.h>
 #include <opensubdiv/far/ptexIndices.h>
+#include <range/v3/algorithm/copy.hpp>
 
 using namespace glm;
 

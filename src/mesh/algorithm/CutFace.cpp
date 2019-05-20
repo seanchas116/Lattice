@@ -1,4 +1,5 @@
 #include "CutFace.hpp"
+#include <range/v3/algorithm/find_if.hpp>
 
 namespace Lattice {
 namespace Mesh {

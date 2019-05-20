@@ -4,6 +4,7 @@
 #include "../../support/Distance.hpp"
 #include "../../support/Debug.hpp"
 #include "../../mesh/algorithm/CutEdge.hpp"
+#include <range/v3/algorithm/find.hpp>
 
 using namespace glm;
 

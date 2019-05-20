@@ -1,4 +1,7 @@
 #include "Mesh.hpp"
+#include <range/v3/algorithm/find_if.hpp>
+#include <range/v3/algorithm/find.hpp>
+#include <range/v3/action/erase.hpp>
 
 namespace Lattice {
 namespace Mesh {

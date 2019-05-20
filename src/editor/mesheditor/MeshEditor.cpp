@@ -19,6 +19,8 @@
 #include <QMouseEvent>
 #include <QMenu>
 #include <QPainter>
+#include <range/v3/algorithm/any_of.hpp>
+#include <range/v3/algorithm/find.hpp>
 
 using namespace glm;
 

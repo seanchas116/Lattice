@@ -2,7 +2,10 @@
 #include "Handle.hpp"
 #include "../support/Ray.hpp"
 #include <glm/glm.hpp>
-#include <range/v3/all.hpp>
+#include <range/v3/view/iota.hpp>
+#include <range/v3/view/transform.hpp>
+#include <range/v3/view/filter.hpp>
+#include <range/v3/action/join.hpp>
 #include <vector>
 #include <array>
 #include <unordered_map>
