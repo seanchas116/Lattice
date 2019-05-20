@@ -223,8 +223,10 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
         src = dst;
     }
 
-    // Evaluate local points from interpolated vertex primvars.
-    patchTable->ComputeLocalPointValues(&verts[0], &verts[nRefinerVertices]);
+    if (nLocalPoints > 0) {
+        // Evaluate local points from interpolated vertex primvars.
+        patchTable->ComputeLocalPointValues(&verts[0], &verts[nRefinerVertices]);
+    }
 
     // Create a Far::PatchMap to help locating patches in the table
     Far::PatchMap patchmap(*patchTable);
