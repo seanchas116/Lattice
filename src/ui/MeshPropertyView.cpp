@@ -59,9 +59,12 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
         layout->addRow(gridLayout);
     }
 
-    _smoothEdgeCheckBox = new Widget::MultiValueCheckBox(tr("Smooth Edge"));
-    connect(_smoothEdgeCheckBox, &Widget::MultiValueCheckBox::clicked, this, &MeshPropertyView::handleEdgeSmoothChange);
-    layout->addRow(_smoothEdgeCheckBox);
+    _edgeSmoothCheckBox = new Widget::MultiValueCheckBox(tr("Edge Smooth"));
+    connect(_edgeSmoothCheckBox, &Widget::MultiValueCheckBox::clicked, this, &MeshPropertyView::handleEdgeSmoothChange);
+    layout->addRow(_edgeSmoothCheckBox);
+
+    _edgeCreaseSpinBox = new Widget::MultiValueDoubleSpinBox();
+    layout->addRow(tr("Edge Crease"), _edgeCreaseSpinBox);
 
     setLayout(layout);
 }
@@ -109,15 +112,15 @@ void MeshPropertyView::refreshValues() {
     {
         auto edges = mesh.edges(selection) | ranges::to_vector;
         if (edges.empty()) {
-            _smoothEdgeCheckBox->setEnabled(false);
+            _edgeSmoothCheckBox->setEnabled(false);
         } else {
-            _smoothEdgeCheckBox->setEnabled(true);
+            _edgeSmoothCheckBox->setEnabled(true);
 
             std::vector<bool> isSmoothValues;
             for (auto edge : edges) {
                 isSmoothValues.push_back(mesh.isSmooth(edge));
             }
-            _smoothEdgeCheckBox->setValues(isSmoothValues);
+            _edgeSmoothCheckBox->setValues(isSmoothValues);
         }
     }
 }

@@ -37,7 +37,8 @@ private:
     Opt<SP<State::MeshEditState>> _meshEditState;
     QMetaObject::Connection _connection;
     std::array<Widget::MultiValueDoubleSpinBox*, 3> _positionSpinBoxes;
-    Widget::MultiValueCheckBox* _smoothEdgeCheckBox = nullptr;
+    Widget::MultiValueCheckBox* _edgeSmoothCheckBox = nullptr;
+    Widget::MultiValueDoubleSpinBox* _edgeCreaseSpinBox = nullptr;
 };
 
 } // namespace UI
