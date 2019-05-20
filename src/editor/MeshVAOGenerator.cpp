@@ -38,8 +38,8 @@ SP<GL::VAO> MeshVAOGenerator::generateVertexVAO() const {
 SP<GL::VAO> MeshVAOGenerator::generateEdgeVAO() const {
     std::vector<GL::IndexBuffer::Line> lines;
     for (auto edge : _mesh.edges()) {
-        auto i0 = _mesh.vertices(edge)[0].index;
-        auto i1 = _mesh.vertices(edge)[1].index;
+        auto i0 = uint32_t(_mesh.vertices(edge)[0].index);
+        auto i1 = uint32_t(_mesh.vertices(edge)[1].index);
         lines.push_back({i0, i1});
     }
     auto edgeIndexBuffer = makeShared<GL::IndexBuffer>();

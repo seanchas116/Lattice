@@ -14,15 +14,15 @@ struct MeshData {
     std::vector<float> vertexCornerArray;
 
     std::vector<glm::vec2> uvPositionArray;
-    std::vector<uint32_t> uvVertexArray;
+    std::vector<int32_t> uvVertexArray;
 
     std::vector<uint8_t> edgeSmoothArray;
     std::vector<float> edgeCreaseArray;
-    std::vector<std::array<uint32_t, 2>> edgeVerticesArray;
+    std::vector<std::array<int32_t, 2>> edgeVerticesArray;
 
-    std::vector<uint32_t> faceMaterialArray;
-    std::vector<uint32_t> faceVertexCountArray;
-    std::vector<uint32_t> faceUVPointArray;
+    std::vector<int32_t> faceMaterialArray;
+    std::vector<int32_t> faceVertexCountArray;
+    std::vector<int32_t> faceUVPointArray;
 
     explicit MeshData(const Mesh &mesh);
     Mesh toMesh() const;

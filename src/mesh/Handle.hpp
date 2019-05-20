@@ -9,10 +9,10 @@ namespace Mesh {
 template <typename Tag>
 struct Handle {
     Handle() : index(0) {}
-    explicit Handle(uint32_t index) : index(index) {}
+    explicit Handle(int index) : index(index) {}
     bool operator==(const Handle& other) const { return index == other.index; }
     bool operator!=(const Handle& other) const { return !operator==(other); }
-    uint32_t index;
+    int index;
 };
 
 struct VertexHandleTag {};
@@ -35,7 +35,7 @@ namespace std {
 template <typename Tag>
 struct hash<Lattice::Mesh::Handle<Tag>> {
     size_t operator()(const Lattice::Mesh::Handle<Tag>& value) const {
-        return std::hash<uint32_t>()(value.index);
+        return std::hash<int>()(value.index);
     }
 };
 

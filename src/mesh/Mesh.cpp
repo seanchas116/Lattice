@@ -149,7 +149,7 @@ void Mesh::removeUVPoint(UVPointHandle uv) {
     for (auto f : faces(uv)) {
         removeFace(f);
     }
-    eraseValue(vertexData(vertex(uv)).uvPoints, uv);
+    //eraseValue(vertexData(vertex(uv)).uvPoints, uv);
     uvPointData(uv).isDeleted = true;
 }
 
@@ -157,19 +157,21 @@ void Mesh::removeEdge(EdgeHandle e) {
     for (auto f : faces(e)) {
         removeFace(f);
     }
-    for (auto v : vertices(e)) {
-        eraseValue(vertexData(v).edges, e);
-    }
+    //for (auto v : vertices(e)) {
+        //eraseValue(vertexData(v).edges, e);
+    //}
     edgeData(e).isDeleted = true;
 }
 
 void Mesh::removeFace(FaceHandle f) {
+    /*
     for (auto uv : uvPoints(f)) {
         eraseValue(uvPointData(uv).faces, f);
     }
     for (auto e : edges(f)) {
         eraseValue(edgeData(e).faces, f);
     }
+    */
     faceData(f).isDeleted = true;
 }
 

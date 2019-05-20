@@ -116,15 +116,15 @@ void from_json(const nlohmann::json &json, MeshData &meshData) {
     meshData.vertexCornerArray = fromDataString<float>(json["vertex"]["corner"]);
 
     meshData.uvPositionArray = fromDataString<glm::vec2>(json["uvPoint"]["position"]);
-    meshData.uvVertexArray = fromDataString<uint32_t>(json["uvPoint"]["vertex"]);
+    meshData.uvVertexArray = fromDataString<int32_t>(json["uvPoint"]["vertex"]);
 
     meshData.edgeSmoothArray = fromDataString<uint8_t>(json["edge"]["smooth"]);
     meshData.edgeCreaseArray = fromDataString<float>(json["edge"]["crease"]);
-    meshData.edgeVerticesArray = fromDataString<std::array<uint32_t, 2>>(json["edge"]["vertices"]);
+    meshData.edgeVerticesArray = fromDataString<std::array<int32_t, 2>>(json["edge"]["vertices"]);
 
-    meshData.faceMaterialArray = fromDataString<uint32_t>(json["face"]["material"]);
-    meshData.faceVertexCountArray = fromDataString<uint32_t>(json["face"]["vertexCount"]);
-    meshData.faceUVPointArray = fromDataString<uint32_t>(json["face"]["uvPoint"]);
+    meshData.faceMaterialArray = fromDataString<int32_t>(json["face"]["material"]);
+    meshData.faceVertexCountArray = fromDataString<int32_t>(json["face"]["vertexCount"]);
+    meshData.faceUVPointArray = fromDataString<int32_t>(json["face"]["uvPoint"]);
 }
 
 } // namespace Mesh
