@@ -7,7 +7,7 @@
 #include "../support/PropertyChange.hpp"
 #include <QtDebug>
 #include <nlohmann/json.hpp>
-#include <algorithm>
+#include <range/v3/algorithm/find.hpp>
 
 namespace Lattice {
 namespace Document {
@@ -117,7 +117,7 @@ void Object::removeChildObject(const SP<Object>& object) {
 }
 
 void Object::removeChildObjectInternal(const SP<Object>& object) {
-    auto it = std::find(_childObjects.begin(), _childObjects.end(), object);
+    auto it = ranges::find(_childObjects, object);
     if (it == _childObjects.end()) {
         throw std::runtime_error("cannot find object");
     }
@@ -132,7 +132,7 @@ int Object::index() const {
     LATTICE_OPTIONAL_GUARD(parent, _parentObject.lock(), return -1;)
 
     auto& siblings = parent->_childObjects;
-    auto it = std::find(siblings.begin(), siblings.end(), sharedFromThis());
+    auto it = ranges::find(siblings, sharedFromThis());
     if (it == siblings.end()) {
         return -1;
     }
