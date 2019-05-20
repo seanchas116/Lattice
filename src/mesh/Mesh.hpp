@@ -86,23 +86,23 @@ public:
     size_t faceCount() const { return _faces.size(); }
 
     auto vertices() const {
-        return ranges::view::iota(0U, _vertices.size())
-                | ranges::view::transform([](uint32_t index) { return VertexHandle(index); })
+        return ranges::view::iota(0, _vertices.size())
+                | ranges::view::transform([](int index) { return VertexHandle(index); })
                 | ranges::view::filter([this](auto handle) { return !vertexData(handle).isDeleted; });
     }
     auto uvPoints() const {
-        return ranges::view::iota(0U, _uvPoints.size())
-                | ranges::view::transform([](uint32_t index) { return UVPointHandle(index); })
+        return ranges::view::iota(0, _uvPoints.size())
+                | ranges::view::transform([](int index) { return UVPointHandle(index); })
                 | ranges::view::filter([this](auto handle) { return !uvPointData(handle).isDeleted; });
     }
     auto edges() const {
-        return ranges::view::iota(0U, _edges.size())
-                | ranges::view::transform([](uint32_t index) { return EdgeHandle(index); })
+        return ranges::view::iota(0, _edges.size())
+                | ranges::view::transform([](int index) { return EdgeHandle(index); })
                 | ranges::view::filter([this](auto handle) { return !edgeData(handle).isDeleted; });
     }
     auto faces() const {
-        return ranges::view::iota(0U, _faces.size())
-                | ranges::view::transform([](uint32_t index) { return FaceHandle(index); })
+        return ranges::view::iota(0, _faces.size())
+                | ranges::view::transform([](int index) { return FaceHandle(index); })
                 | ranges::view::filter([this](auto handle) { return !faceData(handle).isDeleted; });
     }
 
