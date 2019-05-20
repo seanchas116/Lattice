@@ -64,6 +64,7 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
     layout->addRow(_edgeSmoothCheckBox);
 
     _edgeCreaseSpinBox = new Widget::MultiValueDoubleSpinBox();
+    connect(_edgeCreaseSpinBox, &Widget::MultiValueDoubleSpinBox::editingFinished, this, &MeshPropertyView::handleEdgeCreaseChange);
     layout->addRow(tr("Edge Crease"), _edgeCreaseSpinBox);
 
     setLayout(layout);
@@ -113,14 +114,19 @@ void MeshPropertyView::refreshValues() {
         auto edges = mesh.edges(selection) | ranges::to_vector;
         if (edges.empty()) {
             _edgeSmoothCheckBox->setEnabled(false);
+            _edgeCreaseSpinBox->setEnabled(false);
         } else {
             _edgeSmoothCheckBox->setEnabled(true);
+            _edgeCreaseSpinBox->setEnabled(true);
 
             std::vector<bool> isSmoothValues;
+            std::vector<double> creaseValues;
             for (auto edge : edges) {
                 isSmoothValues.push_back(mesh.isSmooth(edge));
+                creaseValues.push_back(mesh.crease(edge));
             }
             _edgeSmoothCheckBox->setValues(isSmoothValues);
+            _edgeCreaseSpinBox->setValues(creaseValues);
         }
     }
 }
@@ -170,6 +176,24 @@ void MeshPropertyView::handleEdgeSmoothChange(bool smooth) {
     }
 
     meshEditState->commitMeshChanged(tr("Set Edge Smooth"));
+}
+
+void MeshPropertyView::handleEdgeCreaseChange(double crease) {
+    if (!_meshEditState) {
+        return;
+    }
+    auto meshEditState = *_meshEditState;
+    auto& mesh = *meshEditState->mesh();
+    auto edges = mesh.edges(mesh.selectedVertices()) | ranges::to_vector;
+    if (edges.empty()) {
+        return;
+    }
+
+    for (auto edge : edges) {
+        mesh.setCrease(edge, float(crease));
+    }
+
+    meshEditState->commitMeshChanged(tr("Set Edge Crease"));
 }
 
 } // namespace UI

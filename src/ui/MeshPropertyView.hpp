@@ -32,6 +32,7 @@ private:
     void refreshValues();
     void handlePositionValueChange(int index, double value);
     void handleEdgeSmoothChange(bool smooth);
+    void handleEdgeCreaseChange(double crease);
 
     SP<State::AppState> _appState;
     Opt<SP<State::MeshEditState>> _meshEditState;
