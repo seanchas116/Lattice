@@ -363,6 +363,7 @@ void MeshEditor::updateVAOs() {
         for (auto e : mesh.edges()) {
             bool hovered = e == _hoveredEdge;
             bool hitTestExcluded = ranges::find(hitTestExclusion.edges, e) != hitTestExclusion.edges.end();
+            float crease = mesh.crease(e);
 
             for (size_t vertexInEdgeIndex = 0; vertexInEdgeIndex < 2; ++vertexInEdgeIndex) {
                 auto& v = mesh.vertices(e)[vertexInEdgeIndex];
@@ -371,6 +372,7 @@ void MeshEditor::updateVAOs() {
                 Draw::PointLineVertex attrib;
                 attrib.position = mesh.position(v);
                 attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
+                attrib.width = 1.f + crease / 10.f;
                 edgeAttributes.push_back(attrib);
 
                 Draw::PointLineVertex pickAttrib;
