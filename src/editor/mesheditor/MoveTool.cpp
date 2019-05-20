@@ -118,6 +118,10 @@ void MoveTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport:
         return;
     }
 
+    if (!_dragged) {
+        return;
+    }
+
     _dragged = false;
     _initPositions.clear();
     if (_dragStarted) {
