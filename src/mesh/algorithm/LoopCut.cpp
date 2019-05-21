@@ -52,7 +52,7 @@ std::vector<VertexHandle> LoopCut::perform(Mesh &mesh) {
     std::vector<VertexHandle> vertices;
     vertices.reserve(edges.size());
     for (auto& [edge, isReverse] : edges) {
-        auto v = CutEdge(edge, isReverse ? (1.0 - cutPosition) : cutPosition).perform(mesh);
+        auto v = CutEdge(edge, isReverse ? (1.f - cutPosition) : cutPosition).perform(mesh);
         vertices.push_back(v);
     }
     for (size_t i = 0; i < vertices.size(); ++i) {
