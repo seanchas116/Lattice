@@ -130,6 +130,9 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
     };
 
     auto mesh = _mesh.collectGarbage();
+    if (mesh.faceCount() == 0) {
+        return {};
+    }
 
     std::vector<glm::vec3> origVerts;
     origVerts.reserve(mesh.vertexCount());
