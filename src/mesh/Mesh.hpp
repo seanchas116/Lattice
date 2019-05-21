@@ -86,22 +86,22 @@ public:
     size_t faceCount() const { return _faces.size(); }
 
     auto vertices() const {
-        return ranges::view::iota(0, _vertices.size())
+        return ranges::view::iota(0, int(_vertices.size()))
                 | ranges::view::transform([](int index) { return VertexHandle(index); })
                 | ranges::view::filter([this](auto handle) { return !vertexData(handle).isDeleted; });
     }
     auto uvPoints() const {
-        return ranges::view::iota(0, _uvPoints.size())
+        return ranges::view::iota(0, int(_uvPoints.size()))
                 | ranges::view::transform([](int index) { return UVPointHandle(index); })
                 | ranges::view::filter([this](auto handle) { return !uvPointData(handle).isDeleted; });
     }
     auto edges() const {
-        return ranges::view::iota(0, _edges.size())
+        return ranges::view::iota(0, int(_edges.size()))
                 | ranges::view::transform([](int index) { return EdgeHandle(index); })
                 | ranges::view::filter([this](auto handle) { return !edgeData(handle).isDeleted; });
     }
     auto faces() const {
-        return ranges::view::iota(0, _faces.size())
+        return ranges::view::iota(0, int(_faces.size()))
                 | ranges::view::transform([](int index) { return FaceHandle(index); })
                 | ranges::view::filter([this](auto handle) { return !faceData(handle).isDeleted; });
     }

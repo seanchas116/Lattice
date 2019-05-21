@@ -83,7 +83,7 @@ Mesh MeshData::toMesh() const {
         auto material = MaterialHandle(faceMaterialArray[i]);
 
         std::vector<UVPointHandle> uvPoints;
-        for (size_t j = 0; j < vertexCount; ++j) {
+        for (int j = 0; j < vertexCount; ++j) {
             uvPoints.push_back(UVPointHandle(faceUVPointArray[uvPointOffset + j]));
         }
         uvPointOffset += vertexCount;
