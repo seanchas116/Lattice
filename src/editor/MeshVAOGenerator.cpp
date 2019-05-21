@@ -54,20 +54,14 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> MeshVAOGenerator::generate
     for (auto face : _mesh.faces()) {
         faceNormals[face.index] = _mesh.calculateNormal(face);
     }
-    std::vector<std::vector<glm::vec3>> faceVertexNormals(_mesh.faceCount());
-    for (auto face : _mesh.faces()) {
-        auto vertices = _mesh.vertices(face);
-        auto& vertexNormals = faceVertexNormals[face.index];
-        vertexNormals.reserve(vertices.size());
-
-        for (auto vertex : vertices) {
-            glm::vec3 normalSum(0);
-            for (auto vertexFace : _mesh.faces(vertex)) {
-                normalSum += faceNormals[vertexFace.index];
-            }
-            normalSum = glm::normalize(normalSum);
-            vertexNormals.push_back(normalSum);
+    std::vector<glm::vec3> vertexNormals(_mesh.vertexCount());
+    for (auto vertex : _mesh.vertices()) {
+        glm::vec3 normalSum(0);
+        for (auto vertexFace : _mesh.faces(vertex)) {
+            normalSum += faceNormals[vertexFace.index];
         }
+        normalSum = glm::normalize(normalSum);
+        vertexNormals[vertex.index] = normalSum;
     }
 
     std::vector<Draw::Vertex> vertexAttributes;
@@ -76,10 +70,11 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> MeshVAOGenerator::generate
     for (auto face : _mesh.faces()) {
         auto addPoint = [&](Mesh::FaceHandle face, uint32_t indexInFace) {
             auto p = _mesh.uvPoints(face)[indexInFace];
+            auto v = _mesh.vertices(face)[indexInFace];
             Draw::Vertex attrib;
             attrib.position = _mesh.position(_mesh.vertex(p));
             attrib.texCoord = _mesh.uvPosition(p);
-            attrib.normal = faceVertexNormals[face.index][indexInFace];
+            attrib.normal = vertexNormals[v.index];
 
             auto index = uint32_t(vertexAttributes.size());
             vertexAttributes.push_back(attrib);
