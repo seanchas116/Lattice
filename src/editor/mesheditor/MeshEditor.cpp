@@ -115,11 +115,32 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::Mesh
     connect(meshEditState->object().get(), &Document::MeshObject::subdivSettingsChanged, this, &MeshEditor::handleMeshChanged);
 }
 
-void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void MeshEditor::preDraw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     updateVAOs();
     resizeFramebuffers(glm::ivec2(camera->viewportSize()));
 
-    // TODO: Render faces
+    glEnable(GL_DEPTH_TEST);
+
+    auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
+
+    if (_appState->isFaceSelectable()) {
+        GL::Binder binder(*_faceHitFramebuffer);
+        operations->clear.clear(encodeIntToColor(-1), 1);
+        operations->drawUnicolor.draw(_facePickVAO, matrixToWorld, camera, vec4(0), true);
+    }
+    if (_appState->isEdgeSelectable()) {
+        GL::Binder binder(*_edgeHitFramebuffer);
+        operations->clear.clear(encodeIntToColor(-1), 1);
+        operations->drawLine.draw(_edgePickVAO, matrixToWorld, camera, 12.0, vec4(0), true);
+    }
+    if (_appState->isVertexSelectable()) {
+        GL::Binder binder(*_vertexHitFramebuffer);
+        operations->clear.clear(encodeIntToColor(-1), 1);
+        operations->drawCircle.draw(_vertexPickVAO, matrixToWorld, camera, 24.0, vec4(0), true);
+    }
+}
+
+void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
     auto& materials = _meshEditState->object()->materials();
 
@@ -152,26 +173,6 @@ void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const SP<Ca
     }
     if (_appState->isVertexSelectable()) {
         operations->drawCircle.draw(_vertexPickVAO, matrixToWorld, camera, 24.0, idColor, false);
-    }
-}
-
-void MeshEditor::drawCustomFramebuffer(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
-    auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
-
-    if (_appState->isFaceSelectable()) {
-        GL::Binder binder(*_faceHitFramebuffer);
-        operations->clear.clear(encodeIntToColor(-1), 1);
-        operations->drawUnicolor.draw(_facePickVAO, matrixToWorld, camera, vec4(0), true);
-    }
-    if (_appState->isEdgeSelectable()) {
-        GL::Binder binder(*_edgeHitFramebuffer);
-        operations->clear.clear(encodeIntToColor(-1), 1);
-        operations->drawLine.draw(_edgePickVAO, matrixToWorld, camera, 12.0, vec4(0), true);
-    }
-    if (_appState->isVertexSelectable()) {
-        GL::Binder binder(*_vertexHitFramebuffer);
-        operations->clear.clear(encodeIntToColor(-1), 1);
-        operations->drawCircle.draw(_vertexPickVAO, matrixToWorld, camera, 24.0, vec4(0), true);
     }
 }
 

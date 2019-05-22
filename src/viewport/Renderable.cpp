@@ -25,6 +25,16 @@ void Renderable::setChildRenderables(const std::vector<SP<Renderable> > &childre
     emit updated();
 }
 
+void Renderable::preDrawRecursive(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+    if (!_isVisible) {
+        return;
+    }
+    preDraw(operations, camera);
+    for (auto& c : childRenderables()) {
+        c->preDrawRecursive(operations, camera);
+    }
+}
+
 void Renderable::drawRecursive(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     if (!_isVisible) {
         return;
@@ -45,16 +55,6 @@ void Renderable::drawHitAreaRecursive(const SP<Draw::Operations> &operations, co
     }
 }
 
-void Renderable::drawCustomFramebufferRecursive(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
-    if (!_isVisible) {
-        return;
-    }
-    drawCustomFramebuffer(operations, camera);
-    for (auto& c : childRenderables()) {
-        c->drawCustomFramebufferRecursive(operations, camera);
-    }
-}
-
 void Renderable::draw2DRecursive(QPainter *painter, const QSize &viewportSize) {
     if (!_isVisible) {
         return;
@@ -72,15 +72,15 @@ void Renderable::getDescendants(std::vector<SP<Renderable>> &descendants) {
     }
 }
 
+void Renderable::preDraw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+    Q_UNUSED(operations); Q_UNUSED(camera);
+}
+
 void Renderable::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     Q_UNUSED(operations); Q_UNUSED(camera);
 }
 
 void Renderable::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
-    Q_UNUSED(operations); Q_UNUSED(camera);
-}
-
-void Renderable::drawCustomFramebuffer(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     Q_UNUSED(operations); Q_UNUSED(camera);
 }
 
