@@ -16,7 +16,7 @@ struct MeshData {
     std::vector<glm::vec2> uvPositionArray;
     std::vector<int32_t> uvVertexArray;
 
-    std::vector<uint8_t> edgeSmoothArray;
+    std::vector<uint8_t> edgeSharpArray;
     std::vector<float> edgeCreaseArray;
     std::vector<std::array<int32_t, 2>> edgeVerticesArray;
 

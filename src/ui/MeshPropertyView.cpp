@@ -59,9 +59,9 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
         layout->addRow(gridLayout);
     }
 
-    _edgeSmoothCheckBox = new Widget::MultiValueCheckBox(tr("Edge Smooth"));
-    connect(_edgeSmoothCheckBox, &Widget::MultiValueCheckBox::clicked, this, &MeshPropertyView::handleEdgeSmoothChange);
-    layout->addRow(_edgeSmoothCheckBox);
+    _edgeSharpCheckBox = new Widget::MultiValueCheckBox(tr("Edge Sharp"));
+    connect(_edgeSharpCheckBox, &Widget::MultiValueCheckBox::clicked, this, &MeshPropertyView::handleEdgeSharpChange);
+    layout->addRow(_edgeSharpCheckBox);
 
     _edgeCreaseSpinBox = new Widget::MultiValueDoubleSpinBox();
     connect(_edgeCreaseSpinBox, &Widget::MultiValueDoubleSpinBox::editingFinished, this, &MeshPropertyView::handleEdgeCreaseChange);
@@ -113,19 +113,19 @@ void MeshPropertyView::refreshValues() {
     {
         auto edges = mesh.edges(selection) | ranges::to_vector;
         if (edges.empty()) {
-            _edgeSmoothCheckBox->setEnabled(false);
+            _edgeSharpCheckBox->setEnabled(false);
             _edgeCreaseSpinBox->setEnabled(false);
         } else {
-            _edgeSmoothCheckBox->setEnabled(true);
+            _edgeSharpCheckBox->setEnabled(true);
             _edgeCreaseSpinBox->setEnabled(true);
 
-            std::vector<bool> isSmoothValues;
-            std::vector<double> creaseValues;
-            for (auto edge : edges) {
-                isSmoothValues.push_back(mesh.isSmooth(edge));
-                creaseValues.push_back(mesh.crease(edge));
+            std::vector<bool> isSharpValues(edges.size());
+            std::vector<double> creaseValues(edges.size());
+            for (size_t i = 0; i < edges.size(); ++i) {
+                isSharpValues[i] = mesh.isSharp(edges[i]);
+                creaseValues[i] = double(mesh.crease(edges[i]));
             }
-            _edgeSmoothCheckBox->setValues(isSmoothValues);
+            _edgeSharpCheckBox->setValues(isSharpValues);
             _edgeCreaseSpinBox->setValues(creaseValues);
         }
     }
@@ -160,7 +160,7 @@ void MeshPropertyView::handlePositionValueChange(int index, double value) {
     meshEditState->commitMeshChanged(tr("Set Vertex Position"));
 }
 
-void MeshPropertyView::handleEdgeSmoothChange(bool smooth) {
+void MeshPropertyView::handleEdgeSharpChange(bool sharp) {
     if (!_meshEditState) {
         return;
     }
@@ -171,10 +171,10 @@ void MeshPropertyView::handleEdgeSmoothChange(bool smooth) {
         return;
     }
     for (auto edge : edges) {
-        mesh.setSmooth(edge, smooth);
+        mesh.setSharp(edge, sharp);
     }
 
-    meshEditState->commitMeshChanged(tr("Set Edge Smooth"));
+    meshEditState->commitMeshChanged(tr("Set Edge Sharp"));
 }
 
 void MeshPropertyView::handleEdgeCreaseChange(double crease) {

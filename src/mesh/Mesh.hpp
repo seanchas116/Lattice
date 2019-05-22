@@ -32,7 +32,7 @@ struct UVPointData {
 
 struct EdgeData {
     bool isDeleted = false;
-    bool isSmooth = true;
+    bool isSharp = false;
     float crease = 0;
     std::array<VertexHandle, 2> vertices;
     std::vector<FaceHandle> faces;
@@ -206,8 +206,8 @@ public:
         return Ray<float>(pos0, pos1 - pos0);
     }
 
-    bool isSmooth(EdgeHandle edge) const { return edgeData(edge).isSmooth; }
-    void setSmooth(EdgeHandle edge, bool smooth) { edgeData(edge).isSmooth = smooth; }
+    bool isSharp(EdgeHandle edge) const { return edgeData(edge).isSharp; }
+    void setSharp(EdgeHandle edge, bool isSharp) { edgeData(edge).isSharp = isSharp; }
 
     float crease(EdgeHandle edge) const { return edgeData(edge).crease; }
     void setCrease(EdgeHandle edge, float crease) { edgeData(edge).crease = crease; }
