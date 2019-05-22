@@ -6,14 +6,8 @@ namespace Mesh {
 
 void SplitSharpEdges::perform(Mesh &mesh) const {
     for (auto v : mesh.vertices()) {
-        auto faces = mesh.faces(v) | ranges::to_vector;
-        if (faces.empty()) {
-            continue;
-        }
-        auto edges = mesh.edges(v) | ranges::to_vector;
-
         int nSharpEdges = 0;
-        for (auto e : edges) {
+        for (auto e : mesh.edges(v)) {
             if (!mesh.isSmooth(e) || ranges::distance(mesh.faces(e)) >= 3) {
                 ++nSharpEdges;
             }
@@ -21,6 +15,9 @@ void SplitSharpEdges::perform(Mesh &mesh) const {
         if (nSharpEdges <= 1) {
             continue;
         }
+
+        auto faces = mesh.faces(v) | ranges::to_vector;
+        auto edges = mesh.edges(v) | ranges::to_vector;
 
         // 1. split faces into groups by sharp edges
         // 2. create separate vertices for each group
