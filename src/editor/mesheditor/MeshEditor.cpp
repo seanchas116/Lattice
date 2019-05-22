@@ -11,6 +11,8 @@
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
 #include "../../gl/Framebuffer.hpp"
+#include "../../gl/Texture.hpp"
+#include "../../gl/Binder.hpp"
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
 #include "../../document/MeshObject.hpp"
@@ -198,6 +200,42 @@ void MeshEditor::drawHitUserColor(const SP<Draw::Operations> &operations, const 
         operations->drawLine.draw(_edgePickVAO, matrixToWorld, camera, 12.0, vec4(0), true);
     }
     if (_appState->isVertexSelectable()) {
+        operations->drawCircle.draw(_vertexPickVAO, matrixToWorld, camera, 24.0, vec4(0), true);
+    }
+}
+
+void MeshEditor::drawCustomFramebuffer(const SP<Draw::Operations> &operations, const SP<Camera> &camera)
+{
+    updateVAOs();
+
+    auto viewportSize = glm::ivec2(camera->viewportSize());
+    if (_framebufferSize != viewportSize) {
+        auto makeFramebuffer = [] (glm::ivec2 size) {
+            return makeShared<GL::Framebuffer>(size,
+                std::vector{makeShared<GL::Texture>(size, GL::Texture::Format::RGBA32F)},
+                makeShared<GL::Texture>(size, GL::Texture::Format::Depth24Stencil8));
+        };
+        _vertexHitFramebuffer = makeFramebuffer(viewportSize);
+        _edgeHitFramebuffer = makeFramebuffer(viewportSize);
+        _faceHitFramebuffer = makeFramebuffer(viewportSize);
+        _framebufferSize = viewportSize;
+    }
+
+    auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
+
+    if (_appState->isFaceSelectable()) {
+        GL::Binder binder(*_faceHitFramebuffer);
+        operations->clear.clear(glm::vec4(0), 1);
+        operations->drawUnicolor.draw(_facePickVAO, matrixToWorld, camera, vec4(0), true);
+    }
+    if (_appState->isEdgeSelectable()) {
+        GL::Binder binder(*_edgeHitFramebuffer);
+        operations->clear.clear(glm::vec4(0), 1);
+        operations->drawLine.draw(_edgePickVAO, matrixToWorld, camera, 12.0, vec4(0), true);
+    }
+    if (_appState->isVertexSelectable()) {
+        GL::Binder binder(*_vertexHitFramebuffer);
+        operations->clear.clear(glm::vec4(0), 1);
         operations->drawCircle.draw(_vertexPickVAO, matrixToWorld, camera, 24.0, vec4(0), true);
     }
 }
