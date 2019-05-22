@@ -1,5 +1,6 @@
 #include "MeshVAOGenerator.hpp"
 #include "../mesh/Mesh.hpp"
+#include "../mesh/algorithm/SplitSharpEdges.hpp"
 #include "../document/MeshObject.hpp"
 #include "../gl/VAO.hpp"
 #include "../gl/VertexBuffer.hpp"
@@ -49,15 +50,18 @@ SP<GL::VAO> MeshVAOGenerator::generateEdgeVAO() const {
 }
 
 std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() const {
+    auto mesh = _mesh;
+    Mesh::SplitSharpEdges().perform(mesh);
+
     // calculate normals
-    std::vector<glm::vec3> faceNormals(_mesh.faceCount());
-    for (auto face : _mesh.faces()) {
-        faceNormals[face.index] = _mesh.calculateNormal(face);
+    std::vector<glm::vec3> faceNormals(mesh.faceCount());
+    for (auto face : mesh.faces()) {
+        faceNormals[face.index] = mesh.calculateNormal(face);
     }
-    std::vector<glm::vec3> vertexNormals(_mesh.vertexCount());
-    for (auto vertex : _mesh.vertices()) {
+    std::vector<glm::vec3> vertexNormals(mesh.vertexCount());
+    for (auto vertex : mesh.vertices()) {
         glm::vec3 normalSum(0);
-        for (auto vertexFace : _mesh.faces(vertex)) {
+        for (auto vertexFace : mesh.faces(vertex)) {
             normalSum += faceNormals[vertexFace.index];
         }
         normalSum = glm::normalize(normalSum);
@@ -67,13 +71,13 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> MeshVAOGenerator::generate
     std::vector<Draw::Vertex> vertexAttributes;
     std::unordered_map<Mesh::MaterialHandle, std::vector<GL::IndexBuffer::Triangle>> trianglesMap;
 
-    for (auto face : _mesh.faces()) {
+    for (auto face : mesh.faces()) {
         auto addPoint = [&](Mesh::FaceHandle face, uint32_t indexInFace) {
-            auto p = _mesh.uvPoints(face)[indexInFace];
-            auto v = _mesh.vertices(face)[indexInFace];
+            auto p = mesh.uvPoints(face)[indexInFace];
+            auto v = mesh.vertices(face)[indexInFace];
             Draw::Vertex attrib;
-            attrib.position = _mesh.position(_mesh.vertex(p));
-            attrib.texCoord = _mesh.uvPosition(p);
+            attrib.position = mesh.position(mesh.vertex(p));
+            attrib.texCoord = mesh.uvPosition(p);
             attrib.normal = vertexNormals[v.index];
 
             auto index = uint32_t(vertexAttributes.size());
@@ -81,10 +85,10 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> MeshVAOGenerator::generate
             return index;
         };
 
-        auto& triangles = trianglesMap[_mesh.material(face)];
+        auto& triangles = trianglesMap[mesh.material(face)];
 
         auto i0 = addPoint(face, 0);
-        auto vertexCount = _mesh.uvPoints(face).size();
+        auto vertexCount = mesh.uvPoints(face).size();
         for (uint32_t i = 2; i < vertexCount; ++i) {
             auto i1 = addPoint(face, i - 1);
             auto i2 = addPoint(face, i);
