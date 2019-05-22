@@ -141,6 +141,7 @@ void MeshEditor::preDraw(const SP<Draw::Operations> &operations, const SP<Camera
     }
 
     {
+        // TODO: Use multisampled framebuffer
         GL::Binder binder(*_facesFramebuffer);
         operations->clear.clear(glm::vec4(0), 1);
         operations->drawUnicolor.draw(_faceVAO, matrixToWorld, camera, vec4(0), true);
