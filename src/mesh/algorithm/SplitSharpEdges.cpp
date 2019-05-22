@@ -1,4 +1,5 @@
 #include "SplitSharpEdges.hpp"
+#include <range/v3/algorithm/find.hpp>
 
 namespace Lattice {
 namespace Mesh {
@@ -67,6 +68,22 @@ void SplitSharpEdges::perform(Mesh &mesh) const {
             }
             if (!addedToGroup) {
                 faceGroups.push_back({f});
+            }
+        }
+
+        for (auto it = faceGroups.begin() + 1; it != faceGroups.end(); ++it) {
+            auto& faceGroup = *it;
+            auto newVertex = mesh.addVertex(mesh.position(v));
+
+            for (auto f : faceGroup) {
+                auto vertices = mesh.vertices(f);
+                auto vertexIndex = ranges::find(vertices, v) - vertices.begin();
+                std::vector<UVPointHandle> uvPoints = mesh.uvPoints(f);
+                uvPoints[vertexIndex] = mesh.addUVPoint(newVertex, mesh.uvPosition(uvPoints[vertexIndex]));
+                auto material = mesh.material(f);
+
+                mesh.removeFace(f);
+                mesh.addFace(uvPoints, material);
             }
         }
     }
