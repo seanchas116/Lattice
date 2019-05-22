@@ -77,6 +77,8 @@ private:
     void updateManipulatorVisibility();
     void updateChildren();
 
+    void resizeFramebuffers(glm::ivec2 size);
+
     void handleMeshChanged();
 
     SP<State::AppState> _appState;

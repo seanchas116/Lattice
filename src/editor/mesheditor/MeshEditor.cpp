@@ -113,6 +113,7 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::Mesh
 
 void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     updateVAOs();
+    resizeFramebuffers(glm::ivec2(camera->viewportSize()));
 
     // TODO: Render faces
     auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
@@ -134,8 +135,6 @@ void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &
 }
 
 void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
-    updateVAOs();
-
     auto idColor = toIDColor();
     operations->clear.clear(idColor, 1);
 
@@ -152,23 +151,7 @@ void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const SP<Ca
     }
 }
 
-void MeshEditor::drawCustomFramebuffer(const SP<Draw::Operations> &operations, const SP<Camera> &camera)
-{
-    updateVAOs();
-
-    auto viewportSize = glm::ivec2(camera->viewportSize());
-    if (_framebufferSize != viewportSize) {
-        auto makeFramebuffer = [] (glm::ivec2 size) {
-            return makeShared<GL::Framebuffer>(size,
-                std::vector{makeShared<GL::Texture>(size, GL::Texture::Format::RGBA32F)},
-                makeShared<GL::Texture>(size, GL::Texture::Format::Depth24Stencil8));
-        };
-        _vertexHitFramebuffer = makeFramebuffer(viewportSize);
-        _edgeHitFramebuffer = makeFramebuffer(viewportSize);
-        _faceHitFramebuffer = makeFramebuffer(viewportSize);
-        _framebufferSize = viewportSize;
-    }
-
+void MeshEditor::drawCustomFramebuffer(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
 
     if (_appState->isFaceSelectable()) {
@@ -268,6 +251,20 @@ void MeshEditor::updateManipulatorVisibility() {
 
 void MeshEditor::updateChildren() {
     setChildRenderables({_manipulator, _tool});
+}
+
+void MeshEditor::resizeFramebuffers(ivec2 size) {
+    if (_framebufferSize != size) {
+        auto makeFramebuffer = [&] () {
+            return makeShared<GL::Framebuffer>(size,
+                                               std::vector{makeShared<GL::Texture>(size, GL::Texture::Format::RGBA32F)},
+                                               makeShared<GL::Texture>(size, GL::Texture::Format::Depth24Stencil8));
+        };
+        _vertexHitFramebuffer = makeFramebuffer();
+        _edgeHitFramebuffer = makeFramebuffer();
+        _faceHitFramebuffer = makeFramebuffer();
+        _framebufferSize = size;
+    }
 }
 
 void MeshEditor::handleMeshChanged() {
