@@ -119,6 +119,7 @@ void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &
         operations->drawMaterial.draw(vao, matrixToWorld, camera, material);
     }
 
+    operations->drawUnicolor.draw(_faceVAO, matrixToWorld, camera, vec4(0), true);
     operations->drawLine.draw(_edgeVAO, matrixToWorld, camera, 1.0, vec4(0), true);
     if (_appState->isVertexSelectable()) {
         operations->drawCircle.draw(_vertexVAO, matrixToWorld, camera, 6.0, vec4(0), true);
@@ -391,8 +392,10 @@ void MeshEditor::updateVAOs() {
     }
 
     {
+        std::vector<Draw::Vertex> faceAttributes;
         std::vector<Draw::Vertex> facePickAttributes;
         std::vector<GL::IndexBuffer::Triangle> faceTriangles;
+        faceAttributes.reserve(_facePickVBO->size());
         facePickAttributes.reserve(_facePickVBO->size());
         faceTriangles.reserve(_faceIBO->size() / 3);
 
@@ -404,14 +407,30 @@ void MeshEditor::updateVAOs() {
                 faceTriangles.push_back({i0, i1, i2});
             }
 
+            bool selected = true;
+            for (auto v : mesh.vertices(f)) {
+                if (!mesh.isSelected(v)) {
+                    selected = false;
+                }
+            }
+
+            bool hovered = f == _hoveredTarget.face;
             vec4 indexColor = encodeIntToColor(f.index);
             for (auto& p : mesh.uvPoints(f)) {
+                auto position = mesh.position(mesh.vertex(p));
+
+                Draw::Vertex attrib;
+                attrib.position = position;
+                attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
+                faceAttributes.push_back(attrib);
+
                 Draw::Vertex pickAttrib;
-                pickAttrib.position = mesh.position(mesh.vertex(p));
+                pickAttrib.position = position;
                 pickAttrib.color = indexColor;
                 facePickAttributes.push_back(pickAttrib);
             }
         }
+        _faceVBO->setVertices(faceAttributes);
         _facePickVBO->setVertices(facePickAttributes);
         _faceIBO->setTriangles(faceTriangles);
     }
