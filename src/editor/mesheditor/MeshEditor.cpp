@@ -155,14 +155,15 @@ void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &
         operations->drawMaterial.draw(vao, matrixToWorld, camera, material);
     }
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    operations->copy.copy(_facesTexture, _facesDepthTexture, 0.5);
-    glDisable(GL_BLEND);
     operations->drawLine.draw(_edgeVAO, matrixToWorld, camera, 1.0, vec4(0), true);
     if (_appState->isVertexSelectable()) {
         operations->drawCircle.draw(_vertexVAO, matrixToWorld, camera, 6.0, vec4(0), true);
     }
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    operations->copy.copy(_facesTexture, _facesDepthTexture, 0.5);
+    glDisable(GL_BLEND);
 }
 
 void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
