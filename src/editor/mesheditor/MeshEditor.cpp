@@ -77,7 +77,7 @@ glm::vec4 encodeEventTargetToColor(const Tool::EventTarget& target) {
 }
 
 Tool::EventTarget decodeColorToEventTarget(glm::vec4 color) {
-    int value = decodeColorToInt(color);
+    int value = int(decodeColorToInt(color));
     if (value < 0) {
         return {};
     }
