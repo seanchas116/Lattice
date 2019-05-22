@@ -5,6 +5,7 @@ namespace Lattice {
 namespace Mesh {
 
 class SplitSharpEdges {
+public:
     void perform(Mesh& mesh) const;
 };
 
