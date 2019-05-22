@@ -41,7 +41,7 @@ void Copy::copy(const SP<GL::Texture> &texture, const SP<GL::Texture> &depthText
     depthTexture->bind();
 
     _shader.setUniform("colorSampler", 0);
-    _shader.setUniform("depthSampler", 0);
+    _shader.setUniform("depthSampler", 1);
     _shader.setUniform("opacity", opacity);
     _vao->draw();
 }

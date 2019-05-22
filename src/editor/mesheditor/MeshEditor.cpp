@@ -35,9 +35,9 @@ const vec4 unselectedColor = vec4(0, 0, 0, 1);
 const vec4 selectedColor = vec4(1, 1, 1, 1);
 const vec4 hoveredColor = vec4(1, 1, 0, 1);
 
-const vec4 unselectedFaceColor = vec4(0, 0, 0, 0.5);
-const vec4 selectedFaceColor = vec4(1, 1, 1, 0.5);
-const vec4 hoveredFaceColor = vec4(1, 1, 0, 0.5);
+const vec4 unselectedFaceColor = vec4(0, 0, 0, 1);
+const vec4 selectedFaceColor = vec4(1, 1, 1, 1);
+const vec4 hoveredFaceColor = vec4(1, 1, 0, 1);
 
 const vec4 unselectedFaceHighlight = vec4(0, 0, 0, 0);
 const vec4 selectedFaceHighlight = vec4(1, 1, 1, 0.5);
@@ -138,6 +138,12 @@ void MeshEditor::preDraw(const SP<Draw::Operations> &operations, const SP<Camera
         operations->clear.clear(encodeIntToColor(-1), 1);
         operations->drawCircle.draw(_vertexPickVAO, matrixToWorld, camera, 24.0, vec4(0), true);
     }
+
+    {
+        GL::Binder binder(*_facesFramebuffer);
+        operations->clear.clear(glm::vec4(0), 1);
+        operations->drawUnicolor.draw(_faceVAO, matrixToWorld, camera, vec4(0), true);
+    }
 }
 
 void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
@@ -150,8 +156,8 @@ void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &
     }
 
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    operations->drawUnicolor.draw(_faceVAO, matrixToWorld, camera, vec4(0), true);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    operations->copy.copy(_facesTexture, _facesDepthTexture, 0.5);
     glDisable(GL_BLEND);
     operations->drawLine.draw(_edgeVAO, matrixToWorld, camera, 1.0, vec4(0), true);
     if (_appState->isVertexSelectable()) {
