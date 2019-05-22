@@ -39,70 +39,26 @@ const vec4 unselectedFaceHighlight = vec4(0, 0, 0, 0);
 const vec4 selectedFaceHighlight = vec4(1, 1, 1, 0.5);
 const vec4 hoveredFaceHighlight = vec4(1, 1, 0.5, 0.5);
 
+glm::vec4 encodeIntToColor(int64_t value) {
+    union {
+        int64_t value;
+        glm::u16vec4 color;
+    } valueColor;
+    valueColor.value = value;
+
+    return glm::vec4(valueColor.color) / float(0xFFFF);
 }
 
-// TODO: find beteter name
-class EventTargetValue {
-    static glm::vec4 encodeValueToColor(uint64_t value) {
-        union {
-            uint64_t value;
-            glm::u16vec4 color;
-        } valueColor;
-        valueColor.value = value;
+int64_t decodeColorToInt(glm::vec4 color) {
+    union {
+        int64_t value;
+        glm::u16vec4 color;
+    } valueColor;
+    valueColor.color = glm::u16vec4(glm::round(color * float(0xFFFF)));
+    return valueColor.value;
+}
 
-        return glm::vec4(valueColor.color) / float(0xFFFF);
-    }
-
-    static uint64_t decodeColorToValue(glm::vec4 color) {
-        union {
-            uint64_t value;
-            glm::u16vec4 color;
-        } valueColor;
-        valueColor.color = glm::u16vec4(glm::round(color * float(0xFFFF)));
-        return valueColor.value;
-    }
-
-    uint64_t value;
-
-public:
-    EventTargetValue(glm::vec4 hitUserColor) {
-        value = decodeColorToValue(hitUserColor);
-    }
-    EventTargetValue() {
-        value = 0;
-    }
-    EventTargetValue(Mesh::VertexHandle v) {
-        value = v.index * 3 + 1;
-    }
-    EventTargetValue(Mesh::EdgeHandle e) {
-        value = e.index * 3 + 2;
-    }
-    EventTargetValue(Mesh::FaceHandle f) {
-        value = f.index * 3 + 3;
-    }
-
-    glm::vec4 hitUserColor() const {
-        return encodeValueToColor(value);
-    }
-
-    Tool::EventTarget eventTarget() const {
-        if (value == 0) {
-            return {};
-        }
-
-        uint64_t type = (value - 1) % 3;
-        uint64_t index = (value - 1) / 3;
-        switch (type) {
-        case 0:
-            return {Mesh::VertexHandle(index), {}, {}};
-        case 1:
-            return {{}, Mesh::EdgeHandle(index), {}};
-        case 2:
-            return {{}, {}, Mesh::FaceHandle(index)};
-        }
-        return {};
-    }
-};
+}
 
 MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::MeshEditState> &meshEditState) :
     _appState(appState),
@@ -185,25 +141,6 @@ void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const SP<Ca
     }
 }
 
-void MeshEditor::drawHitUserColor(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
-    updateVAOs();
-
-    auto background = EventTargetValue().hitUserColor();
-    operations->clear.clear(background, 1);
-
-    auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
-
-    if (_appState->isFaceSelectable()) {
-        operations->drawUnicolor.draw(_facePickVAO, matrixToWorld, camera, vec4(0), true);
-    }
-    if (_appState->isEdgeSelectable()) {
-        operations->drawLine.draw(_edgePickVAO, matrixToWorld, camera, 12.0, vec4(0), true);
-    }
-    if (_appState->isVertexSelectable()) {
-        operations->drawCircle.draw(_vertexPickVAO, matrixToWorld, camera, 24.0, vec4(0), true);
-    }
-}
-
 void MeshEditor::drawCustomFramebuffer(const SP<Draw::Operations> &operations, const SP<Camera> &camera)
 {
     updateVAOs();
@@ -225,35 +162,35 @@ void MeshEditor::drawCustomFramebuffer(const SP<Draw::Operations> &operations, c
 
     if (_appState->isFaceSelectable()) {
         GL::Binder binder(*_faceHitFramebuffer);
-        operations->clear.clear(glm::vec4(0), 1);
+        operations->clear.clear(encodeIntToColor(-1), 1);
         operations->drawUnicolor.draw(_facePickVAO, matrixToWorld, camera, vec4(0), true);
     }
     if (_appState->isEdgeSelectable()) {
         GL::Binder binder(*_edgeHitFramebuffer);
-        operations->clear.clear(glm::vec4(0), 1);
+        operations->clear.clear(encodeIntToColor(-1), 1);
         operations->drawLine.draw(_edgePickVAO, matrixToWorld, camera, 12.0, vec4(0), true);
     }
     if (_appState->isVertexSelectable()) {
         GL::Binder binder(*_vertexHitFramebuffer);
-        operations->clear.clear(glm::vec4(0), 1);
+        operations->clear.clear(encodeIntToColor(-1), 1);
         operations->drawCircle.draw(_vertexPickVAO, matrixToWorld, camera, 24.0, vec4(0), true);
     }
 }
 
 void MeshEditor::mousePressEvent(const Viewport::MouseEvent &event) {
-    mousePressTarget(EventTargetValue(event.hitUserColor).eventTarget(), event);
+    mousePressTarget(pickEventTarget(event.viewportPos), event);
 }
 
 void MeshEditor::mouseMoveEvent(const Viewport::MouseEvent &event) {
-    mouseMoveTarget(EventTargetValue(event.hitUserColor).eventTarget(), event);
+    mouseMoveTarget(pickEventTarget(event.viewportPos), event);
 }
 
 void MeshEditor::mouseReleaseEvent(const Viewport::MouseEvent &event) {
-    mouseReleaseTarget(EventTargetValue(event.hitUserColor).eventTarget(), event);
+    mouseReleaseTarget(pickEventTarget(event.viewportPos), event);
 }
 
 void MeshEditor::contextMenuEvent(const Viewport::MouseEvent &event) {
-    contextMenuTarget(EventTargetValue(event.hitUserColor).eventTarget(), event);
+    contextMenuTarget(pickEventTarget(event.viewportPos), event);
 }
 
 void MeshEditor::keyPressEvent(QKeyEvent *event) {
@@ -287,6 +224,29 @@ void MeshEditor::handleToolChange(State::Tool tool) {
     });
     updateManipulatorVisibility();
     updateChildren();
+}
+
+Tool::EventTarget MeshEditor::pickEventTarget(vec2 pos) {
+    recallContext();
+    PixelData<vec4> pixels(glm::ivec2(1));
+
+    _vertexHitFramebuffer->readPixels(pos, pixels);
+    auto vertexIndex = decodeColorToInt(pixels.data()[0]);
+    if (vertexIndex >= 0) {
+        return {Mesh::VertexHandle(vertexIndex), {}, {}};
+    }
+    _edgeHitFramebuffer->readPixels(pos, pixels);
+    auto edgeIndex = decodeColorToInt(pixels.data()[0]);
+    if (edgeIndex >= 0) {
+        return {{}, Mesh::EdgeHandle(edgeIndex), {}};
+    }
+    _faceHitFramebuffer->readPixels(pos, pixels);
+    auto faceIndex = decodeColorToInt(pixels.data()[0]);
+    if (faceIndex >= 0) {
+        return {{}, {}, Mesh::FaceHandle(faceIndex)};
+    }
+
+    return {};
 }
 
 void MeshEditor::updateManipulatorVisibility() {
@@ -387,7 +347,7 @@ void MeshEditor::updateVAOs() {
 
             Draw::PointLineVertex pickAttrib;
             pickAttrib.position = mesh.position(v);
-            pickAttrib.color = EventTargetValue(v).hitUserColor();
+            pickAttrib.color = encodeIntToColor(v.index);
             pickAttrib.width = hitTestExcluded ? 0 : 1;
             vertexPickAttributes.push_back(pickAttrib);
         }
@@ -407,6 +367,7 @@ void MeshEditor::updateVAOs() {
             bool hovered = e == _hoveredEdge;
             bool hitTestExcluded = ranges::find(hitTestExclusion.edges, e) != hitTestExclusion.edges.end();
             float crease = mesh.crease(e);
+            vec4 indexColor = encodeIntToColor(e.index);
 
             for (size_t vertexInEdgeIndex = 0; vertexInEdgeIndex < 2; ++vertexInEdgeIndex) {
                 auto& v = mesh.vertices(e)[vertexInEdgeIndex];
@@ -420,7 +381,7 @@ void MeshEditor::updateVAOs() {
 
                 Draw::PointLineVertex pickAttrib;
                 pickAttrib.position = mesh.position(v);
-                pickAttrib.color = EventTargetValue(e).hitUserColor();
+                pickAttrib.color = indexColor;
                 pickAttrib.width = hitTestExcluded ? 0 : 1;
                 edgePickAttributes.push_back(pickAttrib);
             }
@@ -444,10 +405,11 @@ void MeshEditor::updateVAOs() {
                 faceTriangles.push_back({i0, i1, i2});
             }
 
+            vec4 indexColor = encodeIntToColor(f.index);
             for (auto& p : mesh.uvPoints(f)) {
                 Draw::Vertex pickAttrib;
                 pickAttrib.position = mesh.position(mesh.vertex(p));
-                pickAttrib.color = EventTargetValue(f).hitUserColor();
+                pickAttrib.color = indexColor;
                 facePickAttributes.push_back(pickAttrib);
             }
         }
