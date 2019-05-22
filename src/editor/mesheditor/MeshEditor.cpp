@@ -164,7 +164,7 @@ void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    operations->copy.copy(_facesTexture, _facesDepthTexture, 0.5);
+    operations->copy.copy(_facesTexture, _facesDepthTexture, 0.4);
     glDisable(GL_BLEND);
 }
 
