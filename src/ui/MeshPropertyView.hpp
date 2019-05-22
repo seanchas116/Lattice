@@ -31,14 +31,14 @@ public:
 private:
     void refreshValues();
     void handlePositionValueChange(int index, double value);
-    void handleEdgeSmoothChange(bool smooth);
+    void handleEdgeSharpChange(bool sharp);
     void handleEdgeCreaseChange(double crease);
 
     SP<State::AppState> _appState;
     Opt<SP<State::MeshEditState>> _meshEditState;
     QMetaObject::Connection _connection;
     std::array<Widget::MultiValueDoubleSpinBox*, 3> _positionSpinBoxes;
-    Widget::MultiValueCheckBox* _edgeSmoothCheckBox = nullptr;
+    Widget::MultiValueCheckBox* _edgeSharpCheckBox = nullptr;
     Widget::MultiValueDoubleSpinBox* _edgeCreaseSpinBox = nullptr;
 };
 

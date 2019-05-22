@@ -8,7 +8,7 @@ void SplitSharpEdges::perform(Mesh &mesh) const {
     for (auto v : mesh.vertices()) {
         int nSharpEdges = 0;
         for (auto e : mesh.edges(v)) {
-            if (!mesh.isSmooth(e) || ranges::distance(mesh.faces(e)) >= 3) {
+            if (mesh.isSharp(e) || ranges::distance(mesh.faces(e)) >= 3) {
                 ++nSharpEdges;
             }
         }
@@ -24,7 +24,7 @@ void SplitSharpEdges::perform(Mesh &mesh) const {
 
         std::vector<std::array<FaceHandle, 2>> faceConnections;
         for (auto e : edges) {
-            if (!mesh.isSmooth(e)) {
+            if (mesh.isSharp(e)) {
                 continue;
             }
             auto edgeFaces = mesh.faces(e) | ranges::to_vector;
