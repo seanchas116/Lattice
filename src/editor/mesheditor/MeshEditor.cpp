@@ -85,6 +85,10 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::Mesh
 
     _tool(makeShared<MoveTool>(meshEditState)),
 
+    _facesFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))),
+    _facesTexture(makeShared<GL::Texture>(glm::ivec2(0, 0))),
+    _facesDepthTexture(makeShared<GL::Texture>(glm::ivec2(0, 0))),
+
     _vertexHitFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))),
     _edgeHitFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))),
     _faceHitFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0)))

@@ -108,6 +108,11 @@ private:
     SP<Tool> _tool;
 
     glm::ivec2 _framebufferSize {0};
+
+    SP<GL::Framebuffer> _facesFramebuffer;
+    SP<GL::Texture> _facesTexture;
+    SP<GL::Texture> _facesDepthTexture;
+
     SP<GL::Framebuffer> _vertexHitFramebuffer;
     SP<GL::Framebuffer> _edgeHitFramebuffer;
     SP<GL::Framebuffer> _faceHitFramebuffer;
