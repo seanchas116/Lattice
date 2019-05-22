@@ -7,10 +7,12 @@
 namespace Lattice {
 namespace Mesh {
 
-std::vector<VertexHandle> LoopCut::perform(Mesh &mesh) {
+std::vector<VertexHandle> LoopCut::perform(Mesh &mesh) const {
     bool isEdgeReverse = false;
     std::vector<std::pair<EdgeHandle, bool>> edges;
     Opt<FaceHandle> lastFace;
+
+    auto edge = this->edge;
 
     while (true) {
         edges.push_back({edge, isEdgeReverse});

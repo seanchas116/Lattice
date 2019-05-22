@@ -8,7 +8,7 @@ class LoopCut {
 public:
     LoopCut(EdgeHandle edge, float cutPosition) : edge(edge), cutPosition(cutPosition) {}
 
-    std::vector<VertexHandle> perform(Mesh& mesh);
+    std::vector<VertexHandle> perform(Mesh& mesh) const;
 
     EdgeHandle edge;
     float cutPosition;
