@@ -65,8 +65,10 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::Mesh
     _meshEditState(meshEditState),
     _manipulator(makeShared<Manipulator::MeshManipulator>(meshEditState->object()->location().matrixToWorld(), meshEditState->mesh())),
 
-    _facePickVBO(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
     _faceIBO(makeShared<GL::IndexBuffer>()),
+    _faceVBO(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
+    _faceVAO(makeShared<GL::VAO>(_faceVBO, _faceIBO)),
+    _facePickVBO(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
     _facePickVAO(makeShared<GL::VAO>(_facePickVBO, _faceIBO)),
     _edgeVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
     _edgeVAO(makeShared<GL::VAO>(_edgeVBO, GL::Primitive::Line)),

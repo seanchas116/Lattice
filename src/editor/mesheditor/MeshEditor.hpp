@@ -86,13 +86,18 @@ private:
 
     bool _isVAOsDirty = true;
     std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> _finalShapeVAOs;
-    SP<GL::VertexBuffer<Draw::Vertex>> _facePickVBO;
+
     SP<GL::IndexBuffer> _faceIBO;
+    SP<GL::VertexBuffer<Draw::Vertex>> _faceVBO;
+    SP<GL::VAO> _faceVAO;
+    SP<GL::VertexBuffer<Draw::Vertex>> _facePickVBO;
     SP<GL::VAO> _facePickVAO;
+
     SP<GL::VertexBuffer<Draw::PointLineVertex>> _edgeVBO;
     SP<GL::VAO> _edgeVAO;
     SP<GL::VertexBuffer<Draw::PointLineVertex>> _edgePickVBO;
     SP<GL::VAO> _edgePickVAO;
+
     SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexVBO;
     SP<GL::VAO> _vertexVAO;
     SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexPickVBO;
