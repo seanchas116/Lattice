@@ -10,6 +10,7 @@
 #include "../../gl/ContextRecallable.hpp"
 #include <glm/glm.hpp>
 #include <unordered_map>
+#include <QOpenGLExtraFunctions>
 
 namespace Lattice {
 
@@ -38,7 +39,7 @@ class MeshManipulator;
 
 namespace MeshEditor {
 
-class MeshEditor final : public Viewport::Renderable, protected GL::ContextRecallable {
+class MeshEditor final : public Viewport::Renderable, protected GL::ContextRecallable, protected QOpenGLExtraFunctions {
     Q_OBJECT
 public:
     MeshEditor(const SP<State::AppState>& appState, const SP<State::MeshEditState>& meshEditState);

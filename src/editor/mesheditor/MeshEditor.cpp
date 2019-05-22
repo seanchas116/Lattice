@@ -83,6 +83,7 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::Mesh
     _edgeHitFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))),
     _faceHitFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0)))
 {
+    initializeOpenGLFunctions();
     updateVAOs();
 
     connect(appState.get(), &State::AppState::toolChanged, this, &MeshEditor::handleToolChange);
