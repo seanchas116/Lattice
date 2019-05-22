@@ -259,14 +259,18 @@ void MeshEditor::updateChildren() {
 
 void MeshEditor::resizeFramebuffers(ivec2 size) {
     if (_framebufferSize != size) {
-        auto makeFramebuffer = [&] () {
+        _facesTexture = makeShared<GL::Texture>(size, GL::Texture::Format::RGBA8);
+        _facesDepthTexture = makeShared<GL::Texture>(size, GL::Texture::Format::Depth24Stencil8);
+        _facesFramebuffer = makeShared<GL::Framebuffer>(size, std::vector{_facesTexture}, _facesDepthTexture);
+
+        auto makeHitFramebuffer = [&] () {
             return makeShared<GL::Framebuffer>(size,
                                                std::vector{makeShared<GL::Texture>(size, GL::Texture::Format::RGBA32F)},
                                                makeShared<GL::Texture>(size, GL::Texture::Format::Depth24Stencil8));
         };
-        _vertexHitFramebuffer = makeFramebuffer();
-        _edgeHitFramebuffer = makeFramebuffer();
-        _faceHitFramebuffer = makeFramebuffer();
+        _vertexHitFramebuffer = makeHitFramebuffer();
+        _edgeHitFramebuffer = makeHitFramebuffer();
+        _faceHitFramebuffer = makeHitFramebuffer();
         _framebufferSize = size;
     }
 }
