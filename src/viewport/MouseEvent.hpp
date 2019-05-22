@@ -8,7 +8,6 @@ namespace Viewport {
 
 struct MouseEvent {
     glm::dvec3 viewportPos;
-    glm::vec4 hitUserColor;
     SP<Camera> camera;
     QMouseEvent* originalMouseEvent;
     QContextMenuEvent* originalContextMenuEvent;
