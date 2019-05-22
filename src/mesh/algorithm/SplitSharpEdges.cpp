@@ -11,6 +11,9 @@ void SplitSharpEdges::perform(Mesh &mesh) const {
                 ++nSharpEdges;
             }
         }
+        if (nSharpEdges <= 1) {
+            continue;
+        }
     }
 }
 
