@@ -91,6 +91,9 @@ void VAO::draw() {
         case Primitive::Triangle:
             glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
             break;
+        case Primitive::TriangleFan:
+            glDrawElements(GL_TRIANGLE_FAN, indexCount, GL_UNSIGNED_INT, nullptr);
+            break;
         }
     } else {
         auto bufferSize = GLsizei(_buffers[0].first->size());
@@ -104,6 +107,9 @@ void VAO::draw() {
             break;
         case Primitive::Triangle:
             glDrawArrays(GL_TRIANGLES, 0, bufferSize);
+            break;
+        case Primitive::TriangleFan:
+            glDrawArrays(GL_TRIANGLE_FAN, 0, bufferSize);
             break;
         }
     }

@@ -61,6 +61,9 @@ void ViewportContainer::paintGL() {
         if (!viewport->_renderable) {
             continue;
         }
+
+        (*viewport->_renderable)->preDrawRecursive(operations, viewport->_camera);
+
         glm::dvec2 minPos = mapQtToGL(this, viewport->mapTo(this, viewport->rect().bottomLeft()));
         glm::dvec2 maxPos = mapQtToGL(this, viewport->mapTo(this, viewport->rect().topRight()));
         glm::ivec2 minPosViewport = round(minPos * devicePixelRatioF());
@@ -78,8 +81,6 @@ void ViewportContainer::paintGL() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         viewport->hitAreaMap()->draw(*viewport->_renderable, operations, viewport->camera());
-
-        (*viewport->_renderable)->drawCustomFramebufferRecursive(operations, viewport->_camera);
     }
 
     glDisable(GL_CULL_FACE);

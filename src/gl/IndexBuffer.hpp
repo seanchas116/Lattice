@@ -9,6 +9,7 @@ enum class Primitive {
     Point,
     Line,
     Triangle,
+    TriangleFan,
 };
 
 class IndexBuffer : protected QOpenGLExtraFunctions {

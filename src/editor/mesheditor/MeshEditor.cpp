@@ -35,6 +35,10 @@ const vec4 unselectedColor = vec4(0, 0, 0, 1);
 const vec4 selectedColor = vec4(1, 1, 1, 1);
 const vec4 hoveredColor = vec4(1, 1, 0, 1);
 
+const vec4 unselectedFaceColor = vec4(0, 0, 0, 1);
+const vec4 selectedFaceColor = vec4(1, 1, 1, 1);
+const vec4 hoveredFaceColor = vec4(1, 1, 0, 1);
+
 const vec4 unselectedFaceHighlight = vec4(0, 0, 0, 0);
 const vec4 selectedFaceHighlight = vec4(1, 1, 1, 0.5);
 const vec4 hoveredFaceHighlight = vec4(1, 1, 0.5, 0.5);
@@ -65,8 +69,10 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::Mesh
     _meshEditState(meshEditState),
     _manipulator(makeShared<Manipulator::MeshManipulator>(meshEditState->object()->location().matrixToWorld(), meshEditState->mesh())),
 
-    _facePickVBO(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
     _faceIBO(makeShared<GL::IndexBuffer>()),
+    _faceVBO(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
+    _faceVAO(makeShared<GL::VAO>(_faceVBO, _faceIBO)),
+    _facePickVBO(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
     _facePickVAO(makeShared<GL::VAO>(_facePickVBO, _faceIBO)),
     _edgeVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
     _edgeVAO(makeShared<GL::VAO>(_edgeVBO, GL::Primitive::Line)),
@@ -79,10 +85,15 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::Mesh
 
     _tool(makeShared<MoveTool>(meshEditState)),
 
+    _facesFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))),
+    _facesTexture(makeShared<GL::Texture>(glm::ivec2(0, 0))),
+    _facesDepthTexture(makeShared<GL::Texture>(glm::ivec2(0, 0))),
+
     _vertexHitFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))),
     _edgeHitFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))),
     _faceHitFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0)))
 {
+    initializeOpenGLFunctions();
     updateVAOs();
 
     connect(appState.get(), &State::AppState::toolChanged, this, &MeshEditor::handleToolChange);
@@ -104,59 +115,12 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::Mesh
     connect(meshEditState->object().get(), &Document::MeshObject::subdivSettingsChanged, this, &MeshEditor::handleMeshChanged);
 }
 
-void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void MeshEditor::preDraw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+    // TODO: use separate framebuffer for each viewport instead of resizing them
     updateVAOs();
+    resizeFramebuffers(glm::ivec2(camera->viewportSize()));
 
-    // TODO: Render faces
-    auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
-    auto& materials = _meshEditState->object()->materials();
-
-    for (auto& [materialID, vao] : _finalShapeVAOs) {
-        auto material = materials.at(materialID.index).toDrawMaterial();
-        operations->drawMaterial.draw(vao, matrixToWorld, camera, material);
-    }
-
-    operations->drawLine.draw(_edgeVAO, matrixToWorld, camera, 1.0, vec4(0), true);
-    if (_appState->isVertexSelectable()) {
-        operations->drawCircle.draw(_vertexVAO, matrixToWorld, camera, 6.0, vec4(0), true);
-    }
-}
-
-void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
-    updateVAOs();
-
-    auto idColor = toIDColor();
-    operations->clear.clear(idColor, 1);
-
-    auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
-
-    if (_appState->isFaceSelectable()) {
-        operations->drawUnicolor.draw(_facePickVAO, matrixToWorld, camera, idColor, false);
-    }
-    if (_appState->isEdgeSelectable()) {
-        operations->drawLine.draw(_edgePickVAO, matrixToWorld, camera, 12.0, idColor, false);
-    }
-    if (_appState->isVertexSelectable()) {
-        operations->drawCircle.draw(_vertexPickVAO, matrixToWorld, camera, 24.0, idColor, false);
-    }
-}
-
-void MeshEditor::drawCustomFramebuffer(const SP<Draw::Operations> &operations, const SP<Camera> &camera)
-{
-    updateVAOs();
-
-    auto viewportSize = glm::ivec2(camera->viewportSize());
-    if (_framebufferSize != viewportSize) {
-        auto makeFramebuffer = [] (glm::ivec2 size) {
-            return makeShared<GL::Framebuffer>(size,
-                std::vector{makeShared<GL::Texture>(size, GL::Texture::Format::RGBA32F)},
-                makeShared<GL::Texture>(size, GL::Texture::Format::Depth24Stencil8));
-        };
-        _vertexHitFramebuffer = makeFramebuffer(viewportSize);
-        _edgeHitFramebuffer = makeFramebuffer(viewportSize);
-        _faceHitFramebuffer = makeFramebuffer(viewportSize);
-        _framebufferSize = viewportSize;
-    }
+    glEnable(GL_DEPTH_TEST);
 
     auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
 
@@ -174,6 +138,50 @@ void MeshEditor::drawCustomFramebuffer(const SP<Draw::Operations> &operations, c
         GL::Binder binder(*_vertexHitFramebuffer);
         operations->clear.clear(encodeIntToColor(-1), 1);
         operations->drawCircle.draw(_vertexPickVAO, matrixToWorld, camera, 24.0, vec4(0), true);
+    }
+
+    {
+        // TODO: Use multisampled framebuffer
+        GL::Binder binder(*_facesFramebuffer);
+        operations->clear.clear(glm::vec4(0), 1);
+        operations->drawUnicolor.draw(_faceVAO, matrixToWorld, camera, vec4(0), true);
+    }
+}
+
+void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+    auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
+    auto& materials = _meshEditState->object()->materials();
+
+    for (auto& [materialID, vao] : _finalShapeVAOs) {
+        auto material = materials.at(materialID.index).toDrawMaterial();
+        operations->drawMaterial.draw(vao, matrixToWorld, camera, material);
+    }
+
+    operations->drawLine.draw(_edgeVAO, matrixToWorld, camera, 1.0, vec4(0), true);
+    if (_appState->isVertexSelectable()) {
+        operations->drawCircle.draw(_vertexVAO, matrixToWorld, camera, 6.0, vec4(0), true);
+    }
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    operations->copy.copy(_facesTexture, _facesDepthTexture, 0.4);
+    glDisable(GL_BLEND);
+}
+
+void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+    auto idColor = toIDColor();
+    operations->clear.clear(idColor, 1);
+
+    auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
+
+    if (_appState->isFaceSelectable()) {
+        operations->drawUnicolor.draw(_facePickVAO, matrixToWorld, camera, idColor, false);
+    }
+    if (_appState->isEdgeSelectable()) {
+        operations->drawLine.draw(_edgePickVAO, matrixToWorld, camera, 12.0, idColor, false);
+    }
+    if (_appState->isVertexSelectable()) {
+        operations->drawCircle.draw(_vertexPickVAO, matrixToWorld, camera, 24.0, idColor, false);
     }
 }
 
@@ -257,6 +265,24 @@ void MeshEditor::updateManipulatorVisibility() {
 
 void MeshEditor::updateChildren() {
     setChildRenderables({_manipulator, _tool});
+}
+
+void MeshEditor::resizeFramebuffers(ivec2 size) {
+    if (_framebufferSize != size) {
+        _facesTexture = makeShared<GL::Texture>(size, GL::Texture::Format::RGBA8);
+        _facesDepthTexture = makeShared<GL::Texture>(size, GL::Texture::Format::Depth24Stencil8);
+        _facesFramebuffer = makeShared<GL::Framebuffer>(size, std::vector{_facesTexture}, _facesDepthTexture);
+
+        auto makeHitFramebuffer = [&] () {
+            return makeShared<GL::Framebuffer>(size,
+                                               std::vector{makeShared<GL::Texture>(size, GL::Texture::Format::RGBA32F)},
+                                               makeShared<GL::Texture>(size, GL::Texture::Format::Depth24Stencil8));
+        };
+        _vertexHitFramebuffer = makeHitFramebuffer();
+        _edgeHitFramebuffer = makeHitFramebuffer();
+        _faceHitFramebuffer = makeHitFramebuffer();
+        _framebufferSize = size;
+    }
 }
 
 void MeshEditor::handleMeshChanged() {
@@ -388,8 +414,10 @@ void MeshEditor::updateVAOs() {
     }
 
     {
+        std::vector<Draw::Vertex> faceAttributes;
         std::vector<Draw::Vertex> facePickAttributes;
         std::vector<GL::IndexBuffer::Triangle> faceTriangles;
+        faceAttributes.reserve(_facePickVBO->size());
         facePickAttributes.reserve(_facePickVBO->size());
         faceTriangles.reserve(_faceIBO->size() / 3);
 
@@ -401,14 +429,30 @@ void MeshEditor::updateVAOs() {
                 faceTriangles.push_back({i0, i1, i2});
             }
 
+            bool selected = true;
+            for (auto v : mesh.vertices(f)) {
+                if (!mesh.isSelected(v)) {
+                    selected = false;
+                }
+            }
+
+            bool hovered = f == _hoveredTarget.face;
             vec4 indexColor = encodeIntToColor(f.index);
             for (auto& p : mesh.uvPoints(f)) {
+                auto position = mesh.position(mesh.vertex(p));
+
+                Draw::Vertex attrib;
+                attrib.position = position;
+                attrib.color = hovered ? hoveredFaceColor : selected ? selectedFaceColor : unselectedFaceColor;
+                faceAttributes.push_back(attrib);
+
                 Draw::Vertex pickAttrib;
-                pickAttrib.position = mesh.position(mesh.vertex(p));
+                pickAttrib.position = position;
                 pickAttrib.color = indexColor;
                 facePickAttributes.push_back(pickAttrib);
             }
         }
+        _faceVBO->setVertices(faceAttributes);
         _facePickVBO->setVertices(facePickAttributes);
         _faceIBO->setTriangles(faceTriangles);
     }

@@ -10,6 +10,7 @@
 #include "../../gl/ContextRecallable.hpp"
 #include <glm/glm.hpp>
 #include <unordered_map>
+#include <QOpenGLExtraFunctions>
 
 namespace Lattice {
 
@@ -38,16 +39,16 @@ class MeshManipulator;
 
 namespace MeshEditor {
 
-class MeshEditor final : public Viewport::Renderable, protected GL::ContextRecallable {
+class MeshEditor final : public Viewport::Renderable, protected GL::ContextRecallable, protected QOpenGLExtraFunctions {
     Q_OBJECT
 public:
     MeshEditor(const SP<State::AppState>& appState, const SP<State::MeshEditState>& meshEditState);
 
     auto& meshEditState() const { return _meshEditState; }
 
+    void preDraw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
     void draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
     void drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
-    void drawCustomFramebuffer(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
 
     void mousePressEvent(const Viewport::MouseEvent &event) override;
     void mouseMoveEvent(const Viewport::MouseEvent &event) override;
@@ -76,6 +77,8 @@ private:
     void updateManipulatorVisibility();
     void updateChildren();
 
+    void resizeFramebuffers(glm::ivec2 size);
+
     void handleMeshChanged();
 
     SP<State::AppState> _appState;
@@ -85,13 +88,18 @@ private:
 
     bool _isVAOsDirty = true;
     std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> _finalShapeVAOs;
-    SP<GL::VertexBuffer<Draw::Vertex>> _facePickVBO;
+
     SP<GL::IndexBuffer> _faceIBO;
+    SP<GL::VertexBuffer<Draw::Vertex>> _faceVBO;
+    SP<GL::VAO> _faceVAO;
+    SP<GL::VertexBuffer<Draw::Vertex>> _facePickVBO;
     SP<GL::VAO> _facePickVAO;
+
     SP<GL::VertexBuffer<Draw::PointLineVertex>> _edgeVBO;
     SP<GL::VAO> _edgeVAO;
     SP<GL::VertexBuffer<Draw::PointLineVertex>> _edgePickVBO;
     SP<GL::VAO> _edgePickVAO;
+
     SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexVBO;
     SP<GL::VAO> _vertexVAO;
     SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexPickVBO;
@@ -100,6 +108,11 @@ private:
     SP<Tool> _tool;
 
     glm::ivec2 _framebufferSize {0};
+
+    SP<GL::Framebuffer> _facesFramebuffer;
+    SP<GL::Texture> _facesTexture;
+    SP<GL::Texture> _facesDepthTexture;
+
     SP<GL::Framebuffer> _vertexHitFramebuffer;
     SP<GL::Framebuffer> _edgeHitFramebuffer;
     SP<GL::Framebuffer> _faceHitFramebuffer;
