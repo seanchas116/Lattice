@@ -78,6 +78,8 @@ void ViewportContainer::paintGL() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         viewport->hitAreaMap()->draw(*viewport->_renderable, operations, viewport->camera());
+
+        (*viewport->_renderable)->drawCustomFramebufferRecursive(operations, viewport->_camera);
     }
 
     glDisable(GL_CULL_FACE);
