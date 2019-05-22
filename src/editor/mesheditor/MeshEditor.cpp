@@ -62,6 +62,36 @@ int64_t decodeColorToInt(glm::vec4 color) {
     return valueColor.value;
 }
 
+glm::vec4 encodeEventTargetToColor(const Tool::EventTarget& target) {
+    int value;
+    if (target.vertex) {
+        value = target.vertex->index * 3;
+    } else if (target.edge) {
+        value = target.edge->index * 3 + 1;
+    } else if (target.face) {
+        value = target.face->index * 3 + 2;
+    } else {
+        value = -1;
+    }
+    return encodeIntToColor(value);
+}
+
+Tool::EventTarget decodeColorToEventTarget(glm::vec4 color) {
+    int value = decodeColorToInt(color);
+    if (value < 0) {
+        return {};
+    }
+    switch (value % 3) {
+    default:
+    case 0:
+        return {Mesh::VertexHandle(value / 3), {}, {}};
+    case 1:
+        return {{}, Mesh::EdgeHandle(value / 3), {}};
+    case 2:
+        return {{}, {}, Mesh::FaceHandle(value / 3)};
+    }
+}
+
 }
 
 MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::MeshEditState> &meshEditState) :
@@ -88,10 +118,7 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::Mesh
     _facesFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))),
     _facesTexture(makeShared<GL::Texture>(glm::ivec2(0, 0))),
     _facesDepthTexture(makeShared<GL::Texture>(glm::ivec2(0, 0))),
-
-    _vertexHitFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))),
-    _edgeHitFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))),
-    _faceHitFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0)))
+    _hitFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0)))
 {
     initializeOpenGLFunctions();
     updateVAOs();
@@ -124,20 +151,18 @@ void MeshEditor::preDraw(const SP<Draw::Operations> &operations, const SP<Camera
 
     auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
 
-    if (_appState->isFaceSelectable()) {
-        GL::Binder binder(*_faceHitFramebuffer);
-        operations->clear.clear(encodeIntToColor(-1), 1);
-        operations->drawUnicolor.draw(_facePickVAO, matrixToWorld, camera, vec4(0), true);
-    }
-    if (_appState->isEdgeSelectable()) {
-        GL::Binder binder(*_edgeHitFramebuffer);
-        operations->clear.clear(encodeIntToColor(-1), 1);
-        operations->drawLine.draw(_edgePickVAO, matrixToWorld, camera, 12.0, vec4(0), true);
-    }
-    if (_appState->isVertexSelectable()) {
-        GL::Binder binder(*_vertexHitFramebuffer);
-        operations->clear.clear(encodeIntToColor(-1), 1);
-        operations->drawCircle.draw(_vertexPickVAO, matrixToWorld, camera, 24.0, vec4(0), true);
+    {
+        GL::Binder binder(*_hitFramebuffer);
+        operations->clear.clear(encodeEventTargetToColor({}), 1);
+        if (_appState->isFaceSelectable()) {
+            operations->drawUnicolor.draw(_facePickVAO, matrixToWorld, camera, vec4(0), true);
+        }
+        if (_appState->isEdgeSelectable()) {
+            operations->drawLine.draw(_edgePickVAO, matrixToWorld, camera, 24.0, vec4(0), true, -0.0001);
+        }
+        if (_appState->isVertexSelectable()) {
+            operations->drawCircle.draw(_vertexPickVAO, matrixToWorld, camera, 24.0, vec4(0), true, -0.0002);
+        }
     }
 
     {
@@ -237,24 +262,8 @@ void MeshEditor::handleToolChange(State::Tool tool) {
 Tool::EventTarget MeshEditor::pickEventTarget(vec2 pos) {
     recallContext();
     PixelData<vec4> pixels(glm::ivec2(1));
-
-    _vertexHitFramebuffer->readPixels(pos, pixels);
-    auto vertexIndex = decodeColorToInt(pixels.data()[0]);
-    if (vertexIndex >= 0) {
-        return {Mesh::VertexHandle(vertexIndex), {}, {}};
-    }
-    _edgeHitFramebuffer->readPixels(pos, pixels);
-    auto edgeIndex = decodeColorToInt(pixels.data()[0]);
-    if (edgeIndex >= 0) {
-        return {{}, Mesh::EdgeHandle(edgeIndex), {}};
-    }
-    _faceHitFramebuffer->readPixels(pos, pixels);
-    auto faceIndex = decodeColorToInt(pixels.data()[0]);
-    if (faceIndex >= 0) {
-        return {{}, {}, Mesh::FaceHandle(faceIndex)};
-    }
-
-    return {};
+    _hitFramebuffer->readPixels(pos, pixels);
+    return decodeColorToEventTarget(pixels.data()[0]);
 }
 
 void MeshEditor::updateManipulatorVisibility() {
@@ -273,14 +282,9 @@ void MeshEditor::resizeFramebuffers(ivec2 size) {
         _facesDepthTexture = makeShared<GL::Texture>(size, GL::Texture::Format::Depth24Stencil8);
         _facesFramebuffer = makeShared<GL::Framebuffer>(size, std::vector{_facesTexture}, _facesDepthTexture);
 
-        auto makeHitFramebuffer = [&] () {
-            return makeShared<GL::Framebuffer>(size,
-                                               std::vector{makeShared<GL::Texture>(size, GL::Texture::Format::RGBA32F)},
-                                               makeShared<GL::Texture>(size, GL::Texture::Format::Depth24Stencil8));
-        };
-        _vertexHitFramebuffer = makeHitFramebuffer();
-        _edgeHitFramebuffer = makeHitFramebuffer();
-        _faceHitFramebuffer = makeHitFramebuffer();
+        _hitFramebuffer = makeShared<GL::Framebuffer>(size,
+                                                      std::vector{makeShared<GL::Texture>(size, GL::Texture::Format::RGBA32F)},
+                                                      makeShared<GL::Texture>(size, GL::Texture::Format::Depth24Stencil8));
         _framebufferSize = size;
     }
 }
@@ -369,7 +373,7 @@ void MeshEditor::updateVAOs() {
 
             Draw::PointLineVertex pickAttrib;
             pickAttrib.position = mesh.position(v);
-            pickAttrib.color = encodeIntToColor(v.index);
+            pickAttrib.color = encodeEventTargetToColor({v, {}, {}});
             pickAttrib.width = hitTestExcluded ? 0 : 1;
             vertexPickAttributes.push_back(pickAttrib);
         }
@@ -389,7 +393,7 @@ void MeshEditor::updateVAOs() {
             bool hovered = e == _hoveredTarget.edge;
             bool hitTestExcluded = ranges::find(hitTestExclusion.edges, e) != hitTestExclusion.edges.end();
             float crease = mesh.crease(e);
-            vec4 indexColor = encodeIntToColor(e.index);
+            vec4 indexColor = encodeEventTargetToColor({{}, e, {}});
 
             for (size_t vertexInEdgeIndex = 0; vertexInEdgeIndex < 2; ++vertexInEdgeIndex) {
                 auto& v = mesh.vertices(e)[vertexInEdgeIndex];
@@ -437,7 +441,7 @@ void MeshEditor::updateVAOs() {
             }
 
             bool hovered = f == _hoveredTarget.face;
-            vec4 indexColor = encodeIntToColor(f.index);
+            vec4 indexColor = encodeEventTargetToColor({{}, {}, f});
             for (auto& p : mesh.uvPoints(f)) {
                 auto position = mesh.position(mesh.vertex(p));
 

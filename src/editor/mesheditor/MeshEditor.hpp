@@ -113,9 +113,7 @@ private:
     SP<GL::Texture> _facesTexture;
     SP<GL::Texture> _facesDepthTexture;
 
-    SP<GL::Framebuffer> _vertexHitFramebuffer;
-    SP<GL::Framebuffer> _edgeHitFramebuffer;
-    SP<GL::Framebuffer> _faceHitFramebuffer;
+    SP<GL::Framebuffer> _hitFramebuffer;
 
     Tool::EventTarget _lastMouseMoveTarget;
     Tool::EventTarget _hoveredTarget;
