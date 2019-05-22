@@ -116,6 +116,7 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::Mesh
 }
 
 void MeshEditor::preDraw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+    // TODO: use separate framebuffer for each viewport instead of resizing them
     updateVAOs();
     resizeFramebuffers(glm::ivec2(camera->viewportSize()));
 
