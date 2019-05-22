@@ -55,6 +55,16 @@ void Renderable::drawHitUserColorRecursive(const SP<Draw::Operations> &operation
     }
 }
 
+void Renderable::drawCustomFramebufferRecursive(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+    if (!_isVisible) {
+        return;
+    }
+    drawCustomFramebuffer(operations, camera);
+    for (auto& c : childRenderables()) {
+        c->drawCustomFramebufferRecursive(operations, camera);
+    }
+}
+
 void Renderable::draw2DRecursive(QPainter *painter, const QSize &viewportSize) {
     if (!_isVisible) {
         return;
@@ -81,6 +91,10 @@ void Renderable::drawHitArea(const SP<Draw::Operations> &operations, const SP<Ca
 }
 
 void Renderable::drawHitUserColor(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+    Q_UNUSED(operations); Q_UNUSED(camera);
+}
+
+void Renderable::drawCustomFramebuffer(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     Q_UNUSED(operations); Q_UNUSED(camera);
 }
 

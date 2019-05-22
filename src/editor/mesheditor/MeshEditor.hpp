@@ -7,6 +7,7 @@
 #include "../../support/Shorthands.hpp"
 #include "../../support/Box.hpp"
 #include "../../support/Location.hpp"
+#include "../../gl/ContextRecallable.hpp"
 #include <glm/glm.hpp>
 #include <unordered_map>
 
@@ -26,6 +27,7 @@ struct Vertex;
 template <typename T> class VertexBuffer;
 class IndexBuffer;
 class VAO;
+class Framebuffer;
 }
 
 namespace Editor {
@@ -36,7 +38,7 @@ class MeshManipulator;
 
 namespace MeshEditor {
 
-class MeshEditor final : public Viewport::Renderable {
+class MeshEditor final : public Viewport::Renderable, protected GL::ContextRecallable {
     Q_OBJECT
 public:
     MeshEditor(const SP<State::AppState>& appState, const SP<State::MeshEditState>& meshEditState);
@@ -45,7 +47,7 @@ public:
 
     void draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
     void drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
-    void drawHitUserColor(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
+    void drawCustomFramebuffer(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
 
     void mousePressEvent(const Viewport::MouseEvent &event) override;
     void mouseMoveEvent(const Viewport::MouseEvent &event) override;
@@ -58,6 +60,8 @@ public:
 
 private:
     void handleToolChange(State::Tool tool);
+
+    Tool::EventTarget pickEventTarget(glm::vec2 pos);
 
     void mousePressTarget(const Tool::EventTarget& target, const Viewport::MouseEvent &event);
     void mouseMoveTarget(const Tool::EventTarget& target, const Viewport::MouseEvent &event);
@@ -94,6 +98,11 @@ private:
     SP<GL::VAO> _vertexPickVAO;
 
     SP<Tool> _tool;
+
+    glm::ivec2 _framebufferSize {0};
+    SP<GL::Framebuffer> _vertexHitFramebuffer;
+    SP<GL::Framebuffer> _edgeHitFramebuffer;
+    SP<GL::Framebuffer> _faceHitFramebuffer;
 
     Tool::EventTarget _lastMouseMoveTarget;
     Opt<Mesh::VertexHandle> _hoveredVertex;
