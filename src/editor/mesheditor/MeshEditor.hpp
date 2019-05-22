@@ -26,6 +26,7 @@ struct Vertex;
 template <typename T> class VertexBuffer;
 class IndexBuffer;
 class VAO;
+class Framebuffer;
 }
 
 namespace Editor {
@@ -94,6 +95,10 @@ private:
     SP<GL::VAO> _vertexPickVAO;
 
     SP<Tool> _tool;
+
+    SP<GL::Framebuffer> _vertexHitFramebuffer;
+    SP<GL::Framebuffer> _edgeHitFramebuffer;
+    SP<GL::Framebuffer> _faceHitFramebuffer;
 
     Tool::EventTarget _lastMouseMoveTarget;
     Opt<Mesh::VertexHandle> _hoveredVertex;

@@ -10,6 +10,7 @@
 #include "../../state/MeshEditState.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
+#include "../../gl/Framebuffer.hpp"
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
 #include "../../document/MeshObject.hpp"
@@ -118,7 +119,11 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::Mesh
     _vertexPickVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
     _vertexPickVAO(makeShared<GL::VAO>(_vertexPickVBO, GL::Primitive::Point)),
 
-    _tool(makeShared<MoveTool>(meshEditState))
+    _tool(makeShared<MoveTool>(meshEditState)),
+
+    _vertexHitFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))),
+    _edgeHitFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))),
+    _faceHitFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0)))
 {
     updateVAOs();
 
