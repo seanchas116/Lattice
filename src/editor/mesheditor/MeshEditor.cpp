@@ -283,9 +283,7 @@ void MeshEditor::mouseReleaseTarget(const Tool::EventTarget &target, const Viewp
 }
 
 void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
-    _hoveredVertex = target.vertex;
-    _hoveredEdge = target.edge;
-    _hoveredFace = target.face;
+    _hoveredTarget = target;
     _isVAOsDirty = true;
     emit updated();
 
@@ -293,9 +291,7 @@ void MeshEditor::hoverEnterTarget(const Tool::EventTarget &target, const Viewpor
 }
 
 void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
-    _hoveredVertex = {};
-    _hoveredEdge = {};
-    _hoveredFace = {};
+    _hoveredTarget = {};
     _isVAOsDirty = true;
     emit updated();
 
@@ -337,7 +333,7 @@ void MeshEditor::updateVAOs() {
 
         for (auto v : mesh.vertices()) {
             bool selected = mesh.isSelected(v);
-            bool hovered = v == _hoveredVertex;
+            bool hovered = v == _hoveredTarget.vertex;
             bool hitTestExcluded = ranges::find(hitTestExclusion.vertices, v) != hitTestExclusion.vertices.end();
 
             Draw::PointLineVertex attrib;
@@ -364,7 +360,7 @@ void MeshEditor::updateVAOs() {
         edgePickAttributes.reserve(mesh.edgeCount() * 2);
 
         for (auto e : mesh.edges()) {
-            bool hovered = e == _hoveredEdge;
+            bool hovered = e == _hoveredTarget.edge;
             bool hitTestExcluded = ranges::find(hitTestExclusion.edges, e) != hitTestExclusion.edges.end();
             float crease = mesh.crease(e);
             vec4 indexColor = encodeIntToColor(e.index);

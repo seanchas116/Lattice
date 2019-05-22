@@ -105,9 +105,7 @@ private:
     SP<GL::Framebuffer> _faceHitFramebuffer;
 
     Tool::EventTarget _lastMouseMoveTarget;
-    Opt<Mesh::VertexHandle> _hoveredVertex;
-    Opt<Mesh::EdgeHandle> _hoveredEdge;
-    Opt<Mesh::FaceHandle> _hoveredFace;
+    Tool::EventTarget _hoveredTarget;
 };
 
 }
