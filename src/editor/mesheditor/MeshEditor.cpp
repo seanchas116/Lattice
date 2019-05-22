@@ -35,6 +35,10 @@ const vec4 unselectedColor = vec4(0, 0, 0, 1);
 const vec4 selectedColor = vec4(1, 1, 1, 1);
 const vec4 hoveredColor = vec4(1, 1, 0, 1);
 
+const vec4 unselectedFaceColor = vec4(0, 0, 0, 0.5);
+const vec4 selectedFaceColor = vec4(1, 1, 1, 0.5);
+const vec4 hoveredFaceColor = vec4(1, 1, 0, 0.5);
+
 const vec4 unselectedFaceHighlight = vec4(0, 0, 0, 0);
 const vec4 selectedFaceHighlight = vec4(1, 1, 1, 0.5);
 const vec4 hoveredFaceHighlight = vec4(1, 1, 0.5, 0.5);
@@ -421,7 +425,7 @@ void MeshEditor::updateVAOs() {
 
                 Draw::Vertex attrib;
                 attrib.position = position;
-                attrib.color = hovered ? hoveredColor : selected ? selectedColor : unselectedColor;
+                attrib.color = hovered ? hoveredFaceColor : selected ? selectedFaceColor : unselectedFaceColor;
                 faceAttributes.push_back(attrib);
 
                 Draw::Vertex pickAttrib;
