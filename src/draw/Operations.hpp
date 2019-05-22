@@ -1,6 +1,7 @@
 #pragma once
 
 #include "./Clear.hpp"
+#include "./Copy.hpp"
 #include "./DrawCircle.hpp"
 #include "./DrawLine.hpp"
 #include "./DrawMaterial.hpp"
@@ -14,6 +15,7 @@ public:
     Operations() = default;
 
     Clear clear;
+    Copy copy;
     DrawCircle drawCircle;
     DrawLine drawLine;
     DrawMaterial drawMaterial;
