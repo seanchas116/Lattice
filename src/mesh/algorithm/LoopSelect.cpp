@@ -11,12 +11,6 @@ void LoopSelect::perform(Mesh &mesh) const {
     auto vertex = mesh.vertices(edge)[0];
     edges.push_back(edge);
 
-    auto edgeFaces = mesh.faces(edge) | ranges::to_vector;
-    if (edgeFaces.size() != 2) {
-        // non-manifold edge
-        return;
-    }
-
     while (true) {
         auto nextVertex = mesh.vertices(edge)[0] == vertex ? mesh.vertices(edge)[1] : mesh.vertices(edge)[0];
         if (ranges::distance(mesh.faces(nextVertex)) != 4) {
@@ -29,15 +23,9 @@ void LoopSelect::perform(Mesh &mesh) const {
         std::vector<FaceHandle> nextEdgeFaces;
 
         for (auto e : mesh.edges(nextVertex)) {
-            auto faces = mesh.faces(e) | ranges::to_vector;
-            if (faces.size() != 2) {
-                // non-manifold edge
-                continue;
-            }
-
             bool allFacesDifferent = true;
-            for (auto face : faces) {
-                for (auto edgeFace : edgeFaces) {
+            for (auto face : mesh.faces(e)) {
+                for (auto edgeFace : mesh.faces(edge)) {
                     if (edgeFace == face) {
                         allFacesDifferent = false;
                     }
@@ -45,7 +33,6 @@ void LoopSelect::perform(Mesh &mesh) const {
             }
             if (allFacesDifferent) {
                 nextEdge = e;
-                nextEdgeFaces = std::move(edgeFaces);
                 nextEdgeFound = true;
                 break;
             }
@@ -74,7 +61,6 @@ void LoopSelect::perform(Mesh &mesh) const {
 
         edges.push_back(nextEdge);
         edge = nextEdge;
-        edgeFaces = std::move(nextEdgeFaces);
     }
 }
 
