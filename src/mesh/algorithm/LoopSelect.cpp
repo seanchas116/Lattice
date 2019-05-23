@@ -61,6 +61,7 @@ void LoopSelect::perform(Mesh &mesh) const {
 
         edges.push_back(nextEdge);
         edge = nextEdge;
+        vertex = nextVertex;
     }
 }
 
