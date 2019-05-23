@@ -13,6 +13,7 @@ void LoopSelect::perform(Mesh &mesh) const {
 
     auto edgeFaces = mesh.faces(edge) | ranges::to_vector;
     if (edgeFaces.size() != 2) {
+        // non-manifold edge
         return;
     }
 
