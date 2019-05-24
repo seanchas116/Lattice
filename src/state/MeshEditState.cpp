@@ -75,6 +75,7 @@ void MeshEditState::deselectAll() {
 }
 
 void MeshEditState::loopSelect(Mesh::EdgeHandle edge) {
+    _mesh->deselectAll();
     Mesh::LoopSelect(edge).perform(*_mesh);
     notifyMeshChanged();
 }
