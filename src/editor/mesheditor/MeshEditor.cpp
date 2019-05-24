@@ -332,9 +332,16 @@ void MeshEditor::contextMenuTarget(const Tool::EventTarget &target, const Viewpo
     Q_UNUSED(target);
 
     QMenu contextMenu;
-    contextMenu.addAction(tr("Delete Vertices"), _appState.get(), &State::AppState::deleteVertices);
-    contextMenu.addAction(tr("Delete Edges"), _appState.get(), &State::AppState::deleteEdges);
-    contextMenu.addAction(tr("Delete Faces"), _appState.get(), &State::AppState::deleteFaces);
+    contextMenu.addAction(tr("Delete Vertices"), _meshEditState.get(), &State::MeshEditState::deleteVertices);
+    contextMenu.addAction(tr("Delete Edges"), _meshEditState.get(), &State::MeshEditState::deleteEdges);
+    contextMenu.addAction(tr("Delete Faces"), _meshEditState.get(), &State::MeshEditState::deleteFaces);
+    contextMenu.addSeparator();
+    contextMenu.addAction(tr("Select All"), _meshEditState.get(), &State::MeshEditState::selectAll);
+    contextMenu.addAction(tr("Select Loop"), this, [this, target] {
+        if (target.edge) {
+            _meshEditState->loopSelect(*target.edge);
+        }
+    });
     contextMenu.exec(event.originalContextMenuEvent->globalPos());
 }
 

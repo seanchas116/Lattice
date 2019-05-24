@@ -1,5 +1,6 @@
 #pragma once
 #include "../document/MeshObject.hpp"
+#include "../mesh/Handle.hpp"
 #include <QObject>
 
 namespace Lattice {
@@ -24,6 +25,8 @@ public:
     void deleteFaces();
     void selectAll();
     void deselectAll();
+
+    void loopSelect(Mesh::EdgeHandle edge);
 
 signals:
     void meshChanged(const Mesh::Mesh& mesh);

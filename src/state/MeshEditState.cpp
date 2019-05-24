@@ -2,6 +2,7 @@
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
 #include "../mesh/Mesh.hpp"
+#include "../mesh/algorithm/LoopSelect.hpp"
 
 namespace Lattice {
 namespace State {
@@ -70,6 +71,12 @@ void MeshEditState::selectAll() {
 
 void MeshEditState::deselectAll() {
     _mesh->deselectAll();
+    notifyMeshChanged();
+}
+
+void MeshEditState::loopSelect(Mesh::EdgeHandle edge) {
+    _mesh->deselectAll();
+    Mesh::LoopSelect(edge).perform(*_mesh);
     notifyMeshChanged();
 }
 
