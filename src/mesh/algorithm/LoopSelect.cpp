@@ -14,7 +14,7 @@ void LoopSelect::perform(Mesh &mesh) const {
     while (true) {
         auto nextVertex = mesh.vertices(edge)[0] == vertex ? mesh.vertices(edge)[1] : mesh.vertices(edge)[0];
         if (ranges::distance(mesh.faces(nextVertex)) != 4) {
-            // extraordinally vertex
+            // extraordinary vertex
             return;
         }
 
