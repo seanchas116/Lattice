@@ -115,7 +115,6 @@ private:
 
     SP<GL::Framebuffer> _hitFramebuffer;
 
-    Tool::EventTarget _lastMouseMoveTarget;
     Tool::EventTarget _hoveredTarget;
 };
 

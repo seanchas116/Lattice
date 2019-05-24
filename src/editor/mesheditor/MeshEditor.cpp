@@ -301,8 +301,8 @@ void MeshEditor::mousePressTarget(const Tool::EventTarget &target, const Viewpor
 }
 
 void MeshEditor::mouseMoveTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
-    if (_lastMouseMoveTarget != target) {
-        hoverLeaveTarget(_lastMouseMoveTarget);
+    if (_hoveredTarget != target) {
+        hoverLeaveTarget(_hoveredTarget);
         hoverEnterTarget(target, event);
     }
     _tool->mouseMoveTool(target, event);
