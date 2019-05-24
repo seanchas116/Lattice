@@ -31,14 +31,13 @@ void LoopSelect::perform(Mesh &mesh) const {
         std::vector<FaceHandle> nextEdgeFaces;
 
         for (auto e : mesh.edges(nextVertex)) {
-            auto faces = mesh.faces(e) | ranges::to_vector;
-            if (faces.size() != 2) {
+            if (ranges::distance(mesh.faces(e)) != 2) {
                 // non-manifold edge
                 continue;
             }
 
             bool allFacesDifferent = true;
-            for (auto face : faces) {
+            for (auto face : mesh.faces(e)) {
                 for (auto edgeFace : mesh.faces(edge)) {
                     if (edgeFace == face) {
                         allFacesDifferent = false;
