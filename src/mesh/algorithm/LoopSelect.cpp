@@ -1,5 +1,6 @@
 #include "LoopSelect.hpp"
 #include <range/v3/algorithm/find.hpp>
+#include <QtDebug>
 
 namespace Lattice {
 namespace Mesh {
@@ -11,14 +12,15 @@ void LoopSelect::perform(Mesh &mesh) const {
     auto vertex = mesh.vertices(edge)[0];
     edges.push_back(edge);
 
-    auto edgeFaces = mesh.faces(edge) | ranges::to_vector;
-    if (edgeFaces.size() != 2) {
+    if (ranges::distance(mesh.faces(edge)) != 2) {
         // non-manifold edge
         return;
     }
 
     while (true) {
         auto nextVertex = mesh.vertices(edge)[0] == vertex ? mesh.vertices(edge)[1] : mesh.vertices(edge)[0];
+        mesh.setSelected(nextVertex, true);
+
         if (ranges::distance(mesh.faces(nextVertex)) != 4) {
             // extraordinary vertex
             return;
@@ -37,7 +39,7 @@ void LoopSelect::perform(Mesh &mesh) const {
 
             bool allFacesDifferent = true;
             for (auto face : faces) {
-                for (auto edgeFace : edgeFaces) {
+                for (auto edgeFace : mesh.faces(edge)) {
                     if (edgeFace == face) {
                         allFacesDifferent = false;
                     }
@@ -45,7 +47,6 @@ void LoopSelect::perform(Mesh &mesh) const {
             }
             if (allFacesDifferent) {
                 nextEdge = e;
-                nextEdgeFaces = std::move(edgeFaces);
                 nextEdgeFound = true;
                 break;
             }
@@ -74,7 +75,6 @@ void LoopSelect::perform(Mesh &mesh) const {
 
         edges.push_back(nextEdge);
         edge = nextEdge;
-        edgeFaces = std::move(nextEdgeFaces);
         vertex = nextVertex;
     }
 }
