@@ -1,11 +1,11 @@
-#include "LoopSelect.hpp"
+#include "FindLoop.hpp"
 #include <range/v3/algorithm/find.hpp>
 #include <QtDebug>
 
 namespace Lattice {
 namespace Mesh {
 
-void LoopSelect::perform(Mesh &mesh) const {
+std::vector<EdgeHandle> FindLoop::perform(const Mesh &mesh) const {
     std::vector<EdgeHandle> edges;
 
     auto edge = this->edge;
@@ -14,16 +14,15 @@ void LoopSelect::perform(Mesh &mesh) const {
 
     if (ranges::distance(mesh.faces(edge)) != 2) {
         // non-manifold edge
-        return;
+        return {};
     }
 
     while (true) {
         auto nextVertex = mesh.vertices(edge)[0] == vertex ? mesh.vertices(edge)[1] : mesh.vertices(edge)[0];
-        mesh.setSelected(nextVertex, true);
 
         if (ranges::distance(mesh.faces(nextVertex)) != 4) {
             // extraordinary vertex
-            return;
+            return {};
         }
 
         EdgeHandle nextEdge;
@@ -52,24 +51,17 @@ void LoopSelect::perform(Mesh &mesh) const {
         }
 
         if (!nextEdgeFound) {
-            return;
+            return {};
         }
 
         if (nextEdge == edges[0]) {
             // loop found
-
-            for (auto e : edges) {
-                for (auto v : mesh.vertices(e)) {
-                    mesh.setSelected(v, true);
-                }
-            }
-
-            return;
+            return edges;
         }
 
         if (ranges::find(edges, nextEdge) != edges.end()) {
             // 9 loop
-            return;
+            return {};
         }
 
         edges.push_back(nextEdge);

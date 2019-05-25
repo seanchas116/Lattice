@@ -2,7 +2,7 @@
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
 #include "../mesh/Mesh.hpp"
-#include "../mesh/algorithm/LoopSelect.hpp"
+#include "../mesh/algorithm/FindLoop.hpp"
 
 namespace Lattice {
 namespace State {
@@ -83,8 +83,15 @@ void MeshEditState::invertSelection() {
 }
 
 void MeshEditState::loopSelect(Mesh::EdgeHandle edge) {
+    auto edges = Mesh::FindLoop(edge).perform(*_mesh);
+
     _mesh->deselectAll();
-    Mesh::LoopSelect(edge).perform(*_mesh);
+    for (auto e : edges) {
+        for (auto v : _mesh->vertices(e)) {
+            _mesh->setSelected(v, true);
+        }
+    }
+
     notifyMeshChanged();
 }
 

@@ -4,11 +4,11 @@
 namespace Lattice {
 namespace Mesh {
 
-class LoopSelect {
+class FindLoop {
 public:
-    LoopSelect(EdgeHandle edge) : edge(edge) {}
+    FindLoop(EdgeHandle edge) : edge(edge) {}
 
-    void perform(Mesh& mesh) const;
+    std::vector<EdgeHandle> perform(const Mesh& mesh) const;
 
     EdgeHandle edge;
 };
