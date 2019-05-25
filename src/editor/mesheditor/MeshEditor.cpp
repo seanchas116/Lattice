@@ -342,6 +342,11 @@ void MeshEditor::contextMenuTarget(const Tool::EventTarget &target, const Viewpo
             _meshEditState->loopSelect(*target.edge);
         }
     });
+    contextMenu.addAction(tr("Select Belt"), this, [this, target] {
+        if (target.edge) {
+            _meshEditState->beltSelect(*target.edge);
+        }
+    });
     contextMenu.addAction(tr("Invert Selection"), _meshEditState.get(), &State::MeshEditState::invertSelection);
     contextMenu.addAction(tr("Deselect All"), _meshEditState.get(), &State::MeshEditState::deselectAll);
     contextMenu.exec(event.originalContextMenuEvent->globalPos());

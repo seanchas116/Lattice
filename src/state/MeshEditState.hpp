@@ -28,6 +28,7 @@ public:
     void deselectAll();
     void invertSelection();
     void loopSelect(Mesh::EdgeHandle edge);
+    void beltSelect(Mesh::EdgeHandle edge);
 
 signals:
     void meshChanged(const Mesh::Mesh& mesh);
