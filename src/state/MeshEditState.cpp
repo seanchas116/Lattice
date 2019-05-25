@@ -3,6 +3,7 @@
 #include "../document/History.hpp"
 #include "../mesh/Mesh.hpp"
 #include "../mesh/algorithm/FindLoop.hpp"
+#include "../mesh/algorithm/FindBelt.hpp"
 
 namespace Lattice {
 namespace State {
@@ -88,6 +89,19 @@ void MeshEditState::loopSelect(Mesh::EdgeHandle edge) {
     _mesh->deselectAll();
     for (auto e : edges) {
         for (auto v : _mesh->vertices(e)) {
+            _mesh->setSelected(v, true);
+        }
+    }
+
+    notifyMeshChanged();
+}
+
+void MeshEditState::beltSelect(Mesh::EdgeHandle edge) {
+    auto belt = Mesh::FindBelt(edge).perform(*_mesh);
+
+    _mesh->deselectAll();
+    for (auto [edge, face, isEdgeReverse] : belt) {
+        for (auto v : _mesh->vertices(edge)) {
             _mesh->setSelected(v, true);
         }
     }
