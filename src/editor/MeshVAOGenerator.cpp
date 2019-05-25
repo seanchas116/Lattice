@@ -197,12 +197,12 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
     desc.creaseWeights = creaseWeights.data();
 
     // Instantiate a FarTopologyRefiner from the descriptor.
-    auto refiner = Far::TopologyRefinerFactory<Far::TopologyDescriptor>::Create(
+    std::unique_ptr<Far::TopologyRefiner> refiner(Far::TopologyRefinerFactory<Far::TopologyDescriptor>::Create(
         desc,
         Far::TopologyRefinerFactory<Far::TopologyDescriptor>::Options(
             OpenSubdiv::Sdc::SCHEME_CATMARK, options
         )
-    );
+    ));
 
     // Adaptively refine the topology with an isolation level capped at 3
     // because the sharpest crease in the shape is 3.0f (in g_creaseweights[])
@@ -216,8 +216,7 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
     patchOptions.endCapType =
         Far::PatchTableFactory::Options::ENDCAP_GREGORY_BASIS;
 
-    Far::PatchTable const * patchTable =
-        Far::PatchTableFactory::Create(*refiner, patchOptions);
+    std::unique_ptr<const Far::PatchTable> patchTable(Far::PatchTableFactory::Create(*refiner, patchOptions));
 
     // Compute the total number of points we need to evaluate patchtable.
     // we use local points around extraordinary features.
