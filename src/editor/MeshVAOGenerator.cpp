@@ -68,36 +68,30 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> MeshVAOGenerator::generate
         vertexNormals[vertex.index] = normalSum;
     }
 
-    std::vector<Draw::Vertex> vertexAttributes;
+    std::vector<Draw::Vertex> uvPointAttributes(mesh.uvPointCount());
+    for (auto uv : mesh.uvPoints()) {
+        auto v = mesh.vertex(uv);
+        uvPointAttributes[uv.index].position = mesh.position(v);
+        uvPointAttributes[uv.index].texCoord = mesh.uvPosition(uv);
+        uvPointAttributes[uv.index].normal = vertexNormals[v.index];
+    }
+
     std::unordered_map<Mesh::MaterialHandle, std::vector<GL::IndexBuffer::Triangle>> trianglesMap;
 
     for (auto face : mesh.faces()) {
-        auto addPoint = [&](Mesh::FaceHandle face, uint32_t indexInFace) {
-            auto p = mesh.uvPoints(face)[indexInFace];
-            auto v = mesh.vertices(face)[indexInFace];
-            Draw::Vertex attrib;
-            attrib.position = mesh.position(mesh.vertex(p));
-            attrib.texCoord = mesh.uvPosition(p);
-            attrib.normal = vertexNormals[v.index];
-
-            auto index = uint32_t(vertexAttributes.size());
-            vertexAttributes.push_back(attrib);
-            return index;
-        };
-
         auto& triangles = trianglesMap[mesh.material(face)];
+        auto& uvPoints = mesh.uvPoints(face);
 
-        auto i0 = addPoint(face, 0);
-        auto vertexCount = mesh.uvPoints(face).size();
-        for (uint32_t i = 2; i < vertexCount; ++i) {
-            auto i1 = addPoint(face, i - 1);
-            auto i2 = addPoint(face, i);
+        auto i0 = uint32_t(uvPoints[0].index);
+        for (uint32_t i = 2; i < uvPoints.size(); ++i) {
+            auto i1 = uint32_t(uvPoints[i - 1].index);
+            auto i2 = uint32_t(uvPoints[i].index);
             triangles.push_back({i0, i1, i2});
         }
     }
 
     auto vbo = makeShared<GL::VertexBuffer<Draw::Vertex>>();
-    vbo->setVertices(vertexAttributes);
+    vbo->setVertices(uvPointAttributes);
 
     std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> vaos;
     vaos.reserve(trianglesMap.size());
