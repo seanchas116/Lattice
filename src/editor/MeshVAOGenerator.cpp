@@ -256,6 +256,7 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
     int faceCount = ptexIndices.GetNumFaces();
 
     std::vector<Draw::Vertex> vertexAttributes;
+    vertexAttributes.reserve(faceCount * (segmentCount + 1) * (segmentCount + 1));
 
     for (int faceIndex = 0; faceIndex < faceCount; ++faceIndex) {
         for (int tIndex = 0; tIndex <= segmentCount; ++tIndex) {
@@ -289,6 +290,7 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
     }
 
     std::vector<GL::IndexBuffer::Triangle> triangles;
+    triangles.reserve(faceCount * segmentCount * segmentCount * 2);
     int indexStride = segmentCount + 1;
     for (int faceIndex = 0; faceIndex < faceCount; ++faceIndex) {
         for (int tIndex = 0; tIndex < segmentCount; ++tIndex) {
