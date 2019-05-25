@@ -147,7 +147,10 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
         glm::vec3 deriv2;
     };
 
-    auto mesh = _mesh.collectGarbage();
+    auto mesh = _mesh;
+    Mesh::SplitSharpEdges().perform(mesh);
+    mesh = mesh.collectGarbage();
+
     if (mesh.faceCount() == 0) {
         return {};
     }
@@ -209,7 +212,7 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
 
     // Adaptively refine the topology with an isolation level capped at 3
     // because the sharpest crease in the shape is 3.0f (in g_creaseweights[])
-    int maxIsolation = 10;
+    int maxIsolation = 3;
     refiner->RefineAdaptive(
         Far::TopologyRefiner::AdaptiveOptions(maxIsolation));
 
