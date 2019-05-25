@@ -74,6 +74,14 @@ void MeshEditState::deselectAll() {
     notifyMeshChanged();
 }
 
+void MeshEditState::invertSelection() {
+    auto& mesh = *_mesh;
+    for (auto v : mesh.vertices()) {
+        mesh.setSelected(v, !mesh.isSelected(v));
+    }
+    notifyMeshChanged();
+}
+
 void MeshEditState::loopSelect(Mesh::EdgeHandle edge) {
     _mesh->deselectAll();
     Mesh::LoopSelect(edge).perform(*_mesh);

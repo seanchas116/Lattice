@@ -23,9 +23,10 @@ public:
     void deleteVertices();
     void deleteEdges();
     void deleteFaces();
+
     void selectAll();
     void deselectAll();
-
+    void invertSelection();
     void loopSelect(Mesh::EdgeHandle edge);
 
 signals:
