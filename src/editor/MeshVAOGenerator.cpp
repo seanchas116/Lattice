@@ -123,6 +123,22 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
         glm::vec3 point;
     };
 
+    struct UV {
+        // Minimal required interface ----------------------
+        UV() {}
+        UV(glm::vec2 point) : point(point) {}
+
+        void Clear(void* = nullptr) {
+            point = glm::vec2(0);
+        }
+
+        void AddWithWeight(UV const & src, float weight) {
+            point += weight * src.point;
+        }
+
+        glm::vec2 point;
+    };
+
     struct LimitFrame {
         void Clear(void* = nullptr) {
             point = deriv1 = deriv2 = glm::vec3(0);
@@ -218,13 +234,19 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
     // Compute the total number of points we need to evaluate patchtable.
     // we use local points around extraordinary features.
     int nRefinerVertices = refiner->GetNumVerticesTotal();
+    int nRefinerUVs = refiner->GetNumFVarValuesTotal(0);
     int nLocalPoints = patchTable->GetNumLocalPoints();
+    int nLocalPointUV = patchTable->GetNumLocalPointsFaceVarying(0);
 
     // Create a buffer to hold the position of the refined verts and
     // local points, then copy the coarse positions at the beginning.
     std::vector<Vertex> verts(nRefinerVertices + nLocalPoints);
-    for (int i = 0; i < int(mesh.allVertexCount()); ++i) {
-        verts[i] = mesh.position(Mesh::VertexHandle(i));
+    for (auto v : mesh.allVertices()) {
+        verts[v.index] = mesh.position(v);
+    }
+    std::vector<UV> uvs(nRefinerUVs + nLocalPointUV);
+    for (auto uv : mesh.allUVPoints()) {
+        uvs[uv.index] = mesh.uvPosition(uv);
     }
 
     // Adaptive refinement may result in fewer levels than maxIsolation.
@@ -232,11 +254,21 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
 
     // Interpolate vertex primvar data : they are the control vertices
     // of the limit patches (see far_tutorial_0 for details)
-    Vertex* src = &verts[0];
-    for (int level = 1; level < nRefinedLevels; ++level) {
-        Vertex* dst = src + refiner->GetLevel(level-1).GetNumVertices();
-        Far::PrimvarRefiner(*refiner).Interpolate(level, src, dst);
-        src = dst;
+    {
+        Vertex* src = &verts[0];
+        for (int level = 1; level < nRefinedLevels; ++level) {
+            Vertex* dst = src + refiner->GetLevel(level-1).GetNumVertices();
+            Far::PrimvarRefiner(*refiner).Interpolate(level, src, dst);
+            src = dst;
+        }
+    }
+    {
+        UV* src = &uvs[0];
+        for (int level = 1; level < nRefinedLevels; ++level) {
+            UV* dst = src + refiner->GetLevel(level-1).GetNumFVarValues(0);
+            Far::PrimvarRefiner(*refiner).InterpolateFaceVarying(level, src, dst);
+            src = dst;
+        }
     }
 
     if (nLocalPoints > 0) {
