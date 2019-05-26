@@ -54,11 +54,11 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> MeshVAOGenerator::generate
     Mesh::SplitSharpEdges().perform(mesh);
 
     // calculate normals
-    std::vector<glm::vec3> faceNormals(mesh.faceCount());
+    std::vector<glm::vec3> faceNormals(mesh.allFaceCount());
     for (auto face : mesh.faces()) {
         faceNormals[face.index] = mesh.calculateNormal(face);
     }
-    std::vector<glm::vec3> vertexNormals(mesh.vertexCount());
+    std::vector<glm::vec3> vertexNormals(mesh.allVertexCount());
     for (auto vertex : mesh.vertices()) {
         glm::vec3 normalSum(0);
         for (auto vertexFace : mesh.faces(vertex)) {
@@ -68,7 +68,7 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> MeshVAOGenerator::generate
         vertexNormals[vertex.index] = normalSum;
     }
 
-    std::vector<Draw::Vertex> uvPointAttributes(mesh.uvPointCount());
+    std::vector<Draw::Vertex> uvPointAttributes(mesh.allUVPointCount());
     for (auto uv : mesh.uvPoints()) {
         auto v = mesh.vertex(uv);
         uvPointAttributes[uv.index].position = mesh.position(v);
@@ -145,33 +145,33 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
     Mesh::SplitSharpEdges().perform(mesh);
     mesh = mesh.collectGarbage();
 
-    if (mesh.faceCount() == 0) {
+    if (mesh.allFaceCount() == 0) {
         return {};
     }
 
     std::vector<int> vertsPerFace;
-    vertsPerFace.reserve(mesh.faceCount());
-    for (auto f : mesh.faces()) {
+    vertsPerFace.reserve(mesh.allFaceCount());
+    for (auto f : mesh.allFaces()) {
         vertsPerFace.push_back(int(mesh.vertices(f).size()));
     }
 
     std::vector<int> faceVerts;
-    for (auto f : mesh.faces()) {
+    for (auto f : mesh.allFaces()) {
         for (auto v : mesh.vertices(f)) {
             faceVerts.push_back(int(v.index));
         }
     }
 
     std::vector<int> creaseVerts;
-    creaseVerts.reserve(mesh.edgeCount() * 2);
-    for (auto e : mesh.edges()) {
+    creaseVerts.reserve(mesh.allEdgeCount() * 2);
+    for (auto e : mesh.allEdges()) {
         creaseVerts.push_back(int(mesh.vertices(e)[0].index));
         creaseVerts.push_back(int(mesh.vertices(e)[1].index));
     }
 
     std::vector<float> creaseWeights;
-    creaseWeights.reserve(mesh.edgeCount());
-    for (auto e : mesh.edges()) {
+    creaseWeights.reserve(mesh.allEdgeCount());
+    for (auto e : mesh.allEdges()) {
         creaseWeights.push_back(mesh.crease(e));
     }
 
@@ -183,11 +183,11 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
     options.SetVtxBoundaryInterpolation(Sdc::Options::VTX_BOUNDARY_EDGE_ONLY);
 
     Far::TopologyDescriptor desc;
-    desc.numVertices = int(mesh.vertexCount());
-    desc.numFaces = int(mesh.faceCount());
+    desc.numVertices = int(mesh.allVertexCount());
+    desc.numFaces = int(mesh.allFaceCount());
     desc.numVertsPerFace = vertsPerFace.data();
     desc.vertIndicesPerFace = faceVerts.data();
-    desc.numCreases = int(mesh.edgeCount());
+    desc.numCreases = int(mesh.allEdgeCount());
     desc.creaseVertexIndexPairs = creaseVerts.data();
     desc.creaseWeights = creaseWeights.data();
 
@@ -221,7 +221,7 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
     // Create a buffer to hold the position of the refined verts and
     // local points, then copy the coarse positions at the beginning.
     std::vector<Vertex> verts(nRefinerVertices + nLocalPoints);
-    for (int i = 0; i < int(mesh.vertexCount()); ++i) {
+    for (int i = 0; i < int(mesh.allVertexCount()); ++i) {
         verts[i] = mesh.position(Mesh::VertexHandle(i));
     }
 

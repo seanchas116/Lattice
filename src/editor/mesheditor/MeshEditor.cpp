@@ -372,8 +372,8 @@ void MeshEditor::updateVAOs() {
         std::vector<Draw::PointLineVertex> vertexAttributes;
         std::vector<Draw::PointLineVertex> vertexPickAttributes;
 
-        vertexAttributes.reserve(mesh.vertexCount());
-        vertexPickAttributes.reserve(mesh.vertexCount());
+        vertexAttributes.reserve(mesh.allVertexCount());
+        vertexPickAttributes.reserve(mesh.allVertexCount());
 
         for (auto v : mesh.vertices()) {
             bool selected = mesh.isSelected(v);
@@ -400,8 +400,8 @@ void MeshEditor::updateVAOs() {
         std::vector<Draw::PointLineVertex> edgeAttributes;
         std::vector<Draw::PointLineVertex> edgePickAttributes;
 
-        edgeAttributes.reserve(mesh.edgeCount() * 2);
-        edgePickAttributes.reserve(mesh.edgeCount() * 2);
+        edgeAttributes.reserve(mesh.allEdgeCount() * 2);
+        edgePickAttributes.reserve(mesh.allEdgeCount() * 2);
 
         for (auto e : mesh.edges()) {
             bool hovered = e == _hoveredTarget.edge;

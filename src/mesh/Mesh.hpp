@@ -80,30 +80,40 @@ public:
     void clear();
 
     // TODO: exclude deleted items
-    size_t vertexCount() const { return _vertices.size(); }
-    size_t uvPointCount() const { return _uvPoints.size(); }
-    size_t edgeCount() const { return _edges.size(); }
-    size_t faceCount() const { return _faces.size(); }
+    size_t allVertexCount() const { return _vertices.size(); }
+    size_t allUVPointCount() const { return _uvPoints.size(); }
+    size_t allEdgeCount() const { return _edges.size(); }
+    size_t allFaceCount() const { return _faces.size(); }
+
+    // vertices including deleted ones
+    auto allVertices() const {
+        return ranges::view::iota(0, int(_vertices.size()))
+            | ranges::view::transform([](int index) { return VertexHandle(index); });
+    }
+    auto allUVPoints() const {
+        return ranges::view::iota(0, int(_uvPoints.size()))
+            | ranges::view::transform([](int index) { return UVPointHandle(index); });
+    }
+    auto allEdges() const {
+        return ranges::view::iota(0, int(_edges.size()))
+            | ranges::view::transform([](int index) { return EdgeHandle(index); });
+    }
+    auto allFaces() const {
+        return ranges::view::iota(0, int(_faces.size()))
+            | ranges::view::transform([](int index) { return FaceHandle(index); });
+    }
 
     auto vertices() const {
-        return ranges::view::iota(0, int(_vertices.size()))
-                | ranges::view::transform([](int index) { return VertexHandle(index); })
-                | ranges::view::filter([this](auto handle) { return !vertexData(handle).isDeleted; });
+        return allVertices() | ranges::view::filter([this](auto handle) { return !vertexData(handle).isDeleted; });
     }
     auto uvPoints() const {
-        return ranges::view::iota(0, int(_uvPoints.size()))
-                | ranges::view::transform([](int index) { return UVPointHandle(index); })
-                | ranges::view::filter([this](auto handle) { return !uvPointData(handle).isDeleted; });
+        return allUVPoints() | ranges::view::filter([this](auto handle) { return !uvPointData(handle).isDeleted; });
     }
     auto edges() const {
-        return ranges::view::iota(0, int(_edges.size()))
-                | ranges::view::transform([](int index) { return EdgeHandle(index); })
-                | ranges::view::filter([this](auto handle) { return !edgeData(handle).isDeleted; });
+        return allEdges() | ranges::view::filter([this](auto handle) { return !edgeData(handle).isDeleted; });
     }
     auto faces() const {
-        return ranges::view::iota(0, int(_faces.size()))
-                | ranges::view::transform([](int index) { return FaceHandle(index); })
-                | ranges::view::filter([this](auto handle) { return !faceData(handle).isDeleted; });
+        return allFaces() | ranges::view::filter([this](auto handle) { return !faceData(handle).isDeleted; });
     }
 
     auto uvPoints(VertexHandle v) const {
