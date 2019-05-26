@@ -139,24 +139,6 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
         glm::vec2 point;
     };
 
-    struct LimitFrame {
-        void Clear(void* = nullptr) {
-            point = deriv1 = deriv2 = glm::vec3(0);
-        }
-
-        void AddWithWeight(Vertex const & src,
-                           float weight, float d1Weight, float d2Weight) {
-
-            point += weight * src.point;
-            deriv1 += d1Weight * src.point;
-            deriv2 += d2Weight * src.point;
-        }
-
-        glm::vec3 point;
-        glm::vec3 deriv1;
-        glm::vec3 deriv2;
-    };
-
     auto mesh = _mesh;
     Mesh::SplitSharpEdges().perform(mesh);
     mesh = mesh.collectGarbage();
@@ -305,15 +287,20 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
 
                 Far::ConstIndexArray cvs = patchTable->GetPatchVertices(*handle);
 
-                LimitFrame dst;
-                dst.Clear();
+                glm::vec3 p(0);
+                glm::vec3 ds(0);
+                glm::vec3 dt(0);
+
                 for (int cv=0; cv < cvs.size(); ++cv) {
-                    dst.AddWithWeight(verts[cvs[cv]], pWeights[cv], dsWeights[cv], dtWeights[cv]);
+                    auto src = verts[cvs[cv]].point;
+                    p += pWeights[cv] * src;
+                    ds += dsWeights[cv] * src;
+                    dt += dtWeights[cv] * src;
                 }
 
                 Draw::Vertex attrib;
-                attrib.position = dst.point;
-                attrib.normal = glm::normalize(glm::cross(dst.deriv1, dst.deriv2));
+                attrib.position = p;
+                attrib.normal = glm::normalize(glm::cross(ds, dt));
                 // TODO: texcoord
 
                 vertexAttributes.push_back(attrib);
