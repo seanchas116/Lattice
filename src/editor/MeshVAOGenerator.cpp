@@ -151,12 +151,14 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
 
     std::vector<int> vertsPerFace;
     std::vector<int> faceVerts;
+    std::vector<int> faceUVs;
     vertsPerFace.reserve(mesh.allFaceCount());
     for (auto f : mesh.allFaces()) {
-        auto vertices = mesh.vertices(f);
-        vertsPerFace.push_back(int(vertices.size()));
-        for (auto v : vertices) {
-            faceVerts.push_back(int(v.index));
+        auto& uvPoints = mesh.uvPoints(f);
+        vertsPerFace.push_back(int(uvPoints.size()));
+        for (auto uv : uvPoints) {
+            faceVerts.push_back(mesh.vertex(uv).index);
+            faceUVs.push_back(uv.index);
         }
     }
 
