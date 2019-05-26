@@ -182,6 +182,8 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
         creaseWeights.push_back(mesh.crease(e));
     }
 
+    // TODO: Cache TopologyRefiner and PatchTable when mesh topology is not changed
+
     // create topology refiner
 
     Sdc::Options options;
