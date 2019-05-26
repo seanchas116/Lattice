@@ -176,6 +176,7 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
 
     Sdc::Options options;
     options.SetVtxBoundaryInterpolation(Sdc::Options::VTX_BOUNDARY_EDGE_ONLY);
+    options.SetFVarLinearInterpolation(Sdc::Options::FVAR_LINEAR_NONE);
 
     Far::TopologyDescriptor desc;
     desc.numVertices = int(mesh.allVertexCount());
@@ -282,26 +283,47 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
                     patchmap.FindPatch(faceIndex, st.s, st.t);
                 assert(handle);
 
-                // Evaluate the patch weights, identify the CVs and compute the limit frame:
-                patchTable->EvaluateBasis(*handle, st.s, st.t, pWeights, dsWeights, dtWeights);
+                Draw::Vertex attrib;
 
-                Far::ConstIndexArray cvs = patchTable->GetPatchVertices(*handle);
+                {
+                    // Evaluate the patch weights, identify the CVs and compute the limit frame:
+                    patchTable->EvaluateBasis(*handle, st.s, st.t, pWeights, dsWeights, dtWeights);
 
-                glm::vec3 p(0);
-                glm::vec3 ds(0);
-                glm::vec3 dt(0);
+                    Far::ConstIndexArray cvs = patchTable->GetPatchVertices(*handle);
 
-                for (int cv=0; cv < cvs.size(); ++cv) {
-                    auto src = verts[cvs[cv]].point;
-                    p += pWeights[cv] * src;
-                    ds += dsWeights[cv] * src;
-                    dt += dtWeights[cv] * src;
+                    glm::vec3 p(0);
+                    glm::vec3 ds(0);
+                    glm::vec3 dt(0);
+
+                    for (int cv=0; cv < cvs.size(); ++cv) {
+                        auto src = verts[cvs[cv]].point;
+                        p += pWeights[cv] * src;
+                        ds += dsWeights[cv] * src;
+                        dt += dtWeights[cv] * src;
+                    }
+
+                    attrib.position = p;
+                    attrib.normal = glm::normalize(glm::cross(ds, dt));
                 }
 
-                Draw::Vertex attrib;
-                attrib.position = p;
-                attrib.normal = glm::normalize(glm::cross(ds, dt));
-                // TODO: texcoord
+                {
+                    patchTable->EvaluateBasisFaceVarying(*handle, st.s, st.t, pWeights, dsWeights, dtWeights, 0);
+
+                    Far::ConstIndexArray cvs = patchTable->GetPatchFVarValues(*handle, 0);
+
+                    glm::vec2 p(0);
+                    glm::vec2 ds(0);
+                    glm::vec2 dt(0);
+
+                    for (int cv=0; cv < cvs.size(); ++cv) {
+                        auto src = uvs[cvs[cv]].point;
+                        p += pWeights[cv] * src;
+                        ds += dsWeights[cv] * src;
+                        dt += dtWeights[cv] * src;
+                    }
+
+                    attrib.texCoord = p;
+                }
 
                 vertexAttributes.push_back(attrib);
             }
