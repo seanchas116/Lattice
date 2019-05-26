@@ -150,28 +150,23 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
     }
 
     std::vector<int> vertsPerFace;
+    std::vector<int> faceVerts;
     vertsPerFace.reserve(mesh.allFaceCount());
     for (auto f : mesh.allFaces()) {
-        vertsPerFace.push_back(int(mesh.vertices(f).size()));
-    }
-
-    std::vector<int> faceVerts;
-    for (auto f : mesh.allFaces()) {
-        for (auto v : mesh.vertices(f)) {
+        auto vertices = mesh.vertices(f);
+        vertsPerFace.push_back(int(vertices.size()));
+        for (auto v : vertices) {
             faceVerts.push_back(int(v.index));
         }
     }
 
     std::vector<int> creaseVerts;
+    std::vector<float> creaseWeights;
     creaseVerts.reserve(mesh.allEdgeCount() * 2);
+    creaseWeights.reserve(mesh.allEdgeCount());
     for (auto e : mesh.allEdges()) {
         creaseVerts.push_back(int(mesh.vertices(e)[0].index));
         creaseVerts.push_back(int(mesh.vertices(e)[1].index));
-    }
-
-    std::vector<float> creaseWeights;
-    creaseWeights.reserve(mesh.allEdgeCount());
-    for (auto e : mesh.allEdges()) {
         creaseWeights.push_back(mesh.crease(e));
     }
 
