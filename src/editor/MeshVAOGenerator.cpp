@@ -211,6 +211,7 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
     Far::PatchTableFactory::Options patchOptions;
     patchOptions.endCapType =
         Far::PatchTableFactory::Options::ENDCAP_GREGORY_BASIS;
+    patchOptions.generateFVarTables = true;
 
     std::unique_ptr<const Far::PatchTable> patchTable(Far::PatchTableFactory::Create(*refiner, patchOptions));
 
