@@ -149,13 +149,6 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
         return {};
     }
 
-    std::vector<glm::vec3> origVerts;
-    origVerts.reserve(mesh.vertexCount());
-    for (auto v : mesh.vertices()) {
-        auto pos = mesh.position(v);
-        origVerts.push_back(pos);
-    }
-
     std::vector<int> vertsPerFace;
     vertsPerFace.reserve(mesh.faceCount());
     for (auto f : mesh.faces()) {
@@ -228,7 +221,9 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
     // Create a buffer to hold the position of the refined verts and
     // local points, then copy the coarse positions at the beginning.
     std::vector<Vertex> verts(nRefinerVertices + nLocalPoints);
-    ranges::copy(origVerts, verts.begin());
+    for (int i = 0; i < int(mesh.vertexCount()); ++i) {
+        verts[i] = mesh.position(Mesh::VertexHandle(i));
+    }
 
     // Adaptive refinement may result in fewer levels than maxIsolation.
     int nRefinedLevels = refiner->GetNumLevels();
