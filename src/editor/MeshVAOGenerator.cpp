@@ -187,6 +187,11 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
     desc.numCreases = int(mesh.allEdgeCount());
     desc.creaseVertexIndexPairs = creaseVerts.data();
     desc.creaseWeights = creaseWeights.data();
+    desc.numFVarChannels = 1;
+    Far::TopologyDescriptor::FVarChannel uvFVarChannel;
+    uvFVarChannel.numValues = int(mesh.allUVPointCount());
+    uvFVarChannel.valueIndices = faceUVs.data();
+    desc.fvarChannels = &uvFVarChannel;
 
     // Instantiate a FarTopologyRefiner from the descriptor.
     std::unique_ptr<Far::TopologyRefiner> refiner(Far::TopologyRefinerFactory<Far::TopologyDescriptor>::Create(
