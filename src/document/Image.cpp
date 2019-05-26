@@ -3,9 +3,9 @@
 namespace Lattice {
 namespace Document {
 
-Image::Image(const std::string &filePath) :
+Image::Image(std::string filePath) :
     _image(QImage(QString::fromStdString(filePath))),
-    _filePath(filePath) {
+    _filePath(std::move(filePath)) {
 }
 
 } // namespace Document

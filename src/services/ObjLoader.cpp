@@ -37,12 +37,12 @@ std::vector<SP<Document::MeshObject>> ObjLoader::load(const QString &filePathStr
 
     std::vector<SP<Document::MeshObject>> objects;
 
-    auto loadImage = [&](const std::string& name) {
+    auto loadImage = [&](const std::string& name) -> Opt<SP<Document::Image>> {
         if (name.empty()) {
-            return QImage();
+            return {};
         }
-        auto path = parentPathString + QString::fromStdString(name);
-        return QImage(path);
+        auto path = parentPathString.toStdString() + name;
+        return makeShared<Document::Image>(path);
     };
 
     for (auto& objShape : objShapes) {

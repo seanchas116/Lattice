@@ -7,7 +7,7 @@ namespace Document {
 
 class Image {
 public:
-    Image(const std::string& filePath);
+    Image(std::string filePath);
 
     auto& image() const { return _image; }
     auto& filePath() const { return _filePath; }
