@@ -17,7 +17,6 @@ public:
     glm::dvec3 baseColor() const { return _baseColor; }
     void setBaseColor(const glm::dvec3 &baseColor) { _baseColor = baseColor; }
 
-    // TODO: image should be storead as a reference to an item of per-document image list
     auto& baseColorImage() const { return _baseColorImage; }
     void setBaseColorImage(Opt<SP<Image>> baseColorImage) { _baseColorImage = std::move(baseColorImage); }
 
