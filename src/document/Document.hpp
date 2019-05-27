@@ -10,6 +10,7 @@ namespace Document {
 
 class Object;
 class MeshObject;
+class ImageManager;
 class History;
 
 class Document final : public QObject, public EnableSharedFromThis<Document> {
@@ -30,6 +31,8 @@ public:
     void insertObjectToCurrentPosition(const SP<Object>& object);
     void deleteSelectedObjects();
 
+    auto& imageManager() const { return _imageManager; }
+
     auto& history() const { return _history; }
 
 signals:
@@ -48,6 +51,8 @@ private:
 
     Opt<SP<Object>> _currentObject;
     std::unordered_set<SP<Object>> _selectedObjects;
+
+    SP<ImageManager> _imageManager;
 
     SP<History> _history;
 };
