@@ -7,12 +7,15 @@ namespace Document {
 ImageManager::ImageManager() {
 }
 
-SP<Image> ImageManager::openImage(const std::string &filePath) {
+Opt<SP<Image>> ImageManager::openImage(const std::string &filePath) {
     // TODO: check if same image exists
 
-    auto image = makeShared<Image>(filePath);
-    _images.push_back(image);
+    auto image = Image::open(filePath);
+    if (!image) {
+        return {};
+    }
 
+    _images.push_back(*image);
     emit imagesChanged(_images);
 
     return image;

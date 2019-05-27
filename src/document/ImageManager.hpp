@@ -14,7 +14,7 @@ public:
 
     auto& images() const { return _images; }
 
-    SP<Image> openImage(const std::string& filePath);
+    Opt<SP<Image>> openImage(const std::string& filePath);
 
 signals:
     void imagesChanged(const std::vector<SP<Image>>& images);
