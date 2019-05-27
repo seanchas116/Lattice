@@ -1,5 +1,6 @@
 #pragma once
 #include <QObject>
+#include <unordered_map>
 #include "../support/Shorthands.hpp"
 
 namespace Lattice {
@@ -23,6 +24,7 @@ signals:
 
 private:
     std::vector<SP<Image>> _images;
+    std::unordered_map<std::string, SP<Image>> _imageForPath;
 };
 
 } // namespace Document
