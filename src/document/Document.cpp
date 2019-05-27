@@ -1,5 +1,6 @@
 #include "Document.hpp"
 #include "MeshObject.hpp"
+#include "ImageManager.hpp"
 #include "History.hpp"
 #include "../support/Debug.hpp"
 #include "../support/OptionalGuard.hpp"
@@ -33,6 +34,7 @@ private:
 
 Document::Document() :
     _rootObject(makeShared<RootObject>(this)),
+    _imageManager(makeShared<ImageManager>()),
     _history(makeShared<History>())
 {
     watchChildrenInsertRemove(_rootObject);

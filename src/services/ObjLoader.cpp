@@ -1,6 +1,8 @@
 #include "ObjLoader.hpp"
 #include "../mesh/Mesh.hpp"
 #include "../document/MeshObject.hpp"
+#include "../document/Document.hpp"
+#include "../document/ImageManager.hpp"
 #include <tiny_obj_loader.h>
 #include <QDir>
 #include <QFileInfo>
@@ -13,7 +15,7 @@ using namespace glm;
 namespace Lattice {
 namespace Services {
 
-std::vector<SP<Document::MeshObject>> ObjLoader::load(const QString &filePathString) {
+std::vector<SP<Document::MeshObject>> ObjLoader::load(const SP<Document::Document> &document, const QString &filePathString) {
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> objShapes;
     std::vector<tinyobj::material_t> objMaterials;
@@ -37,12 +39,12 @@ std::vector<SP<Document::MeshObject>> ObjLoader::load(const QString &filePathStr
 
     std::vector<SP<Document::MeshObject>> objects;
 
-    auto loadImage = [&](const std::string& name) {
+    auto loadImage = [&](const std::string& name) -> Opt<SP<Document::Image>> {
         if (name.empty()) {
-            return QImage();
+            return {};
         }
-        auto path = parentPathString + QString::fromStdString(name);
-        return QImage(path);
+        auto path = parentPathString.toStdString() + name;
+        return document->imageManager()->openImage(path);
     };
 
     for (auto& objShape : objShapes) {

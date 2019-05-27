@@ -1,7 +1,9 @@
 #pragma once
 #include <QImage>
 #include <glm/glm.hpp>
+#include "../support/Shorthands.hpp"
 #include "../draw/Material.hpp"
+#include "Image.hpp"
 
 namespace Lattice {
 namespace Document {
@@ -15,21 +17,20 @@ public:
     glm::dvec3 baseColor() const { return _baseColor; }
     void setBaseColor(const glm::dvec3 &baseColor) { _baseColor = baseColor; }
 
-    // TODO: image should be storead as a reference to an item of per-document image list
-    QImage baseColorImage() const { return _baseColorImage; }
-    void setBaseColorImage(const QImage &baseColorImage) { _baseColorImage = baseColorImage; }
+    auto& baseColorImage() const { return _baseColorImage; }
+    void setBaseColorImage(Opt<SP<Image>> baseColorImage) { _baseColorImage = std::move(baseColorImage); }
 
     float metallic() const { return _metallic; }
     void setMetallic(float metallic) { _metallic = metallic; }
 
-    QImage metallicImage() const { return _metallicImage; }
-    void setMetallicImage(const QImage &metallicImage) { _metallicImage = metallicImage; }
+    auto& metallicImage() const { return _metallicImage; }
+    void setMetallicImage(Opt<SP<Image>> metallicImage) { _metallicImage = std::move(metallicImage); }
 
     float roughness() const { return _roughness; }
     void setRoughness(float roughness) { _roughness = roughness; }
 
-    QImage roughnessImage() const { return _roughnessImage; }
-    void setRoughnessImage(const QImage &roughnessImage) { _roughnessImage = roughnessImage; }
+    auto& roughnessImage() const { return _roughnessImage; }
+    void setRoughnessImage(Opt<SP<Image>> roughnessImage) { _roughnessImage = std::move(roughnessImage); }
 
     Draw::Material toDrawMaterial() const;
 
@@ -38,13 +39,13 @@ public:
 
 private:
     glm::dvec3 _baseColor {1, 0, 0};
-    QImage _baseColorImage;
+    Opt<SP<Image>> _baseColorImage;
 
     float _metallic {0};
-    QImage _metallicImage;
+    Opt<SP<Image>> _metallicImage;
 
     float _roughness {0.5};
-    QImage _roughnessImage;
+    Opt<SP<Image>> _roughnessImage;
 };
 
 } // namespace Document

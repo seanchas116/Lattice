@@ -9,11 +9,11 @@ Material::Material() {
 Draw::Material Material::toDrawMaterial() const {
     Draw::Material material;
     material.baseColor = _baseColor;
-    material.baseColorImage = _baseColorImage;
+    material.baseColorImage = _baseColorImage ? (*_baseColorImage)->image() : QImage();
     material.metallic = _metallic;
-    material.metallicImage = _metallicImage;
+    material.metallicImage = _metallicImage ? (*_metallicImage)->image() : QImage();
     material.roughness = _roughness;
-    material.roughnessImage = _roughnessImage;
+    material.roughnessImage = _roughnessImage ? (*_roughnessImage)->image() : QImage();
     return material;
 }
 
