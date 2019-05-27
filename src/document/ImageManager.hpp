@@ -12,6 +12,8 @@ class ImageManager : public QObject {
 public:
     ImageManager();
 
+    // TODO: support undo/redo for ImageManager changes
+
     auto& images() const { return _images; }
 
     Opt<SP<Image>> openImage(const std::string& filePath);
