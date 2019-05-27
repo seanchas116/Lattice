@@ -150,8 +150,8 @@ public:
 
     auto& edges(FaceHandle f) const { return faceData(f).edges; }
 
-    template <typename TVertices>
-    auto edges(TVertices&& vertices) const -> CPP_ret(std::unordered_set<EdgeHandle>)(requires ranges::Range<TVertices>) {
+    template <typename TVertices, CONCEPT_REQUIRES_(ranges::Range<TVertices>())>
+    auto edges(TVertices&& vertices) const {
         std::unordered_map<EdgeHandle, size_t> edgeCounts;
 
         for (auto v : vertices) {
@@ -174,8 +174,8 @@ public:
         return edges;
     }
 
-    template <typename TVertices>
-    auto faces(TVertices&& vertices) const -> CPP_ret(std::unordered_set<FaceHandle>)(requires ranges::Range<TVertices>) {
+    template <typename TVertices, CONCEPT_REQUIRES_(ranges::Range<TVertices>())>
+    auto faces(TVertices&& vertices) const {
         std::unordered_map<FaceHandle, size_t> faceCounts;
 
         for (auto v : vertices) {
