@@ -4,6 +4,7 @@
 #include "../document/Document.hpp"
 #include "../document/ImageManager.hpp"
 #include "../support/Debug.hpp"
+#include <tinygltf/tiny_gltf.h>
 
 using namespace glm;
 

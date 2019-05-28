@@ -22,9 +22,13 @@ add_definitions(-DGLM_FORCE_SWIZZLE)
 add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
 add_definitions(-D_USE_MATH_DEFINES)
 
+add_definitions(-DTINYGLTF_NO_STB_IMAGE)
+add_definitions(-DTINYGLTF_NO_INCLUDE_JSON)
+
 find_package(Qt5Widgets REQUIRED)
 find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
+include_directories("vendor")
 include_directories("vendor/range-v3/include")
 include_directories("vendor/glm")
 include_directories("vendor/json/include")
