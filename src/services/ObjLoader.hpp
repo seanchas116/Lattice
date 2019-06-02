@@ -1,9 +1,7 @@
 #pragma once
+#include "../support/Shorthands.hpp"
 #include <vector>
 #include <boost/filesystem/path.hpp>
-#include "../support/Shorthands.hpp"
-
-class QString;
 
 namespace Lattice {
 namespace Document {

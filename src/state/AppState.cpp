@@ -13,7 +13,6 @@
 #include "../mesh/algorithm/BuildCylinder.hpp"
 #include <QFileDialog>
 #include <QtDebug>
-#include <QFileInfo>
 #include <QApplication>
 
 using namespace glm;

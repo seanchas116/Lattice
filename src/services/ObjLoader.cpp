@@ -3,12 +3,9 @@
 #include "../document/MeshObject.hpp"
 #include "../document/Document.hpp"
 #include "../document/ImageManager.hpp"
-#include <tiny_obj_loader.h>
-#include <QDir>
-#include <QFileInfo>
-#include <QtDebug>
 #include "../support/Debug.hpp"
 #include "../support/Hash.hpp"
+#include <tiny_obj_loader.h>
 
 using namespace glm;
 
