@@ -14,7 +14,7 @@ namespace Services {
 
 class GLTFLoader final {
 public:
-    static std::vector<SP<Document::MeshObject>> load(const SP<Document::Document>& document, const QString &filePath);
+    static std::vector<SP<Document::MeshObject>> load(const SP<Document::Document>& document, const std::string &filePath);
 };
 
 }

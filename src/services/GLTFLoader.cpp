@@ -11,7 +11,7 @@ using namespace glm;
 namespace Lattice {
 namespace Services {
 
-std::vector<SP<Document::MeshObject>> GLTFLoader::load(const SP<Document::Document> &document, const QString &filePathString) {
+std::vector<SP<Document::MeshObject>> GLTFLoader::load(const SP<Document::Document> &document, const std::string &filePathString) {
     Q_UNUSED(document);
     Q_UNUSED(filePathString);
     return {};
