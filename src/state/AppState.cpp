@@ -13,7 +13,6 @@
 #include "../mesh/algorithm/BuildCylinder.hpp"
 #include <QFileDialog>
 #include <QtDebug>
-#include <QFileInfo>
 #include <QApplication>
 
 using namespace glm;
@@ -131,7 +130,7 @@ void AppState::import() {
 
     _document->history()->beginChange(tr("Import"));
 
-    auto objects = Services::ObjLoader::load(_document, filePath);
+    auto objects = Services::ObjLoader::load(_document, filePath.toStdString());
     for (auto& object : objects) {
         _document->insertObjectToCurrentPosition(object);
     }

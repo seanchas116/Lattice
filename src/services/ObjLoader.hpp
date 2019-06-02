@@ -1,8 +1,7 @@
 #pragma once
-#include <vector>
 #include "../support/Shorthands.hpp"
-
-class QString;
+#include <vector>
+#include <boost/filesystem/path.hpp>
 
 namespace Lattice {
 namespace Document {
@@ -14,7 +13,7 @@ namespace Services {
 
 class ObjLoader final {
 public:
-    static std::vector<SP<Document::MeshObject>> load(const SP<Document::Document>& document, const QString &filePath);
+    static std::vector<SP<Document::MeshObject>> load(const SP<Document::Document>& document, const boost::filesystem::path &filePath);
 };
 
 }
