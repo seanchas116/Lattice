@@ -131,7 +131,7 @@ void AppState::import() {
 
     _document->history()->beginChange(tr("Import"));
 
-    auto objects = Services::ObjLoader::load(_document, filePath);
+    auto objects = Services::ObjLoader::load(_document, filePath.toStdString());
     for (auto& object : objects) {
         _document->insertObjectToCurrentPosition(object);
     }

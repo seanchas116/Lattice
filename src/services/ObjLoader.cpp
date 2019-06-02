@@ -15,17 +15,16 @@ using namespace glm;
 namespace Lattice {
 namespace Services {
 
-std::vector<SP<Document::MeshObject>> ObjLoader::load(const SP<Document::Document> &document, const QString &filePathString) {
+std::vector<SP<Document::MeshObject>> ObjLoader::load(const SP<Document::Document> &document, const boost::filesystem::path &filePath) {
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> objShapes;
     std::vector<tinyobj::material_t> objMaterials;
 
-    QFileInfo fileInfo(filePathString);
-    auto parentPathString = fileInfo.dir().path() + "/";
+    auto parentPath = filePath.parent_path();
 
     std::string warn;
     std::string err;
-    bool ret = tinyobj::LoadObj(&attrib, &objShapes, &objMaterials, &warn, &err, filePathString.toUtf8().data(), parentPathString.toUtf8().data(), false);
+    bool ret = tinyobj::LoadObj(&attrib, &objShapes, &objMaterials, &warn, &err, filePath.string().data(), parentPath.string().data(), false);
 
     if (!warn.empty()) {
         qWarning() << warn.c_str();
@@ -43,8 +42,8 @@ std::vector<SP<Document::MeshObject>> ObjLoader::load(const SP<Document::Documen
         if (name.empty()) {
             return {};
         }
-        auto path = parentPathString.toStdString() + name;
-        return document->imageManager()->openImage(path);
+        auto path = parentPath / name;
+        return document->imageManager()->openImage(path.string());
     };
 
     for (auto& objShape : objShapes) {

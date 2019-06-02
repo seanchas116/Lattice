@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <boost/filesystem/path.hpp>
 #include "../support/Shorthands.hpp"
 
 class QString;
@@ -14,7 +15,7 @@ namespace Services {
 
 class ObjLoader final {
 public:
-    static std::vector<SP<Document::MeshObject>> load(const SP<Document::Document>& document, const QString &filePath);
+    static std::vector<SP<Document::MeshObject>> load(const SP<Document::Document>& document, const boost::filesystem::path &filePath);
 };
 
 }
