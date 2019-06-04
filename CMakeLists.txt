@@ -33,7 +33,6 @@ include_directories("vendor/Catch2/single_include")
 include_directories("vendor/OpenSubdiv")
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/_cmrc/include)
 
-#set(LIBRARIES Qt5::Widgets Boost::system Boost::filesystem)
 set(LIBRARIES Qt5::Widgets Boost::filesystem)
 
 file(GLOB_RECURSE SOURCES
