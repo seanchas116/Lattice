@@ -1,3 +1,4 @@
+#if 0
 #include "MeshPicker.hpp"
 #include "../support/ScopedTimer.hpp"
 #include "../support/Distance.hpp"
@@ -129,3 +130,5 @@ Opt<std::pair<SP<Edge>, double> > MeshPicker::pickEdge(const dmat4 &modelToWorld
 
 } // namespace Mesh
 } // namespace Lattice
+
+#endif

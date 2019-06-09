@@ -7,7 +7,6 @@
 #include "../document/MeshObject.hpp"
 #include "../state/Preferences.hpp"
 #include "../support/Debug.hpp"
-#include "../support/OldCamera.hpp"
 #include <QMouseEvent>
 #include <QMenu>
 

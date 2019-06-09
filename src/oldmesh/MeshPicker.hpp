@@ -1,4 +1,5 @@
 #pragma once
+#if 0
 #include "Mesh.hpp"
 #include "../support/Ray.hpp"
 #include "../support/OldCamera.hpp"
@@ -20,3 +21,5 @@ private:
 
 } // namespace Mesh
 } // namespace Lattice
+
+#endif

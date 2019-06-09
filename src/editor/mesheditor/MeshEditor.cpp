@@ -18,7 +18,6 @@
 #include "../../document/MeshObject.hpp"
 #include "../../mesh/Mesh.hpp"
 #include "../../support/Debug.hpp"
-#include "../../support/OldCamera.hpp"
 #include <QMouseEvent>
 #include <QMenu>
 #include <QPainter>
