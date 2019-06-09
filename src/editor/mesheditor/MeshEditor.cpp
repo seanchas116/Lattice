@@ -361,8 +361,9 @@ void MeshEditor::updateVAOs() {
     auto hitTestExclusion = _tool->hitTestExclusion();
 
     auto& object = _meshEditState->object();
+    bool isSubdiv = object->subdivSettings().isEnabled;
     MeshVAOGenerator generator(mesh);
-    if (object->subdivSettings().isEnabled) {
+    if (isSubdiv) {
         _finalShapeVAOs = generator.generateSubdivFaceVAOs(object->subdivSettings().segmentCount);
     } else {
         _finalShapeVAOs = generator.generateFaceVAOs();
@@ -461,7 +462,7 @@ void MeshEditor::updateVAOs() {
 
                 Draw::Vertex attrib;
                 attrib.position = position;
-                attrib.color = hovered ? hoveredFaceColor : selected ? selectedFaceColor : unselectedFaceColor;
+                attrib.color = hovered ? hoveredFaceColor : selected ? selectedFaceColor : isSubdiv ? unselectedFaceColor : vec4(0);
                 faceAttributes.push_back(attrib);
 
                 Draw::Vertex pickAttrib;
