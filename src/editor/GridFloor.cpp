@@ -72,9 +72,9 @@ void GridFloor::setNormalAxis(int axis) {
 
 void GridFloor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
     static const std::array<glm::mat4, 3> swizzleTransforms {
-        glm::mat4(1),
-        glm::mat4(0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1),
-        glm::mat4(0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1),
+        glm::mat4(1), // yz to yz
+        glm::mat4(0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1), // yz to zx
+        glm::mat4(0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1), // yz to xy
     };
     auto transform = swizzleTransforms[_normalAxis];
 
