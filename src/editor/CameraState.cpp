@@ -3,5 +3,8 @@
 namespace Lattice {
 namespace Editor {
 
+CameraState::CameraState() {
+}
+
 } // namespace Editor
 } // namespace Lattice
