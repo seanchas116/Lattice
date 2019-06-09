@@ -20,9 +20,6 @@ class GridFloor final : public Viewport::Renderable {
 public:
     GridFloor();
 
-    int normalAxis() const { return _normalAxis; }
-    void setNormalAxis(int axis);
-
     void draw(const SP<Draw::Operations>& operations, const SP<Camera>& camera) override;
 
 private:
@@ -33,7 +30,6 @@ private:
     SP<GL::IndexBuffer> _zAxisIndexBuffer;
     SP<GL::VAO> _yAxisVAO;
     SP<GL::VAO> _zAxisVAO;
-    int _normalAxis = 1;
 };
 
 }

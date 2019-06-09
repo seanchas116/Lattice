@@ -62,26 +62,27 @@ GridFloor::GridFloor() :
     _zAxisIndexBuffer->setLineStrips({zLineStrip});
 }
 
-void GridFloor::setNormalAxis(int axis) {
-    if (_normalAxis == axis) {
-        return;
-    }
-    _normalAxis = axis;
-    emit updated();
-}
-
 void GridFloor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+    int normalAxis = 1;
+    if (camera->projection() == Camera::Projection::Orthographic) {
+        if (camera->isLookingOrientation(Camera::Orientation::Front) || camera->isLookingOrientation(Camera::Orientation::Back)) {
+            normalAxis = 2;
+        } else if (camera->isLookingOrientation(Camera::Orientation::Left) || camera->isLookingOrientation(Camera::Orientation::Right)) {
+            normalAxis = 0;
+        }
+    }
+
     static const std::array<glm::mat4, 3> swizzleTransforms {
         glm::mat4(1), // xyz to xyz
         glm::mat4(0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1), // xyz to yzx
         glm::mat4(0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1), // xyz to zxy
     };
-    auto transform = swizzleTransforms[_normalAxis];
+    auto transform = swizzleTransforms[normalAxis];
 
     operations->drawLine.draw(_vao, transform, camera, 1, vec4(0.5, 0.5, 0.5, 1));
 
-    int axis0 = (1 + _normalAxis) % 3;
-    int axis1 = (2 + _normalAxis) % 3;
+    int axis0 = (1 + normalAxis) % 3;
+    int axis1 = (2 + normalAxis) % 3;
     vec4 color0(0.5f);
     color0[axis0] = 0.8f;
     vec4 color1(0.5f);
