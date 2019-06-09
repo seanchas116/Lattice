@@ -1,4 +1,6 @@
 #include "CameraState.hpp"
+#include <glm/gtx/transform.hpp>
+#include <glm/gtx/euler_angles.hpp>
 
 namespace Lattice {
 namespace Editor {
@@ -13,6 +15,16 @@ CameraState::CameraState() {
     connect(this, &CameraState::eulerAnglesChanged, this, [this] {
         setOrientation(Orientation::None);
     });
+}
+
+Camera CameraState::camera() const {
+    auto cameraToWorld = glm::translate(_position) * glm::mat4_cast(glm::dquat(_eulerAngles));
+
+    if (_projection == Camera::Projection::Perspective) {
+        return Camera::perspective(cameraToWorld, _viewportSize, _fieldOfView, _zNear, _zFar);
+    } else {
+        return Camera::orthographic(cameraToWorld, _viewportSize, _orthoScale);
+    }
 }
 
 glm::dvec3 CameraState::orientationAngle(CameraState::Orientation orientation) {

@@ -23,6 +23,8 @@ public:
 
     CameraState();
 
+    Camera camera() const;
+
 private:
     static glm::dvec3 orientationAngle(Orientation orientation);
 
