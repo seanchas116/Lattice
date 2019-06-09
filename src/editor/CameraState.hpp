@@ -1,6 +1,6 @@
 #pragma once
 #include <QObject>
-#include "../support/OldCamera.hpp"
+#include "../support/Camera.hpp"
 #include "../support/Property.hpp"
 
 namespace Lattice {
@@ -26,7 +26,7 @@ private:
     static glm::dvec3 orientationAngle(Orientation orientation);
 
     LATTICE_AUTO_PROPERTY(Orientation, orientation, setOrientation, Orientation::None)
-    LATTICE_AUTO_PROPERTY(OldCamera::Projection, projection, setProjection, OldCamera::Projection::Perspective)
+    LATTICE_AUTO_PROPERTY(Camera::Projection, projection, setProjection, Camera::Projection::Perspective)
     LATTICE_AUTO_PROPERTY(glm::dvec3, position, setPosition, glm::dvec3(0))
     LATTICE_AUTO_PROPERTY(glm::dvec3, eulerAngles, setEulerAngles, glm::dvec3(0))
     LATTICE_AUTO_PROPERTY(glm::dvec2, viewportSize, setViewportSize, glm::dvec2(100, 100))
