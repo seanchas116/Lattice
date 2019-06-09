@@ -1,7 +1,8 @@
 #pragma once
-#include <QObject>
 #include "../support/Camera.hpp"
 #include "../support/Property.hpp"
+#include <QObject>
+#include <glm/glm.hpp>
 
 namespace Lattice {
 namespace Editor {
