@@ -2,9 +2,4 @@
 
 namespace Lattice {
 
-Camera::Camera()
-{
-
-}
-
 } // namespace Lattice
