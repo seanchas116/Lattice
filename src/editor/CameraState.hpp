@@ -23,6 +23,8 @@ public:
     CameraState();
 
 private:
+    static glm::dvec3 orientationAngle(Orientation orientation);
+
     LATTICE_AUTO_PROPERTY(Orientation, orientation, setOrientation, Orientation::None)
     LATTICE_AUTO_PROPERTY(Camera::Projection, projection, setProjection, Camera::Projection::Perspective)
     LATTICE_AUTO_PROPERTY(glm::dvec3, position, setPosition, glm::dvec3(0))
