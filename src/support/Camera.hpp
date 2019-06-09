@@ -20,7 +20,7 @@ public:
     auto zFar() const { return _zFar; }
     auto orthoScale() const { return _orthoScale; }
 
-    auto cameraToViewportMatrix() const { return _cameraToWorldMatrix; }
+    auto cameraToViewportMatrix() const { return _cameraToViewportMatrix; }
     auto worldToCameraMatrix() const { return _worldToCameraMatrix; }
     auto worldToViewportMatrix() const { return _worldToViewportMatrix; }
 
