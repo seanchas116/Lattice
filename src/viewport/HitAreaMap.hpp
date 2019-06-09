@@ -9,7 +9,7 @@
 #include <glm/glm.hpp>
 
 namespace Lattice {
-class OldCamera;
+class Camera;
 
 namespace GL {
 class Framebuffer;
@@ -29,7 +29,7 @@ public:
     HitAreaMap();
 
     Opt<HitResult> pick(glm::vec2 physicalPos);
-    void draw(const SP<Renderable> &renderable, const SP<Draw::Operations>& operations, const SP<OldCamera>& camera);
+    void draw(const SP<Renderable> &renderable, const SP<Draw::Operations>& operations, const Camera& camera);
 
 private:
     void resize(glm::ivec2 size);

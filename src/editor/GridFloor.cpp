@@ -2,7 +2,7 @@
 #include "../gl/VAO.hpp"
 #include "../gl/VertexBuffer.hpp"
 #include "../draw/Vertex.hpp"
-#include "../support/OldCamera.hpp"
+#include "../support/Camera.hpp"
 
 using namespace glm;
 
@@ -62,15 +62,18 @@ GridFloor::GridFloor() :
     _zAxisIndexBuffer->setLineStrips({zLineStrip});
 }
 
-void GridFloor::draw(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
+void GridFloor::draw(const SP<Draw::Operations> &operations, const Camera &camera) {
     int normalAxis = 1;
-    if (camera->projection() == OldCamera::Projection::Orthographic) {
-        if (camera->isLookingOrientation(OldCamera::Orientation::Front) || camera->isLookingOrientation(OldCamera::Orientation::Back)) {
+    // TODO
+    /*
+    if (camera.projection() == OldCamera::Projection::Orthographic) {
+        if (camera.isLookingOrientation(OldCamera::Orientation::Front) || camera.isLookingOrientation(OldCamera::Orientation::Back)) {
             normalAxis = 2;
-        } else if (camera->isLookingOrientation(OldCamera::Orientation::Left) || camera->isLookingOrientation(OldCamera::Orientation::Right)) {
+        } else if (camera.isLookingOrientation(OldCamera::Orientation::Left) || camera.isLookingOrientation(OldCamera::Orientation::Right)) {
             normalAxis = 0;
         }
     }
+    */
 
     static const std::array<glm::mat4, 3> swizzleTransforms {
         glm::mat4(1), // xyz to xyz

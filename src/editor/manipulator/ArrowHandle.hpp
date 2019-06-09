@@ -16,8 +16,8 @@ public:
 
     ArrowHandle(int axis, HandleType handleType);
 
-    void draw(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) override;
-    void drawHitArea(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) override;
+    void draw(const SP<Draw::Operations> &operations, const Camera &camera) override;
+    void drawHitArea(const SP<Draw::Operations> &operations, const Camera &camera) override;
 
     void mousePressEvent(const Viewport::MouseEvent &event) override;
     void mouseMoveEvent(const Viewport::MouseEvent &event) override;

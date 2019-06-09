@@ -2,7 +2,7 @@
 #include "../gl/VAO.hpp"
 #include "../gl/Texture.hpp"
 #include "../resource/Resource.hpp"
-#include "../support/OldCamera.hpp"
+#include "../support/Camera.hpp"
 
 namespace Lattice {
 namespace Draw {
@@ -13,12 +13,12 @@ DrawMaterial::DrawMaterial() : _shader(Resource::read("src/draw/DrawMaterial.ver
     initializeOpenGLFunctions();
 }
 
-void DrawMaterial::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<OldCamera> &camera, const Material &material) {
+void DrawMaterial::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const Camera &camera, const Material &material) {
     _shader.bind();
     _shader.setUniform("diffuse", material.baseColor);
     _shader.setUniform("ambient", glm::vec3(0));
-    _shader.setUniform("MV", camera->worldToCameraMatrix() * matrix);
-    _shader.setUniform("MVP", camera->worldToViewportMatrix() * matrix);
+    _shader.setUniform("MV", camera.worldToCameraMatrix() * matrix);
+    _shader.setUniform("MVP", camera.worldToViewportMatrix() * matrix);
 
     if (!material.baseColorImage.isNull()) {
         auto texture = getTexture(material.baseColorImage);

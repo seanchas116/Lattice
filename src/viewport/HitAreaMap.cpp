@@ -4,7 +4,7 @@
 #include "../gl/Texture.hpp"
 #include "../gl/Binder.hpp"
 #include "../support/Debug.hpp"
-#include "../support/OldCamera.hpp"
+#include "../support/Camera.hpp"
 #include <glm/gtc/type_precision.hpp>
 
 using namespace glm;
@@ -40,8 +40,8 @@ Opt<HitResult> HitAreaMap::pick(vec2 physicalPos) {
     return {{*renderable, depth}};
 }
 
-void HitAreaMap::draw(const SP<Renderable> &renderable, const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
-    resize(camera->viewportSize());
+void HitAreaMap::draw(const SP<Renderable> &renderable, const SP<Draw::Operations> &operations, const Camera &camera) {
+    resize(camera.viewportSize());
 
     {
         GL::Binder binder(*_framebuffer);

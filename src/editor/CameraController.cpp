@@ -1,20 +1,24 @@
 #include "CameraController.hpp"
+#include "CameraState.hpp"
 #include "../viewport/Util.hpp"
 #include <QMouseEvent>
 #include <QtDebug>
 #include <QApplication>
+#include <glm/gtx/euler_angles.hpp>
 
 using namespace glm;
 
 namespace Lattice {
 namespace Editor {
 
-CameraController::CameraController(const SP<OldCamera> &camera, QWidget *widget) : _camera(camera), _widget(widget) {
+CameraController::CameraController(const SP<CameraState> &cameraState, QWidget *widget) : _cameraState(cameraState), _widget(widget) {
+    /*
     _camera->setLocation(location());
     connect(_camera.get(), &OldCamera::locationChanged, this, [this](const Location& location) {
         _position = location.position;
         _eulerAngles = glm::eulerAngles(location.rotation);
     });
+    */
 }
 
 bool CameraController::mousePress(QMouseEvent *event) {
@@ -38,24 +42,25 @@ bool CameraController::mouseMove(QMouseEvent *event) {
     QPoint offset = event->pos() - _lastMousePos;
     switch (_mode) {
     case Mode::Move: {
-        glm::dmat2x3 upRight(location().up(), location().right());
+        auto cameraToWorld = _cameraState->cameraToWorldMatrix();
+        glm::dmat2x3 upRight(cameraToWorld[1].xyz, cameraToWorld[0].xyz);
         double ratio;
-        if (_camera->projection() == OldCamera::Projection::Perspective) {
+        if (_cameraState->projection() == Camera::Projection::Perspective) {
             ratio = 0.02;
         } else {
-            ratio = 1 / _camera->orthoScale();
+            ratio = 1 / _cameraState->orthoScale();
         }
-        _position += upRight * (glm::dvec2(offset.y(), -offset.x()) * ratio);
-
-        _camera->setLocation(location());
+        auto position = _cameraState->position();
+        position += upRight * (glm::dvec2(offset.y(), -offset.x()) * ratio);
+        _cameraState->setPosition(position);
         break;
     }
     case Mode::Rotate: {
         double unit = 0.2 / 180.0 * M_PI;
-        _eulerAngles.y -= offset.x() * unit;
-        _eulerAngles.x -= offset.y() * unit;
-
-        _camera->setLocation(location());
+        auto eulerAngles = _cameraState->eulerAngles();
+        eulerAngles.y -= offset.x() * unit;
+        eulerAngles.x -= offset.y() * unit;
+        _cameraState->setEulerAngles(eulerAngles);
         break;
     }
     default: {
@@ -73,11 +78,12 @@ bool CameraController::mouseRelease(QMouseEvent *) {
 }
 
 bool CameraController::wheel(QWheelEvent *event) {
-    if (_camera->projection() == OldCamera::Projection::Perspective) {
-        _position += -location().backward() * (0.01 * event->delta());
-        _camera->setLocation(location());
+    if (_cameraState->projection() == Camera::Projection::Perspective) {
+        auto position = _cameraState->position();
+        position += -glm::dvec3(_cameraState->cameraToWorldMatrix()[2].xyz) * (0.01 * event->delta());
+        _cameraState->setPosition(position);
     } else {
-        _camera->setOrthoScale(_camera->orthoScale() * pow(2.0, 0.001 * event->delta()));
+        _cameraState->setOrthoScale(_cameraState->orthoScale() * pow(2.0, 0.001 * event->delta()));
     }
     return false;
 }
@@ -97,13 +103,6 @@ void CameraController::setPressedKeys(const std::unordered_set<int> &keys) {
         QApplication::restoreOverrideCursor();
         _isOverridingCursor = false;
     }
-}
-
-Location CameraController::location() const {
-    Location location;
-    location.position = _position;
-    location.rotation = glm::dquat(_eulerAngles);
-    return location;
 }
 
 }

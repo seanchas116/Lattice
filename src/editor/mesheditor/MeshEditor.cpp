@@ -142,10 +142,10 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::Mesh
     connect(meshEditState->object().get(), &Document::MeshObject::subdivSettingsChanged, this, &MeshEditor::handleMeshChanged);
 }
 
-void MeshEditor::preDraw(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
+void MeshEditor::preDraw(const SP<Draw::Operations> &operations, const Camera &camera) {
     // TODO: use separate framebuffer for each viewport instead of resizing them
     updateVAOs();
-    resizeFramebuffers(glm::ivec2(camera->viewportSize()));
+    resizeFramebuffers(glm::ivec2(camera.viewportSize()));
 
     glEnable(GL_DEPTH_TEST);
 
@@ -173,7 +173,7 @@ void MeshEditor::preDraw(const SP<Draw::Operations> &operations, const SP<OldCam
     }
 }
 
-void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
+void MeshEditor::draw(const SP<Draw::Operations> &operations, const Camera &camera) {
     auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
     auto& materials = _meshEditState->object()->materials();
 
@@ -193,7 +193,7 @@ void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<OldCamera
     glDisable(GL_BLEND);
 }
 
-void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
+void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const Camera &camera) {
     auto idColor = toIDColor();
     operations->clear.clear(idColor, 1);
 

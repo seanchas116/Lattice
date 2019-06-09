@@ -25,7 +25,7 @@ MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Documen
     connect(object.get(), &Document::MeshObject::subdivSettingsChanged, this, &MeshRenderer::handleMeshUpdated);
 }
 
-void MeshRenderer::draw(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
+void MeshRenderer::draw(const SP<Draw::Operations> &operations, const Camera &camera) {
     updateVAOs();
     for (auto& [materialID, vao] : _faceVAOs) {
         auto material = _object->materials().at(materialID.index).toDrawMaterial();
@@ -33,7 +33,7 @@ void MeshRenderer::draw(const SP<Draw::Operations> &operations, const SP<OldCame
     }
 }
 
-void MeshRenderer::drawHitArea(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
+void MeshRenderer::drawHitArea(const SP<Draw::Operations> &operations, const Camera &camera) {
     updateVAOs();
     for (auto& [material, vao] : _faceVAOs) {
         operations->drawUnicolor.draw(vao, _object->location().matrixToWorld(), camera, toIDColor());
@@ -50,7 +50,7 @@ void MeshRenderer::mousePressEvent(const Viewport::MouseEvent &event) {
     }
     case Qt::LeftButton: {
         glm::dvec3 worldPos = event.worldPos();
-        auto [viewportDragPos, isInViewport] = event.camera->mapWorldToViewport(worldPos);
+        auto [viewportDragPos, isInViewport] = event.camera.mapWorldToViewport(worldPos);
         if (!isInViewport) {
             return;
         }

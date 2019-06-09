@@ -9,7 +9,7 @@ Background::Background(const SP<State::AppState> &appState) : _appState(appState
     initializeOpenGLFunctions();
 }
 
-void Background::draw(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
+void Background::draw(const SP<Draw::Operations> &operations, const Camera &camera) {
     Q_UNUSED(operations); Q_UNUSED(camera);
 
     // TODO: manage depth test in better way
@@ -19,7 +19,7 @@ void Background::draw(const SP<Draw::Operations> &operations, const SP<OldCamera
     operations->clear.clear(glm::vec4(0.8, 0.8, 0.8, 1), 1);
 }
 
-void Background::drawHitArea(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
+void Background::drawHitArea(const SP<Draw::Operations> &operations, const Camera &camera) {
     Q_UNUSED(operations); Q_UNUSED(camera);
 
     auto color = toIDColor();

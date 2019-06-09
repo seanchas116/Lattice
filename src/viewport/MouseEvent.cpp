@@ -4,7 +4,7 @@ namespace Lattice {
 namespace Viewport {
 
 glm::dvec3 MouseEvent::worldPos() const {
-    return camera->mapViewportToWorld(viewportPos);
+    return camera.mapViewportToWorld(viewportPos);
 }
 
 }

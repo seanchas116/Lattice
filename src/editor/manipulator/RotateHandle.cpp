@@ -24,7 +24,7 @@ RotateHandle::RotateHandle(int axis) :
 {
 }
 
-void RotateHandle::draw(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
+void RotateHandle::draw(const SP<Draw::Operations> &operations, const Camera &camera) {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInViewport){
         return;
@@ -35,7 +35,7 @@ void RotateHandle::draw(const SP<Draw::Operations> &operations, const SP<OldCame
     operations->clear.clearDepth(1);
 }
 
-void RotateHandle::drawHitArea(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
+void RotateHandle::drawHitArea(const SP<Draw::Operations> &operations, const Camera &camera) {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInViewport){
         return;
@@ -58,7 +58,7 @@ void RotateHandle::mousePressEvent(const Viewport::MouseEvent &event) {
 
     dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * Constants::swizzleTransforms[_axis];
     dmat4 rotateHandleMatrixInverse = inverse(rotateHandleMatrix);
-    auto rotateHandleRay = rotateHandleMatrixInverse * event.camera->cameraMouseRay(event.viewportPos);
+    auto rotateHandleRay = rotateHandleMatrixInverse * event.camera.cameraMouseRay(event.viewportPos);
 
     dvec3 intersection = rotateHandleRay.whereXIsZero();
     double angle = atan2(intersection.z, intersection.y);
@@ -80,7 +80,7 @@ void RotateHandle::mouseMoveEvent(const Viewport::MouseEvent &event) {
 
     dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * Constants::swizzleTransforms[_axis];
     dmat4 rotateHandleMatrixInverse = inverse(rotateHandleMatrix);
-    auto rotateHandleRay = rotateHandleMatrixInverse * event.camera->cameraMouseRay(event.viewportPos);
+    auto rotateHandleRay = rotateHandleMatrixInverse * event.camera.cameraMouseRay(event.viewportPos);
     dvec3 intersection = rotateHandleRay.whereXIsZero();
     double angle = atan2(intersection.z, intersection.y);
 

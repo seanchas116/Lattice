@@ -10,8 +10,7 @@
 namespace Lattice {
 namespace Viewport {
 
-Viewport::Viewport(QWidget *parent) : QWidget(parent), _camera(makeShared<OldCamera>()) {
-    connect(_camera.get(), &OldCamera::changed, this, &Viewport::updateRequested);
+Viewport::Viewport(QWidget *parent) : QWidget(parent), _camera(Camera::perspective(glm::dmat4(1), glm::dvec2(1))) {
     setMouseTracking(true);
 }
 
@@ -20,6 +19,11 @@ void Viewport::setRenderable(const Opt<SP<Renderable> > &renderable) {
         connect(renderable->get(), &Renderable::updated, this, &Viewport::updateRequested);
     }
     _renderable = renderable;
+}
+
+void Viewport::setCamera(const Camera &camera) {
+    _camera = camera;
+    emit updateRequested();
 }
 
 const SP<HitAreaMap> &Viewport::hitAreaMap() {
@@ -106,7 +110,6 @@ void Viewport::moveEvent(QMoveEvent *event) {
 
 void Viewport::resizeEvent(QResizeEvent *event) {
     super::resizeEvent(event);
-    _camera->setViewportSize(mapQtToGL(this, QPoint(event->size().width(), 0)));
     emit updateRequested();
 }
 
@@ -121,7 +124,7 @@ void Viewport::mouseReleaseEvent(QMouseEvent *event) {
     _draggedHitResult = {};
 }
 
-Opt<HitResult> Viewport::hitTest(glm::dvec2 pos, const SP<OldCamera> &camera) {
+Opt<HitResult> Viewport::hitTest(glm::dvec2 pos, const Camera &camera) {
     Q_UNUSED(camera);
 
     if (!_hitAreaMap) {

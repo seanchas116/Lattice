@@ -2,7 +2,7 @@
 #include "../gl/VAO.hpp"
 #include "../resource/Resource.hpp"
 #include "../support/Location.hpp"
-#include "../support/OldCamera.hpp"
+#include "../support/Camera.hpp"
 #include <glm/gtx/transform.hpp>
 
 using namespace glm;
@@ -15,10 +15,10 @@ DrawCircle::DrawCircle() : _shader(Resource::read("src/draw/DrawCircle.vert"),
                                    Resource::read("src/draw/DrawCircle.frag")) {
 }
 
-void DrawCircle::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const SP<OldCamera> &camera, double width, glm::vec4 color, bool useVertexColor, double zOffset) {
+void DrawCircle::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const Camera &camera, double width, glm::vec4 color, bool useVertexColor, double zOffset) {
     _shader.bind();
-    _shader.setUniform("MVP", camera->worldToViewportMatrix() * matrix);
-    _shader.setUniform("viewportSize", camera->viewportSize());
+    _shader.setUniform("MVP", camera.worldToViewportMatrix() * matrix);
+    _shader.setUniform("viewportSize", camera.viewportSize());
     _shader.setUniform("width", width);
     _shader.setUniform("color", color);
     _shader.setUniform("useVertexColor", useVertexColor);

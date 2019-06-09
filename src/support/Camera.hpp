@@ -24,7 +24,7 @@ public:
     auto worldToCameraMatrix() const { return _worldToCameraMatrix; }
     auto worldToViewportMatrix() const { return _worldToViewportMatrix; }
 
-    static Camera perspective(glm::dmat4 cameraToWorldMatrix, glm::dvec2 viewportSize, double fieldOfView, double zNear, double zFar);
+    static Camera perspective(glm::dmat4 cameraToWorldMatrix, glm::dvec2 viewportSize, double fieldOfView = glm::radians(60.0), double zNear = 0.1, double zFar = 100.0);
     static Camera orthographic(glm::dmat4 cameraToWorldMatrix, glm::dvec2 viewportSize, double scale);
 
     std::pair<glm::dvec3, bool> mapModelToViewport(const glm::dmat4& modelMatrix, glm::dvec3 worldPos) const;

@@ -28,7 +28,7 @@ ArrowHandle::ArrowHandle(int axis, HandleType handleType) :
 {
 }
 
-void ArrowHandle::draw(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
+void ArrowHandle::draw(const SP<Draw::Operations> &operations, const Camera &camera) {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInViewport){
         return;
@@ -39,7 +39,7 @@ void ArrowHandle::draw(const SP<Draw::Operations> &operations, const SP<OldCamer
     operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
 }
 
-void ArrowHandle::drawHitArea(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
+void ArrowHandle::drawHitArea(const SP<Draw::Operations> &operations, const Camera &camera) {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInViewport){
         return;
@@ -58,7 +58,7 @@ void ArrowHandle::mousePressEvent(const Viewport::MouseEvent &event) {
         return;
     }
 
-    RayRayDistanceSolver mouseToAxisDistanceSolver(event.camera->cameraMouseRay(event.viewportPos), coordinates.axisRaysInCameraSpace[_axis]);
+    RayRayDistanceSolver mouseToAxisDistanceSolver(event.camera.cameraMouseRay(event.viewportPos), coordinates.axisRaysInCameraSpace[_axis]);
     double tAxis = mouseToAxisDistanceSolver.t1;
 
     _initialTargetPosition = _targetPosition;
@@ -76,7 +76,7 @@ void ArrowHandle::mouseMoveEvent(const Viewport::MouseEvent &event) {
         return;
     }
 
-    RayRayDistanceSolver mouseToAxisDistanceSolver(event.camera->cameraMouseRay(event.viewportPos), coordinates.axisRaysInCameraSpace[_axis]);
+    RayRayDistanceSolver mouseToAxisDistanceSolver(event.camera.cameraMouseRay(event.viewportPos), coordinates.axisRaysInCameraSpace[_axis]);
     double tAxis = mouseToAxisDistanceSolver.t1;
 
     emit onDragMove(tAxis);

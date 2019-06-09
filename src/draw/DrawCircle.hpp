@@ -2,7 +2,7 @@
 #include "../gl/Shader.hpp"
 
 namespace Lattice {
-class OldCamera;
+class Camera;
 
 namespace GL {
 class VAO;
@@ -16,7 +16,7 @@ public:
 
     DrawCircle();
 
-    void draw(const SP<GL::VAO>& vao, const glm::dmat4 &matrix, const SP<OldCamera>& camera,
+    void draw(const SP<GL::VAO>& vao, const glm::dmat4 &matrix, const Camera& camera,
               double width, glm::vec4 color, bool useVertexColor = false, double zOffset = defaultZOffset);
     void draw2D(const SP<GL::VAO>& vao, const glm::dmat4 &matrix, glm::ivec2 viewportSize,
                 double width, glm::vec4 color, bool useVertexColor = false);

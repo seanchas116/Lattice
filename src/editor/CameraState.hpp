@@ -25,6 +25,11 @@ public:
 
     Camera camera() const;
 
+    glm::dmat4 cameraToWorldMatrix() const;
+
+signals:
+    void cameraChanged(const Camera& camera);
+
 private:
     static glm::dvec3 orientationAngle(Orientation orientation);
 
@@ -37,6 +42,8 @@ private:
     LATTICE_AUTO_PROPERTY(double, zNear, setZNear, 0.1)
     LATTICE_AUTO_PROPERTY(double, zFar, setZFar, 100.0)
     LATTICE_AUTO_PROPERTY(double, orthoScale, setOrthoScale, 100.0)
+
+    void emitCameraChanged();
 };
 
 } // namespace Editor

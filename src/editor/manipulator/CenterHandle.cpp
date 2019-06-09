@@ -3,6 +3,7 @@
 #include "../../draw/Vertex.hpp"
 #include "../../gl/VertexBuffer.hpp"
 #include "../../support/Debug.hpp"
+#include "../../support/Camera.hpp"
 
 using namespace glm;
 
@@ -13,12 +14,12 @@ namespace Manipulator {
 CenterHandle::CenterHandle() {
 }
 
-void CenterHandle::draw(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
+void CenterHandle::draw(const SP<Draw::Operations> &operations, const Camera &camera) {
     Q_UNUSED(operations); Q_UNUSED(camera);
 }
 
-void CenterHandle::drawHitArea(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
-    auto [viewportPos, isInViewport] = camera->mapWorldToViewport(_targetPosition);
+void CenterHandle::drawHitArea(const SP<Draw::Operations> &operations, const Camera &camera) {
+    auto [viewportPos, isInViewport] = camera.mapWorldToViewport(_targetPosition);
     if (!isInViewport) {
         return;
     }
@@ -28,21 +29,21 @@ void CenterHandle::drawHitArea(const SP<Draw::Operations> &operations, const SP<
     auto vbo = makeShared<GL::VertexBuffer<Draw::Vertex>>();
     vbo->setVertices({vertex});
     auto vao = makeShared<GL::VAO>(vbo, GL::Primitive::Point);
-    operations->drawCircle.draw2D(vao, dmat4(1), camera->viewportSize(), 32, toIDColor());
+    operations->drawCircle.draw2D(vao, dmat4(1), camera.viewportSize(), 32, toIDColor());
 }
 
 void CenterHandle::mousePressEvent(const Viewport::MouseEvent &event) {
     if (event.originalMouseEvent->button() != Qt::LeftButton) {
         return;
     }
-    auto [viewportPos, isInViewport] = event.camera->mapWorldToViewport(_targetPosition);
+    auto [viewportPos, isInViewport] = event.camera.mapWorldToViewport(_targetPosition);
     if (!isInViewport) {
         return;
     }
     qDebug() << "center press";
     _depth = viewportPos.z;
     _dragged = true;
-    auto pos = event.camera->mapViewportToWorld(dvec3(dvec2(event.viewportPos), _depth));
+    auto pos = event.camera.mapViewportToWorld(dvec3(dvec2(event.viewportPos), _depth));
     emit onDragBegin(pos);
 }
 
@@ -50,7 +51,7 @@ void CenterHandle::mouseMoveEvent(const Viewport::MouseEvent &event) {
     if (!_dragged) {
         return;
     }
-    auto pos = event.camera->mapViewportToWorld(dvec3(dvec2(event.viewportPos), _depth));
+    auto pos = event.camera.mapViewportToWorld(dvec3(dvec2(event.viewportPos), _depth));
     emit onDragMove(pos);
 }
 
