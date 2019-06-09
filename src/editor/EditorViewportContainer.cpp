@@ -91,22 +91,19 @@ void EditorViewportContainer::setSplitMode(State::ViewportSplitMode split) {
             viewports.push_back(new EditorViewport(_appState, _keyObserver));
         }
         {
-            Location location;
-            location.rotation = glm::dquat(OrientationAngles::top);
             viewports[0]->camera()->setProjection(Camera::Projection::Orthographic);
-            viewports[0]->camera()->setLocation(location);
+            viewports[0]->camera()->setLocation(Location());
+            viewports[0]->camera()->lookOrientation(Camera::Orientation::Top);
         }
         {
-            Location location;
-            location.rotation = glm::dquat(OrientationAngles::front);
             viewports[2]->camera()->setProjection(Camera::Projection::Orthographic);
-            viewports[2]->camera()->setLocation(location);
+            viewports[2]->camera()->setLocation(Location());
+            viewports[2]->camera()->lookOrientation(Camera::Orientation::Front);
         }
         {
-            Location location;
-            location.rotation = glm::dquat(OrientationAngles::right);
             viewports[3]->camera()->setProjection(Camera::Projection::Orthographic);
-            viewports[3]->camera()->setLocation(location);
+            viewports[3]->camera()->setLocation(Location());
+            viewports[3]->camera()->lookOrientation(Camera::Orientation::Right);
         }
 
         auto splitter = new QSplitter();

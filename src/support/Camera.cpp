@@ -5,6 +5,23 @@ using namespace glm;
 
 namespace Lattice {
 
+dvec3 Camera::orientationAngle(Orientation orientation) {
+    switch (orientation) {
+    case Orientation::Front:
+        return {0, 0, 0};
+    case Orientation::Back:
+        return {0, M_PI, 0};
+    case Orientation::Right:
+        return {0, M_PI * 0.5, 0};
+    case Orientation::Left:
+        return {0, M_PI * 1.5, 0};
+    case Orientation::Top:
+        return {M_PI * -0.5, 0, 0};
+    case Orientation::Bottom:
+        return {M_PI * 0.5, 0, 0};
+    }
+}
+
 Camera::Camera() {
     connect(this, &Camera::projectionChanged, this, &Camera::changed);
     connect(this, &Camera::locationChanged, this, &Camera::changed);
@@ -16,10 +33,14 @@ Camera::Camera() {
     connect(this, &Camera::changed, this, &Camera::updateMatrix);
 }
 
-void Camera::lookFront() {
+void Camera::lookOrientation(Camera::Orientation orientation) {
     auto location = this->location();
-    location.rotation = glm::dquat(glm::vec3(0, 0, 0));
+    location.rotation = glm::dquat(orientationAngle(orientation));
     setLocation(location);
+}
+
+bool Camera::isLookingOrientation(Camera::Orientation orientation) const {
+    return _location.rotation == glm::dquat(orientationAngle(orientation));
 }
 
 std::pair<dvec3, bool> Camera::mapModelToViewport(const dmat4 &modelMatrix, dvec3 worldPos) const {

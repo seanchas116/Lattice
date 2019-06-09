@@ -38,21 +38,20 @@ ViewportControlView::ViewportControlView(const SP<Camera> &camera, QWidget *pare
     menu->addSeparator();
 
     {
-        std::vector<std::pair<QString, glm::dvec3>> orientations = {
-            {tr("Front"), OrientationAngles::front},
-            {tr("Back"), OrientationAngles::back},
-            {tr("Right"), OrientationAngles::right},
-            {tr("Left"), OrientationAngles::left},
-            {tr("Top"), OrientationAngles::top},
-            {tr("Bottom"), OrientationAngles::bottom},
+        std::vector<std::pair<QString, Camera::Orientation>> orientations = {
+            {tr("Front"), Camera::Orientation::Front},
+            {tr("Back"), Camera::Orientation::Back},
+            {tr("Right"), Camera::Orientation::Right},
+            {tr("Left"), Camera::Orientation::Left},
+            {tr("Top"), Camera::Orientation::Top},
+            {tr("Bottom"), Camera::Orientation::Bottom},
         };
 
-        for (auto&& [text, eulerAngles] : orientations) {
-            menu->addAction(text, this, [this, eulerAngles = eulerAngles] {
-                Location location;
-                location.rotation = glm::dquat(eulerAngles);
+        for (auto&& [text, orientation] : orientations) {
+            menu->addAction(text, this, [this, orientation = orientation] {
                 _camera->setProjection(Camera::Projection::Orthographic);
-                _camera->setLocation(location);
+                _camera->setLocation(Location());
+                _camera->lookOrientation(orientation);
             });
         }
 
@@ -69,23 +68,22 @@ ViewportControlView::ViewportControlView(const SP<Camera> &camera, QWidget *pare
     auto updateMenuTitle = [camera, toolButton] {
         auto title = [&] {
             if (camera->projection() == Camera::Projection::Orthographic) {
-                auto rotation = camera->location().rotation;
-                if (rotation == glm::dquat(OrientationAngles::front)) {
+                if (camera->isLookingOrientation(Camera::Orientation::Front)) {
                     return tr("Front");
                 }
-                if (rotation == glm::dquat(OrientationAngles::back)) {
+                if (camera->isLookingOrientation(Camera::Orientation::Back)) {
                     return tr("Back");
                 }
-                if (rotation == glm::dquat(OrientationAngles::right)) {
+                if (camera->isLookingOrientation(Camera::Orientation::Right)) {
                     return tr("Right");
                 }
-                if (rotation == glm::dquat(OrientationAngles::left)) {
+                if (camera->isLookingOrientation(Camera::Orientation::Left)) {
                     return tr("Left");
                 }
-                if (rotation == glm::dquat(OrientationAngles::top)) {
+                if (camera->isLookingOrientation(Camera::Orientation::Top)) {
                     return tr("Top");
                 }
-                if (rotation == glm::dquat(OrientationAngles::bottom)) {
+                if (camera->isLookingOrientation(Camera::Orientation::Bottom)) {
                     return tr("Bottom");
                 }
                 return tr("Orthographic");
