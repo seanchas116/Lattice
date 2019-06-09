@@ -91,19 +91,19 @@ void EditorViewportContainer::setSplitMode(State::ViewportSplitMode split) {
             viewports.push_back(new EditorViewport(_appState, _keyObserver));
         }
         {
-            viewports[0]->camera()->setProjection(Camera::Projection::Orthographic);
+            viewports[0]->camera()->setProjection(OldCamera::Projection::Orthographic);
             viewports[0]->camera()->setLocation(Location());
-            viewports[0]->camera()->lookOrientation(Camera::Orientation::Top);
+            viewports[0]->camera()->lookOrientation(OldCamera::Orientation::Top);
         }
         {
-            viewports[2]->camera()->setProjection(Camera::Projection::Orthographic);
+            viewports[2]->camera()->setProjection(OldCamera::Projection::Orthographic);
             viewports[2]->camera()->setLocation(Location());
-            viewports[2]->camera()->lookOrientation(Camera::Orientation::Front);
+            viewports[2]->camera()->lookOrientation(OldCamera::Orientation::Front);
         }
         {
-            viewports[3]->camera()->setProjection(Camera::Projection::Orthographic);
+            viewports[3]->camera()->setProjection(OldCamera::Projection::Orthographic);
             viewports[3]->camera()->setLocation(Location());
-            viewports[3]->camera()->lookOrientation(Camera::Orientation::Right);
+            viewports[3]->camera()->lookOrientation(OldCamera::Orientation::Right);
         }
 
         auto splitter = new QSplitter();

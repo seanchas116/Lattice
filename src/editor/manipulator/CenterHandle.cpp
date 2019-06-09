@@ -13,11 +13,11 @@ namespace Manipulator {
 CenterHandle::CenterHandle() {
 }
 
-void CenterHandle::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void CenterHandle::draw(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
     Q_UNUSED(operations); Q_UNUSED(camera);
 }
 
-void CenterHandle::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void CenterHandle::drawHitArea(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
     auto [viewportPos, isInViewport] = camera->mapWorldToViewport(_targetPosition);
     if (!isInViewport) {
         return;

@@ -5,7 +5,7 @@
 #include <QOpenGLExtraFunctions>
 
 namespace Lattice {
-class Camera;
+class OldCamera;
 
 namespace GL {
 class VAO;
@@ -18,7 +18,7 @@ class DrawMaterial final : protected QOpenGLExtraFunctions {
 public:
     DrawMaterial();
 
-    void draw(const SP<GL::VAO>& vao, const glm::dmat4& matrix, const SP<Camera>& camera, const Material& material);
+    void draw(const SP<GL::VAO>& vao, const glm::dmat4& matrix, const SP<OldCamera>& camera, const Material& material);
 
     SP<GL::Texture> getTexture(const QImage& image);
 

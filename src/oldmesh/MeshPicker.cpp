@@ -48,7 +48,7 @@ bool mapLineToViewport(const mat4& P, vec2 viewportSize, float zNear, vec4 p0_ca
 MeshPicker::MeshPicker(const SP<Mesh> &mesh) : _mesh(mesh) {
 }
 
-Opt<std::pair<SP<Face>, double> > MeshPicker::pickFace(const dmat4 &modelToWorld, const SP<Camera> &camera, dvec2 viewportPos) const {
+Opt<std::pair<SP<Face>, double> > MeshPicker::pickFace(const dmat4 &modelToWorld, const SP<OldCamera> &camera, dvec2 viewportPos) const {
     Ray<float> ray = inverse(modelToWorld) * camera->worldMouseRay(viewportPos);
     // TODO: Use Bounding Volume Hierarchy to do faster
     //ScopedTimer timer("MeshPicker::pickFace");
@@ -74,7 +74,7 @@ Opt<std::pair<SP<Face>, double> > MeshPicker::pickFace(const dmat4 &modelToWorld
     return {{nearest->second, nearest->first}};
 }
 
-Opt<std::pair<SP<Vertex>, double> > MeshPicker::pickVertex(const dmat4 &modelToWorld, const SP<Camera> &camera, dvec2 viewportPos, double distance) const {
+Opt<std::pair<SP<Vertex>, double> > MeshPicker::pickVertex(const dmat4 &modelToWorld, const SP<OldCamera> &camera, dvec2 viewportPos, double distance) const {
     std::map<double, SP<Vertex>> intersectings;
 
     for (auto& v : _mesh->vertices()) {
@@ -93,7 +93,7 @@ Opt<std::pair<SP<Vertex>, double> > MeshPicker::pickVertex(const dmat4 &modelToW
     return {{nearest->second, nearest->first}};
 }
 
-Opt<std::pair<SP<Edge>, double> > MeshPicker::pickEdge(const dmat4 &modelToWorld, const SP<Camera> &camera, dvec2 viewportPos, double distance) const {
+Opt<std::pair<SP<Edge>, double> > MeshPicker::pickEdge(const dmat4 &modelToWorld, const SP<OldCamera> &camera, dvec2 viewportPos, double distance) const {
     std::map<double, SP<Edge>> intersectings;
 
     for (auto& [_, e] : _mesh->edges()) {

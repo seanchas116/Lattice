@@ -24,7 +24,7 @@ RotateHandle::RotateHandle(int axis) :
 {
 }
 
-void RotateHandle::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void RotateHandle::draw(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInViewport){
         return;
@@ -35,7 +35,7 @@ void RotateHandle::draw(const SP<Draw::Operations> &operations, const SP<Camera>
     operations->clear.clearDepth(1);
 }
 
-void RotateHandle::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void RotateHandle::drawHitArea(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
     Coordinates coordinates(camera, _targetPosition);
     if (!coordinates.isInViewport){
         return;

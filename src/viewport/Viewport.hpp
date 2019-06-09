@@ -40,13 +40,13 @@ private:
 
     const SP<HitAreaMap>& hitAreaMap();
 
-    Opt<HitResult> hitTest(glm::dvec2 pos, const SP<Camera>& camera);
+    Opt<HitResult> hitTest(glm::dvec2 pos, const SP<OldCamera>& camera);
 
     Opt<SP<Renderable>> _renderable;
     Opt<HitResult> _draggedHitResult;
     Opt<HitResult> _hoveredHitResult;
     Opt<SP<HitAreaMap>> _hitAreaMap;
-    SP<Camera> _camera;
+    SP<OldCamera> _camera;
 };
 
 } // namespace Renderer

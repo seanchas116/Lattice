@@ -2,7 +2,7 @@
 #include "../gl/VAO.hpp"
 #include "../gl/VertexBuffer.hpp"
 #include "../draw/Vertex.hpp"
-#include "../support/Camera.hpp"
+#include "../support/OldCamera.hpp"
 
 using namespace glm;
 
@@ -62,12 +62,12 @@ GridFloor::GridFloor() :
     _zAxisIndexBuffer->setLineStrips({zLineStrip});
 }
 
-void GridFloor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void GridFloor::draw(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
     int normalAxis = 1;
-    if (camera->projection() == Camera::Projection::Orthographic) {
-        if (camera->isLookingOrientation(Camera::Orientation::Front) || camera->isLookingOrientation(Camera::Orientation::Back)) {
+    if (camera->projection() == OldCamera::Projection::Orthographic) {
+        if (camera->isLookingOrientation(OldCamera::Orientation::Front) || camera->isLookingOrientation(OldCamera::Orientation::Back)) {
             normalAxis = 2;
-        } else if (camera->isLookingOrientation(Camera::Orientation::Left) || camera->isLookingOrientation(Camera::Orientation::Right)) {
+        } else if (camera->isLookingOrientation(OldCamera::Orientation::Left) || camera->isLookingOrientation(OldCamera::Orientation::Right)) {
             normalAxis = 0;
         }
     }

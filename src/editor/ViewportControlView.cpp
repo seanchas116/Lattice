@@ -8,16 +8,16 @@
 namespace Lattice {
 namespace Editor {
 
-ViewportControlView::ViewportControlView(const SP<Camera> &camera, QWidget *parent) : QWidget(parent), _camera(camera) {
+ViewportControlView::ViewportControlView(const SP<OldCamera> &camera, QWidget *parent) : QWidget(parent), _camera(camera) {
     auto menu = new QMenu(this);
 
     {
         auto actionGroup = new QActionGroup(this);
         actionGroup->setExclusive(true);
 
-        std::vector<std::pair<Camera::Projection, QString>> projections = {
-            {Camera::Projection::Perspective, tr("Perspective")},
-            {Camera::Projection::Orthographic, tr("Orthographic")},
+        std::vector<std::pair<OldCamera::Projection, QString>> projections = {
+            {OldCamera::Projection::Perspective, tr("Perspective")},
+            {OldCamera::Projection::Orthographic, tr("Orthographic")},
         };
         for (auto&& [projection, text] : projections) {
             auto action= menu->addAction(text);
@@ -28,7 +28,7 @@ ViewportControlView::ViewportControlView(const SP<Camera> &camera, QWidget *pare
                     camera->setProjection(projection);
                 }
             });
-            connect(camera.get(), &Camera::projectionChanged, action, [action, projection = projection](auto newProjection) {
+            connect(camera.get(), &OldCamera::projectionChanged, action, [action, projection = projection](auto newProjection) {
                 action->setChecked(projection == newProjection);
             });
             actionGroup->addAction(action);
@@ -38,18 +38,18 @@ ViewportControlView::ViewportControlView(const SP<Camera> &camera, QWidget *pare
     menu->addSeparator();
 
     {
-        std::vector<std::pair<QString, Camera::Orientation>> orientations = {
-            {tr("Front"), Camera::Orientation::Front},
-            {tr("Back"), Camera::Orientation::Back},
-            {tr("Right"), Camera::Orientation::Right},
-            {tr("Left"), Camera::Orientation::Left},
-            {tr("Top"), Camera::Orientation::Top},
-            {tr("Bottom"), Camera::Orientation::Bottom},
+        std::vector<std::pair<QString, OldCamera::Orientation>> orientations = {
+            {tr("Front"), OldCamera::Orientation::Front},
+            {tr("Back"), OldCamera::Orientation::Back},
+            {tr("Right"), OldCamera::Orientation::Right},
+            {tr("Left"), OldCamera::Orientation::Left},
+            {tr("Top"), OldCamera::Orientation::Top},
+            {tr("Bottom"), OldCamera::Orientation::Bottom},
         };
 
         for (auto&& [text, orientation] : orientations) {
             menu->addAction(text, this, [this, orientation = orientation] {
-                _camera->setProjection(Camera::Projection::Orthographic);
+                _camera->setProjection(OldCamera::Projection::Orthographic);
                 _camera->setLocation(Location());
                 _camera->lookOrientation(orientation);
             });
@@ -67,23 +67,23 @@ ViewportControlView::ViewportControlView(const SP<Camera> &camera, QWidget *pare
 
     auto updateMenuTitle = [camera, toolButton] {
         auto title = [&] {
-            if (camera->projection() == Camera::Projection::Orthographic) {
-                if (camera->isLookingOrientation(Camera::Orientation::Front)) {
+            if (camera->projection() == OldCamera::Projection::Orthographic) {
+                if (camera->isLookingOrientation(OldCamera::Orientation::Front)) {
                     return tr("Front");
                 }
-                if (camera->isLookingOrientation(Camera::Orientation::Back)) {
+                if (camera->isLookingOrientation(OldCamera::Orientation::Back)) {
                     return tr("Back");
                 }
-                if (camera->isLookingOrientation(Camera::Orientation::Right)) {
+                if (camera->isLookingOrientation(OldCamera::Orientation::Right)) {
                     return tr("Right");
                 }
-                if (camera->isLookingOrientation(Camera::Orientation::Left)) {
+                if (camera->isLookingOrientation(OldCamera::Orientation::Left)) {
                     return tr("Left");
                 }
-                if (camera->isLookingOrientation(Camera::Orientation::Top)) {
+                if (camera->isLookingOrientation(OldCamera::Orientation::Top)) {
                     return tr("Top");
                 }
-                if (camera->isLookingOrientation(Camera::Orientation::Bottom)) {
+                if (camera->isLookingOrientation(OldCamera::Orientation::Bottom)) {
                     return tr("Bottom");
                 }
                 return tr("Orthographic");
@@ -93,7 +93,7 @@ ViewportControlView::ViewportControlView(const SP<Camera> &camera, QWidget *pare
         toolButton->setText(title);
     };
 
-    connect(camera.get(), &Camera::changed, toolButton, updateMenuTitle);
+    connect(camera.get(), &OldCamera::changed, toolButton, updateMenuTitle);
     updateMenuTitle();
 
     auto layout = new QVBoxLayout();

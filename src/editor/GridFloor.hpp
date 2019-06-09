@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 
 namespace Lattice {
-class Camera;
+class OldCamera;
 
 namespace GL {
 template <typename T> class VertexBuffer;
@@ -20,7 +20,7 @@ class GridFloor final : public Viewport::Renderable {
 public:
     GridFloor();
 
-    void draw(const SP<Draw::Operations>& operations, const SP<Camera>& camera) override;
+    void draw(const SP<Draw::Operations>& operations, const SP<OldCamera>& camera) override;
 
 private:
     SP<GL::VertexBuffer<Draw::PointLineVertex>> _vbo;

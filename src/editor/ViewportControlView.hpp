@@ -1,6 +1,6 @@
 #pragma once
 #include <QWidget>
-#include "../support/Camera.hpp"
+#include "../support/OldCamera.hpp"
 
 namespace Lattice {
 namespace Editor {
@@ -8,12 +8,12 @@ namespace Editor {
 class ViewportControlView : public QWidget {
     Q_OBJECT
 public:
-    explicit ViewportControlView(const SP<Camera>& camera, QWidget *parent = nullptr);
+    explicit ViewportControlView(const SP<OldCamera>& camera, QWidget *parent = nullptr);
 
 public slots:
 
 private:
-    SP<Camera> _camera;
+    SP<OldCamera> _camera;
 };
 
 } // namespace Editor

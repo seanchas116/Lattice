@@ -7,7 +7,7 @@
 #include "../document/MeshObject.hpp"
 #include "../state/Preferences.hpp"
 #include "../support/Debug.hpp"
-#include "../support/Camera.hpp"
+#include "../support/OldCamera.hpp"
 #include <QMouseEvent>
 #include <QMenu>
 
@@ -25,7 +25,7 @@ MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Documen
     connect(object.get(), &Document::MeshObject::subdivSettingsChanged, this, &MeshRenderer::handleMeshUpdated);
 }
 
-void MeshRenderer::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void MeshRenderer::draw(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
     updateVAOs();
     for (auto& [materialID, vao] : _faceVAOs) {
         auto material = _object->materials().at(materialID.index).toDrawMaterial();
@@ -33,7 +33,7 @@ void MeshRenderer::draw(const SP<Draw::Operations> &operations, const SP<Camera>
     }
 }
 
-void MeshRenderer::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void MeshRenderer::drawHitArea(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
     updateVAOs();
     for (auto& [material, vao] : _faceVAOs) {
         operations->drawUnicolor.draw(vao, _object->location().matrixToWorld(), camera, toIDColor());

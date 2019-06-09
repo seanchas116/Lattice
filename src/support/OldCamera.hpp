@@ -9,7 +9,7 @@
 
 namespace Lattice {
 
-class Camera final : public QObject {
+class OldCamera final : public QObject {
     Q_OBJECT
 
 public:
@@ -28,7 +28,7 @@ public:
     };
     static glm::dvec3 orientationAngle(Orientation orientation);
 
-    Camera();
+    OldCamera();
 
     void lookOrientation(Orientation orientation);
     bool isLookingOrientation(Orientation orientation) const;

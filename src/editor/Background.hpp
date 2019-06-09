@@ -8,8 +8,8 @@ namespace Editor {
 class Background : public Viewport::Renderable, protected QOpenGLExtraFunctions {
 public:
     Background(const SP<State::AppState>& appState);
-    void draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
-    void drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
+    void draw(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) override;
+    void drawHitArea(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) override;
     void mousePressEvent(const Viewport::MouseEvent &event) override;
 
 private:

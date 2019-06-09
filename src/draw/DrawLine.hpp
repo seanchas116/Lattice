@@ -3,7 +3,7 @@
 #include "../gl/Shader.hpp"
 
 namespace Lattice {
-class Camera;
+class OldCamera;
 
 namespace GL {
 class VAO;
@@ -17,7 +17,7 @@ public:
 
     DrawLine();
 
-    void draw(const SP<GL::VAO>& vao, const glm::dmat4 &matrix, const SP<Camera>& camera,
+    void draw(const SP<GL::VAO>& vao, const glm::dmat4 &matrix, const SP<OldCamera>& camera,
               double width, glm::vec4 color, bool useVertexColor = false, double zOffset = defaultZOffset);
 
 private:

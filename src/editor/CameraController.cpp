@@ -9,9 +9,9 @@ using namespace glm;
 namespace Lattice {
 namespace Editor {
 
-CameraController::CameraController(const SP<Camera> &camera, QWidget *widget) : _camera(camera), _widget(widget) {
+CameraController::CameraController(const SP<OldCamera> &camera, QWidget *widget) : _camera(camera), _widget(widget) {
     _camera->setLocation(location());
-    connect(_camera.get(), &Camera::locationChanged, this, [this](const Location& location) {
+    connect(_camera.get(), &OldCamera::locationChanged, this, [this](const Location& location) {
         _position = location.position;
         _eulerAngles = glm::eulerAngles(location.rotation);
     });
@@ -40,7 +40,7 @@ bool CameraController::mouseMove(QMouseEvent *event) {
     case Mode::Move: {
         glm::dmat2x3 upRight(location().up(), location().right());
         double ratio;
-        if (_camera->projection() == Camera::Projection::Perspective) {
+        if (_camera->projection() == OldCamera::Projection::Perspective) {
             ratio = 0.02;
         } else {
             ratio = 1 / _camera->orthoScale();
@@ -73,7 +73,7 @@ bool CameraController::mouseRelease(QMouseEvent *) {
 }
 
 bool CameraController::wheel(QWheelEvent *event) {
-    if (_camera->projection() == Camera::Projection::Perspective) {
+    if (_camera->projection() == OldCamera::Projection::Perspective) {
         _position += -location().backward() * (0.01 * event->delta());
         _camera->setLocation(location());
     } else {

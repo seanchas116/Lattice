@@ -1,5 +1,5 @@
 #pragma once
-#include "../../support/Camera.hpp"
+#include "../../support/OldCamera.hpp"
 #include "Constants.hpp"
 #include <glm/gtx/transform.hpp>
 
@@ -9,7 +9,7 @@ namespace Manipulator {
 
 class Coordinates final {
 public:
-    Coordinates(const SP<Camera>& camera, glm::dvec3 targetPos) : targetPos(targetPos) {
+    Coordinates(const SP<OldCamera>& camera, glm::dvec3 targetPos) : targetPos(targetPos) {
         using namespace glm;
 
         auto [viewportPos, isInViewport] = camera->mapWorldToViewport(targetPos);
@@ -19,7 +19,7 @@ public:
         }
 
         // TODO: calculate scale from desired arrow length in viewport space
-        if (camera->projection() == Camera::Projection::Perspective) {
+        if (camera->projection() == OldCamera::Projection::Perspective) {
             dvec3 viewportPosFixedDepth(viewportPos.xy, Constants::fixedDepth);
             dvec3 positionFixedDepth_worldSpace = camera->mapViewportToWorld(viewportPosFixedDepth);
 

@@ -1,6 +1,6 @@
 #pragma once
 #include <QMouseEvent>
-#include "../support/Camera.hpp"
+#include "../support/OldCamera.hpp"
 #include "../support/Shorthands.hpp"
 
 namespace Lattice {
@@ -8,7 +8,7 @@ namespace Viewport {
 
 struct MouseEvent {
     glm::dvec3 viewportPos;
-    SP<Camera> camera;
+    SP<OldCamera> camera;
     QMouseEvent* originalMouseEvent;
     QContextMenuEvent* originalContextMenuEvent;
 

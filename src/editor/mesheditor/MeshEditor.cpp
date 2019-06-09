@@ -18,7 +18,7 @@
 #include "../../document/MeshObject.hpp"
 #include "../../mesh/Mesh.hpp"
 #include "../../support/Debug.hpp"
-#include "../../support/Camera.hpp"
+#include "../../support/OldCamera.hpp"
 #include <QMouseEvent>
 #include <QMenu>
 #include <QPainter>
@@ -142,7 +142,7 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::Mesh
     connect(meshEditState->object().get(), &Document::MeshObject::subdivSettingsChanged, this, &MeshEditor::handleMeshChanged);
 }
 
-void MeshEditor::preDraw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void MeshEditor::preDraw(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
     // TODO: use separate framebuffer for each viewport instead of resizing them
     updateVAOs();
     resizeFramebuffers(glm::ivec2(camera->viewportSize()));
@@ -173,7 +173,7 @@ void MeshEditor::preDraw(const SP<Draw::Operations> &operations, const SP<Camera
     }
 }
 
-void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
     auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
     auto& materials = _meshEditState->object()->materials();
 
@@ -193,7 +193,7 @@ void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &
     glDisable(GL_BLEND);
 }
 
-void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const SP<OldCamera> &camera) {
     auto idColor = toIDColor();
     operations->clear.clear(idColor, 1);
 

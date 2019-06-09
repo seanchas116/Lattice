@@ -10,8 +10,8 @@
 namespace Lattice {
 namespace Viewport {
 
-Viewport::Viewport(QWidget *parent) : QWidget(parent), _camera(makeShared<Camera>()) {
-    connect(_camera.get(), &Camera::changed, this, &Viewport::updateRequested);
+Viewport::Viewport(QWidget *parent) : QWidget(parent), _camera(makeShared<OldCamera>()) {
+    connect(_camera.get(), &OldCamera::changed, this, &Viewport::updateRequested);
     setMouseTracking(true);
 }
 
@@ -121,7 +121,7 @@ void Viewport::mouseReleaseEvent(QMouseEvent *event) {
     _draggedHitResult = {};
 }
 
-Opt<HitResult> Viewport::hitTest(glm::dvec2 pos, const SP<Camera> &camera) {
+Opt<HitResult> Viewport::hitTest(glm::dvec2 pos, const SP<OldCamera> &camera) {
     Q_UNUSED(camera);
 
     if (!_hitAreaMap) {

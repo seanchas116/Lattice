@@ -4,7 +4,7 @@
 #include <QPoint>
 #include <unordered_set>
 #include "../support/Location.hpp"
-#include "../support/Camera.hpp"
+#include "../support/OldCamera.hpp"
 
 class QMouseEvent;
 class QWheelEvent;
@@ -15,7 +15,7 @@ namespace Editor {
 class CameraController final : public QObject {
     Q_OBJECT
 public:
-    CameraController(const SP<Camera>& camera, QWidget* widget);
+    CameraController(const SP<OldCamera>& camera, QWidget* widget);
     bool mousePress(QMouseEvent* event);
     bool mouseMove(QMouseEvent* event);
     bool mouseRelease(QMouseEvent* event);
@@ -32,7 +32,7 @@ private:
 
     Location location() const;
 
-    SP<Camera> _camera;
+    SP<OldCamera> _camera;
     QWidget *_widget;
 
     Mode _mode;
