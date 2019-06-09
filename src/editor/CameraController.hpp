@@ -31,7 +31,6 @@ private:
     };
 
     Location location() const;
-    void setLocationToCamera();
 
     SP<Camera> _camera;
     QWidget *_widget;

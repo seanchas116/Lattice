@@ -11,6 +11,10 @@ namespace Editor {
 
 CameraController::CameraController(const SP<Camera> &camera, QWidget *widget) : _camera(camera), _widget(widget) {
     _camera->setLocation(location());
+    connect(_camera.get(), &Camera::locationChanged, this, [this](const Location& location) {
+        _position = location.position;
+        _eulerAngles = glm::eulerAngles(location.rotation);
+    });
 }
 
 bool CameraController::mousePress(QMouseEvent *event) {
@@ -100,10 +104,6 @@ Location CameraController::location() const {
     location.position = _position;
     location.rotation = glm::dquat(_eulerAngles);
     return location;
-}
-
-void CameraController::setLocationToCamera() {
-    _camera->setLocation(location());
 }
 
 }
