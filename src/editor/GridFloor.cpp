@@ -88,8 +88,8 @@ void GridFloor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &c
     vec4 color1(0.5f);
     color1[axis1] = 0.8f;
 
-    operations->drawLine.draw(_yAxisVAO, transform, camera, 1, color0);
-    operations->drawLine.draw(_zAxisVAO, transform, camera, 1, color1);
+    operations->drawLine.draw(_yAxisVAO, transform, camera, 2, color0);
+    operations->drawLine.draw(_zAxisVAO, transform, camera, 2, color1);
 }
 
 }
