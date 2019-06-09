@@ -19,6 +19,16 @@ class CameraState : public QObject {
     LATTICE_AUTO_PROPERTY(double, orthoScale, setOrthoScale, 100.0)
 
 public:
+    enum class Orientation {
+        None,
+        Front,
+        Back,
+        Right,
+        Left,
+        Top,
+        Bottom,
+    };
+
     CameraState();
 };
 
