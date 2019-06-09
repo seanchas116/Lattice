@@ -12,6 +12,18 @@ public:
         Orthographic,
     };
 
+    auto projection() const { return _projection; }
+    auto cameraToWorldMatrix() const { return _cameraToWorldMatrix; }
+    auto viewportSize() const { return _viewportSize; }
+    auto fieldOfView() const { return _fieldOfView; }
+    auto zNear() const { return _zNear; }
+    auto zFar() const { return _zFar; }
+    auto orthoScale() const { return _orthoScale; }
+
+    auto cameraToViewportMatrix() const { return _cameraToWorldMatrix; }
+    auto worldToCameraMatrix() const { return _worldToCameraMatrix; }
+    auto worldToViewportMatrix() const { return _worldToViewportMatrix; }
+
     static Camera perspective(glm::dmat4 cameraToWorldMatrix, glm::dvec2 viewportSize, double fieldOfView, double zNear, double zFar);
     static Camera orthographic(glm::dmat4 cameraToWorldMatrix, glm::dvec2 viewportSize, double scale);
 
