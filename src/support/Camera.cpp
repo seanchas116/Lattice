@@ -11,6 +11,7 @@ Camera Camera::perspective(glm::mat4 viewportToWorldMatrix, glm::vec2 viewportSi
     camera._fieldOfView = fieldOfView;
     camera._zNear = zNear;
     camera._zFar = zFar;
+    camera._orthoScale = 1;
 
     camera._cameraToViewportMatrix = glm::perspective(fieldOfView, viewportSize.x / viewportSize.y, zNear, zFar);
     camera._worldToCameraMatrix = inverse(viewportToWorldMatrix);
