@@ -14,7 +14,7 @@ class Copy : public QOpenGLExtraFunctions {
 public:
     Copy();
 
-    void copy(const SP<GL::Texture>& texture, const SP<GL::Texture>& depthTexture, float opacity);
+    void copy(const SP<GL::Texture>& texture, const SP<GL::Texture>& depthTexture, float opacity = 1);
 
 private:
     GL::Shader _shader;
