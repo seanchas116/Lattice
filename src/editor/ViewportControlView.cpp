@@ -1,4 +1,5 @@
 #include "ViewportControlView.hpp"
+#include "CameraState.hpp"
 #include <QRadioButton>
 #include <QToolButton>
 #include <QVBoxLayout>
@@ -8,7 +9,7 @@
 namespace Lattice {
 namespace Editor {
 
-ViewportControlView::ViewportControlView(const SP<Camera> &camera, QWidget *parent) : QWidget(parent), _camera(camera) {
+ViewportControlView::ViewportControlView(const SP<CameraState> &cameraState, QWidget *parent) : QWidget(parent), _cameraState(cameraState) {
     auto menu = new QMenu(this);
 
     {
@@ -22,13 +23,13 @@ ViewportControlView::ViewportControlView(const SP<Camera> &camera, QWidget *pare
         for (auto&& [projection, text] : projections) {
             auto action= menu->addAction(text);
             action->setCheckable(true);
-            action->setChecked(projection == _camera->projection());
-            connect(action, &QAction::triggered, camera.get(), [camera, projection = projection] (bool checked) {
+            action->setChecked(projection == cameraState->projection());
+            connect(action, &QAction::triggered, cameraState.get(), [cameraState, projection = projection] (bool checked) {
                 if (checked) {
-                    camera->setProjection(projection);
+                    cameraState->setProjection(projection);
                 }
             });
-            connect(camera.get(), &Camera::projectionChanged, action, [action, projection = projection](auto newProjection) {
+            connect(cameraState.get(), &CameraState::projectionChanged, action, [action, projection = projection](auto newProjection) {
                 action->setChecked(projection == newProjection);
             });
             actionGroup->addAction(action);
@@ -38,20 +39,19 @@ ViewportControlView::ViewportControlView(const SP<Camera> &camera, QWidget *pare
     menu->addSeparator();
 
     {
-        std::vector<std::pair<QString, Camera::Orientation>> orientations = {
-            {tr("Front"), Camera::Orientation::Front},
-            {tr("Back"), Camera::Orientation::Back},
-            {tr("Right"), Camera::Orientation::Right},
-            {tr("Left"), Camera::Orientation::Left},
-            {tr("Top"), Camera::Orientation::Top},
-            {tr("Bottom"), Camera::Orientation::Bottom},
+        std::vector<std::pair<QString, CameraState::Orientation>> orientations = {
+            {tr("Front"), CameraState::Orientation::Front},
+            {tr("Back"), CameraState::Orientation::Back},
+            {tr("Right"), CameraState::Orientation::Right},
+            {tr("Left"), CameraState::Orientation::Left},
+            {tr("Top"), CameraState::Orientation::Top},
+            {tr("Bottom"), CameraState::Orientation::Bottom},
         };
 
         for (auto&& [text, orientation] : orientations) {
             menu->addAction(text, this, [this, orientation = orientation] {
-                _camera->setProjection(Camera::Projection::Orthographic);
-                _camera->setLocation(Location());
-                _camera->lookOrientation(orientation);
+                _cameraState->setProjection(Camera::Projection::Orthographic);
+                _cameraState->setOrientation(orientation);
             });
         }
 
@@ -65,25 +65,25 @@ ViewportControlView::ViewportControlView(const SP<Camera> &camera, QWidget *pare
     toolButton->setMenu(menu);
     toolButton->setPopupMode(QToolButton::InstantPopup);
 
-    auto updateMenuTitle = [camera, toolButton] {
+    auto updateMenuTitle = [cameraState, toolButton] {
         auto title = [&] {
-            if (camera->projection() == Camera::Projection::Orthographic) {
-                if (camera->isLookingOrientation(Camera::Orientation::Front)) {
+            if (cameraState->projection() == Camera::Projection::Orthographic) {
+                if (cameraState->orientation() == CameraState::Orientation::Front) {
                     return tr("Front");
                 }
-                if (camera->isLookingOrientation(Camera::Orientation::Back)) {
+                if (cameraState->orientation() == CameraState::Orientation::Back) {
                     return tr("Back");
                 }
-                if (camera->isLookingOrientation(Camera::Orientation::Right)) {
+                if (cameraState->orientation() == CameraState::Orientation::Right) {
                     return tr("Right");
                 }
-                if (camera->isLookingOrientation(Camera::Orientation::Left)) {
+                if (cameraState->orientation() == CameraState::Orientation::Left) {
                     return tr("Left");
                 }
-                if (camera->isLookingOrientation(Camera::Orientation::Top)) {
+                if (cameraState->orientation() == CameraState::Orientation::Top) {
                     return tr("Top");
                 }
-                if (camera->isLookingOrientation(Camera::Orientation::Bottom)) {
+                if (cameraState->orientation() == CameraState::Orientation::Bottom) {
                     return tr("Bottom");
                 }
                 return tr("Orthographic");
@@ -93,7 +93,8 @@ ViewportControlView::ViewportControlView(const SP<Camera> &camera, QWidget *pare
         toolButton->setText(title);
     };
 
-    connect(camera.get(), &Camera::changed, toolButton, updateMenuTitle);
+    connect(cameraState.get(), &CameraState::orientationChanged, toolButton, updateMenuTitle);
+    connect(cameraState.get(), &CameraState::projectionChanged, toolButton, updateMenuTitle);
     updateMenuTitle();
 
     auto layout = new QVBoxLayout();

@@ -5,44 +5,6 @@ using namespace glm;
 
 namespace Lattice {
 
-dvec3 Camera::orientationAngle(Orientation orientation) {
-    switch (orientation) {
-    case Orientation::Front:
-        return {0, 0, 0};
-    case Orientation::Back:
-        return {0, M_PI, 0};
-    case Orientation::Right:
-        return {0, M_PI * 0.5, 0};
-    case Orientation::Left:
-        return {0, M_PI * 1.5, 0};
-    case Orientation::Top:
-        return {M_PI * -0.5, 0, 0};
-    case Orientation::Bottom:
-        return {M_PI * 0.5, 0, 0};
-    }
-}
-
-Camera::Camera() {
-    connect(this, &Camera::projectionChanged, this, &Camera::changed);
-    connect(this, &Camera::locationChanged, this, &Camera::changed);
-    connect(this, &Camera::viewportSizeChanged, this, &Camera::changed);
-    connect(this, &Camera::fieldOfViewChanged, this, &Camera::changed);
-    connect(this, &Camera::zNearChanged, this, &Camera::changed);
-    connect(this, &Camera::zFarChanged, this, &Camera::changed);
-    connect(this, &Camera::orthoScaleChanged, this, &Camera::changed);
-    connect(this, &Camera::changed, this, &Camera::updateMatrix);
-}
-
-void Camera::lookOrientation(Camera::Orientation orientation) {
-    auto location = this->location();
-    location.rotation = glm::dquat(orientationAngle(orientation));
-    setLocation(location);
-}
-
-bool Camera::isLookingOrientation(Camera::Orientation orientation) const {
-    return _location.rotation == glm::dquat(orientationAngle(orientation));
-}
-
 std::pair<dvec3, bool> Camera::mapModelToViewport(const dmat4 &modelMatrix, dvec3 worldPos) const {
     return mapWorldToViewport((modelMatrix * dvec4(worldPos, 1)).xyz);
 }
@@ -59,8 +21,7 @@ std::pair<glm::dvec3, bool> Camera::mapWorldToViewport(dvec3 worldPos) const {
 
 glm::dvec3 Camera::mapViewportToWorld(dvec3 viewportPosWithDepth) const {
     auto cameraPos = mapViewportToCamera(viewportPosWithDepth);
-    auto cameraToWorldMatrix = _location.matrixToWorld();
-    return (cameraToWorldMatrix * vec4(cameraPos, 1)).xyz;
+    return (_cameraToWorldMatrix * vec4(cameraPos, 1)).xyz;
 }
 
 std::pair<dvec3, bool> Camera::mapCameraToViewport(dvec3 cameraPos) const {
@@ -94,15 +55,43 @@ Ray<double> Camera::modelMouseRay(const dmat4 &modelMatrix, dvec2 viewportPos) c
     return {front, back - front};
 }
 
-void Camera::updateMatrix() {
-    _worldToCameraMatrix = inverse(_location.matrixToWorld());
-    if (_projection == Projection::Perspective) {
-        _cameraToViewportMatrix = glm::perspective(_fieldOfView, double(_viewportSize.x) / double(_viewportSize.y), _zNear, _zFar);
-    } else {
-        dvec2 topRight = _viewportSize / _orthoScale * 0.5;
-        _cameraToViewportMatrix = glm::ortho(-topRight.x, topRight.x, -topRight.y, topRight.y, -10000.0, 10000.0);
-    }
-    _worldToViewportMatrix = _cameraToViewportMatrix * _worldToCameraMatrix;
+
+Camera Camera::perspective(glm::dmat4 cameraToWorldMatrix, glm::dvec2 viewportSize, double fieldOfView, double zNear, double zFar) {
+    Camera camera;
+    camera._projection = Projection::Perspective;
+    camera._cameraToWorldMatrix = cameraToWorldMatrix;
+    camera._viewportSize = viewportSize;
+    camera._fieldOfView = fieldOfView;
+    camera._zNear = zNear;
+    camera._zFar = zFar;
+    camera._orthoScale = 1;
+
+    camera._cameraToViewportMatrix = glm::perspective(fieldOfView, viewportSize.x / viewportSize.y, zNear, zFar);
+    camera._worldToCameraMatrix = inverse(cameraToWorldMatrix);
+    camera._worldToViewportMatrix = camera._cameraToViewportMatrix * camera._worldToCameraMatrix;
+
+    return camera;
+}
+
+Camera Camera::orthographic(glm::dmat4 cameraToWorldMatrix, glm::dvec2 viewportSize, double scale) {
+    double zNear = -10000;
+    double zFar = 10000;
+
+    Camera camera;
+    camera._projection = Projection::Orthographic;
+    camera._cameraToWorldMatrix = cameraToWorldMatrix;
+    camera._viewportSize = viewportSize;
+    camera._fieldOfView = 0;
+    camera._zNear = zNear;
+    camera._zFar = zFar;
+    camera._orthoScale = scale;
+
+    dvec2 topRight = viewportSize / scale * 0.5;
+    camera._cameraToViewportMatrix = ortho(-topRight.x, topRight.x, -topRight.y, topRight.y, zNear, zFar);
+    camera._worldToCameraMatrix = inverse(cameraToWorldMatrix);
+    camera._worldToViewportMatrix = camera._cameraToViewportMatrix * camera._worldToCameraMatrix;
+
+    return camera;
 }
 
 } // namespace Lattice

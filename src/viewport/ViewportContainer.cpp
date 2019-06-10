@@ -62,7 +62,9 @@ void ViewportContainer::paintGL() {
             continue;
         }
 
-        (*viewport->_renderable)->preDrawRecursive(operations, viewport->_camera);
+        DrawEvent drawEvent {viewport, viewport->camera(), operations};
+
+        (*viewport->_renderable)->preDrawRecursive(drawEvent);
 
         glm::dvec2 minPos = mapQtToGL(this, viewport->mapTo(this, viewport->rect().bottomLeft()));
         glm::dvec2 maxPos = mapQtToGL(this, viewport->mapTo(this, viewport->rect().topRight()));
@@ -75,12 +77,12 @@ void ViewportContainer::paintGL() {
         glViewport(minPosViewport.x, minPosViewport.y, sizeViewport.x, sizeViewport.y);
         glBindFramebuffer(GL_FRAMEBUFFER, QOpenGLContext::currentContext()->defaultFramebufferObject());
 
-        (*viewport->_renderable)->drawRecursive(operations, viewport->_camera);
+        (*viewport->_renderable)->drawRecursive(drawEvent);
 
         glDisable(GL_SCISSOR_TEST);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-        viewport->hitAreaMap()->draw(*viewport->_renderable, operations, viewport->camera());
+        viewport->hitAreaMap()->draw(*viewport->_renderable, drawEvent);
     }
 
     glDisable(GL_CULL_FACE);
@@ -100,7 +102,9 @@ void ViewportContainer::paintGL() {
             * QTransform::fromTranslate(offset.x(), offset.y())
             * QTransform::fromScale(devicePixelRatioF(), devicePixelRatioF());
         painter.setTransform(transform);
-        (*viewport->_renderable)->draw2DRecursive(&painter, viewport->size());
+
+        Draw2DEvent event {viewport, viewport->size(), &painter};
+        (*viewport->_renderable)->draw2DRecursive(event);
         painter.restore();
     }
 }

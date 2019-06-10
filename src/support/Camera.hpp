@@ -1,41 +1,31 @@
 #pragma once
-#include <optional>
-#include <glm/glm.hpp>
-#include "Location.hpp"
 #include "Ray.hpp"
-#include "Shorthands.hpp"
-#include <QObject>
-#include "Property.hpp"
+#include <glm/glm.hpp>
+#include <tuple>
 
 namespace Lattice {
 
-class Camera final : public QObject {
-    Q_OBJECT
-
+class Camera {
 public:
     enum class Projection {
         Perspective,
         Orthographic,
     };
 
-    enum class Orientation {
-        Front,
-        Back,
-        Right,
-        Left,
-        Top,
-        Bottom,
-    };
-    static glm::dvec3 orientationAngle(Orientation orientation);
+    auto projection() const { return _projection; }
+    auto cameraToWorldMatrix() const { return _cameraToWorldMatrix; }
+    auto viewportSize() const { return _viewportSize; }
+    auto fieldOfView() const { return _fieldOfView; }
+    auto zNear() const { return _zNear; }
+    auto zFar() const { return _zFar; }
+    auto orthoScale() const { return _orthoScale; }
 
-    Camera();
+    auto cameraToViewportMatrix() const { return _cameraToViewportMatrix; }
+    auto worldToCameraMatrix() const { return _worldToCameraMatrix; }
+    auto worldToViewportMatrix() const { return _worldToViewportMatrix; }
 
-    void lookOrientation(Orientation orientation);
-    bool isLookingOrientation(Orientation orientation) const;
-
-    glm::dmat4 worldToCameraMatrix() const { return _worldToCameraMatrix; }
-    glm::dmat4 cameraToViewportMatrix() const { return _cameraToViewportMatrix; }
-    glm::dmat4 worldToViewportMatrix() const { return _worldToViewportMatrix; }
+    static Camera perspective(glm::dmat4 cameraToWorldMatrix, glm::dvec2 viewportSize, double fieldOfView = glm::radians(60.0), double zNear = 0.1, double zFar = 100.0);
+    static Camera orthographic(glm::dmat4 cameraToWorldMatrix, glm::dvec2 viewportSize, double scale);
 
     std::pair<glm::dvec3, bool> mapModelToViewport(const glm::dmat4& modelMatrix, glm::dvec3 worldPos) const;
     glm::dvec3 mapViewportToModel(const glm::dmat4& modelMatrix, glm::dvec3 viewportPosWithDepth) const;
@@ -54,19 +44,16 @@ public:
     Ray<double> worldMouseRay(glm::dvec2 viewportPos) const;
     Ray<double> modelMouseRay(const glm::dmat4& modelMatrix, glm::dvec2 viewportPos) const;
 
-signals:
-    void changed();
-
 private:
-    LATTICE_AUTO_PROPERTY(Projection, projection, setProjection, Projection::Perspective)
-    LATTICE_AUTO_PROPERTY(Location, location, setLocation, {})
-    LATTICE_AUTO_PROPERTY(glm::dvec2, viewportSize, setViewportSize, glm::dvec2(100, 100))
-    LATTICE_AUTO_PROPERTY(double, fieldOfView, setFieldOfView, glm::radians(60.0))
-    LATTICE_AUTO_PROPERTY(double, zNear, setZNear, 0.1)
-    LATTICE_AUTO_PROPERTY(double, zFar, setZFar, 100.0)
-    LATTICE_AUTO_PROPERTY(double, orthoScale, setOrthoScale, 100.0)
+    Camera() {}
 
-    void updateMatrix();
+    Projection _projection;
+    glm::dmat4 _cameraToWorldMatrix;
+    glm::dvec2 _viewportSize;
+    double _fieldOfView;
+    double _zNear;
+    double _zFar;
+    double _orthoScale;
 
     glm::dmat4 _cameraToViewportMatrix;
     glm::dmat4 _worldToCameraMatrix;

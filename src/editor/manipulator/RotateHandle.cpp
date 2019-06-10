@@ -10,6 +10,7 @@
 #include "../../support/Debug.hpp"
 #include "../../support/Ray.hpp"
 #include "../../support/Distance.hpp"
+#include <QMouseEvent>
 
 using namespace glm;
 
@@ -24,26 +25,26 @@ RotateHandle::RotateHandle(int axis) :
 {
 }
 
-void RotateHandle::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
-    Coordinates coordinates(camera, _targetPosition);
+void RotateHandle::draw(const Viewport::DrawEvent &event) {
+    Coordinates coordinates(event.camera, _targetPosition);
     if (!coordinates.isInViewport){
         return;
     }
 
-    operations->clear.clearDepth(Constants::fixedDepth);
-    operations->drawLine.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, Constants::colors[_axis]);
-    operations->clear.clearDepth(1);
+    event.operations->clear.clearDepth(Constants::fixedDepth);
+    event.operations->drawLine.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], event.camera, Constants::bodyWidth, Constants::colors[_axis]);
+    event.operations->clear.clearDepth(1);
 }
 
-void RotateHandle::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
-    Coordinates coordinates(camera, _targetPosition);
+void RotateHandle::drawHitArea(const Viewport::DrawEvent &event) {
+    Coordinates coordinates(event.camera, _targetPosition);
     if (!coordinates.isInViewport){
         return;
     }
 
-    operations->clear.clearDepth(Constants::fixedDepth);
-    operations->drawLine.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, toIDColor());
-    operations->clear.clearDepth(1);
+    event.operations->clear.clearDepth(Constants::fixedDepth);
+    event.operations->drawLine.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], event.camera, Constants::bodyWidth, toIDColor());
+    event.operations->clear.clearDepth(1);
 }
 
 void RotateHandle::mousePressEvent(const Viewport::MouseEvent &event) {
@@ -58,7 +59,7 @@ void RotateHandle::mousePressEvent(const Viewport::MouseEvent &event) {
 
     dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * Constants::swizzleTransforms[_axis];
     dmat4 rotateHandleMatrixInverse = inverse(rotateHandleMatrix);
-    auto rotateHandleRay = rotateHandleMatrixInverse * event.camera->cameraMouseRay(event.viewportPos);
+    auto rotateHandleRay = rotateHandleMatrixInverse * event.camera.cameraMouseRay(event.viewportPos);
 
     dvec3 intersection = rotateHandleRay.whereXIsZero();
     double angle = atan2(intersection.z, intersection.y);
@@ -80,7 +81,7 @@ void RotateHandle::mouseMoveEvent(const Viewport::MouseEvent &event) {
 
     dmat4 rotateHandleMatrix = coordinates.manipulatorToCamera * Constants::swizzleTransforms[_axis];
     dmat4 rotateHandleMatrixInverse = inverse(rotateHandleMatrix);
-    auto rotateHandleRay = rotateHandleMatrixInverse * event.camera->cameraMouseRay(event.viewportPos);
+    auto rotateHandleRay = rotateHandleMatrixInverse * event.camera.cameraMouseRay(event.viewportPos);
     dvec3 intersection = rotateHandleRay.whereXIsZero();
     double angle = atan2(intersection.z, intersection.y);
 

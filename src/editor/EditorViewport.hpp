@@ -13,12 +13,15 @@ namespace Editor {
 
 class EditorScene;
 class KeyObserver;
+class CameraState;
 
 class EditorViewport final : public Viewport::Viewport {
     Q_OBJECT
     using super = Viewport;
 public:
     explicit EditorViewport(const SP<State::AppState>& appState, const SP<KeyObserver>& keyObserver, QWidget *parent = nullptr);
+
+    auto& cameraState() const { return _cameraState; }
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
@@ -27,9 +30,12 @@ protected:
 
     void wheelEvent(QWheelEvent *event) override;
 
+    void resizeEvent(QResizeEvent *event) override;
+
 private:
-    CameraController _cameraController;
     SP<State::AppState> _appState;
+    SP<CameraState> _cameraState;
+    CameraController _cameraController;
 };
 
 }

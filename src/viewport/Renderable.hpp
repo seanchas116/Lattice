@@ -1,10 +1,13 @@
 #pragma once
 
-#include "MouseEvent.hpp"
 #include "../support/SharedPointer.hpp"
+#include "../support/Camera.hpp"
 #include "../draw/Operations.hpp"
 #include <QObject>
 #include <glm/glm.hpp>
+
+class QMouseEvent;
+class QContextMenuEvent;
 
 namespace Lattice {
 
@@ -13,6 +16,30 @@ class Operations;
 }
 
 namespace Viewport {
+
+class Viewport;
+
+struct DrawEvent {
+    Viewport* viewport;
+    Camera camera;
+    SP<Draw::Operations> operations;
+};
+
+struct Draw2DEvent {
+    Viewport* viewport;
+    QSize viewportSize;
+    QPainter* painter;
+};
+
+struct MouseEvent {
+    Viewport* viewport;
+    Camera camera;
+    glm::dvec3 viewportPos;
+    QMouseEvent* originalMouseEvent;
+    QContextMenuEvent* originalContextMenuEvent;
+
+    glm::dvec3 worldPos() const;
+};
 
 class Renderable : public QObject, public EnableSharedFromThis<Renderable> {
     Q_OBJECT
@@ -26,17 +53,17 @@ public:
     auto& childRenderables() const { return _childRenderables; }
     void setChildRenderables(const std::vector<SP<Renderable>>& children);
 
-    void preDrawRecursive(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
-    void drawRecursive(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
-    void drawHitAreaRecursive(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
-    void draw2DRecursive(QPainter* painter, const QSize& viewportSize);
+    void preDrawRecursive(const DrawEvent& event);
+    void drawRecursive(const DrawEvent& event);
+    void drawHitAreaRecursive(const DrawEvent& event);
+    void draw2DRecursive(const Draw2DEvent& event);
 
     void getDescendants(std::vector<SP<Renderable>>& descendants);
 
-    virtual void preDraw(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
-    virtual void draw(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
-    virtual void drawHitArea(const SP<Draw::Operations>& operations, const SP<Camera>& camera);
-    virtual void draw2D(QPainter* painter, const QSize& viewportSize);
+    virtual void preDraw(const DrawEvent& event);
+    virtual void draw(const DrawEvent& event);
+    virtual void drawHitArea(const DrawEvent& event);
+    virtual void draw2D(const Draw2DEvent& event);
 
     virtual void mousePressEvent(const MouseEvent& event);
     virtual void mouseMoveEvent(const MouseEvent& event);

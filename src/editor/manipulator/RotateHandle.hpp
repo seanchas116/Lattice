@@ -20,8 +20,8 @@ class RotateHandle : public Viewport::Renderable {
 public:
     RotateHandle(int axis);
 
-    void draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
-    void drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) override;
+    void draw(const Viewport::DrawEvent &event) override;
+    void drawHitArea(const Viewport::DrawEvent &event) override;
 
     void mousePressEvent(const Viewport::MouseEvent &event) override;
     void mouseMoveEvent(const Viewport::MouseEvent &event) override;

@@ -4,7 +4,7 @@
 #include <QPoint>
 #include <unordered_set>
 #include "../support/Location.hpp"
-#include "../support/Camera.hpp"
+#include "../support/Shorthands.hpp"
 
 class QMouseEvent;
 class QWheelEvent;
@@ -12,10 +12,12 @@ class QWheelEvent;
 namespace Lattice {
 namespace Editor {
 
+class CameraState;
+
 class CameraController final : public QObject {
     Q_OBJECT
 public:
-    CameraController(const SP<Camera>& camera, QWidget* widget);
+    CameraController(const SP<CameraState>& camera, QWidget* widget);
     bool mousePress(QMouseEvent* event);
     bool mouseMove(QMouseEvent* event);
     bool mouseRelease(QMouseEvent* event);
@@ -30,9 +32,7 @@ private:
         Rotate,
     };
 
-    Location location() const;
-
-    SP<Camera> _camera;
+    SP<CameraState> _cameraState;
     QWidget *_widget;
 
     Mode _mode;
@@ -41,8 +41,6 @@ private:
     bool _rotateKey = false;
     bool _moveKey = false;
     bool _isOverridingCursor = false;
-    glm::dvec3 _position {0, 10, 10};
-    glm::dvec3 _eulerAngles {0, 0, 0};
 };
 
 }

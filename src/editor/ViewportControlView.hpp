@@ -1,19 +1,21 @@
 #pragma once
 #include <QWidget>
-#include "../support/Camera.hpp"
+#include "../support/Shorthands.hpp"
 
 namespace Lattice {
 namespace Editor {
 
+class CameraState;
+
 class ViewportControlView : public QWidget {
     Q_OBJECT
 public:
-    explicit ViewportControlView(const SP<Camera>& camera, QWidget *parent = nullptr);
+    explicit ViewportControlView(const SP<CameraState>& cameraState, QWidget *parent = nullptr);
 
 public slots:
 
 private:
-    SP<Camera> _camera;
+    SP<CameraState> _cameraState;
 };
 
 } // namespace Editor

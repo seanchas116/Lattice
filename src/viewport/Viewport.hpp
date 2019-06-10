@@ -1,9 +1,9 @@
 #pragma once
-#include <QOpenGLWidget>
-#include "../support/Shorthands.hpp"
-#include "../draw/Operations.hpp"
-#include "MouseEvent.hpp"
 #include "HitResult.hpp"
+#include "../draw/Operations.hpp"
+#include "../support/Shorthands.hpp"
+#include "../support/Camera.hpp"
+#include <QOpenGLWidget>
 
 namespace Lattice {
 namespace Viewport {
@@ -22,6 +22,7 @@ public:
     void setRenderable(const Opt<SP<Renderable> > &renderable);
 
     auto& camera() const { return _camera; }
+    void setCamera(const Camera& camera);
 
 signals:
     void updateRequested();
@@ -40,13 +41,13 @@ private:
 
     const SP<HitAreaMap>& hitAreaMap();
 
-    Opt<HitResult> hitTest(glm::dvec2 pos, const SP<Camera>& camera);
+    Opt<HitResult> hitTest(glm::dvec2 pos, const Camera& camera);
 
     Opt<SP<Renderable>> _renderable;
     Opt<HitResult> _draggedHitResult;
     Opt<HitResult> _hoveredHitResult;
     Opt<SP<HitAreaMap>> _hitAreaMap;
-    SP<Camera> _camera;
+    Camera _camera;
 };
 
 } // namespace Renderer

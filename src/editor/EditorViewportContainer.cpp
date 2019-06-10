@@ -2,6 +2,7 @@
 #include "EditorViewport.hpp"
 #include "EditorScene.hpp"
 #include "KeyObserver.hpp"
+#include "CameraState.hpp"
 #include "../state/AppState.hpp"
 #include <QVBoxLayout>
 #include <QSplitter>
@@ -52,7 +53,7 @@ void EditorViewportContainer::setSplitMode(State::ViewportSplitMode split) {
     layout->setMargin(0);
     layout->setSpacing(0);
 
-    std::vector<Viewport::Viewport*> viewports;
+    std::vector<EditorViewport*> viewports;
 
     switch (split) {
     case State::ViewportSplitMode::Single: {
@@ -91,19 +92,19 @@ void EditorViewportContainer::setSplitMode(State::ViewportSplitMode split) {
             viewports.push_back(new EditorViewport(_appState, _keyObserver));
         }
         {
-            viewports[0]->camera()->setProjection(Camera::Projection::Orthographic);
-            viewports[0]->camera()->setLocation(Location());
-            viewports[0]->camera()->lookOrientation(Camera::Orientation::Top);
+            viewports[0]->cameraState()->setProjection(Camera::Projection::Orthographic);
+            viewports[0]->cameraState()->setPosition(glm::dvec3(0));
+            viewports[0]->cameraState()->setOrientation(CameraState::Orientation::Top);
         }
         {
-            viewports[2]->camera()->setProjection(Camera::Projection::Orthographic);
-            viewports[2]->camera()->setLocation(Location());
-            viewports[2]->camera()->lookOrientation(Camera::Orientation::Front);
+            viewports[2]->cameraState()->setProjection(Camera::Projection::Orthographic);
+            viewports[2]->cameraState()->setPosition(glm::dvec3(0));
+            viewports[2]->cameraState()->setOrientation(CameraState::Orientation::Front);
         }
         {
-            viewports[3]->camera()->setProjection(Camera::Projection::Orthographic);
-            viewports[3]->camera()->setLocation(Location());
-            viewports[3]->camera()->lookOrientation(Camera::Orientation::Right);
+            viewports[3]->cameraState()->setProjection(Camera::Projection::Orthographic);
+            viewports[3]->cameraState()->setPosition(glm::dvec3(0));
+            viewports[3]->cameraState()->setOrientation(CameraState::Orientation::Right);
         }
 
         auto splitter = new QSplitter();
@@ -131,7 +132,7 @@ void EditorViewportContainer::setSplitMode(State::ViewportSplitMode split) {
     }
 
     setLayout(layout);
-    setViewports(viewports);
+    setViewports(std::vector<Viewport::Viewport*>(viewports.begin(), viewports.end()));
 
     for (auto& v : viewports) {
         v->setRenderable(_renderable);

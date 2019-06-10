@@ -22,6 +22,7 @@ class Operations;
 namespace Viewport {
 
 class Renderable;
+struct DrawEvent;
 
 class HitAreaMap final : protected GL::ContextRecallable {
     Q_DISABLE_COPY(HitAreaMap)
@@ -29,7 +30,7 @@ public:
     HitAreaMap();
 
     Opt<HitResult> pick(glm::vec2 physicalPos);
-    void draw(const SP<Renderable> &renderable, const SP<Draw::Operations>& operations, const SP<Camera>& camera);
+    void draw(const SP<Renderable> &renderable, const DrawEvent& drawEvent);
 
 private:
     void resize(glm::ivec2 size);

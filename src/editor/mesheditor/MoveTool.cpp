@@ -3,6 +3,7 @@
 #include "../../document/History.hpp"
 #include "../../mesh/Mesh.hpp"
 #include "../../state/Preferences.hpp"
+#include <QMouseEvent>
 
 using namespace glm;
 

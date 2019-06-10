@@ -2,10 +2,11 @@
 #include "../../state/MeshEditState.hpp"
 #include "../../mesh/Handle.hpp"
 #include "../../document/MeshObject.hpp"
-#include "../../viewport/MouseEvent.hpp"
 #include "../../viewport/Renderable.hpp"
 #include <QObject>
 #include <unordered_set>
+
+class QKeyEvent;
 
 namespace Lattice {
 

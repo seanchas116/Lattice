@@ -18,7 +18,6 @@
 #include "../../document/MeshObject.hpp"
 #include "../../mesh/Mesh.hpp"
 #include "../../support/Debug.hpp"
-#include "../../support/Camera.hpp"
 #include <QMouseEvent>
 #include <QMenu>
 #include <QPainter>
@@ -142,10 +141,10 @@ MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::Mesh
     connect(meshEditState->object().get(), &Document::MeshObject::subdivSettingsChanged, this, &MeshEditor::handleMeshChanged);
 }
 
-void MeshEditor::preDraw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void MeshEditor::preDraw(const Viewport::DrawEvent &event) {
     // TODO: use separate framebuffer for each viewport instead of resizing them
     updateVAOs();
-    resizeFramebuffers(glm::ivec2(camera->viewportSize()));
+    resizeFramebuffers(glm::ivec2(event.camera.viewportSize()));
 
     glEnable(GL_DEPTH_TEST);
 
@@ -153,60 +152,60 @@ void MeshEditor::preDraw(const SP<Draw::Operations> &operations, const SP<Camera
 
     {
         GL::Binder binder(*_hitFramebuffer);
-        operations->clear.clear(encodeEventTargetToColor({}), 1);
+        event.operations->clear.clear(encodeEventTargetToColor({}), 1);
         if (_appState->isFaceSelectable()) {
-            operations->drawUnicolor.draw(_facePickVAO, matrixToWorld, camera, vec4(0), true);
+            event.operations->drawUnicolor.draw(_facePickVAO, matrixToWorld, event.camera, vec4(0), true);
         }
         if (_appState->isEdgeSelectable()) {
-            operations->drawLine.draw(_edgePickVAO, matrixToWorld, camera, 24.0, vec4(0), true, -0.0001);
+            event.operations->drawLine.draw(_edgePickVAO, matrixToWorld, event.camera, 24.0, vec4(0), true, -0.0001);
         }
         if (_appState->isVertexSelectable()) {
-            operations->drawCircle.draw(_vertexPickVAO, matrixToWorld, camera, 24.0, vec4(0), true, -0.0002);
+            event.operations->drawCircle.draw(_vertexPickVAO, matrixToWorld, event.camera, 24.0, vec4(0), true, -0.0002);
         }
     }
 
     {
         // TODO: Use multisampled framebuffer
         GL::Binder binder(*_facesFramebuffer);
-        operations->clear.clear(glm::vec4(0), 1);
-        operations->drawUnicolor.draw(_faceVAO, matrixToWorld, camera, vec4(0), true);
+        event.operations->clear.clear(glm::vec4(0), 1);
+        event.operations->drawUnicolor.draw(_faceVAO, matrixToWorld, event.camera, vec4(0), true);
     }
 }
 
-void MeshEditor::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void MeshEditor::draw(const Viewport::DrawEvent &event) {
     auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
     auto& materials = _meshEditState->object()->materials();
 
     for (auto& [materialID, vao] : _finalShapeVAOs) {
         auto material = materials.at(materialID.index).toDrawMaterial();
-        operations->drawMaterial.draw(vao, matrixToWorld, camera, material);
+        event.operations->drawMaterial.draw(vao, matrixToWorld, event.camera, material);
     }
 
-    operations->drawLine.draw(_edgeVAO, matrixToWorld, camera, 1.0, vec4(0), true);
+    event.operations->drawLine.draw(_edgeVAO, matrixToWorld, event.camera, 1.0, vec4(0), true);
     if (_appState->isVertexSelectable()) {
-        operations->drawCircle.draw(_vertexVAO, matrixToWorld, camera, 6.0, vec4(0), true);
+        event.operations->drawCircle.draw(_vertexVAO, matrixToWorld, event.camera, 6.0, vec4(0), true);
     }
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    operations->copy.copy(_facesTexture, _facesDepthTexture);
+    event.operations->copy.copy(_facesTexture, _facesDepthTexture);
     glDisable(GL_BLEND);
 }
 
-void MeshEditor::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void MeshEditor::drawHitArea(const Viewport::DrawEvent &event) {
     auto idColor = toIDColor();
-    operations->clear.clear(idColor, 1);
+    event.operations->clear.clear(idColor, 1);
 
     auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
 
     if (_appState->isFaceSelectable()) {
-        operations->drawUnicolor.draw(_facePickVAO, matrixToWorld, camera, idColor, false);
+        event.operations->drawUnicolor.draw(_facePickVAO, matrixToWorld, event.camera, idColor, false);
     }
     if (_appState->isEdgeSelectable()) {
-        operations->drawLine.draw(_edgePickVAO, matrixToWorld, camera, 12.0, idColor, false);
+        event.operations->drawLine.draw(_edgePickVAO, matrixToWorld, event.camera, 12.0, idColor, false);
     }
     if (_appState->isVertexSelectable()) {
-        operations->drawCircle.draw(_vertexPickVAO, matrixToWorld, camera, 24.0, idColor, false);
+        event.operations->drawCircle.draw(_vertexPickVAO, matrixToWorld, event.camera, 24.0, idColor, false);
     }
 }
 

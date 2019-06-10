@@ -3,6 +3,10 @@
 namespace Lattice {
 namespace Viewport {
 
+glm::dvec3 MouseEvent::worldPos() const {
+    return camera.mapViewportToWorld(viewportPos);
+}
+
 Renderable::~Renderable() {
 }
 
@@ -25,43 +29,43 @@ void Renderable::setChildRenderables(const std::vector<SP<Renderable> > &childre
     emit updated();
 }
 
-void Renderable::preDrawRecursive(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void Renderable::preDrawRecursive(const DrawEvent& event) {
     if (!_isVisible) {
         return;
     }
-    preDraw(operations, camera);
+    preDraw(event);
     for (auto& c : childRenderables()) {
-        c->preDrawRecursive(operations, camera);
+        c->preDrawRecursive(event);
     }
 }
 
-void Renderable::drawRecursive(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void Renderable::drawRecursive(const DrawEvent &event) {
     if (!_isVisible) {
         return;
     }
-    draw(operations, camera);
+    draw(event);
     for (auto& c : childRenderables()) {
-        c->drawRecursive(operations, camera);
+        c->drawRecursive(event);
     }
 }
 
-void Renderable::drawHitAreaRecursive(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
+void Renderable::drawHitAreaRecursive(const DrawEvent &event) {
     if (!_isVisible) {
         return;
     }
-    drawHitArea(operations, camera);
+    drawHitArea(event);
     for (auto& c : childRenderables()) {
-        c->drawHitAreaRecursive(operations, camera);
+        c->drawHitAreaRecursive(event);
     }
 }
 
-void Renderable::draw2DRecursive(QPainter *painter, const QSize &viewportSize) {
+void Renderable::draw2DRecursive(const Draw2DEvent &event) {
     if (!_isVisible) {
         return;
     }
-    draw2D(painter, viewportSize);
+    draw2D(event);
     for (auto& c : childRenderables()) {
-        c->draw2DRecursive(painter, viewportSize);
+        c->draw2DRecursive(event);
     }
 }
 
@@ -72,20 +76,20 @@ void Renderable::getDescendants(std::vector<SP<Renderable>> &descendants) {
     }
 }
 
-void Renderable::preDraw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
-    Q_UNUSED(operations); Q_UNUSED(camera);
+void Renderable::preDraw(const DrawEvent &event) {
+    Q_UNUSED(event);
 }
 
-void Renderable::draw(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
-    Q_UNUSED(operations); Q_UNUSED(camera);
+void Renderable::draw(const DrawEvent &event) {
+    Q_UNUSED(event);
 }
 
-void Renderable::drawHitArea(const SP<Draw::Operations> &operations, const SP<Camera> &camera) {
-    Q_UNUSED(operations); Q_UNUSED(camera);
+void Renderable::drawHitArea(const DrawEvent &event) {
+    Q_UNUSED(event);
 }
 
-void Renderable::draw2D(QPainter *painter, const QSize &viewportSize) {
-    Q_UNUSED(painter); Q_UNUSED(viewportSize);
+void Renderable::draw2D(const Draw2DEvent &event) {
+    Q_UNUSED(event);
 }
 
 void Renderable::mousePressEvent(const MouseEvent &event) {

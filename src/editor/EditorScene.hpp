@@ -1,7 +1,9 @@
 #pragma once
-#include <QObject>
-#include "../gl/ContextRecallable.hpp"
 #include "../viewport/Renderable.hpp"
+#include "../gl/ContextRecallable.hpp"
+#include <QObject>
+
+class QKeyEvent;
 
 namespace Lattice {
 

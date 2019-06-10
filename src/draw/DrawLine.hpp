@@ -17,7 +17,7 @@ public:
 
     DrawLine();
 
-    void draw(const SP<GL::VAO>& vao, const glm::dmat4 &matrix, const SP<Camera>& camera,
+    void draw(const SP<GL::VAO>& vao, const glm::dmat4 &matrix, const Camera& camera,
               double width, glm::vec4 color, bool useVertexColor = false, double zOffset = defaultZOffset);
 
 private:

@@ -4,6 +4,7 @@
 #include "../../document/History.hpp"
 #include "../../support/Debug.hpp"
 #include <QPainter>
+#include <QMouseEvent>
 
 using namespace glm;
 
@@ -24,7 +25,7 @@ void BorderSelectTool::mousePressTool(const Tool::EventTarget &target, const Vie
     _vertices.reserve(mesh()->allVertexCount());
     for (auto vertex : mesh()->vertices()) {
         // TODO: optimize
-        auto [screenPos, isInScreen] = event.camera->mapModelToViewport(object()->location().matrixToWorld(), mesh()->position(vertex));
+        auto [screenPos, isInScreen] = event.camera.mapModelToViewport(object()->location().matrixToWorld(), mesh()->position(vertex));
         if (!isInScreen) {
             continue;
         }
@@ -68,8 +69,7 @@ void BorderSelectTool::mouseReleaseTool(const Tool::EventTarget &target, const V
     emit updated();
 }
 
-void BorderSelectTool::draw2D(QPainter *painter, const QSize &viewportSize) {
-    Q_UNUSED(viewportSize);
+void BorderSelectTool::draw2D(const Viewport::Draw2DEvent &event) {
     if (!_dragged) {
         return;
     }
@@ -78,9 +78,9 @@ void BorderSelectTool::draw2D(QPainter *painter, const QSize &viewportSize) {
     auto maxPos = max(_initViewportPos, _currentViewportPos);
     auto size = maxPos - minPos;
 
-    painter->setBrush(QColor(255, 255, 255, 50));
+    event.painter->setBrush(QColor(255, 255, 255, 50));
 
-    painter->drawRect(minPos.x, minPos.y, size.x, size.y);
+    event.painter->drawRect(minPos.x, minPos.y, size.x, size.y);
 }
 
 } // namespace MeshEditor
