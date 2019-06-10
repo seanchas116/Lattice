@@ -102,6 +102,7 @@ void ViewportContainer::paintGL() {
             * QTransform::fromTranslate(offset.x(), offset.y())
             * QTransform::fromScale(devicePixelRatioF(), devicePixelRatioF());
         painter.setTransform(transform);
+        painter.setClipRect(0, 0, viewport->width(), viewport->height());
 
         Draw2DEvent event {viewport, viewport->size(), &painter};
         (*viewport->_renderable)->draw2DRecursive(event);
