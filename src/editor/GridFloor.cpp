@@ -1,4 +1,6 @@
 #include "GridFloor.hpp"
+#include "EditorViewport.hpp"
+#include "CameraState.hpp"
 #include "../gl/VAO.hpp"
 #include "../gl/VertexBuffer.hpp"
 #include "../draw/Vertex.hpp"
@@ -64,16 +66,26 @@ GridFloor::GridFloor() :
 
 void GridFloor::draw(const Viewport::DrawEvent &event) {
     int normalAxis = 1;
-    // TODO
-    /*
-    if (camera.projection() == OldCamera::Projection::Orthographic) {
-        if (camera.isLookingOrientation(OldCamera::Orientation::Front) || camera.isLookingOrientation(OldCamera::Orientation::Back)) {
+
+    auto viewport = static_cast<EditorViewport*>(event.viewport);
+    auto cameraState = viewport->cameraState();
+
+    if (cameraState->projection() == Camera::Projection::Orthographic) {
+        auto orientation = cameraState->orientation();
+
+        switch (orientation) {
+        case CameraState::Orientation::Front:
+        case CameraState::Orientation::Back:
             normalAxis = 2;
-        } else if (camera.isLookingOrientation(OldCamera::Orientation::Left) || camera.isLookingOrientation(OldCamera::Orientation::Right)) {
+            break;
+        case CameraState::Orientation::Left:
+        case CameraState::Orientation::Right:
             normalAxis = 0;
+            break;
+        default:
+            break;
         }
     }
-    */
 
     static const std::array<glm::mat4, 3> swizzleTransforms {
         glm::mat4(1), // xyz to xyz
