@@ -17,19 +17,24 @@ class Operations;
 
 namespace Viewport {
 
+class Viewport;
+
 struct DrawEvent {
-    SP<Draw::Operations> operations;
+    Viewport* viewport;
     Camera camera;
+    SP<Draw::Operations> operations;
 };
 
 struct Draw2DEvent {
-    QPainter* painter;
+    Viewport* viewport;
     QSize viewportSize;
+    QPainter* painter;
 };
 
 struct MouseEvent {
-    glm::dvec3 viewportPos;
+    Viewport* viewport;
     Camera camera;
+    glm::dvec3 viewportPos;
     QMouseEvent* originalMouseEvent;
     QContextMenuEvent* originalContextMenuEvent;
 
