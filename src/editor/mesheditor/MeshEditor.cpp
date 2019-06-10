@@ -39,8 +39,8 @@ const vec4 selectedFaceColorSubdiv = vec4(1, 1, 1, 1) * 0.4f;
 const vec4 hoveredFaceColorSubdiv = vec4(1, 1, 0, 1) * 0.4f;
 
 const vec4 unselectedFaceColor = vec4(0);
-const vec4 selectedFaceColor = vec4(1, 1, 1, 1) * 0.5f;
-const vec4 hoveredFaceColor = vec4(1, 1, 0.5, 1) * 0.5f;;
+const vec4 selectedFaceColor = vec4(1, 1, 1, 1) * 0.8f;
+const vec4 hoveredFaceColor = vec4(1, 1, 0.5, 1) * 0.8f;;
 
 glm::vec4 encodeIntToColor(int64_t value) {
     union {
