@@ -18,8 +18,7 @@ void BorderSelectTool::mousePressTool(const Tool::EventTarget &target, const Vie
     if (event.originalMouseEvent->button() != Qt::LeftButton) {
         return;
     }
-    _dragged = true;
-    _currentViewport = event.viewport;
+    _draggedViewport = event.viewport;
     _initViewportPos = _currentViewportPos = event.viewportPos;
 
     _vertices.clear();
@@ -42,7 +41,7 @@ void BorderSelectTool::mousePressTool(const Tool::EventTarget &target, const Vie
 void BorderSelectTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
 
-    if (!_dragged) {
+    if (!_draggedViewport) {
         return;
     }
     _currentViewportPos = event.viewportPos;
@@ -65,17 +64,13 @@ void BorderSelectTool::mouseMoveTool(const Tool::EventTarget &target, const View
 void BorderSelectTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target); Q_UNUSED(event);
 
-    _dragged = false;
-    _currentViewport = nullptr;
+    _draggedViewport = nullptr;
     _vertices.clear();
     emit updated();
 }
 
 void BorderSelectTool::draw2D(const Viewport::Draw2DEvent &event) {
-    if (!_dragged) {
-        return;
-    }
-    if (event.viewport != _currentViewport) {
+    if (event.viewport != _draggedViewport) {
         return;
     }
 
