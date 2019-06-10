@@ -17,6 +17,11 @@ class Operations;
 
 namespace Viewport {
 
+struct DrawEvent {
+    SP<Draw::Operations> operations;
+    Camera camera;
+};
+
 struct MouseEvent {
     glm::dvec3 viewportPos;
     Camera camera;
