@@ -1,5 +1,4 @@
 #pragma once
-#include "MouseEvent.hpp"
 #include "HitResult.hpp"
 #include "../draw/Operations.hpp"
 #include "../support/Shorthands.hpp"

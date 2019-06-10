@@ -4,6 +4,7 @@
 #include "../../document/History.hpp"
 #include "../../support/Debug.hpp"
 #include <QPainter>
+#include <QMouseEvent>
 
 using namespace glm;
 

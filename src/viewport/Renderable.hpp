@@ -1,10 +1,13 @@
 #pragma once
 
-#include "MouseEvent.hpp"
 #include "../support/SharedPointer.hpp"
+#include "../support/Camera.hpp"
 #include "../draw/Operations.hpp"
 #include <QObject>
 #include <glm/glm.hpp>
+
+class QMouseEvent;
+class QContextMenuEvent;
 
 namespace Lattice {
 
@@ -13,6 +16,15 @@ class Operations;
 }
 
 namespace Viewport {
+
+struct MouseEvent {
+    glm::dvec3 viewportPos;
+    Camera camera;
+    QMouseEvent* originalMouseEvent;
+    QContextMenuEvent* originalContextMenuEvent;
+
+    glm::dvec3 worldPos() const;
+};
 
 class Renderable : public QObject, public EnableSharedFromThis<Renderable> {
     Q_OBJECT

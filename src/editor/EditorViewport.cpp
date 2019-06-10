@@ -3,6 +3,7 @@
 #include "ViewportControlView.hpp"
 #include "CameraState.hpp"
 #include <QVBoxLayout>
+#include <QResizeEvent>
 
 namespace Lattice {
 namespace Editor {

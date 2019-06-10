@@ -2,7 +2,6 @@
 #include <QOpenGLWidget>
 #include "../support/Shorthands.hpp"
 #include "../draw/Operations.hpp"
-#include "MouseEvent.hpp"
 
 namespace Lattice {
 namespace Viewport {
@@ -28,7 +27,6 @@ protected:
     void paintGL() override;
 
 private:
-
     std::vector<Viewport*> _viewports;
     Opt<SP<Draw::Operations>> _operations;
 };

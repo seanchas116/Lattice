@@ -10,6 +10,7 @@
 #include "../../support/Debug.hpp"
 #include "../../support/Ray.hpp"
 #include "../../support/Distance.hpp"
+#include <QMouseEvent>
 
 using namespace glm;
 

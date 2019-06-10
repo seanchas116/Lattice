@@ -4,6 +4,7 @@
 #include "../../gl/VertexBuffer.hpp"
 #include "../../support/Debug.hpp"
 #include "../../support/Camera.hpp"
+#include <QMouseEvent>
 
 using namespace glm;
 
