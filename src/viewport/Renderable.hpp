@@ -22,6 +22,11 @@ struct DrawEvent {
     Camera camera;
 };
 
+struct Draw2DEvent {
+    QPainter* painter;
+    QSize viewportSize;
+};
+
 struct MouseEvent {
     glm::dvec3 viewportPos;
     Camera camera;
@@ -46,14 +51,14 @@ public:
     void preDrawRecursive(const DrawEvent& event);
     void drawRecursive(const DrawEvent& event);
     void drawHitAreaRecursive(const DrawEvent& event);
-    void draw2DRecursive(QPainter* painter, const QSize& viewportSize);
+    void draw2DRecursive(const Draw2DEvent& event);
 
     void getDescendants(std::vector<SP<Renderable>>& descendants);
 
     virtual void preDraw(const DrawEvent& event);
     virtual void draw(const DrawEvent& event);
     virtual void drawHitArea(const DrawEvent& event);
-    virtual void draw2D(QPainter* painter, const QSize& viewportSize);
+    virtual void draw2D(const Draw2DEvent& event);
 
     virtual void mousePressEvent(const MouseEvent& event);
     virtual void mouseMoveEvent(const MouseEvent& event);

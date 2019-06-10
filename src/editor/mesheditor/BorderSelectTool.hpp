@@ -13,7 +13,7 @@ public:
     void mouseMoveTool(const EventTarget &target, const Viewport::MouseEvent &event) override;
     void mouseReleaseTool(const EventTarget &target, const Viewport::MouseEvent &event) override;
 
-    void draw2D(QPainter *painter, const QSize &viewportSize) override;
+    void draw2D(const Viewport::Draw2DEvent& event) override;
 
 private:
     struct VertexWithScreenPos {

@@ -59,13 +59,13 @@ void Renderable::drawHitAreaRecursive(const DrawEvent &event) {
     }
 }
 
-void Renderable::draw2DRecursive(QPainter *painter, const QSize &viewportSize) {
+void Renderable::draw2DRecursive(const Draw2DEvent &event) {
     if (!_isVisible) {
         return;
     }
-    draw2D(painter, viewportSize);
+    draw2D(event);
     for (auto& c : childRenderables()) {
-        c->draw2DRecursive(painter, viewportSize);
+        c->draw2DRecursive(event);
     }
 }
 
@@ -88,8 +88,8 @@ void Renderable::drawHitArea(const DrawEvent &event) {
     Q_UNUSED(event);
 }
 
-void Renderable::draw2D(QPainter *painter, const QSize &viewportSize) {
-    Q_UNUSED(painter); Q_UNUSED(viewportSize);
+void Renderable::draw2D(const Draw2DEvent &event) {
+    Q_UNUSED(event);
 }
 
 void Renderable::mousePressEvent(const MouseEvent &event) {

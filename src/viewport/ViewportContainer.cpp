@@ -62,7 +62,7 @@ void ViewportContainer::paintGL() {
             continue;
         }
 
-        DrawEvent drawEvent { operations, viewport->_camera };
+        DrawEvent drawEvent {operations, viewport->_camera};
 
         (*viewport->_renderable)->preDrawRecursive(drawEvent);
 
@@ -102,7 +102,9 @@ void ViewportContainer::paintGL() {
             * QTransform::fromTranslate(offset.x(), offset.y())
             * QTransform::fromScale(devicePixelRatioF(), devicePixelRatioF());
         painter.setTransform(transform);
-        (*viewport->_renderable)->draw2DRecursive(&painter, viewport->size());
+
+        Draw2DEvent event {&painter, viewport->size()};
+        (*viewport->_renderable)->draw2DRecursive(event);
         painter.restore();
     }
 }
