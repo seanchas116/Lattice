@@ -27,13 +27,16 @@ public:
 
     glm::dmat4 cameraToWorldMatrix() const;
 
+    Orientation orientation() const;
+    void setOrientation(Orientation orientation);
+
 signals:
     void cameraChanged(const Camera& camera);
+    void orientationChanged(Orientation orientation);
 
 private:
     static glm::dvec3 orientationAngle(Orientation orientation);
 
-    LATTICE_AUTO_PROPERTY(Orientation, orientation, setOrientation, Orientation::None)
     LATTICE_AUTO_PROPERTY(Camera::Projection, projection, setProjection, Camera::Projection::Perspective)
     LATTICE_AUTO_PROPERTY(glm::dvec3, position, setPosition, glm::dvec3(0, 10, 10))
     LATTICE_AUTO_PROPERTY(glm::dvec3, eulerAngles, setEulerAngles, glm::dvec3(0))

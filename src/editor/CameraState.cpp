@@ -6,14 +6,8 @@ namespace Lattice {
 namespace Editor {
 
 CameraState::CameraState() {
-    connect(this, &CameraState::orientationChanged, this, [this] (auto orientation) {
-        if (orientation == Orientation::None) {
-            return;
-        }
-        setEulerAngles(orientationAngle(orientation));
-    });
     connect(this, &CameraState::eulerAnglesChanged, this, [this] {
-        setOrientation(Orientation::None);
+        emit orientationChanged(orientation());
     });
 
     connect(this, &CameraState::orientationChanged, this, &CameraState::emitCameraChanged);
@@ -39,6 +33,28 @@ glm::dmat4 CameraState::cameraToWorldMatrix() const {
     return glm::translate(_position) * glm::mat4_cast(glm::dquat(_eulerAngles));
 }
 
+CameraState::Orientation CameraState::orientation() const {
+    Orientation orientations[] = {
+        Orientation::Front,
+        Orientation::Back,
+        Orientation::Right,
+        Orientation::Left,
+        Orientation::Top,
+        Orientation::Bottom,
+    };
+
+    for (auto orientation : orientations) {
+        if (_eulerAngles == orientationAngle(orientation)) {
+            return orientation;
+        }
+    }
+    return Orientation::None;
+}
+
+void CameraState::setOrientation(CameraState::Orientation orientation) {
+    setEulerAngles(orientationAngle(orientation));
+}
+
 glm::dvec3 CameraState::orientationAngle(CameraState::Orientation orientation) {
     switch (orientation) {
     case Orientation::None:
@@ -62,4 +78,4 @@ void CameraState::emitCameraChanged() {
 }
 
 } // namespace Editor
-} // namespace Lattice
+} // namespace Lattic
