@@ -3,28 +3,15 @@
 #include "../../document/History.hpp"
 #include "../../mesh/Mesh.hpp"
 #include "../../state/Preferences.hpp"
+#include "../../support/SetUtil.hpp"
 #include <QMouseEvent>
+#include <range/v3/algorithm/set_algorithm.hpp>
 
 using namespace glm;
 
 namespace Lattice {
 namespace Editor {
 namespace MeshEditor {
-
-namespace {
-
-// TODO: move to support
-template <typename T>
-bool set_includes(const std::unordered_set<T>& set, const std::unordered_set<T>& otherSet) {
-    for (auto& value : otherSet) {
-        if (set.find(value) == set.end()) {
-            return false;
-        }
-    }
-    return true;
-}
-
-}
 
 MoveTool::MoveTool(const SP<State::MeshEditState> &meshEditState) :
     Tool(meshEditState),
@@ -51,7 +38,7 @@ void MoveTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
 
     auto oldSelection = mesh.selectedVertices() | ranges::to_<std::unordered_set<Mesh::VertexHandle>>();
 
-    bool alreadySelected = !clickedVertices.empty() && set_includes(oldSelection, clickedVertices);
+    bool alreadySelected = !clickedVertices.empty() && includes(oldSelection, clickedVertices);
 
     std::unordered_set<Mesh::VertexHandle> selection;
     if (event.originalMouseEvent->modifiers() & Qt::ShiftModifier) {

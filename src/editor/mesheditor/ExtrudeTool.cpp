@@ -2,6 +2,7 @@
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
 #include "../../support/Debug.hpp"
+#include "../../support/SetUtil.hpp"
 #include "../../mesh/Mesh.hpp"
 #include "../../state/Preferences.hpp"
 
@@ -10,20 +11,6 @@ using namespace glm;
 namespace Lattice {
 namespace Editor {
 namespace MeshEditor {
-
-namespace {
-
-template <typename T>
-bool set_includes(const std::unordered_set<T>& set, const std::unordered_set<T>& otherSet) {
-    for (auto& value : otherSet) {
-        if (set.find(value) == set.end()) {
-            return false;
-        }
-    }
-    return true;
-}
-
-}
 
 Tool::HitTestExclusion ExtrudeTool::hitTestExclusion() const {
     return {};
@@ -38,7 +25,7 @@ void ExtrudeTool::mousePressTool(const Tool::EventTarget &target, const Viewport
     }
     _vertices = mesh.selectedVertices() | ranges::to_<std::unordered_set<Mesh::VertexHandle>>();
 
-    if (!set_includes(_vertices, clickedVertices)) {
+    if (!includes(_vertices, clickedVertices)) {
         _vertices = clickedVertices;
     }
     _dragStarted = false;
