@@ -75,6 +75,9 @@ ObjectPropertyView::ObjectPropertyView(const SP<State::AppState> &appState, QWid
     layout->addRow(tr("Segment Count"), _subdivSegmentCountSpinbox);
 
     setLayout(layout);
+
+    connect(_appState->document().get(), &Document::Document::selectedObjectsChanged, this, &ObjectPropertyView::setObjects);
+    setObjects(_appState->document()->selectedObjects());
 }
 
 void ObjectPropertyView::setObjects(const std::unordered_set<SP<Document::Object> > &objects) {

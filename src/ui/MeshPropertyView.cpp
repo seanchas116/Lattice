@@ -21,9 +21,6 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
     QWidget(parent),
     _appState(appState)
 {
-    setMeshEditState(appState->meshEditState());
-    connect(appState.get(), &State::AppState::meshEditStateChanged, this, &MeshPropertyView::setMeshEditState);
-
     auto layout = new QFormLayout();
 
     {
@@ -68,6 +65,9 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
     layout->addRow(tr("Edge Crease"), _edgeCreaseSpinBox);
 
     setLayout(layout);
+
+    setMeshEditState(appState->meshEditState());
+    connect(appState.get(), &State::AppState::meshEditStateChanged, this, &MeshPropertyView::setMeshEditState);
 }
 
 void MeshPropertyView::setMeshEditState(const Opt<SP<State::MeshEditState> > &meshEditState) {
