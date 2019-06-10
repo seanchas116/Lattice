@@ -34,13 +34,13 @@ const vec4 unselectedColor = vec4(0, 0, 0, 1);
 const vec4 selectedColor = vec4(1, 1, 1, 1);
 const vec4 hoveredColor = vec4(1, 1, 0, 1);
 
-const vec4 unselectedFaceColorSubdiv = vec4(0, 0, 0, 0.4);
-const vec4 selectedFaceColorSubdiv = vec4(1, 1, 1, 0.4);
-const vec4 hoveredFaceColorSubdiv = vec4(1, 1, 0, 0.4);
+const vec4 unselectedFaceColorSubdiv = vec4(0, 0, 0, 1) * 0.4f;
+const vec4 selectedFaceColorSubdiv = vec4(1, 1, 1, 1) * 0.4f;
+const vec4 hoveredFaceColorSubdiv = vec4(1, 1, 0, 1) * 0.4f;
 
-const vec4 unselectedFaceColor = vec4(0, 0, 0, 0);
-const vec4 selectedFaceColor = vec4(1, 1, 1, 0.5);
-const vec4 hoveredFaceColor = vec4(1, 1, 0.5, 0.5);
+const vec4 unselectedFaceColor = vec4(0);
+const vec4 selectedFaceColor = vec4(1, 1, 1, 1) * 0.5f;
+const vec4 hoveredFaceColor = vec4(1, 1, 0.5, 1) * 0.5f;;
 
 glm::vec4 encodeIntToColor(int64_t value) {
     union {
