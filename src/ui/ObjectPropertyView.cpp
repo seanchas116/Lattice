@@ -76,6 +76,7 @@ ObjectPropertyView::ObjectPropertyView(const SP<State::AppState> &appState, QWid
 
     setLayout(layout);
 
+    setEnabled(false);
     connect(_appState->document().get(), &Document::Document::selectedObjectsChanged, this, &ObjectPropertyView::setObjects);
     setObjects(_appState->document()->selectedObjects());
 }
@@ -85,6 +86,7 @@ void ObjectPropertyView::setObjects(const std::unordered_set<SP<Document::Object
         return;
     }
     _objects = objects;
+    setEnabled(!objects.empty());
 
     Opt<SP<Document::Object>> firstObject;
     if (!objects.empty()) {

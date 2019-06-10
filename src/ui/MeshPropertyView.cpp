@@ -73,6 +73,7 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
 void MeshPropertyView::setMeshEditState(const Opt<SP<State::MeshEditState> > &meshEditState) {
     disconnect(_connection);
     _meshEditState = meshEditState;
+    setEnabled(bool(meshEditState));
     if (!meshEditState) {
         return;
     }

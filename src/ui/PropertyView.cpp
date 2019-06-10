@@ -28,14 +28,12 @@ PropertyView::PropertyView(const SP<State::AppState> &appState, QWidget *parent)
     setLayout(layout);
 
     connect(appState.get(), &State::AppState::meshEditStateChanged, this, [tabWidget, meshPropertyView, objectPropertyView] (auto state) {
-        meshPropertyView->setEnabled(bool(state));
         if (state) {
             tabWidget->setCurrentWidget(meshPropertyView);
         } else {
             tabWidget->setCurrentWidget(objectPropertyView);
         }
     });
-    meshPropertyView->setEnabled(bool(appState->meshEditState()));
 }
 
 } // namespace UI
