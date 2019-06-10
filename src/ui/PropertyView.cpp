@@ -4,6 +4,7 @@
 #include "../state/AppState.hpp"
 #include "../document/Document.hpp"
 #include <QVBoxLayout>
+#include <QTabWidget>
 
 namespace Lattice {
 namespace UI {
@@ -15,24 +16,26 @@ PropertyView::PropertyView(const SP<State::AppState> &appState, QWidget *parent)
     auto layout = new QVBoxLayout();
     layout->setMargin(0);
 
+    auto tabWidget = new QTabWidget();
+
     auto objectPropertyView = new ObjectPropertyView(appState);
-    layout->addWidget(objectPropertyView);
+    tabWidget->addTab(objectPropertyView, tr("Object"));
     auto meshPropertyView = new MeshPropertyView(appState);
-    layout->addWidget(meshPropertyView);
+    tabWidget->addTab(meshPropertyView, tr("Mesh"));
 
-    auto document = appState->document();
-
-    auto update = [appState, document, objectPropertyView, meshPropertyView] {
-        meshPropertyView->setMeshEditState(appState->meshEditState());
-        meshPropertyView->setVisible(!!appState->meshEditState()); // TODO: hide when no vertex selected
-        objectPropertyView->setObjects(document->selectedObjects());
-        objectPropertyView->setVisible(!document->selectedObjects().empty() && !appState->meshEditState());
-    };
-    connect(document.get(), &Document::Document::selectedObjectsChanged, this, update);
-    connect(appState.get(), &State::AppState::meshEditStateChanged, this, update);
-    update();
+    layout->addWidget(tabWidget);
 
     setLayout(layout);
+
+    connect(appState.get(), &State::AppState::meshEditStateChanged, this, [tabWidget, meshPropertyView, objectPropertyView] (auto state) {
+        meshPropertyView->setEnabled(bool(state));
+        if (state) {
+            tabWidget->setCurrentWidget(meshPropertyView);
+        } else {
+            tabWidget->setCurrentWidget(objectPropertyView);
+        }
+    });
+    meshPropertyView->setEnabled(bool(appState->meshEditState()));
 }
 
 } // namespace UI
