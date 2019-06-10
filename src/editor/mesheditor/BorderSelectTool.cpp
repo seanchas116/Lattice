@@ -19,6 +19,7 @@ void BorderSelectTool::mousePressTool(const Tool::EventTarget &target, const Vie
         return;
     }
     _dragged = true;
+    _currentViewport = event.viewport;
     _initViewportPos = _currentViewportPos = event.viewportPos;
 
     _vertices.clear();
@@ -65,12 +66,16 @@ void BorderSelectTool::mouseReleaseTool(const Tool::EventTarget &target, const V
     Q_UNUSED(target); Q_UNUSED(event);
 
     _dragged = false;
+    _currentViewport = nullptr;
     _vertices.clear();
     emit updated();
 }
 
 void BorderSelectTool::draw2D(const Viewport::Draw2DEvent &event) {
     if (!_dragged) {
+        return;
+    }
+    if (event.viewport != _currentViewport) {
         return;
     }
 

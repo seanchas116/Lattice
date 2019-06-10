@@ -24,6 +24,7 @@ private:
     std::vector<VertexWithScreenPos> _vertices;
     glm::dvec2 _initViewportPos {0};
     glm::dvec2 _currentViewportPos {0};
+    Viewport::Viewport* _currentViewport = nullptr;
     bool _dragged {false};
 };
 
