@@ -15,12 +15,12 @@ namespace Manipulator {
 CenterHandle::CenterHandle() {
 }
 
-void CenterHandle::draw(const SP<Draw::Operations> &operations, const Camera &camera) {
-    Q_UNUSED(operations); Q_UNUSED(camera);
+void CenterHandle::draw(const Viewport::DrawEvent &event) {
+    Q_UNUSED(event);
 }
 
-void CenterHandle::drawHitArea(const SP<Draw::Operations> &operations, const Camera &camera) {
-    auto [viewportPos, isInViewport] = camera.mapWorldToViewport(_targetPosition);
+void CenterHandle::drawHitArea(const Viewport::DrawEvent &event) {
+    auto [viewportPos, isInViewport] = event.camera.mapWorldToViewport(_targetPosition);
     if (!isInViewport) {
         return;
     }
@@ -30,7 +30,7 @@ void CenterHandle::drawHitArea(const SP<Draw::Operations> &operations, const Cam
     auto vbo = makeShared<GL::VertexBuffer<Draw::Vertex>>();
     vbo->setVertices({vertex});
     auto vao = makeShared<GL::VAO>(vbo, GL::Primitive::Point);
-    operations->drawCircle.draw2D(vao, dmat4(1), camera.viewportSize(), 32, toIDColor());
+    event.operations->drawCircle.draw2D(vao, dmat4(1), event.camera.viewportSize(), 32, toIDColor());
 }
 
 void CenterHandle::mousePressEvent(const Viewport::MouseEvent &event) {

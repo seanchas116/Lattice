@@ -24,18 +24,18 @@ MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Documen
     connect(object.get(), &Document::MeshObject::subdivSettingsChanged, this, &MeshRenderer::handleMeshUpdated);
 }
 
-void MeshRenderer::draw(const SP<Draw::Operations> &operations, const Camera &camera) {
+void MeshRenderer::draw(const Viewport::DrawEvent &event) {
     updateVAOs();
     for (auto& [materialID, vao] : _faceVAOs) {
         auto material = _object->materials().at(materialID.index).toDrawMaterial();
-        operations->drawMaterial.draw(vao, _object->location().matrixToWorld(), camera, material);
+        event.operations->drawMaterial.draw(vao, _object->location().matrixToWorld(), event.camera, material);
     }
 }
 
-void MeshRenderer::drawHitArea(const SP<Draw::Operations> &operations, const Camera &camera) {
+void MeshRenderer::drawHitArea(const Viewport::DrawEvent &event) {
     updateVAOs();
     for (auto& [material, vao] : _faceVAOs) {
-        operations->drawUnicolor.draw(vao, _object->location().matrixToWorld(), camera, toIDColor());
+        event.operations->drawUnicolor.draw(vao, _object->location().matrixToWorld(), event.camera, toIDColor());
     }
 }
 

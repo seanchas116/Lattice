@@ -29,24 +29,24 @@ ArrowHandle::ArrowHandle(int axis, HandleType handleType) :
 {
 }
 
-void ArrowHandle::draw(const SP<Draw::Operations> &operations, const Camera &camera) {
-    Coordinates coordinates(camera, _targetPosition);
+void ArrowHandle::draw(const Viewport::DrawEvent &event) {
+    Coordinates coordinates(event.camera, _targetPosition);
     if (!coordinates.isInViewport){
         return;
     }
 
     dmat4 translate = glm::translate(dvec3(_length, 0, 0));
-    operations->drawUnicolor.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis] * translate, camera, _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
-    operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, Constants::bodyWidth, _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
+    event.operations->drawUnicolor.draw(_handleVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis] * translate, event.camera, _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
+    event.operations->drawLine.draw(_bodyVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], event.camera, Constants::bodyWidth, _hovered ? Constants::hoverColors[_axis] : Constants::colors[_axis]);
 }
 
-void ArrowHandle::drawHitArea(const SP<Draw::Operations> &operations, const Camera &camera) {
-    Coordinates coordinates(camera, _targetPosition);
+void ArrowHandle::drawHitArea(const Viewport::DrawEvent &event) {
+    Coordinates coordinates(event.camera, _targetPosition);
     if (!coordinates.isInViewport){
         return;
     }
 
-    operations->drawUnicolor.draw(_bodyPickVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], camera, toIDColor());
+    event.operations->drawUnicolor.draw(_bodyPickVAO, coordinates.manipulatorToWorld * Constants::swizzleTransforms[_axis], event.camera, toIDColor());
 }
 
 void ArrowHandle::mousePressEvent(const Viewport::MouseEvent &event) {

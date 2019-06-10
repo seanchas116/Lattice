@@ -62,7 +62,7 @@ GridFloor::GridFloor() :
     _zAxisIndexBuffer->setLineStrips({zLineStrip});
 }
 
-void GridFloor::draw(const SP<Draw::Operations> &operations, const Camera &camera) {
+void GridFloor::draw(const Viewport::DrawEvent &event) {
     int normalAxis = 1;
     // TODO
     /*
@@ -82,7 +82,7 @@ void GridFloor::draw(const SP<Draw::Operations> &operations, const Camera &camer
     };
     auto transform = swizzleTransforms[normalAxis];
 
-    operations->drawLine.draw(_vao, transform, camera, 1, vec4(0.5, 0.5, 0.5, 1));
+    event.operations->drawLine.draw(_vao, transform, event.camera, 1, vec4(0.5, 0.5, 0.5, 1));
 
     int axis0 = (1 + normalAxis) % 3;
     int axis1 = (2 + normalAxis) % 3;
@@ -91,8 +91,8 @@ void GridFloor::draw(const SP<Draw::Operations> &operations, const Camera &camer
     vec4 color1(0.5f);
     color1[axis1] = 0.8f;
 
-    operations->drawLine.draw(_yAxisVAO, transform, camera, 2, color0);
-    operations->drawLine.draw(_zAxisVAO, transform, camera, 2, color1);
+    event.operations->drawLine.draw(_yAxisVAO, transform, event.camera, 2, color0);
+    event.operations->drawLine.draw(_zAxisVAO, transform, event.camera, 2, color1);
 }
 
 }

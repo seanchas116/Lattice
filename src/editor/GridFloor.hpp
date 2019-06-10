@@ -19,7 +19,7 @@ class GridFloor final : public Viewport::Renderable {
 public:
     GridFloor();
 
-    void draw(const SP<Draw::Operations>& operations, const Camera& camera) override;
+    void draw(const Viewport::DrawEvent& event) override;
 
 private:
     SP<GL::VertexBuffer<Draw::PointLineVertex>> _vbo;

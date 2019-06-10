@@ -40,13 +40,13 @@ Opt<HitResult> HitAreaMap::pick(vec2 physicalPos) {
     return {{*renderable, depth}};
 }
 
-void HitAreaMap::draw(const SP<Renderable> &renderable, const SP<Draw::Operations> &operations, const Camera &camera) {
-    resize(camera.viewportSize());
+void HitAreaMap::draw(const SP<Renderable> &renderable, const DrawEvent &drawEvent) {
+    resize(drawEvent.camera.viewportSize());
 
     {
         GL::Binder binder(*_framebuffer);
-        operations->clear.clear(glm::vec4(0), 1);
-        renderable->drawHitAreaRecursive(operations, camera);
+        drawEvent.operations->clear.clear(glm::vec4(0), 1);
+        renderable->drawHitAreaRecursive(drawEvent);
     }
 
     _lastRenderables.clear();

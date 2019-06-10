@@ -43,16 +43,16 @@ public:
     auto& childRenderables() const { return _childRenderables; }
     void setChildRenderables(const std::vector<SP<Renderable>>& children);
 
-    void preDrawRecursive(const SP<Draw::Operations>& operations, const Camera& camera);
-    void drawRecursive(const SP<Draw::Operations>& operations, const Camera& camera);
-    void drawHitAreaRecursive(const SP<Draw::Operations>& operations, const Camera& camera);
+    void preDrawRecursive(const DrawEvent& event);
+    void drawRecursive(const DrawEvent& event);
+    void drawHitAreaRecursive(const DrawEvent& event);
     void draw2DRecursive(QPainter* painter, const QSize& viewportSize);
 
     void getDescendants(std::vector<SP<Renderable>>& descendants);
 
-    virtual void preDraw(const SP<Draw::Operations>& operations, const Camera& camera);
-    virtual void draw(const SP<Draw::Operations>& operations, const Camera& camera);
-    virtual void drawHitArea(const SP<Draw::Operations>& operations, const Camera& camera);
+    virtual void preDraw(const DrawEvent& event);
+    virtual void draw(const DrawEvent& event);
+    virtual void drawHitArea(const DrawEvent& event);
     virtual void draw2D(QPainter* painter, const QSize& viewportSize);
 
     virtual void mousePressEvent(const MouseEvent& event);
