@@ -1,4 +1,4 @@
-#include "BuildCircle.hpp"
+#include "CircleBuilder.hpp"
 #include <QtGlobal>
 
 using namespace glm;
@@ -6,7 +6,7 @@ using namespace glm;
 namespace Lattice {
 namespace Mesh {
 
-Mesh BuildCircle::perform() const {
+Mesh CircleBuilder::build() const {
     Mesh mesh;
 
     std::vector<UVPointHandle> uvPoints;

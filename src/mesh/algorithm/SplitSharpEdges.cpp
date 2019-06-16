@@ -4,7 +4,7 @@
 namespace Lattice {
 namespace Mesh {
 
-void SplitSharpEdges::perform(Mesh &mesh) const {
+void splitSharpEdges(Mesh &mesh) {
     for (auto v : mesh.vertices()) {
         int nSharpEdges = 0;
         for (auto e : mesh.edges(v)) {

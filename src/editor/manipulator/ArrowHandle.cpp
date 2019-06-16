@@ -4,9 +4,9 @@
 #include "../MeshVAOGenerator.hpp"
 #include "../../draw/Operations.hpp"
 #include "../../mesh/Mesh.hpp"
-#include "../../mesh/algorithm/BuildCone.hpp"
-#include "../../mesh/algorithm/BuildCube.hpp"
-#include "../../mesh/algorithm/BuildCylinder.hpp"
+#include "../../mesh/builder/ConeBuilder.hpp"
+#include "../../mesh/builder/CubeBuilder.hpp"
+#include "../../mesh/builder/CylinderBuilder.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
 #include "../../support/Debug.hpp"
@@ -117,9 +117,18 @@ SP<GL::VAO> ArrowHandle::createHandleVAO() {
     Mesh::Mesh mesh;
     Mesh::MaterialHandle material;
     if (_handleType == HandleType::Translate) {
-        mesh = Mesh::BuildCone(vec3(0), Constants::translateHandleWidth * 0.5, Constants::translateHandleLength, 8, 0, material).perform();
+        Mesh::ConeBuilder builder;
+        builder.center = vec3(0);
+        builder.radius = Constants::translateHandleWidth * 0.5;
+        builder.height = Constants::translateHandleLength;
+        builder.segmentCount = 8;
+        builder.axis = 0;
+        mesh = builder.build();
     } else {
-        mesh = Mesh::BuildCube(-vec3(Constants::scaleHandleSize*0.5), vec3(Constants::scaleHandleSize*0.5), material).perform();
+        Mesh::CubeBuilder builder;
+        builder.minPos = vec3(-Constants::scaleHandleSize*0.5);
+        builder.maxPos = vec3(Constants::scaleHandleSize*0.5);
+        mesh = builder.build();
     }
     return MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
 }
@@ -134,10 +143,13 @@ SP<GL::VAO> ArrowHandle::createBodyVAO(double length) {
 }
 
 SP<GL::VAO> ArrowHandle::createBodyPickVAO(double length) {
-    Mesh::Mesh mesh;
-    Mesh::MaterialHandle material;
-    mesh = Mesh::BuildCylinder(vec3(Constants::bodyBegin, 0, 0), Constants::hitRadius, length - Constants::bodyBegin + Constants::translateHandleLength, 8, 0, material).perform();
-    return MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
+    Mesh::CylinderBuilder builder;
+    builder.center = vec3(Constants::bodyBegin, 0, 0);
+    builder.radius = Constants::hitRadius;
+    builder.height = length - Constants::bodyBegin + Constants::translateHandleLength;
+    builder.segmentCount = 8;
+    builder.axis = 0;
+    return MeshVAOGenerator(builder.build()).generateFaceVAOs().at(builder.material);
 }
 
 }

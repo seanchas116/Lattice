@@ -1,4 +1,4 @@
-#include "BuildCone.hpp"
+#include "ConeBuilder.hpp"
 #include <QtGlobal>
 
 using namespace glm;
@@ -6,7 +6,7 @@ using namespace glm;
 namespace Lattice {
 namespace Mesh {
 
-Mesh BuildCone::perform() const {
+Mesh ConeBuilder::build() const {
     Mesh mesh;
 
     std::vector<UVPointHandle> uvPoints;

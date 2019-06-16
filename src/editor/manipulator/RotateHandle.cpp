@@ -4,7 +4,7 @@
 #include "../MeshVAOGenerator.hpp"
 #include "../../draw/Operations.hpp"
 #include "../../mesh/Mesh.hpp"
-#include "../../mesh/algorithm/BuildCircle.hpp"
+#include "../../mesh/builder/CircleBuilder.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
 #include "../../support/Debug.hpp"
@@ -99,9 +99,12 @@ void RotateHandle::contextMenuEvent(const Viewport::MouseEvent &event) {
 }
 
 SP<Mesh::Mesh> RotateHandle::createMesh() {
-    auto mesh = makeShared<Mesh::Mesh>();
-    *mesh = Mesh::BuildCircle(vec3(0), 2.f, 64, 0, Mesh::MaterialHandle()).perform();
-    return mesh;
+    Mesh::CircleBuilder builder;
+    builder.center = glm::vec3(0);
+    builder.radius = 2.f;
+    builder.segmentCount = 64;
+    builder.normalAxis = 0;
+    return makeShared<Mesh::Mesh>(builder.build());
 }
 
 }

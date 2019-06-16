@@ -6,12 +6,10 @@
 namespace Lattice {
 namespace Mesh {
 
-std::vector<FindBelt::BeltElement> FindBelt::perform(const Mesh &mesh) const {
+std::vector<BeltElement> findBelt(const Mesh &mesh, EdgeHandle edge) {
     bool isEdgeReverse = false;
     std::vector<BeltElement> belt;
     Opt<FaceHandle> lastFace;
-
-    auto edge = this->edge;
 
     while (true) {
         auto edgeFaces = mesh.faces(edge) | ranges::to_vector;

@@ -76,7 +76,7 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
         Ray<double> edgeRay = mesh.ray(edge);
         Ray<double> mouseRay = event.camera.modelMouseRay(modelMatrix, event.viewportPos);
         RayRayDistanceSolver distanceSolver(edgeRay, mouseRay);
-        auto vertex = Mesh::CutEdge(edge, distanceSolver.t0).perform(mesh);
+        auto vertex = Mesh::cutEdge(mesh, edge, distanceSolver.t0);
 
         if (_drawnUVPoints.size() >= 1) {
             auto prevUVPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];

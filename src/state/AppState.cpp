@@ -5,12 +5,12 @@
 #include "../document/History.hpp"
 #include "../document/MeshObject.hpp"
 #include "../mesh/Mesh.hpp"
-#include "../mesh/algorithm/BuildPlane.hpp"
-#include "../mesh/algorithm/BuildCube.hpp"
-#include "../mesh/algorithm/BuildCircle.hpp"
-#include "../mesh/algorithm/BuildSphere.hpp"
-#include "../mesh/algorithm/BuildCone.hpp"
-#include "../mesh/algorithm/BuildCylinder.hpp"
+#include "../mesh/builder/PlaneBuilder.hpp"
+#include "../mesh/builder/CubeBuilder.hpp"
+#include "../mesh/builder/CircleBuilder.hpp"
+#include "../mesh/builder/SphereBuilder.hpp"
+#include "../mesh/builder/ConeBuilder.hpp"
+#include "../mesh/builder/CylinderBuilder.hpp"
 #include <QFileDialog>
 #include <QtDebug>
 #include <QApplication>
@@ -42,8 +42,11 @@ void AppState::addPlane() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Plane").toStdString());
 
-    auto mesh = Mesh::BuildPlane(dvec3(0), dvec2(2), 1, Mesh::MaterialHandle()).perform();
-    object->setMesh(std::move(mesh));
+    Mesh::PlaneBuilder builder;
+    builder.center = vec3(0);
+    builder.size = vec2(2);
+    builder.normalAxis = 1;
+    object->setMesh(builder.build());
 
     _document->insertObjectToCurrentPosition(object);
     _document->setCurrentObject(object);
@@ -55,8 +58,10 @@ void AppState::addCube() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Cube").toStdString());
 
-    auto mesh = Mesh::BuildCube(glm::vec3(-1), glm::vec3(1), Mesh::MaterialHandle()).perform();
-    object->setMesh(std::move(mesh));
+    Mesh::CubeBuilder builder;
+    builder.minPos = vec3(-1);
+    builder.maxPos = vec3(1);
+    object->setMesh(builder.build());
 
     _document->insertObjectToCurrentPosition(object);
     _document->setCurrentObject(object);
@@ -68,8 +73,12 @@ void AppState::addCircle() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Circle").toStdString());
 
-    auto mesh = Mesh::BuildCircle(glm::vec3(0), 1.0, 16, 1, Mesh::MaterialHandle()).perform();
-    object->setMesh(std::move(mesh));
+    Mesh::CircleBuilder builder;
+    builder.center = glm::vec3(0);
+    builder.radius = 1.0;
+    builder.segmentCount = 16;
+    builder.normalAxis = 1;
+    object->setMesh(builder.build());
 
     _document->insertObjectToCurrentPosition(object);
     _document->setCurrentObject(object);
@@ -81,8 +90,13 @@ void AppState::addSphere() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Sphere").toStdString());
 
-    auto mesh = Mesh::BuildSphere(glm::vec3(0), 1.0, 16, 8, 1, Mesh::MaterialHandle()).perform();
-    object->setMesh(std::move(mesh));
+    Mesh::SphereBuilder builder;
+    builder.center = vec3(0);
+    builder.radius = 1;
+    builder.segmentCount = 16;
+    builder.ringCount = 8;
+    builder.axis = 1;
+    object->setMesh(builder.build());
 
     _document->insertObjectToCurrentPosition(object);
     _document->setCurrentObject(object);
@@ -94,8 +108,13 @@ void AppState::addCone() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Cone").toStdString());
 
-    auto mesh = Mesh::BuildCone(glm::vec3(0), 1.0, 1.0, 16, 1, Mesh::MaterialHandle()).perform();
-    object->setMesh(std::move(mesh));
+    Mesh::ConeBuilder builder;
+    builder.center = vec3(0);
+    builder.radius = 1.0;
+    builder.height = 1.0;
+    builder.segmentCount = 16;
+    builder.axis = 1;
+    object->setMesh(builder.build());
 
     _document->insertObjectToCurrentPosition(object);
     _document->setCurrentObject(object);
@@ -107,8 +126,13 @@ void AppState::addCylinder() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Cylinder").toStdString());
 
-    auto mesh = Mesh::BuildCylinder(glm::vec3(0), 1.0, 1.0, 16, 1, Mesh::MaterialHandle()).perform();
-    object->setMesh(std::move(mesh));
+    Mesh::CylinderBuilder builder;
+    builder.center = vec3(0);
+    builder.radius = 1;
+    builder.height = 1;
+    builder.segmentCount = 16;
+    builder.axis = 1;
+    object->setMesh(builder.build());
 
     _document->insertObjectToCurrentPosition(object);
     _document->setCurrentObject(object);

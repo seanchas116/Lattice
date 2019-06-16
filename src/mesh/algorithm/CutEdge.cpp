@@ -1,12 +1,11 @@
 #include "CutEdge.hpp"
-#include <QtGlobal>
 
 using namespace glm;
 
 namespace Lattice {
 namespace Mesh {
 
-VertexHandle CutEdge::perform(Mesh &mesh) const {
+VertexHandle cutEdge(Mesh &mesh, EdgeHandle edge, float t) {
     auto pos = mesh.ray(edge).at(t);
 
     auto uv = mesh.addUVPoint(mesh.addVertex(pos), dvec2(0)); // TODO: Use better UV position
