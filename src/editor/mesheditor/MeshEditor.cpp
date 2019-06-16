@@ -346,6 +346,9 @@ void MeshEditor::contextMenuTarget(const Tool::EventTarget &target, const Viewpo
             _meshEditState->beltSelect(*target.edge);
         }
     });
+    contextMenu.addAction(tr("Select Connected"), this, [this, target] {
+        _meshEditState->selectConnected(target.vertices(*_meshEditState->mesh()) | ranges::to_vector);
+    });
     contextMenu.addAction(tr("Invert Selection"), _meshEditState.get(), &State::MeshEditState::invertSelection);
     contextMenu.addAction(tr("Deselect All"), _meshEditState.get(), &State::MeshEditState::deselectAll);
     contextMenu.exec(event.originalContextMenuEvent->globalPos());
