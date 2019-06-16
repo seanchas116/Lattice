@@ -338,12 +338,12 @@ void MeshEditor::contextMenuTarget(const Tool::EventTarget &target, const Viewpo
     contextMenu.addAction(tr("Select All"), _meshEditState.get(), &State::MeshEditState::selectAll);
     contextMenu.addAction(tr("Select Loop"), this, [this, target] {
         if (target.edge) {
-            _meshEditState->loopSelect(*target.edge);
+            _meshEditState->selectLoop(*target.edge);
         }
     });
     contextMenu.addAction(tr("Select Belt"), this, [this, target] {
         if (target.edge) {
-            _meshEditState->beltSelect(*target.edge);
+            _meshEditState->selectBelt(*target.edge);
         }
     });
     contextMenu.addAction(tr("Select Connected"), this, [this, target] {

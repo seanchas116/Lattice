@@ -84,7 +84,7 @@ void MeshEditState::invertSelection() {
     notifyMeshChanged();
 }
 
-void MeshEditState::loopSelect(Mesh::EdgeHandle edge) {
+void MeshEditState::selectLoop(Mesh::EdgeHandle edge) {
     auto edges = Mesh::findLoop(*_mesh, edge);
 
     _mesh->deselectAll();
@@ -97,7 +97,7 @@ void MeshEditState::loopSelect(Mesh::EdgeHandle edge) {
     notifyMeshChanged();
 }
 
-void MeshEditState::beltSelect(Mesh::EdgeHandle edge) {
+void MeshEditState::selectBelt(Mesh::EdgeHandle edge) {
     auto belt = findBelt(*_mesh, edge);
 
     _mesh->deselectAll();

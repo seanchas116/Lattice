@@ -27,8 +27,8 @@ public:
     void selectAll();
     void deselectAll();
     void invertSelection();
-    void loopSelect(Mesh::EdgeHandle edge);
-    void beltSelect(Mesh::EdgeHandle edge);
+    void selectLoop(Mesh::EdgeHandle edge);
+    void selectBelt(Mesh::EdgeHandle edge);
     void selectConnected(const std::vector<Mesh::VertexHandle>& vertices);
 
 signals:
