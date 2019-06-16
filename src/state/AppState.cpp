@@ -5,7 +5,7 @@
 #include "../document/History.hpp"
 #include "../document/MeshObject.hpp"
 #include "../mesh/Mesh.hpp"
-#include "../mesh/algorithm/BuildPlane.hpp"
+#include "../mesh/algorithm/PlaneBuilder.hpp"
 #include "../mesh/algorithm/CubeBuilder.hpp"
 #include "../mesh/algorithm/CircleBuilder.hpp"
 #include "../mesh/algorithm/BuildSphere.hpp"
@@ -42,8 +42,11 @@ void AppState::addPlane() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Plane").toStdString());
 
-    auto mesh = Mesh::BuildPlane(dvec3(0), dvec2(2), 1, Mesh::MaterialHandle()).perform();
-    object->setMesh(std::move(mesh));
+    Mesh::PlaneBuilder builder;
+    builder.center = vec3(0);
+    builder.size = vec2(2);
+    builder.normalAxis = 1;
+    object->setMesh(builder.build());
 
     _document->insertObjectToCurrentPosition(object);
     _document->setCurrentObject(object);
