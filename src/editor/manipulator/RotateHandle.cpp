@@ -4,7 +4,7 @@
 #include "../MeshVAOGenerator.hpp"
 #include "../../draw/Operations.hpp"
 #include "../../mesh/Mesh.hpp"
-#include "../../mesh/algorithm/CircleBuilder.hpp"
+#include "../../mesh/builder/CircleBuilder.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
 #include "../../support/Debug.hpp"
