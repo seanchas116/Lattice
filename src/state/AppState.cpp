@@ -8,7 +8,7 @@
 #include "../mesh/algorithm/PlaneBuilder.hpp"
 #include "../mesh/algorithm/CubeBuilder.hpp"
 #include "../mesh/algorithm/CircleBuilder.hpp"
-#include "../mesh/algorithm/BuildSphere.hpp"
+#include "../mesh/algorithm/SphereBuilder.hpp"
 #include "../mesh/algorithm/ConeBuilder.hpp"
 #include "../mesh/algorithm/CylinderBuilder.hpp"
 #include <QFileDialog>
@@ -90,8 +90,13 @@ void AppState::addSphere() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Sphere").toStdString());
 
-    auto mesh = Mesh::BuildSphere(glm::vec3(0), 1.0, 16, 8, 1, Mesh::MaterialHandle()).perform();
-    object->setMesh(std::move(mesh));
+    Mesh::SphereBuilder builder;
+    builder.center = vec3(0);
+    builder.radius = 1;
+    builder.segmentCount = 16;
+    builder.ringCount = 8;
+    builder.axis = 1;
+    object->setMesh(builder.build());
 
     _document->insertObjectToCurrentPosition(object);
     _document->setCurrentObject(object);
