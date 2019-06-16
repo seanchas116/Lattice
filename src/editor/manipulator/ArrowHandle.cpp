@@ -4,7 +4,7 @@
 #include "../MeshVAOGenerator.hpp"
 #include "../../draw/Operations.hpp"
 #include "../../mesh/Mesh.hpp"
-#include "../../mesh/algorithm/BuildCone.hpp"
+#include "../../mesh/algorithm/ConeBuilder.hpp"
 #include "../../mesh/algorithm/BuildCube.hpp"
 #include "../../mesh/algorithm/BuildCylinder.hpp"
 #include "../../gl/VAO.hpp"
@@ -117,7 +117,13 @@ SP<GL::VAO> ArrowHandle::createHandleVAO() {
     Mesh::Mesh mesh;
     Mesh::MaterialHandle material;
     if (_handleType == HandleType::Translate) {
-        mesh = Mesh::BuildCone(vec3(0), Constants::translateHandleWidth * 0.5, Constants::translateHandleLength, 8, 0, material).perform();
+        Mesh::ConeBuilder builder;
+        builder.center = vec3(0);
+        builder.radius = Constants::translateHandleWidth * 0.5;
+        builder.height = Constants::translateHandleLength;
+        builder.segmentCount = 8;
+        builder.axis = 0;
+        mesh = builder.build();
     } else {
         mesh = Mesh::BuildCube(-vec3(Constants::scaleHandleSize*0.5), vec3(Constants::scaleHandleSize*0.5), material).perform();
     }

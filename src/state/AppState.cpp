@@ -9,7 +9,7 @@
 #include "../mesh/algorithm/BuildCube.hpp"
 #include "../mesh/algorithm/CircleBuilder.hpp"
 #include "../mesh/algorithm/BuildSphere.hpp"
-#include "../mesh/algorithm/BuildCone.hpp"
+#include "../mesh/algorithm/ConeBuilder.hpp"
 #include "../mesh/algorithm/BuildCylinder.hpp"
 #include <QFileDialog>
 #include <QtDebug>
@@ -98,8 +98,13 @@ void AppState::addCone() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Cone").toStdString());
 
-    auto mesh = Mesh::BuildCone(glm::vec3(0), 1.0, 1.0, 16, 1, Mesh::MaterialHandle()).perform();
-    object->setMesh(std::move(mesh));
+    Mesh::ConeBuilder builder;
+    builder.center = vec3(0);
+    builder.radius = 1.0;
+    builder.height = 1.0;
+    builder.segmentCount = 16;
+    builder.axis = 1;
+    object->setMesh(builder.build());
 
     _document->insertObjectToCurrentPosition(object);
     _document->setCurrentObject(object);
