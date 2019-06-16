@@ -4,7 +4,7 @@
 namespace Lattice {
 namespace Mesh {
 
-std::vector<VertexHandle> findConnected(const std::vector<VertexHandle>& vertices);
+std::unordered_set<VertexHandle> findConnected(const Mesh& mesh, const std::vector<VertexHandle>& vertices);
 
 } // namespace Mesh
 } // namespace Lattice
