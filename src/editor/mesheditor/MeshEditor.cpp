@@ -328,13 +328,14 @@ void MeshEditor::hoverLeaveTarget(const Tool::EventTarget &target) {
 }
 
 void MeshEditor::contextMenuTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
-    Q_UNUSED(target);
-
     QMenu contextMenu;
+
     contextMenu.addAction(tr("Delete Vertices"), _meshEditState.get(), &State::MeshEditState::deleteVertices);
     contextMenu.addAction(tr("Delete Edges"), _meshEditState.get(), &State::MeshEditState::deleteEdges);
     contextMenu.addAction(tr("Delete Faces"), _meshEditState.get(), &State::MeshEditState::deleteFaces);
+
     contextMenu.addSeparator();
+
     contextMenu.addAction(tr("Select All"), _meshEditState.get(), &State::MeshEditState::selectAll);
     contextMenu.addAction(tr("Select Loop"), this, [this, target] {
         if (target.edge) {
@@ -351,6 +352,11 @@ void MeshEditor::contextMenuTarget(const Tool::EventTarget &target, const Viewpo
     });
     contextMenu.addAction(tr("Invert Selection"), _meshEditState.get(), &State::MeshEditState::invertSelection);
     contextMenu.addAction(tr("Deselect All"), _meshEditState.get(), &State::MeshEditState::deselectAll);
+
+    contextMenu.addSeparator();
+
+    contextMenu.addAction(tr("Flip Normal"), _meshEditState.get(), &State::MeshEditState::flipFaces);
+
     contextMenu.exec(event.originalContextMenuEvent->globalPos());
 }
 
