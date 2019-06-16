@@ -5,6 +5,7 @@
 #include "../mesh/algorithm/FindLoop.hpp"
 #include "../mesh/algorithm/FindBelt.hpp"
 #include "../mesh/algorithm/FindConnected.hpp"
+#include "../mesh/algorithm/FlipFace.hpp"
 
 namespace Lattice {
 namespace State {
@@ -116,6 +117,15 @@ void MeshEditState::selectConnected(const std::vector<Mesh::VertexHandle> &verti
     _mesh->deselectAll();
     for (auto&& v : connected) {
         _mesh->setSelected(v, true);
+    }
+
+    notifyMeshChanged();
+}
+
+void MeshEditState::flipFaces() {
+    auto selectedFaces = _mesh->selectedFaces();
+    for (auto&& face : selectedFaces) {
+        Mesh::flipFace(*_mesh, face);
     }
 
     notifyMeshChanged();

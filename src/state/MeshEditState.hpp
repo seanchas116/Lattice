@@ -31,6 +31,8 @@ public:
     void selectBelt(Mesh::EdgeHandle edge);
     void selectConnected(const std::vector<Mesh::VertexHandle>& vertices);
 
+    void flipFaces();
+
 signals:
     void meshChanged(const Mesh::Mesh& mesh);
 
