@@ -4,6 +4,7 @@
 #include "../mesh/Mesh.hpp"
 #include "../mesh/algorithm/FindLoop.hpp"
 #include "../mesh/algorithm/FindBelt.hpp"
+#include "../mesh/algorithm/FindConnected.hpp"
 
 namespace Lattice {
 namespace State {
@@ -104,6 +105,17 @@ void MeshEditState::beltSelect(Mesh::EdgeHandle edge) {
         for (auto v : _mesh->vertices(edge)) {
             _mesh->setSelected(v, true);
         }
+    }
+
+    notifyMeshChanged();
+}
+
+void MeshEditState::selectConnected(const std::vector<Mesh::VertexHandle> &vertices) {
+    auto connected = findConnected(*_mesh, vertices);
+
+    _mesh->deselectAll();
+    for (auto&& v : connected) {
+        _mesh->setSelected(v, true);
     }
 
     notifyMeshChanged();
