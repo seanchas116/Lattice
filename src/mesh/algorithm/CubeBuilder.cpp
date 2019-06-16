@@ -1,4 +1,4 @@
-#include "BuildCube.hpp"
+#include "CubeBuilder.hpp"
 #include <QtGlobal>
 
 using namespace glm;
@@ -6,7 +6,7 @@ using namespace glm;
 namespace Lattice {
 namespace Mesh {
 
-Mesh BuildCube::perform() const {
+Mesh CubeBuilder::build() const {
     Mesh mesh;
 
     //   2    3

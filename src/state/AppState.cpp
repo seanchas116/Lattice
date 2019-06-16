@@ -6,7 +6,7 @@
 #include "../document/MeshObject.hpp"
 #include "../mesh/Mesh.hpp"
 #include "../mesh/algorithm/BuildPlane.hpp"
-#include "../mesh/algorithm/BuildCube.hpp"
+#include "../mesh/algorithm/CubeBuilder.hpp"
 #include "../mesh/algorithm/CircleBuilder.hpp"
 #include "../mesh/algorithm/BuildSphere.hpp"
 #include "../mesh/algorithm/ConeBuilder.hpp"
@@ -55,8 +55,10 @@ void AppState::addCube() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Cube").toStdString());
 
-    auto mesh = Mesh::BuildCube(glm::vec3(-1), glm::vec3(1), Mesh::MaterialHandle()).perform();
-    object->setMesh(std::move(mesh));
+    Mesh::CubeBuilder builder;
+    builder.minPos = vec3(-1);
+    builder.maxPos = vec3(1);
+    object->setMesh(builder.build());
 
     _document->insertObjectToCurrentPosition(object);
     _document->setCurrentObject(object);

@@ -5,7 +5,7 @@
 #include "../../draw/Operations.hpp"
 #include "../../mesh/Mesh.hpp"
 #include "../../mesh/algorithm/ConeBuilder.hpp"
-#include "../../mesh/algorithm/BuildCube.hpp"
+#include "../../mesh/algorithm/CubeBuilder.hpp"
 #include "../../mesh/algorithm/BuildCylinder.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
@@ -125,7 +125,10 @@ SP<GL::VAO> ArrowHandle::createHandleVAO() {
         builder.axis = 0;
         mesh = builder.build();
     } else {
-        mesh = Mesh::BuildCube(-vec3(Constants::scaleHandleSize*0.5), vec3(Constants::scaleHandleSize*0.5), material).perform();
+        Mesh::CubeBuilder builder;
+        builder.minPos = vec3(-Constants::scaleHandleSize*0.5);
+        builder.maxPos = vec3(Constants::scaleHandleSize*0.5);
+        mesh = builder.build();
     }
     return MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
 }
