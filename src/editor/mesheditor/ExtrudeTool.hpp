@@ -17,14 +17,11 @@ public:
 
 private:
     bool _dragStarted {false};
-    std::unordered_set<Mesh::VertexHandle> _vertices;
+    std::vector<Mesh::VertexHandle> _vertices;
+    std::vector<Mesh::VertexHandle> _newVertices;
 
     glm::dvec3 _initWorldPos {0};
     glm::dvec2 _initViewportPos {0};
-    std::unordered_map<Mesh::VertexHandle, glm::dvec3> _initPositions;
-
-    std::unordered_map<Mesh::VertexHandle, Mesh::UVPointHandle> _vertexToUV;
-    std::unordered_map<Mesh::UVPointHandle, Mesh::UVPointHandle> _oldToNewUVPoints;
 
     bool _useGuide {false};
     glm::dvec3 _guideDirection {0};
