@@ -4,15 +4,7 @@
 namespace Lattice {
 namespace Mesh {
 
-class LoopCut {
-public:
-    LoopCut(EdgeHandle edge, float cutPosition) : edge(edge), cutPosition(cutPosition) {}
-
-    std::vector<VertexHandle> perform(Mesh& mesh) const;
-
-    EdgeHandle edge;
-    float cutPosition;
-};
+std::vector<VertexHandle> loopCut(Mesh& mesh, EdgeHandle edge, float cutPosition);
 
 } // namespace Mesh
 } // namespace Lattice

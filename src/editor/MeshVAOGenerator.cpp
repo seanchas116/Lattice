@@ -51,7 +51,7 @@ SP<GL::VAO> MeshVAOGenerator::generateEdgeVAO() const {
 
 std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() const {
     auto mesh = _mesh;
-    Mesh::SplitSharpEdges().perform(mesh);
+    Mesh::splitSharpEdges(mesh);
 
     // calculate normals
     std::vector<glm::vec3> faceNormals(mesh.allFaceCount());
@@ -140,7 +140,7 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
     };
 
     auto mesh = _mesh;
-    Mesh::SplitSharpEdges().perform(mesh);
+    Mesh::splitSharpEdges(mesh);
     mesh = mesh.collectGarbage();
 
     if (mesh.allFaceCount() == 0) {

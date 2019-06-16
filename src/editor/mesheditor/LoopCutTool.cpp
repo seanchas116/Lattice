@@ -22,7 +22,7 @@ void LoopCutTool::mousePressTool(const Tool::EventTarget &target, const Viewport
     RayRayDistanceSolver distanceSolver(Ray<double>(mesh.ray(edge)), mouseRay);
     float cutPosition = distanceSolver.t0;
 
-    auto vertices = Mesh::LoopCut(edge, cutPosition).perform(mesh);
+    auto vertices = Mesh::loopCut(mesh, edge, cutPosition);
     if (vertices.empty()) {
         return;
     }

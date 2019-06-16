@@ -4,14 +4,7 @@
 namespace Lattice {
 namespace Mesh {
 
-class FindLoop {
-public:
-    FindLoop(EdgeHandle edge) : edge(edge) {}
-
-    std::vector<EdgeHandle> perform(const Mesh& mesh) const;
-
-    EdgeHandle edge;
-};
+std::vector<EdgeHandle> findLoop(const Mesh& mesh, EdgeHandle edge);
 
 } // namespace Mesh
 } // namespace Lattice

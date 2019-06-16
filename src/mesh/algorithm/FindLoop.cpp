@@ -1,14 +1,12 @@
 #include "FindLoop.hpp"
 #include <range/v3/algorithm/find.hpp>
-#include <QtDebug>
 
 namespace Lattice {
 namespace Mesh {
 
-std::vector<EdgeHandle> FindLoop::perform(const Mesh &mesh) const {
+std::vector<EdgeHandle> findLoop(const Mesh &mesh, EdgeHandle edge) {
     std::vector<EdgeHandle> edges;
 
-    auto edge = this->edge;
     auto vertex = mesh.vertices(edge)[0];
     edges.push_back(edge);
 
