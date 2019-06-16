@@ -14,39 +14,38 @@
 namespace Lattice {
 namespace Mesh {
 
-struct VertexData {
-    bool isDeleted = false;
-    bool isSelected = false;
-    float corner = 0;
-    glm::vec3 position = glm::vec3(0);
-    std::vector<UVPointHandle> uvPoints;
-    std::vector<EdgeHandle> edges;
-};
-
-struct UVPointData {
-    bool isDeleted = false;
-    glm::vec2 uvPosition = glm::vec2(0);
-    VertexHandle vertex;
-    std::vector<FaceHandle> faces;
-};
-
-struct EdgeData {
-    bool isDeleted = false;
-    bool isSharp = false;
-    float crease = 0;
-    std::array<VertexHandle, 2> vertices;
-    std::vector<FaceHandle> faces;
-};
-
-struct FaceData {
-    bool isDeleted = false;
-    MaterialHandle material;
-    std::vector<UVPointHandle> uvPoints;
-    std::vector<EdgeHandle> edges;
-};
-
-
 class Mesh {
+    struct VertexData {
+        bool isDeleted = false;
+        bool isSelected = false;
+        float corner = 0;
+        glm::vec3 position = glm::vec3(0);
+        std::vector<UVPointHandle> uvPoints;
+        std::vector<EdgeHandle> edges;
+    };
+
+    struct UVPointData {
+        bool isDeleted = false;
+        glm::vec2 uvPosition = glm::vec2(0);
+        VertexHandle vertex;
+        std::vector<FaceHandle> faces;
+    };
+
+    struct EdgeData {
+        bool isDeleted = false;
+        bool isSharp = false;
+        float crease = 0;
+        std::array<VertexHandle, 2> vertices;
+        std::vector<FaceHandle> faces;
+    };
+
+    struct FaceData {
+        bool isDeleted = false;
+        MaterialHandle material;
+        std::vector<UVPointHandle> uvPoints;
+        std::vector<EdgeHandle> edges;
+    };
+
     auto& vertexData(VertexHandle handle) { return _vertices[handle.index]; }
     auto& vertexData(VertexHandle handle) const { return _vertices[handle.index]; }
 
