@@ -4,7 +4,7 @@
 namespace Lattice {
 namespace Mesh {
 
-FaceHandle flipNormal(Mesh& mesh, FaceHandle face);
+FaceHandle flipFace(Mesh& mesh, FaceHandle face);
 
 } // namespace Mesh
 } // namespace Lattice
