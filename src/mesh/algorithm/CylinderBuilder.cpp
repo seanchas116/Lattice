@@ -1,4 +1,4 @@
-#include "BuildCylinder.hpp"
+#include "CylinderBuilder.hpp"
 #include <QtGlobal>
 
 using namespace glm;
@@ -6,7 +6,7 @@ using namespace glm;
 namespace Lattice {
 namespace Mesh {
 
-Mesh BuildCylinder::perform() const {
+Mesh CylinderBuilder::build() const {
     Mesh mesh;
 
     float angleStep = M_PI * 2 / segmentCount;

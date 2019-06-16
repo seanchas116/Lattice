@@ -10,7 +10,7 @@
 #include "../mesh/algorithm/CircleBuilder.hpp"
 #include "../mesh/algorithm/BuildSphere.hpp"
 #include "../mesh/algorithm/ConeBuilder.hpp"
-#include "../mesh/algorithm/BuildCylinder.hpp"
+#include "../mesh/algorithm/CylinderBuilder.hpp"
 #include <QFileDialog>
 #include <QtDebug>
 #include <QApplication>
@@ -118,8 +118,13 @@ void AppState::addCylinder() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Cylinder").toStdString());
 
-    auto mesh = Mesh::BuildCylinder(glm::vec3(0), 1.0, 1.0, 16, 1, Mesh::MaterialHandle()).perform();
-    object->setMesh(std::move(mesh));
+    Mesh::CylinderBuilder builder;
+    builder.center = vec3(0);
+    builder.radius = 1;
+    builder.height = 1;
+    builder.segmentCount = 16;
+    builder.axis = 1;
+    object->setMesh(builder.build());
 
     _document->insertObjectToCurrentPosition(object);
     _document->setCurrentObject(object);

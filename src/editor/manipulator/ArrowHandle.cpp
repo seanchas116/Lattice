@@ -6,7 +6,7 @@
 #include "../../mesh/Mesh.hpp"
 #include "../../mesh/algorithm/ConeBuilder.hpp"
 #include "../../mesh/algorithm/CubeBuilder.hpp"
-#include "../../mesh/algorithm/BuildCylinder.hpp"
+#include "../../mesh/algorithm/CylinderBuilder.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
 #include "../../support/Debug.hpp"
@@ -143,10 +143,13 @@ SP<GL::VAO> ArrowHandle::createBodyVAO(double length) {
 }
 
 SP<GL::VAO> ArrowHandle::createBodyPickVAO(double length) {
-    Mesh::Mesh mesh;
-    Mesh::MaterialHandle material;
-    mesh = Mesh::BuildCylinder(vec3(Constants::bodyBegin, 0, 0), Constants::hitRadius, length - Constants::bodyBegin + Constants::translateHandleLength, 8, 0, material).perform();
-    return MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
+    Mesh::CylinderBuilder builder;
+    builder.center = vec3(Constants::bodyBegin, 0, 0);
+    builder.radius = Constants::hitRadius;
+    builder.height = length - Constants::bodyBegin + Constants::translateHandleLength;
+    builder.segmentCount = 8;
+    builder.axis = 0;
+    return MeshVAOGenerator(builder.build()).generateFaceVAOs().at(builder.material);
 }
 
 }
