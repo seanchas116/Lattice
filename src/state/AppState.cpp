@@ -7,7 +7,7 @@
 #include "../mesh/Mesh.hpp"
 #include "../mesh/algorithm/BuildPlane.hpp"
 #include "../mesh/algorithm/BuildCube.hpp"
-#include "../mesh/algorithm/BuildCircle.hpp"
+#include "../mesh/algorithm/CircleBuilder.hpp"
 #include "../mesh/algorithm/BuildSphere.hpp"
 #include "../mesh/algorithm/BuildCone.hpp"
 #include "../mesh/algorithm/BuildCylinder.hpp"
@@ -68,8 +68,12 @@ void AppState::addCircle() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Circle").toStdString());
 
-    auto mesh = Mesh::BuildCircle(glm::vec3(0), 1.0, 16, 1, Mesh::MaterialHandle()).perform();
-    object->setMesh(std::move(mesh));
+    Mesh::CircleBuilder builder;
+    builder.center = glm::vec3(0);
+    builder.radius = 1.0;
+    builder.segmentCount = 16;
+    builder.normalAxis = 1;
+    object->setMesh(builder.build());
 
     _document->insertObjectToCurrentPosition(object);
     _document->setCurrentObject(object);
