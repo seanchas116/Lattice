@@ -1,9 +1,10 @@
 #include "Extrude.hpp"
+#include <range/v3/view/reverse.hpp>
 
 namespace Lattice {
 namespace Mesh {
 
-std::vector<VertexHandle> extrude(Mesh &mesh, const std::vector<VertexHandle> &vertices) {
+std::vector<VertexHandle> extrude(Mesh &mesh, const std::vector<VertexHandle> &vertices, bool addFlipFace) {
     std::vector<VertexHandle> newVertices;
     std::unordered_map<VertexHandle, UVPointHandle> vertexToUV;
     std::unordered_map<UVPointHandle, UVPointHandle> oldToNewUVPoints;
@@ -79,6 +80,12 @@ std::vector<VertexHandle> extrude(Mesh &mesh, const std::vector<VertexHandle> &v
             newUVPoints.push_back(newUV);
         }
         mesh.addFace(newUVPoints, mesh.material(face));
+
+        if (addFlipFace) {
+            auto reverseUVPoints = mesh.uvPoints(face) | ranges::view::reverse | ranges::to_vector;
+            mesh.addFace(reverseUVPoints, mesh.material(face));
+        }
+
         mesh.removeFace(face);
     }
 
