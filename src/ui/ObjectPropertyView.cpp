@@ -74,6 +74,20 @@ ObjectPropertyView::ObjectPropertyView(const SP<State::AppState> &appState, QWid
     connect(_subdivSegmentCountSpinbox, &Widget::MultiValueSpinBox::editingFinished, this, &ObjectPropertyView::handleSubdivSegmentCountChange);
     layout->addRow(tr("Segment Count"), _subdivSegmentCountSpinbox);
 
+    auto mirrorLayout = new QHBoxLayout();
+    mirrorLayout->addWidget(new QLabel(tr("Mirror")));
+
+    mirrorLayout->addStretch();
+
+    auto mirrorXCheckbox = new QCheckBox(tr("X"));
+    auto mirrorYCheckbox = new QCheckBox(tr("Y"));
+    auto mirrorZCheckbox = new QCheckBox(tr("Z"));
+    mirrorLayout->addWidget(mirrorXCheckbox);
+    mirrorLayout->addWidget(mirrorYCheckbox);
+    mirrorLayout->addWidget(mirrorZCheckbox);
+
+    layout->addRow(mirrorLayout);
+
     setLayout(layout);
 
     setEnabled(false);
