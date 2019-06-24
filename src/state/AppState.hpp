@@ -32,7 +32,7 @@ class AppState final : public QObject {
 
     LATTICE_AUTO_PROPERTY(ViewportSplitMode, viewportSplitMode, setViewportSplit, ViewportSplitMode::Single)
 
-    LATTICE_AUTO_PROPERTY(Opt<SP<MeshEditState>>, meshEditState, setMeshEditState, {})
+    LATTICE_AUTO_PROPERTY_REFERENCE(Opt<SP<MeshEditState>>, meshEditState, setMeshEditState, {})
 
 public:
     AppState();
