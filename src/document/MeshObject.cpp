@@ -57,6 +57,20 @@ void MeshObject::setSubdivSettingsInternal(SubdivSettings settings) {
     emit subdivSettingsChanged(settings);
 }
 
+void MeshObject::setMirrorSettings(MirrorSettings settings) {
+    auto self = *dynamicPointerCast<MeshObject>(sharedFromThis());
+    auto change = makeShared<PropertyChange<MeshObject, MirrorSettings>>(self, std::move(settings), &MeshObject::mirrorSettings, &MeshObject::setMirrorSettingsInternal);
+    addChange(change);
+}
+
+void MeshObject::setMirrorSettingsInternal(MirrorSettings settings) {
+    if (_mirrorSettings == settings) {
+        return;
+    }
+    _mirrorSettings = std::move(settings);
+    emit mirrorSettingsChanged(settings);
+}
+
 SP<Object> MeshObject::clone() const {
     auto cloned = makeShared<MeshObject>();
     // FIXME: object name is not copied

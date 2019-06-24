@@ -23,6 +23,17 @@ struct SubdivSettings {
     }
 };
 
+struct MirrorSettings {
+    glm::bvec3 isEnabled {false};
+
+    bool operator==(const MirrorSettings& other) const {
+        return isEnabled == other.isEnabled;
+    }
+    bool operator!=(const MirrorSettings& other) const {
+        return !operator==(other);
+    }
+};
+
 class MeshObject final : public Object {
     Q_OBJECT
 public:
@@ -38,6 +49,9 @@ public:
     void setSubdivSettings(SubdivSettings settings);
     auto& subdivSettings() const { return _subdivSettings; }
 
+    void setMirrorSettings(MirrorSettings settings);
+    auto& mirrorSettings() const { return _mirrorSettings; }
+
     SP<Object> clone() const override;
     void toJSON(nlohmann::json& json) const override;
     void fromJSON(const nlohmann::json& json) override;
@@ -46,15 +60,18 @@ signals:
     void meshChanged(const Mesh::Mesh& mesh);
     void materialsChanged(const std::vector<Material>& materials);
     void subdivSettingsChanged(const SubdivSettings& settings);
+    void mirrorSettingsChanged(const MirrorSettings& settings);
 
 private:
     void setMeshInternal(Mesh::Mesh mesh);
     void setMaterialsInternal(std::vector<Material> materials);
     void setSubdivSettingsInternal(SubdivSettings settings);
+    void setMirrorSettingsInternal(MirrorSettings settings);
 
     std::unique_ptr<Mesh::Mesh> _mesh;
     std::vector<Material> _materials;
     SubdivSettings _subdivSettings;
+    MirrorSettings _mirrorSettings;
 };
 
 }
