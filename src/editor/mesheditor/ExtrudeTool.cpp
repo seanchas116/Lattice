@@ -1,11 +1,11 @@
 #include "ExtrudeTool.hpp"
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
+#include "../../state/Preferences.hpp"
 #include "../../support/Debug.hpp"
 #include "../../support/SetUtil.hpp"
-#include "../../mesh/Mesh.hpp"
-#include "../../mesh/algorithm/Extrude.hpp"
-#include "../../state/Preferences.hpp"
+#include <meshlib/Mesh.hpp>
+#include <meshlib/algorithm/Extrude.hpp>
 
 using namespace glm;
 
@@ -18,7 +18,7 @@ Tool::HitTestExclusion ExtrudeTool::hitTestExclusion() const {
 }
 
 void ExtrudeTool::mousePressTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
-    auto& mesh = *this->mesh();
+    auto &mesh = *this->mesh();
 
     auto clickedVertices = target.vertices(mesh);
     if (clickedVertices.empty()) {
@@ -39,7 +39,7 @@ void ExtrudeTool::mousePressTool(const Tool::EventTarget &target, const Viewport
 void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target);
 
-    auto& mesh = *this->mesh();
+    auto &mesh = *this->mesh();
 
     if (_vertices.empty()) {
         return;
@@ -57,8 +57,8 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
             _useGuide = false;
         } else {
             _useGuide = true;
-            glm::dvec3 normal {0};
-            for (auto& face : faces) {
+            glm::dvec3 normal{0};
+            for (auto &face : faces) {
                 normal += mesh.calculateNormal(face);
             }
             _guideDirection = glm::normalize(normal);
@@ -66,7 +66,7 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
 
         mesh.deselectAll();
 
-        for (auto&& v : _newVertices) {
+        for (auto &&v : _newVertices) {
             mesh.setSelected(v, true);
         }
 
@@ -92,7 +92,8 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
 }
 
 void ExtrudeTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
-    Q_UNUSED(target); Q_UNUSED(event);
+    Q_UNUSED(target);
+    Q_UNUSED(event);
 
     _vertices.clear();
     _newVertices.clear();

@@ -1,28 +1,26 @@
 #include "AppState.hpp"
-#include "MeshEditState.hpp"
-#include "../services/ObjLoader.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
 #include "../document/MeshObject.hpp"
-#include "../mesh/Mesh.hpp"
-#include "../mesh/builder/PlaneBuilder.hpp"
-#include "../mesh/builder/CubeBuilder.hpp"
-#include "../mesh/builder/CircleBuilder.hpp"
-#include "../mesh/builder/SphereBuilder.hpp"
-#include "../mesh/builder/ConeBuilder.hpp"
-#include "../mesh/builder/CylinderBuilder.hpp"
+#include "../services/ObjLoader.hpp"
+#include "MeshEditState.hpp"
+#include <QApplication>
 #include <QFileDialog>
 #include <QtDebug>
-#include <QApplication>
+#include <meshlib/Mesh.hpp>
+#include <meshlib/builder/CircleBuilder.hpp>
+#include <meshlib/builder/ConeBuilder.hpp>
+#include <meshlib/builder/CubeBuilder.hpp>
+#include <meshlib/builder/CylinderBuilder.hpp>
+#include <meshlib/builder/PlaneBuilder.hpp>
+#include <meshlib/builder/SphereBuilder.hpp>
 
 using namespace glm;
 
 namespace Lattice {
 namespace State {
 
-AppState::AppState() :
-    _document(makeShared<Document::Document>())
-{
+AppState::AppState() : _document(makeShared<Document::Document>()) {
     addCube();
     auto object = _document->rootObject()->childObjects()[0];
     _document->setCurrentObject(object);
@@ -139,11 +137,9 @@ void AppState::addCylinder() {
 }
 
 void AppState::addText() {
-
 }
 
 void AppState::addImagePlane() {
-
 }
 
 void AppState::import() {
@@ -155,7 +151,7 @@ void AppState::import() {
     _document->history()->beginChange(tr("Import"));
 
     auto objects = Services::ObjLoader::load(_document, filePath.toStdString());
-    for (auto& object : objects) {
+    for (auto &object : objects) {
         _document->insertObjectToCurrentPosition(object);
     }
 }
@@ -183,7 +179,7 @@ void AppState::selectAll() {
         (*_meshEditState)->selectAll();
     } else {
         std::unordered_set<SP<Document::Object>> allObjects;
-        _document->rootObject()->forEachDescendant([&] (auto& object) {
+        _document->rootObject()->forEachDescendant([&](auto &object) {
             allObjects.insert(object);
         });
         _document->setSelectedObjects(std::move(allObjects));
@@ -213,5 +209,5 @@ void AppState::startEditing(const SP<Document::MeshObject> &object) {
     setMeshEditState(makeShared<MeshEditState>(object));
 }
 
-}
+} // namespace State
 } // namespace Lattice

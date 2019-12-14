@@ -1,26 +1,26 @@
 #include "MeshEditor.hpp"
-#include "MoveTool.hpp"
-#include "DrawTool.hpp"
-#include "ExtrudeTool.hpp"
-#include "LoopCutTool.hpp"
-#include "BorderSelectTool.hpp"
-#include "../manipulator/MeshManipulator.hpp"
-#include "../MeshVAOGenerator.hpp"
-#include "../../state/AppState.hpp"
-#include "../../state/MeshEditState.hpp"
-#include "../../gl/VAO.hpp"
-#include "../../gl/VertexBuffer.hpp"
-#include "../../gl/Framebuffer.hpp"
-#include "../../gl/Texture.hpp"
-#include "../../gl/Binder.hpp"
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
 #include "../../document/MeshObject.hpp"
-#include "../../mesh/Mesh.hpp"
+#include "../../gl/Binder.hpp"
+#include "../../gl/Framebuffer.hpp"
+#include "../../gl/Texture.hpp"
+#include "../../gl/VAO.hpp"
+#include "../../gl/VertexBuffer.hpp"
+#include "../../state/AppState.hpp"
+#include "../../state/MeshEditState.hpp"
 #include "../../support/Debug.hpp"
-#include <QMouseEvent>
+#include "../MeshVAOGenerator.hpp"
+#include "../manipulator/MeshManipulator.hpp"
+#include "BorderSelectTool.hpp"
+#include "DrawTool.hpp"
+#include "ExtrudeTool.hpp"
+#include "LoopCutTool.hpp"
+#include "MoveTool.hpp"
 #include <QMenu>
+#include <QMouseEvent>
 #include <QPainter>
+#include <meshlib/Mesh.hpp>
 #include <range/v3/algorithm/any_of.hpp>
 #include <range/v3/algorithm/find.hpp>
 
@@ -40,7 +40,8 @@ const vec4 hoveredFaceColorSubdiv = vec4(1, 1, 0, 1) * 0.4f;
 
 const vec4 unselectedFaceColor = vec4(0);
 const vec4 selectedFaceColor = vec4(1, 1, 1, 1) * 0.8f;
-const vec4 hoveredFaceColor = vec4(1, 1, 0.5, 1) * 0.8f;;
+const vec4 hoveredFaceColor = vec4(1, 1, 0.5, 1) * 0.8f;
+;
 
 glm::vec4 encodeIntToColor(int64_t value) {
     union {
@@ -61,7 +62,7 @@ int64_t decodeColorToInt(glm::vec4 color) {
     return valueColor.value;
 }
 
-glm::vec4 encodeEventTargetToColor(const Tool::EventTarget& target) {
+glm::vec4 encodeEventTargetToColor(const Tool::EventTarget &target) {
     int value;
     if (target.vertex) {
         value = target.vertex->index * 3;
@@ -91,41 +92,39 @@ Tool::EventTarget decodeColorToEventTarget(glm::vec4 color) {
     }
 }
 
-}
+} // namespace
 
-MeshEditor::MeshEditor(const SP<State::AppState>& appState, const SP<State::MeshEditState> &meshEditState) :
-    _appState(appState),
-    _meshEditState(meshEditState),
-    _manipulator(makeShared<Manipulator::MeshManipulator>(meshEditState->object()->location().matrixToWorld(), meshEditState->mesh())),
+MeshEditor::MeshEditor(const SP<State::AppState> &appState, const SP<State::MeshEditState> &meshEditState) : _appState(appState),
+                                                                                                             _meshEditState(meshEditState),
+                                                                                                             _manipulator(makeShared<Manipulator::MeshManipulator>(meshEditState->object()->location().matrixToWorld(), meshEditState->mesh())),
 
-    _faceIBO(makeShared<GL::IndexBuffer>()),
-    _faceVBO(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
-    _faceVAO(makeShared<GL::VAO>(_faceVBO, _faceIBO)),
-    _facePickVBO(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
-    _facePickVAO(makeShared<GL::VAO>(_facePickVBO, _faceIBO)),
-    _edgeVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
-    _edgeVAO(makeShared<GL::VAO>(_edgeVBO, GL::Primitive::Line)),
-    _edgePickVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
-    _edgePickVAO(makeShared<GL::VAO>(_edgePickVBO, GL::Primitive::Line)),
-    _vertexVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
-    _vertexVAO(makeShared<GL::VAO>(_vertexVBO, GL::Primitive::Point)),
-    _vertexPickVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
-    _vertexPickVAO(makeShared<GL::VAO>(_vertexPickVBO, GL::Primitive::Point)),
+                                                                                                             _faceIBO(makeShared<GL::IndexBuffer>()),
+                                                                                                             _faceVBO(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
+                                                                                                             _faceVAO(makeShared<GL::VAO>(_faceVBO, _faceIBO)),
+                                                                                                             _facePickVBO(makeShared<GL::VertexBuffer<Draw::Vertex>>()),
+                                                                                                             _facePickVAO(makeShared<GL::VAO>(_facePickVBO, _faceIBO)),
+                                                                                                             _edgeVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
+                                                                                                             _edgeVAO(makeShared<GL::VAO>(_edgeVBO, GL::Primitive::Line)),
+                                                                                                             _edgePickVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
+                                                                                                             _edgePickVAO(makeShared<GL::VAO>(_edgePickVBO, GL::Primitive::Line)),
+                                                                                                             _vertexVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
+                                                                                                             _vertexVAO(makeShared<GL::VAO>(_vertexVBO, GL::Primitive::Point)),
+                                                                                                             _vertexPickVBO(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
+                                                                                                             _vertexPickVAO(makeShared<GL::VAO>(_vertexPickVBO, GL::Primitive::Point)),
 
-    _tool(makeShared<MoveTool>(meshEditState)),
+                                                                                                             _tool(makeShared<MoveTool>(meshEditState)),
 
-    _facesFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))),
-    _facesTexture(makeShared<GL::Texture>(glm::ivec2(0, 0))),
-    _facesDepthTexture(makeShared<GL::Texture>(glm::ivec2(0, 0))),
-    _hitFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0)))
-{
+                                                                                                             _facesFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))),
+                                                                                                             _facesTexture(makeShared<GL::Texture>(glm::ivec2(0, 0))),
+                                                                                                             _facesDepthTexture(makeShared<GL::Texture>(glm::ivec2(0, 0))),
+                                                                                                             _hitFramebuffer(makeShared<GL::Framebuffer>(glm::ivec2(0, 0))) {
     initializeOpenGLFunctions();
     updateVAOs();
 
     connect(appState.get(), &State::AppState::toolChanged, this, &MeshEditor::handleToolChange);
     handleToolChange(appState->tool());
 
-    connect(_manipulator.get(), &Manipulator::Manipulator::onContextMenu, this, [this](auto& event) {
+    connect(_manipulator.get(), &Manipulator::Manipulator::onContextMenu, this, [this](auto &event) {
         contextMenuTarget({}, event);
     });
     connect(_manipulator.get(), &Manipulator::MeshManipulator::meshChanged, _meshEditState.get(), &State::MeshEditState::notifyMeshChanged);
@@ -174,9 +173,9 @@ void MeshEditor::preDraw(const Viewport::DrawEvent &event) {
 
 void MeshEditor::draw(const Viewport::DrawEvent &event) {
     auto matrixToWorld = _meshEditState->object()->location().matrixToWorld();
-    auto& materials = _meshEditState->object()->materials();
+    auto &materials = _meshEditState->object()->materials();
 
-    for (auto& [materialID, vao] : _finalShapeVAOs) {
+    for (auto &[materialID, vao] : _finalShapeVAOs) {
         auto material = materials.at(materialID.index).toDrawMaterial();
         event.operations->drawMaterial.draw(vao, matrixToWorld, event.camera, material);
     }
@@ -266,9 +265,9 @@ Tool::EventTarget MeshEditor::pickEventTarget(vec2 pos) {
 }
 
 void MeshEditor::updateManipulatorVisibility() {
-    auto& mesh = *_meshEditState->mesh();
-    bool isVertexSelected = ranges::any_of(mesh.vertices(), [&] (auto v) { return mesh.isSelected(v); });
-    _manipulator->setVisible(isVertexSelected  && _appState->tool() == State::Tool::None);
+    auto &mesh = *_meshEditState->mesh();
+    bool isVertexSelected = ranges::any_of(mesh.vertices(), [&](auto v) { return mesh.isSelected(v); });
+    _manipulator->setVisible(isVertexSelected && _appState->tool() == State::Tool::None);
 }
 
 void MeshEditor::updateChildren() {
@@ -365,10 +364,10 @@ void MeshEditor::updateVAOs() {
         return;
     }
 
-    auto& mesh = *_meshEditState->mesh();
+    auto &mesh = *_meshEditState->mesh();
     auto hitTestExclusion = _tool->hitTestExclusion();
 
-    auto& object = _meshEditState->object();
+    auto &object = _meshEditState->object();
     bool isSubdiv = object->subdivSettings().isEnabled;
     MeshVAOGenerator generator(mesh);
     if (isSubdiv) {
@@ -419,7 +418,7 @@ void MeshEditor::updateVAOs() {
             vec4 indexColor = encodeEventTargetToColor({{}, e, {}});
 
             for (size_t vertexInEdgeIndex = 0; vertexInEdgeIndex < 2; ++vertexInEdgeIndex) {
-                auto& v = mesh.vertices(e)[vertexInEdgeIndex];
+                auto &v = mesh.vertices(e)[vertexInEdgeIndex];
                 bool selected = mesh.isSelected(v);
 
                 Draw::PointLineVertex attrib;
@@ -465,7 +464,7 @@ void MeshEditor::updateVAOs() {
 
             bool hovered = f == _hoveredTarget.face;
             vec4 indexColor = encodeEventTargetToColor({{}, {}, f});
-            for (auto& p : mesh.uvPoints(f)) {
+            for (auto &p : mesh.uvPoints(f)) {
                 auto position = mesh.position(mesh.vertex(p));
 
                 Draw::Vertex attrib;
@@ -493,4 +492,4 @@ void MeshEditor::updateVAOs() {
     updateChildren();
 }
 
-}
+} // namespace Lattice::Editor::MeshEditor

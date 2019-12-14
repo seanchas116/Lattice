@@ -1,16 +1,16 @@
 #include "RotateHandle.hpp"
-#include "Constants.hpp"
-#include "Coordinates.hpp"
-#include "../MeshVAOGenerator.hpp"
 #include "../../draw/Operations.hpp"
-#include "../../mesh/Mesh.hpp"
-#include "../../mesh/builder/CircleBuilder.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
 #include "../../support/Debug.hpp"
-#include "../../support/Ray.hpp"
 #include "../../support/Distance.hpp"
+#include "../../support/Ray.hpp"
+#include "../MeshVAOGenerator.hpp"
+#include "Constants.hpp"
+#include "Coordinates.hpp"
 #include <QMouseEvent>
+#include <meshlib/Mesh.hpp>
+#include <meshlib/builder/CircleBuilder.hpp>
 
 using namespace glm;
 
@@ -18,16 +18,14 @@ namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
-RotateHandle::RotateHandle(int axis) :
-    _axis(axis),
-    _handleMesh(createMesh()),
-    _handleVAO(MeshVAOGenerator(*_handleMesh).generateEdgeVAO())
-{
+RotateHandle::RotateHandle(int axis) : _axis(axis),
+                                       _handleMesh(createMesh()),
+                                       _handleVAO(MeshVAOGenerator(*_handleMesh).generateEdgeVAO()) {
 }
 
 void RotateHandle::draw(const Viewport::DrawEvent &event) {
     Coordinates coordinates(event.camera, _targetPosition);
-    if (!coordinates.isInViewport){
+    if (!coordinates.isInViewport) {
         return;
     }
 
@@ -38,7 +36,7 @@ void RotateHandle::draw(const Viewport::DrawEvent &event) {
 
 void RotateHandle::drawHitArea(const Viewport::DrawEvent &event) {
     Coordinates coordinates(event.camera, _targetPosition);
-    if (!coordinates.isInViewport){
+    if (!coordinates.isInViewport) {
         return;
     }
 
@@ -107,6 +105,6 @@ SP<Mesh::Mesh> RotateHandle::createMesh() {
     return makeShared<Mesh::Mesh>(builder.build());
 }
 
-}
+} // namespace Manipulator
 } // namespace Editor
 } // namespace Lattice

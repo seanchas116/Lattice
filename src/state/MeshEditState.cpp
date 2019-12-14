@@ -1,20 +1,19 @@
 #include "MeshEditState.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
-#include "../mesh/Mesh.hpp"
-#include "../mesh/algorithm/FindLoop.hpp"
-#include "../mesh/algorithm/FindBelt.hpp"
-#include "../mesh/algorithm/FindConnected.hpp"
-#include "../mesh/algorithm/FlipFace.hpp"
+#include <meshlib/Mesh.hpp>
+#include <meshlib/algorithm/FindBelt.hpp>
+#include <meshlib/algorithm/FindConnected.hpp>
+#include <meshlib/algorithm/FindLoop.hpp>
+#include <meshlib/algorithm/FlipFace.hpp>
 
 namespace Lattice {
 namespace State {
 
-MeshEditState::MeshEditState(const SP<Document::MeshObject> &targetObject) :
-    _object(targetObject),
-    _mesh(makeShared<Mesh::Mesh>(targetObject->mesh())) {
+MeshEditState::MeshEditState(const SP<Document::MeshObject> &targetObject) : _object(targetObject),
+                                                                             _mesh(makeShared<Mesh::Mesh>(targetObject->mesh())) {
 
-    connect(targetObject.get(), &Document::MeshObject::meshChanged, this, [this](auto& mesh) {
+    connect(targetObject.get(), &Document::MeshObject::meshChanged, this, [this](auto &mesh) {
         *_mesh = mesh;
         notifyMeshChanged();
     });
@@ -41,7 +40,7 @@ void MeshEditState::commitMeshChanged(const QString &changeTitle) {
 }
 
 void MeshEditState::deleteVertices() {
-    auto& mesh = *_mesh;
+    auto &mesh = *_mesh;
     auto vertices = mesh.selectedVertices() | ranges::to_vector;
     for (auto v : vertices) {
         mesh.removeVertex(v);
@@ -50,7 +49,7 @@ void MeshEditState::deleteVertices() {
 }
 
 void MeshEditState::deleteEdges() {
-    auto& mesh = *_mesh;
+    auto &mesh = *_mesh;
     auto edges = mesh.edges(mesh.selectedVertices());
     for (auto e : edges) {
         mesh.removeEdge(e);
@@ -59,7 +58,7 @@ void MeshEditState::deleteEdges() {
 }
 
 void MeshEditState::deleteFaces() {
-    auto& mesh = *_mesh;
+    auto &mesh = *_mesh;
     auto faces = mesh.faces(mesh.selectedVertices());
     for (auto f : faces) {
         mesh.removeFace(f);
@@ -78,7 +77,7 @@ void MeshEditState::deselectAll() {
 }
 
 void MeshEditState::invertSelection() {
-    auto& mesh = *_mesh;
+    auto &mesh = *_mesh;
     for (auto v : mesh.vertices()) {
         mesh.setSelected(v, !mesh.isSelected(v));
     }
@@ -115,7 +114,7 @@ void MeshEditState::selectConnected(const std::vector<Mesh::VertexHandle> &verti
     auto connected = findConnected(*_mesh, vertices);
 
     _mesh->deselectAll();
-    for (auto&& v : connected) {
+    for (auto &&v : connected) {
         _mesh->setSelected(v, true);
     }
 
@@ -124,7 +123,7 @@ void MeshEditState::selectConnected(const std::vector<Mesh::VertexHandle> &verti
 
 void MeshEditState::flipFaces() {
     auto selectedFaces = _mesh->selectedFaces();
-    for (auto&& face : selectedFaces) {
+    for (auto &&face : selectedFaces) {
         Mesh::flipFace(*_mesh, face);
     }
 

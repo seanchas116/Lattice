@@ -1,18 +1,17 @@
 #include "MeshObject.hpp"
-#include "../mesh/Mesh.hpp"
 #include "../support/Debug.hpp"
 #include "../support/PropertyChange.hpp"
-#include <nlohmann/json.hpp>
 #include <QTimer>
+#include <meshlib/Mesh.hpp>
+#include <nlohmann/json.hpp>
 
 using namespace glm;
 
 namespace Lattice {
 namespace Document {
 
-MeshObject::MeshObject() :
-    _mesh(std::make_unique<Mesh::Mesh>()),
-    _materials({Material()}) {
+MeshObject::MeshObject() : _mesh(std::make_unique<Mesh::Mesh>()),
+                           _materials({Material()}) {
 }
 
 MeshObject::~MeshObject() {
@@ -92,5 +91,5 @@ void MeshObject::fromJSON(const nlohmann::json &json) {
     //_shape->fomJSON(json["shape"]);
 }
 
-}
+} // namespace Document
 } // namespace Lattice

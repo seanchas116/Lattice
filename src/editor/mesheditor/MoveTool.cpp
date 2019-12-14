@@ -1,10 +1,10 @@
 #include "MoveTool.hpp"
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
-#include "../../mesh/Mesh.hpp"
 #include "../../state/Preferences.hpp"
 #include "../../support/SetUtil.hpp"
 #include <QMouseEvent>
+#include <meshlib/Mesh.hpp>
 #include <range/v3/algorithm/set_algorithm.hpp>
 
 using namespace glm;
@@ -13,10 +13,8 @@ namespace Lattice {
 namespace Editor {
 namespace MeshEditor {
 
-MoveTool::MoveTool(const SP<State::MeshEditState> &meshEditState) :
-    Tool(meshEditState),
-    _borderSelectTool(makeShared<BorderSelectTool>(meshEditState))
-{
+MoveTool::MoveTool(const SP<State::MeshEditState> &meshEditState) : Tool(meshEditState),
+                                                                    _borderSelectTool(makeShared<BorderSelectTool>(meshEditState)) {
     setChildRenderables({_borderSelectTool});
     _borderSelectTool->setVisible(false);
 }
@@ -26,7 +24,7 @@ void MoveTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
         return;
     }
 
-    auto& mesh = *this->mesh();
+    auto &mesh = *this->mesh();
 
     auto clickedVertices = target.vertices(mesh);
     if (clickedVertices.empty()) {
@@ -45,11 +43,11 @@ void MoveTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
         selection = oldSelection;
 
         if (alreadySelected) {
-            for (auto& v : clickedVertices) {
+            for (auto &v : clickedVertices) {
                 selection.erase(v);
             }
         } else {
-            for (auto& v: clickedVertices) {
+            for (auto &v : clickedVertices) {
                 selection.insert(v);
             }
         }
@@ -58,11 +56,11 @@ void MoveTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
     }
     _nextSelection = selection;
 
-    auto& dragVertices = alreadySelected ? oldSelection : clickedVertices;
+    auto &dragVertices = alreadySelected ? oldSelection : clickedVertices;
 
     _dragged = true;
     _initPositions.clear();
-    for (auto& v : dragVertices) {
+    for (auto &v : dragVertices) {
         _initPositions[v] = mesh.position(v);
     }
     _initObjectPos = (object()->location().matrixToModel() * dvec4(event.worldPos(), 1)).xyz;
@@ -92,7 +90,7 @@ void MoveTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::Mo
         _dragStarted = true;
     }
 
-    for (auto& [v, initialPos] : _initPositions) {
+    for (auto &[v, initialPos] : _initPositions) {
         mesh()->setPosition(v, initialPos + offset);
     }
     meshEditState()->notifyMeshChanged();
@@ -117,7 +115,7 @@ void MoveTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport:
         emit finished();
     } else {
         mesh()->deselectAll();
-        for (auto& v : _nextSelection) {
+        for (auto &v : _nextSelection) {
             mesh()->setSelected(v, true);
         }
         meshEditState()->notifyMeshChanged();

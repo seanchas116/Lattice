@@ -1,5 +1,5 @@
 #include "Tool.hpp"
-#include "../../mesh/Mesh.hpp"
+#include <meshlib/Mesh.hpp>
 
 namespace Lattice {
 namespace Editor {
@@ -35,7 +35,8 @@ Tool::HitTestExclusion Tool::hitTestExclusion() const {
 }
 
 void Tool::hoverEnterTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
-    Q_UNUSED(target); Q_UNUSED(event);
+    Q_UNUSED(target);
+    Q_UNUSED(event);
 }
 
 void Tool::hoverLeaveTool(const Tool::EventTarget &target) {

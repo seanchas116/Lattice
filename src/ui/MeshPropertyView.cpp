@@ -1,32 +1,30 @@
 #include "MeshPropertyView.hpp"
-#include "../document/MeshObject.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
+#include "../document/MeshObject.hpp"
 #include "../state/AppState.hpp"
 #include "../state/MeshEditState.hpp"
-#include "../widget/MultiValueDoubleSpinBox.hpp"
 #include "../widget/MultiValueCheckBox.hpp"
-#include "../mesh/Mesh.hpp"
+#include "../widget/MultiValueDoubleSpinBox.hpp"
+#include <QCheckBox>
 #include <QFormLayout>
 #include <QGridLayout>
 #include <QLabel>
-#include <QCheckBox>
+#include <meshlib/Mesh.hpp>
 
 using namespace glm;
 
 namespace Lattice {
 namespace UI {
 
-MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget *parent) :
-    QWidget(parent),
-    _appState(appState)
-{
+MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget *parent) : QWidget(parent),
+                                                                                           _appState(appState) {
     auto layout = new QFormLayout();
 
     {
         auto gridLayout = new QGridLayout();
 
-        std::array<QString, 3> labels {"X", "Y", "Z"};
+        std::array<QString, 3> labels{"X", "Y", "Z"};
         for (size_t i = 0; i < 3; ++i) {
             auto label = new QLabel(labels[i]);
             label->setAlignment(Qt::AlignHCenter);
@@ -47,7 +45,7 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
             spinBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
             gridLayout->addWidget(spinBox, 1, int(i + 1));
 
-            auto handleValueChange = [this, i] (double value) {
+            auto handleValueChange = [this, i](double value) {
                 this->handlePositionValueChange(i, value);
             };
             connect(spinBox, &Widget::MultiValueDoubleSpinBox::editingFinished, this, handleValueChange);
@@ -70,7 +68,7 @@ MeshPropertyView::MeshPropertyView(const SP<State::AppState> &appState, QWidget 
     connect(appState.get(), &State::AppState::meshEditStateChanged, this, &MeshPropertyView::setMeshEditState);
 }
 
-void MeshPropertyView::setMeshEditState(const Opt<SP<State::MeshEditState> > &meshEditState) {
+void MeshPropertyView::setMeshEditState(const Opt<SP<State::MeshEditState>> &meshEditState) {
     disconnect(_connection);
     _meshEditState = meshEditState;
     setEnabled(bool(meshEditState));
@@ -87,7 +85,7 @@ void MeshPropertyView::refreshValues() {
         return;
     }
     auto meshEditState = *_meshEditState;
-    auto& mesh = *meshEditState->mesh();
+    auto &mesh = *meshEditState->mesh();
     auto selection = mesh.selectedVertices() | ranges::to_vector;
     if (selection.empty()) {
         return;
@@ -137,7 +135,7 @@ void MeshPropertyView::handlePositionValueChange(int index, double value) {
         return;
     }
     auto meshEditState = *_meshEditState;
-    auto& mesh = *meshEditState->mesh();
+    auto &mesh = *meshEditState->mesh();
     auto selection = mesh.selectedVertices() | ranges::to_vector;
     if (selection.empty()) {
         return;
@@ -166,7 +164,7 @@ void MeshPropertyView::handleEdgeSharpChange(bool sharp) {
         return;
     }
     auto meshEditState = *_meshEditState;
-    auto& mesh = *meshEditState->mesh();
+    auto &mesh = *meshEditState->mesh();
     auto edges = mesh.selectedEdges() | ranges::to_vector;
     if (edges.empty()) {
         return;
@@ -183,7 +181,7 @@ void MeshPropertyView::handleEdgeCreaseChange(double crease) {
         return;
     }
     auto meshEditState = *_meshEditState;
-    auto& mesh = *meshEditState->mesh();
+    auto &mesh = *meshEditState->mesh();
     auto edges = mesh.selectedEdges() | ranges::to_vector;
     if (edges.empty()) {
         return;

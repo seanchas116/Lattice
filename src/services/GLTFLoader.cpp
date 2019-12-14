@@ -1,9 +1,9 @@
 #include "GLTFLoader.hpp"
-#include "../mesh/Mesh.hpp"
-#include "../document/MeshObject.hpp"
 #include "../document/Document.hpp"
 #include "../document/ImageManager.hpp"
+#include "../document/MeshObject.hpp"
 #include "../support/Debug.hpp"
+#include <meshlib/Mesh.hpp>
 #include <tinygltf/tiny_gltf.h>
 
 using namespace glm;
@@ -17,5 +17,5 @@ std::vector<SP<Document::MeshObject>> GLTFLoader::load(const SP<Document::Docume
     return {};
 }
 
-}
+} // namespace Services
 } // namespace Lattice

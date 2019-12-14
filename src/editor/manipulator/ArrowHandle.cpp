@@ -1,18 +1,18 @@
 #include "ArrowHandle.hpp"
-#include "Constants.hpp"
-#include "Coordinates.hpp"
-#include "../MeshVAOGenerator.hpp"
 #include "../../draw/Operations.hpp"
-#include "../../mesh/Mesh.hpp"
-#include "../../mesh/builder/ConeBuilder.hpp"
-#include "../../mesh/builder/CubeBuilder.hpp"
-#include "../../mesh/builder/CylinderBuilder.hpp"
 #include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
 #include "../../support/Debug.hpp"
-#include "../../support/Ray.hpp"
 #include "../../support/Distance.hpp"
+#include "../../support/Ray.hpp"
+#include "../MeshVAOGenerator.hpp"
+#include "Constants.hpp"
+#include "Coordinates.hpp"
 #include <QMouseEvent>
+#include <meshlib/Mesh.hpp>
+#include <meshlib/builder/ConeBuilder.hpp>
+#include <meshlib/builder/CubeBuilder.hpp>
+#include <meshlib/builder/CylinderBuilder.hpp>
 
 using namespace glm;
 
@@ -20,18 +20,16 @@ namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
-ArrowHandle::ArrowHandle(int axis, HandleType handleType) :
-    _axis(axis),
-    _handleType(handleType),
-    _handleVAO(createHandleVAO()),
-    _bodyVAO(createBodyVAO(_length)),
-    _bodyPickVAO(createBodyPickVAO(_length))
-{
+ArrowHandle::ArrowHandle(int axis, HandleType handleType) : _axis(axis),
+                                                            _handleType(handleType),
+                                                            _handleVAO(createHandleVAO()),
+                                                            _bodyVAO(createBodyVAO(_length)),
+                                                            _bodyPickVAO(createBodyPickVAO(_length)) {
 }
 
 void ArrowHandle::draw(const Viewport::DrawEvent &event) {
     Coordinates coordinates(event.camera, _targetPosition);
-    if (!coordinates.isInViewport){
+    if (!coordinates.isInViewport) {
         return;
     }
 
@@ -42,7 +40,7 @@ void ArrowHandle::draw(const Viewport::DrawEvent &event) {
 
 void ArrowHandle::drawHitArea(const Viewport::DrawEvent &event) {
     Coordinates coordinates(event.camera, _targetPosition);
-    if (!coordinates.isInViewport){
+    if (!coordinates.isInViewport) {
         return;
     }
 
@@ -126,8 +124,8 @@ SP<GL::VAO> ArrowHandle::createHandleVAO() {
         mesh = builder.build();
     } else {
         Mesh::CubeBuilder builder;
-        builder.minPos = vec3(-Constants::scaleHandleSize*0.5);
-        builder.maxPos = vec3(Constants::scaleHandleSize*0.5);
+        builder.minPos = vec3(-Constants::scaleHandleSize * 0.5);
+        builder.maxPos = vec3(Constants::scaleHandleSize * 0.5);
         mesh = builder.build();
     }
     return MeshVAOGenerator(mesh).generateFaceVAOs().at(material);
@@ -152,6 +150,6 @@ SP<GL::VAO> ArrowHandle::createBodyPickVAO(double length) {
     return MeshVAOGenerator(builder.build()).generateFaceVAOs().at(builder.material);
 }
 
-}
+} // namespace Manipulator
 } // namespace Editor
 } // namespace Lattice

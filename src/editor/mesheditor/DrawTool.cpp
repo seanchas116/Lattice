@@ -1,11 +1,11 @@
 #include "DrawTool.hpp"
 #include "../../document/Document.hpp"
 #include "../../document/History.hpp"
-#include "../../support/Distance.hpp"
 #include "../../support/Debug.hpp"
-#include "../../mesh/algorithm/CutEdge.hpp"
-#include <range/v3/algorithm/find.hpp>
+#include "../../support/Distance.hpp"
 #include <QKeyEvent>
+#include <meshlib/algorithm/CutEdge.hpp>
+#include <range/v3/algorithm/find.hpp>
 
 using namespace glm;
 
@@ -18,13 +18,13 @@ Tool::HitTestExclusion DrawTool::hitTestExclusion() const {
         return {};
     }
     auto uvPoint = *_previewUVPoint;
-    auto& mesh = *this->mesh();
+    auto &mesh = *this->mesh();
     std::vector<Mesh::EdgeHandle> edges = mesh.edges(mesh.vertex(uvPoint)) | ranges::to_vector;
     return {{mesh.vertex(uvPoint)}, edges, {}};
 }
 
 void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
-    auto& mesh = *this->mesh();
+    auto &mesh = *this->mesh();
     auto modelMatrix = object()->location().matrixToWorld();
 
     if (target.vertex) {
@@ -53,7 +53,7 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
             _previewUVPoint = std::nullopt;
 
             mesh.deselectAll();
-            for (auto& p : points) {
+            for (auto &p : points) {
                 mesh.setSelected(mesh.vertex(p), true);
             }
             meshEditState()->commitMeshChanged(tr("Draw"));
@@ -73,7 +73,7 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
         }
 
         auto edge = *target.edge;
-        Ray<double> edgeRay = mesh.ray(edge);
+        auto edgeRay = Ray<double>::fromPoints(mesh.positions(edge));
         Ray<double> mouseRay = event.camera.modelMouseRay(modelMatrix, event.viewportPos);
         RayRayDistanceSolver distanceSolver(edgeRay, mouseRay);
         auto vertex = Mesh::cutEdge(mesh, edge, distanceSolver.t0);
@@ -120,7 +120,7 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
 void DrawTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
     Q_UNUSED(target);
 
-    auto& mesh = *this->mesh();
+    auto &mesh = *this->mesh();
     auto modelMatrix = object()->location().matrixToWorld();
 
     if (!_previewUVPoint) {
@@ -135,7 +135,7 @@ void DrawTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::Mo
         pos = mesh.position(snapVertex);
     } else if (target.edge) {
         auto snapEdge = *target.edge;
-        Ray<double> edgeRay = mesh.ray(snapEdge);
+        auto edgeRay = Ray<double>::fromPoints(mesh.positions(snapEdge));
         Ray<double> mouseRay = event.camera.modelMouseRay(modelMatrix, event.viewportPos);
         RayRayDistanceSolver distanceSolver(edgeRay, mouseRay);
         pos = edgeRay.at(distanceSolver.t0);
@@ -153,11 +153,12 @@ void DrawTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport::Mo
 }
 
 void DrawTool::mouseReleaseTool(const Tool::EventTarget &target, const Viewport::MouseEvent &event) {
-    Q_UNUSED(target); Q_UNUSED(event);
+    Q_UNUSED(target);
+    Q_UNUSED(event);
 }
 
 void DrawTool::keyPressTool(QKeyEvent *event) {
-    auto& mesh = *this->mesh();
+    auto &mesh = *this->mesh();
 
     if (event->key() == Qt::Key_Escape || event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) {
         if (_previewUVPoint) {

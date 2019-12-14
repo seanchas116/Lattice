@@ -1,5 +1,5 @@
 #include <catch2/catch.hpp>
-#include "../../src/mesh/Mesh.hpp"
+#include <meshlib/Mesh.hpp>
 
 using namespace Lattice;
 using namespace glm;

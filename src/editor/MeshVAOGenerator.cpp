@@ -1,14 +1,14 @@
 #include "MeshVAOGenerator.hpp"
-#include "../mesh/Mesh.hpp"
-#include "../mesh/algorithm/SplitSharpEdges.hpp"
 #include "../document/MeshObject.hpp"
 #include "../gl/VAO.hpp"
 #include "../gl/VertexBuffer.hpp"
-#include <opensubdiv/far/topologyDescriptor.h>
-#include <opensubdiv/far/primvarRefiner.h>
-#include <opensubdiv/far/patchTableFactory.h>
+#include <meshlib/Mesh.hpp>
+#include <meshlib/algorithm/SplitSharpEdges.hpp>
 #include <opensubdiv/far/patchMap.h>
+#include <opensubdiv/far/patchTableFactory.h>
+#include <opensubdiv/far/primvarRefiner.h>
 #include <opensubdiv/far/ptexIndices.h>
+#include <opensubdiv/far/topologyDescriptor.h>
 #include <range/v3/algorithm/copy.hpp>
 
 using namespace glm;
@@ -16,10 +16,8 @@ using namespace glm;
 namespace Lattice {
 namespace Editor {
 
-MeshVAOGenerator::MeshVAOGenerator(const Mesh::Mesh &mesh) :
-    _mesh(mesh),
-    _vertexEdgeVertexBuffer(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>())
-{
+MeshVAOGenerator::MeshVAOGenerator(const Mesh::Mesh &mesh) : _mesh(mesh),
+                                                             _vertexEdgeVertexBuffer(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()) {
     std::vector<Draw::PointLineVertex> vertexAttributes;
     for (auto vertex : mesh.vertices()) {
         Draw::PointLineVertex vertexAttribute = {
@@ -79,8 +77,8 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> MeshVAOGenerator::generate
     std::unordered_map<Mesh::MaterialHandle, std::vector<GL::IndexBuffer::Triangle>> trianglesMap;
 
     for (auto face : mesh.faces()) {
-        auto& triangles = trianglesMap[mesh.material(face)];
-        auto& uvPoints = mesh.uvPoints(face);
+        auto &triangles = trianglesMap[mesh.material(face)];
+        auto &uvPoints = mesh.uvPoints(face);
 
         auto i0 = uint32_t(uvPoints[0].index);
         for (uint32_t i = 2; i < uvPoints.size(); ++i) {
@@ -104,7 +102,7 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> MeshVAOGenerator::generate
     return vaos;
 }
 
-std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generateSubdivFaceVAOs(int segmentCount) const {
+std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> MeshVAOGenerator::generateSubdivFaceVAOs(int segmentCount) const {
     using namespace OpenSubdiv;
 
     struct Vertex {
@@ -112,11 +110,11 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
         Vertex() {}
         Vertex(glm::vec3 point) : point(point) {}
 
-        void Clear(void* = nullptr) {
+        void Clear(void * = nullptr) {
             point = glm::vec3(0);
         }
 
-        void AddWithWeight(Vertex const & src, float weight) {
+        void AddWithWeight(Vertex const &src, float weight) {
             point += weight * src.point;
         }
 
@@ -128,11 +126,11 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
         UV() {}
         UV(glm::vec2 point) : point(point) {}
 
-        void Clear(void* = nullptr) {
+        void Clear(void * = nullptr) {
             point = glm::vec2(0);
         }
 
-        void AddWithWeight(UV const & src, float weight) {
+        void AddWithWeight(UV const &src, float weight) {
             point += weight * src.point;
         }
 
@@ -152,7 +150,7 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
     std::vector<int> faceUVs;
     vertsPerFace.reserve(mesh.allFaceCount());
     for (auto f : mesh.allFaces()) {
-        auto& uvPoints = mesh.uvPoints(f);
+        auto &uvPoints = mesh.uvPoints(f);
         vertsPerFace.push_back(int(uvPoints.size()));
         for (auto uv : uvPoints) {
             faceVerts.push_back(mesh.vertex(uv).index);
@@ -196,9 +194,7 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
     std::unique_ptr<Far::TopologyRefiner> refiner(Far::TopologyRefinerFactory<Far::TopologyDescriptor>::Create(
         desc,
         Far::TopologyRefinerFactory<Far::TopologyDescriptor>::Options(
-            OpenSubdiv::Sdc::SCHEME_CATMARK, options
-        )
-    ));
+            OpenSubdiv::Sdc::SCHEME_CATMARK, options)));
 
     // Adaptively refine the topology with an isolation level capped at 3
     // because the sharpest crease in the shape is 3.0f (in g_creaseweights[])
@@ -239,17 +235,17 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
     // Interpolate vertex primvar data : they are the control vertices
     // of the limit patches (see far_tutorial_0 for details)
     {
-        Vertex* src = &verts[0];
+        Vertex *src = &verts[0];
         for (int level = 1; level < nRefinedLevels; ++level) {
-            Vertex* dst = src + refiner->GetLevel(level-1).GetNumVertices();
+            Vertex *dst = src + refiner->GetLevel(level - 1).GetNumVertices();
             Far::PrimvarRefiner(*refiner).Interpolate(level, src, dst);
             src = dst;
         }
     }
     {
-        UV* src = &uvs[0];
+        UV *src = &uvs[0];
         for (int level = 1; level < nRefinedLevels; ++level) {
-            UV* dst = src + refiner->GetLevel(level-1).GetNumFVarValues(0);
+            UV *dst = src + refiner->GetLevel(level - 1).GetNumFVarValues(0);
             Far::PrimvarRefiner(*refiner).InterpolateFaceVarying(level, src, dst);
             src = dst;
         }
@@ -280,7 +276,7 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
                 glm::vec2 st = glm::vec2(sIndex, tIndex) / float(segmentCount);
 
                 // Locate the patch corresponding to the face ptex idx and (s,t)
-                Far::PatchTable::PatchHandle const * handle =
+                Far::PatchTable::PatchHandle const *handle =
                     patchmap.FindPatch(faceIndex, st.s, st.t);
                 assert(handle);
 
@@ -296,7 +292,7 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
                     glm::vec3 ds(0);
                     glm::vec3 dt(0);
 
-                    for (int cv=0; cv < cvs.size(); ++cv) {
+                    for (int cv = 0; cv < cvs.size(); ++cv) {
                         auto src = verts[cvs[cv]].point;
                         p += pWeights[cv] * src;
                         ds += dsWeights[cv] * src;
@@ -316,7 +312,7 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
                     glm::vec2 ds(0);
                     glm::vec2 dt(0);
 
-                    for (int cv=0; cv < cvs.size(); ++cv) {
+                    for (int cv = 0; cv < cvs.size(); ++cv) {
                         auto src = uvs[cvs[cv]].point;
                         p += pWeights[cv] * src;
                         ds += dsWeights[cv] * src;
@@ -356,5 +352,5 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO> > MeshVAOGenerator::generat
     return {{Mesh::MaterialHandle(), vao}}; // TODO: support multiple materials
 }
 
-} // namespace Viewport
+} // namespace Editor
 } // namespace Lattice

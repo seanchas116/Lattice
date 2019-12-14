@@ -1,10 +1,10 @@
 #include "ObjLoader.hpp"
-#include "../mesh/Mesh.hpp"
-#include "../document/MeshObject.hpp"
 #include "../document/Document.hpp"
 #include "../document/ImageManager.hpp"
+#include "../document/MeshObject.hpp"
 #include "../support/Debug.hpp"
 #include "../support/Hash.hpp"
+#include <meshlib/Mesh.hpp>
 #include <tiny_obj_loader.h>
 
 using namespace glm;
@@ -35,7 +35,7 @@ std::vector<SP<Document::MeshObject>> ObjLoader::load(const SP<Document::Documen
 
     std::vector<SP<Document::MeshObject>> objects;
 
-    auto loadImage = [&](const std::string& name) -> Opt<SP<Document::Image>> {
+    auto loadImage = [&](const std::string &name) -> Opt<SP<Document::Image>> {
         if (name.empty()) {
             return {};
         }
@@ -43,7 +43,7 @@ std::vector<SP<Document::MeshObject>> ObjLoader::load(const SP<Document::Documen
         return document->imageManager()->openImage(path.string());
     };
 
-    for (auto& objShape : objShapes) {
+    for (auto &objShape : objShapes) {
         auto object = makeShared<Document::MeshObject>();
         object->setName(objShape.name);
 
@@ -55,7 +55,7 @@ std::vector<SP<Document::MeshObject>> ObjLoader::load(const SP<Document::Documen
         std::vector<Document::Material> materials;
 
         // Add materials
-        for (auto& objMaterial : objMaterials) {
+        for (auto &objMaterial : objMaterials) {
             vec3 diffuse(objMaterial.diffuse[0], objMaterial.diffuse[1], objMaterial.diffuse[2]);
             auto diffuseImage = loadImage(objMaterial.diffuse_texname);
 
@@ -69,9 +69,9 @@ std::vector<SP<Document::MeshObject>> ObjLoader::load(const SP<Document::Documen
         object->setMaterials(materials);
 
         for (size_t v = 0; v < attrib.vertices.size() / 3; ++v) {
-            tinyobj::real_t vx = attrib.vertices[3*v+0];
-            tinyobj::real_t vy = attrib.vertices[3*v+1];
-            tinyobj::real_t vz = attrib.vertices[3*v+2];
+            tinyobj::real_t vx = attrib.vertices[3 * v + 0];
+            tinyobj::real_t vy = attrib.vertices[3 * v + 1];
+            tinyobj::real_t vz = attrib.vertices[3 * v + 2];
             mesh.addVertex(glm::vec3(vx, vy, vz));
         }
 
@@ -93,8 +93,8 @@ std::vector<SP<Document::MeshObject>> ObjLoader::load(const SP<Document::Documen
                     if (uvPointIt != uvPointForIndices.end()) {
                         return uvPointIt->second;
                     }
-                    tinyobj::real_t tx = attrib.texcoords[2*idx.texcoord_index+0];
-                    tinyobj::real_t ty = attrib.texcoords[2*idx.texcoord_index+1];
+                    tinyobj::real_t tx = attrib.texcoords[2 * idx.texcoord_index + 0];
+                    tinyobj::real_t ty = attrib.texcoords[2 * idx.texcoord_index + 1];
                     glm::vec2 uv(tx, ty);
                     auto uvPoint = mesh.addUVPoint(vertex, uv);
 
@@ -121,5 +121,5 @@ std::vector<SP<Document::MeshObject>> ObjLoader::load(const SP<Document::Documen
     return objects;
 }
 
-}
+} // namespace Services
 } // namespace Lattice

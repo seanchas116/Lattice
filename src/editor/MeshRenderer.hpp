@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../support/Shorthands.hpp"
 #include "../support/Box.hpp"
 #include "../support/Location.hpp"
+#include "../support/Shorthands.hpp"
 #include "../viewport/Renderable.hpp"
-#include "../mesh/Handle.hpp"
 #include <glm/glm.hpp>
+#include <meshlib/Handle.hpp>
 #include <unordered_map>
 
 class QMouseEvent;
@@ -32,8 +32,8 @@ class MeshPicker;
 
 class MeshRenderer final : public Viewport::Renderable {
     Q_OBJECT
-public:
-    MeshRenderer(const SP<State::AppState>& appState, const SP<Document::MeshObject>& object);
+  public:
+    MeshRenderer(const SP<State::AppState> &appState, const SP<Document::MeshObject> &object);
 
     void draw(const Viewport::DrawEvent &event) override;
     void drawHitArea(const Viewport::DrawEvent &event) override;
@@ -43,7 +43,7 @@ public:
     void mouseReleaseEvent(const Viewport::MouseEvent &event) override;
     void mouseDoubleClickEvent(const Viewport::MouseEvent &event) override;
 
-private:
+  private:
     void handleMeshUpdated();
     void updateVAOs();
 
@@ -60,5 +60,5 @@ private:
     bool _dragStarted = false;
 };
 
-}
-}
+} // namespace Editor
+} // namespace Lattice

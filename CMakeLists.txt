@@ -35,12 +35,14 @@ include_directories("vendor/json/include")
 include_directories("vendor/tinyobjloader")
 include_directories("vendor/Catch2/single_include")
 include_directories("vendor/OpenSubdiv")
+include_directories("vendor/meshlib")
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/_cmrc/include)
 
 set(LIBRARIES Qt5::Widgets Boost::filesystem)
 
 file(GLOB_RECURSE SOURCES
     "src/*.cpp" "src/*.hpp"
+    "vendor/meshlib/*.cpp" "vendor/meshlib/*.hpp"
     "vendor/tinyobjloader/tiny_obj_loader.cc"
     "vendor/OpenSubdiv/opensubdiv/far/*.cpp" "vendor/OpenSubdiv/opensubdiv/sdc/*.cpp" "vendor/OpenSubdiv/opensubdiv/vtr/*.cpp")
 

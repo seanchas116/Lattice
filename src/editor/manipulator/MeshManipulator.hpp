@@ -1,7 +1,7 @@
 #pragma once
-#include "Manipulator.hpp"
 #include "../../support/Location.hpp"
-#include "../../mesh/Handle.hpp"
+#include "Manipulator.hpp"
+#include <meshlib/Handle.hpp>
 
 namespace Lattice {
 
@@ -14,20 +14,19 @@ namespace Manipulator {
 
 class MeshManipulator : public Manipulator {
     Q_OBJECT
-public:
-    MeshManipulator(const glm::dmat4& objectToWorldMatrix, const SP<Mesh::Mesh>& mesh);
+  public:
+    MeshManipulator(const glm::dmat4 &objectToWorldMatrix, const SP<Mesh::Mesh> &mesh);
 
     void updatePosition();
 
-signals:
+  signals:
     void meshChanged();
     void meshChangeFinished();
 
-private:
+  private:
     void handleOnDragBegin(ValueType type, glm::dvec3 values);
     void handleOnDragMove(ValueType type, glm::dvec3 values);
     void handleOnDragEnd(ValueType type);
-
 
     glm::dmat4 _objectToWorld;
     glm::dmat4 _worldToObject;
@@ -37,6 +36,6 @@ private:
     glm::dvec3 _initialValues;
 };
 
-}
+} // namespace Manipulator
 } // namespace Editor
 } // namespace Lattice
