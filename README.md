@@ -1,5 +1,5 @@
 # Lattice
-3D modeling tool
 
-[Trello](https://trello.com/b/4GvzxCop/lattice)
+[WIP] 3D modeling tool
 
+![screenshot](screenshot.png)
