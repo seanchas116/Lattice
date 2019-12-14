@@ -8,7 +8,7 @@
 
 ### Prerequisites
 
-* Install [Qt](https://www.qt.io/download) (open source edition)
+* Install [Qt](https://www.qt.io/download) 5.12 (open source edition)
 
 * Install homebrew packages
 
