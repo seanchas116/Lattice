@@ -45,7 +45,7 @@ void MeshManipulator::handleOnDragBegin(ValueType type, dvec3 values) {
     auto &mesh = *_mesh;
 
     auto selectedVertices = mesh.selectedVertices() | ranges::to_vector;
-    auto medianPos = medianPosition(selectedVertices | ranges::view::transform([&](auto v) { return mesh.position(v); }));
+    auto medianPos = medianPosition(selectedVertices | ranges::views::transform([&](auto v) { return mesh.position(v); }));
 
     for (auto v : selectedVertices) {
         _initialPositions[v] = (_objectToWorld * dvec4(mesh.position(v), 1)).xyz;
@@ -102,7 +102,7 @@ void MeshManipulator::handleOnDragEnd(ValueType type) {
 void MeshManipulator::updatePosition() {
     auto &mesh = *_mesh;
     auto selectedVertices = mesh.selectedVertices() | ranges::to_vector;
-    auto medianPos = medianPosition(selectedVertices | ranges::view::transform([&](auto v) { return mesh.position(v); }));
+    auto medianPos = medianPosition(selectedVertices | ranges::views::transform([&](auto v) { return mesh.position(v); }));
     setTargetPosition((_objectToWorld * dvec4(medianPos, 1)).xyz);
 }
 

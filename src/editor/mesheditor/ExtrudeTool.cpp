@@ -24,7 +24,7 @@ void ExtrudeTool::mousePressTool(const Tool::EventTarget &target, const Viewport
     if (clickedVertices.empty()) {
         return;
     }
-    auto vertices = mesh.selectedVertices() | ranges::to_<std::unordered_set<meshlib::VertexHandle>>();
+    auto vertices = mesh.selectedVertices() | ranges::to<std::unordered_set<meshlib::VertexHandle>>();
 
     if (!includes(vertices, clickedVertices)) {
         vertices = clickedVertices;

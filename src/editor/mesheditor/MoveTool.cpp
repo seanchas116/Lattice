@@ -34,7 +34,7 @@ void MoveTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
         return;
     }
 
-    auto oldSelection = mesh.selectedVertices() | ranges::to_<std::unordered_set<meshlib::VertexHandle>>();
+    auto oldSelection = mesh.selectedVertices() | ranges::to<std::unordered_set<meshlib::VertexHandle>>();
 
     bool alreadySelected = !clickedVertices.empty() && includes(oldSelection, clickedVertices);
 
