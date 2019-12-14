@@ -22,3 +22,6 @@
 [submodule "vendor/tinygltf"]
 	path = vendor/tinygltf
 	url = https://github.com/syoyo/tinygltf.git
+[submodule "vendor/meshlib"]
+	path = vendor/meshlib
+	url = git@github.com:seanchas116/meshlib.git
