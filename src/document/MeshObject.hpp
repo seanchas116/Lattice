@@ -3,11 +3,11 @@
 #include "Object.hpp"
 #include <glm/glm.hpp>
 
-namespace Lattice {
-
-namespace Mesh {
+namespace meshlib {
 class Mesh;
 }
+
+namespace Lattice {
 
 namespace Document {
 
@@ -40,7 +40,7 @@ class MeshObject final : public Object {
     MeshObject();
     ~MeshObject() override;
 
-    void setMesh(Mesh::Mesh mesh);
+    void setMesh(meshlib::Mesh mesh);
     auto &mesh() const { return *_mesh; }
 
     void setMaterials(std::vector<Material> materials);
@@ -57,18 +57,18 @@ class MeshObject final : public Object {
     void fromJSON(const nlohmann::json &json) override;
 
   signals:
-    void meshChanged(const Mesh::Mesh &mesh);
+    void meshChanged(const meshlib::Mesh &mesh);
     void materialsChanged(const std::vector<Material> &materials);
     void subdivSettingsChanged(const SubdivSettings &settings);
     void mirrorSettingsChanged(const MirrorSettings &settings);
 
   private:
-    void setMeshInternal(Mesh::Mesh mesh);
+    void setMeshInternal(meshlib::Mesh mesh);
     void setMaterialsInternal(std::vector<Material> materials);
     void setSubdivSettingsInternal(SubdivSettings settings);
     void setMirrorSettingsInternal(MirrorSettings settings);
 
-    std::unique_ptr<Mesh::Mesh> _mesh;
+    std::unique_ptr<meshlib::Mesh> _mesh;
     std::vector<Material> _materials;
     SubdivSettings _subdivSettings;
     MirrorSettings _mirrorSettings;

@@ -1,11 +1,11 @@
 #include <catch2/catch.hpp>
 #include <meshlib/Mesh.hpp>
 
-using namespace Lattice;
+using namespace meshlib;
 using namespace glm;
 
-TEST_CASE("Mesh::Mesh") {
-    Mesh::Mesh mesh;
+TEST_CASE("meshlib::Mesh") {
+    meshlib::Mesh mesh;
     SECTION("addVertex") {
         SECTION("adds verted at specified position") {
             vec3 p(1, 2, 3);

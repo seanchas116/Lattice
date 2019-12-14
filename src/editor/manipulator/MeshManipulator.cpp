@@ -28,9 +28,9 @@ glm::vec3 medianPosition(const TPositions &positions) {
 
 } // namespace
 
-MeshManipulator::MeshManipulator(const glm::dmat4 &objectToWorldMatrix, const SP<Mesh::Mesh> &mesh) : _objectToWorld(objectToWorldMatrix),
-                                                                                                      _worldToObject(inverse(objectToWorldMatrix)),
-                                                                                                      _mesh(mesh) {
+MeshManipulator::MeshManipulator(const glm::dmat4 &objectToWorldMatrix, const SP<meshlib::Mesh> &mesh) : _objectToWorld(objectToWorldMatrix),
+                                                                                                         _worldToObject(inverse(objectToWorldMatrix)),
+                                                                                                         _mesh(mesh) {
     updatePosition();
 
     connect(this, &Manipulator::onDragBegin, this, &MeshManipulator::handleOnDragBegin);

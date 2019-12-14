@@ -16,8 +16,8 @@ using namespace glm;
 namespace Lattice {
 namespace Editor {
 
-MeshVAOGenerator::MeshVAOGenerator(const Mesh::Mesh &mesh) : _mesh(mesh),
-                                                             _vertexEdgeVertexBuffer(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()) {
+MeshVAOGenerator::MeshVAOGenerator(const meshlib::Mesh &mesh) : _mesh(mesh),
+                                                                _vertexEdgeVertexBuffer(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()) {
     std::vector<Draw::PointLineVertex> vertexAttributes;
     for (auto vertex : mesh.vertices()) {
         Draw::PointLineVertex vertexAttribute = {
@@ -47,9 +47,9 @@ SP<GL::VAO> MeshVAOGenerator::generateEdgeVAO() const {
     return edgeVAO;
 }
 
-std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() const {
+std::unordered_map<meshlib::MaterialHandle, SP<GL::VAO>> MeshVAOGenerator::generateFaceVAOs() const {
     auto mesh = _mesh;
-    Mesh::splitSharpEdges(mesh);
+    meshlib::splitSharpEdges(mesh);
 
     // calculate normals
     std::vector<glm::vec3> faceNormals(mesh.allFaceCount());
@@ -74,7 +74,7 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> MeshVAOGenerator::generate
         uvPointAttributes[uv.index].normal = vertexNormals[v.index];
     }
 
-    std::unordered_map<Mesh::MaterialHandle, std::vector<GL::IndexBuffer::Triangle>> trianglesMap;
+    std::unordered_map<meshlib::MaterialHandle, std::vector<GL::IndexBuffer::Triangle>> trianglesMap;
 
     for (auto face : mesh.faces()) {
         auto &triangles = trianglesMap[mesh.material(face)];
@@ -91,7 +91,7 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> MeshVAOGenerator::generate
     auto vbo = makeShared<GL::VertexBuffer<Draw::Vertex>>();
     vbo->setVertices(uvPointAttributes);
 
-    std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> vaos;
+    std::unordered_map<meshlib::MaterialHandle, SP<GL::VAO>> vaos;
     vaos.reserve(trianglesMap.size());
     for (auto [material, triangles] : trianglesMap) {
         auto indexBuffer = makeShared<GL::IndexBuffer>();
@@ -102,7 +102,7 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> MeshVAOGenerator::generate
     return vaos;
 }
 
-std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> MeshVAOGenerator::generateSubdivFaceVAOs(int segmentCount) const {
+std::unordered_map<meshlib::MaterialHandle, SP<GL::VAO>> MeshVAOGenerator::generateSubdivFaceVAOs(int segmentCount) const {
     using namespace OpenSubdiv;
 
     struct Vertex {
@@ -138,7 +138,7 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> MeshVAOGenerator::generate
     };
 
     auto mesh = _mesh;
-    Mesh::splitSharpEdges(mesh);
+    meshlib::splitSharpEdges(mesh);
     mesh = mesh.collectGarbage();
 
     if (mesh.allFaceCount() == 0) {
@@ -349,7 +349,7 @@ std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> MeshVAOGenerator::generate
     ibo->setTriangles(triangles);
     auto vao = makeShared<GL::VAO>(vbo, ibo);
 
-    return {{Mesh::MaterialHandle(), vao}}; // TODO: support multiple materials
+    return {{meshlib::MaterialHandle(), vao}}; // TODO: support multiple materials
 }
 
 } // namespace Editor

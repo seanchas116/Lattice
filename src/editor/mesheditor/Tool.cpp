@@ -5,8 +5,8 @@ namespace Lattice {
 namespace Editor {
 namespace MeshEditor {
 
-std::unordered_set<Mesh::VertexHandle> Tool::EventTarget::vertices(const Mesh::Mesh &mesh) const {
-    std::unordered_set<Mesh::VertexHandle> vertices;
+std::unordered_set<meshlib::VertexHandle> Tool::EventTarget::vertices(const meshlib::Mesh &mesh) const {
+    std::unordered_set<meshlib::VertexHandle> vertices;
     if (vertex) {
         vertices.insert(*vertex);
     }

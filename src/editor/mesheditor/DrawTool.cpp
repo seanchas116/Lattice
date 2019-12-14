@@ -19,7 +19,7 @@ Tool::HitTestExclusion DrawTool::hitTestExclusion() const {
     }
     auto uvPoint = *_previewUVPoint;
     auto &mesh = *this->mesh();
-    std::vector<Mesh::EdgeHandle> edges = mesh.edges(mesh.vertex(uvPoint)) | ranges::to_vector;
+    std::vector<meshlib::EdgeHandle> edges = mesh.edges(mesh.vertex(uvPoint)) | ranges::to_vector;
     return {{mesh.vertex(uvPoint)}, edges, {}};
 }
 
@@ -37,8 +37,8 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
         auto closingPointIt = ranges::find(_drawnUVPoints, uvPoint);
         if (closingPointIt != _drawnUVPoints.end()) {
             // create face
-            std::vector<Mesh::UVPointHandle> points(closingPointIt, _drawnUVPoints.end());
-            auto face = mesh.addFace(points, Mesh::MaterialHandle()); // TODO: use better material
+            std::vector<meshlib::UVPointHandle> points(closingPointIt, _drawnUVPoints.end());
+            auto face = mesh.addFace(points, meshlib::MaterialHandle()); // TODO: use better material
 
             Q_UNUSED(face);
             // TODO: flip face (or use two-sided faces)
@@ -76,7 +76,7 @@ void DrawTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
         auto edgeRay = Ray<double>::fromPoints(mesh.positions(edge));
         Ray<double> mouseRay = event.camera.modelMouseRay(modelMatrix, event.viewportPos);
         RayRayDistanceSolver distanceSolver(edgeRay, mouseRay);
-        auto vertex = Mesh::cutEdge(mesh, edge, distanceSolver.t0);
+        auto vertex = meshlib::cutEdge(mesh, edge, distanceSolver.t0);
 
         if (_drawnUVPoints.size() >= 1) {
             auto prevUVPoint = _drawnUVPoints[_drawnUVPoints.size() - 1];

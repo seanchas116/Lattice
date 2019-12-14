@@ -96,13 +96,13 @@ void RotateHandle::contextMenuEvent(const Viewport::MouseEvent &event) {
     emit onContextMenu(event);
 }
 
-SP<Mesh::Mesh> RotateHandle::createMesh() {
-    Mesh::CircleBuilder builder;
+SP<meshlib::Mesh> RotateHandle::createMesh() {
+    meshlib::CircleBuilder builder;
     builder.center = glm::vec3(0);
     builder.radius = 2.f;
     builder.segmentCount = 64;
     builder.normalAxis = 0;
-    return makeShared<Mesh::Mesh>(builder.build());
+    return makeShared<meshlib::Mesh>(builder.build());
 }
 
 } // namespace Manipulator

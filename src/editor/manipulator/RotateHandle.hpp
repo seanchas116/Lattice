@@ -1,11 +1,11 @@
 #pragma once
 #include "../../viewport/Renderable.hpp"
 
-namespace Lattice {
-
-namespace Mesh {
+namespace meshlib {
 class Mesh;
 }
+
+namespace Lattice {
 
 namespace GL {
 class VAO;
@@ -39,11 +39,11 @@ class RotateHandle : public Viewport::Renderable {
     void onContextMenu(const Viewport::MouseEvent &event);
 
   private:
-    SP<Mesh::Mesh> createMesh();
+    SP<meshlib::Mesh> createMesh();
 
     int _axis;
     glm::dvec3 _targetPosition{0};
-    SP<Mesh::Mesh> _handleMesh;
+    SP<meshlib::Mesh> _handleMesh;
     SP<GL::VAO> _handleVAO;
     glm::dvec3 _initialTargetPosition{0};
     bool _dragged = false;

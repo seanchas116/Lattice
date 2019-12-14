@@ -24,7 +24,7 @@ void ExtrudeTool::mousePressTool(const Tool::EventTarget &target, const Viewport
     if (clickedVertices.empty()) {
         return;
     }
-    auto vertices = mesh.selectedVertices() | ranges::to_<std::unordered_set<Mesh::VertexHandle>>();
+    auto vertices = mesh.selectedVertices() | ranges::to_<std::unordered_set<meshlib::VertexHandle>>();
 
     if (!includes(vertices, clickedVertices)) {
         vertices = clickedVertices;
@@ -50,7 +50,7 @@ void ExtrudeTool::mouseMoveTool(const Tool::EventTarget &target, const Viewport:
             return;
         }
 
-        _newVertices = Mesh::extrude(mesh, _vertices);
+        _newVertices = meshlib::extrude(mesh, _vertices);
 
         auto faces = mesh.faces(_newVertices);
         if (faces.empty()) {

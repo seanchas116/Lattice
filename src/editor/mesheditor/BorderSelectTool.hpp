@@ -17,7 +17,7 @@ class BorderSelectTool : public Tool {
 
   private:
     struct VertexWithScreenPos {
-        Mesh::VertexHandle vertex;
+        meshlib::VertexHandle vertex;
         glm::dvec2 screenPos;
     };
 

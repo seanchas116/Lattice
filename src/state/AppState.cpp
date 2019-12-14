@@ -40,7 +40,7 @@ void AppState::addPlane() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Plane").toStdString());
 
-    Mesh::PlaneBuilder builder;
+    meshlib::PlaneBuilder builder;
     builder.center = vec3(0);
     builder.size = vec2(2);
     builder.normalAxis = 1;
@@ -56,7 +56,7 @@ void AppState::addCube() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Cube").toStdString());
 
-    Mesh::CubeBuilder builder;
+    meshlib::CubeBuilder builder;
     builder.minPos = vec3(-1);
     builder.maxPos = vec3(1);
     object->setMesh(builder.build());
@@ -71,7 +71,7 @@ void AppState::addCircle() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Circle").toStdString());
 
-    Mesh::CircleBuilder builder;
+    meshlib::CircleBuilder builder;
     builder.center = glm::vec3(0);
     builder.radius = 1.0;
     builder.segmentCount = 16;
@@ -88,7 +88,7 @@ void AppState::addSphere() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Sphere").toStdString());
 
-    Mesh::SphereBuilder builder;
+    meshlib::SphereBuilder builder;
     builder.center = vec3(0);
     builder.radius = 1;
     builder.segmentCount = 16;
@@ -106,7 +106,7 @@ void AppState::addCone() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Cone").toStdString());
 
-    Mesh::ConeBuilder builder;
+    meshlib::ConeBuilder builder;
     builder.center = vec3(0);
     builder.radius = 1.0;
     builder.height = 1.0;
@@ -124,7 +124,7 @@ void AppState::addCylinder() {
     auto object = makeShared<Document::MeshObject>();
     object->setName(tr("Cylinder").toStdString());
 
-    Mesh::CylinderBuilder builder;
+    meshlib::CylinderBuilder builder;
     builder.center = vec3(0);
     builder.radius = 1;
     builder.height = 1;

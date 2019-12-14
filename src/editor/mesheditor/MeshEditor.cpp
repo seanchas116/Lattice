@@ -84,11 +84,11 @@ Tool::EventTarget decodeColorToEventTarget(glm::vec4 color) {
     switch (value % 3) {
     default:
     case 0:
-        return {Mesh::VertexHandle(value / 3), {}, {}};
+        return {meshlib::VertexHandle(value / 3), {}, {}};
     case 1:
-        return {{}, Mesh::EdgeHandle(value / 3), {}};
+        return {{}, meshlib::EdgeHandle(value / 3), {}};
     case 2:
-        return {{}, {}, Mesh::FaceHandle(value / 3)};
+        return {{}, {}, meshlib::FaceHandle(value / 3)};
     }
 }
 

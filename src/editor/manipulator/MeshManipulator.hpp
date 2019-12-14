@@ -3,11 +3,11 @@
 #include "Manipulator.hpp"
 #include <meshlib/Handle.hpp>
 
-namespace Lattice {
-
-namespace Mesh {
+namespace meshlib {
 class Mesh;
 }
+
+namespace Lattice {
 
 namespace Editor {
 namespace Manipulator {
@@ -15,7 +15,7 @@ namespace Manipulator {
 class MeshManipulator : public Manipulator {
     Q_OBJECT
   public:
-    MeshManipulator(const glm::dmat4 &objectToWorldMatrix, const SP<Mesh::Mesh> &mesh);
+    MeshManipulator(const glm::dmat4 &objectToWorldMatrix, const SP<meshlib::Mesh> &mesh);
 
     void updatePosition();
 
@@ -30,8 +30,8 @@ class MeshManipulator : public Manipulator {
 
     glm::dmat4 _objectToWorld;
     glm::dmat4 _worldToObject;
-    SP<Mesh::Mesh> _mesh;
-    std::unordered_map<Mesh::VertexHandle, glm::dvec3> _initialPositions;
+    SP<meshlib::Mesh> _mesh;
+    std::unordered_map<meshlib::VertexHandle, glm::dvec3> _initialPositions;
     glm::dvec3 _initialMedianPos;
     glm::dvec3 _initialValues;
 };

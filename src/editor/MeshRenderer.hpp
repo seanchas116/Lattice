@@ -50,7 +50,7 @@ class MeshRenderer final : public Viewport::Renderable {
     SP<State::AppState> _appState;
     SP<Document::MeshObject> _object;
 
-    std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> _faceVAOs;
+    std::unordered_map<meshlib::MaterialHandle, SP<GL::VAO>> _faceVAOs;
     bool _isVAOsDirty = true;
 
     bool _dragged = false;

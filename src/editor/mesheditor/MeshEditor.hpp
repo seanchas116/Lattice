@@ -88,7 +88,7 @@ class MeshEditor final : public Viewport::Renderable, protected GL::ContextRecal
     SP<Manipulator::MeshManipulator> _manipulator;
 
     bool _isVAOsDirty = true;
-    std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> _finalShapeVAOs;
+    std::unordered_map<meshlib::MaterialHandle, SP<GL::VAO>> _finalShapeVAOs;
 
     SP<GL::IndexBuffer> _faceIBO;
     SP<GL::VertexBuffer<Draw::Vertex>> _faceVBO;

@@ -11,7 +11,7 @@ namespace Lattice {
 namespace State {
 
 MeshEditState::MeshEditState(const SP<Document::MeshObject> &targetObject) : _object(targetObject),
-                                                                             _mesh(makeShared<Mesh::Mesh>(targetObject->mesh())) {
+                                                                             _mesh(makeShared<meshlib::Mesh>(targetObject->mesh())) {
 
     connect(targetObject.get(), &Document::MeshObject::meshChanged, this, [this](auto &mesh) {
         *_mesh = mesh;
@@ -19,7 +19,7 @@ MeshEditState::MeshEditState(const SP<Document::MeshObject> &targetObject) : _ob
     });
 }
 
-void MeshEditState::setMesh(Mesh::Mesh mesh) {
+void MeshEditState::setMesh(meshlib::Mesh mesh) {
     *_mesh = std::move(mesh);
     emit meshChanged(*_mesh);
 }
@@ -84,8 +84,8 @@ void MeshEditState::invertSelection() {
     notifyMeshChanged();
 }
 
-void MeshEditState::selectLoop(Mesh::EdgeHandle edge) {
-    auto edges = Mesh::findLoop(*_mesh, edge);
+void MeshEditState::selectLoop(meshlib::EdgeHandle edge) {
+    auto edges = meshlib::findLoop(*_mesh, edge);
 
     _mesh->deselectAll();
     for (auto e : edges) {
@@ -97,7 +97,7 @@ void MeshEditState::selectLoop(Mesh::EdgeHandle edge) {
     notifyMeshChanged();
 }
 
-void MeshEditState::selectBelt(Mesh::EdgeHandle edge) {
+void MeshEditState::selectBelt(meshlib::EdgeHandle edge) {
     auto belt = findBelt(*_mesh, edge);
 
     _mesh->deselectAll();
@@ -110,7 +110,7 @@ void MeshEditState::selectBelt(Mesh::EdgeHandle edge) {
     notifyMeshChanged();
 }
 
-void MeshEditState::selectConnected(const std::vector<Mesh::VertexHandle> &vertices) {
+void MeshEditState::selectConnected(const std::vector<meshlib::VertexHandle> &vertices) {
     auto connected = findConnected(*_mesh, vertices);
 
     _mesh->deselectAll();
@@ -124,7 +124,7 @@ void MeshEditState::selectConnected(const std::vector<Mesh::VertexHandle> &verti
 void MeshEditState::flipFaces() {
     auto selectedFaces = _mesh->selectedFaces();
     for (auto &&face : selectedFaces) {
-        Mesh::flipFace(*_mesh, face);
+        meshlib::flipFace(*_mesh, face);
     }
 
     notifyMeshChanged();

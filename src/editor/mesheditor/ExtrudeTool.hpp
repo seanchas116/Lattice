@@ -17,8 +17,8 @@ class ExtrudeTool : public Tool {
 
   private:
     bool _dragStarted{false};
-    std::vector<Mesh::VertexHandle> _vertices;
-    std::vector<Mesh::VertexHandle> _newVertices;
+    std::vector<meshlib::VertexHandle> _vertices;
+    std::vector<meshlib::VertexHandle> _newVertices;
 
     glm::dvec3 _initWorldPos{0};
     glm::dvec2 _initViewportPos{0};

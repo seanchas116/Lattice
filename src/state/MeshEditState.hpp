@@ -15,7 +15,7 @@ class MeshEditState : public QObject {
     auto &object() const { return _object; }
 
     auto &mesh() const { return _mesh; }
-    void setMesh(Mesh::Mesh mesh);
+    void setMesh(meshlib::Mesh mesh);
 
     void notifyMeshChanged();
     void commitMeshChanged(const QString &changeTitle);
@@ -27,18 +27,18 @@ class MeshEditState : public QObject {
     void selectAll();
     void deselectAll();
     void invertSelection();
-    void selectLoop(Mesh::EdgeHandle edge);
-    void selectBelt(Mesh::EdgeHandle edge);
-    void selectConnected(const std::vector<Mesh::VertexHandle> &vertices);
+    void selectLoop(meshlib::EdgeHandle edge);
+    void selectBelt(meshlib::EdgeHandle edge);
+    void selectConnected(const std::vector<meshlib::VertexHandle> &vertices);
 
     void flipFaces();
 
   signals:
-    void meshChanged(const Mesh::Mesh &mesh);
+    void meshChanged(const meshlib::Mesh &mesh);
 
   private:
     SP<Document::MeshObject> _object;
-    SP<Mesh::Mesh> _mesh;
+    SP<meshlib::Mesh> _mesh;
 };
 
 } // namespace State

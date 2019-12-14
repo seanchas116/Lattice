@@ -47,10 +47,10 @@ std::vector<SP<Document::MeshObject>> ObjLoader::load(const SP<Document::Documen
         auto object = makeShared<Document::MeshObject>();
         object->setName(objShape.name);
 
-        Mesh::Mesh mesh;
+        meshlib::Mesh mesh;
 
         // TODO: use index_t as key
-        std::unordered_map<std::pair<int, int>, Mesh::UVPointHandle> uvPointForIndices;
+        std::unordered_map<std::pair<int, int>, meshlib::UVPointHandle> uvPointForIndices;
 
         std::vector<Document::Material> materials;
 
@@ -80,13 +80,13 @@ std::vector<SP<Document::MeshObject>> ObjLoader::load(const SP<Document::Documen
         for (size_t f = 0; f < objShape.mesh.num_face_vertices.size(); f++) {
             size_t fv = objShape.mesh.num_face_vertices[f];
 
-            std::vector<Mesh::UVPointHandle> uvPoints;
+            std::vector<meshlib::UVPointHandle> uvPoints;
 
             // Loop over vertices in the face.
             for (size_t v = 0; v < fv; v++) {
                 // access to vertex
                 tinyobj::index_t idx = objShape.mesh.indices[index_offset + v];
-                auto vertex = Mesh::VertexHandle(idx.vertex_index);
+                auto vertex = meshlib::VertexHandle(idx.vertex_index);
 
                 auto uvPoint = [&] {
                     auto uvPointIt = uvPointForIndices.find({idx.vertex_index, idx.texcoord_index});
@@ -108,7 +108,7 @@ std::vector<SP<Document::MeshObject>> ObjLoader::load(const SP<Document::Documen
 
             auto materialID = objShape.mesh.material_ids[f];
             if (materialID >= 0) {
-                mesh.addFace(uvPoints, Mesh::MaterialHandle(materialID));
+                mesh.addFace(uvPoints, meshlib::MaterialHandle(materialID));
             } else {
                 // TODO: add default material
             }

@@ -5,11 +5,12 @@
 #include <meshlib/Handle.hpp>
 #include <unordered_map>
 
-namespace Lattice {
-
-namespace Mesh {
+namespace meshlib {
 class Mesh;
 }
+
+namespace Lattice {
+
 namespace GL {
 class VAO;
 }
@@ -18,15 +19,15 @@ namespace Editor {
 
 class MeshVAOGenerator {
   public:
-    MeshVAOGenerator(const Mesh::Mesh &mesh);
+    MeshVAOGenerator(const meshlib::Mesh &mesh);
 
     SP<GL::VAO> generateVertexVAO() const;
     SP<GL::VAO> generateEdgeVAO() const;
-    std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> generateFaceVAOs() const;
-    std::unordered_map<Mesh::MaterialHandle, SP<GL::VAO>> generateSubdivFaceVAOs(int segmentCount) const;
+    std::unordered_map<meshlib::MaterialHandle, SP<GL::VAO>> generateFaceVAOs() const;
+    std::unordered_map<meshlib::MaterialHandle, SP<GL::VAO>> generateSubdivFaceVAOs(int segmentCount) const;
 
   private:
-    const Mesh::Mesh &_mesh;
+    const meshlib::Mesh &_mesh;
     SP<GL::VertexBuffer<Draw::PointLineVertex>> _vertexEdgeVertexBuffer;
 };
 

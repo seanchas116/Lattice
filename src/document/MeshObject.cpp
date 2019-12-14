@@ -10,16 +10,16 @@ using namespace glm;
 namespace Lattice {
 namespace Document {
 
-MeshObject::MeshObject() : _mesh(std::make_unique<Mesh::Mesh>()),
+MeshObject::MeshObject() : _mesh(std::make_unique<meshlib::Mesh>()),
                            _materials({Material()}) {
 }
 
 MeshObject::~MeshObject() {
 }
 
-void MeshObject::setMesh(Mesh::Mesh mesh) {
+void MeshObject::setMesh(meshlib::Mesh mesh) {
     auto self = *dynamicPointerCast<MeshObject>(sharedFromThis());
-    auto change = makeShared<PropertyChange<MeshObject, Mesh::Mesh>>(self, std::move(mesh), &MeshObject::mesh, &MeshObject::setMeshInternal);
+    auto change = makeShared<PropertyChange<MeshObject, meshlib::Mesh>>(self, std::move(mesh), &MeshObject::mesh, &MeshObject::setMeshInternal);
     addChange(change);
 }
 
@@ -29,7 +29,7 @@ void MeshObject::setMaterials(std::vector<Material> materials) {
     addChange(change);
 }
 
-void MeshObject::setMeshInternal(Mesh::Mesh mesh) {
+void MeshObject::setMeshInternal(meshlib::Mesh mesh) {
     *_mesh = std::move(mesh);
     emit meshChanged(*_mesh);
 }

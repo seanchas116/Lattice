@@ -34,11 +34,11 @@ void MoveTool::mousePressTool(const Tool::EventTarget &target, const Viewport::M
         return;
     }
 
-    auto oldSelection = mesh.selectedVertices() | ranges::to_<std::unordered_set<Mesh::VertexHandle>>();
+    auto oldSelection = mesh.selectedVertices() | ranges::to_<std::unordered_set<meshlib::VertexHandle>>();
 
     bool alreadySelected = !clickedVertices.empty() && includes(oldSelection, clickedVertices);
 
-    std::unordered_set<Mesh::VertexHandle> selection;
+    std::unordered_set<meshlib::VertexHandle> selection;
     if (event.originalMouseEvent->modifiers() & Qt::ShiftModifier) {
         selection = oldSelection;
 

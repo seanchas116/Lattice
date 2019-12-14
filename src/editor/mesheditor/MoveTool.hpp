@@ -16,8 +16,8 @@ class MoveTool : public Tool {
 
   private:
     SP<BorderSelectTool> _borderSelectTool;
-    std::unordered_set<Mesh::VertexHandle> _nextSelection;
-    std::unordered_map<Mesh::VertexHandle, glm::dvec3> _initPositions;
+    std::unordered_set<meshlib::VertexHandle> _nextSelection;
+    std::unordered_map<meshlib::VertexHandle, glm::dvec3> _initPositions;
     glm::dvec3 _initObjectPos{0};
     glm::dvec2 _initViewportPos{0};
     bool _dragged{false};

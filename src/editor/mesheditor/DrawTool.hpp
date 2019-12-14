@@ -18,8 +18,8 @@ class DrawTool : public Tool {
 
   private:
     // draw
-    std::vector<Mesh::UVPointHandle> _drawnUVPoints;
-    Opt<Mesh::UVPointHandle> _previewUVPoint;
+    std::vector<meshlib::UVPointHandle> _drawnUVPoints;
+    Opt<meshlib::UVPointHandle> _previewUVPoint;
 };
 
 } // namespace MeshEditor

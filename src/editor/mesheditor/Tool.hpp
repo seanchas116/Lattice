@@ -21,19 +21,19 @@ class Tool : public Viewport::Renderable {
     Q_OBJECT
   public:
     struct EventTarget {
-        Opt<Mesh::VertexHandle> vertex;
-        Opt<Mesh::EdgeHandle> edge;
-        Opt<Mesh::FaceHandle> face;
+        Opt<meshlib::VertexHandle> vertex;
+        Opt<meshlib::EdgeHandle> edge;
+        Opt<meshlib::FaceHandle> face;
 
-        std::unordered_set<Mesh::VertexHandle> vertices(const Mesh::Mesh &mesh) const;
+        std::unordered_set<meshlib::VertexHandle> vertices(const meshlib::Mesh &mesh) const;
         bool operator==(const EventTarget &other) const;
         bool operator!=(const EventTarget &other) const { return !operator==(other); }
     };
 
     struct HitTestExclusion {
-        std::vector<Mesh::VertexHandle> vertices;
-        std::vector<Mesh::EdgeHandle> edges;
-        std::vector<Mesh::FaceHandle> faces;
+        std::vector<meshlib::VertexHandle> vertices;
+        std::vector<meshlib::EdgeHandle> edges;
+        std::vector<meshlib::FaceHandle> faces;
     };
 
     Tool(const SP<State::MeshEditState> &meshEditState) : _meshEditState(meshEditState) {}

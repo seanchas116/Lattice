@@ -112,10 +112,10 @@ void ArrowHandle::setLength(double length) {
 }
 
 SP<GL::VAO> ArrowHandle::createHandleVAO() {
-    Mesh::Mesh mesh;
-    Mesh::MaterialHandle material;
+    meshlib::Mesh mesh;
+    meshlib::MaterialHandle material;
     if (_handleType == HandleType::Translate) {
-        Mesh::ConeBuilder builder;
+        meshlib::ConeBuilder builder;
         builder.center = vec3(0);
         builder.radius = Constants::translateHandleWidth * 0.5;
         builder.height = Constants::translateHandleLength;
@@ -123,7 +123,7 @@ SP<GL::VAO> ArrowHandle::createHandleVAO() {
         builder.axis = 0;
         mesh = builder.build();
     } else {
-        Mesh::CubeBuilder builder;
+        meshlib::CubeBuilder builder;
         builder.minPos = vec3(-Constants::scaleHandleSize * 0.5);
         builder.maxPos = vec3(Constants::scaleHandleSize * 0.5);
         mesh = builder.build();
@@ -141,7 +141,7 @@ SP<GL::VAO> ArrowHandle::createBodyVAO(double length) {
 }
 
 SP<GL::VAO> ArrowHandle::createBodyPickVAO(double length) {
-    Mesh::CylinderBuilder builder;
+    meshlib::CylinderBuilder builder;
     builder.center = vec3(Constants::bodyBegin, 0, 0);
     builder.radius = Constants::hitRadius;
     builder.height = length - Constants::bodyBegin + Constants::translateHandleLength;
