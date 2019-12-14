@@ -1,7 +1,7 @@
 #include "History.hpp"
 #include "../support/Change.hpp"
-#include <QUndoStack>
 #include <QUndoCommand>
+#include <QUndoStack>
 
 namespace Lattice {
 namespace Document {
@@ -9,13 +9,13 @@ namespace Document {
 namespace {
 
 class ChangeCommand : public QUndoCommand {
-public:
-    ChangeCommand(int id, const QString& text, const SP<Change>& change) : _id(id), _changes({change}) {
+  public:
+    ChangeCommand(int id, const QString &text, const SP<Change> &change) : _id(id), _changes({change}) {
         setText(text);
     }
 
     void redo() override {
-        for (auto& change : _changes) {
+        for (auto &change : _changes) {
             change->apply();
         }
     }
@@ -31,12 +31,12 @@ public:
     }
 
     bool mergeWith(const QUndoCommand *other) override {
-        auto otherChangeCommand = dynamic_cast<const ChangeCommand*>(other);
+        auto otherChangeCommand = dynamic_cast<const ChangeCommand *>(other);
         if (!otherChangeCommand) {
             return false;
         }
 
-        for (auto& change : otherChangeCommand->_changes) {
+        for (auto &change : otherChangeCommand->_changes) {
             if (_changes[_changes.size() - 1]->mergeWith(change)) {
                 continue;
             }
@@ -45,12 +45,12 @@ public:
         return true;
     }
 
-private:
+  private:
     int _id;
     std::vector<SP<Change>> _changes;
 };
 
-}
+} // namespace
 
 History::History() {
     _undoStack = new QUndoStack(this);
@@ -72,5 +72,5 @@ void History::clear() {
     _currentTitle.clear();
 }
 
-}
+} // namespace Document
 } // namespace Lattice

@@ -6,10 +6,10 @@ namespace State {
 
 class Preferences : public QObject {
     Q_OBJECT
-public:
+  public:
     double moveThreshold() const { return 4; }
 
-    static Preferences& shared();
+    static Preferences &shared();
 };
 
 } // namespace State

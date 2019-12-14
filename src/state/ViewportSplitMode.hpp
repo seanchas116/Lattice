@@ -11,4 +11,4 @@ enum class ViewportSplitMode {
 };
 
 }
-}
+} // namespace Lattice

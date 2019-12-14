@@ -1,45 +1,43 @@
 #include "ObjectPropertyView.hpp"
-#include "../state/AppState.hpp"
 #include "../document/Document.hpp"
-#include "../document/Object.hpp"
-#include "../document/MeshObject.hpp"
 #include "../document/History.hpp"
+#include "../document/MeshObject.hpp"
+#include "../document/Object.hpp"
+#include "../state/AppState.hpp"
 #include "../support/Debug.hpp"
 #include "../support/OptionalGuard.hpp"
-#include "../widget/SpinBox.hpp"
 #include "../widget/MultiValueCheckBox.hpp"
 #include "../widget/MultiValueDoubleSpinBox.hpp"
 #include "../widget/MultiValueSpinBox.hpp"
-#include <QDoubleSpinBox>
-#include <QGridLayout>
-#include <QFormLayout>
-#include <QLabel>
+#include "../widget/SpinBox.hpp"
 #include <QCheckBox>
+#include <QDoubleSpinBox>
+#include <QFormLayout>
+#include <QGridLayout>
+#include <QLabel>
 #include <QtDebug>
 
 namespace Lattice {
 namespace UI {
 
-ObjectPropertyView::ObjectPropertyView(const SP<State::AppState> &appState, QWidget *parent) :
-    QWidget(parent),
-    _appState(appState)
-{
+ObjectPropertyView::ObjectPropertyView(const SP<State::AppState> &appState, QWidget *parent) : QWidget(parent),
+                                                                                               _appState(appState) {
     auto layout = new QFormLayout();
 
     auto gridLayout = new QGridLayout();
 
-    std::array<QString, 3> labels {"X", "Y", "Z"};
+    std::array<QString, 3> labels{"X", "Y", "Z"};
     for (size_t i = 0; i < 3; ++i) {
         auto label = new QLabel(labels[i]);
         label->setAlignment(Qt::AlignHCenter);
         gridLayout->addWidget(label, 0, int(i + 1));
     }
 
-    auto buildVec3SpinBoxes = [&] (LocationMember member, const QString& title, int row) {
+    auto buildVec3SpinBoxes = [&](LocationMember member, const QString &title, int row) {
         auto label = new QLabel(title);
         gridLayout->addWidget(label, row, 0);
 
-        std::array<Widget::MultiValueDoubleSpinBox*, 3> spinBoxes = {
+        std::array<Widget::MultiValueDoubleSpinBox *, 3> spinBoxes = {
             new Widget::MultiValueDoubleSpinBox(),
             new Widget::MultiValueDoubleSpinBox(),
             new Widget::MultiValueDoubleSpinBox(),
@@ -50,7 +48,7 @@ ObjectPropertyView::ObjectPropertyView(const SP<State::AppState> &appState, QWid
             spinBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
             gridLayout->addWidget(spinBox, row, int(i + 1));
 
-            auto handleValueChange = [this, member, i] (double value) {
+            auto handleValueChange = [this, member, i](double value) {
                 this->handleLocationValueChange(member, i, value);
             };
             connect(spinBox, &Widget::MultiValueDoubleSpinBox::editingFinished, this, handleValueChange);
@@ -95,7 +93,7 @@ ObjectPropertyView::ObjectPropertyView(const SP<State::AppState> &appState, QWid
     setObjects(_appState->document()->selectedObjects());
 }
 
-void ObjectPropertyView::setObjects(const std::unordered_set<SP<Document::Object> > &objects) {
+void ObjectPropertyView::setObjects(const std::unordered_set<SP<Document::Object>> &objects) {
     if (_objects == objects) {
         return;
     }
@@ -107,12 +105,12 @@ void ObjectPropertyView::setObjects(const std::unordered_set<SP<Document::Object
         firstObject = *objects.begin();
     }
 
-    for (auto& c : _connections) {
+    for (auto &c : _connections) {
         disconnect(c);
     }
     _connections.clear();
 
-    for (auto& object : objects) {
+    for (auto &object : objects) {
         _connections.push_back(connect(object.get(), &Document::Object::locationChanged, this, &ObjectPropertyView::refreshValues));
         if (auto maybeMeshObject = dynamicPointerCast<Document::MeshObject>(object); maybeMeshObject) {
             auto meshObject = *maybeMeshObject;
@@ -131,8 +129,8 @@ void ObjectPropertyView::refreshValues() {
     std::array<std::vector<double>, 3> scaleValueArrays;
     std::array<std::vector<double>, 3> rotationValueArrays;
 
-    for (auto& object : _objects) {
-        auto& location = object->location();
+    for (auto &object : _objects) {
+        auto &location = object->location();
         auto eulerAngles = glm::eulerAngles(location.rotation);
         for (int i = 0; i < 3; ++i) {
             positionValueArrays[i].push_back(location.position[i]);
@@ -154,7 +152,7 @@ void ObjectPropertyView::refreshValues() {
 
         std::vector<bool> subdivEnabledValues;
         std::vector<int> subdivSegmentCountValues;
-        for (auto& meshObject : meshObjects) {
+        for (auto &meshObject : meshObjects) {
             subdivEnabledValues.push_back(meshObject->subdivSettings().isEnabled);
             subdivSegmentCountValues.push_back(meshObject->subdivSettings().segmentCount);
         }
@@ -172,7 +170,7 @@ void ObjectPropertyView::handleLocationValueChange(LocationMember member, int in
     }
 
     _appState->document()->history()->beginChange(tr("Set Object Location"));
-    for (auto& object : _objects) {
+    for (auto &object : _objects) {
         auto location = object->location();
         auto eulerAngles = glm::eulerAngles(location.rotation);
 
@@ -199,7 +197,7 @@ void ObjectPropertyView::handleSubdivEnabledChange(bool enabled) {
     }
 
     _appState->document()->history()->beginChange(tr("Set Subdiv Enabled"));
-    for (auto& object : meshObjects) {
+    for (auto &object : meshObjects) {
         auto settings = object->subdivSettings();
         settings.isEnabled = enabled;
         object->setSubdivSettings(settings);
@@ -213,16 +211,16 @@ void ObjectPropertyView::handleSubdivSegmentCountChange(int count) {
     }
 
     _appState->document()->history()->beginChange(tr("Set Subdiv Segment Count"));
-    for (auto& object : meshObjects) {
+    for (auto &object : meshObjects) {
         auto settings = object->subdivSettings();
         settings.segmentCount = count;
         object->setSubdivSettings(settings);
     }
 }
 
-std::vector<SP<Document::MeshObject> > ObjectPropertyView::meshObjects() const {
+std::vector<SP<Document::MeshObject>> ObjectPropertyView::meshObjects() const {
     std::vector<SP<Document::MeshObject>> meshObjects;
-    for (auto& object : _objects) {
+    for (auto &object : _objects) {
         if (auto meshObject = dynamicPointerCast<Document::MeshObject>(object); meshObject) {
             meshObjects.push_back(*meshObject);
         }
@@ -230,5 +228,5 @@ std::vector<SP<Document::MeshObject> > ObjectPropertyView::meshObjects() const {
     return meshObjects;
 }
 
-}
+} // namespace UI
 } // namespace Lattice

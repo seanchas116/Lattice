@@ -8,8 +8,8 @@ namespace Editor {
 namespace Manipulator {
 
 class Coordinates final {
-public:
-    Coordinates(const Camera& camera, glm::dvec3 targetPos) : targetPos(targetPos) {
+  public:
+    Coordinates(const Camera &camera, glm::dvec3 targetPos) : targetPos(targetPos) {
         using namespace glm;
 
         auto [viewportPos, isInViewport] = camera.mapWorldToViewport(targetPos);
@@ -50,6 +50,6 @@ public:
     std::array<Ray<double>, 3> axisRaysInCameraSpace;
 };
 
-}
+} // namespace Manipulator
 } // namespace Editor
 } // namespace Lattice

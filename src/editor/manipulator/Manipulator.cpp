@@ -1,24 +1,22 @@
 #include "Manipulator.hpp"
 #include "ArrowHandle.hpp"
-#include "RotateHandle.hpp"
 #include "CenterHandle.hpp"
 #include "Manipulator.hpp"
+#include "RotateHandle.hpp"
 
 namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
-Manipulator::Manipulator() :
-    _centerHandle(makeShared<CenterHandle>())
-{
+Manipulator::Manipulator() : _centerHandle(makeShared<CenterHandle>()) {
     connect(this, &Manipulator::targetPositionChanged, _centerHandle.get(), &CenterHandle::setTargetPosition);
-    connect(_centerHandle.get(), &CenterHandle::onDragBegin, this, [this] (glm::dvec3 values) {
+    connect(_centerHandle.get(), &CenterHandle::onDragBegin, this, [this](glm::dvec3 values) {
         emit onDragBegin(ValueType::Translate, values);
     });
-    connect(_centerHandle.get(), &CenterHandle::onDragMove, this, [this] (glm::dvec3 values) {
+    connect(_centerHandle.get(), &CenterHandle::onDragMove, this, [this](glm::dvec3 values) {
         emit onDragMove(ValueType::Translate, values);
     });
-    connect(_centerHandle.get(), &CenterHandle::onDragEnd, this, [this] () {
+    connect(_centerHandle.get(), &CenterHandle::onDragEnd, this, [this]() {
         emit onDragEnd(ValueType::Translate);
     });
     connect(_centerHandle.get(), &CenterHandle::onContextMenu, this, &Manipulator::onContextMenu);
@@ -28,12 +26,12 @@ Manipulator::Manipulator() :
         handle->setTargetPosition(targetPosition());
         connect(this, &Manipulator::targetPositionChanged, handle.get(), &ArrowHandle::setTargetPosition);
 
-        connect(handle.get(), &ArrowHandle::onDragBegin, this, [this, axis] (double value) {
+        connect(handle.get(), &ArrowHandle::onDragBegin, this, [this, axis](double value) {
             glm::dvec3 values(0);
             values[axis] = value;
             emit onDragBegin(ValueType::Translate, values);
         });
-        connect(handle.get(), &ArrowHandle::onDragMove, this, [this, axis] (double value) {
+        connect(handle.get(), &ArrowHandle::onDragMove, this, [this, axis](double value) {
             glm::dvec3 values(0);
             values[axis] = value;
             emit onDragMove(ValueType::Translate, values);
@@ -50,12 +48,12 @@ Manipulator::Manipulator() :
         handle->setTargetPosition(targetPosition());
         connect(this, &Manipulator::targetPositionChanged, handle.get(), &ArrowHandle::setTargetPosition);
 
-        connect(handle.get(), &ArrowHandle::onDragBegin, this, [this, axis] (double value) {
+        connect(handle.get(), &ArrowHandle::onDragBegin, this, [this, axis](double value) {
             glm::dvec3 values(1);
             values[axis] = value;
             emit onDragBegin(ValueType::Scale, values);
         });
-        connect(handle.get(), &ArrowHandle::onDragMove, this, [this, axis] (double value) {
+        connect(handle.get(), &ArrowHandle::onDragMove, this, [this, axis](double value) {
             glm::dvec3 values(1);
             values[axis] = value;
             emit onDragMove(ValueType::Scale, values);
@@ -72,12 +70,12 @@ Manipulator::Manipulator() :
         handle->setTargetPosition(targetPosition());
         connect(this, &Manipulator::targetPositionChanged, handle.get(), &RotateHandle::setTargetPosition);
 
-        connect(handle.get(), &RotateHandle::onDragBegin, this, [this, axis] (double value) {
+        connect(handle.get(), &RotateHandle::onDragBegin, this, [this, axis](double value) {
             glm::dvec3 values(0);
             values[axis] = value;
             emit onDragBegin(ValueType::Rotate, values);
         });
-        connect(handle.get(), &RotateHandle::onDragMove, this, [this, axis] (double value) {
+        connect(handle.get(), &RotateHandle::onDragMove, this, [this, axis](double value) {
             glm::dvec3 values(0);
             values[axis] = value;
             emit onDragMove(ValueType::Rotate, values);
@@ -142,16 +140,16 @@ void Manipulator::updateHandles() {
     double translateHandleLength = _isRotateHandleVisible ? 2.3 : 2.0;
     double scaleHandleLength = (_isTranslateHandleVisible || _isRotateHandleVisible) ? 1.7 : 2.0;
 
-    for (auto& translateHandle : _translateHandles) {
+    for (auto &translateHandle : _translateHandles) {
         translateHandle->setLength(translateHandleLength);
     }
-    for (auto& scaleHandle : _scaleHandles) {
+    for (auto &scaleHandle : _scaleHandles) {
         scaleHandle->setLength(scaleHandleLength);
     }
 
     setChildRenderables(handles);
 }
 
-}
+} // namespace Manipulator
 } // namespace Editor
 } // namespace Lattice

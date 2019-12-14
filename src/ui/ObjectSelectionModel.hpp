@@ -1,6 +1,6 @@
 #pragma once
-#include <QItemSelectionModel>
 #include "../support/Shorthands.hpp"
+#include <QItemSelectionModel>
 
 namespace Lattice {
 namespace UI {
@@ -9,13 +9,13 @@ class ObjectItemModel;
 
 class ObjectSelectionModel final : public QItemSelectionModel {
     Q_OBJECT
-public:
-    explicit ObjectSelectionModel(ObjectItemModel* model, QObject *parent = nullptr);
+  public:
+    explicit ObjectSelectionModel(ObjectItemModel *model, QObject *parent = nullptr);
 
-signals:
+  signals:
 
-public slots:
+  public slots:
 };
 
-}
-} // namespace Shapecraft
+} // namespace UI
+} // namespace Lattice

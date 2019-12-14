@@ -1,20 +1,18 @@
 #include "EditorViewportContainer.hpp"
-#include "EditorViewport.hpp"
-#include "EditorScene.hpp"
-#include "KeyObserver.hpp"
-#include "CameraState.hpp"
 #include "../state/AppState.hpp"
-#include <QVBoxLayout>
+#include "CameraState.hpp"
+#include "EditorScene.hpp"
+#include "EditorViewport.hpp"
+#include "KeyObserver.hpp"
 #include <QSplitter>
+#include <QVBoxLayout>
 
 namespace Lattice {
 namespace Editor {
 
-EditorViewportContainer::EditorViewportContainer(const SP<State::AppState> &appState, QWidget *parent) :
-    Viewport::ViewportContainer(parent),
-    _appState(appState),
-    _keyObserver(makeShared<KeyObserver>())
-{
+EditorViewportContainer::EditorViewportContainer(const SP<State::AppState> &appState, QWidget *parent) : Viewport::ViewportContainer(parent),
+                                                                                                         _appState(appState),
+                                                                                                         _keyObserver(makeShared<KeyObserver>()) {
     setFocusPolicy(Qt::ClickFocus);
 
     setSplitMode(appState->viewportSplitMode());
@@ -53,7 +51,7 @@ void EditorViewportContainer::setSplitMode(State::ViewportSplitMode split) {
     layout->setMargin(0);
     layout->setSpacing(0);
 
-    std::vector<EditorViewport*> viewports;
+    std::vector<EditorViewport *> viewports;
 
     switch (split) {
     case State::ViewportSplitMode::Single: {
@@ -64,10 +62,9 @@ void EditorViewportContainer::setSplitMode(State::ViewportSplitMode split) {
     }
     case State::ViewportSplitMode::LeftRight: {
         viewports = {
-            new EditorViewport(_appState, _keyObserver), new EditorViewport(_appState, _keyObserver)
-        };
+            new EditorViewport(_appState, _keyObserver), new EditorViewport(_appState, _keyObserver)};
         auto splitter = new QSplitter();
-        for (auto&& v : viewports) {
+        for (auto &&v : viewports) {
             splitter->addWidget(v);
         }
 
@@ -76,11 +73,10 @@ void EditorViewportContainer::setSplitMode(State::ViewportSplitMode split) {
     }
     case State::ViewportSplitMode::TopBottom: {
         viewports = {
-            new EditorViewport(_appState, _keyObserver), new EditorViewport(_appState, _keyObserver)
-        };
+            new EditorViewport(_appState, _keyObserver), new EditorViewport(_appState, _keyObserver)};
         auto splitter = new QSplitter();
         splitter->setOrientation(Qt::Vertical);
-        for (auto&& v : viewports) {
+        for (auto &&v : viewports) {
             splitter->addWidget(v);
         }
 
@@ -132,21 +128,21 @@ void EditorViewportContainer::setSplitMode(State::ViewportSplitMode split) {
     }
 
     setLayout(layout);
-    setViewports(std::vector<Viewport::Viewport*>(viewports.begin(), viewports.end()));
+    setViewports(std::vector<Viewport::Viewport *>(viewports.begin(), viewports.end()));
 
-    for (auto& v : viewports) {
+    for (auto &v : viewports) {
         v->setRenderable(_renderable);
     }
 
     update();
 }
 
-void EditorViewportContainer::setRenderable(const Opt<SP<Viewport::Renderable> > &renderable) {
+void EditorViewportContainer::setRenderable(const Opt<SP<Viewport::Renderable>> &renderable) {
     _renderable = renderable;
-    for (auto& v : viewports()) {
+    for (auto &v : viewports()) {
         v->setRenderable(renderable);
     }
 }
 
-}
+} // namespace Editor
 } // namespace Lattice

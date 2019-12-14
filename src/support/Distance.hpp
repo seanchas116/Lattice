@@ -1,16 +1,16 @@
 #pragma once
 
+#include "Ray.hpp"
+#include <array>
 #include <glm/glm.hpp>
 #include <tuple>
-#include <array>
-#include "Ray.hpp"
 
 namespace Lattice {
 
 template <typename T>
 class RayPointDistanceSolver final {
-public:
-    RayPointDistanceSolver(const Ray<T>& l, const glm::tvec3<T> p) {
+  public:
+    RayPointDistanceSolver(const Ray<T> &l, const glm::tvec3<T> p) {
         // http://geomalgorithms.com/a02-_lines.html#Distance-to-Infinite-Line
         using namespace glm;
         tvec3<T> w = p - l.origin;
@@ -24,8 +24,8 @@ public:
 
 template <typename T>
 class RayRayDistanceSolver final {
-public:
-    RayRayDistanceSolver(const Ray<T>& l0, const Ray<T>& l1) {
+  public:
+    RayRayDistanceSolver(const Ray<T> &l0, const Ray<T> &l1) {
         // http://geomalgorithms.com/a07-_distance.html
         using namespace glm;
         tvec3<T> u = l0.direction;

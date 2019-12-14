@@ -1,8 +1,8 @@
 #include "Location.hpp"
 #include "JSON.hpp"
-#include <nlohmann/json.hpp>
-#include <glm/gtx/transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
+#include <glm/gtx/transform.hpp>
+#include <nlohmann/json.hpp>
 
 using namespace glm;
 

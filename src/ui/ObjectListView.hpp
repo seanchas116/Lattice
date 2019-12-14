@@ -1,7 +1,7 @@
 #pragma once
 
-#include <QWidget>
 #include "../support/Shorthands.hpp"
+#include <QWidget>
 
 namespace Lattice {
 
@@ -13,12 +13,12 @@ namespace UI {
 
 class ObjectListView final : public QWidget {
     Q_OBJECT
-public:
+  public:
     explicit ObjectListView(const SP<State::AppState> &appState, QWidget *parent = nullptr);
 
-private:
+  private:
     SP<State::AppState> _appState;
 };
 
-}
-} // namespace Shapecraft
+} // namespace UI
+} // namespace Lattice

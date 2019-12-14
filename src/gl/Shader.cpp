@@ -134,7 +134,7 @@ void Shader::setUniform(const char *name, glm::dmat4 value) {
 
 GLuint Shader::loadShader(GLenum type, const std::string &src) {
     GLuint shader = glCreateShader(type);
-    const char* srcData = src.data();
+    const char *srcData = src.data();
 
     glShaderSource(shader, 1, &srcData, nullptr);
     glCompileShader(shader);
@@ -157,5 +157,5 @@ GLuint Shader::loadShader(GLenum type, const std::string &src) {
     return shader;
 }
 
-}
-}
+} // namespace GL
+} // namespace Lattice

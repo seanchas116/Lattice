@@ -1,7 +1,7 @@
 #pragma once
 
-#include <QWidget>
 #include "../support/Shorthands.hpp"
+#include <QWidget>
 
 namespace Lattice {
 namespace State {
@@ -12,12 +12,12 @@ namespace UI {
 
 class MaterialListView final : public QWidget {
     Q_OBJECT
-public:
-    explicit MaterialListView(const SP<State::AppState>& appState, QWidget *parent = nullptr);
+  public:
+    explicit MaterialListView(const SP<State::AppState> &appState, QWidget *parent = nullptr);
 
-private:
+  private:
     SP<State::AppState> _appState;
 };
 
-}
+} // namespace UI
 } // namespace Lattice

@@ -1,24 +1,22 @@
 #include "EditorScene.hpp"
+#include "../document/Document.hpp"
+#include "../document/MeshObject.hpp"
+#include "../document/Object.hpp"
+#include "../state/AppState.hpp"
+#include "../state/MeshEditState.hpp"
+#include "./manipulator/ObjectManipulator.hpp"
+#include "./mesheditor/MeshEditor.hpp"
 #include "Background.hpp"
 #include "GridFloor.hpp"
 #include "MeshRenderer.hpp"
-#include "./mesheditor/MeshEditor.hpp"
-#include "./manipulator/ObjectManipulator.hpp"
-#include "../state/AppState.hpp"
-#include "../state/MeshEditState.hpp"
-#include "../document/Document.hpp"
-#include "../document/Object.hpp"
-#include "../document/MeshObject.hpp"
 
 namespace Lattice {
 namespace Editor {
 
-EditorScene::EditorScene(const SP<State::AppState> &appState) :
-    _appState(appState),
-    _background(makeShared<Background>(appState)),
-    _gridFloor(makeShared<GridFloor>()),
-    _objectManipulator(makeShared<Manipulator::ObjectManipulator>(appState))
-{
+EditorScene::EditorScene(const SP<State::AppState> &appState) : _appState(appState),
+                                                                _background(makeShared<Background>(appState)),
+                                                                _gridFloor(makeShared<GridFloor>()),
+                                                                _objectManipulator(makeShared<Manipulator::ObjectManipulator>(appState)) {
     connect(appState.get(), &State::AppState::isVertexSelectableChanged, this, &EditorScene::updateRenderables);
     connect(appState.get(), &State::AppState::isEdgeSelectableChanged, this, &EditorScene::updateRenderables);
     connect(appState.get(), &State::AppState::isFaceSelectableChanged, this, &EditorScene::updateRenderables);
@@ -50,7 +48,7 @@ void EditorScene::updateRenderables() {
         _meshEditor = std::nullopt;
     }
 
-    _appState->document()->rootObject()->forEachDescendant([&] (auto& object) {
+    _appState->document()->rootObject()->forEachDescendant([&](auto &object) {
         LATTICE_OPTIONAL_GUARD(meshObject, dynamicPointerCast<Document::MeshObject>(object), return;)
         if (meshEditState && meshObject == (*meshEditState)->object()) {
             return;
@@ -73,7 +71,7 @@ void EditorScene::updateRenderables() {
     renderables.push_back(_background);
 
     renderables.push_back(_gridFloor);
-    for (auto& [object, renderer] : _meshRenderers) {
+    for (auto &[object, renderer] : _meshRenderers) {
         renderables.push_back(renderer);
     }
     if (_meshEditor) {

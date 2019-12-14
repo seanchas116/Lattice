@@ -1,8 +1,8 @@
 #pragma once
-#include "Manipulator.hpp"
 #include "../../support/Location.hpp"
-#include <unordered_set>
+#include "Manipulator.hpp"
 #include <unordered_map>
+#include <unordered_set>
 
 namespace Lattice {
 
@@ -18,10 +18,10 @@ namespace Manipulator {
 
 class ObjectManipulator : public Manipulator {
     Q_OBJECT
-public:
-    ObjectManipulator(const SP<State::AppState>& appState);
+  public:
+    ObjectManipulator(const SP<State::AppState> &appState);
 
-private:
+  private:
     void handleOnDragBegin(ValueType type, glm::dvec3 values);
     void handleOnDragMove(ValueType type, glm::dvec3 values);
     void handleOnDragEnd(ValueType type);
@@ -37,6 +37,6 @@ private:
     std::vector<QMetaObject::Connection> _connections;
 };
 
-}
+} // namespace Manipulator
 } // namespace Editor
 } // namespace Lattice

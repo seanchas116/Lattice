@@ -1,17 +1,17 @@
 #pragma once
 
-#include <QObject>
-#include "../support/Shorthands.hpp"
 #include "../support/Property.hpp"
-#include "ViewportSplitMode.hpp"
+#include "../support/Shorthands.hpp"
 #include "Tool.hpp"
+#include "ViewportSplitMode.hpp"
+#include <QObject>
 
 namespace Lattice {
 
 namespace Document {
 class Document;
 class MeshObject;
-}
+} // namespace Document
 
 namespace State {
 
@@ -34,13 +34,13 @@ class AppState final : public QObject {
 
     LATTICE_AUTO_PROPERTY_REFERENCE(Opt<SP<MeshEditState>>, meshEditState, setMeshEditState, {})
 
-public:
+  public:
     AppState();
 
-    auto& document() const { return _document; }
+    auto &document() const { return _document; }
 
     void startEditing();
-    void startEditing(const SP<Document::MeshObject>& object);
+    void startEditing(const SP<Document::MeshObject> &object);
     void endEditing();
 
     void deleteObjects();
@@ -63,9 +63,9 @@ public:
     void selectAll();
     void deselectAll();
 
-private:
+  private:
     SP<Document::Document> _document;
 };
 
-}
+} // namespace State
 } // namespace Lattice

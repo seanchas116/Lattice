@@ -6,8 +6,8 @@ namespace Editor {
 namespace MeshEditor {
 
 class DrawTool : public Tool {
-public:
-    DrawTool(const SP<State::MeshEditState>& meshEditState) : Tool(meshEditState) {}
+  public:
+    DrawTool(const SP<State::MeshEditState> &meshEditState) : Tool(meshEditState) {}
 
     HitTestExclusion hitTestExclusion() const override;
 
@@ -16,7 +16,7 @@ public:
     void mouseReleaseTool(const EventTarget &target, const Viewport::MouseEvent &event) override;
     void keyPressTool(QKeyEvent *event) override;
 
-private:
+  private:
     // draw
     std::vector<Mesh::UVPointHandle> _drawnUVPoints;
     Opt<Mesh::UVPointHandle> _previewUVPoint;

@@ -1,8 +1,8 @@
 #pragma once
-#include "HitResult.hpp"
 #include "../draw/Operations.hpp"
-#include "../support/Shorthands.hpp"
 #include "../support/Camera.hpp"
+#include "../support/Shorthands.hpp"
+#include "HitResult.hpp"
 #include <QOpenGLWidget>
 
 namespace Lattice {
@@ -16,18 +16,19 @@ class HitAreaMap;
 class Viewport : public QWidget {
     Q_OBJECT
     using super = QWidget;
-public:
-    Viewport(QWidget* parent = nullptr);
 
-    void setRenderable(const Opt<SP<Renderable> > &renderable);
+  public:
+    Viewport(QWidget *parent = nullptr);
 
-    auto& camera() const { return _camera; }
-    void setCamera(const Camera& camera);
+    void setRenderable(const Opt<SP<Renderable>> &renderable);
 
-signals:
+    auto &camera() const { return _camera; }
+    void setCamera(const Camera &camera);
+
+  signals:
     void updateRequested();
 
-protected:
+  protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
@@ -36,12 +37,12 @@ protected:
     void moveEvent(QMoveEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
 
-private:
+  private:
     friend class ViewportContainer;
 
-    const SP<HitAreaMap>& hitAreaMap();
+    const SP<HitAreaMap> &hitAreaMap();
 
-    Opt<HitResult> hitTest(glm::dvec2 pos, const Camera& camera);
+    Opt<HitResult> hitTest(glm::dvec2 pos, const Camera &camera);
 
     Opt<SP<Renderable>> _renderable;
     Opt<HitResult> _draggedHitResult;
@@ -50,5 +51,5 @@ private:
     Camera _camera;
 };
 
-} // namespace Renderer
+} // namespace Viewport
 } // namespace Lattice

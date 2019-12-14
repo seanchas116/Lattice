@@ -9,22 +9,22 @@ namespace Editor {
 
 class KeyObserver final : public QObject {
     Q_OBJECT
-public:
+  public:
     KeyObserver();
     ~KeyObserver() override;
 
     bool eventFilter(QObject *watched, QEvent *event) override;
-    void keyPress(QKeyEvent* event);
-    void keyRelease(QKeyEvent* event);
+    void keyPress(QKeyEvent *event);
+    void keyRelease(QKeyEvent *event);
 
-    const auto& pressedKeys() const { return _pressedKeys; }
+    const auto &pressedKeys() const { return _pressedKeys; }
 
-signals:
-    void pressedKeysChanged(const std::unordered_set<int>& keys);
+  signals:
+    void pressedKeysChanged(const std::unordered_set<int> &keys);
 
-private:
+  private:
     std::unordered_set<int> _pressedKeys;
 };
 
-}
+} // namespace Editor
 } // namespace Lattice

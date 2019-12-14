@@ -30,7 +30,7 @@ void MultiValueDoubleSpinBox::setValues(const std::vector<double> &values) {
         return;
     }
 
-    bool isValuesSame= true;
+    bool isValuesSame = true;
     double value = values[0];
 
     for (size_t i = 1; i < values.size(); ++i) {

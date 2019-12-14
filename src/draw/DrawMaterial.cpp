@@ -1,6 +1,6 @@
 #include "DrawMaterial.hpp"
-#include "../gl/VAO.hpp"
 #include "../gl/Texture.hpp"
+#include "../gl/VAO.hpp"
 #include "../resource/Resource.hpp"
 #include "../support/Camera.hpp"
 
@@ -47,5 +47,5 @@ SP<GL::Texture> DrawMaterial::getTexture(const QImage &image) {
     return texture;
 }
 
-}
+} // namespace Draw
 } // namespace Lattice

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "SharedPointer.hpp"
 #include "OptionalGuard.hpp"
+#include "SharedPointer.hpp"
 #include <functional>
 
 namespace Lattice {

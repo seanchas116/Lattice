@@ -1,6 +1,6 @@
 #pragma once
-#include <QMainWindow>
 #include "../support/Shorthands.hpp"
+#include <QMainWindow>
 
 namespace Lattice {
 
@@ -12,13 +12,13 @@ namespace UI {
 
 class MainWindow final : public QMainWindow {
     Q_OBJECT
-public:
+  public:
     explicit MainWindow(QWidget *parent = nullptr);
 
-protected:
+  protected:
     void keyPressEvent(QKeyEvent *event) override;
 
-private:
+  private:
     void setupToolBar();
     void setupMenu();
     void setupPanes();
@@ -26,5 +26,5 @@ private:
     SP<State::AppState> _appState;
 };
 
-}
+} // namespace UI
 } // namespace Lattice

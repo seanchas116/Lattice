@@ -1,6 +1,6 @@
 #pragma once
-#include "../viewport/Renderable.hpp"
 #include "../gl/ContextRecallable.hpp"
+#include "../viewport/Renderable.hpp"
 #include <QObject>
 
 class QKeyEvent;
@@ -31,15 +31,15 @@ class ObjectManipulator;
 
 class EditorScene : public Viewport::Renderable, protected GL::ContextRecallable {
     Q_OBJECT
-public:
-    EditorScene(const SP<State::AppState>& appState);
+  public:
+    EditorScene(const SP<State::AppState> &appState);
 
     void updateRenderables();
 
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
 
-private:
+  private:
     SP<State::AppState> _appState;
 
     SP<Background> _background;

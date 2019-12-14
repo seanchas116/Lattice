@@ -9,18 +9,18 @@ namespace Widget {
 
 class MultiValueCheckBox : public QWidget {
     Q_OBJECT
-public:
-    MultiValueCheckBox(const QString& title, QWidget* parent = nullptr);
+  public:
+    MultiValueCheckBox(const QString &title, QWidget *parent = nullptr);
 
     auto checkBox() const { return _checkBox; }
 
-    void setValues(const std::vector<bool>& values);
+    void setValues(const std::vector<bool> &values);
 
-signals:
+  signals:
     void clicked(bool value);
 
-private:
-    QCheckBox* _checkBox;
+  private:
+    QCheckBox *_checkBox;
 };
 
 } // namespace Widget

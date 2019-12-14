@@ -1,7 +1,7 @@
 #include "DrawLine.hpp"
-#include "../support/Camera.hpp"
 #include "../gl/VAO.hpp"
 #include "../resource/Resource.hpp"
+#include "../support/Camera.hpp"
 
 namespace Lattice {
 namespace Draw {
@@ -24,5 +24,5 @@ void DrawLine::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const Came
     vao->draw();
 }
 
-}
+} // namespace Draw
 } // namespace Lattice

@@ -11,14 +11,14 @@ class VAO;
 namespace Draw {
 
 class DrawUnicolor final {
-public:
+  public:
     DrawUnicolor();
 
-    void draw(const SP<GL::VAO>& vao, const glm::dmat4 &matrix, const Camera& camera, glm::vec4 color, bool useVertexColor = false);
+    void draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const Camera &camera, glm::vec4 color, bool useVertexColor = false);
 
-private:
+  private:
     GL::Shader _shader;
 };
 
-}
+} // namespace Draw
 } // namespace Lattice

@@ -18,12 +18,7 @@ Draw::Material Material::toDrawMaterial() const {
 }
 
 bool Material::operator==(const Material &other) const {
-    return _baseColor == other._baseColor
-            && _baseColorImage == other._baseColorImage
-            && _metallic == other._metallic
-            && _metallicImage == other._metallicImage
-            && _roughness == other._roughness
-            && _roughnessImage == other._roughnessImage;
+    return _baseColor == other._baseColor && _baseColorImage == other._baseColorImage && _metallic == other._metallic && _metallicImage == other._metallicImage && _roughness == other._roughness && _roughnessImage == other._roughnessImage;
 }
 
 } // namespace Document

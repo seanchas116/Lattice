@@ -5,19 +5,15 @@
 namespace Lattice {
 namespace GL {
 
-Framebuffer::Framebuffer(glm::ivec2 size) :
-    _isDefault(true),
-    _size(size)
-{
+Framebuffer::Framebuffer(glm::ivec2 size) : _isDefault(true),
+                                            _size(size) {
     initializeOpenGLFunctions();
     _name = QOpenGLContext::currentContext()->defaultFramebufferObject();
 }
 
-Framebuffer::Framebuffer(glm::ivec2 size, const std::vector<SP<Texture> > &colorBuffers, const Opt<SP<Texture> > &depthStencilBuffer) :
-    _size(size),
-    _colorBuffers(colorBuffers),
-    _depthStencilBuffer(depthStencilBuffer)
-{
+Framebuffer::Framebuffer(glm::ivec2 size, const std::vector<SP<Texture>> &colorBuffers, const Opt<SP<Texture>> &depthStencilBuffer) : _size(size),
+                                                                                                                                      _colorBuffers(colorBuffers),
+                                                                                                                                      _depthStencilBuffer(depthStencilBuffer) {
     initializeOpenGLFunctions();
     glGenFramebuffers(1, &_name);
     glBindFramebuffer(GL_FRAMEBUFFER, _name);
@@ -95,5 +91,5 @@ void Framebuffer::blitTo(Framebuffer &dst, GLbitfield buffers, GLenum filter) {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-}
+} // namespace GL
 } // namespace Lattice

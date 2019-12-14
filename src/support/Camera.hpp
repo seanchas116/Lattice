@@ -6,7 +6,7 @@
 namespace Lattice {
 
 class Camera {
-public:
+  public:
     enum class Projection {
         Perspective,
         Orthographic,
@@ -27,8 +27,8 @@ public:
     static Camera perspective(glm::dmat4 cameraToWorldMatrix, glm::dvec2 viewportSize, double fieldOfView = glm::radians(60.0), double zNear = 0.1, double zFar = 100.0);
     static Camera orthographic(glm::dmat4 cameraToWorldMatrix, glm::dvec2 viewportSize, double scale);
 
-    std::pair<glm::dvec3, bool> mapModelToViewport(const glm::dmat4& modelMatrix, glm::dvec3 worldPos) const;
-    glm::dvec3 mapViewportToModel(const glm::dmat4& modelMatrix, glm::dvec3 viewportPosWithDepth) const;
+    std::pair<glm::dvec3, bool> mapModelToViewport(const glm::dmat4 &modelMatrix, glm::dvec3 worldPos) const;
+    glm::dvec3 mapViewportToModel(const glm::dmat4 &modelMatrix, glm::dvec3 viewportPosWithDepth) const;
 
     std::pair<glm::dvec3, bool> mapWorldToViewport(glm::dvec3 worldPos) const;
     glm::dvec3 mapViewportToWorld(glm::dvec3 viewportPosWithDepth) const;
@@ -42,9 +42,9 @@ public:
 
     Ray<double> cameraMouseRay(glm::dvec2 viewportPos) const;
     Ray<double> worldMouseRay(glm::dvec2 viewportPos) const;
-    Ray<double> modelMouseRay(const glm::dmat4& modelMatrix, glm::dvec2 viewportPos) const;
+    Ray<double> modelMouseRay(const glm::dmat4 &modelMatrix, glm::dvec2 viewportPos) const;
 
-private:
+  private:
     Camera() {}
 
     Projection _projection;

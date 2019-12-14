@@ -1,19 +1,17 @@
 #include "EditorViewport.hpp"
+#include "CameraState.hpp"
 #include "KeyObserver.hpp"
 #include "ViewportControlView.hpp"
-#include "CameraState.hpp"
-#include <QVBoxLayout>
 #include <QResizeEvent>
+#include <QVBoxLayout>
 
 namespace Lattice {
 namespace Editor {
 
-EditorViewport::EditorViewport(const SP<State::AppState> &appState, const SP<KeyObserver> &keyObserver, QWidget *parent) :
-    Viewport::Viewport(parent),
-    _appState(appState),
-    _cameraState(makeShared<CameraState>()),
-    _cameraController(_cameraState, this)
-{
+EditorViewport::EditorViewport(const SP<State::AppState> &appState, const SP<KeyObserver> &keyObserver, QWidget *parent) : Viewport::Viewport(parent),
+                                                                                                                           _appState(appState),
+                                                                                                                           _cameraState(makeShared<CameraState>()),
+                                                                                                                           _cameraController(_cameraState, this) {
     connect(keyObserver.get(), &KeyObserver::pressedKeysChanged, &_cameraController, &CameraController::setPressedKeys);
     connect(_cameraState.get(), &CameraState::cameraChanged, this, &Viewport::setCamera);
     setCamera(_cameraState->camera());
@@ -58,5 +56,5 @@ void EditorViewport::resizeEvent(QResizeEvent *event) {
     _cameraState->setViewportSize(glm::vec2(event->size().width(), event->size().height()));
 }
 
-}
+} // namespace Editor
 } // namespace Lattice

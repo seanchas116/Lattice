@@ -1,8 +1,8 @@
 #include "DrawCircle.hpp"
 #include "../gl/VAO.hpp"
 #include "../resource/Resource.hpp"
-#include "../support/Location.hpp"
 #include "../support/Camera.hpp"
+#include "../support/Location.hpp"
 #include <glm/gtx/transform.hpp>
 
 using namespace glm;
@@ -38,5 +38,5 @@ void DrawCircle::draw2D(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, glm::i
     vao->draw();
 }
 
-}
+} // namespace Draw
 } // namespace Lattice

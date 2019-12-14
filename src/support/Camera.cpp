@@ -55,7 +55,6 @@ Ray<double> Camera::modelMouseRay(const dmat4 &modelMatrix, dvec2 viewportPos) c
     return {front, back - front};
 }
 
-
 Camera Camera::perspective(glm::dmat4 cameraToWorldMatrix, glm::dvec2 viewportSize, double fieldOfView, double zNear, double zFar) {
     Camera camera;
     camera._projection = Projection::Perspective;

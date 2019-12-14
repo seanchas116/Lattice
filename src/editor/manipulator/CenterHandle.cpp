@@ -1,9 +1,9 @@
 #include "CenterHandle.hpp"
-#include "../../gl/VAO.hpp"
 #include "../../draw/Vertex.hpp"
+#include "../../gl/VAO.hpp"
 #include "../../gl/VertexBuffer.hpp"
-#include "../../support/Debug.hpp"
 #include "../../support/Camera.hpp"
+#include "../../support/Debug.hpp"
 #include <QMouseEvent>
 
 using namespace glm;
@@ -26,7 +26,7 @@ void CenterHandle::drawHitArea(const Viewport::DrawEvent &event) {
     }
     dvec3 frontPos(viewportPos.xy, 0);
 
-    Draw::Vertex vertex { frontPos };
+    Draw::Vertex vertex{frontPos};
     auto vbo = makeShared<GL::VertexBuffer<Draw::Vertex>>();
     vbo->setVertices({vertex});
     auto vao = makeShared<GL::VAO>(vbo, GL::Primitive::Point);

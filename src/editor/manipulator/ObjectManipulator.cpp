@@ -1,15 +1,14 @@
 #include "ObjectManipulator.hpp"
-#include "../../state/AppState.hpp"
 #include "../../document/Document.hpp"
-#include "../../document/Object.hpp"
 #include "../../document/History.hpp"
+#include "../../document/Object.hpp"
+#include "../../state/AppState.hpp"
 
 namespace Lattice {
 namespace Editor {
 namespace Manipulator {
 
-ObjectManipulator::ObjectManipulator(const SP<State::AppState> &appState) : _appState(appState)
-{
+ObjectManipulator::ObjectManipulator(const SP<State::AppState> &appState) : _appState(appState) {
     setObjects(appState->document()->selectedObjects());
     connect(appState->document().get(), &Document::Document::selectedObjectsChanged, this, &ObjectManipulator::setObjects);
     connect(this, &Manipulator::onDragBegin, this, &ObjectManipulator::handleOnDragBegin);
@@ -34,7 +33,7 @@ void ObjectManipulator::handleOnDragBegin(ValueType type, glm::dvec3 values) {
     }();
 
     _appState->document()->history()->beginChange(changeText);
-    for (auto& object : _objects) {
+    for (auto &object : _objects) {
         _initialLocations[object] = object->location();
     }
     _initialValues = values;
@@ -46,7 +45,7 @@ void ObjectManipulator::handleOnDragMove(ValueType type, glm::dvec3 values) {
     if (_objects.empty()) {
         return;
     }
-    for (auto& object : _objects) {
+    for (auto &object : _objects) {
         auto loc = _initialLocations.at(object);
         switch (type) {
         case ValueType::Translate:
@@ -70,15 +69,15 @@ void ObjectManipulator::handleOnDragEnd(ValueType type) {
     _initialLocations.clear();
 }
 
-void ObjectManipulator::setObjects(const std::unordered_set<SP<Document::Object> > &objects) {
-    for (auto& c : _connections) {
+void ObjectManipulator::setObjects(const std::unordered_set<SP<Document::Object>> &objects) {
+    for (auto &c : _connections) {
         disconnect(c);
     }
     _connections.clear();
 
     _objects = objects;
 
-    for (auto& object : objects) {
+    for (auto &object : objects) {
         auto c = connect(object.get(), &Document::Object::locationChanged, this, [this] {
             updatePosition();
         });
@@ -96,7 +95,7 @@ void ObjectManipulator::updatePosition() {
     glm::dvec3 minPos(std::numeric_limits<double>::infinity());
     glm::dvec3 maxPos(-std::numeric_limits<double>::infinity());
 
-    for (auto& object : _objects) {
+    for (auto &object : _objects) {
         auto p = object->location().position;
         minPos = glm::min(minPos, p);
         maxPos = glm::max(maxPos, p);
@@ -106,6 +105,6 @@ void ObjectManipulator::updatePosition() {
     setTargetPosition(position);
 }
 
-}
+} // namespace Manipulator
 } // namespace Editor
 } // namespace Lattice

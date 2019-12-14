@@ -38,9 +38,9 @@ void IndexBuffer::setLines(const std::vector<IndexBuffer::Line> &lines) {
 
 void IndexBuffer::setLineStrips(const std::vector<IndexBuffer::LineStrip> &strips) {
     std::vector<Line> lines;
-    for (auto& strip : strips) {
+    for (auto &strip : strips) {
         for (size_t i = 0; i < strip.size() - 1; ++i) {
-            lines.push_back({strip[i], strip[i+1]});
+            lines.push_back({strip[i], strip[i + 1]});
         }
     }
     setLines(lines);

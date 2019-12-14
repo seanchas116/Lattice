@@ -10,7 +10,7 @@ namespace Editor {
 class CameraState : public QObject {
     Q_OBJECT
 
-public:
+  public:
     enum class Orientation {
         None,
         Front,
@@ -30,11 +30,11 @@ public:
     Orientation orientation() const;
     void setOrientation(Orientation orientation);
 
-signals:
-    void cameraChanged(const Camera& camera);
+  signals:
+    void cameraChanged(const Camera &camera);
     void orientationChanged(Orientation orientation);
 
-private:
+  private:
     static glm::dvec3 orientationAngle(Orientation orientation);
 
     LATTICE_AUTO_PROPERTY_REFERENCE(Camera::Projection, projection, setProjection, Camera::Projection::Perspective)

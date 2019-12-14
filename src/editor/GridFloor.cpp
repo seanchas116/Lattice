@@ -1,25 +1,23 @@
 #include "GridFloor.hpp"
-#include "EditorViewport.hpp"
-#include "CameraState.hpp"
+#include "../draw/Vertex.hpp"
 #include "../gl/VAO.hpp"
 #include "../gl/VertexBuffer.hpp"
-#include "../draw/Vertex.hpp"
 #include "../support/Camera.hpp"
+#include "CameraState.hpp"
+#include "EditorViewport.hpp"
 
 using namespace glm;
 
 namespace Lattice {
 namespace Editor {
 
-GridFloor::GridFloor() :
-    _vbo(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
-    _indexBuffer(makeShared<GL::IndexBuffer>()),
-    _vao(makeShared<GL::VAO>(_vbo, _indexBuffer)),
-    _yAxisIndexBuffer(makeShared<GL::IndexBuffer>()),
-    _zAxisIndexBuffer(makeShared<GL::IndexBuffer>()),
-    _yAxisVAO(makeShared<GL::VAO>(_vbo, _yAxisIndexBuffer)),
-    _zAxisVAO(makeShared<GL::VAO>(_vbo, _zAxisIndexBuffer))
-{
+GridFloor::GridFloor() : _vbo(makeShared<GL::VertexBuffer<Draw::PointLineVertex>>()),
+                         _indexBuffer(makeShared<GL::IndexBuffer>()),
+                         _vao(makeShared<GL::VAO>(_vbo, _indexBuffer)),
+                         _yAxisIndexBuffer(makeShared<GL::IndexBuffer>()),
+                         _zAxisIndexBuffer(makeShared<GL::IndexBuffer>()),
+                         _yAxisVAO(makeShared<GL::VAO>(_vbo, _yAxisIndexBuffer)),
+                         _zAxisVAO(makeShared<GL::VAO>(_vbo, _zAxisIndexBuffer)) {
     // build grid
     constexpr int count = 200;
     constexpr double unit = 1;
@@ -30,8 +28,8 @@ GridFloor::GridFloor() :
     std::vector<uint32_t> zLineStrip;
 
     for (int z = -count; z <= count; ++z) {
-        dvec3 v1(0, -count*unit, z*unit);
-        dvec3 v2(0, count*unit,  z*unit);
+        dvec3 v1(0, -count * unit, z * unit);
+        dvec3 v2(0, count * unit, z * unit);
         auto i1 = uint32_t(vertices.size());
         vertices.push_back({v1, vec4(0), 1});
         auto i2 = uint32_t(vertices.size());
@@ -44,8 +42,8 @@ GridFloor::GridFloor() :
         }
     }
     for (int y = -count; y <= count; ++y) {
-        dvec3 v1(0, y*unit, -count*unit);
-        dvec3 v2(0, y*unit, count*unit);
+        dvec3 v1(0, y * unit, -count * unit);
+        dvec3 v2(0, y * unit, count * unit);
         auto i1 = uint32_t(vertices.size());
         vertices.push_back({v1, vec4(0), 1});
         auto i2 = uint32_t(vertices.size());
@@ -67,7 +65,7 @@ GridFloor::GridFloor() :
 void GridFloor::draw(const Viewport::DrawEvent &event) {
     int normalAxis = 1;
 
-    auto viewport = static_cast<EditorViewport*>(event.viewport);
+    auto viewport = static_cast<EditorViewport *>(event.viewport);
     auto cameraState = viewport->cameraState();
 
     if (cameraState->projection() == Camera::Projection::Orthographic) {
@@ -87,8 +85,8 @@ void GridFloor::draw(const Viewport::DrawEvent &event) {
         }
     }
 
-    static const std::array<glm::mat4, 3> swizzleTransforms {
-        glm::mat4(1), // xyz to xyz
+    static const std::array<glm::mat4, 3> swizzleTransforms{
+        glm::mat4(1),                                              // xyz to xyz
         glm::mat4(0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1), // xyz to yzx
         glm::mat4(0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1), // xyz to zxy
     };
@@ -107,5 +105,5 @@ void GridFloor::draw(const Viewport::DrawEvent &event) {
     event.operations->drawLine.draw(_zAxisVAO, transform, event.camera, 2, color1);
 }
 
-}
+} // namespace Editor
 } // namespace Lattice

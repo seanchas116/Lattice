@@ -1,17 +1,17 @@
 #include "MainWindow.hpp"
-#include "ObjectListView.hpp"
-#include "PropertyView.hpp"
-#include "../state/AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
 #include "../editor/EditorViewportContainer.hpp"
+#include "../state/AppState.hpp"
+#include "ObjectListView.hpp"
+#include "PropertyView.hpp"
 #include <QAction>
-#include <QMenuBar>
-#include <QUndoStack>
 #include <QDockWidget>
+#include <QKeyEvent>
+#include <QMenuBar>
 #include <QToolBar>
 #include <QToolButton>
-#include <QKeyEvent>
+#include <QUndoStack>
 
 namespace Lattice {
 namespace UI {
@@ -71,18 +71,18 @@ void MainWindow::setupToolBar() {
     for (auto [tool, text] : tools) {
         auto action = toolBar->addAction(text);
         action->setCheckable(true);
-        connect(action, &QAction::toggled, appState, [appState, tool = tool] (bool checked) {
+        connect(action, &QAction::toggled, appState, [appState, tool = tool](bool checked) {
             if (checked) {
                 appState->setTool(tool);
             } else if (appState->tool() == tool) {
                 appState->setTool(State::Tool::None);
             }
         });
-        connect(appState, &State::AppState::toolChanged, action, [action, tool = tool] (State::Tool newTool) {
+        connect(appState, &State::AppState::toolChanged, action, [action, tool = tool](State::Tool newTool) {
             action->setChecked(newTool == tool);
         });
         action->setVisible(!!appState->meshEditState());
-        connect(appState, &State::AppState::meshEditStateChanged, action, [action] (auto meshEditState) {
+        connect(appState, &State::AppState::meshEditStateChanged, action, [action](auto meshEditState) {
             action->setVisible(!!meshEditState);
         });
     }
@@ -93,7 +93,7 @@ void MainWindow::setupToolBar() {
 
     auto isEditingAction = toolBar->addAction(tr("Edit"));
     isEditingAction->setCheckable(true);
-    connect(appState, &State::AppState::meshEditStateChanged, isEditingAction, [isEditingAction] (auto meshEditState) {
+    connect(appState, &State::AppState::meshEditStateChanged, isEditingAction, [isEditingAction](auto meshEditState) {
         isEditingAction->setChecked(!!meshEditState);
     });
     connect(isEditingAction, &QAction::toggled, this, [this](bool isEditing) {
@@ -238,7 +238,7 @@ void MainWindow::setupMenu() {
                 {State::ViewportSplitMode::TopBottom, tr("Top / Bottom")},
                 {State::ViewportSplitMode::Four, tr("Four")},
             };
-            std::unordered_map<State::ViewportSplitMode, QAction*> actions;
+            std::unordered_map<State::ViewportSplitMode, QAction *> actions;
 
             auto group = new QActionGroup(this);
             group->setExclusive(true);
@@ -289,5 +289,5 @@ void MainWindow::setupPanes() {
     }
 }
 
-}
+} // namespace UI
 } // namespace Lattice

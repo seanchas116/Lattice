@@ -19,10 +19,10 @@ class MeshPropertyView;
 
 class PropertyView : public QWidget {
     Q_OBJECT
-public:
+  public:
     explicit PropertyView(const SP<State::AppState> &appState, QWidget *parent = nullptr);
 
-private:
+  private:
     SP<State::AppState> _appState;
 };
 

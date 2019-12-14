@@ -1,24 +1,22 @@
 #include "MeshRenderer.hpp"
-#include "MeshVAOGenerator.hpp"
-#include "../state/AppState.hpp"
-#include "../gl/VAO.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
 #include "../document/MeshObject.hpp"
+#include "../gl/VAO.hpp"
+#include "../state/AppState.hpp"
 #include "../state/Preferences.hpp"
 #include "../support/Debug.hpp"
-#include <QMouseEvent>
+#include "MeshVAOGenerator.hpp"
 #include <QMenu>
+#include <QMouseEvent>
 
 using namespace glm;
 
 namespace Lattice {
 namespace Editor {
 
-MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Document::MeshObject> &object) :
-    _appState(appState),
-    _object(object)
-{
+MeshRenderer::MeshRenderer(const SP<State::AppState> &appState, const SP<Document::MeshObject> &object) : _appState(appState),
+                                                                                                          _object(object) {
     updateVAOs();
     connect(object.get(), &Document::MeshObject::meshChanged, this, &MeshRenderer::handleMeshUpdated);
     connect(object.get(), &Document::MeshObject::subdivSettingsChanged, this, &MeshRenderer::handleMeshUpdated);
@@ -26,7 +24,7 @@ MeshRenderer::MeshRenderer(const SP<State::AppState>& appState, const SP<Documen
 
 void MeshRenderer::draw(const Viewport::DrawEvent &event) {
     updateVAOs();
-    for (auto& [materialID, vao] : _faceVAOs) {
+    for (auto &[materialID, vao] : _faceVAOs) {
         auto material = _object->materials().at(materialID.index).toDrawMaterial();
         event.operations->drawMaterial.draw(vao, _object->location().matrixToWorld(), event.camera, material);
     }
@@ -34,7 +32,7 @@ void MeshRenderer::draw(const Viewport::DrawEvent &event) {
 
 void MeshRenderer::drawHitArea(const Viewport::DrawEvent &event) {
     updateVAOs();
-    for (auto& [material, vao] : _faceVAOs) {
+    for (auto &[material, vao] : _faceVAOs) {
         event.operations->drawUnicolor.draw(vao, _object->location().matrixToWorld(), event.camera, toIDColor());
     }
 }
@@ -117,5 +115,5 @@ void MeshRenderer::updateVAOs() {
     _isVAOsDirty = false;
 }
 
-}
-}
+} // namespace Editor
+} // namespace Lattice

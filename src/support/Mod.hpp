@@ -8,4 +8,4 @@ T mod(T x, T n) {
     return (x % n + n) % n;
 }
 
-}
+} // namespace Lattice

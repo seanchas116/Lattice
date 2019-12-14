@@ -1,6 +1,6 @@
 #include "MultiValueCheckBox.hpp"
-#include <QVBoxLayout>
 #include <QCheckBox>
+#include <QVBoxLayout>
 
 namespace Lattice {
 namespace Widget {
@@ -20,7 +20,7 @@ void MultiValueCheckBox::setValues(const std::vector<bool> &values) {
         return;
     }
 
-    bool isValuesSame= true;
+    bool isValuesSame = true;
     bool value = values[0];
 
     for (size_t i = 1; i < values.size(); ++i) {

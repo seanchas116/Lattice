@@ -7,7 +7,7 @@ namespace Lattice {
 namespace Draw {
 
 class Clear final : protected QOpenGLExtraFunctions {
-public:
+  public:
     Clear();
 
     void clear(glm::vec4 color, float depth);

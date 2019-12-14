@@ -1,8 +1,8 @@
 #pragma once
-#include <QOpenGLWidget>
-#include "CameraController.hpp"
 #include "../support/Shorthands.hpp"
 #include "../viewport/Viewport.hpp"
+#include "CameraController.hpp"
+#include <QOpenGLWidget>
 
 namespace Lattice {
 namespace State {
@@ -18,12 +18,13 @@ class CameraState;
 class EditorViewport final : public Viewport::Viewport {
     Q_OBJECT
     using super = Viewport;
-public:
-    explicit EditorViewport(const SP<State::AppState>& appState, const SP<KeyObserver>& keyObserver, QWidget *parent = nullptr);
 
-    auto& cameraState() const { return _cameraState; }
+  public:
+    explicit EditorViewport(const SP<State::AppState> &appState, const SP<KeyObserver> &keyObserver, QWidget *parent = nullptr);
 
-protected:
+    auto &cameraState() const { return _cameraState; }
+
+  protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
@@ -32,11 +33,11 @@ protected:
 
     void resizeEvent(QResizeEvent *event) override;
 
-private:
+  private:
     SP<State::AppState> _appState;
     SP<CameraState> _cameraState;
     CameraController _cameraController;
 };
 
-}
+} // namespace Editor
 } // namespace Lattice

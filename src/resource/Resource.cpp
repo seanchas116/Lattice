@@ -12,5 +12,5 @@ std::string read(const char *path) {
     return std::string(file.begin(), file.end());
 }
 
-}
-}
+} // namespace Resource
+} // namespace Lattice

@@ -6,14 +6,14 @@ namespace Editor {
 namespace MeshEditor {
 
 class LoopCutTool : public Tool {
-public:
-    LoopCutTool(const SP<State::MeshEditState>& meshEditState) : Tool(meshEditState) {}
+  public:
+    LoopCutTool(const SP<State::MeshEditState> &meshEditState) : Tool(meshEditState) {}
 
     void mousePressTool(const EventTarget &target, const Viewport::MouseEvent &event) override;
     void mouseMoveTool(const EventTarget &target, const Viewport::MouseEvent &event) override;
     void mouseReleaseTool(const EventTarget &target, const Viewport::MouseEvent &event) override;
 
-private:
+  private:
 };
 
 } // namespace MeshEditor

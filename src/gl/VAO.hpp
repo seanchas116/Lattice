@@ -1,12 +1,12 @@
 #pragma once
 #include "../support/Shorthands.hpp"
+#include "IndexBuffer.hpp"
+#include "VertexBuffer.hpp"
 #include <QOpenGLExtraFunctions>
+#include <array>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
-#include <array>
 #include <vector>
-#include "VertexBuffer.hpp"
-#include "IndexBuffer.hpp"
 
 namespace Lattice {
 namespace GL {
@@ -18,20 +18,20 @@ enum class BufferType {
 
 class VAO final : protected QOpenGLExtraFunctions {
     Q_DISABLE_COPY(VAO)
-public:
+  public:
     VAO();
-    VAO(const SP<AnyVertexBuffer>& buffer, const SP<IndexBuffer>& indexBuffer);
-    VAO(const SP<AnyVertexBuffer>& buffer, Primitive primitive);
-    VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>>& buffers, const SP<IndexBuffer>& indexBuffer);
-    VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>>& buffers, Primitive primitive);
+    VAO(const SP<AnyVertexBuffer> &buffer, const SP<IndexBuffer> &indexBuffer);
+    VAO(const SP<AnyVertexBuffer> &buffer, Primitive primitive);
+    VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>> &buffers, const SP<IndexBuffer> &indexBuffer);
+    VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>> &buffers, Primitive primitive);
     ~VAO();
 
-    auto& buffers() const { return _buffers; }
+    auto &buffers() const { return _buffers; }
 
     void draw();
 
-private:
-    VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>>& buffers, const Opt<SP<IndexBuffer>>& indexBuffer, Primitive primitive);
+  private:
+    VAO(const std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>> &buffers, const Opt<SP<IndexBuffer>> &indexBuffer, Primitive primitive);
 
     std::vector<std::pair<SP<AnyVertexBuffer>, BufferType>> _buffers;
     Opt<SP<IndexBuffer>> _indexBuffer;
@@ -39,5 +39,5 @@ private:
     GLuint _vertexArray = 0;
 };
 
-}
-}
+} // namespace GL
+} // namespace Lattice

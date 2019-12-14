@@ -11,7 +11,7 @@ namespace Lattice {
 namespace Draw {
 
 class Operations final {
-public:
+  public:
     Operations() = default;
 
     Clear clear;
@@ -22,5 +22,5 @@ public:
     DrawUnicolor drawUnicolor;
 };
 
-}
-}
+} // namespace Draw
+} // namespace Lattice

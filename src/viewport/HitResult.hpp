@@ -12,5 +12,5 @@ struct HitResult {
     float depth;
 };
 
-}
-}
+} // namespace Viewport
+} // namespace Lattice

@@ -1,9 +1,9 @@
 #include "CameraController.hpp"
-#include "CameraState.hpp"
 #include "../viewport/Util.hpp"
+#include "CameraState.hpp"
+#include <QApplication>
 #include <QMouseEvent>
 #include <QtDebug>
-#include <QApplication>
 #include <glm/gtx/euler_angles.hpp>
 
 using namespace glm;
@@ -105,5 +105,5 @@ void CameraController::setPressedKeys(const std::unordered_set<int> &keys) {
     }
 }
 
-}
+} // namespace Editor
 } // namespace Lattice

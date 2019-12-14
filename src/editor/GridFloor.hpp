@@ -1,27 +1,28 @@
 #pragma once
 
+#include "../draw/Vertex.hpp"
 #include "../support/Shorthands.hpp"
 #include "../viewport/Renderable.hpp"
-#include "../draw/Vertex.hpp"
 #include <glm/glm.hpp>
 
 namespace Lattice {
 
 namespace GL {
-template <typename T> class VertexBuffer;
+template <typename T>
+class VertexBuffer;
 class IndexBuffer;
-}
+} // namespace GL
 
 namespace Editor {
 
 class GridFloor final : public Viewport::Renderable {
     Q_OBJECT
-public:
+  public:
     GridFloor();
 
-    void draw(const Viewport::DrawEvent& event) override;
+    void draw(const Viewport::DrawEvent &event) override;
 
-private:
+  private:
     SP<GL::VertexBuffer<Draw::PointLineVertex>> _vbo;
     SP<GL::IndexBuffer> _indexBuffer;
     SP<GL::VAO> _vao;
@@ -31,5 +32,5 @@ private:
     SP<GL::VAO> _zAxisVAO;
 };
 
-}
+} // namespace Editor
 } // namespace Lattice

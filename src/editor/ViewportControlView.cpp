@@ -1,10 +1,10 @@
 #include "ViewportControlView.hpp"
 #include "CameraState.hpp"
+#include <QActionGroup>
+#include <QMenu>
 #include <QRadioButton>
 #include <QToolButton>
 #include <QVBoxLayout>
-#include <QMenu>
-#include <QActionGroup>
 
 namespace Lattice {
 namespace Editor {
@@ -20,11 +20,11 @@ ViewportControlView::ViewportControlView(const SP<CameraState> &cameraState, QWi
             {Camera::Projection::Perspective, tr("Perspective")},
             {Camera::Projection::Orthographic, tr("Orthographic")},
         };
-        for (auto&& [projection, text] : projections) {
-            auto action= menu->addAction(text);
+        for (auto &&[projection, text] : projections) {
+            auto action = menu->addAction(text);
             action->setCheckable(true);
             action->setChecked(projection == cameraState->projection());
-            connect(action, &QAction::triggered, cameraState.get(), [cameraState, projection = projection] (bool checked) {
+            connect(action, &QAction::triggered, cameraState.get(), [cameraState, projection = projection](bool checked) {
                 if (checked) {
                     cameraState->setProjection(projection);
                 }
@@ -48,7 +48,7 @@ ViewportControlView::ViewportControlView(const SP<CameraState> &cameraState, QWi
             {tr("Bottom"), CameraState::Orientation::Bottom},
         };
 
-        for (auto&& [text, orientation] : orientations) {
+        for (auto &&[text, orientation] : orientations) {
             menu->addAction(text, this, [this, orientation = orientation] {
                 _cameraState->setProjection(Camera::Projection::Orthographic);
                 _cameraState->setOrientation(orientation);

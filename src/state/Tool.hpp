@@ -13,4 +13,4 @@ enum class Tool {
 };
 
 }
-}
+} // namespace Lattice

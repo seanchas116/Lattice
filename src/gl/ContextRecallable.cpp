@@ -13,5 +13,5 @@ void ContextRecallable::recallContext() {
     _context->makeCurrent(_surface);
 }
 
-}
+} // namespace GL
 } // namespace Lattice

@@ -19,5 +19,5 @@ void DrawUnicolor::draw(const SP<GL::VAO> &vao, const glm::dmat4 &matrix, const 
     vao->draw();
 }
 
-}
+} // namespace Draw
 } // namespace Lattice

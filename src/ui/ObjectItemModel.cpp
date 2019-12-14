@@ -1,20 +1,18 @@
 #include "ObjectItemModel.hpp"
-#include "../document/Object.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
+#include "../document/Object.hpp"
 #include "../support/OptionalGuard.hpp"
+#include <QDataStream>
 #include <QMimeData>
 #include <QtDebug>
-#include <QDataStream>
 
 namespace Lattice {
 namespace UI {
 
-ObjectItemModel::ObjectItemModel(const SP<Document::Document> &document, QObject *parent) :
-    QAbstractItemModel(parent),
-    _document(document),
-    _uuid(QUuid::createUuid())
-{
+ObjectItemModel::ObjectItemModel(const SP<Document::Document> &document, QObject *parent) : QAbstractItemModel(parent),
+                                                                                            _document(document),
+                                                                                            _uuid(QUuid::createUuid()) {
     connectObject(document->rootObject());
 }
 
@@ -86,7 +84,7 @@ QMimeData *ObjectItemModel::mimeData(const QModelIndexList &indexes) const {
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);
     stream << _uuid;
-    for (const auto& index : indexes) {
+    for (const auto &index : indexes) {
         auto object = objectForIndex(index);
         stream << QVector<int>::fromStdVector(object->indexPath());
     }
@@ -135,12 +133,12 @@ bool ObjectItemModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
         switch (action) {
         default:
         case Qt::CopyAction:
-            for (const auto& object : objects) {
+            for (const auto &object : objects) {
                 parentObject->insertObjectBefore(object->clone(), ref);
             }
             break;
         case Qt::MoveAction:
-            for (const auto& object : objects) {
+            for (const auto &object : objects) {
                 parentObject->insertObjectBefore(object, ref);
             }
             break;
@@ -151,7 +149,7 @@ bool ObjectItemModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
     return false;
 }
 
-QModelIndex ObjectItemModel::indexForObject(const SP<Document::Object>& object) const {
+QModelIndex ObjectItemModel::indexForObject(const SP<Document::Object> &object) const {
     if (object == _document->rootObject()) {
         return {};
     }
@@ -167,36 +165,36 @@ SP<Document::Object> ObjectItemModel::objectForIndex(const QModelIndex &index) c
 
 void ObjectItemModel::connectObject(const SP<Document::Object> &object) {
     auto objectPtr = object.get();
-    connect(objectPtr, &Document::Object::nameChanged, this, [this, objectPtr] () {
+    connect(objectPtr, &Document::Object::nameChanged, this, [this, objectPtr]() {
         auto index = indexForObject(objectPtr->sharedFromThis());
         emit dataChanged(index, index, {Qt::DisplayRole});
     });
-    connect(objectPtr, &Document::Object::childObjectsAboutToBeInserted, this, [this, objectPtr] (int first, int last) {
+    connect(objectPtr, &Document::Object::childObjectsAboutToBeInserted, this, [this, objectPtr](int first, int last) {
         auto index = indexForObject(objectPtr->sharedFromThis());
         beginInsertRows(index, first, last);
     });
-    connect(objectPtr, &Document::Object::childObjectsInserted, this, [this, objectPtr] (int first, int last) {
+    connect(objectPtr, &Document::Object::childObjectsInserted, this, [this, objectPtr](int first, int last) {
         auto object = objectPtr->sharedFromThis();
         for (int i = first; i <= last; ++i) {
-            auto& child = object->childObjects()[i];
+            auto &child = object->childObjects()[i];
             connectObject(child);
         }
         endInsertRows();
     });
-    connect(objectPtr, &Document::Object::childObjectsAboutToBeRemoved, this, [this, objectPtr] (int first, int last) {
+    connect(objectPtr, &Document::Object::childObjectsAboutToBeRemoved, this, [this, objectPtr](int first, int last) {
         auto object = objectPtr->sharedFromThis();
         for (int i = first; i <= last; ++i) {
-            auto& child = object->childObjects()[i];
+            auto &child = object->childObjects()[i];
             disconnectObject(child);
         }
         auto index = indexForObject(object);
         beginRemoveRows(index, first, last);
     });
-    connect(objectPtr, &Document::Object::childObjectsRemoved, this, [this] () {
+    connect(objectPtr, &Document::Object::childObjectsRemoved, this, [this]() {
         endRemoveRows();
     });
 
-    for (auto& child : object->childObjects()) {
+    for (auto &child : object->childObjects()) {
         connectObject(child);
     }
 }
@@ -205,5 +203,5 @@ void ObjectItemModel::disconnectObject(const SP<Document::Object> &object) {
     disconnect(object.get(), nullptr, this, nullptr);
 }
 
-}
-}
+} // namespace UI
+} // namespace Lattice

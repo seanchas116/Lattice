@@ -7,7 +7,7 @@ namespace Manipulator {
 
 class CenterHandle : public Viewport::Renderable {
     Q_OBJECT
-public:
+  public:
     CenterHandle();
 
     void draw(const Viewport::DrawEvent &event) override;
@@ -19,15 +19,15 @@ public:
 
     void setTargetPosition(glm::dvec3 pos) { _targetPosition = pos; }
 
-signals:
+  signals:
     void onDragBegin(glm::dvec3 pos);
     void onDragMove(glm::dvec3 pos);
     void onDragEnd();
 
-    void onContextMenu(const Viewport::MouseEvent& event);
+    void onContextMenu(const Viewport::MouseEvent &event);
 
-private:
-    glm::dvec3 _targetPosition {0};
+  private:
+    glm::dvec3 _targetPosition{0};
     double _depth = 0;
     bool _dragged = false;
 };

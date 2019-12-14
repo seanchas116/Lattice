@@ -1,25 +1,25 @@
 #pragma once
+#include "DoubleSpinBox.hpp"
 #include <QWidget>
 #include <vector>
-#include "DoubleSpinBox.hpp"
 
 namespace Lattice {
 namespace Widget {
 
 class MultiValueDoubleSpinBox : public QWidget {
     Q_OBJECT
-public:
-    MultiValueDoubleSpinBox(QWidget* parent = nullptr);
+  public:
+    MultiValueDoubleSpinBox(QWidget *parent = nullptr);
 
     auto doubleSpinBox() const { return _doubleSpinBox; }
 
-    void setValues(const std::vector<double>& values);
+    void setValues(const std::vector<double> &values);
 
-signals:
+  signals:
     void editingFinished(double value);
 
-private:
-    DoubleSpinBox* _doubleSpinBox;
+  private:
+    DoubleSpinBox *_doubleSpinBox;
 };
 
 } // namespace Widget

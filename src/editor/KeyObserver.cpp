@@ -1,8 +1,8 @@
 #include "KeyObserver.hpp"
-#include <QKeyEvent>
-#include <QtDebug>
 #include <QApplication>
+#include <QKeyEvent>
 #include <QWindow>
+#include <QtDebug>
 
 namespace Lattice {
 namespace Editor {
@@ -16,15 +16,15 @@ KeyObserver::~KeyObserver() {
 }
 
 bool KeyObserver::eventFilter(QObject *watched, QEvent *event) {
-    if (!qobject_cast<QWindow*>(watched)) {
+    if (!qobject_cast<QWindow *>(watched)) {
         return false;
     }
     switch (event->type()) {
     case QEvent::KeyPress:
-        keyPress(static_cast<QKeyEvent*>(event));
+        keyPress(static_cast<QKeyEvent *>(event));
         break;
     case QEvent::KeyRelease:
-        keyRelease(static_cast<QKeyEvent*>(event));
+        keyRelease(static_cast<QKeyEvent *>(event));
         break;
     default:
         break;
@@ -42,5 +42,5 @@ void KeyObserver::keyRelease(QKeyEvent *event) {
     emit pressedKeysChanged(_pressedKeys);
 }
 
-}
+} // namespace Editor
 } // namespace Lattice

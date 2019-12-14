@@ -1,6 +1,6 @@
 #pragma once
-#include <QObject>
 #include "../../viewport/Renderable.hpp"
+#include <QObject>
 
 namespace Lattice {
 
@@ -14,9 +14,11 @@ class RotateHandle;
 class Manipulator : public Viewport::Renderable {
     Q_OBJECT
 
-public:
+  public:
     enum class ValueType {
-        Translate, Scale, Rotate
+        Translate,
+        Scale,
+        Rotate
     };
 
     Manipulator();
@@ -33,7 +35,7 @@ public:
     bool isScaleHandleVisible() const { return _isScaleHandleVisible; }
     void setScaleHandleVisible(bool isScaleHandleVisible);
 
-signals:
+  signals:
     void targetPositionChanged(glm::dvec3 position);
 
     void translateHandleVisibleChanged(bool isTranslateHandleVisible);
@@ -44,9 +46,9 @@ signals:
     void onDragMove(ValueType type, glm::dvec3 values);
     void onDragEnd(ValueType type);
 
-    void onContextMenu(const Viewport::MouseEvent& event);
+    void onContextMenu(const Viewport::MouseEvent &event);
 
-private:
+  private:
     void updateHandles();
 
     SP<CenterHandle> _centerHandle;
@@ -59,6 +61,6 @@ private:
     bool _isScaleHandleVisible = false;
 };
 
-}
+} // namespace Manipulator
 } // namespace Editor
 } // namespace Lattice

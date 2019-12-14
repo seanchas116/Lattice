@@ -7,15 +7,15 @@ namespace Lattice {
 namespace GL {
 
 class ContextRecallable {
-public:
+  public:
     ContextRecallable();
 
     void recallContext();
 
-private:
-    QOpenGLContext* _context;
-    QSurface* _surface;
+  private:
+    QOpenGLContext *_context;
+    QSurface *_surface;
 };
 
-}
+} // namespace GL
 } // namespace Lattice

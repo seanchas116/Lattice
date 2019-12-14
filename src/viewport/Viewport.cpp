@@ -1,8 +1,8 @@
 #include "Viewport.hpp"
+#include "../support/Debug.hpp"
+#include "HitAreaMap.hpp"
 #include "Renderable.hpp"
 #include "Util.hpp"
-#include "HitAreaMap.hpp"
-#include "../support/Debug.hpp"
 #include <QMouseEvent>
 #include <QOpenGLDebugLogger>
 #include <QResizeEvent>
@@ -14,7 +14,7 @@ Viewport::Viewport(QWidget *parent) : QWidget(parent), _camera(Camera::perspecti
     setMouseTracking(true);
 }
 
-void Viewport::setRenderable(const Opt<SP<Renderable> > &renderable) {
+void Viewport::setRenderable(const Opt<SP<Renderable>> &renderable) {
     if (renderable) {
         connect(renderable->get(), &Renderable::updated, this, &Viewport::updateRequested);
     }
@@ -37,11 +37,13 @@ void Viewport::mousePressEvent(QMouseEvent *event) {
     auto pos = mapQtToGL(this, event->pos());
 
     auto maybeHitResult = hitTest(pos, _camera);
-    if (!maybeHitResult) { return; }
+    if (!maybeHitResult) {
+        return;
+    }
 
     auto hitResult = *maybeHitResult;
 
-    MouseEvent renderMouseEvent {this, _camera, glm::dvec3(pos, hitResult.depth), event, nullptr};
+    MouseEvent renderMouseEvent{this, _camera, glm::dvec3(pos, hitResult.depth), event, nullptr};
     hitResult.renderable->mousePressEvent(renderMouseEvent);
     _draggedHitResult = hitResult;
 }
@@ -52,7 +54,7 @@ void Viewport::mouseMoveEvent(QMouseEvent *event) {
     if (_draggedHitResult) {
         // drag
         auto hitResult = *_draggedHitResult;
-        MouseEvent renderMouseEvent {this, _camera, glm::dvec3(pos, hitResult.depth), event, nullptr};
+        MouseEvent renderMouseEvent{this, _camera, glm::dvec3(pos, hitResult.depth), event, nullptr};
         hitResult.renderable->mouseMoveEvent(renderMouseEvent);
         return;
     } else {
@@ -65,7 +67,7 @@ void Viewport::mouseMoveEvent(QMouseEvent *event) {
             return;
         }
         auto hitResult = *maybeHitResult;
-        MouseEvent renderMouseEvent {this, _camera, glm::dvec3(pos, hitResult.depth), event, nullptr};
+        MouseEvent renderMouseEvent{this, _camera, glm::dvec3(pos, hitResult.depth), event, nullptr};
         if (_hoveredHitResult && _hoveredHitResult->renderable == hitResult.renderable) {
             hitResult.renderable->mouseMoveEvent(renderMouseEvent);
         } else {
@@ -83,11 +85,13 @@ void Viewport::mouseDoubleClickEvent(QMouseEvent *event) {
     auto pos = mapQtToGL(this, event->pos());
 
     auto maybeHitResult = hitTest(pos, _camera);
-    if (!maybeHitResult) { return; }
+    if (!maybeHitResult) {
+        return;
+    }
 
     auto [renderable, hitDepth] = *maybeHitResult;
 
-    MouseEvent renderMouseEvent {this, _camera, glm::dvec3(pos, hitDepth), event, nullptr};
+    MouseEvent renderMouseEvent{this, _camera, glm::dvec3(pos, hitDepth), event, nullptr};
     renderable->mouseDoubleClickEvent(renderMouseEvent);
 }
 
@@ -95,11 +99,13 @@ void Viewport::contextMenuEvent(QContextMenuEvent *event) {
     auto pos = mapQtToGL(this, event->pos());
 
     auto maybeHitResult = hitTest(pos, _camera);
-    if (!maybeHitResult) { return; }
+    if (!maybeHitResult) {
+        return;
+    }
 
     auto [renderable, hitDepth] = *maybeHitResult;
 
-    MouseEvent renderContextMenuEvent {this, _camera, glm::dvec3(pos, hitDepth), nullptr, event};
+    MouseEvent renderContextMenuEvent{this, _camera, glm::dvec3(pos, hitDepth), nullptr, event};
     renderable->contextMenuEvent(renderContextMenuEvent);
 }
 
@@ -119,7 +125,7 @@ void Viewport::mouseReleaseEvent(QMouseEvent *event) {
     }
     auto hitResult = *_draggedHitResult;
 
-    MouseEvent renderMouseEvent {this, _camera, glm::dvec3(mapQtToGL(this, event->pos()), hitResult.depth), event, nullptr};
+    MouseEvent renderMouseEvent{this, _camera, glm::dvec3(mapQtToGL(this, event->pos()), hitResult.depth), event, nullptr};
     hitResult.renderable->mouseReleaseEvent(renderMouseEvent);
     _draggedHitResult = {};
 }
@@ -133,5 +139,5 @@ Opt<HitResult> Viewport::hitTest(glm::dvec2 pos, const Camera &camera) {
     return _hitAreaMap->get()->pick(pos);
 }
 
-} // namespace Render
+} // namespace Viewport
 } // namespace Lattice

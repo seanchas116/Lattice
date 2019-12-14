@@ -1,20 +1,18 @@
 #include "ObjectListView.hpp"
-#include "ObjectItemModel.hpp"
-#include "ObjectSelectionModel.hpp"
-#include "../state/AppState.hpp"
 #include "../document/Document.hpp"
 #include "../document/History.hpp"
+#include "../state/AppState.hpp"
+#include "ObjectItemModel.hpp"
+#include "ObjectSelectionModel.hpp"
+#include <QMenu>
 #include <QTreeView>
 #include <QVBoxLayout>
-#include <QMenu>
 
 namespace Lattice {
 namespace UI {
 
-ObjectListView::ObjectListView(const SP<State::AppState> &appState, QWidget *parent) :
-    QWidget(parent),
-    _appState(appState)
-{
+ObjectListView::ObjectListView(const SP<State::AppState> &appState, QWidget *parent) : QWidget(parent),
+                                                                                       _appState(appState) {
     auto treeView = new QTreeView();
     treeView->setHeaderHidden(true);
     treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -29,7 +27,7 @@ ObjectListView::ObjectListView(const SP<State::AppState> &appState, QWidget *par
     treeView->setSelectionModel(selectionModel);
 
     treeView->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(treeView, &QWidget::customContextMenuRequested, this, [=](const QPoint& p) {
+    connect(treeView, &QWidget::customContextMenuRequested, this, [=](const QPoint &p) {
         auto index = treeView->indexAt(p);
         if (index.isValid()) {
             QMenu contextMenu;
@@ -44,5 +42,5 @@ ObjectListView::ObjectListView(const SP<State::AppState> &appState, QWidget *par
     setLayout(layout);
 }
 
-}
-}
+} // namespace UI
+} // namespace Lattice

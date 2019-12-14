@@ -1,11 +1,11 @@
 #pragma once
 
-#include "HitResult.hpp"
-#include "../support/Shorthands.hpp"
 #include "../gl/ContextRecallable.hpp"
-#include <QtGlobal>
-#include <QVector>
+#include "../support/Shorthands.hpp"
+#include "HitResult.hpp"
 #include <QOpenGLExtraFunctions>
+#include <QVector>
+#include <QtGlobal>
 #include <glm/glm.hpp>
 
 namespace Lattice {
@@ -26,13 +26,13 @@ struct DrawEvent;
 
 class HitAreaMap final : protected GL::ContextRecallable {
     Q_DISABLE_COPY(HitAreaMap)
-public:
+  public:
     HitAreaMap();
 
     Opt<HitResult> pick(glm::vec2 physicalPos);
-    void draw(const SP<Renderable> &renderable, const DrawEvent& drawEvent);
+    void draw(const SP<Renderable> &renderable, const DrawEvent &drawEvent);
 
-private:
+  private:
     void resize(glm::ivec2 size);
 
     SP<GL::Framebuffer> _framebuffer;
@@ -40,5 +40,5 @@ private:
     std::vector<SP<Renderable>> _lastRenderables;
 };
 
-}
-}
+} // namespace Viewport
+} // namespace Lattice

@@ -1,10 +1,10 @@
 #pragma once
 
+#include "../support/Location.hpp"
+#include "../support/Shorthands.hpp"
 #include <QObject>
 #include <QPoint>
 #include <unordered_set>
-#include "../support/Location.hpp"
-#include "../support/Shorthands.hpp"
 
 class QMouseEvent;
 class QWheelEvent;
@@ -16,16 +16,16 @@ class CameraState;
 
 class CameraController final : public QObject {
     Q_OBJECT
-public:
-    CameraController(const SP<CameraState>& camera, QWidget* widget);
-    bool mousePress(QMouseEvent* event);
-    bool mouseMove(QMouseEvent* event);
-    bool mouseRelease(QMouseEvent* event);
-    bool wheel(QWheelEvent* event);
+  public:
+    CameraController(const SP<CameraState> &camera, QWidget *widget);
+    bool mousePress(QMouseEvent *event);
+    bool mouseMove(QMouseEvent *event);
+    bool mouseRelease(QMouseEvent *event);
+    bool wheel(QWheelEvent *event);
 
-    void setPressedKeys(const std::unordered_set<int>& keys);
+    void setPressedKeys(const std::unordered_set<int> &keys);
 
-private:
+  private:
     enum Mode {
         None,
         Move,
@@ -43,5 +43,5 @@ private:
     bool _isOverridingCursor = false;
 };
 
-}
+} // namespace Editor
 } // namespace Lattice

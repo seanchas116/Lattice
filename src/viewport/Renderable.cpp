@@ -18,23 +18,23 @@ void Renderable::setVisible(bool visible) {
     emit updated();
 }
 
-void Renderable::setChildRenderables(const std::vector<SP<Renderable> > &children) {
-    for (auto& child : _childRenderables) {
+void Renderable::setChildRenderables(const std::vector<SP<Renderable>> &children) {
+    for (auto &child : _childRenderables) {
         disconnect(child.get(), &Renderable::updated, this, &Renderable::updated);
     }
     _childRenderables = children;
-    for (auto& child : _childRenderables) {
+    for (auto &child : _childRenderables) {
         connect(child.get(), &Renderable::updated, this, &Renderable::updated);
     }
     emit updated();
 }
 
-void Renderable::preDrawRecursive(const DrawEvent& event) {
+void Renderable::preDrawRecursive(const DrawEvent &event) {
     if (!_isVisible) {
         return;
     }
     preDraw(event);
-    for (auto& c : childRenderables()) {
+    for (auto &c : childRenderables()) {
         c->preDrawRecursive(event);
     }
 }
@@ -44,7 +44,7 @@ void Renderable::drawRecursive(const DrawEvent &event) {
         return;
     }
     draw(event);
-    for (auto& c : childRenderables()) {
+    for (auto &c : childRenderables()) {
         c->drawRecursive(event);
     }
 }
@@ -54,7 +54,7 @@ void Renderable::drawHitAreaRecursive(const DrawEvent &event) {
         return;
     }
     drawHitArea(event);
-    for (auto& c : childRenderables()) {
+    for (auto &c : childRenderables()) {
         c->drawHitAreaRecursive(event);
     }
 }
@@ -64,14 +64,14 @@ void Renderable::draw2DRecursive(const Draw2DEvent &event) {
         return;
     }
     draw2D(event);
-    for (auto& c : childRenderables()) {
+    for (auto &c : childRenderables()) {
         c->draw2DRecursive(event);
     }
 }
 
 void Renderable::getDescendants(std::vector<SP<Renderable>> &descendants) {
     descendants.push_back(sharedFromThis());
-    for (auto& c : _childRenderables) {
+    for (auto &c : _childRenderables) {
         c->getDescendants(descendants);
     }
 }
@@ -121,7 +121,7 @@ void Renderable::hoverLeaveEvent() {
 
 glm::vec4 Renderable::toIDColor() const {
     union {
-        const Renderable* ptr;
+        const Renderable *ptr;
         glm::u16vec4 color;
     } idColor;
     idColor.ptr = this;
@@ -129,9 +129,9 @@ glm::vec4 Renderable::toIDColor() const {
     return glm::vec4(idColor.color) / float(0xFFFF);
 }
 
-Opt<SP<Renderable> > Renderable::fromIDColor(glm::vec4 color) {
+Opt<SP<Renderable>> Renderable::fromIDColor(glm::vec4 color) {
     union {
-        Renderable* ptr;
+        Renderable *ptr;
         glm::u16vec4 color;
     } idColor;
     idColor.color = glm::u16vec4(glm::round(color * float(0xFFFF)));
@@ -141,5 +141,5 @@ Opt<SP<Renderable> > Renderable::fromIDColor(glm::vec4 color) {
     return idColor.ptr->sharedFromThis();
 }
 
-} // namespace Render
+} // namespace Viewport
 } // namespace Lattice

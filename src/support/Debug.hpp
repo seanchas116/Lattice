@@ -1,15 +1,16 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include "Shorthands.hpp"
 #include <QDebug>
 #include <QtDebug>
 #include <array>
+#include <glm/glm.hpp>
 #include <optional>
-#include "Shorthands.hpp"
 
 namespace Lattice {
 
-template<glm::length_t L, typename T, glm::qualifier Q> QDebug operator<<(QDebug debug, const glm::vec<L, T, Q>& v) {
+template <glm::length_t L, typename T, glm::qualifier Q>
+QDebug operator<<(QDebug debug, const glm::vec<L, T, Q> &v) {
     QDebugStateSaver saver(debug);
     debug.nospace();
     debug << "(";
@@ -24,7 +25,7 @@ template<glm::length_t L, typename T, glm::qualifier Q> QDebug operator<<(QDebug
 }
 
 template <typename T, size_t N>
-QDebug operator<<(QDebug debug, const std::array<T, N>& array) {
+QDebug operator<<(QDebug debug, const std::array<T, N> &array) {
     QDebugStateSaver saver(debug);
     debug.nospace();
     debug << "[";
@@ -39,7 +40,7 @@ QDebug operator<<(QDebug debug, const std::array<T, N>& array) {
 }
 
 template <typename T>
-QDebug operator<<(QDebug debug, const Opt<T>& optional) {
+QDebug operator<<(QDebug debug, const Opt<T> &optional) {
     if (optional) {
         return debug << *optional;
     } else {
@@ -48,7 +49,7 @@ QDebug operator<<(QDebug debug, const Opt<T>& optional) {
 }
 
 template <typename T>
-QDebug operator<<(QDebug debug, const SP<T>& ptr) {
+QDebug operator<<(QDebug debug, const SP<T> &ptr) {
     QDebugStateSaver saver(debug);
     debug.nospace();
     debug << "SP(";

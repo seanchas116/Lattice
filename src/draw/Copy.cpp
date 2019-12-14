@@ -24,11 +24,10 @@ SP<GL::VAO> createCopyVAO() {
     return makeShared<GL::VAO>(vbo, GL::Primitive::TriangleFan);
 }
 
-}
+} // namespace
 
 Copy::Copy() : _shader(Resource::read("src/draw/Copy.vert"), {}, Resource::read("src/draw/Copy.frag")),
-               _vao(createCopyVAO())
-{
+               _vao(createCopyVAO()) {
     initializeOpenGLFunctions();
 }
 

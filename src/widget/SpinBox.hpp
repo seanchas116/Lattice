@@ -6,11 +6,10 @@ namespace Widget {
 
 class SpinBox : public QSpinBox {
     Q_OBJECT
-public:
+  public:
     explicit SpinBox(QWidget *parent = nullptr);
     void stepBy(int steps) override;
 };
 
 } // namespace Widget
 } // namespace Lattice
-

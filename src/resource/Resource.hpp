@@ -8,4 +8,4 @@ namespace Resource {
 std::string read(const char *path);
 
 }
-}
+} // namespace Lattice

@@ -1,10 +1,10 @@
 #include "Object.hpp"
-#include "Document.hpp"
-#include "History.hpp"
+#include "../support/Change.hpp"
 #include "../support/JSON.hpp"
 #include "../support/OptionalGuard.hpp"
-#include "../support/Change.hpp"
 #include "../support/PropertyChange.hpp"
+#include "Document.hpp"
+#include "History.hpp"
 #include <QtDebug>
 #include <nlohmann/json.hpp>
 #include <range/v3/algorithm/find.hpp>
@@ -13,12 +13,10 @@ namespace Lattice {
 namespace Document {
 
 class Object::ChildInsertChange : public Change {
-public:
-    ChildInsertChange(const SP<Object>& parent, const SP<Object>& object, const Opt<SP<const Object>>& reference) :
-        _parent(parent),
-        _object(object),
-        _reference(reference)
-    {
+  public:
+    ChildInsertChange(const SP<Object> &parent, const SP<Object> &object, const Opt<SP<const Object>> &reference) : _parent(parent),
+                                                                                                                    _object(object),
+                                                                                                                    _reference(reference) {
     }
 
     void apply() override {
@@ -27,16 +25,15 @@ public:
 
     SP<Change> invert() const override;
 
-private:
-
+  private:
     SP<Object> _parent;
     SP<Object> _object;
     Opt<SP<const Object>> _reference;
 };
 
 class Object::ChildRemoveChange : public Change {
-public:
-    ChildRemoveChange(const SP<Object>& parent, const SP<Object>& object) : _parent(parent), _object(object) {
+  public:
+    ChildRemoveChange(const SP<Object> &parent, const SP<Object> &object) : _parent(parent), _object(object) {
     }
 
     void apply() override {
@@ -46,8 +43,7 @@ public:
 
     SP<Change> invert() const override;
 
-private:
-
+  private:
     SP<Object> _parent;
     SP<Object> _object;
     Opt<SP<Object>> _reference;
@@ -61,7 +57,7 @@ SP<Change> Object::ChildRemoveChange::invert() const {
     return makeShared<ChildInsertChange>(_parent, _object, _reference);
 }
 
-Opt<SP<Object> > Object::parentObject() const {
+Opt<SP<Object>> Object::parentObject() const {
     auto ptr = _parentObject.lock();
     if (ptr) {
         return {ptr};
@@ -93,8 +89,7 @@ void Object::insertObjectBeforeInternal(const SP<Object> &object, const Opt<SP<c
         throw std::runtime_error("cannot insert object");
     }
     LATTICE_OPTIONAL_LET(oldParent, object->parentObject(),
-         oldParent->removeChildObject(object);
-    )
+                         oldParent->removeChildObject(object);)
 
     decltype(_childObjects)::iterator it;
     if (reference) {
@@ -112,11 +107,11 @@ void Object::insertObjectBeforeInternal(const SP<Object> &object, const Opt<SP<c
     emit childObjectsInserted(index, index);
 }
 
-void Object::removeChildObject(const SP<Object>& object) {
+void Object::removeChildObject(const SP<Object> &object) {
     addChange(makeShared<Object::ChildRemoveChange>(sharedFromThis(), object));
 }
 
-void Object::removeChildObjectInternal(const SP<Object>& object) {
+void Object::removeChildObjectInternal(const SP<Object> &object) {
     auto it = ranges::find(_childObjects, object);
     if (it == _childObjects.end()) {
         throw std::runtime_error("cannot find object");
@@ -131,7 +126,7 @@ void Object::removeChildObjectInternal(const SP<Object>& object) {
 int Object::index() const {
     LATTICE_OPTIONAL_GUARD(parent, _parentObject.lock(), return -1;)
 
-    auto& siblings = parent->_childObjects;
+    auto &siblings = parent->_childObjects;
     auto it = ranges::find(siblings, sharedFromThis());
     if (it == siblings.end()) {
         return -1;
@@ -192,9 +187,9 @@ void Object::setLocation(const Location &location) {
     }
 }
 
-void Object::forEachDescendant(const Fn<void(const SP<Object>&)> &callback) {
+void Object::forEachDescendant(const Fn<void(const SP<Object> &)> &callback) {
     callback(sharedFromThis());
-    for (auto& child : _childObjects) {
+    for (auto &child : _childObjects) {
         child->forEachDescendant(callback);
     }
 }
@@ -206,5 +201,5 @@ void Object::setLocationInternal(const Location &location) {
     }
 }
 
-}
+} // namespace Document
 } // namespace Lattice

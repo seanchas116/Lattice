@@ -17,26 +17,28 @@ namespace Widget {
 class MultiValueCheckBox;
 class MultiValueDoubleSpinBox;
 class MultiValueSpinBox;
-}
+} // namespace Widget
 
 namespace Document {
 class Object;
 class MeshObject;
-}
+} // namespace Document
 
 namespace UI {
 
 class ObjectPropertyView final : public QWidget {
     Q_OBJECT
-public:
+  public:
     explicit ObjectPropertyView(const SP<State::AppState> &appState, QWidget *parent = nullptr);
 
     void setObjects(const std::unordered_set<SP<Document::Object>> &objects);
-    auto& objects() const { return _objects; }
+    auto &objects() const { return _objects; }
 
-private:
+  private:
     enum class LocationMember {
-        Position, Scale, Rotation,
+        Position,
+        Scale,
+        Rotation,
     };
 
     void refreshValues();
@@ -52,13 +54,13 @@ private:
     std::unordered_set<SP<Document::Object>> _objects;
     std::vector<QMetaObject::Connection> _connections;
 
-    std::array<Widget::MultiValueDoubleSpinBox*, 3> _positionSpinBoxes;
-    std::array<Widget::MultiValueDoubleSpinBox*, 3> _scaleSpinBoxes;
-    std::array<Widget::MultiValueDoubleSpinBox*, 3> _rotationSpinBoxes;
+    std::array<Widget::MultiValueDoubleSpinBox *, 3> _positionSpinBoxes;
+    std::array<Widget::MultiValueDoubleSpinBox *, 3> _scaleSpinBoxes;
+    std::array<Widget::MultiValueDoubleSpinBox *, 3> _rotationSpinBoxes;
 
-    Widget::MultiValueCheckBox* _subdivEnabledCheckbox = nullptr;
-    Widget::MultiValueSpinBox* _subdivSegmentCountSpinbox = nullptr;
+    Widget::MultiValueCheckBox *_subdivEnabledCheckbox = nullptr;
+    Widget::MultiValueSpinBox *_subdivSegmentCountSpinbox = nullptr;
 };
 
-}
+} // namespace UI
 } // namespace Lattice

@@ -3,9 +3,8 @@
 namespace Lattice {
 namespace Document {
 
-Image::Image(QImage image, std::string filePath) :
-    _image(std::move(image)),
-    _filePath(std::move(filePath)) {
+Image::Image(QImage image, std::string filePath) : _image(std::move(image)),
+                                                   _filePath(std::move(filePath)) {
 }
 
 Opt<SP<Image>> Image::open(const std::string &filePath) {

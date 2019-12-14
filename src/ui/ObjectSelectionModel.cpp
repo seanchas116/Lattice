@@ -1,14 +1,13 @@
 #include "ObjectSelectionModel.hpp"
-#include "ObjectItemModel.hpp"
 #include "../document/Document.hpp"
 #include "../support/OptionalGuard.hpp"
+#include "ObjectItemModel.hpp"
 #include <QtDebug>
 
 namespace Lattice {
 namespace UI {
 
-ObjectSelectionModel::ObjectSelectionModel(ObjectItemModel *model, QObject *parent) : QItemSelectionModel(model, parent)
-{
+ObjectSelectionModel::ObjectSelectionModel(ObjectItemModel *model, QObject *parent) : QItemSelectionModel(model, parent) {
     auto onSelectionChange = [this, model] {
         QItemSelection selection;
         for (auto object : model->document()->selectedObjects()) {
@@ -45,5 +44,5 @@ ObjectSelectionModel::ObjectSelectionModel(ObjectItemModel *model, QObject *pare
     });
 }
 
-}
-} // namespace Shapecraft
+} // namespace UI
+} // namespace Lattice

@@ -1,10 +1,10 @@
 #include "HitAreaMap.hpp"
-#include "Renderable.hpp"
+#include "../gl/Binder.hpp"
 #include "../gl/Framebuffer.hpp"
 #include "../gl/Texture.hpp"
-#include "../gl/Binder.hpp"
-#include "../support/Debug.hpp"
 #include "../support/Camera.hpp"
+#include "../support/Debug.hpp"
+#include "Renderable.hpp"
 #include <glm/gtc/type_precision.hpp>
 
 using namespace glm;
@@ -53,5 +53,5 @@ void HitAreaMap::draw(const SP<Renderable> &renderable, const DrawEvent &drawEve
     renderable->getDescendants(_lastRenderables);
 }
 
-}
-}
+} // namespace Viewport
+} // namespace Lattice

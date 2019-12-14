@@ -1,23 +1,23 @@
 #pragma once
 
-#include "Tool.hpp"
-#include "../../state/Tool.hpp"
-#include "../../viewport/Renderable.hpp"
 #include "../../draw/Vertex.hpp"
-#include "../../support/Shorthands.hpp"
+#include "../../gl/ContextRecallable.hpp"
+#include "../../state/Tool.hpp"
 #include "../../support/Box.hpp"
 #include "../../support/Location.hpp"
-#include "../../gl/ContextRecallable.hpp"
+#include "../../support/Shorthands.hpp"
+#include "../../viewport/Renderable.hpp"
+#include "Tool.hpp"
+#include <QOpenGLExtraFunctions>
 #include <glm/glm.hpp>
 #include <unordered_map>
-#include <QOpenGLExtraFunctions>
 
 namespace Lattice {
 
 namespace State {
 class AppState;
 class MeshEditState;
-}
+} // namespace State
 
 namespace Document {
 class MeshObject;
@@ -25,11 +25,12 @@ class MeshObject;
 
 namespace GL {
 struct Vertex;
-template <typename T> class VertexBuffer;
+template <typename T>
+class VertexBuffer;
 class IndexBuffer;
 class VAO;
 class Framebuffer;
-}
+} // namespace GL
 
 namespace Editor {
 
@@ -41,10 +42,10 @@ namespace MeshEditor {
 
 class MeshEditor final : public Viewport::Renderable, protected GL::ContextRecallable, protected QOpenGLExtraFunctions {
     Q_OBJECT
-public:
-    MeshEditor(const SP<State::AppState>& appState, const SP<State::MeshEditState>& meshEditState);
+  public:
+    MeshEditor(const SP<State::AppState> &appState, const SP<State::MeshEditState> &meshEditState);
 
-    auto& meshEditState() const { return _meshEditState; }
+    auto &meshEditState() const { return _meshEditState; }
 
     void preDraw(const Viewport::DrawEvent &event) override;
     void draw(const Viewport::DrawEvent &event) override;
@@ -59,19 +60,19 @@ public:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
 
-private:
+  private:
     void handleToolChange(State::Tool tool);
 
     Tool::EventTarget pickEventTarget(glm::vec2 pos);
 
-    void mousePressTarget(const Tool::EventTarget& target, const Viewport::MouseEvent &event);
-    void mouseMoveTarget(const Tool::EventTarget& target, const Viewport::MouseEvent &event);
-    void mouseReleaseTarget(const Tool::EventTarget& target, const Viewport::MouseEvent &event);
+    void mousePressTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event);
+    void mouseMoveTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event);
+    void mouseReleaseTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event);
 
-    void hoverEnterTarget(const Tool::EventTarget& target, const Viewport::MouseEvent &event);
-    void hoverLeaveTarget(const Tool::EventTarget& target);
+    void hoverEnterTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event);
+    void hoverLeaveTarget(const Tool::EventTarget &target);
 
-    void contextMenuTarget(const Tool::EventTarget& target, const Viewport::MouseEvent& event);
+    void contextMenuTarget(const Tool::EventTarget &target, const Viewport::MouseEvent &event);
 
     void updateVAOs();
     void updateManipulatorVisibility();
@@ -107,7 +108,7 @@ private:
 
     SP<Tool> _tool;
 
-    glm::ivec2 _framebufferSize {0};
+    glm::ivec2 _framebufferSize{0};
 
     SP<GL::Framebuffer> _facesFramebuffer;
     SP<GL::Texture> _facesTexture;
@@ -118,6 +119,6 @@ private:
     Tool::EventTarget _hoveredTarget;
 };
 
-}
-}
-}
+} // namespace MeshEditor
+} // namespace Editor
+} // namespace Lattice

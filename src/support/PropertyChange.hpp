@@ -7,10 +7,10 @@ namespace Lattice {
 
 template <typename TObject, typename TValue>
 class PropertyChange : public Change {
-public:
+  public:
     using Values = std::unordered_map<SP<TObject>, TValue>;
-    using Getter = std::function<TValue(const SP<TObject>&)>;
-    using Setter = std::function<void(const SP<TObject>&, TValue)>;
+    using Getter = std::function<TValue(const SP<TObject> &)>;
+    using Setter = std::function<void(const SP<TObject> &, TValue)>;
 
     PropertyChange(Values values, Getter getter, Setter setter) : _newValues(std::move(values)), _getter(std::move(getter)), _setter(std::move(setter)) {
     }
@@ -24,7 +24,7 @@ public:
         std::vector<SP<TObject>> objects;
         objects.reserve(_newValues.size());
 
-        for (auto& [obj, value] : _newValues) {
+        for (auto &[obj, value] : _newValues) {
             _oldValues[obj] = _getter(obj);
             _setter(obj, value);
             objects.push_back(obj);
@@ -35,22 +35,22 @@ public:
         return makeShared<PropertyChange>(_oldValues, _getter, _setter);
     }
 
-    bool mergeWith(const SP<const Change>& other) override {
+    bool mergeWith(const SP<const Change> &other) override {
         LATTICE_OPTIONAL_GUARD(change, dynamicPointerCast<const PropertyChange>(other), return false;)
 
         auto oldValuesMerged = std::move(change->_oldValues); // invalidate other change
-        for (auto& [obj, value] : _oldValues) {
+        for (auto &[obj, value] : _oldValues) {
             oldValuesMerged[obj] = value;
         }
         _oldValues = std::move(oldValuesMerged);
 
-        for (auto& [obj, value] : change->_newValues) {
+        for (auto &[obj, value] : change->_newValues) {
             _newValues[obj] = value;
         }
         return true;
     }
 
-private:
+  private:
     Values _oldValues;
     Values _newValues;
     Getter _getter;

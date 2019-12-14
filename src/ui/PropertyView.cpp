@@ -1,18 +1,16 @@
 #include "PropertyView.hpp"
-#include "ObjectPropertyView.hpp"
-#include "MeshPropertyView.hpp"
-#include "../state/AppState.hpp"
 #include "../document/Document.hpp"
-#include <QVBoxLayout>
+#include "../state/AppState.hpp"
+#include "MeshPropertyView.hpp"
+#include "ObjectPropertyView.hpp"
 #include <QTabWidget>
+#include <QVBoxLayout>
 
 namespace Lattice {
 namespace UI {
 
-PropertyView::PropertyView(const SP<State::AppState> &appState, QWidget *parent) :
-    QWidget(parent),
-    _appState(appState)
-{
+PropertyView::PropertyView(const SP<State::AppState> &appState, QWidget *parent) : QWidget(parent),
+                                                                                   _appState(appState) {
     auto layout = new QVBoxLayout();
     layout->setMargin(0);
 
@@ -27,7 +25,7 @@ PropertyView::PropertyView(const SP<State::AppState> &appState, QWidget *parent)
 
     setLayout(layout);
 
-    connect(appState.get(), &State::AppState::meshEditStateChanged, this, [tabWidget, meshPropertyView, objectPropertyView] (auto state) {
+    connect(appState.get(), &State::AppState::meshEditStateChanged, this, [tabWidget, meshPropertyView, objectPropertyView](auto state) {
         if (state) {
             tabWidget->setCurrentWidget(meshPropertyView);
         } else {

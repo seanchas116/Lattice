@@ -1,9 +1,9 @@
 #include "ViewportContainer.hpp"
-#include "Viewport.hpp"
+#include "../support/Debug.hpp"
+#include "HitAreaMap.hpp"
 #include "Renderable.hpp"
 #include "Util.hpp"
-#include "HitAreaMap.hpp"
-#include "../support/Debug.hpp"
+#include "Viewport.hpp"
 #include <QMouseEvent>
 #include <QOpenGLDebugLogger>
 #include <QOpenGLPaintDevice>
@@ -13,9 +13,7 @@
 namespace Lattice {
 namespace Viewport {
 
-ViewportContainer::ViewportContainer(QWidget *parent) :
-    QOpenGLWidget(parent)
-{
+ViewportContainer::ViewportContainer(QWidget *parent) : QOpenGLWidget(parent) {
 }
 
 void ViewportContainer::setViewports(const std::vector<Viewport *> &viewports) {
@@ -30,7 +28,7 @@ void ViewportContainer::initializeGL() {
 
     auto logger = new QOpenGLDebugLogger(this);
     if (logger->initialize()) {
-        connect(logger, &QOpenGLDebugLogger::messageLogged, [](const QOpenGLDebugMessage& message) {
+        connect(logger, &QOpenGLDebugLogger::messageLogged, [](const QOpenGLDebugMessage &message) {
             if (message.severity() == QOpenGLDebugMessage::NotificationSeverity) {
                 return;
             }
@@ -48,7 +46,8 @@ void ViewportContainer::initializeGL() {
 }
 
 void ViewportContainer::resizeGL(int w, int h) {
-    Q_UNUSED(w); Q_UNUSED(h);
+    Q_UNUSED(w);
+    Q_UNUSED(h);
     emit resized();
 }
 
@@ -62,7 +61,7 @@ void ViewportContainer::paintGL() {
             continue;
         }
 
-        DrawEvent drawEvent {viewport, viewport->camera(), operations};
+        DrawEvent drawEvent{viewport, viewport->camera(), operations};
 
         (*viewport->_renderable)->preDrawRecursive(drawEvent);
 
@@ -98,17 +97,15 @@ void ViewportContainer::paintGL() {
         }
         painter.save();
         auto offset = viewport->mapTo(this, viewport->rect().topLeft());
-        auto transform = QTransform(1, 0, 0, -1, 0, viewport->rect().height())
-            * QTransform::fromTranslate(offset.x(), offset.y())
-            * QTransform::fromScale(devicePixelRatioF(), devicePixelRatioF());
+        auto transform = QTransform(1, 0, 0, -1, 0, viewport->rect().height()) * QTransform::fromTranslate(offset.x(), offset.y()) * QTransform::fromScale(devicePixelRatioF(), devicePixelRatioF());
         painter.setTransform(transform);
         painter.setClipRect(0, 0, viewport->width(), viewport->height());
 
-        Draw2DEvent event {viewport, viewport->size(), &painter};
+        Draw2DEvent event{viewport, viewport->size(), &painter};
         (*viewport->_renderable)->draw2DRecursive(event);
         painter.restore();
     }
 }
 
-} // namespace Renderer
+} // namespace Viewport
 } // namespace Lattice
